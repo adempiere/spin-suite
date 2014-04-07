@@ -53,6 +53,8 @@ public abstract class PO {
 	private boolean					isNew = true;
 	/**	Deleted ID					*/
 	private int						m_currentId = 0;
+	/**	Old ID						*/
+	private int						m_oldId = 0;
 	/**	Handle Connection			*/
 	private boolean					handConnection = true;
 	/**	Log Error					*/
@@ -216,6 +218,7 @@ public abstract class PO {
 		if(deleteOld){
 			isNew = true;
 			m_currentValues = new Object[m_TableInfo.getColumnLength()];
+			m_oldId = m_currentId;
 		}
 	}
 	
@@ -227,6 +230,7 @@ public abstract class PO {
 	public void backCopy(){
 		this.isNew = false;
 		m_currentValues = m_oldValues;
+		m_currentId = m_oldId;
 	}
 	
 	/**
@@ -308,8 +312,7 @@ public abstract class PO {
 			if(index == -1)
 				continue;
 			//	
-			if (DisplayType.isText(displayType) 
-					|| DisplayType.isBoolean(displayType)
+			if (DisplayType.isText(displayType)
 					|| displayType == DisplayType.LIST
 					|| displayType == DisplayType.BUTTON)						
 				m_currentValues[i] = rs.getString(index);
@@ -320,7 +323,10 @@ public abstract class PO {
 				m_currentValues[i] = DisplayType.getNumber(rs.getString(index));
 			else if (DisplayType.isLOB(displayType))
 				m_currentValues[i] = rs.getBlob(index);
-			else if(DisplayType.isDate(displayType)){
+			else if(DisplayType.isBoolean(displayType)){
+				String value = rs.getString(index);
+				m_currentValues[i] = (value != null && value.equals("Y"));
+			} else if(DisplayType.isDate(displayType)){
 				long millis = rs.getLong(i);
 				if(millis != 0)
 					m_currentValues[i] = new Date(millis);
@@ -347,6 +353,7 @@ public abstract class PO {
 		if(ID > 0){
 			m_IDs = new Object[] {ID};
 			m_currentId = ID;
+			m_oldId = m_currentId;
 			m_KeyColumns = new String[] {m_TableInfo.getTableName() + "_ID"};
 			isNew = false;
 		}
@@ -665,7 +672,7 @@ public abstract class PO {
 			if(handConnection)
 				conn.setTransactionSuccessful();
 			//	
-			clear();
+			clear(true);
 			LogM.log(getCtx(), getClass(), Level.FINE, (String)m_oldValues[0]);
 		} catch (Exception e) {
 			throw new Exception(e);
@@ -677,14 +684,19 @@ public abstract class PO {
 	/**
 	 * Clean array
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/05/2012, 03:26:13
+	 * @param deleteBackup
 	 * @return void
 	 */
-	public void clear(){
+	public void clear(boolean deleteBackup){
 		isNew = true;
+		m_oldId = m_currentId;
 		m_currentId = 0;
 		int size = m_TableInfo.getColumnLength();
 		m_currentValues = new Object[size];
-		m_oldValues = new Object[size];
+		if(deleteBackup){
+			m_oldId = 0;
+			m_oldValues = new Object[size];
+		}
 	}
 	
 	

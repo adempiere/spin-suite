@@ -53,7 +53,7 @@ public class TV_DynamicActivity extends TV_Base implements I_FragmentSelectListe
 	private LookupMenu 			lookupMenu 		= null;
 	
 	/**	Load Action Menu			*/
-	private LoadActionMenu		loadActionMenu 	= null;;
+	private LoadActionMenu		loadActionMenu 	= null;
 	
 	/** Called when the activity is first created. */
     @Override

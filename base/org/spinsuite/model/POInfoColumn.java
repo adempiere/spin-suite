@@ -109,6 +109,11 @@ public class POInfoColumn implements Parcelable {
 	public String		ValueMin;
 	/**	View Format		*/
 	public String		VFormat;
+	/**	Process ID		*/
+	public int 			AD_Process_ID;
+	/**	Form ID			*/
+	public int 			AD_Form_ID;
+	
 	
 	/**
 	 * Is Column SQL
@@ -167,6 +172,8 @@ public class POInfoColumn implements Parcelable {
 		dest.writeString(ValueMax);
 		dest.writeString(ValueMin);
 		dest.writeString(VFormat);
+		dest.writeInt(AD_Process_ID);
+		dest.writeInt(AD_Form_ID);
 	}
 	
 	/**
@@ -217,19 +224,32 @@ public class POInfoColumn implements Parcelable {
 		ValueMax = parcel.readString();
 		ValueMin = parcel.readString();
 		VFormat = parcel.readString();
+		AD_Process_ID = parcel.readInt();
+		AD_Form_ID = parcel.readInt();
 	}
-
-	/**
-	 * 	String representation
-	 *  @return info
-	 */
-	public String toString()
-	{
-		StringBuffer sb = new StringBuffer("POInfo.Column[");
-		sb.append(ColumnName).append(",ID=").append(AD_Column_ID)
-			.append(",DisplayType=").append(DisplayType);
-		sb.append("]");
-		return sb.toString();
-	}	//	toString
+	
+	@Override
+	public String toString() {
+		return "POInfoColumn [AD_Column_ID=" + AD_Column_ID
+				+ ", AD_Element_ID=" + AD_Element_ID + ", DisplayType="
+				+ DisplayType + ", AD_Reference_Value_ID="
+				+ AD_Reference_Value_ID + ", AD_Val_Rule_ID=" + AD_Val_Rule_ID
+				+ ", Callout=" + Callout + ", ColumnName=" + ColumnName
+				+ ", ColumnSQL=" + ColumnSQL + ", DefaultValue=" + DefaultValue
+				+ ", Description=" + Description + ", EntityType=" + EntityType
+				+ ", FieldLength=" + FieldLength + ", FormatPattern="
+				+ FormatPattern + ", IsAlwaysUpdateable=" + IsAlwaysUpdateable
+				+ ", IsCentrallyMaintained=" + IsCentrallyMaintained
+				+ ", IsEncrypted=" + IsEncrypted + ", IsIdentifier="
+				+ IsIdentifier + ", IsKey=" + IsKey + ", IsMandatory="
+				+ IsMandatory + ", IsParent=" + IsParent
+				+ ", IsSelectionColumn=" + IsSelectionColumn
+				+ ", IsUpdateable=" + IsUpdateable + ", Name=" + Name
+				+ ", SelectionSeqNo=" + SelectionSeqNo + ", SeqNo=" + SeqNo
+				+ ", SFA_Column_ID=" + SFA_Column_ID + ", SFA_Table_ID="
+				+ SFA_Table_ID + ", ValueMax=" + ValueMax + ", ValueMin="
+				+ ValueMin + ", VFormat=" + VFormat + ", AD_Process_ID="
+				+ AD_Process_ID + ", AD_Form_ID=" + AD_Form_ID + "]";
+	}
 
 }	//	POInfoColumn

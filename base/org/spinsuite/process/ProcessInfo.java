@@ -71,9 +71,9 @@ public class ProcessInfo {
 	/** Execution had an error      	*/
 	private boolean     				m_Error = false;
 	/**	Window No						*/
-	private int 						m_WindowNo = 0;
+	private int 						m_ActivityNo = 0;
 	/**	Process Field Parameter			*/
-	private InfoPara[] 				m_processFields = null;
+	private InfoPara[] 					m_processFields = null;
 	/**	Log Info						*/
 	private ArrayList<ProcessInfoLog> 	m_logs = null;
 	/**	Log Info						*/
@@ -127,7 +127,7 @@ public class ProcessInfo {
 		this.m_AD_Process_ID = m_AD_Process_ID;
 		this.m_Table_ID = m_AD_Table_ID;
 		this.m_Record_ID = m_Record_ID;
-		this.m_WindowNo = m_WindowNo;
+		this.m_ActivityNo = m_WindowNo;
 		this.conn = conn;
 		//	Load Meta-data
 		loadProcess();
@@ -156,7 +156,7 @@ public class ProcessInfo {
 	public ProcessInfo(Context ctx, ActivityParameter activityParam, DB conn){
 		this(ctx, activityParam.getAD_Process_ID(), 
 				activityParam.getFrom_SFA_Table_ID(), 
-				activityParam.getFrom_Record_ID(), activityParam.getWindowNo(), conn);
+				activityParam.getFrom_Record_ID(), activityParam.getActivityNo(), conn);
 	}
 	
 	/**
@@ -211,8 +211,8 @@ public class ProcessInfo {
 					.append(language).append("') ");
 		}
 		//	Where Clause
-		sql.append("WHERE pp.IsActive = 'Y' " +
-				"AND p.AD_Process_ID = ").append(m_AD_Process_ID).append(" ");
+		sql.append("WHERE p.AD_Process_ID = ").append(m_AD_Process_ID)
+			.append(" AND ").append("(pp.IsActive = 'Y' OR pp.IsActive IS NULL)").append(" ");
 		//	Order By
 		sql.append("ORDER BY pp.SeqNo");
 		//	
@@ -645,11 +645,11 @@ public class ProcessInfo {
 	/**
 	 * Set Window No
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 21:20:22
-	 * @param m_WindowNo
+	 * @param m_ActivityNo
 	 * @return void
 	 */
-	public void setWindowNo(int m_WindowNo){
-		this.m_WindowNo = m_WindowNo;
+	public void setActivityNo(int m_ActivityNo){
+		this.m_ActivityNo = m_ActivityNo;
 	}
 	
 	/**
@@ -658,8 +658,8 @@ public class ProcessInfo {
 	 * @return
 	 * @return int
 	 */
-	public int getWindowNo() {
-		return m_WindowNo;
+	public int getActivityNo() {
+		return m_ActivityNo;
 	}
 	
 	/**

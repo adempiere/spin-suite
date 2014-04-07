@@ -153,8 +153,8 @@ public final class DisplayType
 	}	//	isID
 	
 	/**
-	 * Verifica si el tipo de dato es Booleano
-	 * @author Yamel Senih 21/05/2012, 04:19:47
+	 * Verify if is a Boolean
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/04/2014, 15:46:00
 	 * @param displayType
 	 * @return
 	 * @return boolean

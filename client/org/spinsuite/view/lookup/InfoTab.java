@@ -275,7 +275,7 @@ public class InfoTab {
 					"c.FormatPattern, c.IsAlwaysUpdateable, c.IsCentrallyMaintained, c.IsEncrypted, c.IsIdentifier, c.IsKey, " +
 					"CASE WHEN f.IsMandatory = 'Y' THEN f.IsMandatory ELSE c.IsMandatory END IsMandatory, " +
 					"c.IsParent, c.IsSelectionColumn, c.IsUpdateable, c.SelectionSeqNo, " +
-					"c.SeqNo, c.SFA_Column_ID, c.SFA_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, " +
+					"c.SeqNo, c.SFA_Column_ID, c.SFA_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, c.AD_Process_ID, p.AD_Form_ID, " +
 					//	Fields
 					"f.Name, f.Description, f.Help, f.AD_FieldGroup_ID, f.DisplayLogic, f.IsActive, f.IsDisplayed, " +
 					"f.IsReadOnly, f.IsSameLine, f.SeqNo, f.SFA_Field_ID " +
@@ -283,7 +283,8 @@ public class InfoTab {
 					"FROM SFA_Tab t " +
 					"INNER JOIN SFA_Table tb ON(tb.SFA_Table_ID = t.SFA_Table_ID) " +
 					"INNER JOIN SFA_Field f ON(f.SFA_Tab_ID = t.SFA_Tab_ID) " +
-					"INNER JOIN SFA_Column c ON(c.SFA_Column_ID = f.SFA_Column_ID) ");
+					"INNER JOIN SFA_Column c ON(c.SFA_Column_ID = f.SFA_Column_ID) " +
+					"LEFT JOIN AD_Process p ON(p.AD_Process_ID = c.AD_Process_ID) ");
 		} else {
 			sql.append("SELECT tt.Name, t.SFA_Tab_ID, t.SFA_Table_ID,t.SFA_Window_ID, t.AD_Process_ID, tb.TableName, " +
 					"t.Classname,tt.Description, tt.Help, t.IsInsertRecord, t.IsReadOnly, t.OrderByClause, " +
@@ -295,7 +296,7 @@ public class InfoTab {
 					"c.FormatPattern, c.IsAlwaysUpdateable, c.IsCentrallyMaintained, c.IsEncrypted, c.IsIdentifier, c.IsKey, " +
 					"CASE WHEN f.IsMandatory = 'Y' THEN f.IsMandatory ELSE c.IsMandatory END IsMandatory, " +
 					"c.IsParent, c.IsSelectionColumn, c.IsUpdateable, c.SelectionSeqNo, " +
-					"c.SeqNo, c.SFA_Column_ID, c.SFA_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, " +
+					"c.SeqNo, c.SFA_Column_ID, c.SFA_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, c.AD_Process_ID, p.AD_Form_ID, " +
 					//	Fields
 					"ft.Name, ft.Description, ft.Help, f.AD_FieldGroup_ID, f.DisplayLogic, f.IsActive, f.IsDisplayed, " +
 					"f.IsReadOnly, f.IsSameLine, f.SeqNo, f.SFA_Field_ID " +
@@ -305,7 +306,8 @@ public class InfoTab {
 					"INNER JOIN SFA_Tab_Trl tt ON(tt.SFA_Tab_ID = t.SFA_Tab_ID AND tt.AD_Language = '").append(language).append("') " +
 					"INNER JOIN SFA_Field f ON(f.SFA_Tab_ID = t.SFA_Tab_ID) " +
 					"INNER JOIN SFA_Field_Trl ft ON(ft.SFA_Field_ID = f.SFA_Field_ID AND ft.AD_Language = '").append(language).append("') " +
-					"INNER JOIN SFA_Column c ON(c.SFA_Column_ID = f.SFA_Column_ID) ");
+					"INNER JOIN SFA_Column c ON(c.SFA_Column_ID = f.SFA_Column_ID) " +
+					"LEFT JOIN AD_Process p ON(p.AD_Process_ID = c.AD_Process_ID) ");
 		}
 		//	Where
 		sql.append("WHERE t.IsActive = 'Y' ")
@@ -389,6 +391,8 @@ public class InfoTab {
 				iFieldColumn.ValueMax = rs.getString(i++);
 				iFieldColumn.ValueMin = rs.getString(i++);
 				iFieldColumn.VFormat = rs.getString(i++);
+				iFieldColumn.AD_Process_ID = rs.getInt(i++);
+				iFieldColumn.AD_Form_ID = rs.getInt(i++);
 				//	Fields
 				iFieldColumn.Name = rs.getString(i++);
 				iFieldColumn.Description = rs.getString(i++);

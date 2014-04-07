@@ -67,7 +67,7 @@ public class ActivityParameter implements Parcelable {
 	/**	Where					*/
 	private String			m_WhereClause = null;
 	/**	Window Number			*/
-	private int 			m_WindowNo = 0;
+	private int 			m_ActivityNo = 0;
 	
 	@SuppressWarnings("rawtypes")
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -133,7 +133,7 @@ public class ActivityParameter implements Parcelable {
 		dest.writeString(m_IsReadWrite);
 		dest.writeString(m_IsInsertRecord);
 		dest.writeString((m_IsSummary? "Y": "N"));
-		dest.writeInt(m_WindowNo);
+		dest.writeInt(m_ActivityNo);
 	}
 	
 	public void readToParcel(Parcel parcel){
@@ -162,7 +162,7 @@ public class ActivityParameter implements Parcelable {
 		String summary = parcel.readString();
 		m_IsSummary = (summary != null 
 								&& summary.equals("Y"));
-		m_WindowNo = parcel.readInt();
+		m_ActivityNo = parcel.readInt();
 	}
 	
 	/**
@@ -627,24 +627,36 @@ public class ActivityParameter implements Parcelable {
 	 * @return
 	 * @return int
 	 */
-	public int getWindowNo(){
-		return m_WindowNo;
+	public int getActivityNo(){
+		return m_ActivityNo;
 	}
 	
 	/**
 	 * Set Window No
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 21:01:58
-	 * @param m_WindowNo
+	 * @param m_ActivityNo
 	 * @return void
 	 */
-	public void setWindowNo(int m_WindowNo){
-		this.m_WindowNo = m_WindowNo;
+	public void setActivityNo(int m_ActivityNo){
+		this.m_ActivityNo = m_ActivityNo;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Name=" + getName() 
-				+ "\nAction=" + getAction() 
-				+ "\nSFA_Window_ID=" + getSFA_Window_ID();
+		return "ActivityParameter [m_From_Record_ID=" + m_From_Record_ID
+				+ ", m_From_SFA_Table_ID=" + m_From_SFA_Table_ID
+				+ ", m_AD_Table_ID=" + m_AD_Table_ID + ", m_Parent_ID="
+				+ m_Parent_ID + ", m_Action=" + m_Action + ", m_AD_Form_ID="
+				+ m_AD_Form_ID + ", m_AD_Process_ID=" + m_AD_Process_ID
+				+ ", m_ActivityMenu_ID=" + m_ActivityMenu_ID
+				+ ", m_DeploymentType=" + m_DeploymentType + ", m_Description="
+				+ m_Description + ", m_GroupByClause=" + m_GroupByClause
+				+ ", m_IsInsertRecord=" + m_IsInsertRecord + ", m_IsReadWrite="
+				+ m_IsReadWrite + ", m_IsSummary=" + m_IsSummary + ", m_Name="
+				+ m_Name + ", m_OrderByClause=" + m_OrderByClause
+				+ ", m_SFA_Menu_ID=" + m_SFA_Menu_ID + ", m_SFA_SyncMenu_ID="
+				+ m_SFA_SyncMenu_ID + ", m_SFA_Table_ID=" + m_SFA_Table_ID
+				+ ", m_SFA_Window_ID=" + m_SFA_Window_ID + ", m_WhereClause="
+				+ m_WhereClause + ", m_ActivityNo=" + m_ActivityNo + "]";
 	}
 }

@@ -176,8 +176,28 @@ public abstract class StdProcess {
 	 * @return
 	 * @return int
 	 */
-	public int getWindowNo(){
-		return m_pi.getWindowNo();
+	public int getActivityNo(){
+		return m_pi.getActivityNo();
+	}
+	
+	/**
+	 * Get Table ID
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/04/2014, 22:41:28
+	 * @return
+	 * @return int
+	 */
+	public int getTable_ID(){
+		return m_pi.getTable_ID();
+	}
+	
+	/**
+	 * Get Record ID
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/04/2014, 22:41:52
+	 * @return
+	 * @return int
+	 */
+	public int getRecord_ID(){
+		return m_pi.getRecord_ID();
 	}
 	
 	/**

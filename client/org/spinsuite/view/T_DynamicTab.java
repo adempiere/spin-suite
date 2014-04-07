@@ -33,6 +33,7 @@ import org.spinsuite.util.ViewIndex;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.InfoTab;
 import org.spinsuite.view.lookup.VLookup;
+import org.spinsuite.view.lookup.VLookupButton;
 import org.spinsuite.view.lookup.VLookupCheckBox;
 import org.spinsuite.view.lookup.VLookupDateBox;
 import org.spinsuite.view.lookup.VLookupSearch;
@@ -148,7 +149,7 @@ public class T_DynamicTab extends Fragment
 	 */
 	private void initLoad(){
 		//	
-    	m_IsLoadOk = true;
+		m_IsLoadOk = true;
     	//	Retain Instance
     	if(tabParam.getTabLevel() == 0)
     		setRetainInstance(true);
@@ -257,6 +258,10 @@ public class T_DynamicTab extends Fragment
 			} else if(field.DisplayType == DisplayType.SEARCH){
 				lookup = new VLookupSearch(getActivity(), field);
 			}
+		} else if(field.DisplayType == DisplayType.BUTTON){
+			VLookupButton lookupButton = new VLookupButton(getActivity(), field);
+			lookupButton.setTabParameter(tabParam);
+			lookup = lookupButton;
 		}
 		//	is Filled
 		if(lookup != null){
@@ -458,7 +463,7 @@ public class T_DynamicTab extends Fragment
     	//	Parent changed
     	if(parentChanged
     			|| record_ID <= 0)
-    		model.clear();
+    		model.clear(false);
     	
     	//	Reload
     	model.loadData(m_Record_ID);
@@ -578,7 +583,9 @@ public class T_DynamicTab extends Fragment
 			for(ViewIndex vIndex : viewList){
 	    		VLookup lookup = vIndex.getVLookup();
 	    		InfoField field = lookup.getField();
-	    		if(field.ColumnName.equals("DocAction"))
+	    		if(field.ColumnName.equals("DocAction")
+	    				|| (field.DisplayType == DisplayType.BUTTON
+	    						&& !field.IsReadOnly))
 	    			lookup.setEnabled(true);
 	    		else
 	    			lookup.setEnabled(false);

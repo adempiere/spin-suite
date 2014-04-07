@@ -16,12 +16,15 @@
 package org.spinsuite.view.lookup;
 
 
-import android.content.Context;
+import org.spinsuite.util.LoadActionMenu;
+import org.spinsuite.util.TabParameter;
+
+import android.app.Activity;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.TextView;
 
 /**
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
@@ -32,60 +35,91 @@ public class VLookupButton extends VLookup {
 	/**
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/02/2014, 08:31:59
-	 * @param context
+	 * @param activity
 	 */
-	public VLookupButton(Context context) {
-		super(context);
+	public VLookupButton(Activity activity) {
+		super(activity);
+		this.activity = activity;
 		init();
 	}
 
 	/**
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/02/2014, 08:31:59
-	 * @param context
+	 * @param activity
 	 * @param attrs
 	 */
-	public VLookupButton(Context context, AttributeSet attrs) {
-		super(context, attrs);
+	public VLookupButton(Activity activity, AttributeSet attrs) {
+		super(activity, attrs);
+		this.activity = activity;
 		init();
 	}
 
 	/**
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/02/2014, 08:31:59
-	 * @param context
+	 * @param activity
 	 * @param attrs
 	 * @param defStyle
 	 */
-	public VLookupButton(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
+	public VLookupButton(Activity activity, AttributeSet attrs, int defStyle) {
+		super(activity, attrs, defStyle);
+		this.activity = activity;
 		init();
 	}
 
 	/**
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/02/2014, 08:31:59
-	 * @param context
+	 * @param activity
 	 * @param m_field
 	 */
-	public VLookupButton(Context context, InfoField m_field) {
-		super(context, m_field);
+	public VLookupButton(Activity activity, InfoField m_field) {
+		super(activity, m_field);
+		this.activity = activity;
 		init();
 	}
 	
 	/**	Button 			*/
-	private Button 		v_Button = null;
+	private Button 			v_Button 		= null;
+	/**	Value			*/
+	private String 			m_Value 		= null;
+	/**	Load Action Menu*/
+	private LoadActionMenu	loadActionMenu 	= null;
+	/**	Activity from		*/
+	private Activity 		activity	 	= null;
+	/**	Tab Parameter		*/
+	private TabParameter	tabParam		= null;
 	
-	@Override
+	@Override	
 	protected void init() {
-		v_Button = new CheckBox(getContext());
+		loadActionMenu = new LoadActionMenu(activity, true);
+		v_Button = new Button(getContext());
 		v_Button.setGravity(Gravity.CENTER_VERTICAL);
 		v_Button.setText(m_field.Name);
 		setEnabled(!m_field.IsReadOnly);
 		//	Add to view
 		addView(v_Button);
 		v_Label.setText("");
-		
+		v_Label.setVisibility(TextView.GONE);
+		//	
+		v_Button.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				loadActionMenu.loadActionFromActivity(m_field, tabParam);
+			}
+		});
+	}
+	
+	/**
+	 * Set Tab Parameter
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/04/2014, 21:21:23
+	 * @param tabParam
+	 * @return void
+	 */
+	public void setTabParameter(TabParameter tabParam){
+		this.tabParam = tabParam;
 	}
 
 	@Override
@@ -96,25 +130,25 @@ public class VLookupButton extends VLookup {
 	
 	@Override
 	public void setValue(Object value) {
-		/*boolean flag = false;
-		if(value != null){
-			if(value instanceof Boolean)
-				flag = (Boolean) value;
-			else if(value instanceof String)
-				flag = ((String) value).equals("Y");
-		}
-		//	Set Flag
-		v_CheckBox.setChecked(flag);*/
+		if(value == null
+				|| ((String)value).length() <= 0)
+			m_Value = null;
+		else
+			m_Value = (String)value;
 	}
 
 	@Override
 	public Object getValue() {
-		return null;//v_CheckBox.isChecked();
+		//	Default
+		if(m_Value == null)
+			return m_Value;
+		return m_Value.toString();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return false;
+		return (m_Value == null 
+				|| m_Value.length() == 0);
 	}
 
 	@Override
@@ -130,6 +164,6 @@ public class VLookupButton extends VLookup {
 
 	@Override
 	public String getDisplayValue() {
-		return null;
+		return v_Button.getText().toString();
 	}
 }

@@ -22,6 +22,7 @@ import org.spinsuite.base.R;
 import org.spinsuite.model.MForm;
 import org.spinsuite.view.LV_Menu;
 import org.spinsuite.view.LV_Search;
+import org.spinsuite.view.lookup.InfoField;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -39,12 +40,12 @@ public class LoadActionMenu {
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/03/2014, 15:39:22
 	 * @param activity
-	 * @param isFromDrawer
+	 * @param isFromActivity
 	 * @param conn
 	 */
-	public LoadActionMenu(Activity activity, boolean isFromDrawer, DB conn){
+	public LoadActionMenu(Activity activity, boolean isFromActivity, DB conn){
 		this.activity = activity;
-		this.isFromDrawer = isFromDrawer;
+		this.isFromActivity = isFromActivity;
 		this.conn = conn;
 	}
 	
@@ -53,18 +54,18 @@ public class LoadActionMenu {
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/03/2014, 15:39:27
 	 * @param activity
-	 * @param isFromDrawer
+	 * @param isFromActivity
 	 */
-	public LoadActionMenu(Activity activity, boolean isFromDrawer){
-		this(activity, isFromDrawer, null);
+	public LoadActionMenu(Activity activity, boolean isFromActivity){
+		this(activity, isFromActivity, null);
 	}
 	
 	/**	Activity				*/
 	private Activity 	activity;
 	/**	Connection				*/
 	private DB			conn;
-	/**	Is From Drawer			*/
-	private boolean		isFromDrawer = false;
+	/**	Is From Activity		*/
+	private boolean		isFromActivity = false;
 	
 	/**
 	 * 
@@ -75,6 +76,9 @@ public class LoadActionMenu {
 	 * @return Bundle
 	 */
 	public Bundle loadAction(DisplayMenuItem item, ActivityParameter param){
+		//	Valid Action
+		if(item.getAction() == null)
+			return null;
 		//	
 		Bundle bundle = new Bundle();
 		//	Intent Activity
@@ -111,6 +115,40 @@ public class LoadActionMenu {
 	}
 	
 	/**
+	 * Load Menu from Activity
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/04/2014, 20:47:52
+	 * @param m_field
+	 * @param tabParam
+	 * @return
+	 * @return void
+	 */
+	public void loadActionFromActivity(InfoField m_field, TabParameter tabParam){
+		//	
+		if(tabParam == null
+				|| m_field == null)
+			return ;
+		//	
+		Bundle bundle = new Bundle();
+		//	Load Parameter
+		DisplayMenuItem item = new DisplayMenuItem(m_field);
+		//	Valid Action
+		if(item.getAction() == null)
+			return;
+		ActivityParameter actParam = new ActivityParameter(item);
+		//	Set Activity No
+		actParam.setActivityNo(tabParam.getActivityNo());
+		//	
+		actParam.setFrom_SFA_Table_ID(tabParam.getSFA_Table_ID());
+    	actParam.setFrom_Record_ID(Env.getTabRecord_ID(activity, tabParam.getActivityNo(), tabParam.getTabNo()));
+		bundle.putParcelable("Param", actParam);
+		//	Add Tab Parameter
+		if(tabParam != null)
+			bundle.putParcelable("TabParam", tabParam);
+		//	Load Activity
+		loadActivityWithAction(item, bundle);
+	}
+	
+	/**
 	 * Load Activity with action
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/02/2014, 22:52:55
 	 * @param item
@@ -129,7 +167,9 @@ public class LoadActionMenu {
 		//	Load Action
 		DB.loadConnection(conn, DB.READ_ONLY);
 		
-		if(item.getAction().equals(DisplayMenuItem.ACTION_Form)) {
+		if(item.getAction().equals(DisplayMenuItem.ACTION_Form)
+				|| (item.getAction().equals(DisplayMenuItem.ACTION_Process)
+						&& item.getAD_Form_ID() != 0)) {
 			MForm form = new MForm(activity, item.getAD_Form_ID(), conn);
 			ok = loadDynamicClass(form.getClassname(), bundle);
 		} else if(item.getAction().equals(DisplayMenuItem.ACTION_Window)){
@@ -164,7 +204,7 @@ public class LoadActionMenu {
 			Intent intent = new Intent(activity, clazz);
 			intent.putExtras(bundle);
 			//	Start
-			if(!isFromDrawer)
+			if(!isFromActivity)
 				activity.startActivity(intent);
 			else
 				activity.startActivityForResult(intent, 0);

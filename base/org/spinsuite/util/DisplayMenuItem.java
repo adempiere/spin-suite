@@ -15,6 +15,8 @@
  *************************************************************************************/
 package org.spinsuite.util;
 
+import org.spinsuite.view.lookup.InfoField;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -30,6 +32,25 @@ public class DisplayMenuItem implements Parcelable {
 	 */
 	public DisplayMenuItem(){
 		//	
+	}
+	
+	/**
+	 * Copy From Field
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/04/2014, 21:17:16
+	 * @param m_field
+	 */
+	public DisplayMenuItem(InfoField m_field){
+		this();
+		if(m_field.AD_Form_ID != 0)
+			setAction(DisplayMenuItem.ACTION_Form);
+		else if(m_field.AD_Process_ID != 0)
+			setAction(DisplayMenuItem.ACTION_Process);
+		//	
+		setAD_Process_ID(m_field.AD_Process_ID);
+		setAD_Form_ID(m_field.AD_Form_ID);
+		setName(m_field.Name);
+		
 	}
 	
 	
@@ -671,13 +692,23 @@ public class DisplayMenuItem implements Parcelable {
 	public int getActivityMenu_ID(){
 		return m_ActivityMenu_ID;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Name=" + getName() +
-				"\nDescription=" + getDescription() + 
-				"\nDeploymentType=" + getDeploymentType() + 
-				"\nSeqNo=" + getSeqNo();
+		return "DisplayMenuItem [m_Action=" + m_Action + ", m_AD_Form_ID="
+				+ m_AD_Form_ID + ", m_AD_Process_ID=" + m_AD_Process_ID
+				+ ", m_ActivityMenu_ID=" + m_ActivityMenu_ID
+				+ ", m_DeploymentType=" + m_DeploymentType + ", m_Description="
+				+ m_Description + ", m_ErrImgURL=" + m_ErrImgURL
+				+ ", m_GroupByClause=" + m_GroupByClause + ", m_ImageURL="
+				+ m_ImageURL + ", m_IsInsertRecord=" + m_IsInsertRecord
+				+ ", m_IsReadWrite=" + m_IsReadWrite + ", m_IsSummary="
+				+ m_IsSummary + ", m_Name=" + m_Name + ", m_OrderByClause="
+				+ m_OrderByClause + ", m_QuickActionMenu_ID="
+				+ m_QuickActionMenu_ID + ", m_SFA_Menu_ID=" + m_SFA_Menu_ID
+				+ ", m_SFA_SyncMenu_ID=" + m_SFA_SyncMenu_ID
+				+ ", m_SFA_Table_ID=" + m_SFA_Table_ID + ", m_SFA_Window_ID="
+				+ m_SFA_Window_ID + ", m_WhereClause=" + m_WhereClause
+				+ ", m_Parent_ID=" + m_Parent_ID + ", m_SeqNo=" + m_SeqNo + "]";
 	}
-	
 }
