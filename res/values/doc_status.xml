@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ACTION_Complete">Complete</string>
+	<string name="ACTION_Prepare">Prepare</string>
+	<string name="ACTION_Void">Void</string>
+	<string name="ACTION_ReActivate">Re-Activate</string>
+	
+	<string name="STATUS_Drafted">Drafted</string>
+	<string name="STATUS_Completed">Completed</string>
+	<string name="STATUS_Voided">Voided</string>
+	<string name="STATUS_InProgress">In Progress</string>
+</resources>

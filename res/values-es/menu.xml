@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Action_Cancel">Cancelar</string>
+	<string name="Action_Ok">Siguiente</string>
+	<string name="Action_Config">Configuración</string>
+	<string name="Action_Search">Buscar</string>
+	<string name="Action_Edit">Editar</string>
+	<string name="Action_Add">Agregar</string>
+	<string name="Action_Delete">Eliminar</string>
+	<string name="Action_Param">Parámetros</string>
+	<string name="Action_Process">Procesar Ahora</string>
+	<string name="Action_PrintFormat">Cambiar Formato de Impresión</string>
+	
+	<!-- Drawer Option -->
+	<string name="drawer_open">Abrir Caja de Navegación</string>
+    <string name="drawer_close">Cerrar Caja de Navegación</string>
+	
+    <!-- Export Option -->
+    <string name="Action_Share">Compartir</string>
+    <string name="Action_Export_XLS">Exportar a XLS</string>
+    <string name="Action_Export_PDF">Exportar a PDF</string>
+    <string name="Action_Export_XML">Exportar a XML</string>
+    <string name="Action_Export_HTML">Exportar a HTML</string>
+    
+</resources>

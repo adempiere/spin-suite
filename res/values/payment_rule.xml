@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="PAYMENTRULE_Cash">Cash</string>
+	<string name="PAYMENTRULE_CreditCard">Credit Card</string>
+	<string name="PAYMENTRULE_DirectDeposit">Direct Deposit</string>
+	<string name="PAYMENTRULE_Check">Check</string>
+	<string name="PAYMENTRULE_OnCredit">On Credit</string>
+	<string name="PAYMENTRULE_DirectDebit">Direct Debit</string>
+	<string name="PAYMENTRULE_Mixed">Mixed</string>
+</resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Action_Cancel">Cancel</string>
+	<string name="Action_Ok">Next</string>
+	<string name="Action_Config">Configuration</string>
+	<string name="Action_Search">Search</string>
+	<string name="Action_Edit">Edit</string>
+	<string name="Action_Add">Add</string>
+	<string name="Action_Delete">Delete</string>
+	<string name="Action_Param">Parameters</string>
+	<string name="Action_Process">Process Now</string>
+	<string name="Action_PrintFormat">Change Print Format</string>
+	
+	<!-- Drawer Option -->
+	<string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    
+    <!-- Export Option -->
+    <string name="Action_Share">Share</string>
+    <string name="Action_Export_XLS">Export to XLS</string>
+    <string name="Action_Export_PDF">Export to PDF</string>
+    <string name="Action_Export_XML">Export to XML</string>
+    <string name="Action_Export_HTML">Export to HTML</string>
+    
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="tt_A_DirectDeposit">Transferencia Electrónica</string>
+    <string name="tt_C_CreditCard">Tarjeta De Crédito</string>
+    <string name="tt_D_DirectDebit">Débito Directo</string>
+    <string name="tt_K_Check">Cheque</string>
+    <string name="tt_X_Cash">Efectivo</string>
+    
+</resources>

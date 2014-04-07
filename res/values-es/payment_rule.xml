@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   	<string name="PAYMENTRULE_Cash">En Efectivo</string>
+	<string name="PAYMENTRULE_CreditCard">Tarjeta de Crédito</string>
+	<string name="PAYMENTRULE_DirectDeposit">Depósito Directo</string>
+	<string name="PAYMENTRULE_Check">Cheque</string>
+	<string name="PAYMENTRULE_OnCredit">A Crédito</string>
+	<string name="PAYMENTRULE_DirectDebit">Débito Directo</string>
+	<string name="PAYMENTRULE_Mixed">Mixto</string>
+</resources>

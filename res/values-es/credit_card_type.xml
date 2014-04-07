@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="cct_A_Amex">Amex</string>
+    <string name="cct_C_Atm">ATM</string>
+    <string name="cct_D_Diners">Diners</string>
+    <string name="cct_M_MasterCard">MasterCard</string>
+    <string name="cct_N_Discover">Descubrir</string>
+    <string name="cct_P_PCard">Tarjeta de Compras</string>
+    <string name="cct_V_Visa">Visa</string>
+    
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="tt_A_DirectDeposit">Direct Deposit</string>
+    <string name="tt_C_CreditCard">Credit Card</string>
+    <string name="tt_D_DirectDebit">Direct Debit</string>
+    <string name="tt_K_Check">Check</string>
+    <string name="tt_X_Cash">Cash</string>
+    
+</resources>

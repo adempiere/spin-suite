@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="User">User</string>
+    <string name="Pass">Password</string>
+    <string name="Url_Soap">URL SOAP</string>
+    <string name="ConfigConn">Config Connection</string>
+    <string name="NameSpace">Name Space</string>
+    <string name="AD_Client_ID">Client</string>
+    <string name="AD_Org_ID">Organization</string>
+    <string name="M_Warehouse_ID">Warehouse</string>
+    <string name="Date">Date</string>
+    <string name="MethodSync">Init Synchronization Method</string>
+    <string name="AD_Role_ID">Role</string>  
+	<string name="MustFillField">Must Fill in the Field</string>
+	<string name="InitSync">Initial Synchronization</string>
+	<string name="DBName">Database Name</string>
+	<string name="LimitQuery">Limit Query</string>
+	<string name="Timeout">Timeout</string>
+	<string name="SavePass">Save Pass</string>
+	<string name="SaveSD">Save data SD(Slow)</string>
+	
+	<string name="tt_TestConn">Test Connection</string>
+	<string name="tt_Conn">Connection</string>
+	<string name="tt_LoginRole">Login Role</string>
+	
+</resources>
