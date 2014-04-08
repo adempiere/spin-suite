@@ -23,6 +23,7 @@ import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.interfaces.I_FragmentSelectListener;
 import org.spinsuite.model.MSFATable;
 import org.spinsuite.model.PO;
+import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
@@ -681,6 +682,25 @@ public class T_DynamicTab extends Fragment
     	if (resultCode == Activity.RESULT_OK) {
 	    	if(data != null){
 	    		Bundle bundle = data.getExtras();
+	    		switch (bundle.getInt(DisplayMenuItem.CONTEXT_ACTIVITY_TYPE)) {
+				case DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_Form:
+					break;
+				case DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_Window:
+					break;
+				case DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_Process:
+					break;
+				case DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_Report:
+					break;
+				case DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_SearchWindow:
+					break;
+				case DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_SearchColumn:
+					break;
+				default:
+					break;
+				}
+	    		
+	    		
+	    		
 	    		DisplayRecordItem item = (DisplayRecordItem) bundle.getParcelable("Record");
 	    		String columnName = bundle.getString("ColumnName");
 	    		//	if a field or just search

@@ -164,27 +164,37 @@ public class DisplayMenuItem implements Parcelable {
 	private int 			m_SeqNo = 0;
 
 	
-	/** Action AD_Reference_ID=53504 */
-	public static final int ACTION_AD_Reference_ID=53504;
-	/** Form = X */
-	public static final String ACTION_Form 							= "X";
-	/** Process = P */
-	public static final String ACTION_Process 						= "P";
-	/** Report = R */
-	public static final String ACTION_Report 						= "R";
-	/**	Window = W */
-	public static final String ACTION_Window 						= "W";
-	/** DeploymentType */
-	public static final int DEPLOYMENTTYPE_AD_Reference_ID			= 53506;
-	/** Direct Form = D */
-	public static final String DEPLOYMENTTYPE_DirectForm 			= "D";
-	/** List = L */
-	public static final String DEPLOYMENTTYPE_List 					= "L";
-	/** Menu with Quick Action = M */
-	public static final String DEPLOYMENTTYPE_MenuWithQuickAction 	= "M";
-	/** List with Quick Action = W */
-	public static final String DEPLOYMENTTYPE_ListWithQuickAction 	= "W";
+	/** Action AD_Reference_ID=53504 	*/
+	public static final int 	ACTION_AD_Reference_ID				= 53504;
+	/** Form = X 						*/
+	public static final String 	ACTION_Form 						= "X";
+	/** Process = P 					*/
+	public static final String 	ACTION_Process 						= "P";
+	/** Report = R 						*/
+	public static final String 	ACTION_Report 						= "R";
+	/**	Window = W 						*/
+	public static final String 	ACTION_Window 						= "W";
+	/** DeploymentType 					*/
+	public static final int 	DEPLOYMENTTYPE_AD_Reference_ID		= 53506;
+	/** Direct Form = D 				*/
+	public static final String 	DEPLOYMENTTYPE_DirectForm 			= "D";
+	/** List = L 						*/
+	public static final String 	DEPLOYMENTTYPE_List 				= "L";
+	/** Menu with Quick Action = M 		*/
+	public static final String	DEPLOYMENTTYPE_MenuWithQuickAction 	= "M";
+	/** List with Quick Action = W 		*/
+	public static final String 	DEPLOYMENTTYPE_ListWithQuickAction 	= "W";
 	
+	/**	Context Menu Type 				*/
+	public static final String	CONTEXT_ACTIVITY_TYPE				= "Context_Activity_Type";
+	public static final int		CONTEXT_ACTIVITY_TYPE_Form			= 1;
+	public static final int		CONTEXT_ACTIVITY_TYPE_Process		= 2;
+	public static final int		CONTEXT_ACTIVITY_TYPE_Report		= 3;
+	public static final int		CONTEXT_ACTIVITY_TYPE_Window		= 4;
+	public static final int		CONTEXT_ACTIVITY_TYPE_SearchWindow	= 5;
+	public static final int		CONTEXT_ACTIVITY_TYPE_SearchColumn	= 6;
+	
+	//	
 	@SuppressWarnings("rawtypes")
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
 		public DisplayMenuItem createFromParcel(Parcel parcel) {

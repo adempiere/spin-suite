@@ -68,6 +68,8 @@ public class ActivityParameter implements Parcelable {
 	private String			m_WhereClause = null;
 	/**	Window Number			*/
 	private int 			m_ActivityNo = 0;
+	/**	Is From Activity		*/
+	private boolean 		m_IsFromActivity = false;
 	
 	@SuppressWarnings("rawtypes")
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -235,6 +237,26 @@ public class ActivityParameter implements Parcelable {
 	 */
 	public int getParent_ID(){
 		return m_Parent_ID;
+	}
+	
+	/**
+	 * Is From Activity
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/04/2014, 14:11:23
+	 * @return
+	 * @return boolean
+	 */
+	public boolean isFromActivity(){
+		return m_IsFromActivity;
+	}
+	
+	/**
+	 * Set Is From Activity
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/04/2014, 14:12:09
+	 * @param m_IsFromActivity
+	 * @return void
+	 */
+	public void setIsFromActivity(boolean m_IsFromActivity){
+		this.m_IsFromActivity = m_IsFromActivity;
 	}
 
 	/**

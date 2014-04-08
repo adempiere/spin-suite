@@ -119,6 +119,8 @@ public class TV_DynamicActivity extends TV_Base implements I_FragmentSelectListe
     		//	Set From Called
         	actParam.setFrom_SFA_Table_ID(tabParam.getSFA_Table_ID());
         	actParam.setFrom_Record_ID(Env.getTabRecord_ID(getApplicationContext(), m_ActivityNo, tabParam.getTabNo()));
+        	//	Is From Activity
+        	actParam.setIsFromActivity(true);
         	//	
         	loadActionMenu.loadAction(item, actParam);
     	}

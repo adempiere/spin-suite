@@ -685,8 +685,12 @@ public class V_Process extends FragmentActivity {
 				tv_Summary.setText(m_pInfo.getSummary());
 				//	Show all logs
 				if(!m_pInfo.isReport()
-						|| m_pInfo.isError())
-					showLog();
+						|| m_pInfo.isError()){
+					if(!m_activityParam.isFromActivity())
+						showLog();
+					else 
+						setActivityResult();
+				}
 				//	Show report
 				else if(m_pInfo.isReport()){
 					iSearch.setVisible(true);
@@ -857,4 +861,21 @@ public class V_Process extends FragmentActivity {
 	    	}
     	}
     }
+	
+	/**
+	 * Set Result to Activity
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/04/2014, 14:54:22
+	 * @return void
+	 */
+	private void setActivityResult(){
+		Intent intent = getIntent();
+		Bundle bundle = new Bundle();
+		bundle.putInt(DisplayMenuItem.CONTEXT_ACTIVITY_TYPE, (!m_pInfo.isReport()
+				? DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_Process
+						: DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_Report));
+		bundle.putString("Summary", m_pInfo.getSummary());
+		intent.putExtras(bundle);
+		setResult(Activity.RESULT_OK, intent);
+		finish();
+	}
 }

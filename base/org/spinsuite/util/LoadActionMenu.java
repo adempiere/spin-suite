@@ -140,7 +140,10 @@ public class LoadActionMenu {
 		//	
 		actParam.setFrom_SFA_Table_ID(tabParam.getSFA_Table_ID());
     	actParam.setFrom_Record_ID(Env.getTabRecord_ID(activity, tabParam.getActivityNo(), tabParam.getTabNo()));
-		bundle.putParcelable("Param", actParam);
+    	//	Is From Activity
+    	actParam.setIsFromActivity(true);
+    	//	
+    	bundle.putParcelable("Param", actParam);
 		//	Add Tab Parameter
 		if(tabParam != null)
 			bundle.putParcelable("TabParam", tabParam);
