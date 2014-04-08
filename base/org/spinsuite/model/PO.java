@@ -779,7 +779,7 @@ public abstract class PO {
 							.append("=")
 							.append("?");
 					//	
-					Object value = parseValue(column, i, true);
+					Object value = parseValue(column, i, false);
 					if(column.IsMandatory 
 							&& value == null)
 						throw new Exception(m_ctx.getResources().getString(R.string.MustFillField) + 
@@ -840,7 +840,8 @@ public abstract class PO {
 	public final Object parseValue(POInfoColumn column, int index, boolean isNew) throws Exception{
 		if(index >= 0){
 			Object value = m_currentValues[index]; 
-			if(column.ColumnName.equals(m_TableInfo.getTableName() + "_ID")){
+			if(column.ColumnName.equals(m_TableInfo.getTableName() + "_ID")
+					&& isNew){
 				m_currentId = MSequence.getNextID(m_ctx, getAD_Client_ID(), getTableName(), conn);
 				//	Set ID
 				set_Value(index, m_currentId);

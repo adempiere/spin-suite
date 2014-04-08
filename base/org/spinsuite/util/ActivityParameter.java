@@ -136,6 +136,7 @@ public class ActivityParameter implements Parcelable {
 		dest.writeString(m_IsInsertRecord);
 		dest.writeString((m_IsSummary? "Y": "N"));
 		dest.writeInt(m_ActivityNo);
+		dest.writeString((m_IsFromActivity? "Y": "N"));
 	}
 	
 	public void readToParcel(Parcel parcel){
@@ -165,6 +166,9 @@ public class ActivityParameter implements Parcelable {
 		m_IsSummary = (summary != null 
 								&& summary.equals("Y"));
 		m_ActivityNo = parcel.readInt();
+		String sIsFromActivity = parcel.readString();
+		m_IsFromActivity = (sIsFromActivity != null 
+								&& sIsFromActivity.equals("Y"));
 	}
 	
 	/**

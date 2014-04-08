@@ -20,7 +20,6 @@ import java.util.logging.Level;
 
 import org.spinsuite.model.X_Test;
 import org.spinsuite.util.LogM;
-import org.spinsuite.util.Msg;
 
 /**
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
@@ -62,7 +61,6 @@ public class TestProcess extends StdProcess {
 	
 	@Override
 	protected String doIt() throws Exception {
-		Msg.toastMsg(getCtx(), "SFA_Table_ID = " + getTable_ID() + " -- Record_ID = " + getRecord_ID());
 		X_Test test = new X_Test(getCtx(), getRecord_ID(), getConnection());
 		test.setName("Now=" + new Date());
 		test.isActive();

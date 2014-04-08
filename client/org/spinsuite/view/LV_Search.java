@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import org.spinsuite.adapters.SearchAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
+import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.FilterValue;
@@ -106,9 +107,6 @@ public class LV_Search extends FragmentActivity {
 			m_criteria = bundle.getParcelable("Criteria");
 		}
 		//	
-		if(m_field == null)
-			m_field = new InfoField();
-		//	
 		llc_Search = (LinearLayout) findViewById(R.id.llc_Search);
 		lv_Search = (ListView) findViewById(R.id.lv_Search);
 		//	
@@ -116,7 +114,7 @@ public class LV_Search extends FragmentActivity {
 			lookup = new LookupDisplayType(getApplicationContext(), m_SFA_Table_ID);
 		else if(m_field != null)
 			lookup = new LookupDisplayType(getApplicationContext(), m_field);
-		
+		//	
 		loadConfig();
 		
 		//	Load
@@ -286,7 +284,11 @@ public class LV_Search extends FragmentActivity {
 			else 
 				itemConfig.setVisible(false);
 		}
-		
+		//	
+		MenuItem itemAdd = menu.findItem(R.id.action_add);
+		//	Visible
+		if(itemAdd != null)
+			itemAdd.setVisible(m_field == null);
 		return true;
 	}
 	    
@@ -367,7 +369,14 @@ public class LV_Search extends FragmentActivity {
 		Intent intent = getIntent();
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("Record", item);
-		bundle.putString("ColumnName", m_field.ColumnName);
+		if(m_field != null){
+			bundle.putInt(DisplayMenuItem.CONTEXT_ACTIVITY_TYPE, 
+					DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_SearchColumn);
+			bundle.putString("ColumnName", m_field.ColumnName);
+		} else {
+			bundle.putInt(DisplayMenuItem.CONTEXT_ACTIVITY_TYPE, 
+					DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_SearchWindow);
+		}
 		intent.putExtras(bundle);
 		setResult(Activity.RESULT_OK, intent);
 		finish();

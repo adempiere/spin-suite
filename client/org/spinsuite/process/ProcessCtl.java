@@ -58,22 +58,24 @@ public class ProcessCtl {
 	 * @return void
 	 */
 	public void runProcess(){
-		if (m_pi.getClassName() != null){
+		//	Start Process if exists
+		if(m_pi.getClassName() != null
+				&& m_pi.getClassName().length() > 0){
 			//	Run Class
 			if (!startProcess())
 				return;
-			//	Report
-			if (m_pi.isReport()){
-				if(m_pi.getAD_ReportView_ID() != 0
-						|| m_pi.getAD_PrintFormat_ID() != 0){
-					//	Instance Print Data
-					m_rpd = new ReportPrintData(m_pi.getCtx(), m_pi, 0, m_pi.getConnection());
-					//	Load Data
-					m_rpd.loadData();
-				}
-				//	
-				return;
+		}
+		//	Report
+		if (m_pi.isReport()){
+			if(m_pi.getAD_ReportView_ID() != 0
+					|| m_pi.getAD_PrintFormat_ID() != 0){
+				//	Instance Print Data
+				m_rpd = new ReportPrintData(m_pi.getCtx(), m_pi, 0, m_pi.getConnection());
+				//	Load Data
+				m_rpd.loadData();
 			}
+			//	
+			return;
 		}
 	}
 	

@@ -15,9 +15,15 @@
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
+import java.util.logging.Level;
+
+import org.spinsuite.base.DB;
 import org.spinsuite.util.DisplayRecordItem;
+import org.spinsuite.util.FilterValue;
+import org.spinsuite.util.LogM;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -91,7 +97,10 @@ public class VLookupSearch extends VLookup {
 
 	@Override
 	public void setValue(Object value) {
-		//v_Search.setItem(item);
+		if(value instanceof Integer
+				&& ((Integer)value) == v_Search.getRecord_ID())
+			return;
+		loadValue(value);
 	}
 
 	@Override
@@ -128,6 +137,38 @@ public class VLookupSearch extends VLookup {
 	@Override
 	public String getDisplayValue() {
 		return v_Search.getValue();
+	}
+	
+	/**
+	 * Load Value
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/04/2014, 21:31:22
+	 * @param value
+	 * @return void
+	 */
+	private void loadValue(Object value){
+		if(!(value instanceof Integer))
+			return;
+		try{
+			LookupDisplayType lookup = new LookupDisplayType(getContext(), m_field);
+			DB conn = new DB(getContext());
+			DB.loadConnection(conn, DB.READ_ONLY);
+			Cursor rs = null;
+			FilterValue criteria = new FilterValue();
+			InfoLookup lookupInfo = lookup.getInfoLookup();
+			criteria.setWhereClause(lookupInfo.TableName + "." + lookupInfo.KeyColumn + " = ?");
+			criteria.addValue(value);
+			lookup.setCriteria(criteria.getWhereClause());
+			//	Query
+			rs = conn.querySQL(lookup.getSQL(), criteria.getValues());
+			if(rs.moveToFirst())
+				setItem(new DisplayRecordItem(rs.getInt(0), rs.getString(1)));
+			else
+				setItem(new DisplayRecordItem(0, null));
+			//	Close
+			DB.closeConnection(conn);
+		} catch(Exception e){
+			LogM.log(getContext(), getClass(), Level.SEVERE, "Error in Load", e);
+		}
 	}
 
 }

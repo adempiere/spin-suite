@@ -659,7 +659,7 @@ public class T_DynamicTab extends Fragment
     		return false;
     	//	do it
     	if(reQuery){
-    		ok = refresh(0, true);
+    		ok = refresh(m_Record_ID, true);
     	} else if(tabParam.getTabLevel() > 0){
     		int currentParent_Record_ID = Env.getTabRecord_ID(getActivity(), 
         			tabParam.getActivityNo(), tabParam.getParentTabNo());
@@ -682,45 +682,55 @@ public class T_DynamicTab extends Fragment
     	if (resultCode == Activity.RESULT_OK) {
 	    	if(data != null){
 	    		Bundle bundle = data.getExtras();
+	    		//	Item
+	    		DisplayRecordItem item = (DisplayRecordItem) bundle.getParcelable("Record");
 	    		switch (bundle.getInt(DisplayMenuItem.CONTEXT_ACTIVITY_TYPE)) {
 				case DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_Form:
 					break;
 				case DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_Window:
 					break;
 				case DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_Process:
+					String summary = bundle.getString("Summary");
+					boolean isError = bundle.getBoolean("IsError");
+					//	Is a Error
+					if(isError){
+						Msg.alertMsg(getActivity(), 
+								getString(R.string.msg_ProcessError), summary);
+					} else {
+						if(summary != null
+								&& summary.length() > 0)
+							Msg.toastMsg(getActivity(), summary);
+					}
+					//	Refresh
+					refreshFromChange(true);
 					break;
 				case DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_Report:
 					break;
 				case DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_SearchWindow:
-					break;
-				case DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_SearchColumn:
-					break;
-				default:
-					break;
-				}
-	    		
-	    		
-	    		
-	    		DisplayRecordItem item = (DisplayRecordItem) bundle.getParcelable("Record");
-	    		String columnName = bundle.getString("ColumnName");
-	    		//	if a field or just search
-	    		if(columnName != null){
-	    			for (ViewIndex vIndex: viewList) {
-	    	    		VLookup lookup = vIndex.getVLookup();
-	    	    		if(vIndex.getColumnName().equals(columnName)){
-	    	    			((VLookupSearch) lookup).setItem(item);
-	    	    			break;
-	    	    		}
-	    			}
-	    		} else {
 	    			//	Refresh
 	    			int record_ID = item.getRecord_ID();
 	    			//	Verify
-	    			if(record_ID != 0) {
+	    			if(record_ID != 0)
 	    				refresh(record_ID, false);
-	    			} else {
+	    			else
 	    				newOption();
-	    			}
+
+					break;
+				case DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_SearchColumn:
+					String columnName = bundle.getString("ColumnName");
+		    		//	if a field or just search
+		    		if(columnName != null){
+		    			for (ViewIndex vIndex: viewList) {
+		    	    		VLookup lookup = vIndex.getVLookup();
+		    	    		if(vIndex.getColumnName().equals(columnName)){
+		    	    			((VLookupSearch) lookup).setItem(item);
+		    	    			break;
+		    	    		}
+		    			}
+		    		}
+					break;
+				default:
+					break;
 	    		}
 	    	}
     	}

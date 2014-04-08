@@ -54,6 +54,7 @@ import org.spinsuite.view.report.ReportPrintData;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -294,6 +295,8 @@ public class V_Process extends FragmentActivity {
 		String msg = null;
 		//	Path
 		String path = null;
+		//	App Type
+		String appType = null;
 		//	
 		if(item.getSFA_Menu_ID() == SHARE_FOR){
 			new AlertDialog.Builder(this)
@@ -312,6 +315,7 @@ public class V_Process extends FragmentActivity {
     	} else if(item.getSFA_Menu_ID() == EXPORT_TO_PDF){
     		try {
     			path = printData.createPDF();
+    			appType = "pdf";
 			} catch (FileNotFoundException e) {
 				LogM.log(getApplicationContext(), getClass(), 
 						Level.SEVERE, "Error in Export to PDF:", e);
@@ -326,6 +330,7 @@ public class V_Process extends FragmentActivity {
     	} else if(item.getSFA_Menu_ID() == EXPORT_TO_XLS){
     		try {
 				path = printData.createXLS();
+				appType = "vnd.ms-excel";
 			} catch (RowsExceededException e) {
 				LogM.log(getApplicationContext(), getClass(), 
 						Level.SEVERE, "Error in Export to XLS:", e);
@@ -349,11 +354,18 @@ public class V_Process extends FragmentActivity {
     	}
 		//	Show Path
 		if(path != null){
-			//	Message
-			Msg.toastMsg(getApplicationContext(), 
-					getResources().getString(R.string.msg_Exported) 
-					+ "... " + getResources().getString(R.string.msg_Path) 
-					+ " \"" + path + "\"");
+			try {
+				//	Launch Application
+				Uri uriPath = Uri.fromFile(new File(path));
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+				intent.setDataAndType(uriPath, "application/" + appType);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				//	Start Activity
+				startActivity(intent);
+			} catch (ActivityNotFoundException e){
+				LogM.log(this, getClass(), Level.WARNING, 
+						"Error Launch Application: " + e.getMessage());
+			}
 		} else if(msg != null){	//	Show Message
 			Msg.alertMsg(this, getResources().getString(R.string.msg_Error), msg);
 		}
@@ -825,22 +837,6 @@ public class V_Process extends FragmentActivity {
 		}
 	}	
 	
-	/**
-	 * On Selected Record
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/03/2014, 13:23:17
-	 * @param item
-	 * @return void
-	 */
-	/*private void selectedRecord(DisplayRecordItem item){
-		Intent intent = getIntent();
-		Bundle bundle = new Bundle();
-		bundle.putParcelable("Record", item);
-		bundle.putString("ColumnName", m_field.ColumnName);
-		intent.putExtras(bundle);
-		setResult(Activity.RESULT_OK, intent);
-		finish();
-	}*/
-	
 	@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     	if (resultCode == Activity.RESULT_OK) {
@@ -874,6 +870,7 @@ public class V_Process extends FragmentActivity {
 				? DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_Process
 						: DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_Report));
 		bundle.putString("Summary", m_pInfo.getSummary());
+		bundle.putBoolean("IsError", m_pInfo.isError());
 		intent.putExtras(bundle);
 		setResult(Activity.RESULT_OK, intent);
 		finish();
