@@ -77,7 +77,8 @@ public class LoadActionMenu {
 	 */
 	public Bundle loadAction(DisplayMenuItem item, ActivityParameter param){
 		//	Valid Action
-		if(item.getAction() == null)
+		if(!item.isSummary()
+				&& item.getAction() == null)
 			return null;
 		//	
 		Bundle bundle = new Bundle();
@@ -169,8 +170,9 @@ public class LoadActionMenu {
 		}
 		//	Load Action
 		DB.loadConnection(conn, DB.READ_ONLY);
-		
-		if(item.getAction().equals(DisplayMenuItem.ACTION_Form)
+		if(item.isSummary()){
+			
+		} else if(item.getAction().equals(DisplayMenuItem.ACTION_Form)
 				|| (item.getAction().equals(DisplayMenuItem.ACTION_Process)
 						&& item.getAD_Form_ID() != 0)) {
 			MForm form = new MForm(activity, item.getAD_Form_ID(), conn);
