@@ -127,14 +127,7 @@ public class T_DynamicTabDetail extends Fragment
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
 			//	
-			if(getActivity().findViewById(R.id.ll_ListLand) != null)
-				return false;
-			FragmentManager fm = getChildFragmentManager();
-		    if (fm.getBackStackEntryCount() > 0){
-		    	//	Get Back
-				fm.popBackStack();
-		    	return true;
-		    }
+			return backToFragment();
 		}
 		//	
 		return false;
@@ -147,6 +140,8 @@ public class T_DynamicTabDetail extends Fragment
 		if(indexRecordLine != null){
 			if(indexRecordLine != null)
 				indexRecordLine.refreshFromChange(true);
+			//	Back
+			backToFragment();
 			return indexRecordLine.refreshFromChange(reQuery);
 		}
 		//	Return
@@ -156,5 +151,24 @@ public class T_DynamicTabDetail extends Fragment
 	@Override
 	public void setTabParameter(TabParameter tabParam) {
 		//	
+	}
+	
+	/**
+	 * Back to Index Fragment
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/04/2014, 11:37:12
+	 * @return
+	 * @return boolean
+	 */
+	private boolean backToFragment(){
+		if(getActivity().findViewById(R.id.ll_ListLand) != null)
+			return false;
+		FragmentManager fm = getChildFragmentManager();
+	    if (fm.getBackStackEntryCount() > 0){
+	    	//	Get Back
+			fm.popBackStack();
+	    	return true;
+	    }
+	    //	Return
+	    return false;
 	}
 }

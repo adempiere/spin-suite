@@ -457,6 +457,9 @@ public class T_DynamicTab extends Fragment
      * @return boolean
      */
     private boolean refresh(int record_ID, boolean parentChanged){
+    	//	Refresh Child Index
+    	if(this.m_Record_ID != record_ID)
+    		refreshIndex();
     	this.m_Record_ID = record_ID;
     	//	Set record Identifier in context
     	Env.setTabRecord_ID(getActivity(), 
