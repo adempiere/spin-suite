@@ -327,6 +327,7 @@ public class TV_Base extends FragmentActivity
 
     @Override
     public void onPageSelected(int position) {
+    	Env.setCurrentTab(this, m_ActivityNo, position);
         TabWidget widget = mTabHost.getTabWidget();
         int oldFocusability = widget.getDescendantFocusability();
         widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);

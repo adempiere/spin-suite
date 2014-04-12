@@ -18,6 +18,7 @@ package org.spinsuite.view;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.interfaces.I_FragmentSelectListener;
+import org.spinsuite.util.Env;
 import org.spinsuite.util.TabParameter;
 
 import android.os.Bundle;
@@ -138,10 +139,9 @@ public class T_DynamicTabDetail extends Fragment
 		I_DynamicTab indexRecordLine = (I_DynamicTab) 
 				getChildFragmentManager().findFragmentByTag(INDEX_FRAGMENT);
 		if(indexRecordLine != null){
-			if(indexRecordLine != null)
-				indexRecordLine.refreshFromChange(true);
-			//	Back
-			backToFragment();
+			if(!Env.isCurrentTab(getActivity(), 
+					tabParam.getActivityNo(), tabParam.getTabNo()))
+				backToFragment();
 			return indexRecordLine.refreshFromChange(reQuery);
 		}
 		//	Return

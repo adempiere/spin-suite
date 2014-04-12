@@ -99,12 +99,12 @@ public class TV_DynamicActivity extends TV_Base implements I_FragmentSelectListe
     
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if(!isDrawerLayoutOpen()){
+    	/*if(!isDrawerLayoutOpen()){
         	I_DynamicTab curFr = (I_DynamicTab) getCurrentFragment();
         	//	Handle Current Menu
         	if(curFr != null)
         		curFr.handleMenu();
-        }
+        }*/
         return super.onPrepareOptionsMenu(menu);
     }
     
@@ -154,8 +154,11 @@ public class TV_DynamicActivity extends TV_Base implements I_FragmentSelectListe
 				"AND t.SFA_Window_ID = " + param.getSFA_Window_ID() + " " + 
 				"ORDER BY t.SeqNo", null);
 		if(rs.moveToFirst()){
+			//	Index
 			int index = 0;
 			int tabNo = 0;
+			//	Set Current Tab No
+			Env.setCurrentTab(this, m_ActivityNo, 0);
 			do{
 				TabParameter tabParam = new TabParameter();
 				tabParam.setActivityNo(m_ActivityNo);

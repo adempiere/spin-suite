@@ -937,22 +937,37 @@ public final class Env {
 	 * Set Current Tab
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:54:11
 	 * @param ctx
+	 * @param m_ActivityNo
 	 * @param tab
 	 * @return void
 	 */
-	public static void setCurrentTab(Context ctx, String tab){
-		setContext(ctx, CURRENT_TAB, tab);
+	public static void setCurrentTab(Context ctx, int m_ActivityNo, int tabNo){
+		setContext(ctx, m_ActivityNo, CURRENT_TAB, tabNo);
 	}
 	
 	/**
 	 * Get Current Tab
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:53:45
 	 * @param ctx
+	 * @param m_ActivityNo
 	 * @return
-	 * @return String
+	 * @return int
 	 */
-	public static String getCurrentTab(Context ctx){
-		return getContext(ctx, CURRENT_TAB);
+	public static int getCurrentTab(Context ctx, int m_ActivityNo){
+		return getContextAsInt(ctx, m_ActivityNo, CURRENT_TAB);
+	}
+	
+	/**
+	 * Is Current Tab No
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/04/2014, 10:22:47
+	 * @param ctx
+	 * @param m_ActivityNo
+	 * @param tabNo
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean isCurrentTab(Context ctx, int m_ActivityNo, int tabNo){
+		return tabNo == getContextAsInt(ctx, m_ActivityNo, CURRENT_TAB);
 	}
 	
 	/**

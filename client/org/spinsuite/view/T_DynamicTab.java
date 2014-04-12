@@ -98,7 +98,7 @@ public class T_DynamicTab extends Fragment
 	private 	int						m_Record_ID			= 0;
 	private 	int 					m_Parent_Record_ID 	= 0;
 	private 	boolean					m_IsLoadOk			= false;
-	//private 	boolean 				m_IsModifying		= false;
+	private 	boolean 				m_IsModifying		= false;
 	/**	From Tab					*/
 	private I_DynamicTab				m_FromTab			= null;
 	
@@ -118,8 +118,6 @@ public class T_DynamicTab extends Fragment
 	
 	private static final float WEIGHT_SUM 	= 2;
 	private static final float WEIGHT 		= 1;
-	
-	private static final String TAB_NO = "TabNo";
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -298,7 +296,11 @@ public class T_DynamicTab extends Fragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-	    menu.clear();
+	    if(!Env.isCurrentTab(getActivity(), 
+	    		tabParam.getActivityNo(), tabParam.getTabNo()))
+	    	return;
+	    //	
+        menu.clear();
         inflater.inflate(R.menu.dynamic_tab, menu);
     	//	Valid is Loaded
     	if(!m_IsLoadOk)
@@ -517,7 +519,7 @@ public class T_DynamicTab extends Fragment
     		mi_Add.setVisible(false);
     		mi_Edit.setVisible(false);
     		mi_Search.setVisible(false);
-    		//m_IsModifying = true;
+    		m_IsModifying = true;
     	} else if(mode == DELETED) {
     		mi_Cancel.setVisible(false);
     		mi_Save.setVisible(false);
@@ -525,7 +527,7 @@ public class T_DynamicTab extends Fragment
     		mi_Add.setVisible(true);
     		mi_Edit.setVisible(false);
     		mi_Search.setVisible(true);
-    		//m_IsModifying = false;
+    		m_IsModifying = false;
     	} else if(mode == SEE) {
     		mi_Cancel.setVisible(false);
     		mi_Save.setVisible(false);
@@ -533,7 +535,7 @@ public class T_DynamicTab extends Fragment
     		mi_Add.setVisible(true);
     		mi_Edit.setVisible(m_Record_ID != 0);
     		mi_Search.setVisible(true);
-    		//m_IsModifying = false;
+    		m_IsModifying = false;
     	}
     	//	Enable
     	enableView(mode);
@@ -612,12 +614,12 @@ public class T_DynamicTab extends Fragment
     	lockView(NEW);
     }
     
-    @Override
+    /*@Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         //	Set Tab No
         outState.putInt(TAB_NO, tabParam.getTabNo());
-    }
+    }*/
     
     /**
      * Handle menu items
@@ -641,9 +643,9 @@ public class T_DynamicTab extends Fragment
     private void changeMenuView(){
     	if(mi_Search != null){
             //	Lock View
-    		/*if(m_IsModifying)
+    		if(m_IsModifying)
     			lockView(MODIFY);
-    		else */if(m_Record_ID == 0)
+    		else if(m_Record_ID == 0)
         		lockView(NEW);
         	else
         		lockView(SEE);
