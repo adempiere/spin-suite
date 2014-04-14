@@ -19,7 +19,9 @@ import java.util.Date;
 import java.util.logging.Level;
 
 import org.spinsuite.model.X_Test;
+import org.spinsuite.util.GPSHandler;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.Msg;
 
 /**
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
@@ -65,6 +67,12 @@ public class TestProcess extends StdProcess {
 		test.setName("Now=" + new Date());
 		test.isActive();
 		test.saveEx();
+		GPSHandler gpsHand = new GPSHandler(getCtx());
+		gpsHand.startLocation();
+		Msg.toastMsg(getCtx(), " GPS Hander Up? " + gpsHand.isProviderEnabled());
+		Msg.toastMsg(getCtx(), " GPS Latitude = " + gpsHand.getLatitude() 
+				+ " GPS Longitude = " + gpsHand.getLongitude() 
+				+ " GPS Precision = " + gpsHand.getPrecision());
 		return "";
 	}
 

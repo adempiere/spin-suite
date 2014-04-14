@@ -191,12 +191,17 @@ public class V_Process extends FragmentActivity {
     	viewList = new ArrayList<ViewIndex>();
     	//	Title
     	getActionBar().setSubtitle(m_activityParam.getName());
-    	getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
     	//	
 		loadProcessInfo();
-		//	Load Drawer
-		loadDrawerOption();
+		//	Load Drawer Option
+		if(m_pInfo.isReport()){
+			getActionBar().setDisplayHomeAsUpEnabled(true);
+	        getActionBar().setHomeButtonEnabled(true);
+	    	//	
+			loadProcessInfo();
+			//	Load Drawer
+			loadDrawerOption();
+		}
 		//	Load Print Formats
 		loadPrintFormat();
 	}
