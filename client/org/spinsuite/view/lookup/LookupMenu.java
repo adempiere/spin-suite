@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -84,22 +84,22 @@ public class LookupMenu {
 		StringBuffer sql = new StringBuffer();
 		//	if Base Language
 		if(isBaseLanguage){
-			sql.append("SELECT m.SFA_Menu_ID, m.Name, m.Description, m.Action, m.ImageURL, " +
-					"m.SFA_Table_ID, m.WhereClause, m.GroupByClause, m.OrderByClause, " +
-					"tn.Parent_ID, m.IsSummary, m.DeploymentType, m.AD_Form_ID, m.SFA_Window_ID, m.AD_Process_ID, " +
+			sql.append("SELECT m.SPS_Menu_ID, m.Name, m.Description, m.Action, m.ImageURL, " +
+					"m.SPS_Table_ID, m.WhereClause, m.GroupByClause, m.OrderByClause, " +
+					"tn.Parent_ID, m.IsSummary, m.DeploymentType, m.AD_Form_ID, m.SPS_Window_ID, m.AD_Process_ID, " +
 					"m.ActivityMenu_ID, m.isReadWrite, m.IsInsertRecord, tn.SeqNo " +
-					"FROM SFA_Menu m " +
+					"FROM SPS_Menu m " +
 					"INNER JOIN AD_Tree t ON(t.AD_Table_ID = 53518) " +
-					"LEFT JOIN AD_TreeNode tn ON(tn.AD_Tree_ID = t.AD_Tree_ID AND tn.Node_ID = m.SFA_Menu_ID) ");
+					"LEFT JOIN AD_TreeNode tn ON(tn.AD_Tree_ID = t.AD_Tree_ID AND tn.Node_ID = m.SPS_Menu_ID) ");
 		} else {
-			sql.append("SELECT m.SFA_Menu_ID, mt.Name, mt.Description, m.Action, m.ImageURL, " +
-					"m.SFA_Table_ID, m.WhereClause, m.GroupByClause, m.OrderByClause, " +
-					"tn.Parent_ID, m.IsSummary, m.DeploymentType, m.AD_Form_ID, m.SFA_Window_ID, m.AD_Process_ID, " +
+			sql.append("SELECT m.SPS_Menu_ID, mt.Name, mt.Description, m.Action, m.ImageURL, " +
+					"m.SPS_Table_ID, m.WhereClause, m.GroupByClause, m.OrderByClause, " +
+					"tn.Parent_ID, m.IsSummary, m.DeploymentType, m.AD_Form_ID, m.SPS_Window_ID, m.AD_Process_ID, " +
 					"m.ActivityMenu_ID, m.isReadWrite, m.IsInsertRecord, tn.SeqNo " +
-					"FROM SFA_Menu m " +
+					"FROM SPS_Menu m " +
 					"INNER JOIN AD_Tree t ON(t.AD_Table_ID = 53518) " +
-					"INNER JOIN SFA_Menu_Trl mt ON(mt.SFA_Menu_ID = m.SFA_Menu_ID AND mt.AD_Language = '").append(language).append("') " +
-					"LEFT JOIN AD_TreeNode tn ON(tn.AD_Tree_ID = t.AD_Tree_ID AND tn.Node_ID = m.SFA_Menu_ID) ");
+					"INNER JOIN SPS_Menu_Trl mt ON(mt.SPS_Menu_ID = m.SPS_Menu_ID AND mt.AD_Language = '").append(language).append("') " +
+					"LEFT JOIN AD_TreeNode tn ON(tn.AD_Tree_ID = t.AD_Tree_ID AND tn.Node_ID = m.SPS_Menu_ID) ");
 		}
 		//	Where Clause
 		sql.append("WHERE m.MenuType = ? " +

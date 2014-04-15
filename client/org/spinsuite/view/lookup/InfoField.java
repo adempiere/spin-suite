@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -86,8 +86,8 @@ public class InfoField extends POInfoColumn {
 		Name = from.Name;
 		SelectionSeqNo = from.SelectionSeqNo;
 		SeqNo = from.SeqNo;
-		SFA_Column_ID = from.SFA_Column_ID;
-		SFA_Table_ID = from.SFA_Table_ID;
+		SPS_Column_ID = from.SPS_Column_ID;
+		SPS_Table_ID = from.SPS_Table_ID;
 		ValueMax = from.ValueMax;
 		ValueMin = from.ValueMin;
 		VFormat = from.VFormat;	
@@ -127,8 +127,8 @@ public class InfoField extends POInfoColumn {
 		Name = from.Name;
 		SelectionSeqNo = from.SelectionSeqNo;
 		SeqNo = from.SeqNo;
-		SFA_Column_ID = from.SFA_Column_ID;
-		SFA_Table_ID = from.SFA_Table_ID;
+		SPS_Column_ID = from.SPS_Column_ID;
+		SPS_Table_ID = from.SPS_Table_ID;
 		ValueMax = from.ValueMax;
 		ValueMin = from.ValueMin;
 		VFormat = from.VFormat;	
@@ -152,7 +152,7 @@ public class InfoField extends POInfoColumn {
 	/**	Sequence			*/
 	public int 			FieldSeqNo = 0;
 	/**	Field				*/
-	public int 			SFA_Field_ID = 0;
+	public int 			SPS_Field_ID = 0;
 	
 	@SuppressWarnings("rawtypes")
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -180,7 +180,7 @@ public class InfoField extends POInfoColumn {
 		dest.writeString(IsReadOnly? "Y": "N");
 		dest.writeString(IsSameLine? "Y": "N");
 		dest.writeInt(FieldSeqNo);
-		dest.writeInt(SFA_Field_ID);
+		dest.writeInt(SPS_Field_ID);
 	}
 	
 	@Override
@@ -198,7 +198,7 @@ public class InfoField extends POInfoColumn {
 		bool = parcel.readString();
 		IsSameLine = (bool != null && bool.equals("Y"));
 		FieldSeqNo = parcel.readInt();
-		SFA_Field_ID = parcel.readInt();
+		SPS_Field_ID = parcel.readInt();
 	}
 
 }

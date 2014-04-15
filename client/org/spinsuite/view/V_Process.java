@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -303,7 +303,7 @@ public class V_Process extends FragmentActivity {
 		//	App Type
 		String appType = null;
 		//	
-		if(item.getSFA_Menu_ID() == SHARE_FOR){
+		if(item.getSPS_Menu_ID() == SHARE_FOR){
 			new AlertDialog.Builder(this)
 	        .setSingleChoiceItems(new String[]{
 	        			getString(R.string.msg_SendAsPDF),
@@ -317,7 +317,7 @@ public class V_Process extends FragmentActivity {
 	                shareReport(selectedPosition, printData);
 	            }
 	        }).show();
-    	} else if(item.getSFA_Menu_ID() == EXPORT_TO_PDF){
+    	} else if(item.getSPS_Menu_ID() == EXPORT_TO_PDF){
     		try {
     			path = printData.createPDF();
     			appType = "pdf";
@@ -332,7 +332,7 @@ public class V_Process extends FragmentActivity {
 				msg = getResources().getString(R.string.msg_DocumentException) 
 							+ " " + e.getMessage();
 			}
-    	} else if(item.getSFA_Menu_ID() == EXPORT_TO_XLS){
+    	} else if(item.getSPS_Menu_ID() == EXPORT_TO_XLS){
     		try {
 				path = printData.createXLS();
 				appType = "vnd.ms-excel";
@@ -352,9 +352,9 @@ public class V_Process extends FragmentActivity {
 				msg = getResources().getString(R.string.msg_IOException) 
 							+ " " + e.getMessage();
 			}
-    	} else if(item.getSFA_Menu_ID() == EXPORT_TO_XML){
+    	} else if(item.getSPS_Menu_ID() == EXPORT_TO_XML){
     		
-    	} else if(item.getSFA_Menu_ID() == EXPORT_TO_HTML){
+    	} else if(item.getSPS_Menu_ID() == EXPORT_TO_HTML){
     		
     	}
 		//	Show Path
@@ -744,7 +744,7 @@ public class V_Process extends FragmentActivity {
 				"					LEFT JOIN AD_ReportView rv ON(rv.AD_ReportView_ID = p.AD_ReportView_ID) " +
 				"					LEFT JOIN AD_PrintFormat pft ON(pft.AD_PrintFormat_ID = p.AD_PrintFormat_ID) " +
 				"					WHERE p.AD_Process_ID = ? " +
-				"					AND pf.SFA_Table_ID = COALESCE(rv.SFA_Table_ID, pft.SFA_Table_ID)) " +
+				"					AND pf.SPS_Table_ID = COALESCE(rv.SPS_Table_ID, pft.SPS_Table_ID)) " +
 				"ORDER BY IsDefault DESC");
 		m_PrintFormats = DB.getKeyNamePairs(getApplicationContext(), 
 				sql, new String[]{"Y", String.valueOf(m_pInfo.getAD_Process_ID())});

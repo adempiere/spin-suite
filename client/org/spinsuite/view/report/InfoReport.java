@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -78,7 +78,7 @@ public class InfoReport {
 	/**	Description				*/
 	private String 		Description = null;
 	/**	Table					*/
-	private int 		SFA_Table_ID = 0;
+	private int 		SPS_Table_ID = 0;
 	/**	Table Name				*/
 	private String 		TableName = null;
 	/**	Where Clause			*/
@@ -245,8 +245,8 @@ public class InfoReport {
 	 * @return
 	 * @return int
 	 */
-	public int getSFA_Table_ID(){
-		return SFA_Table_ID;
+	public int getSPS_Table_ID(){
+		return SPS_Table_ID;
 	}
 	
 	/**
@@ -301,7 +301,7 @@ public class InfoReport {
 		if(isBaseLanguage){
 			sql.append("SELECT pc.AD_PrintColor_ID, pt.AD_PrintFont_ID, pf.AD_PrintFormat_ID, pp.AD_PrintPaper_ID, pft.AD_PrintTableFormat_ID, " + 
 					"rv.AD_ReportView_ID, pf.FooterMargin, pf.HeaderMargin, pf.IsDefault, pf.IsForm, pf.IsStandardHeaderFooter, pf.IsTableBased, " +
-					"pf.Name, pf.PrinterName, pf.Description, t.SFA_Table_ID, t.TableName, rv.WhereClause, rv.OrderByClause, " +
+					"pf.Name, pf.PrinterName, pf.Description, t.SPS_Table_ID, t.TableName, rv.WhereClause, rv.OrderByClause, " +
 					//	Format Items
 					"pfi.AD_PrintColor_ID, pfi.AD_PrintFont_ID, pfi.AD_PrintFormatChild_ID, pfi.AD_PrintFormatItem_ID, pfi.AD_PrintGraph_ID, " +
 					"pfi.ArcDiameter, pfi.BarcodeType, pfi.BelowColumn, pfi.FieldAlignmentType, COALESCE(pfi.FormatPattern, c.FormatPattern) FormatPattern, " +
@@ -316,8 +316,8 @@ public class InfoReport {
 					//	From
 					"FROM AD_PrintFormat pf " +
 					"INNER JOIN AD_PrintFormatItem pfi ON(pfi.AD_PrintFormat_ID = pf.AD_PrintFormat_ID) " +
-					"INNER JOIN SFA_Table t ON(t.SFA_Table_ID = pf.SFA_Table_ID) " +
-					"INNER JOIN SFA_Column c ON(c.SFA_Column_ID = pfi.SFA_Column_ID) " +
+					"INNER JOIN SPS_Table t ON(t.SPS_Table_ID = pf.SPS_Table_ID) " +
+					"INNER JOIN SPS_Column c ON(c.SPS_Column_ID = pfi.SPS_Column_ID) " +
 					"INNER JOIN AD_PrintPaper pp ON(pp.AD_PrintPaper_ID = pf.AD_PrintPaper_ID) " +
 					"INNER JOIN AD_PrintColor pc ON(pc.AD_PrintColor_ID = pf.AD_PrintColor_ID) " +
 					"INNER JOIN AD_PrintFont pt ON(pt.AD_PrintFont_ID = pf.AD_PrintFont_ID) " +
@@ -326,7 +326,7 @@ public class InfoReport {
 		} else {
 			sql.append("SELECT pc.AD_PrintColor_ID, pt.AD_PrintFont_ID, pf.AD_PrintFormat_ID, pp.AD_PrintPaper_ID, pft.AD_PrintTableFormat_ID, " +
 					"rv.AD_ReportView_ID, pf.FooterMargin, pf.HeaderMargin, pf.IsDefault, pf.IsForm, pf.IsStandardHeaderFooter, pf.IsTableBased, " +
-					"pf.Name, pf.PrinterName, pf.Description, t.SFA_Table_ID, t.TableName, rv.WhereClause, rv.OrderByClause, " +
+					"pf.Name, pf.PrinterName, pf.Description, t.SPS_Table_ID, t.TableName, rv.WhereClause, rv.OrderByClause, " +
 					//	Format Items
 					"pfi.AD_PrintColor_ID, pfi.AD_PrintFont_ID, pfi.AD_PrintFormatChild_ID, pfi.AD_PrintFormatItem_ID, pfi.AD_PrintGraph_ID, " +
 					"pfi.ArcDiameter, pfi.BarcodeType, pfi.BelowColumn, pfi.FieldAlignmentType, COALESCE(pfi.FormatPattern, c.FormatPattern) FormatPattern, " +
@@ -342,8 +342,8 @@ public class InfoReport {
 					"FROM AD_PrintFormat pf " +
 					"INNER JOIN AD_PrintFormatItem pfi ON(pfi.AD_PrintFormat_ID = pf.AD_PrintFormat_ID) " +
 					"INNER JOIN AD_PrintFormatItem_Trl pfit ON(pfit.AD_PrintFormatItem_ID = pfi.AD_PrintFormatItem_ID AND pfit.AD_Language = '").append(language).append("') " +
-					"INNER JOIN SFA_Table t ON(t.SFA_Table_ID = pf.SFA_Table_ID) " +
-					"INNER JOIN SFA_Column c ON(c.SFA_Column_ID = pfi.SFA_Column_ID) " +
+					"INNER JOIN SPS_Table t ON(t.SPS_Table_ID = pf.SPS_Table_ID) " +
+					"INNER JOIN SPS_Column c ON(c.SPS_Column_ID = pfi.SPS_Column_ID) " +
 					"INNER JOIN AD_PrintPaper pp ON(pp.AD_PrintPaper_ID = pf.AD_PrintPaper_ID) " +
 					"INNER JOIN AD_PrintColor pc ON(pc.AD_PrintColor_ID = pf.AD_PrintColor_ID) " +
 					"INNER JOIN AD_PrintFont pt ON(pt.AD_PrintFont_ID = pf.AD_PrintFont_ID) " +
@@ -391,7 +391,7 @@ public class InfoReport {
 			Name = rs.getString(i++);
 			PrinterName = rs.getString(i++);
 			Description = rs.getString(i++);
-			SFA_Table_ID = rs.getInt(i++);
+			SPS_Table_ID = rs.getInt(i++);
 			TableName = rs.getString(i++);
 			WhereClause = rs.getString(i++);
 			OrderByClause = rs.getString(i++);
@@ -809,10 +809,10 @@ public class InfoReport {
 	 * @return
 	 * @return int
 	 */
-	public int getSFA_Column_ID(int index) {
+	public int getSPS_Column_ID(int index) {
 		if(m_fields == null || index <= 0)
 			return 0;
-		return m_fields[index].SFA_Column_ID;
+		return m_fields[index].SPS_Column_ID;
 	}
 	
 	/**
@@ -822,10 +822,10 @@ public class InfoReport {
 	 * @return
 	 * @return int
 	 */
-	public int getSFA_Table_ID(int index) {
+	public int getSPS_Table_ID(int index) {
 		if(m_fields == null || index <= 0)
 			return 0;
-		return m_fields[index].SFA_Table_ID;
+		return m_fields[index].SPS_Table_ID;
 	}
 	
 	/**

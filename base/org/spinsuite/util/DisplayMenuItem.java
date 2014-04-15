@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -58,13 +58,13 @@ public class DisplayMenuItem implements Parcelable {
 	 * New Menu Item Manual
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/03/2014, 22:01:08
-	 * @param m_SFA_Menu_ID
+	 * @param m_SPS_Menu_ID
 	 * @param m_Name
 	 * @param m_Description
 	 * @param m_ImageURL
 	 */
-	public DisplayMenuItem(int m_SFA_Menu_ID, String m_Name, String m_Description, String m_ImageURL){
-		this.m_SFA_Menu_ID = m_SFA_Menu_ID;
+	public DisplayMenuItem(int m_SPS_Menu_ID, String m_Name, String m_Description, String m_ImageURL){
+		this.m_SPS_Menu_ID = m_SPS_Menu_ID;
 		this.m_Name = m_Name;
 		this.m_Description = m_Description;
 		this.m_ImageURL = m_ImageURL;
@@ -74,12 +74,12 @@ public class DisplayMenuItem implements Parcelable {
 	 * 
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/02/2014, 17:57:14
-	 * @param m_SFA_Menu_ID
+	 * @param m_SPS_Menu_ID
 	 * @param m_Name
 	 * @param m_Description
 	 * @param m_Action
 	 * @param m_ImageURL
-	 * @param m_SFA_Table_ID
+	 * @param m_SPS_Table_ID
 	 * @param m_WhereClause
 	 * @param m_GroupByClause
 	 * @param m_OrderByClause
@@ -92,17 +92,17 @@ public class DisplayMenuItem implements Parcelable {
 	 * @param m_IsInsertRecord
 	 * @param m_SeqNo
 	 */
-	public DisplayMenuItem(int m_SFA_Menu_ID, String m_Name, String m_Description, String m_Action, 
-			String m_ImageURL, int m_SFA_Table_ID, String m_WhereClause, String m_GroupByClause, 
+	public DisplayMenuItem(int m_SPS_Menu_ID, String m_Name, String m_Description, String m_Action, 
+			String m_ImageURL, int m_SPS_Table_ID, String m_WhereClause, String m_GroupByClause, 
 			String m_OrderByClause, int m_Parent_ID, boolean m_IsSummary, String m_DeploymentType, 
-			int m_AD_Form_ID, int m_SFA_Window_ID, int m_AD_Process_ID, int m_ActivityMenu_ID, 
+			int m_AD_Form_ID, int m_SPS_Window_ID, int m_AD_Process_ID, int m_ActivityMenu_ID, 
 			String m_isReadWrite, String m_IsInsertRecord, int m_SeqNo){
-		this.m_SFA_Menu_ID = m_SFA_Menu_ID;
+		this.m_SPS_Menu_ID = m_SPS_Menu_ID;
 		this.m_Name = m_Name;
 		this.m_Description = m_Description;
 		this.m_Action = m_Action;
 		this.m_ImageURL = m_ImageURL;
-		this.m_SFA_Table_ID = m_SFA_Table_ID;
+		this.m_SPS_Table_ID = m_SPS_Table_ID;
 		this.m_WhereClause = m_WhereClause;
 		this.m_GroupByClause = m_GroupByClause;
 		this.m_OrderByClause = m_OrderByClause;
@@ -110,7 +110,7 @@ public class DisplayMenuItem implements Parcelable {
 		this.m_IsSummary = m_IsSummary;
 		this.m_DeploymentType = m_DeploymentType;
 		this.m_AD_Form_ID = m_AD_Form_ID;
-		this.m_SFA_Window_ID = m_SFA_Window_ID;
+		this.m_SPS_Window_ID = m_SPS_Window_ID;
 		this.m_AD_Process_ID = m_AD_Process_ID;
 		this.m_ActivityMenu_ID = m_ActivityMenu_ID;
 		this.m_IsReadWrite = m_isReadWrite;
@@ -149,13 +149,13 @@ public class DisplayMenuItem implements Parcelable {
 	/**	Quick Action Menu	*/
 	private int 			m_QuickActionMenu_ID = 0;
 	/**	Menu ID				*/
-	private int				m_SFA_Menu_ID = 0;
+	private int				m_SPS_Menu_ID = 0;
 	/**	Sync Menu			*/
-	private int 			m_SFA_SyncMenu_ID = 0;
+	private int 			m_SPS_SyncMenu_ID = 0;
 	/**	Table				*/
-	private int 			m_SFA_Table_ID = 0;
+	private int 			m_SPS_Table_ID = 0;
 	/**	Window				*/
-	private int 			m_SFA_Window_ID = 0;
+	private int 			m_SPS_Window_ID = 0;
 	/**	Where				*/
 	private String			m_WhereClause = null;
 	/**	Menu ID				*/
@@ -230,10 +230,10 @@ public class DisplayMenuItem implements Parcelable {
 		parcel.writeString(m_Name);
 		parcel.writeString(m_OrderByClause);
 		parcel.writeInt(m_QuickActionMenu_ID);
-		parcel.writeInt(m_SFA_Menu_ID);
-		parcel.writeInt(m_SFA_SyncMenu_ID);
-		parcel.writeInt(m_SFA_Table_ID);
-		parcel.writeInt(m_SFA_Window_ID);
+		parcel.writeInt(m_SPS_Menu_ID);
+		parcel.writeInt(m_SPS_SyncMenu_ID);
+		parcel.writeInt(m_SPS_Table_ID);
+		parcel.writeInt(m_SPS_Window_ID);
 		parcel.writeString(m_WhereClause);
 		parcel.writeInt(m_Parent_ID);
 		parcel.writeInt(m_SeqNo);
@@ -256,10 +256,10 @@ public class DisplayMenuItem implements Parcelable {
 		m_Name = parcel.readString();
 		m_OrderByClause = parcel.readString();
 		m_QuickActionMenu_ID = parcel.readInt();
-		m_SFA_Menu_ID = parcel.readInt();
-		m_SFA_SyncMenu_ID = parcel.readInt();
-		m_SFA_Table_ID = parcel.readInt();
-		m_SFA_Window_ID = parcel.readInt();
+		m_SPS_Menu_ID = parcel.readInt();
+		m_SPS_SyncMenu_ID = parcel.readInt();
+		m_SPS_Table_ID = parcel.readInt();
+		m_SPS_Window_ID = parcel.readInt();
 		m_WhereClause = parcel.readString();
 		m_Parent_ID = parcel.readInt();
 		m_SeqNo = parcel.readInt();
@@ -282,18 +282,18 @@ public class DisplayMenuItem implements Parcelable {
 	/*public static DisplayMenuItem createFromMenu(DisplayMenuItem fromMenu){
 		DisplayMenuItem item = new DisplayMenuItem();
 		
-		item.setSFA_Menu_ID(item.getSFA_Menu_ID());
+		item.setSPS_Menu_ID(item.getSPS_Menu_ID());
 		item.setName(fromMenu.getName());
 		item.setAction(fromMenu.getAction());
 		item.setDescription(fromMenu.getDescription());
 		item.setImageURL(fromMenu.getImageURL());
-		item.setSFA_Table_ID(fromMenu.getSFA_Table_ID());
+		item.setSPS_Table_ID(fromMenu.getSPS_Table_ID());
 		item.setWhereClause(fromMenu.getWhereClause());
 		item.setOrderByClause(fromMenu.getOrderByClause());
 		item.setParent_ID(fromMenu.getParent_ID());
 		item.setIsSummary(fromMenu.getIsSummary());
 		item.setDeploymentType(fromMenu.getDeploymentType());
-		item.setSFA_Table_ID(fromMenu.getAD_Process_ID());
+		item.setSPS_Table_ID(fromMenu.getAD_Process_ID());
 		item.setIsReadWriteM(fromMenu.isReadWriteM());
 		
 		return item;
@@ -305,18 +305,18 @@ public class DisplayMenuItem implements Parcelable {
 	 * @return
 	 * @return int
 	 */
-	public int getSFA_Menu_ID(){
-		return m_SFA_Menu_ID;
+	public int getSPS_Menu_ID(){
+		return m_SPS_Menu_ID;
 	}
 	
 	/**
 	 * Set Menu ID
 	 * @author Yamel Senih 01/08/2012, 12:38:45
-	 * @param m_SFA_Menu_ID
+	 * @param m_SPS_Menu_ID
 	 * @return void
 	 */
-	public void setSFA_Menu_ID(int m_SFA_Menu_ID){
-		this.m_SFA_Menu_ID = m_SFA_Menu_ID;
+	public void setSPS_Menu_ID(int m_SPS_Menu_ID){
+		this.m_SPS_Menu_ID = m_SPS_Menu_ID;
 	}
 	
 	/**
@@ -405,8 +405,8 @@ public class DisplayMenuItem implements Parcelable {
 	 * @return
 	 * @return int
 	 */
-	public int getSFA_Table_ID(){
-		return m_SFA_Table_ID;
+	public int getSPS_Table_ID(){
+		return m_SPS_Table_ID;
 	}
 	
 	/**
@@ -415,8 +415,8 @@ public class DisplayMenuItem implements Parcelable {
 	 * @param m_AD_Table_ID
 	 * @return void
 	 */
-	public void setSFA_Table_ID(int m_AD_Table_ID){
-		this.m_SFA_Table_ID = m_AD_Table_ID;
+	public void setSPS_Table_ID(int m_AD_Table_ID){
+		this.m_SPS_Table_ID = m_AD_Table_ID;
 	}
 	
 	/**
@@ -666,11 +666,11 @@ public class DisplayMenuItem implements Parcelable {
 	/**
 	 * SEt Window Identifier
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/02/2014, 09:38:54
-	 * @param m_SFA_Window_ID
+	 * @param m_SPS_Window_ID
 	 * @return void
 	 */
-	public void setSFA_Window_ID(int m_SFA_Window_ID){
-		this.m_SFA_Window_ID = m_SFA_Window_ID;
+	public void setSPS_Window_ID(int m_SPS_Window_ID){
+		this.m_SPS_Window_ID = m_SPS_Window_ID;
 	}
 	
 	/**
@@ -679,8 +679,8 @@ public class DisplayMenuItem implements Parcelable {
 	 * @return
 	 * @return int
 	 */
-	public int getSFA_Window_ID(){
-		return m_SFA_Window_ID;
+	public int getSPS_Window_ID(){
+		return m_SPS_Window_ID;
 	}
 	
 	/**
@@ -715,10 +715,10 @@ public class DisplayMenuItem implements Parcelable {
 				+ ", m_IsReadWrite=" + m_IsReadWrite + ", m_IsSummary="
 				+ m_IsSummary + ", m_Name=" + m_Name + ", m_OrderByClause="
 				+ m_OrderByClause + ", m_QuickActionMenu_ID="
-				+ m_QuickActionMenu_ID + ", m_SFA_Menu_ID=" + m_SFA_Menu_ID
-				+ ", m_SFA_SyncMenu_ID=" + m_SFA_SyncMenu_ID
-				+ ", m_SFA_Table_ID=" + m_SFA_Table_ID + ", m_SFA_Window_ID="
-				+ m_SFA_Window_ID + ", m_WhereClause=" + m_WhereClause
+				+ m_QuickActionMenu_ID + ", m_SPS_Menu_ID=" + m_SPS_Menu_ID
+				+ ", m_SPS_SyncMenu_ID=" + m_SPS_SyncMenu_ID
+				+ ", m_SPS_Table_ID=" + m_SPS_Table_ID + ", m_SPS_Window_ID="
+				+ m_SPS_Window_ID + ", m_WhereClause=" + m_WhereClause
 				+ ", m_Parent_ID=" + m_Parent_ID + ", m_SeqNo=" + m_SeqNo + "]";
 	}
 }

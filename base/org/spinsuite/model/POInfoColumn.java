@@ -100,9 +100,9 @@ public class POInfoColumn implements Parcelable {
 	/**	Sequence		*/
 	public int 			SeqNo;
 	/**	Sync Column ID	*/
-	public int 			SFA_Column_ID;
+	public int 			SPS_Column_ID;
 	/**	Sync Table ID	*/
-	public int 			SFA_Table_ID;
+	public int 			SPS_Table_ID;
 	/**	Max Value		*/
 	public String		ValueMax;
 	/**	Min Value		*/
@@ -167,8 +167,8 @@ public class POInfoColumn implements Parcelable {
 		dest.writeString(Name);
 		dest.writeInt(SelectionSeqNo);
 		dest.writeInt(SeqNo);
-		dest.writeInt(SFA_Column_ID);
-		dest.writeInt(SFA_Table_ID);
+		dest.writeInt(SPS_Column_ID);
+		dest.writeInt(SPS_Table_ID);
 		dest.writeString(ValueMax);
 		dest.writeString(ValueMin);
 		dest.writeString(VFormat);
@@ -219,8 +219,8 @@ public class POInfoColumn implements Parcelable {
 		Name = parcel.readString();
 		SelectionSeqNo = parcel.readInt();
 		SeqNo = parcel.readInt();
-		SFA_Column_ID = parcel.readInt();
-		SFA_Table_ID = parcel.readInt();
+		SPS_Column_ID = parcel.readInt();
+		SPS_Table_ID = parcel.readInt();
 		ValueMax = parcel.readString();
 		ValueMin = parcel.readString();
 		VFormat = parcel.readString();
@@ -246,8 +246,8 @@ public class POInfoColumn implements Parcelable {
 				+ ", IsSelectionColumn=" + IsSelectionColumn
 				+ ", IsUpdateable=" + IsUpdateable + ", Name=" + Name
 				+ ", SelectionSeqNo=" + SelectionSeqNo + ", SeqNo=" + SeqNo
-				+ ", SFA_Column_ID=" + SFA_Column_ID + ", SFA_Table_ID="
-				+ SFA_Table_ID + ", ValueMax=" + ValueMax + ", ValueMin="
+				+ ", SPS_Column_ID=" + SPS_Column_ID + ", SPS_Table_ID="
+				+ SPS_Table_ID + ", ValueMax=" + ValueMax + ", ValueMin="
 				+ ValueMin + ", VFormat=" + VFormat + ", AD_Process_ID="
 				+ AD_Process_ID + ", AD_Form_ID=" + AD_Form_ID + "]";
 	}

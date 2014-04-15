@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -15,6 +15,8 @@
  *************************************************************************************/
 package org.spinsuite.view;
 
+import java.util.logging.Level;
+
 import org.spinsuite.adapters.MenuAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
@@ -22,6 +24,7 @@ import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.LoadActionMenu;
+import org.spinsuite.util.LogM;
 import org.spinsuite.view.lookup.LookupMenu;
 
 import android.app.ActionBar;
@@ -69,7 +72,7 @@ public class LV_Menu extends FragmentActivity {
     	if(param == null)
     		param = new ActivityParameter();
 		//	
-    	m_ActivityNo = param.getSFA_Menu_ID();
+    	m_ActivityNo = param.getSPS_Menu_ID();
 		ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         //	new Menu
@@ -77,7 +80,12 @@ public class LV_Menu extends FragmentActivity {
         //	
         menu = (ListView) findViewById(R.id.lv_Menu);
         //	Load Data
-        load();
+        try {
+        	load();
+        } catch(Exception e) {
+        	LogM.log(this, getClass(), Level.SEVERE, "Error:" + e.getMessage());
+        	finish();
+        }
         //	Action Menu Loader
         loadActionMenu = new LoadActionMenu(this, false);
         //	
@@ -87,7 +95,7 @@ public class LV_Menu extends FragmentActivity {
 			public void onItemClick(AdapterView<?> adapter, View arg1, int position,
 					long arg3) {
 				DisplayMenuItem item = (DisplayMenuItem) adapter.getItemAtPosition(position);
-				param.setParent_ID(item.getSFA_Menu_ID());
+				param.setParent_ID(item.getSPS_Menu_ID());
 				param.setActivityMenu_ID(item.getActivityMenu_ID());
 				//	Load from Action
 				currentOptionBundle = loadActionMenu.loadAction(item, param);

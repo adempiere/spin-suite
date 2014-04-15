@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -18,7 +18,6 @@ package org.spinsuite.process;
 import java.util.Date;
 import java.util.logging.Level;
 
-import org.spinsuite.model.X_Test;
 import org.spinsuite.util.GPSHandler;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
@@ -63,10 +62,6 @@ public class TestProcess extends StdProcess {
 	
 	@Override
 	protected String doIt() throws Exception {
-		X_Test test = new X_Test(getCtx(), getRecord_ID(), getConnection());
-		test.setName("Now=" + new Date());
-		test.isActive();
-		test.saveEx();
 		GPSHandler gpsHand = new GPSHandler(getCtx());
 		gpsHand.startLocation();
 		Msg.toastMsg(getCtx(), " GPS Hander Up? " + gpsHand.isProviderEnabled());

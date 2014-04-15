@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -21,7 +21,7 @@ import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.interfaces.I_FragmentSelectListener;
-import org.spinsuite.model.MSFATable;
+import org.spinsuite.model.MSPSTable;
 import org.spinsuite.model.PO;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
@@ -197,13 +197,13 @@ public class T_DynamicTab extends Fragment
      */
     protected boolean loadView(){
     	boolean ok = false;
-    	tabInfo = new InfoTab(getActivity(), tabParam.getSFA_Tab_ID(), conn);
+    	tabInfo = new InfoTab(getActivity(), tabParam.getSPS_Tab_ID(), conn);
 		//	Identifier
 		m_Record_ID = Env.getTabRecord_ID(getActivity(), 
 				tabParam.getActivityNo(), tabParam.getTabNo());
     	//	Get Model
 		if (model == null)
-    		model = MSFATable.getPO(getActivity(), m_Record_ID, tabInfo.getTableName(), conn);
+    		model = MSPSTable.getPO(getActivity(), m_Record_ID, tabInfo.getTableName(), conn);
 		if(model == null){
     		Msg.alertMsg(getActivity(), getResources().getString(R.string.msg_Error)
     				, getResources().getString(R.string.msg_Error));
@@ -322,8 +322,8 @@ public class T_DynamicTab extends Fragment
     	switch (item.getItemId()) {
         	case R.id.action_search:
             	Bundle bundle = new Bundle();
-            	bundle.putInt("SFA_Table_ID", tabInfo.getSFA_Table_ID());
-            	bundle.putInt("SFA_Tab_ID", tabInfo.getSFA_Tab_ID());
+            	bundle.putInt("SPS_Table_ID", tabInfo.getSPS_Table_ID());
+            	bundle.putInt("SPS_Tab_ID", tabInfo.getSPS_Tab_ID());
             	if(tabParam.getTabLevel() > 0){
             		FilterValue criteria = tabInfo.getCriteria(getActivity(), 
             				tabParam.getActivityNo(), tabParam.getParentTabNo());

@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -27,7 +27,7 @@ public class ActivityParameter implements Parcelable {
 	/**	From Record Identifier	*/
 	private int 			m_From_Record_ID = 0;
 	/**	From Table Identifier	*/
-	private int 			m_From_SFA_Table_ID = 0;
+	private int 			m_From_SPS_Table_ID = 0;
 	/**	Table Identifier		*/
 	private int 			m_AD_Table_ID = 0;
 	/**	Parent Identifier		*/
@@ -57,13 +57,13 @@ public class ActivityParameter implements Parcelable {
 	/**	Order By				*/
 	private String			m_OrderByClause = null;
 	/**	Menu ID					*/
-	private int				m_SFA_Menu_ID = 0;
+	private int				m_SPS_Menu_ID = 0;
 	/**	Sync Menu				*/
-	private int 			m_SFA_SyncMenu_ID = 0;
+	private int 			m_SPS_SyncMenu_ID = 0;
 	/**	Table					*/
-	private int 			m_SFA_Table_ID = 0;
+	private int 			m_SPS_Table_ID = 0;
 	/**	Window					*/
-	private int				m_SFA_Window_ID = 0;
+	private int				m_SPS_Window_ID = 0;
 	/**	Where					*/
 	private String			m_WhereClause = null;
 	/**	Window Number			*/
@@ -113,7 +113,7 @@ public class ActivityParameter implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(m_From_Record_ID);
-		dest.writeInt(m_From_SFA_Table_ID);
+		dest.writeInt(m_From_SPS_Table_ID);
 		dest.writeInt(m_AD_Table_ID);
 		dest.writeInt(m_Parent_ID);
 		dest.writeString(m_Action);
@@ -125,10 +125,10 @@ public class ActivityParameter implements Parcelable {
 		dest.writeString(m_GroupByClause);
 		dest.writeString(m_Name);
 		dest.writeString(m_OrderByClause);
-		dest.writeInt(m_SFA_Menu_ID);
-		dest.writeInt(m_SFA_SyncMenu_ID);
-		dest.writeInt(m_SFA_Table_ID);
-		dest.writeInt(m_SFA_Window_ID);
+		dest.writeInt(m_SPS_Menu_ID);
+		dest.writeInt(m_SPS_SyncMenu_ID);
+		dest.writeInt(m_SPS_Table_ID);
+		dest.writeInt(m_SPS_Window_ID);
 		dest.writeString(m_WhereClause);
 		dest.writeInt(m_Parent_ID);
 		//	Read Write
@@ -141,7 +141,7 @@ public class ActivityParameter implements Parcelable {
 	
 	public void readToParcel(Parcel parcel){
 		m_From_Record_ID = parcel.readInt();
-		m_From_SFA_Table_ID = parcel.readInt();
+		m_From_SPS_Table_ID = parcel.readInt();
 		m_AD_Table_ID = parcel.readInt();
 		m_Parent_ID = parcel.readInt();
 		m_Action = parcel.readString();
@@ -153,10 +153,10 @@ public class ActivityParameter implements Parcelable {
 		m_GroupByClause = parcel.readString();
 		m_Name = parcel.readString();
 		m_OrderByClause = parcel.readString();
-		m_SFA_Menu_ID = parcel.readInt();
-		m_SFA_SyncMenu_ID = parcel.readInt();
-		m_SFA_Table_ID = parcel.readInt();
-		m_SFA_Window_ID = parcel.readInt();
+		m_SPS_Menu_ID = parcel.readInt();
+		m_SPS_SyncMenu_ID = parcel.readInt();
+		m_SPS_Table_ID = parcel.readInt();
+		m_SPS_Window_ID = parcel.readInt();
 		m_WhereClause = parcel.readString();
 		m_Parent_ID = parcel.readInt();
 		//	Read Write
@@ -181,7 +181,7 @@ public class ActivityParameter implements Parcelable {
 		if(from == null)
 			return;
 		//	Set Values
-		setSFA_Table_ID(from.getSFA_Table_ID());
+		setSPS_Table_ID(from.getSPS_Table_ID());
 		setParent_ID(from.getParent_ID());
 		setAction(from.getAction());
 		setAD_Form_ID(from.getAD_Form_ID());
@@ -192,9 +192,9 @@ public class ActivityParameter implements Parcelable {
 		setGroupByClause(from.getGroupByClause());
 		setName(from.getName());
 		setOrderByClause(from.getOrderByClause());
-		setSFA_Menu_ID(from.getSFA_Menu_ID());
-		setSFA_Table_ID(from.getSFA_Table_ID());
-		setSFA_Window_ID(from.getSFA_Window_ID());
+		setSPS_Menu_ID(from.getSPS_Menu_ID());
+		setSPS_Table_ID(from.getSPS_Table_ID());
+		setSPS_Window_ID(from.getSPS_Window_ID());
 		setWhereClause(from.getWhereClause());
 		setParent_ID(from.getParent_ID());
 		//	Read Write
@@ -289,18 +289,18 @@ public class ActivityParameter implements Parcelable {
 	 * @return
 	 * @return int
 	 */
-	public int getSFA_Menu_ID(){
-		return m_SFA_Menu_ID;
+	public int getSPS_Menu_ID(){
+		return m_SPS_Menu_ID;
 	}
 	
 	/**
 	 * Set Menu ID
 	 * @author Yamel Senih 01/08/2012, 12:38:45
-	 * @param m_SFA_Menu_ID
+	 * @param m_SPS_Menu_ID
 	 * @return void
 	 */
-	public void setSFA_Menu_ID(int m_SFA_Menu_ID){
-		this.m_SFA_Menu_ID = m_SFA_Menu_ID;
+	public void setSPS_Menu_ID(int m_SPS_Menu_ID){
+		this.m_SPS_Menu_ID = m_SPS_Menu_ID;
 	}
 	
 	/**
@@ -369,8 +369,8 @@ public class ActivityParameter implements Parcelable {
 	 * @return
 	 * @return int
 	 */
-	public int getSFA_Table_ID(){
-		return m_SFA_Table_ID;
+	public int getSPS_Table_ID(){
+		return m_SPS_Table_ID;
 	}
 	
 	/**
@@ -379,8 +379,8 @@ public class ActivityParameter implements Parcelable {
 	 * @param m_AD_Table_ID
 	 * @return void
 	 */
-	public void setSFA_Table_ID(int m_AD_Table_ID){
-		this.m_SFA_Table_ID = m_AD_Table_ID;
+	public void setSPS_Table_ID(int m_AD_Table_ID){
+		this.m_SPS_Table_ID = m_AD_Table_ID;
 	}
 	
 	/**
@@ -389,18 +389,18 @@ public class ActivityParameter implements Parcelable {
 	 * @return
 	 * @return int
 	 */
-	public int getFrom_SFA_Table_ID(){
-		return m_From_SFA_Table_ID;
+	public int getFrom_SPS_Table_ID(){
+		return m_From_SPS_Table_ID;
 	}
 	
 	/**
 	 * Set From SFA Table
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/03/2014, 15:32:02
-	 * @param m_From_SFA_Table_ID
+	 * @param m_From_SPS_Table_ID
 	 * @return void
 	 */
-	public void setFrom_SFA_Table_ID(int m_From_SFA_Table_ID){
-		this.m_From_SFA_Table_ID = m_From_SFA_Table_ID;
+	public void setFrom_SPS_Table_ID(int m_From_SPS_Table_ID){
+		this.m_From_SPS_Table_ID = m_From_SPS_Table_ID;
 	}
 	
 	/**
@@ -630,11 +630,11 @@ public class ActivityParameter implements Parcelable {
 	/**
 	 * Set Window Identifier
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/02/2014, 09:32:39
-	 * @param m_SFA_Window_ID
+	 * @param m_SPS_Window_ID
 	 * @return void
 	 */
-	public void setSFA_Window_ID(int m_SFA_Window_ID){
-		this.m_SFA_Window_ID = m_SFA_Window_ID;
+	public void setSPS_Window_ID(int m_SPS_Window_ID){
+		this.m_SPS_Window_ID = m_SPS_Window_ID;
 	}
 	
 	/**
@@ -643,8 +643,8 @@ public class ActivityParameter implements Parcelable {
 	 * @return
 	 * @return int
 	 */
-	public int getSFA_Window_ID(){
-		return m_SFA_Window_ID;
+	public int getSPS_Window_ID(){
+		return m_SPS_Window_ID;
 	}
 	
 	/**
@@ -670,7 +670,7 @@ public class ActivityParameter implements Parcelable {
 	@Override
 	public String toString() {
 		return "ActivityParameter [m_From_Record_ID=" + m_From_Record_ID
-				+ ", m_From_SFA_Table_ID=" + m_From_SFA_Table_ID
+				+ ", m_From_SPS_Table_ID=" + m_From_SPS_Table_ID
 				+ ", m_AD_Table_ID=" + m_AD_Table_ID + ", m_Parent_ID="
 				+ m_Parent_ID + ", m_Action=" + m_Action + ", m_AD_Form_ID="
 				+ m_AD_Form_ID + ", m_AD_Process_ID=" + m_AD_Process_ID
@@ -680,9 +680,9 @@ public class ActivityParameter implements Parcelable {
 				+ ", m_IsInsertRecord=" + m_IsInsertRecord + ", m_IsReadWrite="
 				+ m_IsReadWrite + ", m_IsSummary=" + m_IsSummary + ", m_Name="
 				+ m_Name + ", m_OrderByClause=" + m_OrderByClause
-				+ ", m_SFA_Menu_ID=" + m_SFA_Menu_ID + ", m_SFA_SyncMenu_ID="
-				+ m_SFA_SyncMenu_ID + ", m_SFA_Table_ID=" + m_SFA_Table_ID
-				+ ", m_SFA_Window_ID=" + m_SFA_Window_ID + ", m_WhereClause="
+				+ ", m_SPS_Menu_ID=" + m_SPS_Menu_ID + ", m_SPS_SyncMenu_ID="
+				+ m_SPS_SyncMenu_ID + ", m_SPS_Table_ID=" + m_SPS_Table_ID
+				+ ", m_SPS_Window_ID=" + m_SPS_Window_ID + ", m_WhereClause="
 				+ m_WhereClause + ", m_ActivityNo=" + m_ActivityNo + "]";
 	}
 }

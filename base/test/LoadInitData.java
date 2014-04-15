@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -94,7 +94,7 @@ public class LoadInitData {
 				Env.setDB_Path(ctx, DB.DB_NAME);
 			}
 			try {
-				InputStream is = ctx.getResources().openRawResource(R.raw.sfandroid);
+				InputStream is = ctx.getResources().openRawResource(R.raw.spin_suite);
 				
 				File f = new File(Env.getDB_PathName(ctx));
 				
@@ -108,6 +108,8 @@ public class LoadInitData {
 				while ((available = is.read(buffer)) >= 0){
 					outputStream.write(buffer, 0, available);
 				}
+				//	Close
+				outputStream.close();
 				//	Set Conext
 				setContextTest();
 				

@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -39,11 +39,11 @@ public class InfoTab {
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 13:07:07
 	 * @param ctx
-	 * @param SFA_Tab_ID
+	 * @param SPS_Tab_ID
 	 * @param conn
 	 */
-	public InfoTab(Context ctx, int SFA_Tab_ID, DB conn){
-		loadInfoColumnField(ctx, SFA_Tab_ID, false, conn);
+	public InfoTab(Context ctx, int SPS_Tab_ID, DB conn){
+		loadInfoColumnField(ctx, SPS_Tab_ID, false, conn);
 	}
 	
 	/**
@@ -51,12 +51,12 @@ public class InfoTab {
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/03/2014, 23:29:52
 	 * @param ctx
-	 * @param SFA_Tab_ID
+	 * @param SPS_Tab_ID
 	 * @param onlySelectionColumn
 	 * @param conn
 	 */
-	public InfoTab(Context ctx, int SFA_Tab_ID, boolean onlySelectionColumn, DB conn){
-		loadInfoColumnField(ctx, SFA_Tab_ID, onlySelectionColumn, conn);
+	public InfoTab(Context ctx, int SPS_Tab_ID, boolean onlySelectionColumn, DB conn){
+		loadInfoColumnField(ctx, SPS_Tab_ID, onlySelectionColumn, conn);
 	}
 	
 	
@@ -65,10 +65,10 @@ public class InfoTab {
 	
 	/**	Tab Name					*/
 	private String 					TabName 			= null;
-	private int 					SFA_Tab_ID 			= 0;
-	private int 					SFA_Table_ID 		= 0;
+	private int 					SPS_Tab_ID 			= 0;
+	private int 					SPS_Table_ID 		= 0;
 	private String 					TableName 			= null;
-	private int 					SFA_Window_ID 		= 0;
+	private int 					SPS_Window_ID 		= 0;
 	private int 					AD_Process_ID 		= 0;
 	private String 					Classname 			= null;
 	private String 					TabDescription 		= null;
@@ -77,7 +77,7 @@ public class InfoTab {
 	private boolean 				TabIsReadOnly 		= false;
 	private String 					OrderByClause 		= null;
 	private int 					Parent_Column_ID 	= 0;
-	private int 					TabSFA_Column_ID 	= 0;
+	private int 					TabSPS_Column_ID 	= 0;
 	private int 					TabSeqNo 			= 0;
 	private int 					TabLevel 			= 0;
 	private String 					WhereClause 		= null;
@@ -122,8 +122,8 @@ public class InfoTab {
 	 * @return
 	 * @return int
 	 */
-	public int getTabSFA_Column_ID() {
-		return TabSFA_Column_ID;
+	public int getTabSPS_Column_ID() {
+		return TabSPS_Column_ID;
 	}
 	
 	/**
@@ -212,8 +212,8 @@ public class InfoTab {
 	 * @return
 	 * @return int
 	 */
-	public int getSFA_Window_ID() {
-		return SFA_Window_ID;
+	public int getSPS_Window_ID() {
+		return SPS_Window_ID;
 	}
 	
 	/**
@@ -222,8 +222,8 @@ public class InfoTab {
 	 * @return
 	 * @return int
 	 */
-	public int getSFA_Table_ID(){
-		return SFA_Table_ID;
+	public int getSPS_Table_ID(){
+		return SPS_Table_ID;
 	}
 	/**
 	 * Get Tab Identifier
@@ -231,8 +231,8 @@ public class InfoTab {
 	 * @return
 	 * @return int
 	 */
-	public int getSFA_Tab_ID(){
-		return SFA_Tab_ID;
+	public int getSPS_Tab_ID(){
+		return SPS_Tab_ID;
 	}
 	
 	/**
@@ -250,14 +250,14 @@ public class InfoTab {
 	 * Load Info Fields
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/03/2014, 23:27:15
 	 * @param ctx
-	 * @param SFA_Tab_ID
+	 * @param SPS_Tab_ID
 	 * @param onlySelection
 	 * @param p_Conn
 	 * @return void
 	 */
-	private void loadInfoColumnField(Context ctx, int SFA_Tab_ID, boolean onlySelection,DB p_Conn){
+	private void loadInfoColumnField(Context ctx, int SPS_Tab_ID, boolean onlySelection,DB p_Conn){
 		//	Is Mandatory
-		if(SFA_Tab_ID == 0)
+		if(SPS_Tab_ID == 0)
 			return;
 		//	
 		String language = Env.getAD_Language(ctx);
@@ -265,9 +265,9 @@ public class InfoTab {
 		StringBuffer sql = new StringBuffer();
 		//	if Base Language
 		if(isBaseLanguage){
-			sql.append("SELECT t.Name, t.SFA_Tab_ID, t.SFA_Table_ID,t.SFA_Window_ID, t.AD_Process_ID, tb.TableName, " +
+			sql.append("SELECT t.Name, t.SPS_Tab_ID, t.SPS_Table_ID,t.SPS_Window_ID, t.AD_Process_ID, tb.TableName, " +
 					"t.Classname,t.Description, t.Help, t.IsInsertRecord, t.IsReadOnly, t.OrderByClause, " +
-					"t.Parent_Column_ID,t.SFA_Column_ID, t.SeqNo, t.TabLevel, t.WhereClause, c.AD_Element_ID, " +
+					"t.Parent_Column_ID,t.SPS_Column_ID, t.SeqNo, t.TabLevel, t.WhereClause, c.AD_Element_ID, " +
 					"CASE WHEN f.AD_Reference_ID IS NOT NULL THEN f.AD_Reference_ID ELSE C.AD_Reference_ID END AD_Reference_ID, " +
 					"CASE WHEN f.AD_Reference_Value_ID IS NOT NULL THEN f.AD_Reference_Value_ID ELSE c.AD_Reference_Value_ID END AD_Reference_Value_ID, " +
 					"CASE WHEN f.AD_Val_Rule_ID IS NOT NULL THEN f.AD_Val_Rule_ID ELSE c.AD_Val_Rule_ID END AD_Val_Rule_ID, " +
@@ -275,20 +275,20 @@ public class InfoTab {
 					"c.FormatPattern, c.IsAlwaysUpdateable, c.IsCentrallyMaintained, c.IsEncrypted, c.IsIdentifier, c.IsKey, " +
 					"CASE WHEN f.IsMandatory = 'Y' THEN f.IsMandatory ELSE c.IsMandatory END IsMandatory, " +
 					"c.IsParent, c.IsSelectionColumn, c.IsUpdateable, c.SelectionSeqNo, " +
-					"c.SeqNo, c.SFA_Column_ID, c.SFA_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, c.AD_Process_ID, p.AD_Form_ID, " +
+					"c.SeqNo, c.SPS_Column_ID, c.SPS_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, c.AD_Process_ID, p.AD_Form_ID, " +
 					//	Fields
 					"f.Name, f.Description, f.Help, f.AD_FieldGroup_ID, f.DisplayLogic, f.IsActive, f.IsDisplayed, " +
-					"f.IsReadOnly, f.IsSameLine, f.SeqNo, f.SFA_Field_ID " +
+					"f.IsReadOnly, f.IsSameLine, f.SeqNo, f.SPS_Field_ID " +
 					//	From
-					"FROM SFA_Tab t " +
-					"INNER JOIN SFA_Table tb ON(tb.SFA_Table_ID = t.SFA_Table_ID) " +
-					"INNER JOIN SFA_Field f ON(f.SFA_Tab_ID = t.SFA_Tab_ID) " +
-					"INNER JOIN SFA_Column c ON(c.SFA_Column_ID = f.SFA_Column_ID) " +
+					"FROM SPS_Tab t " +
+					"INNER JOIN SPS_Table tb ON(tb.SPS_Table_ID = t.SPS_Table_ID) " +
+					"INNER JOIN SPS_Field f ON(f.SPS_Tab_ID = t.SPS_Tab_ID) " +
+					"INNER JOIN SPS_Column c ON(c.SPS_Column_ID = f.SPS_Column_ID) " +
 					"LEFT JOIN AD_Process p ON(p.AD_Process_ID = c.AD_Process_ID) ");
 		} else {
-			sql.append("SELECT tt.Name, t.SFA_Tab_ID, t.SFA_Table_ID,t.SFA_Window_ID, t.AD_Process_ID, tb.TableName, " +
+			sql.append("SELECT tt.Name, t.SPS_Tab_ID, t.SPS_Table_ID,t.SPS_Window_ID, t.AD_Process_ID, tb.TableName, " +
 					"t.Classname,tt.Description, tt.Help, t.IsInsertRecord, t.IsReadOnly, t.OrderByClause, " +
-					"t.Parent_Column_ID,t.SFA_Column_ID,t.SeqNo, t.TabLevel, t.WhereClause, c.AD_Element_ID, " +
+					"t.Parent_Column_ID,t.SPS_Column_ID,t.SeqNo, t.TabLevel, t.WhereClause, c.AD_Element_ID, " +
 					"CASE WHEN f.AD_Reference_ID IS NOT NULL THEN f.AD_Reference_ID ELSE C.AD_Reference_ID END AD_Reference_ID, " +
 					"CASE WHEN f.AD_Reference_Value_ID IS NOT NULL THEN f.AD_Reference_Value_ID ELSE c.AD_Reference_Value_ID END AD_Reference_Value_ID, " +
 					"CASE WHEN f.AD_Val_Rule_ID IS NOT NULL THEN f.AD_Val_Rule_ID ELSE c.AD_Val_Rule_ID END AD_Val_Rule_ID, " +
@@ -296,23 +296,23 @@ public class InfoTab {
 					"c.FormatPattern, c.IsAlwaysUpdateable, c.IsCentrallyMaintained, c.IsEncrypted, c.IsIdentifier, c.IsKey, " +
 					"CASE WHEN f.IsMandatory = 'Y' THEN f.IsMandatory ELSE c.IsMandatory END IsMandatory, " +
 					"c.IsParent, c.IsSelectionColumn, c.IsUpdateable, c.SelectionSeqNo, " +
-					"c.SeqNo, c.SFA_Column_ID, c.SFA_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, c.AD_Process_ID, p.AD_Form_ID, " +
+					"c.SeqNo, c.SPS_Column_ID, c.SPS_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, c.AD_Process_ID, p.AD_Form_ID, " +
 					//	Fields
 					"ft.Name, ft.Description, ft.Help, f.AD_FieldGroup_ID, f.DisplayLogic, f.IsActive, f.IsDisplayed, " +
-					"f.IsReadOnly, f.IsSameLine, f.SeqNo, f.SFA_Field_ID " +
+					"f.IsReadOnly, f.IsSameLine, f.SeqNo, f.SPS_Field_ID " +
 					//	From
-					"FROM SFA_Tab t " +
-					"INNER JOIN SFA_Table tb ON(tb.SFA_Table_ID = t.SFA_Table_ID) " +
-					"INNER JOIN SFA_Tab_Trl tt ON(tt.SFA_Tab_ID = t.SFA_Tab_ID AND tt.AD_Language = '").append(language).append("') " +
-					"INNER JOIN SFA_Field f ON(f.SFA_Tab_ID = t.SFA_Tab_ID) " +
-					"INNER JOIN SFA_Field_Trl ft ON(ft.SFA_Field_ID = f.SFA_Field_ID AND ft.AD_Language = '").append(language).append("') " +
-					"INNER JOIN SFA_Column c ON(c.SFA_Column_ID = f.SFA_Column_ID) " +
+					"FROM SPS_Tab t " +
+					"INNER JOIN SPS_Table tb ON(tb.SPS_Table_ID = t.SPS_Table_ID) " +
+					"INNER JOIN SPS_Tab_Trl tt ON(tt.SPS_Tab_ID = t.SPS_Tab_ID AND tt.AD_Language = '").append(language).append("') " +
+					"INNER JOIN SPS_Field f ON(f.SPS_Tab_ID = t.SPS_Tab_ID) " +
+					"INNER JOIN SPS_Field_Trl ft ON(ft.SPS_Field_ID = f.SPS_Field_ID AND ft.AD_Language = '").append(language).append("') " +
+					"INNER JOIN SPS_Column c ON(c.SPS_Column_ID = f.SPS_Column_ID) " +
 					"LEFT JOIN AD_Process p ON(p.AD_Process_ID = c.AD_Process_ID) ");
 		}
 		//	Where
 		sql.append("WHERE t.IsActive = 'Y' ")
 					.append("AND f.IsActive = 'Y' ")
-					.append("AND t.SFA_Tab_ID = ").append(SFA_Tab_ID).append(" ");
+					.append("AND t.SPS_Tab_ID = ").append(SPS_Tab_ID).append(" ");
 		//	Only Selection Columns
 		if(onlySelection)
 			sql.append("AND c.IsSelectionColumn = 'Y' ");
@@ -335,9 +335,9 @@ public class InfoTab {
 			int i = 0;
 			//	
 			TabName = rs.getString(i++);
-			this.SFA_Tab_ID = rs.getInt(i++);
-			SFA_Table_ID = rs.getInt(i++);
-			SFA_Window_ID = rs.getInt(i++);
+			this.SPS_Tab_ID = rs.getInt(i++);
+			SPS_Table_ID = rs.getInt(i++);
+			SPS_Window_ID = rs.getInt(i++);
 			AD_Process_ID = rs.getInt(i++);
 			TableName = rs.getString(i++);
 			Classname = rs.getString(i++);
@@ -347,7 +347,7 @@ public class InfoTab {
 			TabIsReadOnly = rs.getString(i++).equals("Y");
 			OrderByClause = rs.getString(i++);
 			Parent_Column_ID = rs.getInt(i++);
-			TabSFA_Column_ID = rs.getInt(i++);
+			TabSPS_Column_ID = rs.getInt(i++);
 			TabSeqNo = rs.getInt(i++);
 			TabLevel = rs.getInt(i++);
 			WhereClause = rs.getString(i++);
@@ -386,8 +386,8 @@ public class InfoTab {
 				iFieldColumn.IsUpdateable = (booleanValue != null && booleanValue.equals("Y"));
 				iFieldColumn.SelectionSeqNo = rs.getInt(i++);
 				iFieldColumn.SeqNo = rs.getInt(i++);
-				iFieldColumn.SFA_Column_ID= rs.getInt(i++);
-				iFieldColumn.SFA_Table_ID= rs.getInt(i++);
+				iFieldColumn.SPS_Column_ID= rs.getInt(i++);
+				iFieldColumn.SPS_Table_ID= rs.getInt(i++);
 				iFieldColumn.ValueMax = rs.getString(i++);
 				iFieldColumn.ValueMin = rs.getString(i++);
 				iFieldColumn.VFormat = rs.getString(i++);
@@ -408,7 +408,7 @@ public class InfoTab {
 				booleanValue = rs.getString(i++);
 				iFieldColumn.IsSameLine = (booleanValue != null && booleanValue.equals("Y"));
 				iFieldColumn.FieldSeqNo = rs.getInt(i++);
-				iFieldColumn.SFA_Field_ID = rs.getInt(i++);
+				iFieldColumn.SPS_Field_ID = rs.getInt(i++);
 				//	Add Field
 				columns.add(iFieldColumn);
 				//	Set index
@@ -793,10 +793,10 @@ public class InfoTab {
 	 * @return
 	 * @return int
 	 */
-	public int getSFA_Column_ID(int index) {
+	public int getSPS_Column_ID(int index) {
 		if(m_fields == null || index <= 0)
 			return 0;
-		return m_fields[index].SFA_Column_ID;
+		return m_fields[index].SPS_Column_ID;
 	}
 	
 	/**
@@ -806,10 +806,10 @@ public class InfoTab {
 	 * @return
 	 * @return int
 	 */
-	public int getSFA_Table_ID(int index) {
+	public int getSPS_Table_ID(int index) {
 		if(m_fields == null || index <= 0)
 			return 0;
-		return m_fields[index].SFA_Table_ID;
+		return m_fields[index].SPS_Table_ID;
 	}
 	
 	/**
@@ -936,10 +936,10 @@ public class InfoTab {
 	 * @return
 	 * @return int
 	 */
-	public int getSFA_Field_ID(int index) {
+	public int getSPS_Field_ID(int index) {
 		if(m_fields == null || index <= 0)
 			return 0;
-		return m_fields[index].SFA_Field_ID;
+		return m_fields[index].SPS_Field_ID;
 	}
 	
 	/**
@@ -970,16 +970,16 @@ public class InfoTab {
 	/**
 	 * Get field from column identifier
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/03/2014, 18:11:04
-	 * @param SFA_Column_ID
+	 * @param SPS_Column_ID
 	 * @return
 	 * @return VOInfoField
 	 */
-	public InfoField getFieldFromColumn(int SFA_Column_ID){
-		if(m_fields == null || SFA_Column_ID <= 0)
+	public InfoField getFieldFromColumn(int SPS_Column_ID){
+		if(m_fields == null || SPS_Column_ID <= 0)
 			return null;
 		//	Get from column
 		for(InfoField field : m_fields){
-			if(field.SFA_Column_ID == SFA_Column_ID)
+			if(field.SPS_Column_ID == SPS_Column_ID)
 				return field;
 		}
 		return null;
@@ -1052,15 +1052,15 @@ public class InfoTab {
 	@Override
 	public String toString() {
 		return "InfoTab [m_fields=" + Arrays.toString(m_fields) + ", TabName="
-				+ TabName + ", SFA_Tab_ID=" + SFA_Tab_ID + ", SFA_Table_ID="
-				+ SFA_Table_ID + ", TableName=" + TableName
-				+ ", SFA_Window_ID=" + SFA_Window_ID + ", AD_Process_ID="
+				+ TabName + ", SPS_Tab_ID=" + SPS_Tab_ID + ", SPS_Table_ID="
+				+ SPS_Table_ID + ", TableName=" + TableName
+				+ ", SPS_Window_ID=" + SPS_Window_ID + ", AD_Process_ID="
 				+ AD_Process_ID + ", Classname=" + Classname
 				+ ", TabDescription=" + TabDescription + ", TabHelp=" + TabHelp
 				+ ", TabIsInsertRecord=" + TabIsInsertRecord
 				+ ", TabIsReadOnly=" + TabIsReadOnly + ", OrderByClause="
 				+ OrderByClause + ", Parent_Column_ID=" + Parent_Column_ID
-				+ ", TabSFA_Column_ID=" + TabSFA_Column_ID + ", TabSeqNo="
+				+ ", TabSPS_Column_ID=" + TabSPS_Column_ID + ", TabSeqNo="
 				+ TabSeqNo + ", TabLevel=" + TabLevel + ", WhereClause="
 				+ WhereClause + ", filterValue=" + filterValue
 				+ ", m_parentFields=" + Arrays.toString(m_parentFields) + "]";

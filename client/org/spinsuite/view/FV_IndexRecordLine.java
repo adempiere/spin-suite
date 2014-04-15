@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -88,12 +88,12 @@ public class FV_IndexRecordLine extends ListFragment implements I_DynamicTab {
      */
     private boolean loadData(){
     	//	Instance Tab Information
-    	tabInfo = new InfoTab(getActivity(), tabParam.getSFA_Tab_ID(), null);
+    	tabInfo = new InfoTab(getActivity(), tabParam.getSPS_Tab_ID(), null);
     	FilterValue criteria = tabInfo.getCriteria(getActivity(), 
 				tabParam.getActivityNo(), tabParam.getParentTabNo());
     	//	Load SQL
     	if(lookup == null){
-    		lookup = new LookupDisplayType(getActivity(), tabParam.getSFA_Table_ID());
+    		lookup = new LookupDisplayType(getActivity(), tabParam.getSPS_Table_ID());
     		//	Get Where Clause
     		lookup.setCriteria(criteria.getWhereClause());
     	}

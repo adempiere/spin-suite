@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -155,7 +155,7 @@ public class ProcessInfo {
 	 */
 	public ProcessInfo(Context ctx, ActivityParameter activityParam, DB conn){
 		this(ctx, activityParam.getAD_Process_ID(), 
-				activityParam.getFrom_SFA_Table_ID(), 
+				activityParam.getFrom_SPS_Table_ID(), 
 				activityParam.getFrom_Record_ID(), activityParam.getActivityNo(), conn);
 	}
 	

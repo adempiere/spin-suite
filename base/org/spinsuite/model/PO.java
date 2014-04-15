@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -940,8 +940,8 @@ public abstract class PO {
 	 *  @param ctxInto context
 	 *  @return int
 	 */
-	protected int getSFA_Table_ID(){
-		return m_TableInfo.getSFA_Table_ID();
+	protected int getSPS_Table_ID(){
+		return m_TableInfo.getSPS_Table_ID();
 	}
 	
 	/**

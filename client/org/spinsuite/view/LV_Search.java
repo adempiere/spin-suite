@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -75,9 +75,9 @@ public class LV_Search extends FragmentActivity {
 	/**	Field					*/
 	private InfoField 				m_field = null;
 	/**	Table Identifier		*/
-	private int						m_SFA_Table_ID = 0;
+	private int						m_SPS_Table_ID = 0;
 	/**	Tab Identifier			*/
-	private int						m_SFA_Tab_ID = 0;
+	private int						m_SPS_Tab_ID = 0;
 	/**	Criteria				*/
 	private FilterValue				m_criteria = null;
 	/**	Old Criteria			*/
@@ -102,16 +102,16 @@ public class LV_Search extends FragmentActivity {
     	Bundle bundle = getIntent().getExtras();
 		if(bundle != null){
 			m_field = (InfoField)bundle.getParcelable("Field");
-			m_SFA_Table_ID = bundle.getInt("SFA_Table_ID");
-			m_SFA_Tab_ID = bundle.getInt("SFA_Tab_ID");
+			m_SPS_Table_ID = bundle.getInt("SPS_Table_ID");
+			m_SPS_Tab_ID = bundle.getInt("SPS_Tab_ID");
 			m_criteria = bundle.getParcelable("Criteria");
 		}
 		//	
 		llc_Search = (LinearLayout) findViewById(R.id.llc_Search);
 		lv_Search = (ListView) findViewById(R.id.lv_Search);
 		//	
-		if(m_SFA_Table_ID != 0)
-			lookup = new LookupDisplayType(getApplicationContext(), m_SFA_Table_ID);
+		if(m_SPS_Table_ID != 0)
+			lookup = new LookupDisplayType(getApplicationContext(), m_SPS_Table_ID);
 		else if(m_field != null)
 			lookup = new LookupDisplayType(getApplicationContext(), m_field);
 		//	
@@ -137,8 +137,8 @@ public class LV_Search extends FragmentActivity {
 	 * @return void
 	 */
 	private void loadConfig(){
-		if(m_SFA_Tab_ID != 0){
-			tabInfo = new InfoTab(getApplicationContext(), m_SFA_Tab_ID, true, null);
+		if(m_SPS_Tab_ID != 0){
+			tabInfo = new InfoTab(getApplicationContext(), m_SPS_Tab_ID, true, null);
 			viewList = new ArrayList<ViewIndex>();
 	    	//	Set Parameter
 	    	v_param = new LayoutParams(LayoutParams.MATCH_PARENT, 
@@ -279,7 +279,7 @@ public class LV_Search extends FragmentActivity {
 		//	Valid Configuration
 		MenuItem itemConfig = menu.findItem(R.id.action_config);
 		if(itemConfig != null) {
-			if(m_SFA_Tab_ID != 0)
+			if(m_SPS_Tab_ID != 0)
 				itemConfig.setVisible(true);
 			else 
 				itemConfig.setVisible(false);

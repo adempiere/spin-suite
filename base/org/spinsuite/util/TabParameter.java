@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -15,7 +15,7 @@
  *************************************************************************************/
 package org.spinsuite.util;
 
-import org.spinsuite.model.MSFATab;
+import org.spinsuite.model.MSPSTab;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -49,11 +49,11 @@ public class TabParameter implements Parcelable {
 	/**	Order By			*/
 	private String			m_OrderByClause = null;
 	/**	Tab					*/
-	private int 			m_SFA_Tab_ID = 0;
+	private int 			m_SPS_Tab_ID = 0;
 	/**	Table				*/
-	private int 			m_SFA_Table_ID = 0;
+	private int 			m_SPS_Table_ID = 0;
 	/**	Window				*/
-	private int				m_SFA_Window_ID = 0;
+	private int				m_SPS_Window_ID = 0;
 	/**	Where				*/
 	private String			m_WhereClause = null;
 	/**	Class Name			*/
@@ -89,7 +89,7 @@ public class TabParameter implements Parcelable {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/02/2014, 13:40:26
 	 * @param from
 	 */
-	public TabParameter(MSFATab from){
+	public TabParameter(MSPSTab from){
 		createFromMSFATab(from);
 	}
 	
@@ -111,9 +111,9 @@ public class TabParameter implements Parcelable {
 		dest.writeString(m_Name);
 		dest.writeString(m_Description);
 		dest.writeString(m_OrderByClause);
-		dest.writeInt(m_SFA_Tab_ID);
-		dest.writeInt(m_SFA_Table_ID);
-		dest.writeInt(m_SFA_Window_ID);
+		dest.writeInt(m_SPS_Tab_ID);
+		dest.writeInt(m_SPS_Table_ID);
+		dest.writeInt(m_SPS_Window_ID);
 		dest.writeString(m_WhereClause);
 		dest.writeString(m_Classname);
 	}
@@ -132,9 +132,9 @@ public class TabParameter implements Parcelable {
 		m_Name = parcel.readString();
 		m_Description = parcel.readString();
 		m_OrderByClause = parcel.readString();
-		m_SFA_Tab_ID = parcel.readInt();
-		m_SFA_Table_ID = parcel.readInt();
-		m_SFA_Window_ID = parcel.readInt();
+		m_SPS_Tab_ID = parcel.readInt();
+		m_SPS_Table_ID = parcel.readInt();
+		m_SPS_Window_ID = parcel.readInt();
 		m_WhereClause = parcel.readString();
 		m_Classname = parcel.readString();
 	}
@@ -145,7 +145,7 @@ public class TabParameter implements Parcelable {
 	 * @param fromMenu
 	 * @return
 	 */
-	public void createFromMSFATab(MSFATab from){
+	public void createFromMSFATab(MSPSTab from){
 		if(from == null)
 			return;
 		//	Set Values
@@ -159,9 +159,9 @@ public class TabParameter implements Parcelable {
 		m_Name = from.getName();
 		m_Description = from.getDescription();
 		m_OrderByClause = from.getOrderByClause();
-		m_SFA_Tab_ID = from.getSFA_Tab_ID();
-		m_SFA_Table_ID = from.getSFA_Table_ID();
-		m_SFA_Window_ID = from.getSFA_Window_ID();
+		m_SPS_Tab_ID = from.getSPS_Tab_ID();
+		m_SPS_Table_ID = from.getSPS_Table_ID();
+		m_SPS_Window_ID = from.getSPS_Window_ID();
 		m_WhereClause = from.getWhereClause();
 		m_Classname = from.getClassname();
 	}
@@ -282,18 +282,18 @@ public class TabParameter implements Parcelable {
 	 * @return
 	 * @return int
 	 */
-	public int getSFA_Tab_ID(){
-		return this.m_SFA_Tab_ID;
+	public int getSPS_Tab_ID(){
+		return this.m_SPS_Tab_ID;
 	}
 	
 	/**
 	 * Set Tab Identifier
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/02/2014, 23:41:00
-	 * @param m_SFA_Tab_ID
+	 * @param m_SPS_Tab_ID
 	 * @return void
 	 */
-	public void setSFA_Tab_ID(int m_SFA_Tab_ID){
-		this.m_SFA_Tab_ID = m_SFA_Tab_ID;
+	public void setSPS_Tab_ID(int m_SPS_Tab_ID){
+		this.m_SPS_Tab_ID = m_SPS_Tab_ID;
 	}
 	
 	/**
@@ -362,8 +362,8 @@ public class TabParameter implements Parcelable {
 	 * @return
 	 * @return int
 	 */
-	public int getSFA_Table_ID(){
-		return m_SFA_Table_ID;
+	public int getSPS_Table_ID(){
+		return m_SPS_Table_ID;
 	}
 	
 	/**
@@ -372,8 +372,8 @@ public class TabParameter implements Parcelable {
 	 * @param m_AD_Table_ID
 	 * @return void
 	 */
-	public void setSFA_Table_ID(int m_AD_Table_ID){
-		this.m_SFA_Table_ID = m_AD_Table_ID;
+	public void setSPS_Table_ID(int m_AD_Table_ID){
+		this.m_SPS_Table_ID = m_AD_Table_ID;
 	}
 	
 	/**
@@ -459,11 +459,11 @@ public class TabParameter implements Parcelable {
 	/**
 	 * Set Window Identifier
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/02/2014, 09:32:39
-	 * @param m_SFA_Window_ID
+	 * @param m_SPS_Window_ID
 	 * @return void
 	 */
-	public void setSFA_Window_ID(int m_SFA_Window_ID){
-		this.m_SFA_Window_ID = m_SFA_Window_ID;
+	public void setSPS_Window_ID(int m_SPS_Window_ID){
+		this.m_SPS_Window_ID = m_SPS_Window_ID;
 	}
 	
 	/**
@@ -472,8 +472,8 @@ public class TabParameter implements Parcelable {
 	 * @return
 	 * @return int
 	 */
-	public int getSFA_Window_ID(){
-		return m_SFA_Window_ID;
+	public int getSPS_Window_ID(){
+		return m_SPS_Window_ID;
 	}
 
 	/* (non-Javadoc)
@@ -487,9 +487,9 @@ public class TabParameter implements Parcelable {
 				+ m_AD_Process_ID + ", m_IsInsertRecord=" + m_IsInsertRecord
 				+ ", m_IsReadOnly=" + m_IsReadOnly + ", m_Name=" + m_Name
 				+ ", m_Description=" + m_Description + ", m_OrderByClause="
-				+ m_OrderByClause + ", m_SFA_Tab_ID=" + m_SFA_Tab_ID
-				+ ", m_SFA_Table_ID=" + m_SFA_Table_ID + ", m_SFA_Window_ID="
-				+ m_SFA_Window_ID + ", m_WhereClause=" + m_WhereClause
+				+ m_OrderByClause + ", m_SPS_Tab_ID=" + m_SPS_Tab_ID
+				+ ", m_SPS_Table_ID=" + m_SPS_Table_ID + ", m_SPS_Window_ID="
+				+ m_SPS_Window_ID + ", m_WhereClause=" + m_WhereClause
 				+ ", m_Classname=" + m_Classname + "]";
 	}
 }

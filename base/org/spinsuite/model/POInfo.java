@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -36,13 +36,13 @@ public class POInfo {
 	 * Get PO Information
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/02/2014, 22:00:49
 	 * @param ctx
-	 * @param p_SFA_Table_ID
+	 * @param p_SPS_Table_ID
 	 * @param conn
 	 * @return
 	 * @return POInfo
 	 */
-	public static POInfo getPOInfo(Context ctx, int p_SFA_Table_ID, DB conn){
-		POInfo retValue = new POInfo(ctx, p_SFA_Table_ID, conn);
+	public static POInfo getPOInfo(Context ctx, int p_SPS_Table_ID, DB conn){
+		POInfo retValue = new POInfo(ctx, p_SPS_Table_ID, conn);
 		return retValue;
 	}
 	
@@ -59,7 +59,7 @@ public class POInfo {
 	}
 	
 	/** Table_ID            	*/
-	private int					m_SFA_Table_ID = 0;
+	private int					m_SPS_Table_ID = 0;
 	/** Table Name          	*/
 	private String				m_TableName = null;
 	/**	Is Deleteable Record	*/
@@ -68,8 +68,8 @@ public class POInfo {
 	private POInfoColumn[]		m_columns = null;
 	/**	Count Column SQL		*/
 	private int					m_CountColumnSQL = 0;
-	public static final String	MT_TABLE = "SFA_Table";
-	public static final String	MT_COLUMN = "SFA_Column";
+	public static final String	MT_TABLE = "SPS_Table";
+	public static final String	MT_COLUMN = "SPS_Column";
 	
 	/**
 	 * Load Column Information
@@ -81,7 +81,7 @@ public class POInfo {
 	 */
 	private void loadInfoColumn(Context ctx, int AD_Table_ID, String tableName, DB p_Conn){
 		String sql = new String("SELECT " +
-				MT_TABLE + ".SFA_Table_ID, " +
+				MT_TABLE + ".SPS_Table_ID, " +
 				MT_TABLE + ".TableName," +
 				MT_TABLE + ".IsDeleteable, " +
 				MT_COLUMN + ".AD_Element_ID, " +
@@ -108,19 +108,19 @@ public class POInfo {
 				MT_COLUMN + ".Name, " +
 				MT_COLUMN + ".SelectionSeqNo, " +
 				MT_COLUMN + ".SeqNo, " +
-				MT_COLUMN + ".SFA_Column_ID, " +
-				MT_COLUMN + ".SFA_Table_ID, " +
+				MT_COLUMN + ".SPS_Column_ID, " +
+				MT_COLUMN + ".SPS_Table_ID, " +
 				MT_COLUMN + ".ValueMax, " +
 				MT_COLUMN + ".ValueMin, " +
 				MT_COLUMN + ".VFormat " +
 				//	From
-				"FROM SFA_Table " +
-				"INNER JOIN SFA_Column ON(SFA_Column.SFA_Table_ID = SFA_Table.SFA_Table_ID) " +
-				"WHERE SFA_Column.IsActive = 'Y' ");
+				"FROM SPS_Table " +
+				"INNER JOIN SPS_Column ON(SPS_Column.SPS_Table_ID = SPS_Table.SPS_Table_ID) " +
+				"WHERE SPS_Column.IsActive = 'Y' ");
 		if(AD_Table_ID != 0)
-			sql += "AND SFA_Table.SFA_Table_ID = " + AD_Table_ID;
+			sql += "AND SPS_Table.SPS_Table_ID = " + AD_Table_ID;
 		else
-			sql += "AND SFA_Table.TableName = '" + tableName + "' ";
+			sql += "AND SPS_Table.TableName = '" + tableName + "' ";
 		
 		sql += " ORDER BY " + MT_COLUMN + ".Name";
 		
@@ -138,7 +138,7 @@ public class POInfo {
 		rs = conn.querySQL(sql, null);
 		if(rs.moveToFirst()){
 			int i = 0;
-			m_SFA_Table_ID 	= rs.getInt(i++);
+			m_SPS_Table_ID 	= rs.getInt(i++);
 			m_TableName 	= rs.getString(i++);
 			m_IsDeleteable	= "Y".equals(rs.getString(i++));
 			do{
@@ -167,8 +167,8 @@ public class POInfo {
 				iColumn.Name = rs.getString(i++);
 				iColumn.SelectionSeqNo = rs.getInt(i++);
 				iColumn.SeqNo = rs.getInt(i++);
-				iColumn.SFA_Column_ID= rs.getInt(i++);
-				iColumn.SFA_Table_ID= rs.getInt(i++);
+				iColumn.SPS_Column_ID= rs.getInt(i++);
+				iColumn.SPS_Table_ID= rs.getInt(i++);
 				iColumn.ValueMax = rs.getString(i++);
 				iColumn.ValueMin = rs.getString(i++);
 				iColumn.VFormat = rs.getString(i++);
@@ -217,8 +217,8 @@ public class POInfo {
 	 * @return
 	 * @return int
 	 */
-	public int getSFA_Table_ID(){
-		return m_SFA_Table_ID;
+	public int getSPS_Table_ID(){
+		return m_SPS_Table_ID;
 	}
 	
 	/**

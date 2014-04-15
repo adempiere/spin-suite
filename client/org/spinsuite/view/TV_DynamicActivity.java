@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -117,7 +117,7 @@ public class TV_DynamicActivity extends TV_Base implements I_FragmentSelectListe
     		ActivityParameter actParam = param;
     		TabParameter tabParam = curFr.getTabParameter();
     		//	Set From Called
-        	actParam.setFrom_SFA_Table_ID(tabParam.getSFA_Table_ID());
+        	actParam.setFrom_SPS_Table_ID(tabParam.getSPS_Table_ID());
         	actParam.setFrom_Record_ID(Env.getTabRecord_ID(getApplicationContext(), m_ActivityNo, tabParam.getTabNo()));
         	//	Is From Activity
         	actParam.setIsFromActivity(true);
@@ -145,13 +145,13 @@ public class TV_DynamicActivity extends TV_Base implements I_FragmentSelectListe
     	DB conn = new DB(getApplicationContext());
     	DB.loadConnection(conn, DB.READ_ONLY);
 		Cursor rs = null;
-		rs = conn.querySQL("SELECT t.SFA_Tab_ID, t.SeqNo, t.TabLevel, " +
+		rs = conn.querySQL("SELECT t.SPS_Tab_ID, t.SeqNo, t.TabLevel, " +
 				"COALESCE(t.IsReadOnly, 'N'), t.Name, t.Description, " +
-				"t.OrderByClause, t.SFA_Table_ID, t.SFA_Window_ID, " +
+				"t.OrderByClause, t.SPS_Table_ID, t.SPS_Window_ID, " +
 				"t.WhereClause, t.Classname " +
-				"FROM SFA_Tab t " +
+				"FROM SPS_Tab t " +
 				"WHERE t.IsActive = 'Y' " +
-				"AND t.SFA_Window_ID = " + param.getSFA_Window_ID() + " " + 
+				"AND t.SPS_Window_ID = " + param.getSPS_Window_ID() + " " + 
 				"ORDER BY t.SeqNo", null);
 		if(rs.moveToFirst()){
 			//	Index
@@ -162,7 +162,7 @@ public class TV_DynamicActivity extends TV_Base implements I_FragmentSelectListe
 			do{
 				TabParameter tabParam = new TabParameter();
 				tabParam.setActivityNo(m_ActivityNo);
-				tabParam.setSFA_Tab_ID(rs.getInt(index++));
+				tabParam.setSPS_Tab_ID(rs.getInt(index++));
 	    		tabParam.setTabNo(tabNo++);
 	    		tabParam.setSeqNo(rs.getInt(index++));
 	    		tabParam.setTabLevel(rs.getInt(index++));
@@ -170,8 +170,8 @@ public class TV_DynamicActivity extends TV_Base implements I_FragmentSelectListe
 	    		tabParam.setName(rs.getString(index++));
 	    		tabParam.setDescription(rs.getString(index++));
 	    		tabParam.setOrderByClause(rs.getString(index++));
-	    		tabParam.setSFA_Table_ID(rs.getInt(index++));
-	    		tabParam.setSFA_Window_ID(rs.getInt(index++));
+	    		tabParam.setSPS_Table_ID(rs.getInt(index++));
+	    		tabParam.setSPS_Window_ID(rs.getInt(index++));
 	    		tabParam.setWhereClause(rs.getString(index++));
 	    		tabParam.setClassname(rs.getString(index++));
 	    		//	Parameter
@@ -180,7 +180,7 @@ public class TV_DynamicActivity extends TV_Base implements I_FragmentSelectListe
 	    		//bundle.putInt("Record_ID", m_Record_ID);
 	    		//	Set Context
 	    		Env.setContext(getApplicationContext(), m_ActivityNo, 
-	    				tabParam.getSFA_Tab_ID(), "SFA_Tab_ID", tabParam.getSFA_Tab_ID());
+	    				tabParam.getSPS_Tab_ID(), "SPS_Tab_ID", tabParam.getSPS_Tab_ID());
 	    		//	Set record Identifier
 	    		if(tabParam.getTabNo() == 0)
 	    			Env.setTabRecord_ID(getApplicationContext(), 
@@ -194,7 +194,7 @@ public class TV_DynamicActivity extends TV_Base implements I_FragmentSelectListe
 	    			Env.setParentTabRecord_ID(getApplicationContext(), 
 	    					tabParam.getActivityNo(), tabParam.getTabNo(), m_Record_ID);
 	    			addFagment(T_DynamicTabDetail.class, tabParam.getName(), tabParam.getName(), bundle);
-	    		} else if(tabParam.getSFA_Table_ID() != 0){	//	Add Dynamic Tab
+	    		} else if(tabParam.getSPS_Table_ID() != 0){	//	Add Dynamic Tab
 	    			addFagment(T_DynamicTab.class, tabParam.getName(), tabParam.getName(), bundle);
 	    		}
 	    		//	Add Custom Tab

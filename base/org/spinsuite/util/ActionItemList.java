@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -34,7 +34,6 @@ public class ActionItemList extends ActionItem {
 	 */
 	public ActionItemList(int actionId, String title, Drawable icon) {
 		super(actionId, title, icon);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -45,7 +44,6 @@ public class ActionItemList extends ActionItem {
 	 */
 	public ActionItemList(int actionId, String title) {
 		super(actionId, title);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -55,7 +53,6 @@ public class ActionItemList extends ActionItem {
 	 */
 	public ActionItemList(Drawable icon) {
 		super(icon);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -66,7 +63,6 @@ public class ActionItemList extends ActionItem {
 	 */
 	public ActionItemList(int actionId, Drawable icon) {
 		super(actionId, icon);
-		// TODO Auto-generated constructor stub
 	}
 	
 	/**

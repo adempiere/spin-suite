@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -48,10 +48,10 @@ public class LookupDisplayType {
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/03/2014, 16:20:14
 	 * @param ctx
-	 * @param m_SFA_Table_ID
+	 * @param m_SPS_Table_ID
 	 */
-	public LookupDisplayType(Context ctx, int m_SFA_Table_ID){
-		this.m_SFA_Table_ID = m_SFA_Table_ID;
+	public LookupDisplayType(Context ctx, int m_SPS_Table_ID){
+		this.m_SPS_Table_ID = m_SPS_Table_ID;
 		this.ctx = ctx;
 		m_InfoLookup = new InfoLookup();
 	}
@@ -59,7 +59,7 @@ public class LookupDisplayType {
 	/**	Field					*/
 	private InfoField 		m_field 				= null;
 	/**	Table					*/
-	private int				m_SFA_Table_ID 			= 0;
+	private int				m_SPS_Table_ID 			= 0;
 	/**	Context					*/
 	private Context			ctx 					= null;
 	/**	Optional where clause	*/
@@ -82,7 +82,7 @@ public class LookupDisplayType {
 		if(m_IsLoaded)
 			return m_SQL;
 		//	
-		if(m_SFA_Table_ID == 0){ 
+		if(m_SPS_Table_ID == 0){ 
 			if(m_field.DisplayType == DisplayType.TABLE_DIR){
 				m_SQL = loadSQLTableDirect();
 				LogM.log(ctx, getClass(), Level.FINE, "SQL=" + m_SQL);
@@ -157,8 +157,8 @@ public class LookupDisplayType {
 		Cursor rs = null;
 		//	Query
 		rs = conn.querySQL("SELECT c.ColumnName, c.AD_Reference_ID " +
-				"FROM SFA_Table t " +
-				"INNER JOIN SFA_Column c ON(c.SFA_Table_ID = t.SFA_Table_ID) " +
+				"FROM SPS_Table t " +
+				"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) " +
 				"WHERE t.TableName = ? " +
 				"AND c.IsIdentifier = ? ORDER BY SeqNo", new String[]{tableName, "Y"});
 		//	First
@@ -214,9 +214,9 @@ public class LookupDisplayType {
 		rs = conn.querySQL("SELECT t.TableName, ck.ColumnName, cd.ColumnName, " +
 				"rl.IsValueDisplayed, rl.WhereClause, rl.OrderByClause " +
 				"FROM AD_Ref_Table rl " +
-				"INNER JOIN SFA_Table t ON(t.AD_Table_ID = rl.AD_Table_ID) " +
-				"INNER JOIN SFA_Column ck ON(ck.AD_Column_ID = rl.AD_Key) " +
-				"INNER JOIN SFA_Column cd ON(cd.AD_Column_ID = rl.AD_Display) " +
+				"INNER JOIN SPS_Table t ON(t.AD_Table_ID = rl.AD_Table_ID) " +
+				"INNER JOIN SPS_Column ck ON(ck.AD_Column_ID = rl.AD_Key) " +
+				"INNER JOIN SPS_Column cd ON(cd.AD_Column_ID = rl.AD_Display) " +
 				"WHERE rl.AD_Reference_ID = " + m_field.AD_Reference_Value_ID, null);
 		
 		if(rs.moveToFirst()){
@@ -302,11 +302,11 @@ public class LookupDisplayType {
 		Cursor rs = null;
 		//	Query
 		rs = conn.querySQL("SELECT t.TableName, c.ColumnName " +
-				"FROM SFA_Table t " +
-				"INNER JOIN SFA_Column c ON(c.SFA_Table_ID = t.SFA_Table_ID) " +
-				"WHERE t.SFA_Table_ID = ? " +
+				"FROM SPS_Table t " +
+				"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) " +
+				"WHERE t.SPS_Table_ID = ? " +
 				"AND c.IsIdentifier = ? " +
-				"ORDER BY SeqNo", new String[]{String.valueOf(m_SFA_Table_ID), "Y"});
+				"ORDER BY SeqNo", new String[]{String.valueOf(m_SPS_Table_ID), "Y"});
 		
 		boolean isFirst = true;
 		if(rs.moveToFirst()){
@@ -359,8 +359,8 @@ public class LookupDisplayType {
 
 	@Override
 	public String toString() {
-		return "LookupDisplayType [m_field=" + m_field + ", m_SFA_Table_ID="
-				+ m_SFA_Table_ID + ", ctx=" + ctx + ", m_optionalWhereClause="
+		return "LookupDisplayType [m_field=" + m_field + ", m_SPS_Table_ID="
+				+ m_SPS_Table_ID + ", ctx=" + ctx + ", m_optionalWhereClause="
 				+ m_optionalWhereClause + ", m_InfoLookup=" + m_InfoLookup
 				+ ", m_IsLoaded=" + m_IsLoaded + ", m_SQL=" + m_SQL + "]";
 	}

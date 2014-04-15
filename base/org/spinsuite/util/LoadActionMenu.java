@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Product: SFAndroid (Sales Force Mobile)                                           *
+ * Product: Spin-Suite (Making your Business Spin)                                   *
  * This program is free software; you can redistribute it and/or modify it           *
  * under the terms version 2 of the GNU General Public License as published          *
  * by the Free Software Foundation. This program is distributed in the hope          *
@@ -102,7 +102,7 @@ public class LoadActionMenu {
 			} else if(item.getDeploymentType().equals(DisplayMenuItem.DEPLOYMENTTYPE_List)
 					|| item.getDeploymentType().equals(DisplayMenuItem.DEPLOYMENTTYPE_ListWithQuickAction)) {
 				//	Start Search
-				bundle.putInt("SFA_Table_ID", item.getSFA_Table_ID());
+				bundle.putInt("SPS_Table_ID", item.getSPS_Table_ID());
             	intent = new Intent(activity, LV_Search.class);
     			intent.putExtras(bundle);
     			//	Start with result
@@ -139,7 +139,7 @@ public class LoadActionMenu {
 		//	Set Activity No
 		actParam.setActivityNo(tabParam.getActivityNo());
 		//	
-		actParam.setFrom_SFA_Table_ID(tabParam.getSFA_Table_ID());
+		actParam.setFrom_SPS_Table_ID(tabParam.getSPS_Table_ID());
     	actParam.setFrom_Record_ID(Env.getTabRecord_ID(activity, tabParam.getActivityNo(), tabParam.getTabNo()));
     	//	Is From Activity
     	actParam.setIsFromActivity(true);
