@@ -129,8 +129,8 @@ public class LoadInitData {
 	public void setContextTest(){
 		//	Set Context Default Values for Demo
 		Env.setIsEnvLoad(ctx, true);
-		Env.setContext(ctx, "#SUser", "Demo");
-		Env.setContext(ctx, "#SPass", "Demo");
+		Env.setContext(ctx, "#SUser", "SuperUser");
+		Env.setContext(ctx, "#SPass", "System");
 		Env.setSavePass(ctx, true);
 		Env.setAutomaticVisitClosing(ctx, true);
 		Env.setContext(ctx, KEY_POS_TAB, 1);
