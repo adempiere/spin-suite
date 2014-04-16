@@ -72,6 +72,7 @@ public class TV_DynamicActivity extends TV_Base implements I_FragmentSelectListe
         //	Option
         loadActionMenu = new LoadActionMenu(this, true);
     	//	Title
+        getActionBar().setTitle(null);
     	getActionBar().setSubtitle(param.getName());
     	//	
     	//	Load Option List

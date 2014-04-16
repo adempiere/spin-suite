@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import org.spinsuite.adapters.MenuAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
+import org.spinsuite.login.Login;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
@@ -32,6 +33,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -136,5 +139,16 @@ public class LV_Menu extends FragmentActivity {
 	    	}
     	}
     }
+	
+	@Override
+	 public boolean onOptionsItemSelected(MenuItem item) {
+	     switch (item.getItemId()) {
+	        case android.R.id.home:
+	        	NavUtils.navigateUpTo(this, new Intent(this, Login.class));
+	        return true;
+	        default:
+	        	return super.onOptionsItemSelected(item);
+	     }
+	}
 	
 }
