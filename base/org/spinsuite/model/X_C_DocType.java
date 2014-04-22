@@ -32,7 +32,7 @@ public class X_C_DocType extends PO implements I_C_DocType
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_C_DocType (Context ctx, int C_DocType_ID, DB conn)

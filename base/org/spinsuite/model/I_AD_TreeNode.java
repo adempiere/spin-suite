@@ -31,8 +31,8 @@ public interface I_AD_TreeNode
     /** TableName=AD_TreeNode */
     public static final String Table_Name = "AD_TreeNode";
 
-    /** SPS_Table_ID=50069 */
-    public static final int SPS_Table_ID = 50069;
+    /** SPS_Table_ID=1000583 */
+    public static final int SPS_Table_ID = 1000583;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */

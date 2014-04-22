@@ -31,8 +31,8 @@ public interface I_SPS_Field
     /** TableName=SPS_Field */
     public static final String Table_Name = "SPS_Field";
 
-    /** SPS_Table_ID=50140 */
-    public static final int SPS_Table_ID = 50140;
+    /** SPS_Table_ID=1000836 */
+    public static final int SPS_Table_ID = 1000836;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */
@@ -44,6 +44,19 @@ public interface I_SPS_Field
 	  * Client/Tenant for this installation.
 	  */
 	public int getAD_Client_ID();
+
+    /** Column name AD_FieldGroup_ID */
+    public static final String COLUMNNAME_AD_FieldGroup_ID = "AD_FieldGroup_ID";
+
+	/** Set Field Group.
+	  * Logical grouping of fields
+	  */
+	public void setAD_FieldGroup_ID (int AD_FieldGroup_ID);
+
+	/** Get Field Group.
+	  * Logical grouping of fields
+	  */
+	public int getAD_FieldGroup_ID();
 
     /** Column name AD_Org_ID */
     public static final String COLUMNNAME_AD_Org_ID = "AD_Org_ID";
@@ -57,6 +70,45 @@ public interface I_SPS_Field
 	  * Organizational entity within client
 	  */
 	public int getAD_Org_ID();
+
+    /** Column name AD_Reference_ID */
+    public static final String COLUMNNAME_AD_Reference_ID = "AD_Reference_ID";
+
+	/** Set Reference.
+	  * System Reference and Validation
+	  */
+	public void setAD_Reference_ID (int AD_Reference_ID);
+
+	/** Get Reference.
+	  * System Reference and Validation
+	  */
+	public int getAD_Reference_ID();
+
+    /** Column name AD_Reference_Value_ID */
+    public static final String COLUMNNAME_AD_Reference_Value_ID = "AD_Reference_Value_ID";
+
+	/** Set Reference Key.
+	  * Required to specify, if data type is Table or List
+	  */
+	public void setAD_Reference_Value_ID (int AD_Reference_Value_ID);
+
+	/** Get Reference Key.
+	  * Required to specify, if data type is Table or List
+	  */
+	public int getAD_Reference_Value_ID();
+
+    /** Column name AD_Val_Rule_ID */
+    public static final String COLUMNNAME_AD_Val_Rule_ID = "AD_Val_Rule_ID";
+
+	/** Set Dynamic Validation.
+	  * Dynamic Validation Rule
+	  */
+	public void setAD_Val_Rule_ID (int AD_Val_Rule_ID);
+
+	/** Get Dynamic Validation.
+	  * Dynamic Validation Rule
+	  */
+	public int getAD_Val_Rule_ID();
 
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
@@ -74,6 +126,21 @@ public interface I_SPS_Field
 	  */
 	public int getCreatedBy();
 
+    /** Column name DefaultValue */
+    public static final String COLUMNNAME_DefaultValue = "DefaultValue";
+
+	/** Set Default Logic.
+	  * Default value hierarchy, separated by ;
+
+	  */
+	public void setDefaultValue (String DefaultValue);
+
+	/** Get Default Logic.
+	  * Default value hierarchy, separated by ;
+
+	  */
+	public String getDefaultValue();
+
     /** Column name Description */
     public static final String COLUMNNAME_Description = "Description";
 
@@ -86,6 +153,19 @@ public interface I_SPS_Field
 	  * Optional short description of the record
 	  */
 	public String getDescription();
+
+    /** Column name DisplayLogic */
+    public static final String COLUMNNAME_DisplayLogic = "DisplayLogic";
+
+	/** Set Display Logic.
+	  * If the Field is displayed, the result determines if the field is actually displayed
+	  */
+	public void setDisplayLogic (String DisplayLogic);
+
+	/** Get Display Logic.
+	  * If the Field is displayed, the result determines if the field is actually displayed
+	  */
+	public String getDisplayLogic();
 
     /** Column name EntityType */
     public static final String COLUMNNAME_EntityType = "EntityType";
@@ -128,6 +208,19 @@ public interface I_SPS_Field
 	  */
 	public boolean isActive();
 
+    /** Column name IsCentrallyMaintained */
+    public static final String COLUMNNAME_IsCentrallyMaintained = "IsCentrallyMaintained";
+
+	/** Set Centrally maintained.
+	  * Information maintained in System Element table
+	  */
+	public void setIsCentrallyMaintained (boolean IsCentrallyMaintained);
+
+	/** Get Centrally maintained.
+	  * Information maintained in System Element table
+	  */
+	public boolean isCentrallyMaintained();
+
     /** Column name IsDisplayed */
     public static final String COLUMNNAME_IsDisplayed = "IsDisplayed";
 
@@ -140,6 +233,32 @@ public interface I_SPS_Field
 	  * Determines, if this field is displayed
 	  */
 	public boolean isDisplayed();
+
+    /** Column name IsEncrypted */
+    public static final String COLUMNNAME_IsEncrypted = "IsEncrypted";
+
+	/** Set Encrypted.
+	  * Display or Storage is encrypted
+	  */
+	public void setIsEncrypted (boolean IsEncrypted);
+
+	/** Get Encrypted.
+	  * Display or Storage is encrypted
+	  */
+	public boolean isEncrypted();
+
+    /** Column name IsMandatory */
+    public static final String COLUMNNAME_IsMandatory = "IsMandatory";
+
+	/** Set Mandatory.
+	  * Data entry is required in this column
+	  */
+	public void setIsMandatory (String IsMandatory);
+
+	/** Get Mandatory.
+	  * Data entry is required in this column
+	  */
+	public String getIsMandatory();
 
     /** Column name IsReadOnly */
     public static final String COLUMNNAME_IsReadOnly = "IsReadOnly";
@@ -198,10 +317,10 @@ public interface I_SPS_Field
     /** Column name SPS_Column_ID */
     public static final String COLUMNNAME_SPS_Column_ID = "SPS_Column_ID";
 
-	/** Set Synchronizing Column	  */
+	/** Set Mobile Column	  */
 	public void setSPS_Column_ID (int SPS_Column_ID);
 
-	/** Get Synchronizing Column	  */
+	/** Get Mobile Column	  */
 	public int getSPS_Column_ID();
 
     /** Column name SPS_Field_ID */

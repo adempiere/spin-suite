@@ -32,7 +32,7 @@ public class X_AD_PrintColor extends PO implements I_AD_PrintColor
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_AD_PrintColor (Context ctx, int AD_PrintColor_ID, DB conn)

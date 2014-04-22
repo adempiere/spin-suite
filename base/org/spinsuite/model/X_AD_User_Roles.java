@@ -31,7 +31,7 @@ public class X_AD_User_Roles extends PO implements I_AD_User_Roles
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_AD_User_Roles (Context ctx, int AD_User_Roles_ID, DB conn)

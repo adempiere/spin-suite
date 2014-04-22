@@ -32,7 +32,7 @@ public class X_SPS_Tab extends PO implements I_SPS_Tab
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_SPS_Tab (Context ctx, int SPS_Tab_ID, DB conn)
@@ -43,8 +43,11 @@ public class X_SPS_Tab extends PO implements I_SPS_Tab
 			setEntityType (null);
 // ECA01
 			setName (null);
+			setSeqNo (0);
+// @SQL=SELECT COALESCE(MAX(SeqNo),0)+10 AS DefaultValue FROM SPS_Tab WHERE SPS_Window_ID=@SPS_Window_ID@
 			setSPS_Tab_ID (0);
 			setSPS_Window_ID (0);
+			setTabLevel (0);
         } */
     }
 
@@ -69,6 +72,29 @@ public class X_SPS_Tab extends PO implements I_SPS_Tab
       return sb.toString();
     }
 
+	/** Set Process.
+		@param AD_Process_ID 
+		Process or Report
+	  */
+	public void setAD_Process_ID (int AD_Process_ID)
+	{
+		if (AD_Process_ID < 1) 
+			set_Value (COLUMNNAME_AD_Process_ID, null);
+		else 
+			set_Value (COLUMNNAME_AD_Process_ID, Integer.valueOf(AD_Process_ID));
+	}
+
+	/** Get Process.
+		@return Process or Report
+	  */
+	public int getAD_Process_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_AD_Process_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set Classname.
 		@param Classname 
 		Java Classname
@@ -84,23 +110,6 @@ public class X_SPS_Tab extends PO implements I_SPS_Tab
 	public String getClassname () 
 	{
 		return (String)get_Value(COLUMNNAME_Classname);
-	}
-
-	/** Set Copy From.
-		@param CopyFrom 
-		Copy From Record
-	  */
-	public void setCopyFrom (String CopyFrom)
-	{
-		set_Value (COLUMNNAME_CopyFrom, CopyFrom);
-	}
-
-	/** Get Copy From.
-		@return Copy From Record
-	  */
-	public String getCopyFrom () 
-	{
-		return (String)get_Value(COLUMNNAME_CopyFrom);
 	}
 
 	/** Set Description.
@@ -174,6 +183,30 @@ public class X_SPS_Tab extends PO implements I_SPS_Tab
 		return (String)get_Value(COLUMNNAME_ImportFields);
 	}
 
+	/** Set Insert Record.
+		@param IsInsertRecord 
+		The user can insert a new Record
+	  */
+	public void setIsInsertRecord (boolean IsInsertRecord)
+	{
+		set_Value (COLUMNNAME_IsInsertRecord, Boolean.valueOf(IsInsertRecord));
+	}
+
+	/** Get Insert Record.
+		@return The user can insert a new Record
+	  */
+	public boolean isInsertRecord () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsInsertRecord);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	/** Set Read Only.
 		@param IsReadOnly 
 		Field is read only
@@ -240,6 +273,50 @@ public class X_SPS_Tab extends PO implements I_SPS_Tab
 		return (String)get_Value(COLUMNNAME_OrderByClause);
 	}
 
+	/** Set Parent Column.
+		@param Parent_Column_ID 
+		The link column on the parent tab.
+	  */
+	public void setParent_Column_ID (int Parent_Column_ID)
+	{
+		if (Parent_Column_ID < 1) 
+			set_Value (COLUMNNAME_Parent_Column_ID, null);
+		else 
+			set_Value (COLUMNNAME_Parent_Column_ID, Integer.valueOf(Parent_Column_ID));
+	}
+
+	/** Get Parent Column.
+		@return The link column on the parent tab.
+	  */
+	public int getParent_Column_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Parent_Column_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Process Now.
+		@param Processing Process Now	  */
+	public void setProcessing (boolean Processing)
+	{
+		set_Value (COLUMNNAME_Processing, Boolean.valueOf(Processing));
+	}
+
+	/** Get Process Now.
+		@return Process Now	  */
+	public boolean isProcessing () 
+	{
+		Object oo = get_Value(COLUMNNAME_Processing);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	/** Set Sequence.
 		@param SeqNo 
 		Method of ordering records; lowest number comes first
@@ -255,6 +332,26 @@ public class X_SPS_Tab extends PO implements I_SPS_Tab
 	public int getSeqNo () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_SeqNo);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Mobile Column.
+		@param SPS_Column_ID Mobile Column	  */
+	public void setSPS_Column_ID (int SPS_Column_ID)
+	{
+		if (SPS_Column_ID < 1) 
+			set_Value (COLUMNNAME_SPS_Column_ID, null);
+		else 
+			set_Value (COLUMNNAME_SPS_Column_ID, Integer.valueOf(SPS_Column_ID));
+	}
+
+	/** Get Mobile Column.
+		@return Mobile Column	  */
+	public int getSPS_Column_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_SPS_Column_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
@@ -280,8 +377,8 @@ public class X_SPS_Tab extends PO implements I_SPS_Tab
 		return ii.intValue();
 	}
 
-	/** Set Synchronizing Table.
-		@param SPS_Table_ID Synchronizing Table	  */
+	/** Set Mobile Table.
+		@param SPS_Table_ID Mobile Table	  */
 	public void setSPS_Table_ID (int SPS_Table_ID)
 	{
 		if (SPS_Table_ID < 1) 
@@ -290,8 +387,8 @@ public class X_SPS_Tab extends PO implements I_SPS_Tab
 			set_Value (COLUMNNAME_SPS_Table_ID, Integer.valueOf(SPS_Table_ID));
 	}
 
-	/** Get Synchronizing Table.
-		@return Synchronizing Table	  */
+	/** Get Mobile Table.
+		@return Mobile Table	  */
 	public int getSPS_Table_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_SPS_Table_ID);

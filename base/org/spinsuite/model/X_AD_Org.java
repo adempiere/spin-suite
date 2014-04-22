@@ -32,7 +32,7 @@ public class X_AD_Org extends PO implements I_AD_Org
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_AD_Org (Context ctx, int AD_Org_ID, DB conn)

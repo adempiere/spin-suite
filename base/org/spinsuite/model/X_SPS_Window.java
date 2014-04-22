@@ -32,7 +32,7 @@ public class X_SPS_Window extends PO implements I_SPS_Window
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_SPS_Window (Context ctx, int SPS_Window_ID, DB conn)
@@ -146,6 +146,27 @@ public class X_SPS_Window extends PO implements I_SPS_Window
     {
         return new KeyNamePair(get_ID(), getName());
     }
+
+	/** Set Process Now.
+		@param Processing Process Now	  */
+	public void setProcessing (boolean Processing)
+	{
+		set_Value (COLUMNNAME_Processing, Boolean.valueOf(Processing));
+	}
+
+	/** Get Process Now.
+		@return Process Now	  */
+	public boolean isProcessing () 
+	{
+		Object oo = get_Value(COLUMNNAME_Processing);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
 
 	/** Set Window Mobile.
 		@param SPS_Window_ID Window Mobile	  */

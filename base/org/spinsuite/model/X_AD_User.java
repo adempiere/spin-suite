@@ -33,7 +33,7 @@ public class X_AD_User extends PO implements I_AD_User
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_AD_User (Context ctx, int AD_User_ID, DB conn)

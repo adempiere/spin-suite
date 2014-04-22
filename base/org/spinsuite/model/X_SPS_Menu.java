@@ -32,7 +32,7 @@ public class X_SPS_Menu extends PO implements I_SPS_Menu
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_SPS_Menu (Context ctx, int SPS_Menu_ID, DB conn)
@@ -42,6 +42,7 @@ public class X_SPS_Menu extends PO implements I_SPS_Menu
         {
 			setEntityType (null);
 // ECA01
+			setMenuType (null);
 			setName (null);
 			setSPS_Menu_ID (0);
         } */
@@ -96,6 +97,26 @@ public class X_SPS_Menu extends PO implements I_SPS_Menu
 	public String getAction () 
 	{
 		return (String)get_Value(COLUMNNAME_Action);
+	}
+
+	/** Set Activity Menu.
+		@param ActivityMenu_ID Activity Menu	  */
+	public void setActivityMenu_ID (int ActivityMenu_ID)
+	{
+		if (ActivityMenu_ID < 1) 
+			set_Value (COLUMNNAME_ActivityMenu_ID, null);
+		else 
+			set_Value (COLUMNNAME_ActivityMenu_ID, Integer.valueOf(ActivityMenu_ID));
+	}
+
+	/** Get Activity Menu.
+		@return Activity Menu	  */
+	public int getActivityMenu_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_ActivityMenu_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Special Form.
@@ -347,6 +368,29 @@ public class X_SPS_Menu extends PO implements I_SPS_Menu
 		return false;
 	}
 
+	/** MenuType AD_Reference_ID=53672 */
+	public static final int MENUTYPE_AD_Reference_ID=53672;
+	/** Main Menu = M */
+	public static final String MENUTYPE_MainMenu = "M";
+	/** Activity Menu = A */
+	public static final String MENUTYPE_ActivityMenu = "A";
+	/** Quick Action Menu = Q */
+	public static final String MENUTYPE_QuickActionMenu = "Q";
+	/** Set Menu Type.
+		@param MenuType Menu Type	  */
+	public void setMenuType (String MenuType)
+	{
+
+		set_Value (COLUMNNAME_MenuType, MenuType);
+	}
+
+	/** Get Menu Type.
+		@return Menu Type	  */
+	public String getMenuType () 
+	{
+		return (String)get_Value(COLUMNNAME_MenuType);
+	}
+
 	/** Set Name.
 		@param Name 
 		Alphanumeric identifier of the entity
@@ -449,8 +493,8 @@ public class X_SPS_Menu extends PO implements I_SPS_Menu
 		return ii.intValue();
 	}
 
-	/** Set Synchronizing Table.
-		@param SPS_Table_ID Synchronizing Table	  */
+	/** Set Mobile Table.
+		@param SPS_Table_ID Mobile Table	  */
 	public void setSPS_Table_ID (int SPS_Table_ID)
 	{
 		if (SPS_Table_ID < 1) 
@@ -459,8 +503,8 @@ public class X_SPS_Menu extends PO implements I_SPS_Menu
 			set_Value (COLUMNNAME_SPS_Table_ID, Integer.valueOf(SPS_Table_ID));
 	}
 
-	/** Get Synchronizing Table.
-		@return Synchronizing Table	  */
+	/** Get Mobile Table.
+		@return Mobile Table	  */
 	public int getSPS_Table_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_SPS_Table_ID);

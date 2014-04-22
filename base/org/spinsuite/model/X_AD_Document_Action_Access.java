@@ -31,7 +31,7 @@ public class X_AD_Document_Action_Access extends PO implements I_AD_Document_Act
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_AD_Document_Action_Access (Context ctx, int AD_Document_Action_Access_ID, DB conn)

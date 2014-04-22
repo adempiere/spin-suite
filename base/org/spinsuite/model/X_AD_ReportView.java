@@ -32,7 +32,7 @@ public class X_AD_ReportView extends PO implements I_AD_ReportView
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_AD_ReportView (Context ctx, int AD_ReportView_ID, DB conn)

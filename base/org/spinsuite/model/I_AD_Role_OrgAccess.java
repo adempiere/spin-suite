@@ -31,8 +31,8 @@ public interface I_AD_Role_OrgAccess
     /** TableName=AD_Role_OrgAccess */
     public static final String Table_Name = "AD_Role_OrgAccess";
 
-    /** SPS_Table_ID=50071 */
-    public static final int SPS_Table_ID = 50071;
+    /** SPS_Table_ID=1000186 */
+    public static final int SPS_Table_ID = 1000186;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */

@@ -31,8 +31,8 @@ public interface I_AD_PrintPaper
     /** TableName=AD_PrintPaper */
     public static final String Table_Name = "AD_PrintPaper";
 
-    /** SPS_Table_ID=50059 */
-    public static final int SPS_Table_ID = 50059;
+    /** SPS_Table_ID=1000473 */
+    public static final int SPS_Table_ID = 1000473;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */

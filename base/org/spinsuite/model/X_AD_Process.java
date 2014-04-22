@@ -32,7 +32,7 @@ public class X_AD_Process extends PO implements I_AD_Process
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_AD_Process (Context ctx, int AD_Process_ID, DB conn)
@@ -343,6 +343,27 @@ public class X_AD_Process extends PO implements I_AD_Process
 	public boolean isBetaFunctionality () 
 	{
 		Object oo = get_Value(COLUMNNAME_IsBetaFunctionality);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Defined for Mobile.
+		@param IsDefinedForMobile Defined for Mobile	  */
+	public void setIsDefinedForMobile (boolean IsDefinedForMobile)
+	{
+		set_Value (COLUMNNAME_IsDefinedForMobile, Boolean.valueOf(IsDefinedForMobile));
+	}
+
+	/** Get Defined for Mobile.
+		@return Defined for Mobile	  */
+	public boolean isDefinedForMobile () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsDefinedForMobile);
 		if (oo != null) 
 		{
 			 if (oo instanceof Boolean) 

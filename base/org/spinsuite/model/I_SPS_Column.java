@@ -31,8 +31,8 @@ public interface I_SPS_Column
     /** TableName=SPS_Column */
     public static final String Table_Name = "SPS_Column";
 
-    /** SPS_Table_ID=50002 */
-    public static final int SPS_Table_ID = 50002;
+    /** SPS_Table_ID=1000832 */
+    public static final int SPS_Table_ID = 1000832;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */
@@ -83,6 +83,19 @@ public interface I_SPS_Column
 	  * Organizational entity within client
 	  */
 	public int getAD_Org_ID();
+
+    /** Column name AD_Process_ID */
+    public static final String COLUMNNAME_AD_Process_ID = "AD_Process_ID";
+
+	/** Set Process.
+	  * Process or Report
+	  */
+	public void setAD_Process_ID (int AD_Process_ID);
+
+	/** Get Process.
+	  * Process or Report
+	  */
+	public int getAD_Process_ID();
 
     /** Column name AD_Reference_ID */
     public static final String COLUMNNAME_AD_Reference_ID = "AD_Reference_ID";

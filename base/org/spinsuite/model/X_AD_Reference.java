@@ -32,7 +32,7 @@ public class X_AD_Reference extends PO implements I_AD_Reference
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_AD_Reference (Context ctx, int AD_Reference_ID, DB conn)

@@ -31,8 +31,8 @@ public interface I_AD_Reference
     /** TableName=AD_Reference */
     public static final String Table_Name = "AD_Reference";
 
-    /** SPS_Table_ID=50082 */
-    public static final int SPS_Table_ID = 50082;
+    /** SPS_Table_ID=1000353 */
+    public static final int SPS_Table_ID = 1000353;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */

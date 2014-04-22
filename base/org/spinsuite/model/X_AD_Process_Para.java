@@ -32,7 +32,7 @@ public class X_AD_Process_Para extends PO implements I_AD_Process_Para
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_AD_Process_Para (Context ctx, int AD_Process_Para_ID, DB conn)

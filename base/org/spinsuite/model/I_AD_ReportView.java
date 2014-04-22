@@ -31,8 +31,8 @@ public interface I_AD_ReportView
     /** TableName=AD_ReportView */
     public static final String Table_Name = "AD_ReportView";
 
-    /** SPS_Table_ID=50053 */
-    public static final int SPS_Table_ID = 50053;
+    /** SPS_Table_ID=1000093 */
+    public static final int SPS_Table_ID = 1000093;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */

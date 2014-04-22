@@ -31,8 +31,8 @@ public interface I_SPS_Window
     /** TableName=SPS_Window */
     public static final String Table_Name = "SPS_Window";
 
-    /** SPS_Table_ID=50137 */
-    public static final int SPS_Table_ID = 50137;
+    /** SPS_Table_ID=1000837 */
+    public static final int SPS_Table_ID = 1000837;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */
@@ -140,6 +140,15 @@ public interface I_SPS_Window
 	  * Alphanumeric identifier of the entity
 	  */
 	public String getName();
+
+    /** Column name Processing */
+    public static final String COLUMNNAME_Processing = "Processing";
+
+	/** Set Process Now	  */
+	public void setProcessing (boolean Processing);
+
+	/** Get Process Now	  */
+	public boolean isProcessing();
 
     /** Column name SPS_Window_ID */
     public static final String COLUMNNAME_SPS_Window_ID = "SPS_Window_ID";

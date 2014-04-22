@@ -32,7 +32,7 @@ public class X_AD_Tree extends PO implements I_AD_Tree
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_AD_Tree (Context ctx, int AD_Tree_ID, DB conn)

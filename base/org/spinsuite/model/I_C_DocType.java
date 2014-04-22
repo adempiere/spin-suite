@@ -31,8 +31,8 @@ public interface I_C_DocType
     /** TableName=C_DocType */
     public static final String Table_Name = "C_DocType";
 
-    /** SPS_Table_ID=50089 */
-    public static final int SPS_Table_ID = 50089;
+    /** SPS_Table_ID=1000555 */
+    public static final int SPS_Table_ID = 1000555;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */

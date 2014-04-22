@@ -31,8 +31,8 @@ public interface I_AD_Process_Para
     /** TableName=AD_Process_Para */
     public static final String Table_Name = "AD_Process_Para";
 
-    /** SPS_Table_ID=50050 */
-    public static final int SPS_Table_ID = 50050;
+    /** SPS_Table_ID=1000639 */
+    public static final int SPS_Table_ID = 1000639;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */

@@ -31,8 +31,8 @@ public interface I_SPS_Menu
     /** TableName=SPS_Menu */
     public static final String Table_Name = "SPS_Menu";
 
-    /** SPS_Table_ID=50144 */
-    public static final int SPS_Table_ID = 50144;
+    /** SPS_Table_ID=1000839 */
+    public static final int SPS_Table_ID = 1000839;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */
@@ -49,6 +49,15 @@ public interface I_SPS_Menu
 	  * Indicates the Action to be performed
 	  */
 	public String getAction();
+
+    /** Column name ActivityMenu_ID */
+    public static final String COLUMNNAME_ActivityMenu_ID = "ActivityMenu_ID";
+
+	/** Set Activity Menu	  */
+	public void setActivityMenu_ID (int ActivityMenu_ID);
+
+	/** Get Activity Menu	  */
+	public int getActivityMenu_ID();
 
     /** Column name AD_Client_ID */
     public static final String COLUMNNAME_AD_Client_ID = "AD_Client_ID";
@@ -246,6 +255,15 @@ public interface I_SPS_Menu
 	  */
 	public boolean isSummary();
 
+    /** Column name MenuType */
+    public static final String COLUMNNAME_MenuType = "MenuType";
+
+	/** Set Menu Type	  */
+	public void setMenuType (String MenuType);
+
+	/** Get Menu Type	  */
+	public String getMenuType();
+
     /** Column name Name */
     public static final String COLUMNNAME_Name = "Name";
 
@@ -302,10 +320,10 @@ public interface I_SPS_Menu
     /** Column name SPS_Table_ID */
     public static final String COLUMNNAME_SPS_Table_ID = "SPS_Table_ID";
 
-	/** Set Synchronizing Table	  */
+	/** Set Mobile Table	  */
 	public void setSPS_Table_ID (int SPS_Table_ID);
 
-	/** Get Synchronizing Table	  */
+	/** Get Mobile Table	  */
 	public int getSPS_Table_ID();
 
     /** Column name SPS_Window_ID */

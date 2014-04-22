@@ -34,7 +34,7 @@ public class X_AD_PrintTableFormat extends PO implements I_AD_PrintTableFormat
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_AD_PrintTableFormat (Context ctx, int AD_PrintTableFormat_ID, DB conn)

@@ -31,8 +31,8 @@ public interface I_AD_Client
     /** TableName=AD_Client */
     public static final String Table_Name = "AD_Client";
 
-    /** SPS_Table_ID=50086 */
-    public static final int SPS_Table_ID = 50086;
+    /** SPS_Table_ID=1000437 */
+    public static final int SPS_Table_ID = 1000437;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */
@@ -251,6 +251,15 @@ public interface I_AD_Client
 	  * Enable the use of Beta Functionality
 	  */
 	public boolean isUseBetaFunctions();
+
+    /** Column name ldapquery */
+    public static final String COLUMNNAME_ldapquery = "ldapquery";
+
+	/** Set ldapquery	  */
+	public void setldapquery (String ldapquery);
+
+	/** Get ldapquery	  */
+	public String getldapquery();
 
     /** Column name MMPolicy */
     public static final String COLUMNNAME_MMPolicy = "MMPolicy";

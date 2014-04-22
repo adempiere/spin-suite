@@ -31,8 +31,8 @@ public interface I_AD_Sequence
     /** TableName=AD_Sequence */
     public static final String Table_Name = "AD_Sequence";
 
-    /** SPS_Table_ID=50080 */
-    public static final int SPS_Table_ID = 50080;
+    /** SPS_Table_ID=1000731 */
+    public static final int SPS_Table_ID = 1000731;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */

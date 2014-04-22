@@ -31,8 +31,8 @@ public interface I_AD_Document_Action_Access
     /** TableName=AD_Document_Action_Access */
     public static final String Table_Name = "AD_Document_Action_Access";
 
-    /** SPS_Table_ID=50074 */
-    public static final int SPS_Table_ID = 50074;
+    /** SPS_Table_ID=1000776 */
+    public static final int SPS_Table_ID = 1000776;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */

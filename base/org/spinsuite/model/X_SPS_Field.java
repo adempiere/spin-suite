@@ -32,7 +32,7 @@ public class X_SPS_Field extends PO implements I_SPS_Field
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_SPS_Field (Context ctx, int SPS_Field_ID, DB conn)
@@ -70,6 +70,115 @@ public class X_SPS_Field extends PO implements I_SPS_Field
       return sb.toString();
     }
 
+	/** Set Field Group.
+		@param AD_FieldGroup_ID 
+		Logical grouping of fields
+	  */
+	public void setAD_FieldGroup_ID (int AD_FieldGroup_ID)
+	{
+		if (AD_FieldGroup_ID < 1) 
+			set_Value (COLUMNNAME_AD_FieldGroup_ID, null);
+		else 
+			set_Value (COLUMNNAME_AD_FieldGroup_ID, Integer.valueOf(AD_FieldGroup_ID));
+	}
+
+	/** Get Field Group.
+		@return Logical grouping of fields
+	  */
+	public int getAD_FieldGroup_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_AD_FieldGroup_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Reference.
+		@param AD_Reference_ID 
+		System Reference and Validation
+	  */
+	public void setAD_Reference_ID (int AD_Reference_ID)
+	{
+		if (AD_Reference_ID < 1) 
+			set_Value (COLUMNNAME_AD_Reference_ID, null);
+		else 
+			set_Value (COLUMNNAME_AD_Reference_ID, Integer.valueOf(AD_Reference_ID));
+	}
+
+	/** Get Reference.
+		@return System Reference and Validation
+	  */
+	public int getAD_Reference_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_AD_Reference_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Reference Key.
+		@param AD_Reference_Value_ID 
+		Required to specify, if data type is Table or List
+	  */
+	public void setAD_Reference_Value_ID (int AD_Reference_Value_ID)
+	{
+		if (AD_Reference_Value_ID < 1) 
+			set_Value (COLUMNNAME_AD_Reference_Value_ID, null);
+		else 
+			set_Value (COLUMNNAME_AD_Reference_Value_ID, Integer.valueOf(AD_Reference_Value_ID));
+	}
+
+	/** Get Reference Key.
+		@return Required to specify, if data type is Table or List
+	  */
+	public int getAD_Reference_Value_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_AD_Reference_Value_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Dynamic Validation.
+		@param AD_Val_Rule_ID 
+		Dynamic Validation Rule
+	  */
+	public void setAD_Val_Rule_ID (int AD_Val_Rule_ID)
+	{
+		if (AD_Val_Rule_ID < 1) 
+			set_Value (COLUMNNAME_AD_Val_Rule_ID, null);
+		else 
+			set_Value (COLUMNNAME_AD_Val_Rule_ID, Integer.valueOf(AD_Val_Rule_ID));
+	}
+
+	/** Get Dynamic Validation.
+		@return Dynamic Validation Rule
+	  */
+	public int getAD_Val_Rule_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_AD_Val_Rule_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Default Logic.
+		@param DefaultValue 
+		Default value hierarchy, separated by ;
+	  */
+	public void setDefaultValue (String DefaultValue)
+	{
+		set_Value (COLUMNNAME_DefaultValue, DefaultValue);
+	}
+
+	/** Get Default Logic.
+		@return Default value hierarchy, separated by ;
+	  */
+	public String getDefaultValue () 
+	{
+		return (String)get_Value(COLUMNNAME_DefaultValue);
+	}
+
 	/** Set Description.
 		@param Description 
 		Optional short description of the record
@@ -85,6 +194,23 @@ public class X_SPS_Field extends PO implements I_SPS_Field
 	public String getDescription () 
 	{
 		return (String)get_Value(COLUMNNAME_Description);
+	}
+
+	/** Set Display Logic.
+		@param DisplayLogic 
+		If the Field is displayed, the result determines if the field is actually displayed
+	  */
+	public void setDisplayLogic (String DisplayLogic)
+	{
+		set_Value (COLUMNNAME_DisplayLogic, DisplayLogic);
+	}
+
+	/** Get Display Logic.
+		@return If the Field is displayed, the result determines if the field is actually displayed
+	  */
+	public String getDisplayLogic () 
+	{
+		return (String)get_Value(COLUMNNAME_DisplayLogic);
 	}
 
 	/** EntityType AD_Reference_ID=389 */
@@ -124,6 +250,30 @@ public class X_SPS_Field extends PO implements I_SPS_Field
 		return (String)get_Value(COLUMNNAME_Help);
 	}
 
+	/** Set Centrally maintained.
+		@param IsCentrallyMaintained 
+		Information maintained in System Element table
+	  */
+	public void setIsCentrallyMaintained (boolean IsCentrallyMaintained)
+	{
+		set_Value (COLUMNNAME_IsCentrallyMaintained, Boolean.valueOf(IsCentrallyMaintained));
+	}
+
+	/** Get Centrally maintained.
+		@return Information maintained in System Element table
+	  */
+	public boolean isCentrallyMaintained () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsCentrallyMaintained);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	/** Set Displayed.
 		@param IsDisplayed 
 		Determines, if this field is displayed
@@ -146,6 +296,54 @@ public class X_SPS_Field extends PO implements I_SPS_Field
 			return "Y".equals(oo);
 		}
 		return false;
+	}
+
+	/** Set Encrypted.
+		@param IsEncrypted 
+		Display or Storage is encrypted
+	  */
+	public void setIsEncrypted (boolean IsEncrypted)
+	{
+		set_Value (COLUMNNAME_IsEncrypted, Boolean.valueOf(IsEncrypted));
+	}
+
+	/** Get Encrypted.
+		@return Display or Storage is encrypted
+	  */
+	public boolean isEncrypted () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsEncrypted);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** IsMandatory AD_Reference_ID=319 */
+	public static final int ISMANDATORY_AD_Reference_ID=319;
+	/** Yes = Y */
+	public static final String ISMANDATORY_Yes = "Y";
+	/** No = N */
+	public static final String ISMANDATORY_No = "N";
+	/** Set Mandatory.
+		@param IsMandatory 
+		Data entry is required in this column
+	  */
+	public void setIsMandatory (String IsMandatory)
+	{
+
+		set_Value (COLUMNNAME_IsMandatory, IsMandatory);
+	}
+
+	/** Get Mandatory.
+		@return Data entry is required in this column
+	  */
+	public String getIsMandatory () 
+	{
+		return (String)get_Value(COLUMNNAME_IsMandatory);
 	}
 
 	/** Set Read Only.
@@ -241,8 +439,8 @@ public class X_SPS_Field extends PO implements I_SPS_Field
 		return ii.intValue();
 	}
 
-	/** Set Synchronizing Column.
-		@param SPS_Column_ID Synchronizing Column	  */
+	/** Set Mobile Column.
+		@param SPS_Column_ID Mobile Column	  */
 	public void setSPS_Column_ID (int SPS_Column_ID)
 	{
 		if (SPS_Column_ID < 1) 
@@ -251,8 +449,8 @@ public class X_SPS_Field extends PO implements I_SPS_Field
 			set_Value (COLUMNNAME_SPS_Column_ID, Integer.valueOf(SPS_Column_ID));
 	}
 
-	/** Get Synchronizing Column.
-		@return Synchronizing Column	  */
+	/** Get Mobile Column.
+		@return Mobile Column	  */
 	public int getSPS_Column_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_SPS_Column_ID);

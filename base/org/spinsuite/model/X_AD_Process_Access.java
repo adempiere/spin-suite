@@ -31,7 +31,7 @@ public class X_AD_Process_Access extends PO implements I_AD_Process_Access
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_AD_Process_Access (Context ctx, int AD_Process_Access_ID, DB conn)

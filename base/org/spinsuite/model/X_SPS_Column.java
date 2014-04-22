@@ -32,7 +32,7 @@ public class X_SPS_Column extends PO implements I_SPS_Column
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_SPS_Column (Context ctx, int SPS_Column_ID, DB conn)
@@ -127,6 +127,29 @@ public class X_SPS_Column extends PO implements I_SPS_Column
 	public int getAD_Element_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_AD_Element_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Process.
+		@param AD_Process_ID 
+		Process or Report
+	  */
+	public void setAD_Process_ID (int AD_Process_ID)
+	{
+		if (AD_Process_ID < 1) 
+			set_Value (COLUMNNAME_AD_Process_ID, null);
+		else 
+			set_Value (COLUMNNAME_AD_Process_ID, Integer.valueOf(AD_Process_ID));
+	}
+
+	/** Get Process.
+		@return Process or Report
+	  */
+	public int getAD_Process_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_AD_Process_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

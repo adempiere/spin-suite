@@ -211,8 +211,8 @@ public class T_Role extends Fragment implements I_Login {
 						}
 						
 						return true;
-					} else
-						Msg.alertMustFillField(this.getActivity(), R.string.M_Warehouse_ID, sp_Warehouse);
+					} //else
+						//Msg.alertMustFillField(this.getActivity(), R.string.M_Warehouse_ID, sp_Warehouse);
 				} else
 					Msg.alertMustFillField(this.getActivity(), R.string.AD_Org_ID, sp_Org);
 			} else

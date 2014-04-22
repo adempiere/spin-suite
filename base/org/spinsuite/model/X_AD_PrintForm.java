@@ -32,7 +32,7 @@ public class X_AD_PrintForm extends PO implements I_AD_PrintForm
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_AD_PrintForm (Context ctx, int AD_PrintForm_ID, DB conn)

@@ -31,7 +31,7 @@ public class X_AD_Form_Access extends PO implements I_AD_Form_Access
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_AD_Form_Access (Context ctx, int AD_Form_Access_ID, DB conn)

@@ -31,8 +31,8 @@ public interface I_AD_Val_Rule
     /** TableName=AD_Val_Rule */
     public static final String Table_Name = "AD_Val_Rule";
 
-    /** SPS_Table_ID=50083 */
-    public static final int SPS_Table_ID = 50083;
+    /** SPS_Table_ID=1000434 */
+    public static final int SPS_Table_ID = 1000434;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */

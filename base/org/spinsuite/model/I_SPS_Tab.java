@@ -31,8 +31,8 @@ public interface I_SPS_Tab
     /** TableName=SPS_Tab */
     public static final String Table_Name = "SPS_Tab";
 
-    /** SPS_Table_ID=50139 */
-    public static final int SPS_Table_ID = 50139;
+    /** SPS_Table_ID=1000835 */
+    public static final int SPS_Table_ID = 1000835;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */
@@ -58,6 +58,19 @@ public interface I_SPS_Tab
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name AD_Process_ID */
+    public static final String COLUMNNAME_AD_Process_ID = "AD_Process_ID";
+
+	/** Set Process.
+	  * Process or Report
+	  */
+	public void setAD_Process_ID (int AD_Process_ID);
+
+	/** Get Process.
+	  * Process or Report
+	  */
+	public int getAD_Process_ID();
+
     /** Column name Classname */
     public static final String COLUMNNAME_Classname = "Classname";
 
@@ -70,19 +83,6 @@ public interface I_SPS_Tab
 	  * Java Classname
 	  */
 	public String getClassname();
-
-    /** Column name CopyFrom */
-    public static final String COLUMNNAME_CopyFrom = "CopyFrom";
-
-	/** Set Copy From.
-	  * Copy From Record
-	  */
-	public void setCopyFrom (String CopyFrom);
-
-	/** Get Copy From.
-	  * Copy From Record
-	  */
-	public String getCopyFrom();
 
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
@@ -167,6 +167,19 @@ public interface I_SPS_Tab
 	  */
 	public boolean isActive();
 
+    /** Column name IsInsertRecord */
+    public static final String COLUMNNAME_IsInsertRecord = "IsInsertRecord";
+
+	/** Set Insert Record.
+	  * The user can insert a new Record
+	  */
+	public void setIsInsertRecord (boolean IsInsertRecord);
+
+	/** Get Insert Record.
+	  * The user can insert a new Record
+	  */
+	public boolean isInsertRecord();
+
     /** Column name IsReadOnly */
     public static final String COLUMNNAME_IsReadOnly = "IsReadOnly";
 
@@ -206,6 +219,28 @@ public interface I_SPS_Tab
 	  */
 	public String getOrderByClause();
 
+    /** Column name Parent_Column_ID */
+    public static final String COLUMNNAME_Parent_Column_ID = "Parent_Column_ID";
+
+	/** Set Parent Column.
+	  * The link column on the parent tab.
+	  */
+	public void setParent_Column_ID (int Parent_Column_ID);
+
+	/** Get Parent Column.
+	  * The link column on the parent tab.
+	  */
+	public int getParent_Column_ID();
+
+    /** Column name Processing */
+    public static final String COLUMNNAME_Processing = "Processing";
+
+	/** Set Process Now	  */
+	public void setProcessing (boolean Processing);
+
+	/** Get Process Now	  */
+	public boolean isProcessing();
+
     /** Column name SeqNo */
     public static final String COLUMNNAME_SeqNo = "SeqNo";
 
@@ -221,6 +256,15 @@ public interface I_SPS_Tab
 	  */
 	public int getSeqNo();
 
+    /** Column name SPS_Column_ID */
+    public static final String COLUMNNAME_SPS_Column_ID = "SPS_Column_ID";
+
+	/** Set Mobile Column	  */
+	public void setSPS_Column_ID (int SPS_Column_ID);
+
+	/** Get Mobile Column	  */
+	public int getSPS_Column_ID();
+
     /** Column name SPS_Tab_ID */
     public static final String COLUMNNAME_SPS_Tab_ID = "SPS_Tab_ID";
 
@@ -233,10 +277,10 @@ public interface I_SPS_Tab
     /** Column name SPS_Table_ID */
     public static final String COLUMNNAME_SPS_Table_ID = "SPS_Table_ID";
 
-	/** Set Synchronizing Table	  */
+	/** Set Mobile Table	  */
 	public void setSPS_Table_ID (int SPS_Table_ID);
 
-	/** Get Synchronizing Table	  */
+	/** Get Mobile Table	  */
 	public int getSPS_Table_ID();
 
     /** Column name SPS_Window_ID */

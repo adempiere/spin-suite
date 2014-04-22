@@ -31,8 +31,8 @@ public interface I_AD_Form_Access
     /** TableName=AD_Form_Access */
     public static final String Table_Name = "AD_Form_Access";
 
-    /** SPS_Table_ID=50073 */
-    public static final int SPS_Table_ID = 50073;
+    /** SPS_Table_ID=1000162 */
+    public static final int SPS_Table_ID = 1000162;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */

@@ -31,8 +31,8 @@ public interface I_AD_PrintColor
     /** TableName=AD_PrintColor */
     public static final String Table_Name = "AD_PrintColor";
 
-    /** SPS_Table_ID=50058 */
-    public static final int SPS_Table_ID = 50058;
+    /** SPS_Table_ID=1000472 */
+    public static final int SPS_Table_ID = 1000472;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */

@@ -32,7 +32,7 @@ public class X_M_Warehouse extends PO implements I_M_Warehouse
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_M_Warehouse (Context ctx, int M_Warehouse_ID, DB conn)

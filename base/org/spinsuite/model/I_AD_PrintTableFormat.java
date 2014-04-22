@@ -31,8 +31,8 @@ public interface I_AD_PrintTableFormat
     /** TableName=AD_PrintTableFormat */
     public static final String Table_Name = "AD_PrintTableFormat";
 
-    /** SPS_Table_ID=50060 */
-    public static final int SPS_Table_ID = 50060;
+    /** SPS_Table_ID=1000228 */
+    public static final int SPS_Table_ID = 1000228;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */

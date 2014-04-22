@@ -32,7 +32,7 @@ public class X_AD_Rule extends PO implements I_AD_Rule
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_AD_Rule (Context ctx, int AD_Rule_ID, DB conn)

@@ -31,8 +31,8 @@ public interface I_AD_Process
     /** TableName=AD_Process */
     public static final String Table_Name = "AD_Process";
 
-    /** SPS_Table_ID=50079 */
-    public static final int SPS_Table_ID = 50079;
+    /** SPS_Table_ID=1000638 */
+    public static final int SPS_Table_ID = 1000638;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */
@@ -253,6 +253,15 @@ public interface I_AD_Process
 	  * This functionality is considered Beta
 	  */
 	public boolean isBetaFunctionality();
+
+    /** Column name IsDefinedForMobile */
+    public static final String COLUMNNAME_IsDefinedForMobile = "IsDefinedForMobile";
+
+	/** Set Defined for Mobile	  */
+	public void setIsDefinedForMobile (boolean IsDefinedForMobile);
+
+	/** Get Defined for Mobile	  */
+	public boolean isDefinedForMobile();
 
     /** Column name IsDirectPrint */
     public static final String COLUMNNAME_IsDirectPrint = "IsDirectPrint";

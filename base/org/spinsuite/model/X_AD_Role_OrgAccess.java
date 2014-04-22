@@ -31,7 +31,7 @@ public class X_AD_Role_OrgAccess extends PO implements I_AD_Role_OrgAccess
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_AD_Role_OrgAccess (Context ctx, int AD_Role_OrgAccess_ID, DB conn)

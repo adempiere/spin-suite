@@ -32,7 +32,7 @@ public class X_AD_Sequence extends PO implements I_AD_Sequence
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_AD_Sequence (Context ctx, int AD_Sequence_ID, DB conn)

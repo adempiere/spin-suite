@@ -32,7 +32,7 @@ public class X_AD_PrintFormatItem extends PO implements I_AD_PrintFormatItem
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_AD_PrintFormatItem (Context ctx, int AD_PrintFormatItem_ID, DB conn)
@@ -40,7 +40,6 @@ public class X_AD_PrintFormatItem extends PO implements I_AD_PrintFormatItem
       super (ctx, AD_PrintFormatItem_ID, conn);
       /** if (AD_PrintFormatItem_ID == 0)
         {
-			setAD_PrintFormatChild_ID (0);
 			setAD_PrintFormat_ID (0);
 			setAD_PrintFormatItem_ID (0);
 			setFieldAlignmentType (null);

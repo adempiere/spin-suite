@@ -32,7 +32,7 @@ public class X_AD_Client extends PO implements I_AD_Client
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140415L;
+	private static final long serialVersionUID = 20140422L;
 
     /** Standard Constructor */
     public X_AD_Client (Context ctx, int AD_Client_ID, DB conn)
@@ -369,6 +369,20 @@ public class X_AD_Client extends PO implements I_AD_Client
 			return "Y".equals(oo);
 		}
 		return false;
+	}
+
+	/** Set ldapquery.
+		@param ldapquery ldapquery	  */
+	public void setldapquery (String ldapquery)
+	{
+		set_Value (COLUMNNAME_ldapquery, ldapquery);
+	}
+
+	/** Get ldapquery.
+		@return ldapquery	  */
+	public String getldapquery () 
+	{
+		return (String)get_Value(COLUMNNAME_ldapquery);
 	}
 
 	/** MMPolicy AD_Reference_ID=335 */
