@@ -197,9 +197,7 @@ public class V_Process extends FragmentActivity {
 		if(m_pInfo.isReport()){
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 	        getActionBar().setHomeButtonEnabled(true);
-	    	//	
-			loadProcessInfo();
-			//	Load Drawer
+	    	//	Load Drawer
 			loadDrawerOption();
 		}
 		//	Load Print Formats

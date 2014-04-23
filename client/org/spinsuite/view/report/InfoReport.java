@@ -335,7 +335,7 @@ public class InfoReport {
 					"pfi.IsImageField, pfi.IsMaxCalc, pfi.IsMinCalc, pfi.IsNextLine, pfi.IsNextPage, pfi.IsOrderBy, pfi.IsPageBreak, pfi.IsPrinted, " +
 					"pfi.IsRelativePosition, pfi.IsRunningTotal, pfi.IsSetNLPosition, pfi.IsSummarized, pfi.IsSuppressNull, pfi.IsSuppressRepeats, " +
 					"pfi.IsVarianceCalc, pfi.LineAlignmentType, pfi.LineWidth, pfi.MaxHeight, pfi.MaxWidth, pfi.Name, pfi.PrintAreaType, pfi.PrintFormatType, " +
-					"pfit.PrintName, pfit.PrintNameSuffix, pfi.RunningTotalLines, pfi.ShapeType, pfi.SortNo, pfi.XPosition, pfi.XSpace, pfi.YPosition, pfi.YSpace, pfi.SeqNo " +
+					"pfit.PrintName, pfit.PrintNameSuffix, pfi.RunningTotalLines, pfi.ShapeType, pfi.SortNo, pfi.XPosition, pfi.XSpace, pfi.YPosition, pfi.YSpace, pfi.SeqNo, " +
 					//	Column
 					"c.ColumnName, c.IsMandatory, c.AD_Reference_ID " +
 					//	From

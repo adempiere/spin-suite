@@ -277,6 +277,9 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 			for(int i = 0; i < reportItem.getColumnsQty(); i++){
 				//	Load Text View
 				String textValue = reportItem.getValue(i);
+				//	only values
+				if(textValue == null)
+					continue;
 				//	Format Numeric
 				if(DisplayType.isNumeric(columns[i].DisplayType)){
 					DecimalFormat decimalFormat = cDecimalFormat[i];
@@ -285,7 +288,7 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 				} else if(DisplayType.isDate(columns[i].DisplayType)){
 					SimpleDateFormat dateFormat = cDateFormat[i];
 					if(dateFormat != null){
-						long date = Long.getLong(textValue, 0);
+						long date = Long.parseLong(textValue);
 						textValue = dateFormat.format(new Date(date));
 					}
 				}

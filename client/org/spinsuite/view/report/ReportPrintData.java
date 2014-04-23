@@ -482,8 +482,10 @@ public class ReportPrintData {
 	 */
 	private RowPrintData getRowFunction(InfoReportField[] columns, String label, int indexGroup, 
 			int function, PrintDataFunction[] m_function){
+		//	
 		RowPrintData rPrintFunctionData = new RowPrintData(false, true);
-		String functionLabel = label;
+		String functionSymbolLabel = "";
+		String functionNameLabel = "";
 		//	
 		boolean isFunction = false;
 		for(int i = 0; i < columns.length; i++){
@@ -494,44 +496,44 @@ public class ReportPrintData {
 			if(function == PrintDataFunction.F_SUM
 					&& printFormatItem.IsSummarized){		//	Sum
 				column.setValue(currentFuctionColumn.getSum().toString());
-				label += PrintDataFunction.getFunctionSymbol(function);
-				functionLabel += PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
+				functionSymbolLabel = PrintDataFunction.getFunctionSymbol(function);
+				functionNameLabel = PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
 				isFunction = true;
 			} else if(function == PrintDataFunction.F_COUNT
 					&& printFormatItem.IsCounted){			//	Count
 				column.setValue(String.valueOf(currentFuctionColumn.getCount()));
-				label += PrintDataFunction.getFunctionSymbol(function);
-				functionLabel += PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
+				functionSymbolLabel = PrintDataFunction.getFunctionSymbol(function);
+				functionNameLabel = PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
 				isFunction = true;
 			} else if(function == PrintDataFunction.F_MAX
 					&& printFormatItem.IsMaxCalc){			//	Maximum
 				column.setValue(currentFuctionColumn.getMax().toString());
-				label += PrintDataFunction.getFunctionSymbol(function);
-				functionLabel += PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
+				functionSymbolLabel = PrintDataFunction.getFunctionSymbol(function);
+				functionNameLabel = PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
 				isFunction = true;
 			} else if(function == PrintDataFunction.F_MIN
 					&& printFormatItem.IsMinCalc){			//	Minimum
 				column.setValue(currentFuctionColumn.getMin().toString());
-				label += PrintDataFunction.getFunctionSymbol(function);
-				functionLabel += PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
+				functionSymbolLabel = PrintDataFunction.getFunctionSymbol(function);
+				functionNameLabel = PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
 				isFunction = true;
 			} else if(function == PrintDataFunction.F_MEAN
 					&& printFormatItem.IsAveraged){			//	Average
 				column.setValue(currentFuctionColumn.getAvgValue().toString());
-				label += PrintDataFunction.getFunctionSymbol(function);
-				functionLabel += PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
+				functionSymbolLabel = PrintDataFunction.getFunctionSymbol(function);
+				functionNameLabel = PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
 				isFunction = true;
 			} else if(function == PrintDataFunction.F_VARIANCE
 					&& printFormatItem.IsVarianceCalc){		//	Variance
 				column.setValue(currentFuctionColumn.getVariance().toString());
-				label += PrintDataFunction.getFunctionSymbol(function);
-				functionLabel += PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
+				functionSymbolLabel = PrintDataFunction.getFunctionSymbol(function);
+				functionNameLabel = PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
 				isFunction = true;
 			} else if(function == PrintDataFunction.F_DEVIATION
 					&& printFormatItem.IsDeviationCalc){	//	Deviation
 				column.setValue(currentFuctionColumn.getDeviation().toString());
-				functionLabel += PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
-				label += PrintDataFunction.getFunctionSymbol(function);
+				functionSymbolLabel = PrintDataFunction.getFunctionSymbol(function);
+				functionNameLabel = PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
 				isFunction = true;
 			}
 			//	Add
@@ -539,10 +541,19 @@ public class ReportPrintData {
 		}
 		//	Function
 		if(isFunction){
-			//	Set Prefix
-			rPrintFunctionData.get(indexGroup).setValue(label);
-			//	Function Value
-			rPrintFunctionData.get(indexGroup).setFunctionValue(functionLabel);
+			//	Set Value
+			if(functionSymbolLabel != null
+					&& functionSymbolLabel.length() > 0){
+				//	
+				ColumnPrintData functionColumnGroup = rPrintFunctionData.get(indexGroup);
+				//	Set Value
+				functionColumnGroup.setValue(label);
+				//	Function Value
+				functionColumnGroup.setFunctionValue(label);
+				//	
+				functionColumnGroup.setValue(label + functionSymbolLabel);
+				functionColumnGroup.setFunctionValue(label + functionNameLabel);
+			}
 			//	Return
 			return rPrintFunctionData;
 		}
@@ -656,28 +667,31 @@ public class ReportPrintData {
 				ColumnPrintData cPrintData = rPrintData.get(col);
 				WritableCell cell = null;
 				WritableCellFormat cellFormat = null;
-				//	
-				if(DisplayType.INTEGER == column.DisplayType){				//	Is Integer
-					//	Integer
-					cellFormat = new WritableCellFormat(NumberFormats.INTEGER);
+				if(cPrintData.getValue() != null){
 					//	
-					cell = new Number(col, row+1, DisplayType
-										.getNumber(cPrintData.getValue()).doubleValue(), cellFormat);
-				} else if(DisplayType.isBigDecimal(column.DisplayType)){	//	Is Big Decimal
-					//	Float
-					cellFormat = new WritableCellFormat(NumberFormats.FLOAT);
-					//	
-					cell = new Number(col, row+1, DisplayType
-										.getNumber(cPrintData.getValue()).doubleValue(), cellFormat);					
-				}else if(DisplayType.isText(column.DisplayType)
-						|| DisplayType.isLookup(column.DisplayType)){		//	Is String
-					cell = new Label(col, row+1, cPrintData.getValue());
-				} else if(DisplayType.isDate(column.DisplayType)){			//	Is Date
-					String pattern = DisplayType.getDateFormat(ctx, column.DisplayType).toPattern();
-					DateFormat customDateFormat = new DateFormat (pattern); 
-					WritableCellFormat dateFormat = new WritableCellFormat (customDateFormat); 
-					long date = Long.getLong(cPrintData.getValue(), 0);
-					cell = new DateTime(col, row+1, new Date(date), dateFormat); 
+					if(DisplayType.INTEGER == column.DisplayType){				//	Is Integer
+						//	Integer
+						cellFormat = new WritableCellFormat(NumberFormats.INTEGER);
+						//	
+						cell = new Number(col, row+1, DisplayType
+											.getNumber(cPrintData.getValue()).doubleValue(), cellFormat);
+					} else if(DisplayType.isBigDecimal(column.DisplayType)){	//	Is Big Decimal
+						//	Float
+						cellFormat = new WritableCellFormat(NumberFormats.FLOAT);
+						//	
+						cell = new Number(col, row+1, DisplayType
+											.getNumber(cPrintData.getValue()).doubleValue(), cellFormat);					
+					}else if(DisplayType.isText(column.DisplayType)
+							|| DisplayType.isLookup(column.DisplayType)){		//	Is String
+						cell = new Label(col, row+1, cPrintData.getValue());
+					} else if(DisplayType.isDate(column.DisplayType)){			//	Is Date
+						String pattern = DisplayType.getDateFormat(ctx, column.DisplayType).toPattern();
+						DateFormat customDateFormat = new DateFormat (pattern); 
+						WritableCellFormat dateFormat = new WritableCellFormat (customDateFormat); 
+						long date = Long.parseLong(cPrintData.getValue());
+						cell = new DateTime(col, row+1, new Date(date), dateFormat); 
+					}
+
 				}
 				//	Add to Sheet
 				if(cell != null)
@@ -838,23 +852,26 @@ public class ReportPrintData {
 				PdfPCell cell = new PdfPCell();
 				//	
 				String value = cPrintData.getValue();
-				if(DisplayType.isNumeric(column.DisplayType)){				//	Number
-					//	Format
-					DecimalFormat decimalFormat = cDecimalFormat[col];
-					//	Format
-					if(decimalFormat != null)
-						value = decimalFormat.format(DisplayType.getNumber(value));
-					//	Set Value
-					cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
-				} else if(DisplayType.isDate(column.DisplayType)){			//	Is Date
-					SimpleDateFormat dateFormat = cDateFormat[col];
-					if(dateFormat != null){
-						long date = Long.getLong(value, 0);
-						value = dateFormat.format(new Date(date));
+				//	Only Values
+				if(value != null){
+					if(DisplayType.isNumeric(column.DisplayType)){				//	Number
+						//	Format
+						DecimalFormat decimalFormat = cDecimalFormat[col];
+						//	Format
+						if(decimalFormat != null)
+							value = decimalFormat.format(DisplayType.getNumber(value));
+						//	Set Value
+						cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+					} else if(DisplayType.isDate(column.DisplayType)){			//	Is Date
+						SimpleDateFormat dateFormat = cDateFormat[col];
+						if(dateFormat != null){
+							long date = Long.parseLong(value);
+							value = dateFormat.format(new Date(date));
+						}
 					}
 				}
 				//	Set Value
-				phrase = new Phrase(value); 
+				phrase = new Phrase(value);
 				//	
 				if(column.FieldAlignmentType
 						.equals(InfoReportField.FIELD_ALIGNMENT_TYPE_TRAILING_RIGHT))
