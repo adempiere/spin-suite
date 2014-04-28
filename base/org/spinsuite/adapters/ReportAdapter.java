@@ -278,7 +278,8 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 				//	Load Text View
 				String textValue = reportItem.getValue(i);
 				//	only values
-				if(textValue == null)
+				if(textValue == null
+						|| textValue.length() == 0)
 					continue;
 				//	Format Numeric
 				if(DisplayType.isNumeric(columns[i].DisplayType)){

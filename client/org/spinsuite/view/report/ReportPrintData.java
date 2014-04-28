@@ -89,6 +89,8 @@ public class ReportPrintData {
 		m_Value = ctx.getResources().getString(R.string.msg_Total);
 		//	Function Name
 		instanceFunctionName();
+		//	
+		loadFirstGroup();
 	}
 	
 	/**	Context							*/
@@ -107,16 +109,23 @@ public class ReportPrintData {
 	private PrintDataFunction[]			m_currentFunctionRow = null;
 	/**	Current Row per Changed			*/
 	private ColumnPrintData[]			m_currentRow = null;
+	/**	Columns							*/
+	private InfoReportField[] 			m_columns = null;
 	/**	Is Aggregate Function			*/
 	private boolean 					m_IsAggregateFunction = false;
 	/**	Is First Record					*/
 	private boolean 					m_IsFirst = true;
 	/**	Is Loaded						*/
 	private boolean 					m_IsLoaded = true;
+	/**	Is Reseted Function				*/
+	private boolean 					m_IsResetedFunction = true;
+	/**	First Group						*/
+	private int 						m_FirstGroup = 0;
 	/**	Total Prefix					*/
 	private String 						m_Value = "";
 	/** Symbols							*/
 	private String[]					FUNCTION_NAME = null;
+	
 	/**
 	 * Instance Function Name
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/04/2014, 10:20:01
@@ -182,28 +191,27 @@ public class ReportPrintData {
 	/**
 	 * Instance Data Function
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 11:41:41
-	 * @param columns
 	 * @return void
 	 */
-	private void instanceDataFunction(InfoReportField [] columns){
+	private void instanceDataFunction(){
 		// 
-		m_currentSummaryFunctionRow = new PrintDataFunction[columns.length];
-		m_currentFunctionRow = new PrintDataFunction[columns.length];
+		m_currentSummaryFunctionRow = new PrintDataFunction[m_columns.length];
+		m_currentFunctionRow = new PrintDataFunction[m_columns.length];
 		//	Current Row
-		m_currentRow = new ColumnPrintData[columns.length];
+		m_currentRow = new ColumnPrintData[m_columns.length];
 		//	
-		for(int i = 0; i < columns.length; i++){
-			m_currentRow[i] = new ColumnPrintData(columns[i].PrintName, columns[i].PrintNameSuffix);
+		for(int i = 0; i < m_columns.length; i++){
+			m_currentRow[i] = new ColumnPrintData(m_columns[i].PrintName, m_columns[i].PrintNameSuffix);
 			m_currentSummaryFunctionRow[i] = new PrintDataFunction();
 			m_currentFunctionRow[i] = new PrintDataFunction();
 			//	Set Aggregate Function
-			if(columns[i].IsSummarized
-					|| columns[i].IsCounted
-					|| columns[i].IsMaxCalc
-					|| columns[i].IsMinCalc
-					|| columns[i].IsAveraged
-					|| columns[i].IsVarianceCalc
-					|| columns[i].IsDeviationCalc)
+			if(m_columns[i].IsSummarized
+					|| m_columns[i].IsCounted
+					|| m_columns[i].IsMaxCalc
+					|| m_columns[i].IsMinCalc
+					|| m_columns[i].IsAveraged
+					|| m_columns[i].IsVarianceCalc
+					|| m_columns[i].IsDeviationCalc)
 				m_IsAggregateFunction = true;
 		}
 	}
@@ -227,6 +235,8 @@ public class ReportPrintData {
 					|| columns[i].IsDeviationCalc)
 				m_IsAggregateFunction = true;
 		}
+		//	
+		m_IsResetedFunction = true;
 	}
 	
 	/**
@@ -353,19 +363,19 @@ public class ReportPrintData {
 		//	
 		if(rs.moveToFirst()){
 			//	Columns
-			InfoReportField[] columns = m_reportQuery.getColumns();
+			m_columns = m_reportQuery.getColumns();
 			//	
-			instanceDataFunction(columns);
+			instanceDataFunction();
 			m_IsLoaded = true;
 			//	Add Header
 			do {
 				//	Add Row
-				m_data.add(getRowData(columns, rs));
+				m_data.add(getRowData(rs));
 				//	Not Is First
 				m_IsFirst = false;
 			}while(rs.moveToNext());
 			//	Add Summary Function
-			addFunctionRowFunction(columns);
+			addFunctionRowFunction();
 		}
 		//	Close Connection
 		if(handleConnection)
@@ -375,18 +385,17 @@ public class ReportPrintData {
 	/**
 	 * Get Row Data
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 21:35:57
-	 * @param columns
 	 * @param rs
 	 * @return
 	 * @return RowPrintData
 	 */
-	private RowPrintData getRowData(InfoReportField[] columns, Cursor rs){
+	private RowPrintData getRowData(Cursor rs){
 		//	New Row
 		RowPrintData rPrintData = new RowPrintData();
 		//	Get Values
-		for (int i = 0; i < columns.length; i++) {
+		for (int i = 0; i < m_columns.length; i++) {
 			//	Current Column
-			InfoReportField column = columns[i];
+			InfoReportField column = m_columns[i];
 			String value = rs.getString(i);
 			//	Add Data
 			if(!isChanged(m_currentRow[i].getValue(), value)
@@ -395,23 +404,23 @@ public class ReportPrintData {
 			else
 				rPrintData.addColumn(value, column.PrintNameSuffix);
 			//	Set Name on first row
-			if(m_IsFirst
-					&& column.IsGroupBy)
+			if(m_IsFirst)
 				m_currentRow[i].setValue(value);
+			//	Add To Function
+			m_currentSummaryFunctionRow[i].addRowValue(value, column);
+			m_currentFunctionRow[i].addRowValue(value, column);
 			//	
-			if(m_IsAggregateFunction){
-				//	Add To Function
-				m_currentSummaryFunctionRow[i].addRowValue(value, column);
-				m_currentFunctionRow[i].addRowValue(value, column);
+			if(m_IsAggregateFunction
+					&& !m_IsFirst){
 				//	Add Function Row
 				if(column.IsGroupBy
 						&& isChanged(m_currentRow[i].getValue(), value)){
 					//	Add Function
-					addRowFunction(columns, i);
+					addRowFunction(i);
 					//	Change
 					m_currentRow[i].setValue(value);
 					//	Reset Current Function
-					resetDataFunction(columns);
+					resetDataFunction(m_columns);
 				}
 			}
 		}
@@ -420,47 +429,72 @@ public class ReportPrintData {
 	}
 	
 	/**
+	 * Search First Group
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/04/2014, 23:27:55
+	 * @return void
+	 */
+	private void loadFirstGroup(){
+		for (int i = 0; i < m_columns.length; i++) {
+			if(m_columns[i].IsGroupBy){
+				m_FirstGroup = i;
+				break;
+			}
+		}
+	}
+	
+	/**
 	 * Add Row Function
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 14:31:59
-	 * @param columns
 	 * @param indexGroup
 	 * @return void
 	 */
-	private void addRowFunction(InfoReportField[] columns, int indexGroup){
-		for(int function = 0; function < PrintDataFunction.getSupportedFunctionQty(); function++){
+	private void addRowFunction(int indexGroup){
+		//	
+		if(!m_IsAggregateFunction
+				|| !m_IsLoaded)
+				return;
+		//	
+		for(int index = m_columns.length - 1; index >= indexGroup; index--){
+			//	
+			InfoReportField column = m_columns[index];
 			//	Get Prefix
-			String value = m_currentRow[indexGroup].getValue();
-			//	Get Row Function
-			RowPrintData functionRow = getRowFunction(columns, value, 
-					indexGroup, function, m_currentFunctionRow);
-			//	Have Function
-			if(functionRow != null)
-				m_data.add(functionRow);
+			String value = m_currentRow[index].getValue();
+			//	
+			if(!column.IsGroupBy)
+				continue;
+			//	
+			for(int function = 0; function < PrintDataFunction.getSupportedFunctionQty(); function++){
+				//	Get Row Function
+				RowPrintData functionRow = getRowFunction(value, 
+						index, function, m_currentFunctionRow);
+				//	Have Function
+				if(functionRow != null)
+					m_data.add(functionRow);
+			}
 		}
 	}
 	
 	/**
 	 * Add Function to Report
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 14:41:44
-	 * @param columns
 	 * @return void
 	 */
-	private void addFunctionRowFunction(InfoReportField[] columns){
+	private void addFunctionRowFunction(){
 		//	
 		if(!m_IsAggregateFunction
 				|| !m_IsLoaded)
 			return;
 		//	
-		for (int i = 0; i < columns.length; i++) {
+		for (int i = 0; i < m_columns.length; i++) {
 			//	Only Group By
-			if(!columns[i].IsGroupBy)
+			if(!m_columns[i].IsGroupBy)
 				continue;
 			//	Get Functions
 			for(int function = 0; function < PrintDataFunction.getSupportedFunctionQty(); function++){
 				//	Get Prefix
 				String value = m_Value;
 				//	Get Row Function
-				RowPrintData functionRow = getRowFunction(columns, value, 
+				RowPrintData functionRow = getRowFunction(value, 
 						i, function, m_currentSummaryFunctionRow);
 				//	Have Function
 				if(functionRow != null)
@@ -480,7 +514,7 @@ public class ReportPrintData {
 	 * @return
 	 * @return RowPrintData
 	 */
-	private RowPrintData getRowFunction(InfoReportField[] columns, String label, int indexGroup, 
+	private RowPrintData getRowFunction(String label, int indexGroup, 
 			int function, PrintDataFunction[] m_function){
 		//	
 		RowPrintData rPrintFunctionData = new RowPrintData(false, true);
@@ -488,10 +522,10 @@ public class ReportPrintData {
 		String functionNameLabel = "";
 		//	
 		boolean isFunction = false;
-		for(int i = 0; i < columns.length; i++){
+		for(int i = 0; i < m_columns.length; i++){
 			ColumnPrintData column = new ColumnPrintData(null, null);
 			PrintDataFunction currentFuctionColumn = m_function[i];
-			InfoReportField printFormatItem = columns[i];
+			InfoReportField printFormatItem = m_columns[i];
 			//	
 			if(function == PrintDataFunction.F_SUM
 					&& printFormatItem.IsSummarized){		//	Sum
