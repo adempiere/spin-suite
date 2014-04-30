@@ -89,8 +89,6 @@ public class ReportPrintData {
 		m_Value = ctx.getResources().getString(R.string.msg_Total);
 		//	Function Name
 		instanceFunctionName();
-		//	
-		loadFirstGroup();
 	}
 	
 	/**	Context							*/
@@ -121,6 +119,8 @@ public class ReportPrintData {
 	private boolean 					m_IsResetedFunction = true;
 	/**	First Group						*/
 	private int 						m_FirstGroup = 0;
+	/**	First Value						*/
+	private String 						m_FirstValue = null;
 	/**	Total Prefix					*/
 	private String 						m_Value = "";
 	/** Symbols							*/
@@ -214,6 +214,8 @@ public class ReportPrintData {
 					|| m_columns[i].IsDeviationCalc)
 				m_IsAggregateFunction = true;
 		}
+		//	
+		loadFirstGroup();
 	}
 	
 	/**
@@ -222,17 +224,17 @@ public class ReportPrintData {
 	 * @param columns
 	 * @return void
 	 */
-	private void resetDataFunction(InfoReportField [] columns){
-		for(int i = 0; i < columns.length; i++){
+	private void resetDataFunction(){
+		for(int i = 0; i < m_columns.length; i++){
 			m_currentFunctionRow[i].reset();
 			//	Set Aggregate Function
-			if(columns[i].IsSummarized
-					|| columns[i].IsCounted
-					|| columns[i].IsMaxCalc
-					|| columns[i].IsMinCalc
-					|| columns[i].IsAveraged
-					|| columns[i].IsVarianceCalc
-					|| columns[i].IsDeviationCalc)
+			if(m_columns[i].IsSummarized
+					|| m_columns[i].IsCounted
+					|| m_columns[i].IsMaxCalc
+					|| m_columns[i].IsMinCalc
+					|| m_columns[i].IsAveraged
+					|| m_columns[i].IsVarianceCalc
+					|| m_columns[i].IsDeviationCalc)
 				m_IsAggregateFunction = true;
 		}
 		//	
@@ -409,6 +411,8 @@ public class ReportPrintData {
 			//	Add To Function
 			m_currentSummaryFunctionRow[i].addRowValue(value, column);
 			m_currentFunctionRow[i].addRowValue(value, column);
+			if(i == m_FirstGroup)
+				m_FirstValue = value;
 			//	
 			if(m_IsAggregateFunction
 					&& !m_IsFirst){
@@ -420,7 +424,7 @@ public class ReportPrintData {
 					//	Change
 					m_currentRow[i].setValue(value);
 					//	Reset Current Function
-					resetDataFunction(m_columns);
+					resetDataFunction();
 				}
 			}
 		}
@@ -429,7 +433,7 @@ public class ReportPrintData {
 	}
 	
 	/**
-	 * Search First Group
+	 * Search First Column Group
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/04/2014, 23:27:55
 	 * @return void
 	 */
@@ -453,20 +457,37 @@ public class ReportPrintData {
 		if(!m_IsAggregateFunction
 				|| !m_IsLoaded)
 				return;
+		//	Get Prefix
+		String value = m_currentRow[indexGroup].getValue();
 		//	
-		for(int index = m_columns.length - 1; index >= indexGroup; index--){
+		if(indexGroup == m_FirstGroup){
+			//	Load
 			//	
-			InfoReportField column = m_columns[index];
-			//	Get Prefix
-			String value = m_currentRow[index].getValue();
-			//	
-			if(!column.IsGroupBy)
-				continue;
-			//	
+			for(int index = m_columns.length - 1; index >= indexGroup; index--){
+				//	
+				InfoReportField column = m_columns[index];
+				//	Get Prefix
+				value = m_currentRow[index].getValue();
+				//	
+				if(!column.IsGroupBy)
+					continue;
+				//	
+				for(int function = 0; function < PrintDataFunction.getSupportedFunctionQty(); function++){
+					//	Get Row Function
+					RowPrintData functionRow = getRowFunction(value, 
+							index, function, m_currentFunctionRow);
+					//	Have Function
+					if(functionRow != null)
+						m_data.add(functionRow);
+				}
+			}
+		} else {
+			if(!isChanged(m_currentRow[m_FirstGroup].getValue(), m_FirstValue))
+				return;
 			for(int function = 0; function < PrintDataFunction.getSupportedFunctionQty(); function++){
 				//	Get Row Function
 				RowPrintData functionRow = getRowFunction(value, 
-						index, function, m_currentFunctionRow);
+						indexGroup, function, m_currentFunctionRow);
 				//	Have Function
 				if(functionRow != null)
 					m_data.add(functionRow);
