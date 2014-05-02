@@ -249,16 +249,24 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 			for(int i = 0; i < columns.length; i++){
 				//	Format
 				String textValue = reportItem.getValue(i);
+				//	Column
+				InfoReportField column = columns[i];
 				//	Format Numeric
-				if(DisplayType.isNumeric(columns[i].DisplayType)){
-					DecimalFormat decimalFormat = cDecimalFormat[i];
-					if(decimalFormat != null)
-						textValue = decimalFormat.format(DisplayType.getNumber(textValue));
-				} else if(DisplayType.isDate(columns[i].DisplayType)){
-					SimpleDateFormat dateFormat = cDateFormat[i];
-					if(dateFormat != null){
-						long date = Long.getLong(textValue, 0);
-						textValue = dateFormat.format(new Date(date));
+				if(DisplayType.isNumeric(column.DisplayType)){
+					if(textValue != null
+							&& textValue.length() != 0){
+						DecimalFormat decimalFormat = cDecimalFormat[i];
+						if(decimalFormat != null)
+							textValue = decimalFormat.format(DisplayType.getNumber(textValue));	
+					}
+				} else if(DisplayType.isDate(column.DisplayType)){
+					if(textValue != null
+							&& textValue.length() != 0){
+						SimpleDateFormat dateFormat = cDateFormat[i];
+						if(dateFormat != null){
+							long longDate = Long.parseLong(textValue);
+							textValue = dateFormat.format(new Date(longDate));
+						}	
 					}
 				}
 				//	Set Value
@@ -267,30 +275,34 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 				holder.addTextView(tv_column);
 				//	Add to Layout
 				ll_ReportItem.addView(tv_column);
-				//	Set Tag
-				view.setTag(holder);
 			}
+			//	Set Tag
+			view.setTag(holder);
 		} else {
 			//	Holder
 			holder = (TextViewArrayHolder) view.getTag();
 			//	Set Holder
-			for(int i = 0; i < reportItem.getColumnsQty(); i++){
+			for(int i = 0; i < columns.length; i++){
 				//	Load Text View
 				String textValue = reportItem.getValue(i);
-				//	only values
-				if(textValue == null
-						|| textValue.length() == 0)
-					continue;
+				//	Column
+				InfoReportField column = columns[i];
 				//	Format Numeric
-				if(DisplayType.isNumeric(columns[i].DisplayType)){
-					DecimalFormat decimalFormat = cDecimalFormat[i];
-					if(decimalFormat != null)
-						textValue = decimalFormat.format(DisplayType.getNumber(textValue));
-				} else if(DisplayType.isDate(columns[i].DisplayType)){
-					SimpleDateFormat dateFormat = cDateFormat[i];
-					if(dateFormat != null){
-						long date = Long.parseLong(textValue);
-						textValue = dateFormat.format(new Date(date));
+				if(DisplayType.isNumeric(column.DisplayType)){
+					if(textValue != null
+							&& textValue.length() != 0){
+						DecimalFormat decimalFormat = cDecimalFormat[i];
+						if(decimalFormat != null)
+							textValue = decimalFormat.format(DisplayType.getNumber(textValue));	
+					}
+				} else if(DisplayType.isDate(column.DisplayType)){
+					if(textValue != null
+							&& textValue.length() != 0){
+						SimpleDateFormat dateFormat = cDateFormat[i];
+						if(dateFormat != null){
+							long longDate = Long.parseLong(textValue);
+							textValue = dateFormat.format(new Date(longDate));
+						}
 					}
 				}
 				//	Set Text

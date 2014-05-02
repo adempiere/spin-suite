@@ -115,8 +115,6 @@ public class ReportPrintData {
 	private boolean 					m_IsFirst = true;
 	/**	Is Loaded						*/
 	private boolean 					m_IsLoaded = true;
-	/**	Is Reseted Function				*/
-	private boolean 					m_IsResetedFunction = true;
 	/**	First Group						*/
 	private int 						m_FirstGroup = 0;
 	/**	First Value						*/
@@ -237,8 +235,6 @@ public class ReportPrintData {
 					|| m_columns[i].IsDeviationCalc)
 				m_IsAggregateFunction = true;
 		}
-		//	
-		m_IsResetedFunction = true;
 	}
 	
 	/**
@@ -377,7 +373,7 @@ public class ReportPrintData {
 				m_IsFirst = false;
 			}while(rs.moveToNext());
 			//	Add Summary Function
-			addFunctionRowFunction();
+			addFooterFunctionRow();
 		}
 		//	Close Connection
 		if(handleConnection)
@@ -500,20 +496,24 @@ public class ReportPrintData {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 14:41:44
 	 * @return void
 	 */
-	private void addFunctionRowFunction(){
+	private void addFooterFunctionRow(){
 		//	
 		if(!m_IsAggregateFunction
 				|| !m_IsLoaded)
 			return;
 		//	
-		for (int i = 0; i < m_columns.length; i++) {
+		for (int i = m_columns.length - 1; i >= 0; i--) {
+			InfoReportField column = m_columns[i];
 			//	Only Group By
-			if(!m_columns[i].IsGroupBy)
+			if(!column.IsGroupBy)
 				continue;
 			//	Get Functions
 			for(int function = 0; function < PrintDataFunction.getSupportedFunctionQty(); function++){
 				//	Get Prefix
-				String value = m_Value;
+				String value = m_Value + " " + column.PrintName 
+							+ (column.PrintNameSuffix != null
+							? " " + column.PrintNameSuffix
+									:"");
 				//	Get Row Function
 				RowPrintData functionRow = getRowFunction(value, 
 						i, function, m_currentSummaryFunctionRow);

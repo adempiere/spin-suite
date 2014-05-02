@@ -78,5 +78,4 @@ public class TextViewArrayHolder {
 	public void setText(String text, int index){
 		tv_array.get(index).setText(text);
 	}
-
 }

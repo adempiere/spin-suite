@@ -311,7 +311,10 @@ public class InfoReportField extends POInfoColumn {
 	
 	@Override
 	public String toString() {
-		return "InfoReportField [AD_PrintColor_ID=" + AD_PrintColor_ID
+		return "InfoReportField [FieldName=" + FieldName 
+				+ ", PrintName=" + PrintName
+				+ ", ColumnName=" + ColumnName
+				+ ", AD_PrintColor_ID=" + AD_PrintColor_ID
 				+ ", AD_PrintFont_ID=" + AD_PrintFont_ID
 				+ ", AD_PrintFormatChild_ID=" + AD_PrintFormatChild_ID
 				+ ", AD_PrintFormatItem_ID=" + AD_PrintFormatItem_ID
