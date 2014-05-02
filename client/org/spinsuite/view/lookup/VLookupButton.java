@@ -80,11 +80,11 @@ public class VLookupButton extends VLookup {
 		init();
 	}
 	
-	/**	Button 			*/
-	private Button 			v_Button 		= null;
-	/**	Value			*/
+	/**	Button 				*/
+	protected Button 		v_Button 		= null;
+	/**	Value				*/
 	private String 			m_Value 		= null;
-	/**	Load Action Menu*/
+	/**	Load Action Menu	*/
 	private LoadActionMenu	loadActionMenu 	= null;
 	/**	Activity from		*/
 	private Activity 		activity	 	= null;
