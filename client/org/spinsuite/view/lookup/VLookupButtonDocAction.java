@@ -35,7 +35,8 @@ import android.view.View;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class VLookupButtonDocAction extends VLookupButton implements OnActionItemClickListener, OnDismissListener{
+public class VLookupButtonDocAction extends VLookupButton 
+					implements OnActionItemClickListener, OnDismissListener{
 
 	/**
 	 * *** Constructor ***
@@ -232,7 +233,6 @@ public class VLookupButtonDocAction extends VLookupButton implements OnActionIte
 	 * @return String
 	 */
 	public String getDocStatus(){
-		//Msg.toastMsg(getContext(), documentStatus);
 		return documentStatus;
 	}
 	
@@ -288,7 +288,6 @@ public class VLookupButtonDocAction extends VLookupButton implements OnActionIte
 	private boolean validAction(String action){
 		if(actions != null){
 			for (int i = 0; i < actions.length; i++) {
-				//Msg.toastMsg(getContext(), action + " " + actions[i].equals(action));
 				if(actions[i].equals(action))
 					return true;
 			}
@@ -306,7 +305,6 @@ public class VLookupButtonDocAction extends VLookupButton implements OnActionIte
 	private boolean validActionRole(String action){
 		if(actionRole != null){
 			for (int i = 0; i < actionRole.length; i++) {
-				//Msg.toastMsg(getContext(), action + " " + actions[i].equals(action));
 				if(actionRole[i].equals(action))
 					return true;
 			}

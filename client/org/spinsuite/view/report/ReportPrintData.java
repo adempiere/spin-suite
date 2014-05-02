@@ -286,7 +286,7 @@ public class ReportPrintData {
 					if(para.getParameter() != null
 							&& para.getParameter_To() != null){
 						//	
-						sqlWhere.append(name).append(" => ?")
+						sqlWhere.append(name).append(" >= ?")
 								.append(" AND ")
 								.append(name).append(" <= ?");
 			    		//	Add Value

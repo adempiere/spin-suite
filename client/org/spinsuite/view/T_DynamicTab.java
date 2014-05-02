@@ -33,8 +33,10 @@ import org.spinsuite.util.TabParameter;
 import org.spinsuite.util.ViewIndex;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.InfoTab;
+import org.spinsuite.view.lookup.LookupButtonPaymentRule;
 import org.spinsuite.view.lookup.VLookup;
 import org.spinsuite.view.lookup.VLookupButton;
+import org.spinsuite.view.lookup.VLookupButtonDocAction;
 import org.spinsuite.view.lookup.VLookupCheckBox;
 import org.spinsuite.view.lookup.VLookupDateBox;
 import org.spinsuite.view.lookup.VLookupSearch;
@@ -258,7 +260,16 @@ public class T_DynamicTab extends Fragment
 				lookup = new VLookupSearch(getActivity(), field);
 			}
 		} else if(field.DisplayType == DisplayType.BUTTON){
-			VLookupButton lookupButton = new VLookupButton(getActivity(), field);
+			VLookupButton lookupButton = null;
+			if(field.ColumnName.equals("DocAction")){
+				lookupButton = new VLookupButtonDocAction(getActivity(), field);
+			} else if(field.ColumnName.equals("PaymentRule")){
+				//	Payment Rule Button
+				lookupButton = new LookupButtonPaymentRule(getActivity(), field);
+			} else {
+				lookupButton = new VLookupButton(getActivity(), field);
+			}
+			//	Set Parameters
 			lookupButton.setTabParameter(tabParam);
 			lookup = lookupButton;
 		}

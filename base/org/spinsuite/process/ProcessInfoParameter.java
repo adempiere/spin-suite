@@ -28,7 +28,7 @@ import java.math.BigDecimal;
  * @author Teo Sarca, www.arhipac.ro
  * 			<li>FR [ 2430845 ] Add ProcessInfoParameter.getParameterAsBoolean method
  */
-public class ProcessInfoParameter{
+public class ProcessInfoParameter {
 
 	/**
 	 *  Construct Parameter

@@ -19,40 +19,59 @@ import org.spinsuite.base.R;
 import org.spinsuite.util.ActionItemList;
 import org.spinsuite.util.contribution.QuickAction;
 
-import android.content.Context;
+import android.app.Activity;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.Button;
 
 /**
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class VButtonPaymentRule extends Button {
+public class LookupButtonPaymentRule extends VLookupButton {
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2012, 15:57:26
-	 * @param context
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/05/2014, 10:43:57
+	 * @param activity
 	 */
-	public VButtonPaymentRule(Context context) {
-		super(context);
-		init(context);
+	public LookupButtonPaymentRule(Activity activity) {
+		super(activity);
 	}
-	
+
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2012, 15:57:19
-	 * @param context
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/05/2014, 10:43:57
+	 * @param activity
 	 * @param attrs
 	 */
-	public VButtonPaymentRule(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		init(context);
+	public LookupButtonPaymentRule(Activity activity, AttributeSet attrs) {
+		super(activity, attrs);
+	}
+
+	/**
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/05/2014, 10:43:57
+	 * @param activity
+	 * @param attrs
+	 * @param defStyle
+	 */
+	public LookupButtonPaymentRule(Activity activity, AttributeSet attrs,
+			int defStyle) {
+		super(activity, attrs, defStyle);
+	}
+
+	/**
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/05/2014, 10:43:57
+	 * @param activity
+	 * @param m_field
+	 */
+	public LookupButtonPaymentRule(Activity activity, InfoField m_field) {
+		super(activity, m_field);
 	}
 	
 	private QuickAction mQAct;
-	private String paymentRule = "B";
+	private String 		paymentRule = "B";
 	
 	/** Cash = B */
 	public static final String PAYMENTRULE_Cash = "B";
@@ -69,20 +88,12 @@ public class VButtonPaymentRule extends Button {
 	/** Mixed = M */
 	public static final String PAYMENTRULE_Mixed = "M";
 	
-	/**
-	 * Init View
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/02/2014, 14:29:24
-	 * @param ctx
-	 * @return void
-	 */
-	private void init(Context ctx){
-		isInEditMode();
-		
-		//	Load Button 
-		//butt_Text = (Button) findViewById(R.id.butt_TextImage);
-		
-		setText(getResources().getString(R.string.PAYMENTRULE_Cash));
-		setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.cash_m), null, null, null);
+	@Override	
+	protected void init() {
+		super.init();
+		v_Button.setText(getResources().getString(R.string.PAYMENTRULE_Cash));
+		v_Button.setCompoundDrawablesWithIntrinsicBounds(
+				getResources().getDrawable(R.drawable.cash_m), null, null, null);
 		
 		setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -90,7 +101,7 @@ public class VButtonPaymentRule extends Button {
 			}
 		});
 		
-		mQAct = new QuickAction(ctx);
+		mQAct = new QuickAction(getContext());
 		
 		mQAct.addActionItem(new ActionItemList(PAYMENTRULE_Cash, 
 				getResources().getString(R.string.PAYMENTRULE_Cash), 
@@ -145,8 +156,9 @@ public class VButtonPaymentRule extends Button {
 	 * @return void
 	 */
 	private void updateDisplay(ActionItemList actionItem){
-		setText(actionItem.getTitle());
-		setCompoundDrawablesWithIntrinsicBounds(actionItem.getIcon(), null, null, null);
+		v_Button.setText(actionItem.getTitle());
+		v_Button.setCompoundDrawablesWithIntrinsicBounds(
+				actionItem.getIcon(), null, null, null);
 	}
 	
 	/**
@@ -158,32 +170,32 @@ public class VButtonPaymentRule extends Button {
 	public void setPaymentRule(String paymentRule){
 		if(paymentRule != null){
 			if(paymentRule.equals(PAYMENTRULE_Cash)){
-				setText(getResources().getString(R.string.PAYMENTRULE_Cash));
-				setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.cash_m), null, null, null);
+				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_Cash));
+				v_Button.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.cash_m), null, null, null);
 				this.paymentRule = paymentRule;
 			} else if(paymentRule.equals(PAYMENTRULE_Check)){
-				setText(getResources().getString(R.string.PAYMENTRULE_Check));
-				setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.check_m), null, null, null);
+				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_Check));
+				v_Button.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.check_m), null, null, null);
 				this.paymentRule = paymentRule;
 			} else if(paymentRule.equals(PAYMENTRULE_CreditCard)){
-				setText(getResources().getString(R.string.PAYMENTRULE_CreditCard));
-				setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.direct_credit_m), null, null, null);
+				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_CreditCard));
+				v_Button.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.direct_credit_m), null, null, null);
 				this.paymentRule = paymentRule;
 			} else if(paymentRule.equals(PAYMENTRULE_DirectDebit)){
-				setText(getResources().getString(R.string.PAYMENTRULE_DirectDebit));
-				setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.direct_debit_m), null, null, null);
+				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_DirectDebit));
+				v_Button.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.direct_debit_m), null, null, null);
 				this.paymentRule = paymentRule;
 			} else if(paymentRule.equals(PAYMENTRULE_DirectDeposit)){
-				setText(getResources().getString(R.string.PAYMENTRULE_DirectDeposit));
-				setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.direct_deposit_m), null, null, null);
+				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_DirectDeposit));
+				v_Button.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.direct_deposit_m), null, null, null);
 				this.paymentRule = paymentRule;
 			} else if(paymentRule.equals(PAYMENTRULE_Mixed)){
-				setText(getResources().getString(R.string.PAYMENTRULE_Mixed));
-				setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.payment_mixed_m), null, null, null);
+				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_Mixed));
+				v_Button.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.payment_mixed_m), null, null, null);
 				this.paymentRule = paymentRule;
 			} else if(paymentRule.equals(PAYMENTRULE_OnCredit)){
-				setText(getResources().getString(R.string.PAYMENTRULE_OnCredit));
-				setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.oncredit_m), null, null, null);
+				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_OnCredit));
+				v_Button.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.oncredit_m), null, null, null);
 				this.paymentRule = paymentRule;
 			}
 		}
@@ -198,4 +210,5 @@ public class VButtonPaymentRule extends Button {
 	public String getPaymentRule(){
 		return paymentRule;
 	}
+
 }
