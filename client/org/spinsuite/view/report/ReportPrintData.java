@@ -501,26 +501,16 @@ public class ReportPrintData {
 		if(!m_IsAggregateFunction
 				|| !m_IsLoaded)
 			return;
+		//	Last Summary
+		addRowFunction(m_FirstGroup);
 		//	
-		for (int i = m_columns.length - 1; i >= 0; i--) {
-			InfoReportField column = m_columns[i];
-			//	Only Group By
-			if(!column.IsGroupBy)
-				continue;
-			//	Get Functions
-			for(int function = 0; function < PrintDataFunction.getSupportedFunctionQty(); function++){
-				//	Get Prefix
-				String value = m_Value + " " + column.PrintName 
-							+ (column.PrintNameSuffix != null
-							? " " + column.PrintNameSuffix
-									:"");
-				//	Get Row Function
-				RowPrintData functionRow = getRowFunction(value, 
-						i, function, m_currentSummaryFunctionRow);
-				//	Have Function
-				if(functionRow != null)
-					m_data.add(functionRow);
-			}
+		for(int function = 0; function < PrintDataFunction.getSupportedFunctionQty(); function++){
+			//	Get Row Function
+			RowPrintData functionRow = getRowFunction(m_Value, 
+					m_FirstGroup, function, m_currentSummaryFunctionRow);
+			//	Have Function
+			if(functionRow != null)
+				m_data.add(functionRow);
 		}
 	}
 	

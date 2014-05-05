@@ -27,6 +27,7 @@ import org.spinsuite.view.report.ColumnPrintData;
 import org.spinsuite.view.report.InfoReportField;
 import org.spinsuite.view.report.RowPrintData;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -43,6 +44,7 @@ import android.widget.TextView;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
+@SuppressLint("ResourceAsColor")
 public class ReportAdapter extends BaseAdapter implements Filterable {
 
 	/**
@@ -57,7 +59,7 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 	public ReportAdapter(Context ctx, ArrayList<RowPrintData> data, InfoReportField[] columns, LinearLayout ll_HeaderReport) {		
 		this.ctx = ctx;
 		this.data = data;
-		this.columns = columns;
+		this.m_columns = columns;
 		//	Set Parameter
     	v_param = new LayoutParams(200, 
     			LayoutParams.WRAP_CONTENT, WEIGHT);
@@ -88,7 +90,7 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 	/**	Data						*/
 	private ArrayList<RowPrintData> 	data 			= null;
 	/**	Columns						*/
-	private InfoReportField[]			columns 		= null;
+	private InfoReportField[]			m_columns 		= null;
 	/**	Column Parameter			*/
 	private LayoutParams				v_param			= null;
 	/**	Inflater					*/
@@ -145,17 +147,18 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 	 */
 	private void formatField(TextView tv_column, int index){
 		//	Valid Columns
-		if(columns != null){
-			InfoReportField formatField = columns[index];
+		if(m_columns != null){
+			InfoReportField column = m_columns[index];
 			//	Set Style
-			if(formatField.FieldAlignmentType
+			if(column.FieldAlignmentType
 					.equals(InfoReportField.FIELD_ALIGNMENT_TYPE_TRAILING_RIGHT))
 				tv_column.setGravity(Gravity.RIGHT);
-			else if(formatField.FieldAlignmentType
+			else if(column.FieldAlignmentType
 					.equals(InfoReportField.FIELD_ALIGNMENT_TYPE_CENTER))
 				tv_column.setGravity(Gravity.CENTER_HORIZONTAL);
 			else 
 				tv_column.setGravity(Gravity.LEFT);
+			//	
 		}
 	}
 	
@@ -173,8 +176,8 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 		if(ll_HeaderReport.getChildCount() > 0)
 			ll_HeaderReport.removeAllViews();
 		//	Add Labels
-		for(int i = 0; i < columns.length; i++){
-			InfoReportField column = columns[i];
+		for(int i = 0; i < m_columns.length; i++){
+			InfoReportField column = m_columns[i];
 			//	Load Text View
 			TextView tv_column = loadTextView(
 					column.PrintName + (column.PrintNameSuffix != null
@@ -192,11 +195,11 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 	 */
 	private void instanceFormat(){
 		//	New Decimal Format
-		cDecimalFormat = new DecimalFormat[columns.length];
-		cDateFormat = new SimpleDateFormat[columns.length];
+		cDecimalFormat = new DecimalFormat[m_columns.length];
+		cDateFormat = new SimpleDateFormat[m_columns.length];
 		//	
-		for(int i = 0; i < columns.length; i++){
-			InfoReportField column = columns[i];
+		for(int i = 0; i < m_columns.length; i++){
+			InfoReportField column = m_columns[i];
 			//	Only Numeric
 			if(DisplayType.isNumeric(column.DisplayType))
 				cDecimalFormat[i] = DisplayType.getNumberFormat(ctx, column.DisplayType, 
@@ -244,13 +247,13 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 			view = (LinearLayout) inflater.inflate(R.layout.i_report, null);
 			LinearLayout ll_ReportItem = (LinearLayout) view.findViewById(R.id.ll_ReportItem);
 			//	
-			ll_ReportItem.setWeightSum(columns.length);
+			ll_ReportItem.setWeightSum(m_columns.length);
 			//	Add Columns
-			for(int i = 0; i < columns.length; i++){
+			for(int i = 0; i < m_columns.length; i++){
 				//	Format
 				String textValue = reportItem.getValue(i);
 				//	Column
-				InfoReportField column = columns[i];
+				InfoReportField column = m_columns[i];
 				//	Format Numeric
 				if(DisplayType.isNumeric(column.DisplayType)){
 					if(textValue != null
@@ -271,6 +274,11 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 				}
 				//	Set Value
 				TextView tv_column = loadTextView(textValue, i);
+				//	
+				if(reportItem.isFunctionRow())
+					tv_column.setTextAppearance(ctx, R.style.TextFunctionReport);
+				else
+					tv_column.setTextAppearance(ctx, R.style.TextItemReport);
 				//	Add Holder
 				holder.addTextView(tv_column);
 				//	Add to Layout
@@ -282,11 +290,11 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 			//	Holder
 			holder = (TextViewArrayHolder) view.getTag();
 			//	Set Holder
-			for(int i = 0; i < columns.length; i++){
+			for(int i = 0; i < m_columns.length; i++){
 				//	Load Text View
 				String textValue = reportItem.getValue(i);
 				//	Column
-				InfoReportField column = columns[i];
+				InfoReportField column = m_columns[i];
 				//	Format Numeric
 				if(DisplayType.isNumeric(column.DisplayType)){
 					if(textValue != null
@@ -305,8 +313,15 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 						}
 					}
 				}
+				//	
+				TextView tv_column = holder.getTextView(i);
+				//	
+				if(reportItem.isFunctionRow())
+					tv_column.setTextAppearance(ctx, R.style.TextFunctionReport);
+				else
+					tv_column.setTextAppearance(ctx, R.style.TextItemReport);
 				//	Set Text
-				holder.setText(textValue, i);
+				tv_column.setText(textValue);
 			}
 		}
 		//	Return
