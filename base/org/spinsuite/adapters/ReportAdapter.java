@@ -182,7 +182,7 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 			TextView tv_column = loadTextView(
 					column.PrintName + (column.PrintNameSuffix != null
 														? " " + column.PrintNameSuffix
-														:""), i);
+														:""), i, true);
 			//	Add to Layout
 			ll_HeaderReport.addView(tv_column);
 		}
@@ -217,18 +217,22 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/03/2014, 11:47:32
 	 * @param text
 	 * @param index
+	 * @param isFunctionRow
 	 * @return
 	 * @return TextView
 	 */
-	private TextView loadTextView(String text, int index){
+	private TextView loadTextView(String text, int index, boolean isFunctionRow){
     	//	New Text Field
 		TextView tv_column = new TextView(ctx);
 		//	Set Parameters
 		tv_column.setLayoutParams(v_param);
-		//	Set Style
-		tv_column.setTextAppearance(ctx, R.style.TextItemReport);
 		//	Format Field
 		formatField(tv_column, index);
+		//	
+		if(isFunctionRow)
+			tv_column.setTextAppearance(ctx, R.style.TextFunctionReport);
+		else
+			tv_column.setTextAppearance(ctx, R.style.TextItemReport);
 		//	Set Text
 		tv_column.setText(text);
 		//	Return
@@ -273,12 +277,7 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 					}
 				}
 				//	Set Value
-				TextView tv_column = loadTextView(textValue, i);
-				//	
-				if(reportItem.isFunctionRow())
-					tv_column.setTextAppearance(ctx, R.style.TextFunctionReport);
-				else
-					tv_column.setTextAppearance(ctx, R.style.TextItemReport);
+				TextView tv_column = loadTextView(textValue, i, reportItem.isFunctionRow());
 				//	Add Holder
 				holder.addTextView(tv_column);
 				//	Add to Layout

@@ -52,14 +52,14 @@
     
     <!-- Text Report Header -->
     <style name="TextHeaderReport" parent="TextStandard">
-        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
-        <item name="android:textColor">@android:color/holo_blue_dark</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
     
     <!-- Text Report Header -->
     <style name="TextFunctionReport" parent="TextStandard">
-        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
-        <item name="android:textColor">@android:color/holo_blue_dark</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
     
     <!-- Text Item -->
