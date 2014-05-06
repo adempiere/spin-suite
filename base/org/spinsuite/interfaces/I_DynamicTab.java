@@ -40,7 +40,7 @@ public interface I_DynamicTab {
 	public TabParameter getTabParameter();
 	
 	/**
-	 * SEt Tab Parameters
+	 * Set Tab Parameters
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/04/2014, 13:49:58
 	 * @param tabParam
 	 * @return void
@@ -54,6 +54,14 @@ public interface I_DynamicTab {
 	 * @return boolean
 	 */
 	public boolean refreshFromChange(boolean reQuery);
+	
+	/**
+	 * Save Data
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 06/05/2014, 23:01:26
+	 * @return
+	 * @return boolean
+	 */
+	public boolean save();
 	
 	/**
 	 * On Key Down

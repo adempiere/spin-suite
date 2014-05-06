@@ -15,12 +15,10 @@
  *************************************************************************************/
 package org.spinsuite.model;
 
-import java.io.File;
 import java.math.BigDecimal;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.process.DocAction;
-import org.spinsuite.util.LogM;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -57,7 +55,7 @@ public class MTestDoc extends X_TestDoc implements DocAction {
 
 	@Override
 	public boolean processIt(String action) throws Exception {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
@@ -75,8 +73,7 @@ public class MTestDoc extends X_TestDoc implements DocAction {
 
 	@Override
 	public String prepareIt() {
-		// TODO Auto-generated method stub
-		return null;
+		return STATUS_InProgress;
 	}
 
 	@Override
@@ -93,8 +90,10 @@ public class MTestDoc extends X_TestDoc implements DocAction {
 
 	@Override
 	public String completeIt() {
-		// TODO Auto-generated method stub
-		return null;
+		setDocAction(ACTION_Close);
+		setDocStatus(STATUS_Completed);
+		setProcessed(true);
+		return STATUS_Completed;
 	}
 
 	@Override
@@ -146,12 +145,6 @@ public class MTestDoc extends X_TestDoc implements DocAction {
 	}
 
 	@Override
-	public File createPDF() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public String getProcessMsg() {
 		// TODO Auto-generated method stub
 		return null;
@@ -179,12 +172,6 @@ public class MTestDoc extends X_TestDoc implements DocAction {
 	public int get_Table_ID() {
 		// TODO Auto-generated method stub
 		return 0;
-	}
-
-	@Override
-	public LogM get_Logger() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

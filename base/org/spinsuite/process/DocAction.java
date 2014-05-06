@@ -16,11 +16,9 @@
  *****************************************************************************/
 package org.spinsuite.process;
 
-import java.io.File;
 import java.math.BigDecimal;
 
 import org.spinsuite.base.DB;
-import org.spinsuite.util.LogM;
 
 import android.content.Context;
 
@@ -98,7 +96,7 @@ public interface DocAction
 	 *	@param newStatus new Status
 	 */
 	public void setDocStatus (String newStatus);
-
+	
 	/**
 	 * 	Get Doc Status
 	 *	@return Document Status

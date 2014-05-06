@@ -23,6 +23,7 @@ import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.interfaces.I_FragmentSelectListener;
 import org.spinsuite.model.MSPSTable;
 import org.spinsuite.model.PO;
+import org.spinsuite.process.DocAction;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
@@ -254,7 +255,8 @@ public class T_DynamicTab extends Fragment
 			lookup = new VLookupCheckBox(getActivity(), field);
 		} else if(DisplayType.isLookup(field.DisplayType)){
 			//	Table Direct
-			if(field.DisplayType == DisplayType.TABLE_DIR){
+			if(field.DisplayType == DisplayType.TABLE_DIR
+					|| field.DisplayType == DisplayType.LIST){
 				lookup = new VLookupSpinner(getActivity(), field);
 			} else if(field.DisplayType == DisplayType.SEARCH){
 				lookup = new VLookupSearch(getActivity(), field);
@@ -262,7 +264,7 @@ public class T_DynamicTab extends Fragment
 		} else if(field.DisplayType == DisplayType.BUTTON){
 			VLookupButton lookupButton = null;
 			if(field.ColumnName.equals("DocAction")){
-				lookupButton = new VLookupButtonDocAction(getActivity(), field);
+				lookupButton = new VLookupButtonDocAction(getActivity(), field, (DocAction) model, this);
 			} else if(field.ColumnName.equals("PaymentRule")){
 				//	Payment Rule Button
 				lookupButton = new LookupButtonPaymentRule(getActivity(), field);
@@ -383,7 +385,7 @@ public class T_DynamicTab extends Fragment
                 return true;
                 
             case R.id.action_save:
-            	if(saveData())
+            	if(save())
             		lockView(SEE);
                 return true;
         }
@@ -397,7 +399,7 @@ public class T_DynamicTab extends Fragment
      * @return
      * @return boolean
      */
-    private boolean saveData(){
+    public boolean save(){
     	boolean ok = true;
     	m_Record_ID = Env.getTabRecord_ID(getActivity(), 
     			tabParam.getActivityNo(), tabParam.getTabNo());
@@ -412,9 +414,8 @@ public class T_DynamicTab extends Fragment
     		VLookup lookup = vIndex.getVLookup();
     		InfoField field = lookup.getField();
     		if((field.IsMandatory
-    				|| field.IsParent)
-    				&& lookup.isEmpty()){
-    			Msg.alertMustFillField(getActivity(), field.Name, lookup.getChildView());
+    				|| field.IsParent)&& lookup.isEmpty()){
+    			Msg.alertMustFillField(getActivity(), "\"" + field.Name + "\"", lookup.getChildView());
     			//	set ok to false
     			ok = false;
     			break;
@@ -485,6 +486,25 @@ public class T_DynamicTab extends Fragment
     	//	Reload
     	model.loadData(m_Record_ID);
     	//	Refresh
+    	loadData();
+    	//	Set Identifier
+    	Env.setContext(getActivity(), tabParam.getActivityNo(), 
+				tabParam.getTabNo(), tabInfo.getTableKeyName(), model.getID());
+    	//	Set Parent Record Identifier
+    	m_Parent_Record_ID = Env.getTabRecord_ID(getActivity(), 
+    			tabParam.getActivityNo(), tabParam.getParentTabNo());
+    	//	
+    	changeMenuView();
+    	//	Return
+    	return !viewList.isEmpty();
+    }
+    
+    /**
+     * Load Data in View
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 06/05/2014, 23:28:32
+     * @return void
+     */
+    private void loadData(){
     	for (ViewIndex vIndex: viewList) {
     		VLookup lookup = vIndex.getVLookup();
     		InfoField field = lookup.getField();
@@ -499,19 +519,7 @@ public class T_DynamicTab extends Fragment
     		//	Set Current Values
     		DisplayType.setContextValue(getActivity(), tabParam.getActivityNo(), 
 	    				tabParam.getTabNo(), field, lookup.getValue());
-    		
-    		
     	}
-    	//	Set Identifier
-    	Env.setContext(getActivity(), tabParam.getActivityNo(), 
-				tabParam.getTabNo(), tabInfo.getTableKeyName(), model.getID());
-    	//	Set Parent Record Identifier
-    	m_Parent_Record_ID = Env.getTabRecord_ID(getActivity(), 
-    			tabParam.getActivityNo(), tabParam.getParentTabNo());
-    	//	
-    	changeMenuView();
-    	//	Return
-    	return !viewList.isEmpty();
     }
     
     /**
@@ -563,9 +571,9 @@ public class T_DynamicTab extends Fragment
 			for(ViewIndex vIndex : viewList){
 	    		VLookup lookup = vIndex.getVLookup();
 	    		InfoField field = lookup.getField();
-	    		if((!field.IsReadOnly 
-	    				&& !field.IsParent)
-	    			|| field.ColumnName.equals("DocAction")){
+	    		if(!field.IsReadOnly 
+	    				&& !field.IsParent
+	    				&& !field.ColumnName.equals("DocAction")){
 	    			lookup.setEnabled(true);
 	    		} else {
 	    			lookup.setEnabled(false);
@@ -576,16 +584,11 @@ public class T_DynamicTab extends Fragment
 	    		VLookup lookup = vIndex.getVLookup();
 	    		InfoField field = lookup.getField();
 	    		if(
-	    			//	Document Action
-	    			(field.ColumnName.equals("DocAction")
-	    				&& !field.IsReadOnly
-	    				&& (field.IsUpdateable || field.IsAlwaysUpdateable))
-	    			||
 	    			//	Any Field
-	    			(!field.ColumnName.equals("DocAction")
+	    			!field.ColumnName.equals("DocAction")
 	    					&& (field.IsUpdateable || field.IsAlwaysUpdateable)
 	    					&& !field.IsReadOnly
-	    					&& !field.IsParent)){
+	    					&& !field.IsParent){
 	    			lookup.setEnabled(true);
 	    		} else {
 	    			lookup.setEnabled(false);
@@ -624,13 +627,6 @@ public class T_DynamicTab extends Fragment
     	refresh(0, false);
     	lockView(NEW);
     }
-    
-    /*@Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //	Set Tab No
-        outState.putInt(TAB_NO, tabParam.getTabNo());
-    }*/
     
     /**
      * Handle menu items
@@ -682,6 +678,8 @@ public class T_DynamicTab extends Fragment
         	if(m_Parent_Record_ID != currentParent_Record_ID){
         		ok = refresh(0, true);
         	}
+    	} else {
+    		loadData();
     	}
     	//	
     	changeMenuView();

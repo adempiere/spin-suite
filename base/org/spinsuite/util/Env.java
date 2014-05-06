@@ -1052,9 +1052,9 @@ public final class Env {
 			token = inStr.substring(0, j);
 			//Msg.alertMsg(ctx, "Epale", token);
 			String ctxInfo = getContext(ctx, token);	// get context
-			if (ctxInfo.length() == 0 && (token.startsWith("#") || token.startsWith("$")) )
+			if (ctxInfo != null && ctxInfo.length() == 0 && (token.startsWith("#") || token.startsWith("$")) )
 				ctxInfo = getContext(ctx, token);	// get global context
-			if (ctxInfo.length() == 0)
+			if (ctxInfo != null && ctxInfo.length() == 0)
 			{
 				LogM.log(ctx, "Env", Level.INFO, "No Context for: " + token);
 				if (!ignoreUnparsable && defaultUnparseable==null)

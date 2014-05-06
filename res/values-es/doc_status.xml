@@ -19,11 +19,15 @@
 <resources>
     <string name="ACTION_Complete">Completar</string>
 	<string name="ACTION_Prepare">Procesar</string>
-	<string name="ACTION_Void">Cancelar</string>
+	<string name="ACTION_Void">Anular</string>
+	<string name="ACTION_Reverse">Reversar</string>
 	<string name="ACTION_ReActivate">Reactivar</string>
+	<string name="ACTION_Close">Cerrar</string>
+	<string name="ACTION_None">Nada</string>
 	
 	<string name="STATUS_Drafted">Borrador</string>
-	<string name="STATUS_Completed">Completado</string>
+	<string name="STATUS_Completed">Completo</string>
 	<string name="STATUS_Voided">Cancelado</string>
 	<string name="STATUS_InProgress">En Proceso</string>
+	<string name="STATUS_Invalid">Inválido</string>
 </resources>

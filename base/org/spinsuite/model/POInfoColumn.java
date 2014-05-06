@@ -230,11 +230,12 @@ public class POInfoColumn implements Parcelable {
 	
 	@Override
 	public String toString() {
-		return "POInfoColumn [AD_Column_ID=" + AD_Column_ID
+		return "POInfoColumn [ColumnName=" + ColumnName
+				+ ", AD_Column_ID=" + AD_Column_ID
 				+ ", AD_Element_ID=" + AD_Element_ID + ", DisplayType="
 				+ DisplayType + ", AD_Reference_Value_ID="
 				+ AD_Reference_Value_ID + ", AD_Val_Rule_ID=" + AD_Val_Rule_ID
-				+ ", Callout=" + Callout + ", ColumnName=" + ColumnName
+				+ ", Callout=" + Callout
 				+ ", ColumnSQL=" + ColumnSQL + ", DefaultValue=" + DefaultValue
 				+ ", Description=" + Description + ", EntityType=" + EntityType
 				+ ", FieldLength=" + FieldLength + ", FormatPattern="

@@ -171,4 +171,9 @@ public class T_DynamicTabDetail extends Fragment
 	    //	Return
 	    return false;
 	}
+
+	@Override
+	public boolean save() {
+		return false;
+	}
 }

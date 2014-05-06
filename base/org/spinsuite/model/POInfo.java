@@ -136,7 +136,7 @@ public class POInfo {
 					"c.ColumnName, " +
 					"c.ColumnSQL, " +
 					"c.DefaultValue, " +
-					"ct.Description, " +
+					"c.Description, " +
 					"c.EntityType, " +
 					"c.FieldLength, " +
 					"c.FormatPattern, " +

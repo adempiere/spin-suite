@@ -17,6 +17,7 @@ package org.spinsuite.view.lookup;
 
 
 import org.spinsuite.base.R;
+import org.spinsuite.util.Env;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -86,7 +87,10 @@ public class VLookupCheckBox extends VLookup {
 		//	Add to view
 		addView(v_CheckBox);
 		v_Label.setText("");
-		
+		//	Set Default Value
+		if(m_field.DefaultValue != null
+					&& m_field.DefaultValue.length() > 0)
+			setValue(Env.parseContext(getContext(), m_field.DefaultValue, false));
 	}
 
 	@Override

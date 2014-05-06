@@ -15,19 +15,17 @@
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
-import java.util.ArrayList;
-
-import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
+import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.process.DocAction;
+import org.spinsuite.process.DocumentEngine;
 import org.spinsuite.util.ActionItemList;
+import org.spinsuite.util.Msg;
 import org.spinsuite.util.contribution.QuickAction;
 import org.spinsuite.util.contribution.QuickAction.OnActionItemClickListener;
 import org.spinsuite.util.contribution.QuickAction.OnDismissListener;
 
 import android.app.Activity;
-import android.content.Context;
-import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -75,22 +73,28 @@ public class VLookupButtonDocAction extends VLookupButton
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/05/2014, 10:43:57
 	 * @param activity
 	 * @param m_field
+	 * @param po
+	 * @param mTab
 	 */
-	public VLookupButtonDocAction(Activity activity, InfoField m_field) {
+	public VLookupButtonDocAction(Activity activity, InfoField m_field, DocAction po, I_DynamicTab mTab) {
 		super(activity, m_field);
+		docEngine = new DocumentEngine(po);
+		this.mTab = mTab;
 	}
 	
+	/**	Quit Action					*/
 	private QuickAction 		mQAct;
-	private String 				documentStatus = "DR";
-	private String [] 			validActions = null;
-	private String [] 			actionRole = null;
-	private boolean 			loaded = false;
+	/**	Document Engine				*/
+	private DocumentEngine		docEngine = null;
+	/**	Tab							*/
+	private I_DynamicTab		mTab = null;
 	
 	@Override	
 	protected void init() {
 		super.init();
 		v_Button.setCompoundDrawablesWithIntrinsicBounds(
 				getResources().getDrawable(R.drawable.edit_m), null, null, null);
+		//	
 		setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
@@ -104,38 +108,8 @@ public class VLookupButtonDocAction extends VLookupButton
 		mQAct.setOnActionItemClickListener(this);
 				
 		mQAct.setOnDismissListener(this);
-	}
-	
-	/**
-	 * Set show View Actions
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/05/2012, 16:57:11
-	 * @param validActions
-	 * @return void
-	 */
-	private void setValidActionOption(String [] validActions){
-		this.validActions = validActions;
-	}
-
-	/**
-	 * Set Status
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/06/2012, 23:54:54
-	 * @param quickAction
-	 * @param pos
-	 * @return void
-	 */
-	public void setStatus(QuickAction quickAction, int pos){
-		ActionItemList actionItem = (ActionItemList) quickAction.getActionItem(pos);
-		if(actionItem.getValue().equals(DocAction.STATUS_Drafted)){
-			setDocAction(DocAction.STATUS_Completed);
-		} else if(actionItem.getValue().equals(DocAction.ACTION_Complete)){
-			setDocAction(DocAction.STATUS_Completed);
-		} else if(actionItem.getValue().equals(DocAction.ACTION_ReActivate)){
-			setDocAction(DocAction.STATUS_InProgress);
-		} else if(actionItem.getValue().equals(DocAction.ACTION_Void)){
-			setDocAction(DocAction.STATUS_Voided);
-		} else if(actionItem.getValue().equals(DocAction.ACTION_Prepare)){
-			setDocAction(DocAction.STATUS_InProgress);
-		}
+		//	Update Display
+		updateDisplay(null);
 	}
 	
 	/**
@@ -145,33 +119,29 @@ public class VLookupButtonDocAction extends VLookupButton
 	 * @return void
 	 */
 	private void loadActions(View v){
+		//	
 		mQAct.clear();
-		
 		//	Action Complete
-		if(validAction(DocAction.ACTION_Complete)
-				&& validActionRole(DocAction.ACTION_Complete)){
+		if(docEngine.isValidAction(DocAction.ACTION_Complete)){
 			mQAct.addActionItem(new ActionItemList(DocAction.ACTION_Complete, 
 					getResources().getString(R.string.ACTION_Complete), 
 					getResources().getDrawable(R.drawable.doc_completed_m)));
 		}
 		//	Action Prepare
-		if(validAction(DocAction.ACTION_Prepare)
-				&& validActionRole(DocAction.ACTION_Prepare)){
+		if(docEngine.isValidAction(DocAction.ACTION_Prepare)){
 			mQAct.addActionItem(new ActionItemList(DocAction.ACTION_Prepare, 
 					getResources().getString(R.string.ACTION_Prepare), 
 					getResources().getDrawable(R.drawable.doc_progress_m)));	
 		}
 		//	Action Void
-		if(validAction(DocAction.ACTION_Void)
-				&& validActionRole(DocAction.ACTION_Void)){
+		if(docEngine.isValidAction(DocAction.ACTION_Void)){
 			mQAct.addActionItem(new ActionItemList(DocAction.ACTION_Void, 
 					getResources().getString(R.string.ACTION_Void), 
 					getResources().getDrawable(R.drawable.remove_m)));	
 		}
 		//	Action Void
-		if(validAction(DocAction.ACTION_ReActivate) 
-				&& !documentStatus.equals(DocAction.STATUS_Drafted)
-				&& validActionRole(DocAction.ACTION_ReActivate)){
+		if(docEngine.isValidAction(DocAction.ACTION_ReActivate) 
+				&& !docEngine.getDocStatus().equals(DocAction.STATUS_Drafted)){
 			mQAct.addActionItem(new ActionItemList(DocAction.ACTION_ReActivate, 
 					getResources().getString(R.string.ACTION_ReActivate), 
 					getResources().getDrawable(R.drawable.doc_progress_m)));	
@@ -183,56 +153,55 @@ public class VLookupButtonDocAction extends VLookupButton
 	/**
 	 * Set Document Action
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/05/2012, 00:35:12
-	 * @param docStatus
+	 * @param action
 	 * @return void
 	 */
-	public void setDocAction(String docStatus){
-		//	Available Options
-		String [] options = null;
+	public void processDocAction(String action){
+		if(!docEngine.processIt(action)){
+			Msg.alertMsg(getContext(), getResources().getString(R.string.msg_Error), docEngine.getProcessMsg());
+			return;
+		}
+		//	
+		updateDisplay(action);
+	}
+	
+	/**
+	 * Update Display
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 06/05/2014, 15:26:38
+	 * @param action
+	 * @return void
+	 */
+	private void updateDisplay(String action){
 		String label = null;
 		Drawable img = null;
 		//	
-		if(docStatus != null){
-			if(docStatus.equals(DocAction.STATUS_Drafted)){
-				label = getResources().getString(R.string.STATUS_Drafted);
-				img = getResources().getDrawable(R.drawable.edit_m);
-				this.documentStatus = docStatus;
-				options = new String[]{
-						DocAction.ACTION_Complete, 
-						DocAction.ACTION_Prepare, 
-						DocAction.ACTION_Void};
-			} else if(docStatus.equals(DocAction.STATUS_Completed)){
-				label = getResources().getString(R.string.STATUS_Completed);
+		if(action != null){
+			if(action.equals(DocAction.ACTION_Complete)){						//	Complete
+				label = getResources().getString(R.string.ACTION_Complete);
 				img = getResources().getDrawable(R.drawable.doc_completed_m);
-				this.documentStatus = docStatus;
-				options = new String[]{
-						DocAction.ACTION_ReActivate, 
-						DocAction.ACTION_Void};
-			} else if(docStatus.equals(DocAction.STATUS_Voided)){
-				label = getResources().getString(R.string.STATUS_Voided);
-				img = getResources().getDrawable(R.drawable.remove_m);
-				this.documentStatus = docStatus;
-			} else if(docStatus.equals(DocAction.STATUS_InProgress)){
-				label = getResources().getString(R.string.STATUS_InProgress);
+			} else if(action.equals(DocAction.ACTION_Prepare)){					//	Prepare
+				label = getResources().getString(R.string.ACTION_Prepare);
 				img = getResources().getDrawable(R.drawable.doc_progress_m);
-				this.documentStatus = docStatus;
-				options = new String[]{
-						DocAction.ACTION_Complete,
-						DocAction.ACTION_Void};
+			} else if(action.equals(DocAction.ACTION_Close)){					//	Close
+				label = getResources().getString(R.string.ACTION_Close);
+				img = getResources().getDrawable(R.drawable.errorsync_m);
+			} else if(action.equals(DocAction.ACTION_Void)){					//	Void
+				label = getResources().getString(R.string.ACTION_Void);
+				img = getResources().getDrawable(R.drawable.remove_m);
+			} else if(action.equals(DocAction.ACTION_Reverse_Correct)){			//	Reverse Correct
+				label = getResources().getString(R.string.ACTION_Reverse);
+				img = getResources().getDrawable(R.drawable.remove_m);
+			} else if(action.equals(DocAction.ACTION_ReActivate)){				//	Re-Activate
+				label = getResources().getString(R.string.ACTION_ReActivate);
+				img = getResources().getDrawable(R.drawable.download_m);
 			}
-		} else {
-			label = getResources().getString(R.string.STATUS_Drafted);
-			img = getResources().getDrawable(R.drawable.edit_m);
-			this.documentStatus = docStatus;
-			options = new String[]{
-					DocAction.ACTION_Complete, 
-					DocAction.ACTION_Prepare, 
-					DocAction.ACTION_Void};
+		} else {																//	Default
+			label = getResources().getString(R.string.ACTION_Prepare);
+			img = getResources().getDrawable(R.drawable.doc_progress_m);
 		}
 		//	
-		v_Button.setTag(label);
+		v_Button.setText(label);
 		v_Button.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
-		setValidActionOption(options);
 	}
 	
 	/**
@@ -242,83 +211,17 @@ public class VLookupButtonDocAction extends VLookupButton
 	 * @return String
 	 */
 	public String getDocStatus(){
-		return documentStatus;
+		return docEngine.getDocStatus();
 	}
 	
 	/**
-	 * Verify valid Action to Document wit role
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/08/2012, 03:14:24
-	 * @param conn
-	 * @param ctx
-	 * @param m_C_DocType_ID
-	 * @param reloaded
+	 * Set Document Action
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 06/05/2014, 15:17:31
+	 * @param status
 	 * @return void
 	 */
-	public void setValRuleAction(DB con_tx, Context ctx, int m_C_DocType_ID, boolean reloaded){
-		if(!loaded || reloaded) {
-			boolean handConnection = false;
-			DB con = null;
-			if(con_tx == null){
-				con = new DB(ctx);
-				con.openDB(DB.READ_ONLY);
-				handConnection = true;
-			} else 
-				con = con_tx;
-			String sql = new String("SELECT DocAction " +
-					"FROM AD_Document_Action_Access " +
-					"WHERE C_DocType_ID = " + m_C_DocType_ID);
-			//	Cursor
-			Cursor rs = con.querySQL(sql, null);
-	    	
-			if(rs.moveToFirst()){
-				ArrayList<String> docActions = new ArrayList<String>();
-				do{
-					docActions.add(rs.getString(0));
-				} while(rs.moveToNext());
-				
-				if(docActions.size() != 0){
-					actionRole = new String[docActions.size()];
-					docActions.toArray(actionRole);
-				}
-	    	}
-			//	Close DB
-			if(handConnection)
-				con.closeDB(rs);	
-		}
-	}
-	
-	/**
-	 * Valid Action
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/05/2012, 17:00:21
-	 * @param action
-	 * @return
-	 * @return boolean
-	 */
-	private boolean validAction(String action){
-		if(validActions != null){
-			for (int i = 0; i < validActions.length; i++) {
-				if(validActions[i].equals(action))
-					return true;
-			}
-		}
-		return false;
-	}
-	
-	/**
-	 * Verify Valid Action with role
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/08/2012, 03:11:32
-	 * @param action
-	 * @return
-	 * @return boolean
-	 */
-	private boolean validActionRole(String action){
-		if(actionRole != null){
-			for (int i = 0; i < actionRole.length; i++) {
-				if(actionRole[i].equals(action))
-					return true;
-			}
-		}
-		return false;
+	public void setDocAction(String status){
+		updateDisplay(status);
 	}
 	
 	/**
@@ -333,12 +236,40 @@ public class VLookupButtonDocAction extends VLookupButton
 
 	@Override
 	public void onItemClick(QuickAction source, int pos, int actionId) {
-		setStatus(source, pos);
+		ActionItemList item = (ActionItemList) source.getActionItem(pos);
+		processDocAction(item.getValue());
+		//	Save
+		if(mTab != null){
+			mTab.refreshFromChange(false);
+			mTab.save();
+		}
 	}
 
 	@Override
 	public void onDismiss() {
 		
+	}
+	
+	@Override
+	public Object getValue() {
+		return getDocStatus();
+	}
+	
+	@Override
+	public void setValue(Object value) {
+		super.setValue(value);
+		//	
+		if(value != null
+				&& value instanceof String)
+			setDocAction((String)value);
+		else
+			setDocAction(null);
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return (getDocStatus() == null 
+				|| getDocStatus().length() == 0);
 	}
 
 }

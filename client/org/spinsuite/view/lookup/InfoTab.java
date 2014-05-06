@@ -271,7 +271,8 @@ public class InfoTab {
 					"CASE WHEN f.AD_Reference_ID IS NOT NULL THEN f.AD_Reference_ID ELSE C.AD_Reference_ID END AD_Reference_ID, " +
 					"CASE WHEN f.AD_Reference_Value_ID IS NOT NULL THEN f.AD_Reference_Value_ID ELSE c.AD_Reference_Value_ID END AD_Reference_Value_ID, " +
 					"CASE WHEN f.AD_Val_Rule_ID IS NOT NULL THEN f.AD_Val_Rule_ID ELSE c.AD_Val_Rule_ID END AD_Val_Rule_ID, " +
-					"c.Callout, c.ColumnName, c.ColumnSQL, c.DefaultValue, c.EntityType, c.FieldLength, " +
+					"CASE WHEN f.DefaultValue IS NOT NULL THEN f.DefaultValue ELSE c.DefaultValue END DefaultValue, " + 
+					"c.Callout, c.ColumnName, c.ColumnSQL, c.EntityType, c.FieldLength, " +
 					"c.FormatPattern, c.IsAlwaysUpdateable, c.IsCentrallyMaintained, c.IsEncrypted, c.IsIdentifier, c.IsKey, " +
 					"CASE WHEN f.IsMandatory = 'Y' THEN f.IsMandatory ELSE c.IsMandatory END IsMandatory, " +
 					"c.IsParent, c.IsSelectionColumn, c.IsUpdateable, c.SelectionSeqNo, " +
@@ -292,7 +293,8 @@ public class InfoTab {
 					"CASE WHEN f.AD_Reference_ID IS NOT NULL THEN f.AD_Reference_ID ELSE C.AD_Reference_ID END AD_Reference_ID, " +
 					"CASE WHEN f.AD_Reference_Value_ID IS NOT NULL THEN f.AD_Reference_Value_ID ELSE c.AD_Reference_Value_ID END AD_Reference_Value_ID, " +
 					"CASE WHEN f.AD_Val_Rule_ID IS NOT NULL THEN f.AD_Val_Rule_ID ELSE c.AD_Val_Rule_ID END AD_Val_Rule_ID, " +
-					"c.Callout, c.ColumnName, c.ColumnSQL, c.DefaultValue, c.EntityType, c.FieldLength, " +
+					"CASE WHEN f.DefaultValue IS NOT NULL THEN f.DefaultValue ELSE c.DefaultValue END DefaultValue, " +
+					"c.Callout, c.ColumnName, c.ColumnSQL, c.EntityType, c.FieldLength, " +
 					"c.FormatPattern, c.IsAlwaysUpdateable, c.IsCentrallyMaintained, c.IsEncrypted, c.IsIdentifier, c.IsKey, " +
 					"CASE WHEN f.IsMandatory = 'Y' THEN f.IsMandatory ELSE c.IsMandatory END IsMandatory, " +
 					"c.IsParent, c.IsSelectionColumn, c.IsUpdateable, c.SelectionSeqNo, " +
@@ -359,10 +361,10 @@ public class InfoTab {
 				iFieldColumn.DisplayType = rs.getInt(i++);
 				iFieldColumn.AD_Reference_Value_ID = rs.getInt(i++);
 				iFieldColumn.AD_Val_Rule_ID = rs.getInt(i++);
+				iFieldColumn.DefaultValue = rs.getString(i++);
 				iFieldColumn.Callout = rs.getString(i++);
 				iFieldColumn.ColumnName = rs.getString(i++);
 				iFieldColumn.ColumnSQL = rs.getString(i++);
-				iFieldColumn.DefaultValue = rs.getString(i++);
 				iFieldColumn.EntityType = rs.getString(i++);
 				iFieldColumn.FieldLength = rs.getInt(i++);
 				iFieldColumn.FormatPattern = rs.getString(i++);

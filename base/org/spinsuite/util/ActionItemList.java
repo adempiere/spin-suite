@@ -26,7 +26,7 @@ import android.graphics.drawable.Drawable;
 public class ActionItemList extends ActionItem {
 
 	/**
-	 * *** Constructor de la Clase ***
+	 * *** Constructor ***
 	 * @author Yamel Senih 09/05/2012, 15:12:35
 	 * @param actionId
 	 * @param title
@@ -37,7 +37,7 @@ public class ActionItemList extends ActionItem {
 	}
 
 	/**
-	 * *** Constructor de la Clase ***
+	 * *** Constructor ***
 	 * @author Yamel Senih 09/05/2012, 15:12:35
 	 * @param actionId
 	 * @param title
@@ -47,7 +47,7 @@ public class ActionItemList extends ActionItem {
 	}
 
 	/**
-	 * *** Constructor de la Clase ***
+	 * *** Constructor ***
 	 * @author Yamel Senih 09/05/2012, 15:12:35
 	 * @param icon
 	 */
@@ -56,7 +56,7 @@ public class ActionItemList extends ActionItem {
 	}
 
 	/**
-	 * *** Constructor de la Clase ***
+	 * *** Constructor ***
 	 * @author Yamel Senih 09/05/2012, 15:12:35
 	 * @param actionId
 	 * @param icon
@@ -67,7 +67,7 @@ public class ActionItemList extends ActionItem {
 	
 	/**
 	 * 
-	 * *** Constructor de la Clase ***
+	 * *** Constructor ***
 	 * @author Yamel Senih 09/05/2012, 15:16:23
 	 * @param value
 	 * @param title
@@ -79,8 +79,7 @@ public class ActionItemList extends ActionItem {
 	}
 	
 	/**
-	 * Utilizado para validar permisos de acceso a Formulario
-	 * *** Constructor de la Clase ***
+	 * *** Constructor ***
 	 * @author Yamel Senih 13/08/2012, 15:32:00
 	 * @param value
 	 * @param title
@@ -98,7 +97,7 @@ public class ActionItemList extends ActionItem {
 	private String className = null;
 	
 	/**
-	 * Obtiene el Value que sustitye el ID
+	 * Get Value
 	 * @author Yamel Senih 09/05/2012, 15:14:15
 	 * @return
 	 * @return String
@@ -128,4 +127,9 @@ public class ActionItemList extends ActionItem {
 		return className;
 	}
 
+	@Override
+	public String toString() {
+		return "ActionItemList [value=" + value + ", className=" + className
+				+ "]";
+	}
 }

@@ -199,4 +199,9 @@ public class FV_IndexRecordLine extends ListFragment implements I_DynamicTab {
 		this.tabParam = tabParam;
 		loadData();
 	}
+
+	@Override
+	public boolean save() {
+		return false;
+	}
 }

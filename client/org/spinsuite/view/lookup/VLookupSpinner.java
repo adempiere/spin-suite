@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import org.spinsuite.base.DB;
 import org.spinsuite.util.DisplayLookupSpinner;
 import org.spinsuite.util.DisplayType;
+import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
 import android.content.Context;
@@ -94,6 +95,10 @@ public class VLookupSpinner extends VLookup {
 		addView(v_Spinner);
 		//	Load Data
 		load();
+		//	Set Default Value
+		if(m_field.DefaultValue != null
+					&& m_field.DefaultValue.length() > 0)
+			setValue(Env.parseContext(getContext(), m_field.DefaultValue, true));
 	}
 	
 	/**
@@ -114,6 +119,10 @@ public class VLookupSpinner extends VLookup {
 					break;	
 				}
 			} else {
+				//	Only Integer
+				if(!(value instanceof Integer))
+					continue;
+				//	
 				if(ds.getIDAsInteger() == (Integer)value){
 					pos = i;
 					break;
@@ -160,6 +169,9 @@ public class VLookupSpinner extends VLookup {
 		if(value != null){
 			if(value instanceof Integer){
 				if(((Integer)value) > -1)
+					return false;
+			} else if(value instanceof String){
+				if(String.valueOf(value).length() != 0)
 					return false;
 			}
 		}

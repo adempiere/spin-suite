@@ -16,12 +16,7 @@
  *****************************************************************************/
 package org.spinsuite.process;
 
-import java.io.File;
 import java.math.BigDecimal;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
@@ -82,7 +77,7 @@ public class DocumentEngine implements DocAction
 	/**
 	 * 	Set Doc Status - Ignored
 	 *	@param ignored Status is not set directly
-	 * @see org.compiere.process.DocAction#setDocStatus(String)
+	 * @see org.compiere.process.DocAction#processDocAction(String)
 	 */
 	public void setDocStatus(String ignored){
 	}	//	setDocStatus
@@ -203,7 +198,8 @@ public class DocumentEngine implements DocAction
 			|| docAction.equals(ACTION_None))
 		{
 			if (m_document != null)
-				LogM.log(getCtx(), getClass(), Level.INFO, "**** No Action (Prc=" + processAction + "/Doc=" + docAction + ") " + m_document);
+				LogM.log(getCtx(), getClass(), Level.INFO, 
+						"**** No Action (Prc=" + processAction + "/Doc=" + docAction + ") " + m_document);
 			return true;	
 		}
 		else
@@ -214,10 +210,12 @@ public class DocumentEngine implements DocAction
 				+ ", @DocStatus@=" + getDocStatus());
 		}
 		if (m_document != null)
-			LogM.log(getCtx(), getClass(), Level.INFO, "**** Action=" + m_action + " (Prc=" + processAction + "/Doc=" + docAction + ") " + m_document);
+			LogM.log(getCtx(), getClass(), Level.INFO, 
+					"**** Action=" + m_action + " (Prc=" + processAction + "/Doc=" + docAction + ") " + m_document);
 		boolean success = processIt (m_action);
 		if (m_document != null)
-			LogM.log(getCtx(), getClass(), Level.INFO, "**** Action=" + m_action + " - Success=" + success);
+			LogM.log(getCtx(), getClass(), Level.INFO, 
+					"**** Action=" + m_action + " - Success=" + success);
 		return success;
 	}	//	process
 	
@@ -255,40 +253,6 @@ public class DocumentEngine implements DocAction
 						|| STATUS_InProgress.equals(status)
 						|| STATUS_WaitingPayment.equals(status)
 						|| STATUS_WaitingConfirmation.equals(status);
-			if (m_document != null && ok)
-			{
-				// PostProcess documents when invoice or inout (this is to postprocess the generated MatchPO and MatchInv if any)
-				ArrayList<PO> docsPostProcess = new ArrayList<PO>();;
-				if (m_document instanceof MInvoice || m_document instanceof MInOut) {
-					if (m_document instanceof MInvoice) {
-						docsPostProcess  = ((MInvoice) m_document).getDocsPostProcess();
-					}
-					if (m_document instanceof MInOut) {
-						docsPostProcess  = ((MInOut) m_document).getDocsPostProcess();
-					}
-				}
-				if (m_document instanceof PO && docsPostProcess.size() > 0) {
-					// Process (this is to update the ProcessedOn flag with a timestamp after the original document)
-					for (PO docafter : docsPostProcess) {
-						docafter.setProcessedOn("Processed", true, false);
-						docafter.save();
-					}
-				}
-				
-				if (STATUS_Completed.equals(status) && MClient.isClientAccountingImmediate())
-				{
-					m_document.save();
-					postIt();
-					
-					if (m_document instanceof PO && docsPostProcess.size() > 0) {
-						for (PO docafter : docsPostProcess) {
-							@SuppressWarnings("unused")
-							String ignoreError = DocumentEngine.postImmediate(docafter.getCtx(), docafter.getAD_Client_ID(), docafter.get_Table_ID(), docafter.get_ID(), true, docafter.get_TrxName());
-						}
-					}
-				}
-
-			}
 			return ok;
 		}
 		if (ACTION_ReActivate.equals(m_action))
@@ -577,6 +541,10 @@ public class DocumentEngine implements DocAction
 	 *	@return array of actions
 	 */
 	public String[] getActionOptions(){
+		//	Customized Valid Actions
+		if(m_document instanceof DocOptions)
+			return ((DocOptions) m_document).customizeValidActions(m_status);
+		//	
 		if (isInvalid())
 			return new String[] {ACTION_Prepare, ACTION_Invalidate, 
 				ACTION_Unlock, ACTION_Void};
@@ -597,13 +565,10 @@ public class DocumentEngine implements DocAction
 		if (isWaiting())
 			return new String[] {ACTION_Complete, ACTION_WaitComplete,
 				ACTION_ReActivate, ACTION_Void, ACTION_Close};
-		//	Yamel Senih 2014-02-25, 09:02:31
-		//	Hide Option Close
 		if (isCompleted())
 			return new String[] {ACTION_Reverse_Correct, ACTION_Close, 
 				ACTION_ReActivate, ACTION_Reverse_Accrual, 
 				ACTION_Post, ACTION_Void};
-		//	End Yamel Senih
 		if (isClosed())
 			return new String[] {ACTION_Post, ACTION_ReOpen};
 		
@@ -781,7 +746,7 @@ public class DocumentEngine implements DocAction
 	 * @param options
 	 * @return Number of valid options
 	 */
-	public static int getValidActions(String docStatus, Object processing, 
+	/*public static int getValidActions(String docStatus, Object processing, 
 			String orderType, String isSOTrx, int AD_Table_ID, String[] docAction, String[] options)
 	{
 		if (options == null)
@@ -791,7 +756,7 @@ public class DocumentEngine implements DocAction
 		
 		int index = 0;
 		
-//		Locked
+		//	Locked
 		if (processing != null)
 		{
 			boolean locked = "Y".equals(processing);
@@ -841,7 +806,7 @@ public class DocumentEngine implements DocAction
 			return 0;		
 		
 		return index;
-	}
+	}*/
 	
 	/**
 	 * Fill Vector with DocAction Ref_List(135) values

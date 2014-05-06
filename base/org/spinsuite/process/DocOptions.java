@@ -21,22 +21,14 @@ package org.spinsuite.process;
  *	Document Options Interface
  *	
  *  @author Carlos Ruiz
+ *  @contributor Yamel Senih
  */
-public interface DocOptions
-{
+public interface DocOptions{
 	/**
 	 * 	Customize Valid Actions
 	 * @param docStatus
-	 * @param processing
-	 * @param orderType
-	 * @param isSOTrx
-	 * @param AD_Table_ID
-	 * @param docAction
-	 * @param options
-	 * @param index
-	 * @return Number of valid options
+	 * @return Array of valid options
 	 */
-	public int customizeValidActions (String docStatus, Object processing, 
-			String orderType, String isSOTrx, int AD_Table_ID, String[] docAction, String[] options, int index);
+	public String[] customizeValidActions (String docStatus);
 
 }	//	DocAction
