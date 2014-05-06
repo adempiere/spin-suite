@@ -29,7 +29,7 @@ import android.content.Context;
  *	
  *  @author Jorg Janke
  *  @version $Id: DocAction.java,v 1.3 2006/07/30 00:54:44 jjanke Exp $
- *  @contributor <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ *  @contributor <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 2014-05-03, 11:14:56
  *  	Add Support to Mobile System
  */
 public interface DocAction
@@ -187,12 +187,6 @@ public interface DocAction
 	 *	@return Type and Document No
 	 */
 	public String getDocumentInfo();
-
-	/**
-	 * 	Create PDF
-	 *	@return file
-	 */
-	public File createPDF ();
 	
 	/**
 	 * 	Get Process Message
@@ -260,12 +254,6 @@ public interface DocAction
 	 */
 	public int get_Table_ID();
 	
-	/**
-	 * 	Get Logger
-	 *	@return logger
-	 */
-	public LogM get_Logger();
-
 	/**
 	 * 	Get Transaction
 	 *	@return trx

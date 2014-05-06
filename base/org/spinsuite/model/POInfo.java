@@ -68,8 +68,8 @@ public class POInfo {
 	private POInfoColumn[]		m_columns = null;
 	/**	Count Column SQL		*/
 	private int					m_CountColumnSQL = 0;
-	public static final String	MT_TABLE = "SPS_Table";
-	public static final String	MT_COLUMN = "SPS_Column";
+	//public static final String	MT_TABLE = "SPS_Table";
+	//public static final String	MT_COLUMN = "SPS_Column";
 	
 	/**
 	 * Load Column Information
@@ -80,49 +80,95 @@ public class POInfo {
 	 * @return void
 	 */
 	private void loadInfoColumn(Context ctx, int AD_Table_ID, String tableName, DB p_Conn){
-		String sql = new String("SELECT " +
-				MT_TABLE + ".SPS_Table_ID, " +
-				MT_TABLE + ".TableName," +
-				MT_TABLE + ".IsDeleteable, " +
-				MT_COLUMN + ".AD_Element_ID, " +
-				MT_COLUMN + ".AD_Reference_ID, " +
-				MT_COLUMN + ".AD_Reference_Value_ID, " +
-				MT_COLUMN + ".AD_Val_Rule_ID, " +
-				MT_COLUMN + ".Callout, " +
-				MT_COLUMN + ".ColumnName, " +
-				MT_COLUMN + ".ColumnSQL, " +
-				MT_COLUMN + ".DefaultValue, " +
-				MT_COLUMN + ".Description, " +
-				MT_COLUMN + ".EntityType, " +
-				MT_COLUMN + ".FieldLength, " +
-				MT_COLUMN + ".FormatPattern, " +
-				MT_COLUMN + ".IsAlwaysUpdateable, " +
-				MT_COLUMN + ".IsCentrallyMaintained, " +
-				MT_COLUMN + ".IsEncrypted, " +
-				MT_COLUMN + ".IsIdentifier, " +
-				MT_COLUMN + ".IsKey, " +
-				MT_COLUMN + ".IsMandatory, " +
-				MT_COLUMN + ".IsParent, " +
-				MT_COLUMN + ".IsSelectionColumn, " +
-				MT_COLUMN + ".IsUpdateable, " +
-				MT_COLUMN + ".Name, " +
-				MT_COLUMN + ".SelectionSeqNo, " +
-				MT_COLUMN + ".SeqNo, " +
-				MT_COLUMN + ".SPS_Column_ID, " +
-				MT_COLUMN + ".SPS_Table_ID, " +
-				MT_COLUMN + ".ValueMax, " +
-				MT_COLUMN + ".ValueMin, " +
-				MT_COLUMN + ".VFormat " +
-				//	From
-				"FROM SPS_Table " +
-				"INNER JOIN SPS_Column ON(SPS_Column.SPS_Table_ID = SPS_Table.SPS_Table_ID) " +
-				"WHERE SPS_Column.IsActive = 'Y' ");
+		//	
+		String language = Env.getAD_Language(ctx);
+		boolean isBaseLanguage = Env.isBaseLanguage(ctx);
+		//	
+		StringBuffer sql = new StringBuffer();
+		//	if Base Language
+		if(isBaseLanguage){
+			sql.append("SELECT " +
+					"t.SPS_Table_ID, " +
+					"t.TableName, " +
+					"t.IsDeleteable, " +
+					"c.AD_Element_ID, " +
+					"c.AD_Reference_ID, " +
+					"c.AD_Reference_Value_ID, " +
+					"c.AD_Val_Rule_ID, " +
+					"c.Callout, " +
+					"c.ColumnName, " +
+					"c.ColumnSQL, " +
+					"c.DefaultValue, " +
+					"c.Description, " +
+					"c.EntityType, " +
+					"c.FieldLength, " +
+					"c.FormatPattern, " +
+					"c.IsAlwaysUpdateable, " +
+					"c.IsCentrallyMaintained, " +
+					"c.IsEncrypted, " +
+					"c.IsIdentifier, " +
+					"c.IsKey, " +
+					"c.IsMandatory, " +
+					"c.IsParent, " +
+					"c.IsSelectionColumn, " +
+					"c.IsUpdateable, " +
+					"c.Name, " +
+					"c.SelectionSeqNo, " +
+					"c.SeqNo, " +
+					"c.SPS_Column_ID, " +
+					"c.SPS_Table_ID, " +
+					"c.ValueMax, " +
+					"c.ValueMin, " +
+					"c.VFormat ");
+			//	From
+			sql.append("FROM SPS_Table t " +
+					"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) ");
+		} else {
+			sql.append("SELECT " +
+					"t.SPS_Table_ID, " +
+					"t.TableName, " +
+					"t.IsDeleteable, " +
+					"c.AD_Element_ID, " +
+					"c.AD_Reference_ID, " +
+					"c.AD_Reference_Value_ID, " +
+					"c.AD_Val_Rule_ID, " +
+					"c.Callout, " +
+					"c.ColumnName, " +
+					"c.ColumnSQL, " +
+					"c.DefaultValue, " +
+					"ct.Description, " +
+					"c.EntityType, " +
+					"c.FieldLength, " +
+					"c.FormatPattern, " +
+					"c.IsAlwaysUpdateable, " +
+					"c.IsCentrallyMaintained, " +
+					"c.IsEncrypted, " +
+					"c.IsIdentifier, " +
+					"c.IsKey, " +
+					"c.IsMandatory, " +
+					"c.IsParent, " +
+					"c.IsSelectionColumn, " +
+					"c.IsUpdateable, " +
+					"ct.Name, " +
+					"c.SelectionSeqNo, " +
+					"c.SeqNo, " +
+					"c.SPS_Column_ID, " +
+					"c.SPS_Table_ID, " +
+					"c.ValueMax, " +
+					"c.ValueMin, " +
+					"c.VFormat ");
+			//	From
+			sql.append("FROM SPS_Table t " +
+					"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) " +
+					"INNER JOIN SPS_Column_Trl ct ON(ct.SPS_Column_ID = c.SPS_Column_ID AND ct.AD_Language = '").append(language).append("') ");
+		}
+		sql.append("WHERE c.IsActive = 'Y' ");
 		if(AD_Table_ID != 0)
-			sql += "AND SPS_Table.SPS_Table_ID = " + AD_Table_ID;
+			sql.append("AND t.SPS_Table_ID = ").append(AD_Table_ID).append(" ");
 		else
-			sql += "AND SPS_Table.TableName = '" + tableName + "' ";
-		
-		sql += " ORDER BY " + MT_COLUMN + ".Name";
+			sql.append("AND t.TableName = '").append(tableName).append("' ");
+		//	Order By
+		sql.append(" ORDER BY c.Name");
 		
 		LogM.log(ctx, getClass(), Level.FINE, "SQL TableInfo SQL:" + sql);
 		
@@ -135,7 +181,7 @@ public class POInfo {
 		if(!conn.isOpen())
 			conn.openDB(DB.READ_ONLY);
 		Cursor rs = null;
-		rs = conn.querySQL(sql, null);
+		rs = conn.querySQL(sql.toString(), null);
 		if(rs.moveToFirst()){
 			int i = 0;
 			m_SPS_Table_ID 	= rs.getInt(i++);

@@ -28,6 +28,7 @@ import org.spinsuite.util.contribution.QuickAction.OnDismissListener;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -81,7 +82,7 @@ public class VLookupButtonDocAction extends VLookupButton
 	
 	private QuickAction 		mQAct;
 	private String 				documentStatus = "DR";
-	private String [] 			actions = null;
+	private String [] 			validActions = null;
 	private String [] 			actionRole = null;
 	private boolean 			loaded = false;
 	
@@ -108,11 +109,11 @@ public class VLookupButtonDocAction extends VLookupButton
 	/**
 	 * Set show View Actions
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/05/2012, 16:57:11
-	 * @param actions
+	 * @param validActions
 	 * @return void
 	 */
-	private void setActionOption(String [] actions){
-		this.actions = actions;
+	private void setValidActionOption(String [] validActions){
+		this.validActions = validActions;
 	}
 
 	/**
@@ -186,44 +187,52 @@ public class VLookupButtonDocAction extends VLookupButton
 	 * @return void
 	 */
 	public void setDocAction(String docStatus){
+		//	Available Options
+		String [] options = null;
+		String label = null;
+		Drawable img = null;
+		//	
 		if(docStatus != null){
 			if(docStatus.equals(DocAction.STATUS_Drafted)){
-				v_Button.setText(getResources().getString(R.string.STATUS_Drafted));
-				v_Button.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.edit_m), null, null, null);
+				label = getResources().getString(R.string.STATUS_Drafted);
+				img = getResources().getDrawable(R.drawable.edit_m);
 				this.documentStatus = docStatus;
-				setActionOption(new String[]{
+				options = new String[]{
 						DocAction.ACTION_Complete, 
 						DocAction.ACTION_Prepare, 
-						DocAction.ACTION_Void});
+						DocAction.ACTION_Void};
 			} else if(docStatus.equals(DocAction.STATUS_Completed)){
-				v_Button.setText(getResources().getString(R.string.STATUS_Completed));
-				v_Button.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.doc_completed_m), null, null, null);
+				label = getResources().getString(R.string.STATUS_Completed);
+				img = getResources().getDrawable(R.drawable.doc_completed_m);
 				this.documentStatus = docStatus;
-				setActionOption(new String[]{
+				options = new String[]{
 						DocAction.ACTION_ReActivate, 
-						DocAction.ACTION_Void});
+						DocAction.ACTION_Void};
 			} else if(docStatus.equals(DocAction.STATUS_Voided)){
-				v_Button.setText(getResources().getString(R.string.STATUS_Voided));
-				v_Button.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.remove_m), null, null, null);
+				label = getResources().getString(R.string.STATUS_Voided);
+				img = getResources().getDrawable(R.drawable.remove_m);
 				this.documentStatus = docStatus;
-				setActionOption(null);
 			} else if(docStatus.equals(DocAction.STATUS_InProgress)){
-				v_Button.setText(getResources().getString(R.string.STATUS_InProgress));
-				v_Button.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.doc_progress_m), null, null, null);
+				label = getResources().getString(R.string.STATUS_InProgress);
+				img = getResources().getDrawable(R.drawable.doc_progress_m);
 				this.documentStatus = docStatus;
-				setActionOption(new String[]{
+				options = new String[]{
 						DocAction.ACTION_Complete,
-						DocAction.ACTION_Void});
+						DocAction.ACTION_Void};
 			}
 		} else {
-			v_Button.setText(getResources().getString(R.string.STATUS_Drafted));
-			v_Button.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.edit_m), null, null, null);
+			label = getResources().getString(R.string.STATUS_Drafted);
+			img = getResources().getDrawable(R.drawable.edit_m);
 			this.documentStatus = docStatus;
-			setActionOption(new String[]{
+			options = new String[]{
 					DocAction.ACTION_Complete, 
 					DocAction.ACTION_Prepare, 
-					DocAction.ACTION_Void});
+					DocAction.ACTION_Void};
 		}
+		//	
+		v_Button.setTag(label);
+		v_Button.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+		setValidActionOption(options);
 	}
 	
 	/**
@@ -286,9 +295,9 @@ public class VLookupButtonDocAction extends VLookupButton
 	 * @return boolean
 	 */
 	private boolean validAction(String action){
-		if(actions != null){
-			for (int i = 0; i < actions.length; i++) {
-				if(actions[i].equals(action))
+		if(validActions != null){
+			for (int i = 0; i < validActions.length; i++) {
+				if(validActions[i].equals(action))
 					return true;
 			}
 		}
