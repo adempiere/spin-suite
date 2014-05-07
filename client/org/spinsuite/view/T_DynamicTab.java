@@ -15,13 +15,17 @@
  *************************************************************************************/
 package org.spinsuite.view;
 
+import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.interfaces.I_FragmentSelectListener;
 import org.spinsuite.model.MSPSTable;
+import org.spinsuite.model.MSequence;
 import org.spinsuite.model.PO;
 import org.spinsuite.process.DocAction;
 import org.spinsuite.util.DisplayMenuItem;
@@ -29,7 +33,6 @@ import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
-import org.spinsuite.util.KeyNamePair;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.TabParameter;
 import org.spinsuite.util.ViewIndex;
@@ -47,9 +50,12 @@ import org.spinsuite.view.lookup.VLookupString;
 
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -105,7 +111,7 @@ public class T_DynamicTab extends Fragment
 	private 	boolean					m_IsLoadOk			= false;
 	private 	boolean 				m_IsModifying		= false;
 	/**	From Tab					*/
-	private I_DynamicTab				m_FromTab			= null;
+	private 	I_DynamicTab			m_FromTab			= null;
 	
 	/**	Current Status				*/
 	protected static final int NEW 		= 0;
@@ -113,16 +119,24 @@ public class T_DynamicTab extends Fragment
 	protected static final int SEE 		= 3;
 	protected static final int DELETED 	= 4;
 	
+	/**	Option Menu Item			*/
+	private final int O_SHARE			= 1;
+	private final int O_DELETE			= 2;
+	private final int O_ATTACH			= 3;
+	
 	/**	Option Menu					*/
 	private MenuItem mi_Search 	= null;
 	private MenuItem mi_Edit 	= null;
 	private MenuItem mi_Add 	= null;
-	private MenuItem mi_Delete 	= null;
+	private MenuItem mi_More 	= null;
 	private MenuItem mi_Cancel 	= null;
 	private MenuItem mi_Save 	= null;
 	
 	private static final float WEIGHT_SUM 	= 2;
 	private static final float WEIGHT 		= 1;
+	
+	/**	Results						*/
+	private final int ACTION_TAKE_PHOTO		= 3;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -325,7 +339,7 @@ public class T_DynamicTab extends Fragment
         mi_Search 	= menu.getItem(0);
         mi_Edit 	= menu.getItem(1);
         mi_Add	 	= menu.getItem(2);
-        mi_Delete 	= menu.getItem(3);
+        mi_More 	= menu.getItem(3);
         mi_Cancel 	= menu.getItem(4);
         mi_Save 	= menu.getItem(5);
         //	Lock View
@@ -386,48 +400,74 @@ public class T_DynamicTab extends Fragment
      * @return void
      */
     private void showPopupMenu(){
-		PopupMenu popupMenu = new PopupMenu(getActivity(), (View)mi_Delete);
-		
-		
-		/*for(KeyNamePair pFormat: m_PrintFormats){
-			pPrintFormat.getMenu().add(Menu.NONE, pFormat.getKey(), 
-					Menu.NONE, pFormat.getName());
-		}
-		//	Listener
-		pPrintFormat.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+    	View menuItemView = getActivity().findViewById(R.id.action_more);
+		PopupMenu popupMenu = new PopupMenu(getActivity(), menuItemView);
+		//	Share Record
+		popupMenu.getMenu().add(Menu.NONE, O_SHARE, 
+					Menu.NONE, getString(R.string.Action_Share));
+		//	Delete Record
+		popupMenu.getMenu().add(Menu.NONE, O_DELETE, 
+				Menu.NONE, getString(R.string.Action_Delete));
+		//	Attach a File
+		popupMenu.getMenu().add(Menu.NONE, O_ATTACH, 
+				Menu.NONE, getString(R.string.Action_AttachImage));
+		//	Action
+		popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 			
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
-				int m_AD_PrintFormatItem_ID = item.getItemId();
-				if(isLoaded){
-					showReport(m_AD_PrintFormatItem_ID);
+				switch (item.getItemId()) {
+	        		case O_SHARE:
+	        			return true;
+	        		case O_DELETE:
+	        			//	Delete
+	        			deleteRecord();
+	        			return true;
+	        		case O_ATTACH:
+	        			attachImage();
+	        			return true;
 				}
 				return false;
 			}
-		});*/
+		});
 		//	Show
 		popupMenu.show();
 	}
     
     /**
-     * String msg_Acept = this.getResources().getString(R.string.msg_Acept);
-    			Builder ask = Msg.confirmMsg(getActivity(), getResources().getString(R.string.msg_AskDelete));
-    			ask.setPositiveButton(msg_Acept, new DialogInterface.OnClickListener() {
-    				public void onClick(DialogInterface dialog, int which) {
-    					dialog.cancel();
-    					if(model.delete()){
-    						refresh(0, false);
-    						lockView(DELETED);
-    			    		//	Refresh
-    			    		refreshIndex();
-    					}
-    					else
-    						Msg.alertMsg(getActivity(), 
-    								getResources().getString(R.string.msg_Error), model.getError());
-    				}
-    			});
-    			ask.show();
+     * Delete Record
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2014, 14:04:50
+     * @return void
      */
+    private void deleteRecord(){
+    	String msg_Acept = this.getResources().getString(R.string.msg_Acept);
+		Builder ask = Msg.confirmMsg(getActivity(), getResources().getString(R.string.msg_AskDelete));
+		ask.setPositiveButton(msg_Acept, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+				if(model.delete()){
+					refresh(0, false);
+					lockView(DELETED);
+		    		//	Refresh
+		    		refreshIndex();
+				}
+				else
+					Msg.alertMsg(getActivity(), 
+							getResources().getString(R.string.msg_Error), model.getError());
+			}
+		});
+		ask.show();
+    }
+    
+    /**
+     * Action Attach
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2014, 15:29:45
+     * @return void
+     */
+    private void attachImage(){
+    	Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    	getActivity().startActivityForResult(takePictureIntent, ACTION_TAKE_PHOTO);
+    }
     
     /**
      * valid and save data
@@ -570,7 +610,7 @@ public class T_DynamicTab extends Fragment
     			|| mode == MODIFY) {
     		mi_Cancel.setVisible(true);
     		mi_Save.setVisible(true);
-    		mi_Delete.setVisible(false);
+    		mi_More.setVisible(false);
     		mi_Add.setVisible(false);
     		mi_Edit.setVisible(false);
     		mi_Search.setVisible(false);
@@ -578,7 +618,7 @@ public class T_DynamicTab extends Fragment
     	} else if(mode == DELETED) {
     		mi_Cancel.setVisible(false);
     		mi_Save.setVisible(false);
-    		mi_Delete.setVisible(false);
+    		mi_More.setVisible(false);
     		mi_Add.setVisible(true);
     		mi_Edit.setVisible(false);
     		mi_Search.setVisible(true);
@@ -586,7 +626,7 @@ public class T_DynamicTab extends Fragment
     	} else if(mode == SEE) {
     		mi_Cancel.setVisible(false);
     		mi_Save.setVisible(false);
-    		mi_Delete.setVisible(m_Record_ID != 0);
+    		mi_More.setVisible(m_Record_ID != 0);
     		mi_Add.setVisible(true);
     		mi_Edit.setVisible(m_Record_ID != 0);
     		mi_Search.setVisible(true);
@@ -723,13 +763,79 @@ public class T_DynamicTab extends Fragment
     	return ok;
     }
     
+    /**
+     * Process Attach
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2014, 15:44:20
+     * @param intent
+     * @return
+     * @return boolean
+     */
+    private boolean processAttach(Intent intent){
+    	Bundle extras = intent.getExtras();
+		Bitmap mImage = (Bitmap) extras.get("data");
+		if(mImage != null){
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			mImage.compress(Bitmap.CompressFormat.PNG, 100, bos);
+			saveAttachment(bos.toByteArray());
+			return true;
+		}
+		return false;
+    }
+    
+    /**
+     * Save Attachment
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2014, 20:31:38
+     * @param bMArray
+     * @return void
+     */
+    private void saveAttachment(byte[] bMArray){
+		//	Save in DataBase
+		DB conn = new DB(getActivity());
+		DB.loadConnection(conn, DB.READ_WRITE);
+		ContentValues values = new ContentValues();         
+		
+		SimpleDateFormat format = DisplayType.getDateFormat_JDBC();
+		//	Set Values
+		values.put("AD_Attachment_ID", MSequence.getNextID(getActivity(), 
+				Env.getAD_Client_ID(getActivity()), tabInfo.getTableName(), conn));
+		values.put("AD_Client_ID", Env.getAD_Client_ID(getActivity()));
+		values.put("AD_Org_ID", Env.getAD_Org_ID(getActivity()));
+		values.put("IsActive", "Y");
+		values.put("AD_Table_ID", tabInfo.getSPS_Table_ID());
+		values.put("Record_ID", model.getID());
+		values.put("Title", new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()));
+		values.put("Created", format.format(new Date()));
+		values.put("CreatedBy", Env.getAD_User_ID(getActivity()));
+		values.put("Updated", format.format(new Date()));
+		values.put("UpdatedBy", Env.getAD_User_ID(getActivity()));
+		values.put("BinaryData", bMArray);
+		//	
+		conn.insertSQL("AD_Attachment", null, values);
+		//	Commit
+		conn.setTransactionSuccessful();
+		//	Close Connection
+		DB.closeConnection(conn);
+		
+		/*Bundle bundle = new Bundle();
+		ActivityParameter param = new ActivityParameter();
+		param.setFrom_Record_ID(model.get_ID());
+		param.setFrom_SPS_Table_ID(tabInfo.getSPS_Table_ID());
+    	bundle.putParcelable("Param", param);
+    	Intent intent = new Intent(getActivity(), V_AttachView.class);
+		intent.putExtras(bundle);
+		startActivity(intent);*/
+		
+    }
+    
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     	//	Valid is Loaded
     	if(!m_IsLoadOk)
     		return;
-    	//	do it
-    	if (resultCode == Activity.RESULT_OK) {
+    	//	
+    	if(requestCode == ACTION_TAKE_PHOTO) {
+    		processAttach(data);
+    	} else if (resultCode == Activity.RESULT_OK) {
 	    	if(data != null){
 	    		Bundle bundle = data.getExtras();
 	    		//	Item

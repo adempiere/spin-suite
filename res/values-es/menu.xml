@@ -27,6 +27,7 @@
 	<string name="Action_Param">Parámetros</string>
 	<string name="Action_Process">Procesar Ahora</string>
 	<string name="Action_PrintFormat">Cambiar Formato de Impresión</string>
+	<string name="Action_AttachImage">Adjuntar Imagen</string>
 	
 	<!-- Drawer Option -->
 	<string name="drawer_open">Abrir Caja de Navegación</string>
