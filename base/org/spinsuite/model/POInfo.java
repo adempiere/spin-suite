@@ -68,8 +68,6 @@ public class POInfo {
 	private POInfoColumn[]		m_columns = null;
 	/**	Count Column SQL		*/
 	private int					m_CountColumnSQL = 0;
-	//public static final String	MT_TABLE = "SPS_Table";
-	//public static final String	MT_COLUMN = "SPS_Column";
 	
 	/**
 	 * Load Column Information
@@ -116,7 +114,6 @@ public class POInfo {
 					"c.SelectionSeqNo, " +
 					"c.SeqNo, " +
 					"c.SPS_Column_ID, " +
-					"c.SPS_Table_ID, " +
 					"c.ValueMax, " +
 					"c.ValueMin, " +
 					"c.VFormat ");
@@ -153,7 +150,6 @@ public class POInfo {
 					"c.SelectionSeqNo, " +
 					"c.SeqNo, " +
 					"c.SPS_Column_ID, " +
-					"c.SPS_Table_ID, " +
 					"c.ValueMax, " +
 					"c.ValueMin, " +
 					"c.VFormat ");
@@ -189,6 +185,7 @@ public class POInfo {
 			m_IsDeleteable	= "Y".equals(rs.getString(i++));
 			do{
 				POInfoColumn iColumn = new POInfoColumn();
+				iColumn.SPS_Table_ID = m_SPS_Table_ID;
 				iColumn.AD_Element_ID = rs.getInt(i++);
 				iColumn.DisplayType = rs.getInt(i++);
 				iColumn.AD_Reference_Value_ID = rs.getInt(i++);
@@ -213,8 +210,7 @@ public class POInfo {
 				iColumn.Name = rs.getString(i++);
 				iColumn.SelectionSeqNo = rs.getInt(i++);
 				iColumn.SeqNo = rs.getInt(i++);
-				iColumn.SPS_Column_ID= rs.getInt(i++);
-				iColumn.SPS_Table_ID= rs.getInt(i++);
+				iColumn.SPS_Column_ID = rs.getInt(i++);
 				iColumn.ValueMax = rs.getString(i++);
 				iColumn.ValueMin = rs.getString(i++);
 				iColumn.VFormat = rs.getString(i++);

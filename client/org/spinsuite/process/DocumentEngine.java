@@ -541,6 +541,7 @@ public class DocumentEngine implements DocAction
 	 *	@return array of actions
 	 */
 	public String[] getActionOptions(){
+		m_status = m_document.getDocStatus();
 		//	Customized Valid Actions
 		if(m_document instanceof DocOptions)
 			return ((DocOptions) m_document).customizeValidActions(m_status);

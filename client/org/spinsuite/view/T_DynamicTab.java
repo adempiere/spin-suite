@@ -29,6 +29,7 @@ import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
+import org.spinsuite.util.KeyNamePair;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.TabParameter;
 import org.spinsuite.util.ViewIndex;
@@ -59,6 +60,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.PopupMenu;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 
@@ -356,24 +358,9 @@ public class T_DynamicTab extends Fragment
             	newOption();
             	return true;
             		
-            case R.id.action_delete:
-            	String msg_Acept = this.getResources().getString(R.string.msg_Acept);
-    			Builder ask = Msg.confirmMsg(getActivity(), getResources().getString(R.string.msg_AskDelete));
-    			ask.setPositiveButton(msg_Acept, new DialogInterface.OnClickListener() {
-    				public void onClick(DialogInterface dialog, int which) {
-    					dialog.cancel();
-    					if(model.delete()){
-    						refresh(0, false);
-    						lockView(DELETED);
-    			    		//	Refresh
-    			    		refreshIndex();
-    					}
-    					else
-    						Msg.alertMsg(getActivity(), 
-    								getResources().getString(R.string.msg_Error), model.getError());
-    				}
-    			});
-    			ask.show();
+            case R.id.action_more:
+            	//	More
+            	showPopupMenu();
             	return true;
             
             case R.id.action_cancel:
@@ -392,6 +379,55 @@ public class T_DynamicTab extends Fragment
 
         return super.onOptionsItemSelected(item);
     }
+    
+    /**
+     * Show Popup Menu
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2014, 12:08:11
+     * @return void
+     */
+    private void showPopupMenu(){
+		PopupMenu popupMenu = new PopupMenu(getActivity(), (View)mi_Delete);
+		
+		
+		/*for(KeyNamePair pFormat: m_PrintFormats){
+			pPrintFormat.getMenu().add(Menu.NONE, pFormat.getKey(), 
+					Menu.NONE, pFormat.getName());
+		}
+		//	Listener
+		pPrintFormat.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+			
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				int m_AD_PrintFormatItem_ID = item.getItemId();
+				if(isLoaded){
+					showReport(m_AD_PrintFormatItem_ID);
+				}
+				return false;
+			}
+		});*/
+		//	Show
+		popupMenu.show();
+	}
+    
+    /**
+     * String msg_Acept = this.getResources().getString(R.string.msg_Acept);
+    			Builder ask = Msg.confirmMsg(getActivity(), getResources().getString(R.string.msg_AskDelete));
+    			ask.setPositiveButton(msg_Acept, new DialogInterface.OnClickListener() {
+    				public void onClick(DialogInterface dialog, int which) {
+    					dialog.cancel();
+    					if(model.delete()){
+    						refresh(0, false);
+    						lockView(DELETED);
+    			    		//	Refresh
+    			    		refreshIndex();
+    					}
+    					else
+    						Msg.alertMsg(getActivity(), 
+    								getResources().getString(R.string.msg_Error), model.getError());
+    				}
+    			});
+    			ask.show();
+     */
     
     /**
      * valid and save data

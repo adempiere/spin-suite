@@ -33,10 +33,10 @@
 	        android:showAsAction="always|collapseActionView"
 	        android:icon="@android:drawable/ic_menu_add" />
 	    
-	    <item android:id="@+id/action_delete"
-	        android:title="@string/Action_Delete"
+	    <item android:id="@+id/action_more"
+	        android:title="@string/None"
 	        android:showAsAction="always|collapseActionView"
-	        android:icon="@android:drawable/ic_menu_delete" />
+	        android:icon="@drawable/ic_menu_moreoverflow_normal_holo_dark"/>
 	    
 	    <item android:id="@+id/action_cancel"
 	        android:title="@string/msg_Cancel"

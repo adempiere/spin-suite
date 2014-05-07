@@ -191,6 +191,7 @@ public abstract class PO {
 			ok = loadDataQuery(ID);
 		} else {
 			isNew = true;
+			ok = loadDefaultValues();
 			setAD_Client_ID(Env.getAD_Client_ID(getCtx()));
 			setAD_Org_ID(Env.getAD_Org_ID(getCtx()));
 		}
@@ -339,6 +340,31 @@ public abstract class PO {
 				ok = true;
 			}
 			LogM.log(getCtx(), getClass(), Level.FINE, "Old Value=" + m_oldValues[i]);	
+		}
+		return ok;
+	}
+	
+	/**
+	 * Load Default Values
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2014, 09:13:13
+	 * @return
+	 * @return boolean
+	 */
+	private boolean loadDefaultValues(){
+		boolean ok = false;
+		try {
+			//	Iterate
+			for(int i = 0; i < m_TableInfo.getColumnLength(); i++){
+				//	Get Column
+				POInfoColumn column = m_TableInfo.getPOInfoColumn(i);
+				m_currentValues[i] = parseValue(column, i, false);
+				//	
+				LogM.log(getCtx(), getClass(), Level.FINE, "Old Value=" + m_oldValues[i]);	
+			}
+			//	Set Ok Value
+			ok = true;
+		} catch(Exception e){
+			
 		}
 		return ok;
 	}
@@ -693,6 +719,9 @@ public abstract class PO {
 		m_currentId = 0;
 		int size = m_TableInfo.getColumnLength();
 		m_currentValues = new Object[size];
+		//	Load default Values
+		loadDefaultValues();
+		//	
 		if(deleteBackup){
 			m_oldId = 0;
 			m_oldValues = new Object[size];

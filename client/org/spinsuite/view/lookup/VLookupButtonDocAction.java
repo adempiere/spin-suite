@@ -78,7 +78,11 @@ public class VLookupButtonDocAction extends VLookupButton
 	 */
 	public VLookupButtonDocAction(Activity activity, InfoField m_field, DocAction po, I_DynamicTab mTab) {
 		super(activity, m_field);
-		docEngine = new DocumentEngine(po);
+		//	Set Document Status
+		if(po != null)
+			docEngine = new DocumentEngine(po, po.getDocStatus());
+		else
+			docEngine = new DocumentEngine(po);
 		this.mTab = mTab;
 	}
 	
