@@ -28,6 +28,7 @@ import org.spinsuite.model.MSPSTable;
 import org.spinsuite.model.MSequence;
 import org.spinsuite.model.PO;
 import org.spinsuite.process.DocAction;
+import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
@@ -123,6 +124,7 @@ public class T_DynamicTab extends Fragment
 	private final int O_SHARE			= 1;
 	private final int O_DELETE			= 2;
 	private final int O_ATTACH			= 3;
+	private final int O_VIEW_ATTACH		= 4;
 	
 	/**	Option Menu					*/
 	private MenuItem mi_Search 	= null;
@@ -411,6 +413,18 @@ public class T_DynamicTab extends Fragment
 		//	Attach a File
 		popupMenu.getMenu().add(Menu.NONE, O_ATTACH, 
 				Menu.NONE, getString(R.string.Action_AttachImage));
+		//	View Attachment
+		if(model != null
+				&& model.getID() > 0){
+			int count = DB.getSQLValue(getActivity(), "SELECT COUNT(att.AD_Attachment_ID) FROM AD_Attachment att " +
+					"WHERE att.AD_Table_ID = ? AND att.Record_ID = ?", 
+					new String[]{String.valueOf(tabInfo.getSPS_Table_ID()), 
+											String.valueOf(model.get_ID())});
+			//	Exist a Attachment
+			if(count != 0)
+				popupMenu.getMenu().add(Menu.NONE, O_VIEW_ATTACH, 
+						Menu.NONE, getString(R.string.Action_ViewAttachment));
+		}
 		//	Action
 		popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 			
@@ -426,6 +440,9 @@ public class T_DynamicTab extends Fragment
 	        		case O_ATTACH:
 	        			attachImage();
 	        			return true;
+	        		case O_VIEW_ATTACH:
+	        			viewAttachment();
+	        			return true;
 				}
 				return false;
 			}
@@ -433,6 +450,22 @@ public class T_DynamicTab extends Fragment
 		//	Show
 		popupMenu.show();
 	}
+    
+    /**
+     * View Attachment
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 11:00:17
+     * @return void
+     */
+    private void viewAttachment(){
+    	Bundle bundle = new Bundle();
+		ActivityParameter param = new ActivityParameter();
+		param.setFrom_Record_ID(model.get_ID());
+		param.setFrom_SPS_Table_ID(tabInfo.getSPS_Table_ID());
+    	bundle.putParcelable("Param", param);
+    	Intent intent = new Intent(getActivity(), LV_AttachView.class);
+		intent.putExtras(bundle);
+		startActivity(intent);
+    }
     
     /**
      * Delete Record
@@ -814,17 +847,7 @@ public class T_DynamicTab extends Fragment
 		//	Commit
 		conn.setTransactionSuccessful();
 		//	Close Connection
-		DB.closeConnection(conn);
-		
-		/*Bundle bundle = new Bundle();
-		ActivityParameter param = new ActivityParameter();
-		param.setFrom_Record_ID(model.get_ID());
-		param.setFrom_SPS_Table_ID(tabInfo.getSPS_Table_ID());
-    	bundle.putParcelable("Param", param);
-    	Intent intent = new Intent(getActivity(), V_AttachView.class);
-		intent.putExtras(bundle);
-		startActivity(intent);*/
-		
+		DB.closeConnection(conn);		
     }
     
     @Override

@@ -28,6 +28,8 @@
 	<string name="Action_Process">Process Now</string>
 	<string name="Action_PrintFormat">Change Print Format</string>
 	<string name="Action_AttachImage">Attach Image</string>
+	<string name="Action_ViewAttachment">View Attachment</string>
+	<string name="Action_DownloadAttachment">Download</string>
 	
 	<!-- Drawer Option -->
 	<string name="drawer_open">Open navigation drawer</string>

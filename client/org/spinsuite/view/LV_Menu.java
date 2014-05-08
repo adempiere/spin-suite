@@ -117,8 +117,8 @@ public class LV_Menu extends FragmentActivity {
 		//	Load Children
 		lookupMenu.loadChildren(param.getParent_ID());
 		//	
-		MenuAdapter mi_adapter = new MenuAdapter(this, R.layout.i_menu, lookupMenu.getData());
-		mi_adapter.setDropDownViewResource(R.layout.i_menu);
+		MenuAdapter mi_adapter = new MenuAdapter(this, R.layout.i_image_text, lookupMenu.getData());
+		mi_adapter.setDropDownViewResource(R.layout.i_image_text);
 		menu.setAdapter(mi_adapter);
 		//	
 		return true;

@@ -17,6 +17,7 @@ package org.spinsuite.base;
 
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -193,12 +194,12 @@ public class DB extends SQLiteOpenHelper {
 	 * Execute SQL with parameters
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:46:22
 	 * @param sql
-	 * @param param
+	 * @param params
 	 * @return void
 	 */
-	public void executeSQL(String sql, Object [] param){
+	public void executeSQL(String sql, Object [] params){
 		LogM.log(ctx, getClass(), Level.FINE, "SQL=" + sql);
-		db.execSQL(sql, param);
+		db.execSQL(sql, params);
 	} 
 	
 	/**
@@ -207,10 +208,10 @@ public class DB extends SQLiteOpenHelper {
 	 * @param table
 	 * @param columnaNull
 	 * @param values
-	 * @return void
+	 * @return long
 	 */
-	public void insertSQL(String table, String columnaNull, ContentValues values){
-		db.insert(table, columnaNull, values);
+	public long insertSQL(String table, String columnaNull, ContentValues values){
+		return db.insert(table, columnaNull, values);
 	}
 	
 	/**
@@ -220,10 +221,10 @@ public class DB extends SQLiteOpenHelper {
 	 * @param values
 	 * @param where
 	 * @param argmWhere
-	 * @return void
+	 * @return int
 	 */
-	public void updateSQL(String table, ContentValues values, String where, String [] argmWhere){
-		db.update(table, values, where, argmWhere);
+	public int updateSQL(String table, ContentValues values, String where, String [] argmWhere){
+		return db.update(table, values, where, argmWhere);
 	}
 	
 	/**
@@ -232,10 +233,10 @@ public class DB extends SQLiteOpenHelper {
 	 * @param table
 	 * @param where
 	 * @param argmWhere
-	 * @return void
+	 * @return int
 	 */
-	public void deleteSQL(String table, String where, String [] argmWhere){
-		db.delete(table, where, argmWhere);
+	public int deleteSQL(String table, String where, String [] argmWhere){
+		return db.delete(table, where, argmWhere);
 	}
 	
 	/**
@@ -351,6 +352,70 @@ public class DB extends SQLiteOpenHelper {
 			conn.close();
 		}
     }
+	
+	/**
+	 * Execute Update.
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 11:58:14
+	 * @param ctx
+	 * @param sql
+	 * @param param
+	 * @return
+	 * @return int
+	 */
+	public static int executeUpdate (Context ctx, String sql, int param){
+		int no = -1;
+		try {
+			no = executeUpdate (ctx, sql, param, true);
+		} catch(Exception e) {}
+		return no;
+	}	//	executeUpdate
+
+	/**
+	 * Execute Update.
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 11:56:05
+	 * @param ctx
+	 * @param sql
+	 * @param param
+	 * @param ignoreError
+	 * @return
+	 * @return int
+	 * @throws Exception 
+	 */
+	public static int executeUpdate (Context ctx, String sql, int param, boolean ignoreError) throws Exception{
+		return executeUpdate(ctx, sql, new Object[]{param}, ignoreError);
+	}
+	
+	/**
+	 * Execute a Update
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 11:52:58
+	 * @param ctx
+	 * @param sql
+	 * @param params
+	 * @param ignoreError
+	 * @return
+	 * @return int
+	 * @throws Exception 
+	 */
+	public static int executeUpdate (Context ctx, String sql, Object[] params, boolean ignoreError) throws Exception{
+		if (sql == null || sql.length() == 0)
+			throw new IllegalArgumentException("Required parameter missing - " + sql);
+		//
+		int no = -1;
+		DB conn = new DB(ctx);
+		loadConnection(conn, READ_WRITE);
+		try {
+			conn.executeSQL(sql, params);
+			conn.setTransactionSuccessful();
+		} catch (Exception e) {
+			if (ignoreError)
+				LogM.log(ctx, DB.class, Level.SEVERE, "SQL=[" + sql + "] " +  e.getMessage());
+			else
+				throw e;
+		}
+		//	Close Connection
+		closeConnection(conn);
+		return no;
+	}	//	executeUpdate
 	
 	/**
 	 * Get Value from SQL
@@ -472,9 +537,22 @@ public class DB extends SQLiteOpenHelper {
 	 * @return int
 	 */
 	public static int getSQLValue(Context ctx, String sql){
+		return getSQLValue(ctx, sql, (String[])null);
+	}
+	
+	/**
+	 * With parameters
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 10:55:44
+	 * @param ctx
+	 * @param sql
+	 * @param params
+	 * @return
+	 * @return int
+	 */
+	public static int getSQLValue(Context ctx, String sql, String... params){
 		int retValue = -1;
 		try{
-			retValue = getSQLValueEx(ctx, sql, (String[])null);
+			retValue = getSQLValueEx(ctx, sql, params);
 		} catch(Exception e){
 			LogM.log(ctx, "DB", Level.SEVERE, "SQLError", e);
 		}

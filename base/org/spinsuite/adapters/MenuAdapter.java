@@ -96,7 +96,7 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 		tV_Description.setText(mi.getDescription());
 		
 		//	Set Image
-		ImageView img_Menu = (ImageView)item.findViewById(R.id.img_Menu);
+		ImageView img_Menu = (ImageView)item.findViewById(R.id.img_Item);
 		
 		if(mi.getImageURL() != null 
 				&& mi.getImageURL().length() > 0){
