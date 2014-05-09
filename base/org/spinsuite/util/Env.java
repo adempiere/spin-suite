@@ -15,6 +15,7 @@
  *************************************************************************************/
 package org.spinsuite.util;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -22,6 +23,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
+
+import org.spinsuite.base.DB;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -829,8 +832,8 @@ public final class Env {
 	 * @param value
 	 * @return void
 	 */
-	public static void setDB_Path(Context ctx, String value){
-		setContext(ctx, DB_NAME, value);
+	public static void setDB_PathName(Context ctx, String value){
+		setContext(ctx, DB_NAME_KEY, value);
 	}
 	
 	/**
@@ -841,29 +844,51 @@ public final class Env {
 	 * @return String
 	 */
 	public static String getDB_PathName(Context ctx){
-		return getContext(ctx, DB_NAME);
+		return getContext(ctx, DB_NAME_KEY);
 	}
 	
 	/**
-	 * Set Application Directory
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/03/2014, 15:42:32
+	 * Set Document Path Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/05/2014, 11:02:17
 	 * @param ctx
 	 * @param value
 	 * @return void
 	 */
-	public static void setAppDirName(Context ctx, String value){
-		setContext(ctx, APP_DIR_NAME, value);
+	public static void setDoc_DirectoryPathName(Context ctx, String value){
+		setContext(ctx, DOC_DIRECTORY_KEY, value);
 	}
 	
 	/**
-	 * Get Application Directory Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/03/2014, 15:41:39
+	 * Get Document Path Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/05/2014, 11:02:27
 	 * @param ctx
 	 * @return
 	 * @return String
 	 */
-	public static String getAppDirName(Context ctx){
-		return getContext(ctx, APP_DIR_NAME);
+	public static String getDoc_DirectoryPathName(Context ctx){
+		return getContext(ctx, DOC_DIRECTORY_KEY);
+	}
+	
+	/**
+	 * Set Image Path Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/05/2014, 11:03:10
+	 * @param ctx
+	 * @param value
+	 * @return void
+	 */
+	public static void setImg_DirectoryPathName(Context ctx, String value){
+		setContext(ctx, IMG_DIRECTORY_KEY, value);
+	}
+	
+	/**
+	 * Get Image Path Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/05/2014, 11:03:22
+	 * @param ctx
+	 * @return
+	 * @return String
+	 */
+	public static String getImg_DirectoryPathName(Context ctx){
+		return getContext(ctx, IMG_DIRECTORY_KEY);
 	}
 	
 	/**
@@ -1375,6 +1400,28 @@ public final class Env {
 		setContext(ctx, ACTIVITY_NO, 0);
 	}
 	
+	/**
+	 * Set App Base Directory
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/05/2014, 10:09:32
+	 * @param ctx
+	 * @param path
+	 * @return void
+	 */
+	public static void setAppBaseDirectory(Context ctx, String path){
+		setContext(ctx, APP_BASE_DIRECTORY_CTX_NAME, path);
+	}
+	
+	/**
+	 * Get App Base Directory
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/05/2014, 10:10:18
+	 * @param ctx
+	 * @return
+	 * @return String
+	 */
+	public static String getAppBaseDirectory(Context ctx){
+		return getContext(ctx, APP_BASE_DIRECTORY_CTX_NAME);
+	}
+	
 	/**************************************************************************
 	 *  Application Context
 	 */
@@ -1406,16 +1453,22 @@ public final class Env {
 	/************************************Env***************************************
 	 * Database Context
 	 */
-	public static final String		DB_VERSION = "#DB_Version";
-	public static final String		DB_NAME = "#DB_Name";
-	public static final String		APP_DIR_NAME = "#APP_DIR_Name";
-	
+	private static final String		DB_VERSION = "#DB_Version";
+	private static final String		DB_NAME_KEY = "#DB_Name";
+	private static final String		DOC_DIRECTORY_KEY = "#DOC_Name";
+	private static final String		IMG_DIRECTORY_KEY = "#IMG_Name";
 	/******************************************************************************
 	 * App Context
 	 */
 	public static final String 		APP_DIRECTORY = "ERP";
-	public static final String 		DOC_DIRECTORY = "Documents";
-	
+	public static final String 		DB_DIRECTORY = "data";
+	public static final String 		DOC_DIRECTORY = APP_DIRECTORY + File.separator + "Documents";
+	public static final String 		IMG_DIRECTORY = APP_DIRECTORY + File.separator + "Images";
+	//	Database
+	public static final String 		DB_PATH_DIRECTORY = APP_DIRECTORY + File.separator + DB_DIRECTORY;
+	public static final String		DB_PATH_NAME = DB_PATH_DIRECTORY + File.separator + DB.DB_NAME;
+	//	Key Directory
+	public static final String 		APP_BASE_DIRECTORY_CTX_NAME = "#APP_BASE_DIRECTORY_CTX_NAME";
 	/***************************************************************************
 	 * Prefix
 	 */

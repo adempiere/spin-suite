@@ -16,6 +16,8 @@
 package org.spinsuite.view;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,6 +57,7 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -113,6 +116,7 @@ public class T_DynamicTab extends Fragment
 	private 	boolean 				m_IsModifying		= false;
 	/**	From Tab					*/
 	private 	I_DynamicTab			m_FromTab			= null;
+	private 	String 					m_CurrentNameAttach = null;
 	
 	/**	Current Status				*/
 	protected static final int NEW 		= 0;
@@ -138,7 +142,8 @@ public class T_DynamicTab extends Fragment
 	private static final float WEIGHT 		= 1;
 	
 	/**	Results						*/
-	private final int ACTION_TAKE_PHOTO		= 3;
+	private static final int 		ACTION_TAKE_PHOTO	= 3;
+	private static final String 	JPEG_FILE_SUFFIX 	= ".jpg";
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -498,10 +503,21 @@ public class T_DynamicTab extends Fragment
      * @return void
      */
     private void attachImage(){
-    	Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-    	getActivity().startActivityForResult(takePictureIntent, ACTION_TAKE_PHOTO);
-    }
-    
+    	m_CurrentNameAttach = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+    	File tmpDirectory = new File(Env.getImg_DirectoryPathName(getActivity()));
+    	File imageTmp;
+		try {
+			imageTmp = File.createTempFile(m_CurrentNameAttach, JPEG_FILE_SUFFIX, tmpDirectory);
+	    	//	
+	    	Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+	    	intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imageTmp));
+	    	//	
+	    	getActivity().startActivityForResult(intent, ACTION_TAKE_PHOTO);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+        
     /**
      * valid and save data
      * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 14:07:20
@@ -836,7 +852,7 @@ public class T_DynamicTab extends Fragment
 		values.put("IsActive", "Y");
 		values.put("AD_Table_ID", tabInfo.getSPS_Table_ID());
 		values.put("Record_ID", model.getID());
-		values.put("Title", new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()));
+		values.put("Title", m_CurrentNameAttach);
 		values.put("Created", format.format(new Date()));
 		values.put("CreatedBy", Env.getAD_User_ID(getActivity()));
 		values.put("Updated", format.format(new Date()));
@@ -847,7 +863,8 @@ public class T_DynamicTab extends Fragment
 		//	Commit
 		conn.setTransactionSuccessful();
 		//	Close Connection
-		DB.closeConnection(conn);		
+		DB.closeConnection(conn);
+		Msg.toastMsg(getActivity(), getString(R.string.msg_Ok));
     }
     
     @Override

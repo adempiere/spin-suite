@@ -100,12 +100,6 @@ public class TV_DynamicActivity extends TV_Base implements I_FragmentSelectListe
     
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-    	/*if(!isDrawerLayoutOpen()){
-        	I_DynamicTab curFr = (I_DynamicTab) getCurrentFragment();
-        	//	Handle Current Menu
-        	if(curFr != null)
-        		curFr.handleMenu();
-        }*/
         return super.onPrepareOptionsMenu(menu);
     }
     

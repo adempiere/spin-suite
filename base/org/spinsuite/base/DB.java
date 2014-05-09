@@ -16,8 +16,6 @@
 package org.spinsuite.base;
 
 
-import java.io.File;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -75,8 +73,8 @@ public class DB extends SQLiteOpenHelper {
 	public static final int 	READ_ONLY = 0;
 	public static final int 	READ_WRITE = 1;
 	public static final String 	DB_NAME = "SFAndroid";
-	public static final String 	DB_DIRECTORY = "data";
 	public static final int 	DB_VERSION = 1;
+	
 	private Context 			ctx;
 	
 	/* (non-Javadoc)
@@ -292,34 +290,6 @@ public class DB extends SQLiteOpenHelper {
 	 */
 	public SQLiteStatement getStatement(){
 		return stm;
-	}
-
-	/**
-	 * Complete Path folder
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:48:45
-	 * @return
-	 * @return String
-	 */
-	public static String getDB_Path(){
-		return File.separator + 
-				Env.APP_DIRECTORY + 
-				File.separator + 
-				DB_DIRECTORY;
-	}
-	
-	/**
-	 * Get DB Path Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:49:05
-	 * @return
-	 * @return String
-	 */
-	public static String getDB_PathName(){
-		return File.separator + 
-				Env.APP_DIRECTORY + 
-				File.separator + 
-				DB_DIRECTORY + 
-				File.separator + 
-				DB_NAME;
 	}
 	
 	/**

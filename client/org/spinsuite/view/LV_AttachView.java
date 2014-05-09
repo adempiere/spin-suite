@@ -15,23 +15,38 @@
  *************************************************************************************/
 package org.spinsuite.view;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import org.spinsuite.adapters.ImageTextAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayImageTextItem;
+import org.spinsuite.util.Env;
+import org.spinsuite.util.LogM;
+import org.spinsuite.util.Msg;
 
+import android.app.AlertDialog.Builder;
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore.Images;
 import android.support.v4.app.FragmentActivity;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
@@ -42,12 +57,13 @@ import android.widget.ListView;
 public class LV_AttachView extends FragmentActivity {
 	
 	/**	Parameter				*/
-	private ActivityParameter		m_activityParam = null;
+	private ActivityParameter		m_activityParam 	= null;
 	/**	List View				*/
-	private ListView 				lv_AttachmentList = null;
+	private ListView 				lv_AttachmentList 	= null;
 	/**	Option Menu				*/
-	private final int 				O_DOWNLOAD = 1;
-	private final int 				O_DELETE = 2;
+	private static final int 		O_DOWNLOAD 			= 1;
+	private static final int 		O_DELETE 			= 2;
+	private static final String 	JPEG_FILE_SUFFIX 	= ".jpg";
 	
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -64,11 +80,26 @@ public class LV_AttachView extends FragmentActivity {
 		//ll_HeaderReport	= (LinearLayout) findViewById(R.id.ll_HeaderReport);
 		
 		lv_AttachmentList = (ListView) findViewById(R.id.lv_AttachmentList);
+		//	
+		lv_AttachmentList.setOnItemClickListener(new ListView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> adapter, View arg1, int position,
+					long arg3) {
+				DisplayImageTextItem item = (DisplayImageTextItem) lv_AttachmentList.getAdapter().getItem(position);
+				//	Show Image
+				if(item.getImage() != null){
+					String path = Images.Media.insertImage(getApplicationContext().getContentResolver(), 
+							item.getImage(), item.getValue(), null);
+					//	Show
+					showImage(Uri.parse(path));
+				}
+			}
+        });
 		//	Event
 		registerForContextMenu(lv_AttachmentList);
-		//lv_AttachmentList.seton
 		//	Title
-    	getActionBar().setSubtitle("Test");
+    	getActionBar().setSubtitle(getString(R.string.Action_ViewAttachment));
     	//	
     	loadAttachment();
 	}
@@ -76,8 +107,7 @@ public class LV_AttachView extends FragmentActivity {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 		if (v.getId() == R.id.lv_AttachmentList) {
-		    //AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
-		    //	Export
+			//	Export
 		    menu.add(Menu.NONE, O_DOWNLOAD, 
 					Menu.NONE, getString(R.string.Action_DownloadAttachment));
 		    //	Delete
@@ -93,7 +123,23 @@ public class LV_AttachView extends FragmentActivity {
 	    //	Options
 	    switch (item.getItemId()) {
 		    case O_DOWNLOAD:
-		    	actionDownload(info.position);
+		    	String msg = null;
+		    	String path = null;
+		    	try {
+		    		path = actionDownload(info.position);
+		    	} catch (IOException e) {
+					LogM.log(getApplicationContext(), getClass(), 
+							Level.SEVERE, "Error Download Image:", e);
+					msg = getResources().getString(R.string.msg_IOException) 
+								+ " " + e.getMessage();
+				}
+		    	//	Show Path
+				if(path != null){
+					showImage(Uri.fromFile(new File(path)));
+				} else if(msg != null){	//	Show Message
+					Msg.alertMsg(this, getResources().getString(R.string.msg_Error), msg);
+				}
+		    	//	
 		        return true;
 		    case O_DELETE:
 		    	actionDelete(info.position);
@@ -104,17 +150,46 @@ public class LV_AttachView extends FragmentActivity {
 	}
 	
 	/**
+	 * Show a Image
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/05/2014, 11:31:29
+	 * @param uriPath
+	 * @return void
+	 */
+	private void showImage(Uri uriPath){
+		try {
+			//	Launch Application
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.setDataAndType(uriPath, "image/*");
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			//	Start Activity
+			startActivity(intent);
+		} catch (ActivityNotFoundException e){
+			LogM.log(this, getClass(), Level.WARNING, 
+					"Error Launch Image: " + e.getMessage());
+		}
+	}
+	
+	/**
 	 * Delete Attachment
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 11:30:23
 	 * @param position
 	 * @return void
 	 */
 	private void actionDelete(int position){
-		DisplayImageTextItem item = (DisplayImageTextItem) lv_AttachmentList.getAdapter().getItem(position);
-		//	Delete
-		DB.executeUpdate(getApplicationContext(), "DELETE FROM AD_Attachment WHERE AD_Attachment_ID = ?", item.getRecord_ID());
-		//	Requery
-		loadAttachment();
+		final DisplayImageTextItem item = (DisplayImageTextItem) lv_AttachmentList.getAdapter().getItem(position);
+		String msg_Acept = this.getResources().getString(R.string.msg_Acept);
+		Builder ask = Msg.confirmMsg(this, getResources().getString(R.string.msg_AskDelete));
+		ask.setPositiveButton(msg_Acept, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+				//	Delete
+				DB.executeUpdate(getApplicationContext(), "DELETE FROM AD_Attachment " +
+						"WHERE AD_Attachment_ID = ?", item.getRecord_ID());
+				//	Re-Query
+				loadAttachment();
+			}
+		});
+		ask.show();
 	}
 	
 	/**
@@ -122,9 +197,29 @@ public class LV_AttachView extends FragmentActivity {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 11:31:01
 	 * @param position
 	 * @return void
+	 * @throws IOException 
 	 */
-	private void actionDownload(int position){
-		
+	private String actionDownload(int position) throws IOException {
+		DisplayImageTextItem item = (DisplayImageTextItem) lv_AttachmentList.getAdapter().getItem(position);
+		if(item.getImage() != null){
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			//	Get Image
+			Bitmap image = item.getImage();
+			//	Compress
+			String path = Env.getImg_DirectoryPathName(this);
+			path = path + File.separator + item.getValue() + JPEG_FILE_SUFFIX;
+			image.compress(Bitmap.CompressFormat.PNG, 100, bos);
+			File file = new File(path);
+			file.createNewFile();
+			//	Write the bytes in file
+			FileOutputStream fOut = new FileOutputStream(file);
+			fOut.write(bos.toByteArray());
+			//	Close Output
+			fOut.close();
+			return path;
+		}
+		//	Return
+		return null;
 	}
 	
 	/**

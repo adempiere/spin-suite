@@ -668,7 +668,7 @@ public class ReportPrintData {
 	 * @return String
 	 */
 	public String createXLS() throws IOException, RowsExceededException, WriteException{
-		String path = Env.getAppDirName(ctx);
+		String path = Env.getDoc_DirectoryPathName(ctx);
 		String title = m_reportQuery.getInfoReport().getName();
 		path = path + File.separator + title + ".xls";
 		File export = new File(path);
@@ -757,7 +757,7 @@ public class ReportPrintData {
 	 * @return String
 	 */
 	public String createPDF() throws FileNotFoundException, DocumentException{
-		String path = Env.getAppDirName(ctx);
+		String path = Env.getDoc_DirectoryPathName(ctx);
 		String title = m_reportQuery.getInfoReport().getName();
 		path = path + File.separator + title + ".pdf";
 		File export = new File(path);
