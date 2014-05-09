@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 /**
@@ -55,6 +56,8 @@ public class ImageTextAdapter extends ArrayAdapter<DisplayImageTextItem> {
 	private ArrayList<DisplayImageTextItem> data = new ArrayList<DisplayImageTextItem>();
 	/**	Identifier of View			*/
 	private int 							id_View;
+	/**	Max Size					*/
+	private static final int				MAX_SIZE = 200;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -77,6 +80,7 @@ public class ImageTextAdapter extends ArrayAdapter<DisplayImageTextItem> {
 		//	Set Image
 		ImageView img_Item = (ImageView)item.findViewById(R.id.img_Item);
 		img_Item.setImageBitmap(diti.getImage());
+		img_Item.setLayoutParams(new LayoutParams(MAX_SIZE, MAX_SIZE));
 		//	Return
 		return item;
 	}

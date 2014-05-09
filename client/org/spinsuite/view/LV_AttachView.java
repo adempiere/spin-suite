@@ -61,8 +61,9 @@ public class LV_AttachView extends FragmentActivity {
 	/**	List View				*/
 	private ListView 				lv_AttachmentList 	= null;
 	/**	Option Menu				*/
-	private static final int 		O_DOWNLOAD 			= 1;
-	private static final int 		O_DELETE 			= 2;
+	private static final int 		O_SHARE 			= 1;
+	private static final int 		O_DOWNLOAD 			= 2;
+	private static final int 		O_DELETE 			= 3;
 	private static final String 	JPEG_FILE_SUFFIX 	= ".jpg";
 	
 	@Override
@@ -77,8 +78,6 @@ public class LV_AttachView extends FragmentActivity {
 		if(m_activityParam == null)
 			m_activityParam = new ActivityParameter();
 		//	Get Elements
-		//ll_HeaderReport	= (LinearLayout) findViewById(R.id.ll_HeaderReport);
-		
 		lv_AttachmentList = (ListView) findViewById(R.id.lv_AttachmentList);
 		//	
 		lv_AttachmentList.setOnItemClickListener(new ListView.OnItemClickListener() {
@@ -108,6 +107,9 @@ public class LV_AttachView extends FragmentActivity {
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 		if (v.getId() == R.id.lv_AttachmentList) {
 			//	Export
+		    menu.add(Menu.NONE, O_SHARE, 
+					Menu.NONE, getString(R.string.Action_Share));
+			//	Export
 		    menu.add(Menu.NONE, O_DOWNLOAD, 
 					Menu.NONE, getString(R.string.Action_DownloadAttachment));
 		    //	Delete
@@ -122,23 +124,15 @@ public class LV_AttachView extends FragmentActivity {
 	            .getMenuInfo();
 	    //	Options
 	    switch (item.getItemId()) {
+	    	case O_SHARE:
+	    		actionShare(info.position);
+	    		return true;
 		    case O_DOWNLOAD:
-		    	String msg = null;
 		    	String path = null;
-		    	try {
-		    		path = actionDownload(info.position);
-		    	} catch (IOException e) {
-					LogM.log(getApplicationContext(), getClass(), 
-							Level.SEVERE, "Error Download Image:", e);
-					msg = getResources().getString(R.string.msg_IOException) 
-								+ " " + e.getMessage();
-				}
+		    	path = actionDownload(info.position);
 		    	//	Show Path
-				if(path != null){
+				if(path != null)
 					showImage(Uri.fromFile(new File(path)));
-				} else if(msg != null){	//	Show Message
-					Msg.alertMsg(this, getResources().getString(R.string.msg_Error), msg);
-				}
 		    	//	
 		        return true;
 		    case O_DELETE:
@@ -199,27 +193,68 @@ public class LV_AttachView extends FragmentActivity {
 	 * @return void
 	 * @throws IOException 
 	 */
-	private String actionDownload(int position) throws IOException {
-		DisplayImageTextItem item = (DisplayImageTextItem) lv_AttachmentList.getAdapter().getItem(position);
-		if(item.getImage() != null){
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			//	Get Image
-			Bitmap image = item.getImage();
-			//	Compress
-			String path = Env.getImg_DirectoryPathName(this);
-			path = path + File.separator + item.getValue() + JPEG_FILE_SUFFIX;
-			image.compress(Bitmap.CompressFormat.PNG, 100, bos);
-			File file = new File(path);
-			file.createNewFile();
-			//	Write the bytes in file
-			FileOutputStream fOut = new FileOutputStream(file);
-			fOut.write(bos.toByteArray());
-			//	Close Output
-			fOut.close();
-			return path;
+	private String actionDownload(int position) {
+		String msg = null;
+		try {
+			DisplayImageTextItem item = (DisplayImageTextItem) lv_AttachmentList.getAdapter().getItem(position);
+			if(item.getImage() != null){
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				//	Get Image
+				Bitmap image = item.getImage();
+				//	Compress
+				String path = Env.getImg_DirectoryPathName(this);
+				path = path + File.separator + item.getValue() + JPEG_FILE_SUFFIX;
+				image.compress(Bitmap.CompressFormat.PNG, 100, bos);
+				File file = new File(path);
+				file.createNewFile();
+				//	Write the bytes in file
+				FileOutputStream fOut = new FileOutputStream(file);
+				fOut.write(bos.toByteArray());
+				//	Close Output
+				fOut.close();
+				return path;
+			}
+		} catch (IOException e) {
+			LogM.log(getApplicationContext(), getClass(), 
+					Level.SEVERE, "Error Download Image:", e);
+			msg = getResources().getString(R.string.msg_IOException) 
+						+ " " + e.getMessage();
 		}
+		//	Show Message
+		if(msg != null)
+			Msg.alertMsg(this, getResources().getString(R.string.msg_Error), msg);
 		//	Return
 		return null;
+	}
+	
+	/**
+	 * Share Image
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/05/2014, 16:38:08
+	 * @param position
+	 * @return void
+	 */
+	private void actionShare(int position){
+		//	Path
+		String localPath = actionDownload(position);
+		//	
+		DisplayImageTextItem item = (DisplayImageTextItem) lv_AttachmentList.getAdapter().getItem(position);
+    	//	
+		if(localPath != null) {
+			//	Share
+			Uri sourceUri = Uri.fromFile(new File(localPath));
+			//	
+			Intent shareIntent = new Intent();
+			shareIntent.setAction(Intent.ACTION_SEND);
+			shareIntent.putExtra(Intent.EXTRA_STREAM, sourceUri);
+			shareIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getText(R.string.msg_Report) 
+					+ " \"" + item.getValue() + "\"");
+			shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_SharedFromSFAndroid));
+			//	
+			shareIntent.setType("image/*");
+			//	
+			startActivity(Intent.createChooser(shareIntent, 
+					getResources().getText(R.string.Action_Share)));
+		}
 	}
 	
 	/**

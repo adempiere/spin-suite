@@ -30,8 +30,6 @@ import org.spinsuite.util.LogM;
 import org.spinsuite.util.TabParameter;
 import org.spinsuite.view.lookup.LookupMenu;
 
-
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -212,13 +210,9 @@ public class TV_DynamicActivity extends TV_Base implements I_FragmentSelectListe
     
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	if (resultCode == Activity.RESULT_OK) {
-	    	if(data != null){
-	    		Fragment currentFragment = getCurrentFragment();
-	    		if(currentFragment != null)
-	    			currentFragment.onActivityResult(requestCode, resultCode, data);
-	    	}
-    	}
+    	Fragment currentFragment = getCurrentFragment();
+    	if(currentFragment != null)
+    		currentFragment.onActivityResult(requestCode, resultCode, data);
     }
 
 	@Override
