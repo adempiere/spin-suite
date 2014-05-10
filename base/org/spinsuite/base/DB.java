@@ -86,6 +86,13 @@ public class DB extends SQLiteOpenHelper {
 				&& sqlCreate.length() > 0)
 			bd.execSQL(sqlCreate);
 	}
+	
+	@Override
+	public void onConfigure(SQLiteDatabase db) {
+		super.onConfigure(db);
+		//	Enable Constraints
+		db.setForeignKeyConstraintsEnabled(true);
+	}
 
 	/* (non-Javadoc)
 	 * @see android.database.sqlite.SQLiteOpenHelper#onUpgrade(android.database.sqlite.SQLiteDatabase, int, int)
@@ -95,6 +102,16 @@ public class DB extends SQLiteOpenHelper {
 		if(sqlUpdate != null
 				&& sqlUpdate.length() > 0)
 		db.execSQL(sqlUpdate);
+	}
+	
+	/**
+	 * Is Datablase Integrity Ok
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/05/2014, 14:37:17
+	 * @return
+	 * @return boolean
+	 */
+	public boolean isDatabaseIntegrityOk(){
+		return db.isDatabaseIntegrityOk();
 	}
 	
 	/**

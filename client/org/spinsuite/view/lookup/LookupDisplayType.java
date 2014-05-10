@@ -41,6 +41,8 @@ public class LookupDisplayType {
 		this.m_field = field;
 		this.ctx = ctx;
 		m_InfoLookup = new InfoLookup();
+		m_Language = Env.getAD_Language(ctx);
+		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
 	}
 	
 	/**
@@ -54,6 +56,8 @@ public class LookupDisplayType {
 		this.m_SPS_Table_ID = m_SPS_Table_ID;
 		this.ctx = ctx;
 		m_InfoLookup = new InfoLookup();
+		m_Language = Env.getAD_Language(ctx);
+		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
 	}
 	
 	/**	Field					*/
@@ -70,6 +74,10 @@ public class LookupDisplayType {
 	private boolean 		m_IsLoaded				= false;
 	/**	SQL						*/
 	private String 			m_SQL					= null;
+	/**	Language				*/
+	private String 			m_Language 				= "en_US";
+	/**	Is Base Language		*/
+	private boolean 		m_IsBaseLanguage 		= true;
 	
 	/**
 	 * Get SQL
@@ -281,7 +289,21 @@ public class LookupDisplayType {
 	 */
 	private String loadSQLList(){
 		//	Set SQL
-		StringBuffer sql = new StringBuffer("SELECT rl.Value, rl.Name FROM AD_Ref_List rl ");
+		StringBuffer sql = new StringBuffer("SELECT rl.Value, ");
+		//	Handle Language
+		if(m_IsBaseLanguage){
+			sql.append("rl.Name ");
+			//	From
+			sql.append("FROM AD_Ref_List rl ");
+		} else {
+			sql.append("rlt.Name ");
+			//	From
+			sql.append("FROM AD_Ref_List rl ");
+			//	Join
+			sql.append("INNER JOIN AD_Ref_List_Trl rlt ON(rlt.AD_Ref_List_ID = rl.AD_Ref_List_ID " +
+					"AND rlt.AD_Language = '").append(m_Language).append("') ");
+		}
+		//	Where Clause			
 		sql.append("WHERE rl.AD_Reference_ID = ").append(m_field.AD_Reference_Value_ID);
 		sql.append(" ").append(getValRule());
 		//	Return

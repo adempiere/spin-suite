@@ -703,15 +703,25 @@ public class T_DynamicTab extends Fragment
 	    		}
 	    	}
 		} else if(mode == MODIFY){
+			//	Check Is Processed
+			boolean isProcessed = Env.getContextAsBoolean(getActivity(), tabParam.getActivityNo(), 
+	    				tabParam.getTabNo(), "Processed");
+			//	
 			for(ViewIndex vIndex : viewList){
 	    		VLookup lookup = vIndex.getVLookup();
 	    		InfoField field = lookup.getField();
 	    		if(
 	    			//	Any Field
 	    			!field.ColumnName.equals("DocAction")
-	    					&& (field.IsUpdateable || field.IsAlwaysUpdateable)
-	    					&& !field.IsReadOnly
-	    					&& !field.IsParent){
+	    				&& (
+	    						//	Updateable and not Processed
+	    						((field.IsUpdateable && !isProcessed)
+	    							&& !field.IsReadOnly
+	    							&& !field.IsParent)
+	    						//	Always Updateable
+	    						|| field.IsAlwaysUpdateable
+	    					)
+	    			){
 	    			lookup.setEnabled(true);
 	    		} else {
 	    			lookup.setEnabled(false);
@@ -818,6 +828,9 @@ public class T_DynamicTab extends Fragment
      * @return boolean
      */
     private boolean processAttach(Intent intent){
+    	File tmpFile = new File(TMP_ATTACH_NAME);
+        if(!tmpFile.exists())
+        	return false;
 		// Get the size of the image
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
@@ -841,6 +854,7 @@ public class T_DynamicTab extends Fragment
 		if(mImage != null){
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			mImage.compress(Bitmap.CompressFormat.PNG, 100, bos);
+			//	Save in DB
 			saveAttachment(bos.toByteArray());
 			return true;
 		}
@@ -881,6 +895,9 @@ public class T_DynamicTab extends Fragment
 		//	Close Connection
 		DB.closeConnection(conn);
 		Msg.toastMsg(getActivity(), getString(R.string.msg_Ok));
+		//	Delete File
+		File tmpFile = new File(TMP_ATTACH_NAME);
+	    tmpFile.deleteOnExit();
     }
     
     @Override

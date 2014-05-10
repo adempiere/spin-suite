@@ -110,6 +110,7 @@
 	<string name="msg_Exported">Exported</string>
 	<string name="msg_Path">Path</string>
 	<string name="msg_Report">Report</string>
+	<string name="msg_Image">Image</string>
 	<string name="msg_SharedFromSFAndroid">Shared from Spin-Suite Application</string>
 	<string name="msg_ReportParameters">Report Parameters</string>
 	<string name="msg_SendAsXLS">Send as XLS Format</string>

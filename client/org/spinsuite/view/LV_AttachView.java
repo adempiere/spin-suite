@@ -246,7 +246,7 @@ public class LV_AttachView extends FragmentActivity {
 			Intent shareIntent = new Intent();
 			shareIntent.setAction(Intent.ACTION_SEND);
 			shareIntent.putExtra(Intent.EXTRA_STREAM, sourceUri);
-			shareIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getText(R.string.msg_Report) 
+			shareIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getText(R.string.msg_Image) 
 					+ " \"" + item.getValue() + "\"");
 			shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_SharedFromSFAndroid));
 			//	
