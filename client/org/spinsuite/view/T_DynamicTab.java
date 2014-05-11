@@ -509,8 +509,11 @@ public class T_DynamicTab extends Fragment
      * @return void
      */
     private void attachImage(){
+    	//	Delete Temp File
     	File tmpFile = new File(TMP_ATTACH_NAME);
-    	tmpFile.deleteOnExit();
+    	if(tmpFile.exists())
+    		tmpFile.delete();
+    	//	
     	Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     	intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tmpFile));
 	    getActivity().startActivityForResult(intent, ACTION_TAKE_PHOTO);
@@ -897,7 +900,9 @@ public class T_DynamicTab extends Fragment
 		Msg.toastMsg(getActivity(), getString(R.string.msg_Ok));
 		//	Delete File
 		File tmpFile = new File(TMP_ATTACH_NAME);
-	    tmpFile.deleteOnExit();
+    	if(tmpFile.exists())
+    		tmpFile.delete();
+    	//	
     }
     
     @Override
