@@ -364,7 +364,7 @@ public abstract class PO {
 			//	Set Ok Value
 			ok = true;
 		} catch(Exception e){
-			
+			LogM.log(getCtx(), getClass(), Level.SEVERE, "Error: " + e.getMessage(), e);
 		}
 		return ok;
 	}
@@ -869,14 +869,33 @@ public abstract class PO {
 	public final Object parseValue(POInfoColumn column, int index, boolean isNew) throws Exception{
 		if(index >= 0){
 			Object value = m_currentValues[index]; 
-			if(column.ColumnName.equals(m_TableInfo.getTableName() + "_ID")
-					&& isNew){
-				m_currentId = MSequence.getNextID(m_ctx, getAD_Client_ID(), getTableName(), conn);
-				//	Set ID
-				set_Value(index, m_currentId);
-				return m_currentId;
+			if(isNew){
+				if(column.ColumnName.equals(m_TableInfo.getTableName() + "_ID")){
+					m_currentId = MSequence.getNextID(m_ctx, getAD_Client_ID(), getTableName(), conn);
+					//	Set ID
+					set_Value(index, m_currentId);
+					return m_currentId;
+				} else if(column.ColumnName.equals("DocumentNo")){
+					//	Get Document Type
+					int m_C_DocType_ID = get_ValueAsInt("C_DocType_ID");
+					//	Target Document
+					if(m_C_DocType_ID == 0)
+						m_C_DocType_ID = get_ValueAsInt("C_DocTypeTarget_ID");
+					//	Get Document No
+					String documentNo = MSequence.getDocumentNo(getCtx(), m_C_DocType_ID, m_TableInfo.getTableName(), true, conn);
+					return documentNo;
+				}
 			} else {
-				if(value != null){
+				if(column.ColumnName.equals("DocumentNo")){
+					//	Get Document Type
+					int m_C_DocType_ID = get_ValueAsInt("C_DocType_ID");
+					//	Target Document
+					if(m_C_DocType_ID == 0)
+						m_C_DocType_ID = get_ValueAsInt("C_DocTypeTarget_ID");
+					//	Get Document No
+					String documentNo = MSequence.getDocumentNo(getCtx(), m_C_DocType_ID, m_TableInfo.getTableName(), false, conn);
+					return documentNo;
+				} else if(value != null){
 					return DisplayType.getJDBC_Value(column.DisplayType, value);
 				} else if(column.DefaultValue != null){
 					return Env.parseContext(getCtx(), (String)column.DefaultValue, false);

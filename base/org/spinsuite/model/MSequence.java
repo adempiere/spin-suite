@@ -15,9 +15,11 @@
  *************************************************************************************/
 package org.spinsuite.model;
 
+import java.text.DecimalFormat;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
+import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
 import android.content.Context;
@@ -64,7 +66,8 @@ public class MSequence extends X_AD_Sequence {
 	{
 		if (TableName == null || TableName.length() == 0)
 			throw new IllegalArgumentException("TableName missing");
-
+		
+		boolean handleConnection = false;
 		int retValue = -1;
 
 		String selectSQL = "SELECT CurrentNext, AD_Sequence_ID "
@@ -74,10 +77,15 @@ public class MSequence extends X_AD_Sequence {
 		
 		LogM.log(ctx, "MSequence", Level.FINE, "Msequence.getNextID >> selectSQL:" + selectSQL);
 		
+		//	Connection
 		if(conn == null){
 			conn = new DB(ctx);
-			conn.openDB(DB.READ_WRITE);
+			handleConnection = true;
+		} else if(!conn.isOpen()){
+			handleConnection = true;
 		}
+		//	
+		DB.loadConnection(conn, DB.READ_WRITE);
 		//	Result Set
 		Cursor rs = null;
 		rs = conn.querySQL(selectSQL, new String[]{TableName});
@@ -99,8 +107,163 @@ public class MSequence extends X_AD_Sequence {
 			conn.executeSQL(updateSQL, new Object[]{m_AD_Sequence_ID});
 			LogM.log(ctx, "MSequence", Level.FINE, "m_AD_Sequence_ID=" + m_AD_Sequence_ID);
 		}
+		//	Close Connection
+		if(handleConnection)
+			DB.closeConnection(conn);
 		//	
 		return retValue;
 	}	//	getNextID
+	
+	
+	/**
+	 * Get Document No
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/05/2014, 22:03:16
+	 * @param ctx
+	 * @param C_DocType_ID
+	 * @param TableName
+	 * @param definite
+	 * @param conn
+	 * @return
+	 * @return String
+	 */
+	public static String getDocumentNo (Context ctx, int C_DocType_ID, String TableName, boolean definite, DB conn){
+		//	
+		boolean handleConnection = false;
+		int m_AD_Sequence_ID = 0;
+		int incrementNo = 0;
+		int next = -1;
+		String prefix = "";
+		String suffix = "";
+		String decimalPattern = "";
+		//String calendarYear = "";
+		
+		String selectSQL = null;
+		//	Connection
+		if(conn == null){
+			conn = new DB(ctx);
+			handleConnection = true;
+		} else if(!conn.isOpen()){
+			handleConnection = true;
+		}
+		//	
+		DB.loadConnection(conn, DB.READ_WRITE);
+		//	Result Set
+		Cursor rs = null;
+		//	By Table
+		if (C_DocType_ID == 0){
+			//	Sequence by User
+			selectSQL = "SELECT s.CurrentNext, s.AD_Sequence_ID, s.IncrementNo, s.Prefix, s.Suffix, s.DecimalPattern " +
+					"FROM AD_Sequence s " +
+					"WHERE s.Name = ? " +
+					"AND s.IsActive = ? " +
+					"AND s.IsTableID = ? ";
+			
+			LogM.log(ctx, "MSequence", Level.FINE, "Msequence.getDocumentNo >> selectSQL:" + selectSQL);
+			//	
+			rs = conn.querySQL(selectSQL, new String[]{TableName, "Y", "N"});
+
+			//	Get Values
+			if(rs.moveToFirst()){
+				next = rs.getInt(0);
+				m_AD_Sequence_ID = rs.getInt(1);
+				incrementNo = rs.getInt(2);
+				prefix = rs.getString(3);
+				suffix = rs.getString(4);
+				decimalPattern = rs.getString(5);
+			}
+		}
+		//	Sequence by User
+		if(next < 0){
+			selectSQL = "SELECT s.CurrentNext, s.AD_Sequence_ID, s.IncrementNo, s.Prefix, s.Suffix, s.DecimalPattern " +
+					"FROM SPS_UserDocSequence uds " +
+					"INNER JOIN AD_Sequence s ON(s.AD_Sequence_ID = uds.AD_Sequence_ID) " +
+					"WHERE uds.C_DocType_ID = ? " +
+					"AND s.IsActive = ? " +
+					"AND s.IsTableID = ? ";
+			
+			LogM.log(ctx, "MSequence", Level.FINE, "Msequence.getDocumentNo >> selectSQL:" + selectSQL);
+			//	
+			rs = conn.querySQL(selectSQL, new String[]{String.valueOf(C_DocType_ID), "Y", "N"});
+
+			//	Get Values
+			if(rs.moveToFirst()){
+				next = rs.getInt(0);
+				m_AD_Sequence_ID = rs.getInt(1);
+				incrementNo = rs.getInt(2);
+				prefix = rs.getString(3);
+				suffix = rs.getString(4);
+				decimalPattern = rs.getString(5);
+			}
+		}
+
+		//	Sequence By Document
+		if(next < 0){
+			selectSQL = "SELECT s.CurrentNext, s.AD_Sequence_ID, s.IncrementNo, s.Prefix, s.Suffix, s.DecimalPattern " +
+					"FROM C_DocType dt " +
+					"INNER JOIN AD_Sequence s ON(s.AD_Sequence_ID = dt.DocNoSequence_ID) " +
+					"WHERE uds.C_DocType_ID = ? " +
+					"AND s.IsActive = ? " +
+					"AND s.IsTableID = ? ";
+			
+			LogM.log(ctx, "MSequence", Level.FINE, "Msequence.getDocumentNo >> selectSQL:" + selectSQL);
+			
+			//	Result Set
+			rs = null;
+			rs = conn.querySQL(selectSQL, new String[]{String.valueOf(C_DocType_ID), "Y", "N"});
+			//	Get Values
+			
+			if(rs.moveToFirst()){
+				next = rs.getInt(0);
+				m_AD_Sequence_ID = rs.getInt(1);
+				incrementNo = rs.getInt(2);
+				prefix = rs.getString(3);
+				suffix = rs.getString(4);
+				decimalPattern = rs.getString(5);
+			}
+		}
+		//	Close Connection
+		if(handleConnection)
+			DB.closeConnection(conn);
+		//	No Sequence
+		if(next < 0)
+			return null;
+		
+		//	Log
+		LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> next=" +  next);
+		LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> m_AD_Sequence_ID" + m_AD_Sequence_ID);
+		LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> incrementNo" + incrementNo);
+		LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> prefix" + prefix);
+		LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> suffix" + suffix);
+		
+		//	create DocumentNo
+		StringBuffer doc = new StringBuffer();
+		if (prefix != null && prefix.length() > 0)
+			doc.append(Env.parseContext(ctx, prefix, true));
+		if (decimalPattern != null && decimalPattern.length() > 0)
+			doc.append(new DecimalFormat(decimalPattern).format(next));
+		else
+			doc.append(next);
+		if (suffix != null && suffix.length() > 0)
+			doc.append(Env.parseContext(ctx, suffix, true));
+		//	Set Document No
+		String documentNo = doc.toString();
+		//	Log
+		LogM.log(ctx, MSequence.class, Level.FINE, documentNo + " (" + incrementNo + ")"
+				+ " - C_DocType_ID=" + C_DocType_ID);
+		
+		//	Update Sequence
+		if(definite){
+			//	Update Sequence
+			String updateSQL = "UPDATE AD_Sequence SET CurrentNext = CurrentNext + IncrementNo " +
+					"WHERE AD_Sequence_ID = ?";
+			//	Log
+			LogM.log(ctx, "MSequence", Level.FINE, "Msequence.getNextID >> updateSQL:" + updateSQL);
+			
+			conn.executeSQL(updateSQL, new Object[]{m_AD_Sequence_ID});
+			LogM.log(ctx, "MSequence", Level.FINE, "m_AD_Sequence_ID=" + m_AD_Sequence_ID);
+		}
+		//	
+		return documentNo;
+	}	//	getDocumentNo
 
 }
