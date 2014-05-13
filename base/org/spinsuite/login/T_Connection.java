@@ -16,11 +16,13 @@
 package org.spinsuite.login;
 
 import java.io.File;
+import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 
 import android.app.ActionBar;
@@ -35,9 +37,11 @@ import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 /**
  * 
@@ -47,18 +51,19 @@ import android.widget.EditText;
 public class T_Connection extends FragmentActivity implements I_Login {
 
 	/**	URL SOAP Comunication	*/
-	private EditText et_UrlSoap;
+	private EditText 	et_UrlSoap;
 	/**	Synchronization Method	*/
-	private EditText et_Method;
-	private EditText et_Timeout;
+	private EditText 	et_Method;
+	private EditText 	et_Timeout;
+	private Spinner 	sp_LogLevel;
 	/** NameSpace*/
-	private EditText et_NameSpace;
+	private EditText 	et_NameSpace;
 	/** Soap Object InitialLoad	*/
 	//private InitialLoad m_load ;
 	/**	Sync					*/
-	private Button butt_InitSync;
+	private Button 		butt_InitSync;
 	/**	Save data SD			*/
-	private CheckBox ch_SaveSD;
+	private CheckBox 	ch_SaveSD;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +80,7 @@ public class T_Connection extends FragmentActivity implements I_Login {
         et_UrlSoap = (EditText) findViewById(R.id.et_UrlSoap);
     	et_Method = (EditText) findViewById(R.id.et_Method);
     	et_Timeout = (EditText) findViewById(R.id.et_Timeout);
+    	sp_LogLevel = (Spinner) findViewById(R.id.sp_LogLevel);
     	et_NameSpace = (EditText) findViewById(R.id.et_NameSpace);
     	ch_SaveSD = (CheckBox) findViewById(R.id.ch_SaveSD);
     	
@@ -86,8 +92,37 @@ public class T_Connection extends FragmentActivity implements I_Login {
 
     	butt_InitSync = (Button) findViewById(R.id.butt_InitSync);
     	
-    	//lockFront();
-    	
+    	sp_LogLevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+
+			@Override
+			public void onItemSelected(AdapterView<?> a, View v,
+					int position, long i) {
+				//	Evaluate
+				Level level = Level.OFF;
+		    	if(position == 0) {
+		    		level = Level.INFO;
+		    	} else if(position == 1) {
+		    		level = Level.FINE;
+		    	} else if(position == 2) {
+		    		level = Level.FINER;
+		    	} else if(position == 3) {
+		    		level = Level.FINEST;
+		    	} else if(position == 4) {
+		    		level = Level.SEVERE;
+		    	} else if(position == 5) {
+		    		level = Level.WARNING;
+		    	} else if(position == 6) {
+		    		level = Level.OFF;
+		    	}
+		    	//	Set Level
+		    	LogM.setTraceLevel(getApplicationContext(), level);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				//	
+			}
+    	});
     	//	Init Sync
     	butt_InitSync.setOnClickListener(new OnClickListener(){
 			
@@ -345,6 +380,32 @@ public class T_Connection extends FragmentActivity implements I_Login {
     		timeout = String.valueOf(timeoutInt);
     		et_Timeout.setText(timeout);
     	}
+    	//	Log Level
+    	int position = -1;
+    	int traceLevel = LogM.getTraceLevel(this);
+    	//	Evaluate
+    	if(traceLevel == Level.INFO.intValue()) {
+    		position = 0;
+    	} else if(traceLevel == Level.FINE.intValue()) {
+    		position = 1;
+    	} else if(traceLevel == Level.FINER.intValue()) {
+    		position = 2;
+    	} else if(traceLevel == Level.FINEST.intValue()) {
+    		position = 3;
+    	} else if(traceLevel == Level.SEVERE.intValue()) {
+    		position = 4;
+    	} else if(traceLevel == Level.WARNING.intValue()) {
+    		position = 5;
+    	} else if(traceLevel == Level.OFF.intValue()) {
+    		position = 6;
+    	}
+    	//	No Trace Level
+    	if(position == -1) {
+    		position = 5;
+    		LogM.setTraceLevel(this, Level.OFF);
+    	}
+    	//	Select Log Position
+    	sp_LogLevel.setSelection(position);
     	
     	//	Save SD
     	ch_SaveSD.setChecked(Env.getContextAsBoolean(this, "#SaveSD"));

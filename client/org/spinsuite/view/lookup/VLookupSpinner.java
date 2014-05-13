@@ -77,7 +77,20 @@ public class VLookupSpinner extends VLookup {
 	 * @param m_field
 	 */
 	public VLookupSpinner(Context context, InfoField m_field) {
+		this(context, m_field, null);
+	}
+	
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/05/2014, 21:12:18
+	 * @param context
+	 * @param m_field
+	 * @param conn
+	 */
+	public VLookupSpinner(Context context, InfoField m_field, DB conn) {
 		super(context, m_field);
+		this.conn = conn;
 		init();
 	}
 	
@@ -85,6 +98,8 @@ public class VLookupSpinner extends VLookup {
 	private Spinner 		v_Spinner = null;
 	/**	Syntax Error		*/
 	private boolean 		isSyntaxError = false;
+	/**	Connection			*/
+	private DB				conn = null;
 	//	
 	@Override
 	protected void init() {
@@ -191,7 +206,14 @@ public class VLookupSpinner extends VLookup {
 	private void load(){
 		try{
 			LookupDisplayType lookup = new LookupDisplayType(getContext(), m_field);
-			DB conn = new DB(getContext());
+			
+			//	
+			boolean isHandleConnection = false;
+			if(conn == null){
+				conn = new DB(getContext());
+				isHandleConnection = true;
+			}
+			//	
 			DB.loadConnection(conn, DB.READ_ONLY);
 			Cursor rs = null;
 			//	Query
@@ -217,7 +239,8 @@ public class VLookupSpinner extends VLookup {
 				v_Spinner.setAdapter(sp_adapter);
 			}
 			//	Close
-			DB.closeConnection(conn);
+			if(isHandleConnection)
+				DB.closeConnection(conn);
 		} catch(Exception e){
 			isSyntaxError = true;
 			LogM.log(getContext(), getClass(), Level.SEVERE, "Error in Load", e);

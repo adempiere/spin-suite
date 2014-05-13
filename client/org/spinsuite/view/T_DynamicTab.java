@@ -237,22 +237,27 @@ public class T_DynamicTab extends Fragment
 		if (model == null)
     		model = MSPSTable.getPO(getActivity(), m_Record_ID, tabInfo.getTableName(), conn);
 		if(model == null){
-    		Msg.alertMsg(getActivity(), getResources().getString(R.string.msg_Error)
-    				, getResources().getString(R.string.msg_Error));
+    		Msg.toastMsg(getActivity(), getString(R.string.msg_LoadError) + ": " 
+    					+ getString(R.string.msg_ClassNotFound));
     		return false;
     	}
 		//	Set identifier
 		Env.setContext(getActivity(), tabParam.getActivityNo(), 
 				tabParam.getTabNo(), tabInfo.getTableName() + "_ID", model.getID());
 		
-		//	Add Fields
-    	for(InfoField field : tabInfo.getFields()){
-    		if(!field.IsDisplayed)
-    			continue;
-    		//	Add View to Layout
-    		addView(field);
-    	}
-    	return ok;
+		try {
+			//	Add Fields
+	    	for(InfoField field : tabInfo.getFields()){
+	    		if(!field.IsDisplayed)
+	    			continue;
+	    		//	Add View to Layout
+	    		addView(field);
+	    	}
+		} catch(Exception e){
+			Msg.alertMsg(getActivity(), getString(R.string.msg_LoadError), 
+					getString(R.string.msg_Error) + ": " + e.getMessage());
+		}
+		return ok;
     }
  
     /**
@@ -286,7 +291,7 @@ public class T_DynamicTab extends Fragment
 			//	Table Direct
 			if(field.DisplayType == DisplayType.TABLE_DIR
 					|| field.DisplayType == DisplayType.LIST){
-				lookup = new VLookupSpinner(getActivity(), field);
+				lookup = new VLookupSpinner(getActivity(), field, conn);
 			} else if(field.DisplayType == DisplayType.SEARCH){
 				lookup = new VLookupSearch(getActivity(), field);
 			}

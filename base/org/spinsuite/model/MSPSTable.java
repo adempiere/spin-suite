@@ -185,21 +185,21 @@ public class MSPSTable extends X_SPS_Table {
 			;//	Not yet implemented
 		
 		boolean errorLogged = false;
-		try
-		{
+		try {
 			Constructor<?> constructor = null;
-			try
-			{
+			try {
 				constructor = clazz.getDeclaredConstructor(new Class[]{Context.class, int.class, DB.class});
 			}
-			catch (Exception e)
-			{
+			catch (Exception e) {
 				String msg = e.getMessage();
 				if (msg == null)
 					msg = e.toString();
 				LogM.log(ctx, "MSFATable", Level.WARNING, "PO.getPO(int, DB) No transaction Constructor for " + clazz + " (" + msg + ")");
 			}
-			
+			//	Valid Constructor
+			if(constructor == null)
+				return null;
+			//	
 			PO po = (PO)constructor.newInstance(new Object[] {ctx, Record_ID, conn});
 			if (po != null 
 					&& po.get_ID() != Record_ID 
