@@ -361,48 +361,43 @@ public class T_DynamicTab extends Fragment
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    	switch (item.getItemId()) {
-        	case R.id.action_search:
-            	Bundle bundle = new Bundle();
-            	bundle.putInt("SPS_Table_ID", tabInfo.getSPS_Table_ID());
-            	bundle.putInt("SPS_Tab_ID", tabInfo.getSPS_Tab_ID());
-            	if(tabParam.getTabLevel() > 0){
-            		FilterValue criteria = tabInfo.getCriteria(getActivity(), 
-            				tabParam.getActivityNo(), tabParam.getParentTabNo());
-            		bundle.putParcelable("Criteria", criteria);
-            	}
-            	Intent intent = new Intent(getActivity(), LV_Search.class);
-    			intent.putExtras(bundle);
-    			//	Start with result
-    			startActivityForResult(intent, 0);
-                return true;
-            
-            case R.id.action_edit:
-            	lockView(MODIFY);
-            	return true;
-            	
-            case R.id.action_add:
-            	newOption();
-            	return true;
-            		
-            case R.id.action_more:
-            	//	More
-            	showPopupMenu();
-            	return true;
-            
-            case R.id.action_cancel:
-            	if(m_Record_ID == 0){
-            		model.backCopy();
-            	}
-            	refresh(model.getID(), false);
-            	lockView(SEE);
-                return true;
-                
-            case R.id.action_save:
-            	if(save())
-            		lockView(SEE);
-                return true;
-        }
+    	int itemId = item.getItemId();
+		if (itemId == R.id.action_search) {
+			Bundle bundle = new Bundle();
+			bundle.putInt("SPS_Table_ID", tabInfo.getSPS_Table_ID());
+			bundle.putInt("SPS_Tab_ID", tabInfo.getSPS_Tab_ID());
+			if(tabParam.getTabLevel() > 0){
+				FilterValue criteria = tabInfo.getCriteria(getActivity(), 
+						tabParam.getActivityNo(), tabParam.getParentTabNo());
+				bundle.putParcelable("Criteria", criteria);
+			}
+			Intent intent = new Intent(getActivity(), LV_Search.class);
+			intent.putExtras(bundle);
+			//	Start with result
+			startActivityForResult(intent, 0);
+			return true;
+		} else if (itemId == R.id.action_edit) {
+			lockView(MODIFY);
+			return true;
+		} else if (itemId == R.id.action_add) {
+			newOption();
+			return true;
+		} else if (itemId == R.id.action_more) {
+			//	More
+			showPopupMenu();
+			return true;
+		} else if (itemId == R.id.action_cancel) {
+			if(m_Record_ID == 0){
+				model.backCopy();
+			}
+			refresh(model.getID(), false);
+			lockView(SEE);
+			return true;
+		} else if (itemId == R.id.action_save) {
+			if(save())
+				lockView(SEE);
+			return true;
+		}
 
         return super.onOptionsItemSelected(item);
     }

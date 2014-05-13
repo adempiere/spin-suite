@@ -294,24 +294,24 @@ public class LV_Search extends FragmentActivity {
 	    
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_add:
-				selectedRecord(new DisplayRecordItem(0, null));
+		int itemId = item.getItemId();
+		if (itemId == R.id.action_add) {
+			selectedRecord(new DisplayRecordItem(0, null));
 			return true;
-			case R.id.action_config:
-				//	Show
-				if(llc_Search.getVisibility() == LinearLayout.GONE){
-					llc_Search.setVisibility(LinearLayout.VISIBLE);
-					m_oldCriteria = m_criteria;
-				} else {
-					llc_Search.setVisibility(LinearLayout.GONE);
-					m_criteria = m_oldCriteria;
-					//	Load New
-					load();
-				}
+		} else if (itemId == R.id.action_config) {
+			//	Show
+			if(llc_Search.getVisibility() == LinearLayout.GONE){
+				llc_Search.setVisibility(LinearLayout.VISIBLE);
+				m_oldCriteria = m_criteria;
+			} else {
+				llc_Search.setVisibility(LinearLayout.GONE);
+				m_criteria = m_oldCriteria;
+				//	Load New
+				load();
+			}
 			return true;
-			case android.R.id.home:
-				NavUtils.navigateUpTo(this, new Intent(this, LV_Menu.class));
+		} else if (itemId == android.R.id.home) {
+			NavUtils.navigateUpTo(this, new Intent(this, LV_Menu.class));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

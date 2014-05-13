@@ -101,29 +101,27 @@ public class Login extends TV_Base implements I_CancelOk {
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // Navigate "up" the demo structure to the launchpad activity.
-                // See http://developer.android.com/design/patterns/navigation.html for more.
-                NavUtils.navigateUpTo(this, new Intent(this, Login.class));
-                return true;
-
-            case R.id.action_ok:
-                // Go to the previous step in the wizard. If there is no previous step,
-                // setCurrentItem will do nothing.
-                processActionOk();
-                return true;
-
-            case R.id.action_cancel:
-                // Advance to the next step in the wizard. If there is no next step, setCurrentItem
-                // will do nothing.
-                processActionCancel();
-                return true;
-            case R.id.action_config:
-        		Intent intent = new Intent(this, T_Connection.class);
-				startActivity(intent);
-                return true;
-        }
+        int itemId = item.getItemId();
+		if (itemId == android.R.id.home) {
+			// Navigate "up" the demo structure to the launchpad activity.
+			// See http://developer.android.com/design/patterns/navigation.html for more.
+			NavUtils.navigateUpTo(this, new Intent(this, Login.class));
+			return true;
+		} else if (itemId == R.id.action_ok) {
+			// Go to the previous step in the wizard. If there is no previous step,
+			// setCurrentItem will do nothing.
+			processActionOk();
+			return true;
+		} else if (itemId == R.id.action_cancel) {
+			// Advance to the next step in the wizard. If there is no next step, setCurrentItem
+			// will do nothing.
+			processActionCancel();
+			return true;
+		} else if (itemId == R.id.action_config) {
+			Intent intent = new Intent(this, T_Connection.class);
+			startActivity(intent);
+			return true;
+		}
 
         return super.onOptionsItemSelected(item);
     }

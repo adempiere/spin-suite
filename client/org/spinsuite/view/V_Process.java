@@ -671,58 +671,57 @@ public class V_Process extends FragmentActivity {
                 return true;
             }
     	}
-		//	
-		switch (item.getItemId()) {
-			case R.id.action_process:
-				if(isLoaded){
-					ll_ProcessPara.setVisibility(ScrollView.VISIBLE);
-					item.setIcon(R.drawable.process_m);
-					if(m_pInfo.isReport()){
-						iSearch.setVisible(false);
-						iPrintFormat.setVisible(false);
-					}
-					//
-					isLoaded = false;
-					return true;
+		int itemId = item.getItemId();
+		if (itemId == R.id.action_process) {
+			if(isLoaded){
+				ll_ProcessPara.setVisibility(ScrollView.VISIBLE);
+				item.setIcon(R.drawable.process_m);
+				if(m_pInfo.isReport()){
+					iSearch.setVisible(false);
+					iPrintFormat.setVisible(false);
 				}
-				//	Run Process
-				if(!getValuesFromParameters())
-					return false;
-				m_pControl.runProcess();
-				tv_Summary.setTextAppearance(this, R.style.TextStandard);
-				tv_Summary.setVisibility(TextView.VISIBLE);
-				//	If Error
-				if(m_pInfo.isError())
-					tv_Summary.setTextColor(Color.RED);
-				else
-					tv_Summary.setTextColor(Color.BLUE);
-				//	Set Summary
-				tv_Summary.setText(m_pInfo.getSummary());
-				//	Show all logs
-				if(!m_pInfo.isReport()
-						|| m_pInfo.isError()){
-					if(!m_activityParam.isFromActivity())
-						showLog();
-					else 
-						setActivityResult();
-				}
-				//	Show report
-				else if(m_pInfo.isReport()){
-					iSearch.setVisible(true);
-					iPrintFormat.setVisible(true);
-					ll_HeaderReport.setVisibility(LinearLayout.VISIBLE);
-					showReport(0);
-				}
-				//	Hide Parameter
-				if(!m_pInfo.isError()){
-					ll_ProcessPara.setVisibility(ScrollView.GONE);
-					item.setIcon(R.drawable.config_m);
-					//	Set Is Loaded
-					isLoaded = true;
-				}				
+				//
+				isLoaded = false;
+				return true;
+			}
+			//	Run Process
+			if(!getValuesFromParameters())
+				return false;
+			m_pControl.runProcess();
+			tv_Summary.setTextAppearance(this, R.style.TextStandard);
+			tv_Summary.setVisibility(TextView.VISIBLE);
+			//	If Error
+			if(m_pInfo.isError())
+				tv_Summary.setTextColor(Color.RED);
+			else
+				tv_Summary.setTextColor(Color.BLUE);
+			//	Set Summary
+			tv_Summary.setText(m_pInfo.getSummary());
+			//	Show all logs
+			if(!m_pInfo.isReport()
+					|| m_pInfo.isError()){
+				if(!m_activityParam.isFromActivity())
+					showLog();
+				else 
+					setActivityResult();
+			}
+			//	Show report
+			else if(m_pInfo.isReport()){
+				iSearch.setVisible(true);
+				iPrintFormat.setVisible(true);
+				ll_HeaderReport.setVisibility(LinearLayout.VISIBLE);
+				showReport(0);
+			}
+			//	Hide Parameter
+			if(!m_pInfo.isError()){
+				ll_ProcessPara.setVisibility(ScrollView.GONE);
+				item.setIcon(R.drawable.config_m);
+				//	Set Is Loaded
+				isLoaded = true;
+			}
 			return true;
-			case R.id.action_print_format:
-				showPrintFormat();
+		} else if (itemId == R.id.action_print_format) {
+			showPrintFormat();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
