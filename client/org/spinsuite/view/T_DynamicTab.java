@@ -540,7 +540,7 @@ public class T_DynamicTab extends Fragment
     		VLookup lookup = vIndex.getVLookup();
     		InfoField field = lookup.getField();
     		if((field.IsMandatory
-    				|| field.IsParent)&& lookup.isEmpty()){
+    				|| field.IsParent) && lookup.isEmpty()){
     			Msg.alertMustFillField(getActivity(), "\"" + field.Name + "\"", lookup.getChildView());
     			//	set ok to false
     			ok = false;

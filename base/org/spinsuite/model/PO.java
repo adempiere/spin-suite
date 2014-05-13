@@ -869,13 +869,14 @@ public abstract class PO {
 	public final Object parseValue(POInfoColumn column, int index, boolean isNew) throws Exception{
 		if(index >= 0){
 			Object value = m_currentValues[index]; 
-			if(isNew){
-				if(column.ColumnName.equals(m_TableInfo.getTableName() + "_ID")){
-					m_currentId = MSequence.getNextID(m_ctx, getAD_Client_ID(), getTableName(), conn);
-					//	Set ID
-					set_Value(index, m_currentId);
-					return m_currentId;
-				} else if(column.ColumnName.equals("DocumentNo")){
+			if(isNew
+					&& column.ColumnName.equals(m_TableInfo.getTableName() + "_ID")){
+				m_currentId = MSequence.getNextID(m_ctx, getAD_Client_ID(), getTableName(), conn);
+				//	Set ID
+				set_Value(index, m_currentId);
+				return m_currentId;
+			} else if(isNew 
+					&& column.ColumnName.equals("DocumentNo")){
 					//	Get Document Type
 					int m_C_DocType_ID = get_ValueAsInt("C_DocType_ID");
 					//	Target Document
@@ -884,9 +885,9 @@ public abstract class PO {
 					//	Get Document No
 					String documentNo = MSequence.getDocumentNo(getCtx(), m_C_DocType_ID, m_TableInfo.getTableName(), true, conn);
 					return documentNo;
-				}
 			} else {
-				if(column.ColumnName.equals("DocumentNo")){
+				if(value == null
+						&& column.ColumnName.equals("DocumentNo")){
 					//	Get Document Type
 					int m_C_DocType_ID = get_ValueAsInt("C_DocType_ID");
 					//	Target Document
