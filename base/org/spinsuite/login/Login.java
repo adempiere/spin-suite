@@ -15,14 +15,11 @@
  *************************************************************************************/
 package org.spinsuite.login;
 
-import java.util.logging.Level;
-
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_CancelOk;
 import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.util.Env;
-import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 import org.spinsuite.view.LV_Menu;
 import org.spinsuite.view.TV_Base;
@@ -77,8 +74,6 @@ public class Login extends TV_Base implements I_CancelOk {
     		LoadInitData initData = new LoadInitData(this);
     		initData.initialLoad_copyDB();
     	}
-    	//	
-    	LogM.setTraceLevel(getApplicationContext(), Level.SEVERE);
     	//	
     }  
     
