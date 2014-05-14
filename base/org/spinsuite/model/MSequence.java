@@ -207,6 +207,7 @@ public class MSequence extends X_AD_Sequence {
 						"AND s.IsTableID = ? ";
 				
 				LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> selectSQL:" + selectSQL);
+				LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> C_DocType_ID:" + C_DocType_ID);
 				
 				//	Result Set
 				rs = null;

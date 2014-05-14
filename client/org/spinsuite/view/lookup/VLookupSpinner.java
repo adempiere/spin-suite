@@ -23,11 +23,13 @@ import org.spinsuite.util.DisplayLookupSpinner;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.TabParameter;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -89,21 +91,38 @@ public class VLookupSpinner extends VLookup {
 	 * @param conn
 	 */
 	public VLookupSpinner(Context context, InfoField m_field, DB conn) {
-		super(context, m_field);
+		this(context, m_field, null, conn);
+	}
+	
+	/**
+	 * With Tab Parameter
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/05/2014, 14:00:56
+	 * @param context
+	 * @param m_field
+	 * @param tabParam
+	 * @param conn
+	 */
+	public VLookupSpinner(Context context, InfoField m_field, TabParameter tabParam, DB conn) {
+		super(context, m_field, tabParam);
 		this.conn = conn;
 		init();
 	}
 	
 	/**	String 				*/
-	private Spinner 		v_Spinner = null;
+	private Spinner 			v_Spinner = null;
 	/**	Syntax Error		*/
-	private boolean 		isSyntaxError = false;
+	private boolean 			isSyntaxError = false;
 	/**	Connection			*/
-	private DB				conn = null;
+	private DB					conn = null;
+	/**	Lookup Handler		*/
+	private LookupDisplayType 	lookup = null;
 	//	
 	@Override
 	protected void init() {
 		v_Spinner = new Spinner(getContext());
+		//	Lookup
+		lookup = new LookupDisplayType(getContext(), getActivityNo(), getTabNo(), m_field);
 		//	
 		setEnabled(!m_field.IsReadOnly);
 		//	Add to View
@@ -114,6 +133,32 @@ public class VLookupSpinner extends VLookup {
 		if(m_field.DefaultValue != null
 					&& m_field.DefaultValue.length() > 0)
 			setValue(Env.parseContext(getContext(), m_field.DefaultValue, true));
+		//	Listener
+		v_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+
+			@Override
+			public void onItemSelected(AdapterView<?> a, View v,
+					int position, long i) {
+				//	Set Context
+				DisplayType.setContextValue(getContext(), getActivityNo(), getTabNo(), m_field, getValueAtPosition(position));
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				//	
+			}
+    	});
+		//	
+		v_Spinner.setOnLongClickListener(new OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+				//	Re-Query
+				load();
+				return false;
+			}
+		});
+		
 	}
 	
 	/**
@@ -178,6 +223,24 @@ public class VLookupSpinner extends VLookup {
 		return null;
 	}
 
+	/**
+	 * Get Value at Position
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/05/2014, 14:21:55
+	 * @param position
+	 * @return
+	 * @return Object
+	 */
+	private Object getValueAtPosition(int position) {
+		DisplayLookupSpinner item = (DisplayLookupSpinner) v_Spinner.getItemAtPosition(position);
+		if(item != null) {
+			if(m_field.DisplayType != DisplayType.LIST)
+				return item.getIDAsInteger();
+			else
+				return item.getIDToString();
+		}
+		return null;
+	}
+	
 	@Override
 	public boolean isEmpty() {
 		Object value = getValue();
@@ -205,8 +268,6 @@ public class VLookupSpinner extends VLookup {
 	 */
 	private void load(){
 		try{
-			LookupDisplayType lookup = new LookupDisplayType(getContext(), m_field);
-			
 			//	
 			boolean isHandleConnection = false;
 			if(conn == null){
@@ -233,11 +294,14 @@ public class VLookupSpinner extends VLookup {
 					else
 						data.add(new DisplayLookupSpinner(rs.getInt(0), rs.getString(1)));
 				}while(rs.moveToNext());
-				ArrayAdapter<DisplayLookupSpinner> sp_adapter = 
-		    			new ArrayAdapter<DisplayLookupSpinner>(getContext(), android.R.layout.simple_spinner_item, data);
-				sp_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-				v_Spinner.setAdapter(sp_adapter);
 			}
+			//	Set Adapter
+			ArrayAdapter<DisplayLookupSpinner> sp_adapter = 
+	    			new ArrayAdapter<DisplayLookupSpinner>(getContext(), android.R.layout.simple_spinner_item, data);
+			//	
+			sp_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			//	
+			v_Spinner.setAdapter(sp_adapter);
 			//	Close
 			if(isHandleConnection)
 				DB.closeConnection(conn);

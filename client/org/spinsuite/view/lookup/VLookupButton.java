@@ -75,7 +75,19 @@ public class VLookupButton extends VLookup {
 	 * @param m_field
 	 */
 	public VLookupButton(Activity activity, InfoField m_field) {
-		super(activity, m_field);
+		this(activity, m_field, null);
+	}
+	
+	/**
+	 * With Tab Parameter
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/05/2014, 14:00:56
+	 * @param context
+	 * @param m_field
+	 * @param tabParam
+	 */
+	public VLookupButton(Activity activity, InfoField m_field, TabParameter tabParam) {
+		super(activity, m_field, tabParam);
 		this.activity = activity;
 		init();
 	}

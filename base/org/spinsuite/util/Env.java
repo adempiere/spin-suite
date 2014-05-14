@@ -1018,28 +1018,11 @@ public final class Env {
 	 * @return
 	 * @return String
 	 */
-	public static String parseContext (Context ctx, String whereClause, boolean ignoreUnparsable)
-	{
-		return parseContext(ctx, whereClause, ignoreUnparsable,null);
+	public static String parseContext (Context ctx, String whereClause, boolean ignoreUnparsable) {
+		return parseContext(ctx, 0, 0, whereClause, ignoreUnparsable,null);
 	}
 	
-	/**
-	 *	Add Container and return WindowNo.
-	 *  @param ctx
-	 *  @param activity
-	 *  @return WindowNo used for context
-	 */
-	/*public static int createActivityNo(Context ctx, Activity activity)
-	{
-		int retValue = getContextAsInt(ctx, ACTIVITY_NO + activity.getLocalClassName());
-		//	Get Current Window No
-		if(retValue == 0) {
-			retValue = getContextAsInt(ctx, CURRENT_ACTIVITY_NO);
-			setContext(ctx, CURRENT_ACTIVITY_NO, retValue + 1);
-		}
-		//	
-		return retValue;
-	}	//	createWindowNo*/
+	
 	
 	/**
 	 *	Parse Context replaces global or Window context @tag@ with actual value.
@@ -1052,8 +1035,8 @@ public final class Env {
 	 * 	@param ignoreUnparsable if true, unsuccessful @return parsed String or "" if not successful and ignoreUnparsable
 	 *	@return parsed context 
 	 */
-	public static String parseContext (Context ctx, String whereClause, boolean ignoreUnparsable,String defaultUnparseable)
-	{
+	public static String parseContext (Context ctx, int m_ActivityNo, int m_TabNo, 
+			String whereClause, boolean ignoreUnparsable,String defaultUnparseable) {
 		if (whereClause == null || whereClause.length() == 0)
 			return "";
 
@@ -1076,7 +1059,7 @@ public final class Env {
 
 			token = inStr.substring(0, j);
 			//Msg.alertMsg(ctx, "Epale", token);
-			String ctxInfo = getContext(ctx, token);	// get context
+			String ctxInfo = getContext(ctx, m_ActivityNo, m_TabNo, token);	// get context
 			if (ctxInfo != null && ctxInfo.length() == 0 && (token.startsWith("#") || token.startsWith("$")) )
 				ctxInfo = getContext(ctx, token);	// get global context
 			if (ctxInfo != null && ctxInfo.length() == 0)

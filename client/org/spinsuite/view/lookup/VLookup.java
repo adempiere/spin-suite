@@ -16,6 +16,8 @@
 package org.spinsuite.view.lookup;
 
 
+import org.spinsuite.util.TabParameter;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -67,10 +69,12 @@ public abstract class VLookup extends LinearLayout {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 20:28:25
 	 * @param context
 	 * @param m_field
+	 * @param m_TabParam
 	 */
-	public VLookup(Context context, InfoField m_field) {
+	public VLookup(Context context, InfoField m_field, TabParameter m_TabParam) {
 		super(context);
 		this.m_field = m_field;
+		this.m_TabParam = m_TabParam;
 		mainInit();
 	}
 	
@@ -78,6 +82,8 @@ public abstract class VLookup extends LinearLayout {
 	protected TextView		v_Label = null;
 	/**	Field Object		*/
 	protected InfoField 	m_field = null;
+	/**	Parameter			*/
+	protected TabParameter 	m_TabParam = null;
 	
 	/**
 	 * Main Init
@@ -97,6 +103,30 @@ public abstract class VLookup extends LinearLayout {
 			v_Label.setText(m_field.Name);
 		//	Add to View
 		addView(v_Label);
+	}
+	
+	/**
+	 * Get Tab No
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/05/2014, 14:04:53
+	 * @return
+	 * @return int
+	 */
+	public int getTabNo() {
+		if(m_TabParam != null)
+			return m_TabParam.getTabNo();
+		return 0;
+	}
+	
+	/**
+	 * Get Activity No
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/05/2014, 14:04:10
+	 * @return
+	 * @return int
+	 */
+	public int getActivityNo() { 
+		if(m_TabParam != null)
+			return m_TabParam.getActivityNo();
+		return 0;
 	}
 	
 	/**

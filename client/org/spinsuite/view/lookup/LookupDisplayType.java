@@ -38,11 +38,17 @@ public class LookupDisplayType {
 	 * @param field
 	 */
 	public LookupDisplayType(Context ctx, InfoField field){
+		this(ctx, 0, 0, field);
+	}
+	
+	public LookupDisplayType(Context ctx, int m_ActivityNo, int m_TabNo, InfoField field){
 		this.m_field = field;
 		this.ctx = ctx;
 		m_InfoLookup = new InfoLookup();
 		m_Language = Env.getAD_Language(ctx);
 		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
+		this.m_ActivityNo = m_ActivityNo;
+		this.m_TabNo = m_TabNo;
 	}
 	
 	/**
@@ -68,6 +74,8 @@ public class LookupDisplayType {
 	private Context			ctx 					= null;
 	/**	Optional where clause	*/
 	private String			m_optionalWhereClause 	= null;
+	/**	Validation Rule			*/
+	private String 			m_ValRule				= null;
 	/**	Lookup Information		*/
 	private InfoLookup 		m_InfoLookup 			= null;
 	/**	Is Loaded				*/
@@ -78,6 +86,10 @@ public class LookupDisplayType {
 	private String 			m_Language 				= "en_US";
 	/**	Is Base Language		*/
 	private boolean 		m_IsBaseLanguage 		= true;
+	/**	Activity No				*/
+	private int				m_ActivityNo			= 0;
+	/**	Tab No					*/
+	private int 			m_TabNo					= 0;
 	
 	/**
 	 * Get SQL
@@ -88,7 +100,7 @@ public class LookupDisplayType {
 	public String getSQL(){
 		//	Cache
 		if(m_IsLoaded)
-			return m_SQL;
+			return Env.parseContext(ctx, m_ActivityNo, m_TabNo, m_SQL, false, null);
 		//	
 		if(m_SPS_Table_ID == 0){ 
 			if(m_field.DisplayType == DisplayType.TABLE_DIR){
@@ -114,7 +126,7 @@ public class LookupDisplayType {
 		//	Set Is Loaded
 		m_IsLoaded = true;
 		//	Return
-		return m_SQL;
+		return Env.parseContext(ctx, m_ActivityNo, m_TabNo, m_SQL, false, null);
 	}
 	
 	/**
@@ -139,12 +151,15 @@ public class LookupDisplayType {
 	private String getValRule(){
 		if(m_field.AD_Val_Rule_ID == 0)
 			return "";
+		//	Cache
+		if(m_ValRule != null)
+			return m_ValRule;
 		//	
 		String code = DB.getSQLValueString(ctx, "SELECT vr.Code " +
 				"FROM AD_Val_Rule vr " +
-				"WHERE AD_ValRule_ID = " + m_field.AD_Val_Rule_ID);
+				"WHERE AD_Val_Rule_ID = " + m_field.AD_Val_Rule_ID);
 		//	Parse
-		return Env.parseContext(ctx, code, false);
+		return code;
 	}
 	
 	/**
@@ -154,6 +169,7 @@ public class LookupDisplayType {
 	 */
 	private String loadSQLTableDirect(){
 		StringBuffer sql = new StringBuffer();
+		StringBuffer where = new StringBuffer();
 		String tableName = m_field.ColumnName.replaceAll("_ID", "");
 		sql.append("SELECT ").append(tableName).append(".").append(m_field.ColumnName);
 		//	Set Info Lookup
@@ -185,6 +201,7 @@ public class LookupDisplayType {
 				if(isFirst)
 					isFirst = false;
 			}while(rs.moveToNext());
+			//	
 			sql.append(longColumn);
 			//	Set Info Lookup
 			m_InfoLookup.DisplayColumn = longColumn.toString();
@@ -197,11 +214,23 @@ public class LookupDisplayType {
 		//	Close
 		DB.closeConnection(conn);
 		sql.append(" FROM ").append(tableName);
-		//	Optional Where
-		if(m_optionalWhereClause != null){
-			//	Add Where
-			sql.append(" WHERE ").append(m_optionalWhereClause);
+		
+		//	Validation Rule
+		if(getValRule() != null
+				&& getValRule().length() > 0){
+			where.append(" WHERE ").append(getValRule());
 		}
+		//	Add Optional Where
+		if(m_optionalWhereClause != null){
+			if(where.length() > 0)
+				where.append(" AND ");
+			else
+				where.append(" WHERE ");
+			//	Add Where
+			where.append(m_optionalWhereClause);
+		}
+		//	Add Where Clause to SQL
+		sql.append(where);
 		//	Return
 		return sql.toString();
 	}
@@ -240,7 +269,7 @@ public class LookupDisplayType {
 			m_InfoLookup.TableName = tableName;
 			m_InfoLookup.KeyColumn = pkColumnName;			
 			//	
-			sql.append(tableName).append(pkColumnName).append(", ");
+			sql.append(tableName).append(".").append(pkColumnName).append(", ");
 			//	Display Column
 			StringBuffer longColumn = new StringBuffer();
 			//	Display Value
@@ -257,12 +286,17 @@ public class LookupDisplayType {
 			//	Where Clause
 			if(whereClause != null
 					&& whereClause.length() > 0)
-				where.append(" WHERE ").append(Env.parseContext(ctx, whereClause, false));
+				where.append(" WHERE ").append(whereClause);
 			//	Set Where
-			if(where.length() > 0)
-				where.append(" AND ");
-			//	
-			where.append(getValRule());
+			//	Validation Rule
+			if(getValRule() != null
+					&& getValRule().length() > 0){
+				//	Add And
+				if(where.length() > 0)
+					where.append(" AND ");
+				//	
+				where.append(getValRule());
+			}
 			//	Add Optional Where
 			if(m_optionalWhereClause != null){
 				if(where.length() > 0)
@@ -270,11 +304,10 @@ public class LookupDisplayType {
 				//	Add Where
 				where.append(m_optionalWhereClause);
 			}
-				
 			//	Order By Clause
 			if(orderByClause != null
 					&& orderByClause.length() > 0)
-				sql.append(" ORDER BY ").append(Env.parseContext(ctx, orderByClause, false));
+				sql.append(" ORDER BY ").append(orderByClause);
 			//	Set SQL
 			sql.append(where);
 		}
@@ -305,7 +338,12 @@ public class LookupDisplayType {
 		}
 		//	Where Clause			
 		sql.append("WHERE rl.AD_Reference_ID = ").append(m_field.AD_Reference_Value_ID);
-		sql.append(" ").append(getValRule());
+		//	Validation Rule
+		if(getValRule() != null
+				&& getValRule().length() > 0){
+			//	Add And
+			sql.append(" AND ").append(getValRule());
+		}
 		//	Return
 		return sql.toString();
 	}
@@ -351,6 +389,7 @@ public class LookupDisplayType {
 				if(isFirst)
 					isFirst = false;
 			}while(rs.moveToNext());
+			//	
 			sql.append(longColumn);
 			//	Set Info Lookup
 			m_InfoLookup.DisplayColumn = longColumn.toString();

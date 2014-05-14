@@ -290,10 +290,11 @@ public class T_DynamicTab extends Fragment
 		} else if(DisplayType.isLookup(field.DisplayType)){
 			//	Table Direct
 			if(field.DisplayType == DisplayType.TABLE_DIR
-					|| field.DisplayType == DisplayType.LIST){
-				lookup = new VLookupSpinner(getActivity(), field, conn);
+					|| field.DisplayType == DisplayType.LIST
+					|| field.DisplayType == DisplayType.TABLE){
+				lookup = new VLookupSpinner(getActivity(), field, tabParam, conn);
 			} else if(field.DisplayType == DisplayType.SEARCH){
-				lookup = new VLookupSearch(getActivity(), field);
+				lookup = new VLookupSearch(getActivity(), field, tabParam);
 			}
 		} else if(field.DisplayType == DisplayType.BUTTON){
 			VLookupButton lookupButton = null;
@@ -399,8 +400,10 @@ public class T_DynamicTab extends Fragment
 			lockView(SEE);
 			return true;
 		} else if (itemId == R.id.action_save) {
-			if(save())
+			if(save()) {
+				refresh(model.getID(), false);
 				lockView(SEE);
+			}
 			return true;
 		}
 

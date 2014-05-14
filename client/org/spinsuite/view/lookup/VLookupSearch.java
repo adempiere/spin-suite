@@ -19,8 +19,10 @@ import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.util.DisplayRecordItem;
+import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.FilterValue;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.TabParameter;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -76,7 +78,19 @@ public class VLookupSearch extends VLookup {
 	 * @param m_field
 	 */
 	public VLookupSearch(Activity activity, InfoField m_field) {
-		super(activity, m_field);
+		this(activity, m_field, null);
+	}
+	
+	/**
+	 * With Tab Parameter
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/05/2014, 14:00:56
+	 * @param context
+	 * @param m_field
+	 * @param tabParam
+	 */
+	public VLookupSearch(Activity activity, InfoField m_field, TabParameter tabParam) {
+		super(activity, m_field, tabParam);
 		this.activity = activity;
 		init();
 	}
@@ -132,6 +146,10 @@ public class VLookupSearch extends VLookup {
 	 */
 	public void setItem(DisplayRecordItem item){
 		v_Search.setItem(item);
+		if(item != null)
+			DisplayType.setContextValue(getContext(), getActivityNo(), getTabNo(), m_field, getValue());
+		else
+			DisplayType.setContextValue(getContext(), getActivityNo(), getTabNo(), m_field, -1);
 	}
 
 	@Override

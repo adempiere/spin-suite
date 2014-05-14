@@ -18,6 +18,7 @@ package org.spinsuite.view.lookup;
 
 import org.spinsuite.base.R;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.TabParameter;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -71,7 +72,19 @@ public class VLookupCheckBox extends VLookup {
 	 * @param m_field
 	 */
 	public VLookupCheckBox(Context context, InfoField m_field) {
-		super(context, m_field);
+		this(context, m_field, null);
+	}
+	
+	/**
+	 * With Tab Parameter
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/05/2014, 14:00:56
+	 * @param context
+	 * @param m_field
+	 * @param tabParam
+	 */
+	public VLookupCheckBox(Context context, InfoField m_field, TabParameter tabParam) {
+		super(context, m_field, tabParam);
 		init();
 	}
 	
