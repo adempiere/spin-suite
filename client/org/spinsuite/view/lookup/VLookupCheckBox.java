@@ -25,6 +25,8 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
 /**
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
@@ -96,6 +98,18 @@ public class VLookupCheckBox extends VLookup {
 		v_CheckBox = new CheckBox(getContext());
 		v_CheckBox.setGravity(Gravity.CENTER_VERTICAL);
 		v_CheckBox.setText(m_field.Name);
+		v_CheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+		        //	Listener
+		        if(m_Listener != null)
+		        	m_Listener.onFieldEvent(m_field, isChecked);
+			}
+			
+		});
+		//	
 		setEnabled(!m_field.IsReadOnly);
 		//	Add to view
 		addView(v_CheckBox);

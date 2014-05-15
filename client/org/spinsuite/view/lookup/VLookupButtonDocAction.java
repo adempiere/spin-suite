@@ -244,6 +244,9 @@ public class VLookupButtonDocAction extends VLookupButton
 		processDocAction(item.getValue());
 		//	Save
 		if(mTab != null){
+            //	Listener
+            if(m_Listener != null)
+            	m_Listener.onFieldEvent(getField(), item.getValue());
 			mTab.refreshFromChange(false);
 			mTab.save();
 		}

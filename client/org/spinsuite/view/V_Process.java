@@ -42,7 +42,7 @@ import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.KeyNamePair;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
-import org.spinsuite.util.ViewIndex;
+import org.spinsuite.util.GridTab;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.VLookup;
 import org.spinsuite.view.lookup.VLookupCheckBox;
@@ -99,7 +99,7 @@ public class V_Process extends FragmentActivity {
 	/**	Field					*/
 	private InfoField 				m_field 		= null;
 	/**	View Index Array		*/
-	private ArrayList<ViewIndex>	viewList 		= null;
+	private ArrayList<GridTab>	viewList 		= null;
 	/**	Parameter				*/
 	private ActivityParameter		m_activityParam = null;
 	/**	Process Info			*/
@@ -188,7 +188,7 @@ public class V_Process extends FragmentActivity {
     	//	Add View
     	sv_Param.addView(v_tableLayout);
     	//	
-    	viewList = new ArrayList<ViewIndex>();
+    	viewList = new ArrayList<GridTab>();
     	//	Title
     	getActionBar().setSubtitle(m_activityParam.getName());
     	//	
@@ -554,7 +554,7 @@ public class V_Process extends FragmentActivity {
 		//	is Filled
 		if(lookup != null){
 			lookup.setLayoutParams(v_rowParam);
-			ViewIndex index = new ViewIndex(lookup, field.ColumnName);
+			GridTab index = new GridTab(lookup, field.ColumnName);
 			viewList.add(index);
 			v_row.addView(lookup);
 			//	Add Row
@@ -578,7 +578,7 @@ public class V_Process extends FragmentActivity {
     	ProcessInfoParameter parameter = null;
     	m_pInfo.setParameter(null);
 		//	Get Values
-    	for (ViewIndex vIndex: viewList) {
+    	for (GridTab vIndex: viewList) {
     		VLookup lookup = vIndex.getVLookup();
     		InfoField field = lookup.getField();
     		if((field.IsMandatory)
@@ -848,7 +848,7 @@ public class V_Process extends FragmentActivity {
 	    		String columnName = bundle.getString("ColumnName");
 	    		//	if a field or just search
 	    		if(columnName != null){
-	    			for (ViewIndex vIndex: viewList) {
+	    			for (GridTab vIndex: viewList) {
 	    	    		VLookup lookup = vIndex.getVLookup();
 	    	    		if(vIndex.getColumnName().equals(columnName)){
 	    	    			((VLookupSearch) lookup).setItem(item);

@@ -18,6 +18,7 @@ package org.spinsuite.view.lookup;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.spinsuite.interfaces.OnFieldChangeListener;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.TabParameter;
 
@@ -99,7 +100,7 @@ public class VLookupDateBox extends VLookup {
 		else
 			format = DisplayType.getDateFormat(getContext(), m_field.DisplayType);
 		//	Instance
-		v_DateBox = new VDateBox(getContext(), format);
+		v_DateBox = new VDateBox(getContext(), format, m_field);
 		setEnabled(!m_field.IsReadOnly);
 		addView(v_DateBox);
 	}
@@ -137,6 +138,13 @@ public class VLookupDateBox extends VLookup {
 	@Override
 	public String getDisplayValue() {
 		return v_DateBox.getDisplayDate();
+	}
+	
+	@Override
+	public void setOnFieldChangeListener(OnFieldChangeListener m_Listener) {
+		super.setOnFieldChangeListener(m_Listener);
+		//	Listener
+		v_DateBox.setOnFieldChangeListener(m_Listener);
 	}
 
 }

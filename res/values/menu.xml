@@ -23,6 +23,7 @@
 	<string name="Action_Search">Search</string>
 	<string name="Action_Edit">Edit</string>
 	<string name="Action_Add">Add</string>
+	<string name="Action_Close">Close</string>
 	<string name="Action_Delete">Delete</string>
 	<string name="Action_Param">Parameters</string>
 	<string name="Action_Process">Process Now</string>

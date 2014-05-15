@@ -23,6 +23,7 @@
 	<string name="Action_Search">Buscar</string>
 	<string name="Action_Edit">Editar</string>
 	<string name="Action_Add">Agregar</string>
+	<string name="Action_Close">Salir</string>
 	<string name="Action_Delete">Eliminar</string>
 	<string name="Action_Param">Parámetros</string>
 	<string name="Action_Process">Procesar Ahora</string>

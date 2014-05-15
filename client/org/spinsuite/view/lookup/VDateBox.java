@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.logging.Level;
 
 import org.spinsuite.base.R;
+import org.spinsuite.interfaces.OnFieldChangeListener;
 import org.spinsuite.util.LogM;
 
 import android.app.DatePickerDialog;
@@ -63,13 +64,15 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 21:12:47
 	 * @param context
 	 * @param format
+	 * @param m_Field
 	 */
-	public VDateBox(Context context, SimpleDateFormat format){
+	public VDateBox(Context context, SimpleDateFormat format, InfoField m_Field){
 		super(context);
 		ctx = context;
 		LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutInflater.inflate(R.layout.v_lookup_date, this);
         formatFront = format;
+        this.m_Field = m_Field;
         init();
 	}
 	
@@ -88,12 +91,24 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
         init();
 	}
 	
-	private ImageButton 		ib_Date;
-	private EditText 			et_Date;
-    private Context 			ctx;
-    private SimpleDateFormat 	formatFront = null;
-    private SimpleDateFormat 	formatBack = null;
-    private Calendar 			cal;
+	private ImageButton 			ib_Date;
+	private EditText 				et_Date;
+    private Context 				ctx;
+    private SimpleDateFormat 		formatFront = null;
+    private SimpleDateFormat 		formatBack = null;
+    private Calendar 				cal;
+    private OnFieldChangeListener 	m_Listener = null;
+    private InfoField				m_Field = null;
+    
+    /**
+     * Set Field Listener
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/05/2014, 21:39:08
+     * @param m_Listener
+     * @return void
+     */
+    public void setOnFieldChangeListener(OnFieldChangeListener m_Listener) {
+    	this.m_Listener = m_Listener;
+    }
     
     /**
      * Init
@@ -144,6 +159,9 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
                 cal.set(Calendar.MONTH, monthOfYear);
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 updateDisplay();
+                //	Listener
+                if(m_Listener != null)
+                	m_Listener.onFieldEvent(m_Field, getDate());
     		}
     };
     

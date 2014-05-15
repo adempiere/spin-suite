@@ -16,6 +16,7 @@
 package org.spinsuite.view.lookup;
 
 
+import org.spinsuite.interfaces.OnFieldChangeListener;
 import org.spinsuite.util.TabParameter;
 
 import android.content.Context;
@@ -79,11 +80,13 @@ public abstract class VLookup extends LinearLayout {
 	}
 	
 	/**	Text View			*/
-	protected TextView		v_Label = null;
+	protected TextView					v_Label = null;
 	/**	Field Object		*/
-	protected InfoField 	m_field = null;
+	protected InfoField 				m_field = null;
 	/**	Parameter			*/
-	protected TabParameter 	m_TabParam = null;
+	protected TabParameter 				m_TabParam = null;
+	/**	Listener			*/
+	protected OnFieldChangeListener 	m_Listener = null;
 	
 	/**
 	 * Main Init
@@ -203,5 +206,15 @@ public abstract class VLookup extends LinearLayout {
 	@Override
 	public String toString() {
 		return "VLookup [v_Label=" + v_Label + ", m_field=" + m_field + "]";
+	}
+	
+	/**
+	 * Set On Field Change Listener
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/05/2014, 20:57:22
+	 * @param m_Listener
+	 * @return void
+	 */
+	public void setOnFieldChangeListener(OnFieldChangeListener m_Listener){
+		this.m_Listener = m_Listener;
 	}
 }

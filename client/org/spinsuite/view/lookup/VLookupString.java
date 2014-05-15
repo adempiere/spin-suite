@@ -93,6 +93,15 @@ public class VLookupString extends VLookup {
 	@Override
 	protected void init() {
 		v_String = new EditText(getContext());
+		v_String.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+		        //	Listener
+		        if(m_Listener != null)
+		        	m_Listener.onFieldEvent(m_field, getValue());
+			}
+		});
 		//	Set Hint
 		v_String.setHint(m_field.Name);
 		setEnabled(!m_field.IsReadOnly);

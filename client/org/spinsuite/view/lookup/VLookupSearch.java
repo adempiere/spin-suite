@@ -146,10 +146,16 @@ public class VLookupSearch extends VLookup {
 	 */
 	public void setItem(DisplayRecordItem item){
 		v_Search.setItem(item);
+		Object value = null;
 		if(item != null)
-			DisplayType.setContextValue(getContext(), getActivityNo(), getTabNo(), m_field, getValue());
+			value = getValue();
 		else
-			DisplayType.setContextValue(getContext(), getActivityNo(), getTabNo(), m_field, -1);
+			value = -1;
+		//	Set Context
+		DisplayType.setContextValue(getContext(), getActivityNo(), getTabNo(), m_field, value);
+        //	Listener
+        if(m_Listener != null)
+        	m_Listener.onFieldEvent(m_field, value);
 	}
 
 	@Override

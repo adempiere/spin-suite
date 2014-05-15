@@ -21,7 +21,7 @@ import org.spinsuite.view.lookup.VLookup;
  * @author Yamel Senih
  *
  */
-public class ViewIndex {
+public class GridTab {
 	
 	/**
 	 * 
@@ -30,7 +30,7 @@ public class ViewIndex {
 	 * @param v_lookup
 	 * @param ColumnName
 	 */
-	public ViewIndex(VLookup v_lookup, String columnName){
+	public GridTab(VLookup v_lookup, String columnName){
 		this.v_lookup = v_lookup;
 		this.columnName = columnName;
 	}
@@ -43,7 +43,7 @@ public class ViewIndex {
 	 * @param columnName
 	 * @param columnIndex
 	 */
-	public ViewIndex(VLookup v_lookup, String columnName, int columnIndex){
+	public GridTab(VLookup v_lookup, String columnName, int columnIndex){
 		this.v_lookup = v_lookup;
 		this.columnName = columnName;
 		this.columnIndex = columnIndex;

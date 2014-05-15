@@ -139,8 +139,12 @@ public class VLookupSpinner extends VLookup {
 			@Override
 			public void onItemSelected(AdapterView<?> a, View v,
 					int position, long i) {
+				Object value = getValueAtPosition(position);
 				//	Set Context
-				DisplayType.setContextValue(getContext(), getActivityNo(), getTabNo(), m_field, getValueAtPosition(position));
+				DisplayType.setContextValue(getContext(), getActivityNo(), getTabNo(), m_field, value);
+                //	Listener
+                if(m_Listener != null)
+                	m_Listener.onFieldEvent(m_field, value);
 			}
 
 			@Override

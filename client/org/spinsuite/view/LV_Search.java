@@ -26,7 +26,7 @@ import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.FilterValue;
 import org.spinsuite.util.LogM;
-import org.spinsuite.util.ViewIndex;
+import org.spinsuite.util.GridTab;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.InfoTab;
 import org.spinsuite.view.lookup.LookupDisplayType;
@@ -87,7 +87,7 @@ public class LV_Search extends FragmentActivity {
 	/**	Info Field				*/
 	private InfoTab					tabInfo = null;
 	/**	View Index Array		*/
-	private ArrayList<ViewIndex>	viewList = null;
+	private ArrayList<GridTab>	viewList = null;
 	/**	Parameter				*/
 	private LayoutParams			v_param	= null;
 	
@@ -121,7 +121,6 @@ public class LV_Search extends FragmentActivity {
 		load();
     	//	Listener
 		lv_Search.setOnItemClickListener(new ListView.OnItemClickListener() {
-
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View arg1, int position,
 					long arg3) {
@@ -139,7 +138,7 @@ public class LV_Search extends FragmentActivity {
 	private void loadConfig(){
 		if(m_SPS_Tab_ID != 0){
 			tabInfo = new InfoTab(getApplicationContext(), m_SPS_Tab_ID, true, null);
-			viewList = new ArrayList<ViewIndex>();
+			viewList = new ArrayList<GridTab>();
 	    	//	Set Parameter
 	    	v_param = new LayoutParams(LayoutParams.MATCH_PARENT, 
 	    			LayoutParams.MATCH_PARENT, WEIGHT);
@@ -181,7 +180,7 @@ public class LV_Search extends FragmentActivity {
 	private void addCriteriaQuery(){
     	//	Get Values
 		StringBuffer sqlWhere = new StringBuffer();
-    	for (ViewIndex vIndex: viewList) {
+    	for (GridTab vIndex: viewList) {
     		VLookup lookup = vIndex.getVLookup();
     		//	Only Filled
     		if(lookup.isEmpty())
@@ -228,7 +227,7 @@ public class LV_Search extends FragmentActivity {
 		}
 		//	is Filled
 		if(lookup != null){
-			ViewIndex index = new ViewIndex(lookup, field.ColumnName);
+			GridTab index = new GridTab(lookup, field.ColumnName);
 			viewList.add(index);
 			llc_Search.addView(lookup, v_param);
 		}
@@ -289,14 +288,21 @@ public class LV_Search extends FragmentActivity {
 		//	Visible
 		if(itemAdd != null)
 			itemAdd.setVisible(m_field == null);
+		//	Close
+		MenuItem itemClose = menu.findItem(R.id.action_close);
+		//	Visible
+		if(itemClose != null)
+			itemClose.setVisible(m_field != null);
+
 		return true;
 	}
 	    
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int itemId = item.getItemId();
-		if (itemId == R.id.action_add) {
-			selectedRecord(new DisplayRecordItem(0, null));
+		if (itemId == R.id.action_add 
+				|| itemId == R.id.action_close) {
+			selectedRecord(new DisplayRecordItem(-1, null));
 			return true;
 		} else if (itemId == R.id.action_config) {
 			//	Show

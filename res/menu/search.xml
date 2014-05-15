@@ -23,6 +23,11 @@
         android:showAsAction="always|collapseActionView"
         android:icon="@android:drawable/ic_menu_search" />
     
+    <item android:id="@+id/action_close"
+        android:title="@string/Action_Close"
+        android:showAsAction="always|collapseActionView"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel" />
+    
     <item android:id="@+id/action_add"
         android:title="@string/Action_Add"
         android:showAsAction="always|collapseActionView"

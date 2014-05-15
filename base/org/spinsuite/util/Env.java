@@ -16,6 +16,11 @@
 package org.spinsuite.util;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -133,6 +138,39 @@ public final class Env {
 		ep.putString(context, value);
 		ep.commit();
 	}	//	setContext
+	
+	/**
+	 * Set Context Object
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/05/2014, 14:41:53
+	 * @param ctx
+	 * @param context
+	 * @param value
+	 * @return void
+	 */
+	public static void setContextObject(Context ctx, String context, Object value){
+		try {
+			FileOutputStream fos = ctx.openFileOutput(context, Context.MODE_PRIVATE);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(value);
+			oos.close();
+			fos.close();
+		} catch (IOException e) {
+			LogM.log(ctx, Env.class, Level.SEVERE, e.getMessage());
+		}
+	}
+	
+	public static Object getContextObject(Context ctx, String context){
+		try {
+			FileInputStream fis = ctx.openFileInput(context);
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			Object object = ois.readObject();
+			return object;
+		} catch (Exception e) {
+			LogM.log(ctx, Env.class, Level.SEVERE, e.getMessage());
+		}
+		//	
+		return null;
+	}
 	
 	/**
 	 * Set Context
