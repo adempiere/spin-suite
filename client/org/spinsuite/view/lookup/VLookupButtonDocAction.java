@@ -16,7 +16,6 @@
 package org.spinsuite.view.lookup;
 
 import org.spinsuite.base.R;
-import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.process.DocAction;
 import org.spinsuite.process.DocumentEngine;
 import org.spinsuite.util.ActionItemList;
@@ -76,22 +75,19 @@ public class VLookupButtonDocAction extends VLookupButton
 	 * @param po
 	 * @param mTab
 	 */
-	public VLookupButtonDocAction(Activity activity, InfoField m_field, DocAction po, I_DynamicTab mTab) {
+	public VLookupButtonDocAction(Activity activity, InfoField m_field, DocAction po) {
 		super(activity, m_field);
 		//	Set Document Status
 		if(po != null)
 			docEngine = new DocumentEngine(po, po.getDocStatus());
 		else
 			docEngine = new DocumentEngine(po);
-		this.mTab = mTab;
 	}
 	
 	/**	Quit Action					*/
 	private QuickAction 		mQAct;
 	/**	Document Engine				*/
 	private DocumentEngine		docEngine = null;
-	/**	Tab							*/
-	private I_DynamicTab		mTab = null;
 	
 	@Override	
 	protected void init() {
@@ -242,14 +238,9 @@ public class VLookupButtonDocAction extends VLookupButton
 	public void onItemClick(QuickAction source, int pos, int actionId) {
 		ActionItemList item = (ActionItemList) source.getActionItem(pos);
 		processDocAction(item.getValue());
-		//	Save
-		if(mTab != null){
-            //	Listener
-            if(m_Listener != null)
-            	m_Listener.onFieldEvent(getField(), item.getValue());
-			mTab.refreshFromChange(false);
-			mTab.save();
-		}
+		//	Listener
+		if(m_Listener != null)
+			m_Listener.onFieldEvent(getField(), item.getValue());
 	}
 
 	@Override

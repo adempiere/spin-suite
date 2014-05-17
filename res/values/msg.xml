@@ -28,6 +28,7 @@
 	<string name="msg_Filter">Search Filter</string>
 	<string name="msg_ClassNotFound">Class Not Found</string>
 	<string name="msg_LoadError">Load Error</string>
+	<string name="msg_Loading">Loading....</string>
 	<string name="msg_NewRecord">Add New Record</string>
 	<string name="msg_New">New</string>
 	<string name="msg_Yes">Yes</string>

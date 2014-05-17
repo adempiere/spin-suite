@@ -16,11 +16,6 @@
 package org.spinsuite.util;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -37,6 +32,8 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
+
+import com.google.gson.Gson;
 
 /**
  * @author Yamel Senih
@@ -148,28 +145,27 @@ public final class Env {
 	 * @return void
 	 */
 	public static void setContextObject(Context ctx, String context, Object value){
-		try {
-			FileOutputStream fos = ctx.openFileOutput(context, Context.MODE_PRIVATE);
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject(value);
-			oos.close();
-			fos.close();
-		} catch (IOException e) {
-			LogM.log(ctx, Env.class, Level.SEVERE, e.getMessage());
-		}
+		Editor prefsEditor = getEditor(ctx);
+        Gson gson = new Gson();
+        String json = gson.toJson(value);
+        prefsEditor.putString(context, json);
+        prefsEditor.commit();
 	}
 	
-	public static Object getContextObject(Context ctx, String context){
-		try {
-			FileInputStream fis = ctx.openFileInput(context);
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			Object object = ois.readObject();
-			return object;
-		} catch (Exception e) {
-			LogM.log(ctx, Env.class, Level.SEVERE, e.getMessage());
-		}
-		//	
-		return null;
+	/**
+	 * Set Context Object
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/05/2014, 14:13:23
+	 * @param ctx
+	 * @param context
+	 * @param clazz
+	 * @return
+	 * @return Object
+	 */
+	public static Object getContextObject(Context ctx, String context, Class<?> clazz){
+		Gson gson = new Gson();
+		SharedPreferences pf = PreferenceManager.getDefaultSharedPreferences(ctx);
+		String json = pf.getString(context, "");
+	    return gson.fromJson(json, clazz);
 	}
 	
 	/**

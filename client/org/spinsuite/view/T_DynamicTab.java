@@ -20,6 +20,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
@@ -36,9 +37,10 @@ import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
+import org.spinsuite.util.GridTab;
+import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.TabParameter;
-import org.spinsuite.util.GridTab;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.InfoTab;
 import org.spinsuite.view.lookup.LookupButtonPaymentRule;
@@ -53,12 +55,14 @@ import org.spinsuite.view.lookup.VLookupString;
 
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -80,7 +84,7 @@ import android.widget.TableLayout;
  *
  */
 public class T_DynamicTab extends Fragment 
-						implements I_DynamicTab, I_FragmentSelectListener, OnFieldChangeListener {
+						implements I_DynamicTab, I_FragmentSelectListener {
 	
 	/**
 	 * 
@@ -105,18 +109,18 @@ public class T_DynamicTab extends Fragment
 	private 	TabParameter	 		tabParam			= null;
 	private 	DB 						conn 				= null;
 	private 	PO 						model				= null;
-	private 	ArrayList<GridTab>	viewList			= null;
+	private 	ArrayList<GridTab>		mGridTab			= null;
 	private 	InfoTab 				tabInfo				= null;
 	private 	ScrollView 				v_scroll			= null;
 	private 	TableLayout 			v_tableLayout		= null;
-	private 	LinearLayout 			v_row				= null;
-	private 	LayoutParams			v_param				= null;
 	private 	int						m_Record_ID			= 0;
 	private 	int 					m_Parent_Record_ID 	= 0;
 	private 	boolean					m_IsLoadOk			= false;
 	private 	boolean 				m_IsModifying		= false;
 	/**	From Tab					*/
 	private 	I_DynamicTab			m_FromTab			= null;
+	/**	Listener					*/
+	private 	OnFieldChangeListener	m_Listener			= null;
 	
 	/**	Current Status				*/
 	protected static final int NEW 		= 0;
@@ -137,9 +141,6 @@ public class T_DynamicTab extends Fragment
 	private MenuItem mi_More 	= null;
 	private MenuItem mi_Cancel 	= null;
 	private MenuItem mi_Save 	= null;
-	
-	private static final float WEIGHT_SUM 	= 2;
-	private static final float WEIGHT 		= 1;
 	
 	/**	Results						*/
 	private static final int 		ACTION_TAKE_PHOTO	= 3;
@@ -170,6 +171,13 @@ public class T_DynamicTab extends Fragment
     	//	Set Temporal Image Name
     	TMP_ATTACH_NAME = Env.getImg_DirectoryPathName(getActivity()) 
     								+ File.separator + "TMP" + JPEG_FILE_SUFFIX;
+    	//	Instance Listener
+    	m_Listener = new OnFieldChangeListener() {
+    		@Override
+    		public void onFieldEvent(InfoField mField, Object value) {
+    			Msg.toastMsg(getActivity(), mField.ColumnName + " Value= " + value);	
+    		}
+		};
     	//	Init Load
     	initLoad();
 	}
@@ -192,17 +200,15 @@ public class T_DynamicTab extends Fragment
     	m_Parent_Record_ID = Env.getTabRecord_ID(getActivity(), 
     			tabParam.getActivityNo(), tabParam.getParentTabNo());
     	
-    	//	Set Parameter
-    	v_param = new LayoutParams(LayoutParams.MATCH_PARENT, 
-    			LayoutParams.MATCH_PARENT, WEIGHT);    	
     	//	Table Layout
     	v_tableLayout = new TableLayout(getActivity());
     	//	Add View
     	v_scroll.addView(v_tableLayout);
     	//	View
-    	viewList = new ArrayList<GridTab>();
+    	mGridTab = new ArrayList<GridTab>();
     	//	
-    	loadView();
+    	//loadView();
+    	new LoadViewTask().execute(v_tableLayout);
 	}
 	
     @Override
@@ -220,128 +226,6 @@ public class T_DynamicTab extends Fragment
     @Override
     public TabParameter getTabParameter(){
     	return tabParam;
-    }
-    
-    /**
-     * Load View Objects
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 16:37:56
-     * @return
-     * @return boolean
-     */
-    protected boolean loadView(){
-    	boolean ok = false;
-    	tabInfo = new InfoTab(getActivity(), tabParam.getSPS_Tab_ID(), conn);
-		//	Identifier
-		m_Record_ID = Env.getTabRecord_ID(getActivity(), 
-				tabParam.getActivityNo(), tabParam.getTabNo());
-    	//	Get Model
-		if (model == null)
-    		model = MSPSTable.getPO(getActivity(), m_Record_ID, tabInfo.getTableName(), conn);
-		if(model == null){
-    		Msg.toastMsg(getActivity(), getString(R.string.msg_LoadError) + ": " 
-    					+ getString(R.string.msg_ClassNotFound));
-    		return false;
-    	}
-		//	Set identifier
-		Env.setContext(getActivity(), tabParam.getActivityNo(), 
-				tabParam.getTabNo(), tabInfo.getTableName() + "_ID", model.getID());
-		
-		try {
-			//	Add Fields
-	    	for(InfoField field : tabInfo.getFields()){
-	    		if(!field.IsDisplayed)
-	    			continue;
-	    		//	Add View to Layout
-	    		addView(field);
-	    	}
-		} catch(Exception e){
-			Msg.alertMsg(getActivity(), getString(R.string.msg_LoadError), 
-					getString(R.string.msg_Error) + ": " + e.getMessage());
-		}
-		return ok;
-    }
- 
-    /**
-     * Add to view
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 20:45:54
-     * @param field
-     * @return void
-     */
-    private void addView(InfoField field){
-    	
-    	boolean isSameLine = field.IsSameLine;
-    	boolean isFirst = false;
-		VLookup lookup = null;
-    	//	Add New Row
-		if(isFirst = (v_row == null)
-				|| !isSameLine) {
-			v_row = new LinearLayout(getActivity());
-			v_row.setOrientation(LinearLayout.HORIZONTAL);
-			v_row.setWeightSum(WEIGHT_SUM);
-		}
-		//	Add
-		if(DisplayType.isDate(field.DisplayType)){
-			lookup = new VLookupDateBox(getActivity(), field);
-		} else if(DisplayType.isText(field.DisplayType)){
-			VLookupString lookupString = new VLookupString(getActivity(), field);
-			lookupString.setInputType(DisplayType.getInputType(field.DisplayType));
-			lookup = lookupString;
-		} else if(DisplayType.isBoolean(field.DisplayType)){
-			lookup = new VLookupCheckBox(getActivity(), field);
-		} else if(DisplayType.isLookup(field.DisplayType)){
-			//	Table Direct
-			if(field.DisplayType == DisplayType.TABLE_DIR
-					|| field.DisplayType == DisplayType.LIST
-					|| field.DisplayType == DisplayType.TABLE){
-				lookup = new VLookupSpinner(getActivity(), field, tabParam, conn);
-			} else if(field.DisplayType == DisplayType.SEARCH){
-				lookup = new VLookupSearch(getActivity(), field, tabParam);
-			}
-		} else if(field.DisplayType == DisplayType.BUTTON){
-			VLookupButton lookupButton = null;
-			if(field.ColumnName.equals("DocAction")){
-				lookupButton = new VLookupButtonDocAction(getActivity(), field, (DocAction) model, this);
-			} else if(field.ColumnName.equals("PaymentRule")){
-				//	Payment Rule Button
-				lookupButton = new LookupButtonPaymentRule(getActivity(), field);
-			} else {
-				lookupButton = new VLookupButton(getActivity(), field);
-			}
-			//	Set Parameters
-			lookupButton.setTabParameter(tabParam);
-			lookup = lookupButton;
-		}
-		//	is Filled
-		if(lookup != null){
-			//	Set Listener
-			lookup.setOnFieldChangeListener(this);
-			GridTab index = new GridTab(lookup, field.ColumnName, model.getColumnIndex(field.ColumnName));
-			lookup.setLayoutParams(v_param);
-			//	Set Value
-			if(m_Record_ID >= 0){
-				lookup.setValue(model.get_Value(index.getColumnIndex()));
-				//	Load Default
-				if(m_Record_ID == 0){
-					if(field.IsParent) {
-						lookup.setValue(DisplayType.getContextValue(getActivity(), 
-								tabParam.getActivityNo(), tabParam.getParentTabNo(), field));
-					} else if(tabParam.getTabLevel() > 0) {
-						lookup.setValue(DisplayType.getContextValue(getActivity(), 
-							tabParam.getActivityNo(), tabParam.getTabNo(), field));
-					}
-				}
-	    		//	Set Current Values
-	    		DisplayType.setContextValue(getActivity(), tabParam.getActivityNo(), 
-		    				tabParam.getTabNo(), field, lookup.getValue());
-			}
-			v_row.addView(lookup);
-			viewList.add(index);
-			
-		}
-		//	Add Row
-		if((lookup != null && !isSameLine)
-				|| isFirst)
-			v_tableLayout.addView(v_row);
     }
     
     @Override
@@ -542,7 +426,7 @@ public class T_DynamicTab extends Fragment
     		return false;
     	}
     	//	Get Values
-    	for (GridTab vIndex: viewList) {
+    	for (GridTab vIndex: mGridTab) {
     		VLookup lookup = vIndex.getVLookup();
     		InfoField field = lookup.getField();
     		if((field.IsMandatory
@@ -628,7 +512,7 @@ public class T_DynamicTab extends Fragment
     	//	
     	changeMenuView();
     	//	Return
-    	return !viewList.isEmpty();
+    	return !mGridTab.isEmpty();
     }
     
     /**
@@ -637,12 +521,12 @@ public class T_DynamicTab extends Fragment
      * @return void
      */
     private void loadData(){
-    	for (GridTab vIndex: viewList) {
+    	for (GridTab vIndex: mGridTab) {
     		VLookup lookup = vIndex.getVLookup();
     		InfoField field = lookup.getField();
     		lookup.setValue(model.get_Value(vIndex.getColumnIndex()));
     		//	
-    		if(m_Record_ID == 0){
+    		if(m_Record_ID <= 0){
 				if(field.IsParent) {
 					lookup.setValue(DisplayType.getContextValue(getActivity(), 
 							tabParam.getActivityNo(), tabParam.getParentTabNo(), field));
@@ -700,7 +584,7 @@ public class T_DynamicTab extends Fragment
      */
     public void enableView(int mode){
 		if(mode == NEW){
-			for(GridTab vIndex : viewList){
+			for(GridTab vIndex : mGridTab){
 	    		VLookup lookup = vIndex.getVLookup();
 	    		InfoField field = lookup.getField();
 	    		if(!field.IsReadOnly 
@@ -716,7 +600,7 @@ public class T_DynamicTab extends Fragment
 			boolean isProcessed = Env.getContextAsBoolean(getActivity(), tabParam.getActivityNo(), 
 	    				tabParam.getTabNo(), "Processed");
 			//	
-			for(GridTab vIndex : viewList){
+			for(GridTab vIndex : mGridTab){
 	    		VLookup lookup = vIndex.getVLookup();
 	    		InfoField field = lookup.getField();
 	    		if(
@@ -737,12 +621,12 @@ public class T_DynamicTab extends Fragment
 	    		}
 	    	}	
 		} else if(mode == DELETED){
-			for(GridTab vIndex : viewList){
+			for(GridTab vIndex : mGridTab){
 	    		VLookup lookup = vIndex.getVLookup();
 	    		lookup.setEnabled(false);
 	    	}
 		} else if(mode == SEE){
-			for(GridTab vIndex : viewList){
+			for(GridTab vIndex : mGridTab){
 	    		VLookup lookup = vIndex.getVLookup();
 	    		InfoField field = lookup.getField();
 	    		if(field.ColumnName.equals("DocAction")
@@ -766,7 +650,7 @@ public class T_DynamicTab extends Fragment
     		model.copyValues(true);
     	}
     	//	
-    	refresh(0, false);
+    	refresh(-1, false);
     	lockView(NEW);
     }
     
@@ -950,7 +834,7 @@ public class T_DynamicTab extends Fragment
 	    			//	Refresh
 	    			int record_ID = item.getRecord_ID();
 	    			//	Verify
-	    			if(record_ID != 0)
+	    			if(record_ID > 0)
 	    				refresh(record_ID, false);
 	    			else
 	    				newOption();
@@ -960,7 +844,7 @@ public class T_DynamicTab extends Fragment
 					String columnName = bundle.getString("ColumnName");
 		    		//	if a field or just search
 		    		if(columnName != null){
-		    			for (GridTab vIndex: viewList) {
+		    			for (GridTab vIndex: mGridTab) {
 		    	    		VLookup lookup = vIndex.getVLookup();
 		    	    		if(vIndex.getColumnName().equals(columnName)){
 		    	    			((VLookupSearch) lookup).setItem(item);
@@ -974,6 +858,28 @@ public class T_DynamicTab extends Fragment
 	    		}
 	    	}
     	}
+    }
+    
+    /**
+     * Load Persistence Object
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/05/2014, 11:03:25
+     * @return
+     * @return boolean
+     */
+    private boolean loadPO(){
+    	m_Record_ID = Env.getTabRecord_ID(getActivity(), 
+				tabParam.getActivityNo(), tabParam.getTabNo());
+    	//	Get Model
+		if (model == null)
+    		model = MSPSTable.getPO(getActivity(), m_Record_ID, tabInfo.getTableName(), conn);
+		if(model == null){
+    		return false;
+    	}
+		//	Set identifier
+		Env.setContext(getActivity(), tabParam.getActivityNo(), 
+				tabParam.getTabNo(), tabInfo.getTableName() + "_ID", model.getID());
+		//	
+		return true;
     }
 
 	@Override
@@ -995,9 +901,172 @@ public class T_DynamicTab extends Fragment
 		//	Initial Load
 		initLoad();
 	}
+	
+	/**
+	 * Include Class
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+	 *
+	 */
+	private class LoadViewTask extends AsyncTask<TableLayout, Integer, Integer> {
 
-	@Override
-	public void onFieldEvent(InfoField mField, Object value) {
-		Msg.toastMsg(getActivity(), mField.ColumnName + " Value= " + value);	
+		/**	Layout					*/
+		private LinearLayout	v_row	= null;
+		private LayoutParams	v_param	= null;
+		private TableLayout 	v_view 	= null;
+		/**	Progress Bar			*/
+		private ProgressDialog 	v_PDialog;
+		/**	Constant				*/
+		private static final float WEIGHT_SUM 	= 2;
+		private static final float WEIGHT 		= 1;
+		/**
+		 * Init Values
+		 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/05/2014, 12:18:42
+		 * @return void
+		 */
+		private void init(){
+	    	//	Set Parameter
+	    	v_param = new LayoutParams(LayoutParams.MATCH_PARENT, 
+	    			LayoutParams.MATCH_PARENT, WEIGHT);   
+	    	//	Load Table Info
+	    	tabInfo = new InfoTab(getActivity(), tabParam.getSPS_Tab_ID(), conn);
+	    	//	Load PO
+	    	loadPO();
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			v_PDialog = ProgressDialog.show(getActivity(), null, 
+					getString(R.string.msg_Loading), true, false);
+		}
+		
+		@Override
+		protected Integer doInBackground(TableLayout... params) {
+			v_view = params[0];
+			init();
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Integer... progress) {
+			
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			loadView();
+			v_PDialog.dismiss();
+		}
+		
+	    /**
+	     * Load View Objects
+	     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 16:37:56
+	     * @return
+	     * @return boolean
+	     */
+	    protected boolean loadView(){
+	    	boolean ok = false;
+	    	//	
+			try {
+				//	Add Fields
+		    	for(InfoField field : tabInfo.getFields()){
+		    		if(!field.IsDisplayed)
+		    			continue;
+		    		//	Add View to Layout
+		    		addView(field);
+		    	}
+			} catch(Exception e){
+				LogM.log(getActivity(), getClass(), Level.SEVERE, e.getLocalizedMessage());
+				//	Message
+				Msg.alertMsg(getActivity(), getString(R.string.msg_LoadError), 
+						getString(R.string.msg_Error) + ": " + e.getLocalizedMessage());
+			}
+			return ok;
+	    }
+	 
+	    /**
+	     * Add to view
+	     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 20:45:54
+	     * @param field
+	     * @return void
+	     */
+	    private void addView(InfoField field){
+	    	
+	    	boolean isSameLine = field.IsSameLine;
+	    	boolean isFirst = false;
+			VLookup lookup = null;
+	    	//	Add New Row
+			if(isFirst = (v_row == null)
+					|| !isSameLine) {
+				v_row = new LinearLayout(getActivity());
+				v_row.setOrientation(LinearLayout.HORIZONTAL);
+				v_row.setWeightSum(WEIGHT_SUM);
+			}
+			//	Add
+			if(DisplayType.isDate(field.DisplayType)){
+				lookup = new VLookupDateBox(getActivity(), field);
+			} else if(DisplayType.isText(field.DisplayType)){
+				VLookupString lookupString = new VLookupString(getActivity(), field);
+				lookupString.setInputType(DisplayType.getInputType(field.DisplayType));
+				lookup = lookupString;
+			} else if(DisplayType.isBoolean(field.DisplayType)){
+				lookup = new VLookupCheckBox(getActivity(), field);
+			} else if(DisplayType.isLookup(field.DisplayType)){
+				//	Table Direct
+				if(field.DisplayType == DisplayType.TABLE_DIR
+						|| field.DisplayType == DisplayType.LIST
+						|| field.DisplayType == DisplayType.TABLE){
+					lookup = new VLookupSpinner(getActivity(), field, tabParam, conn);
+				} else if(field.DisplayType == DisplayType.SEARCH){
+					lookup = new VLookupSearch(getActivity(), field, tabParam);
+				}
+			} else if(field.DisplayType == DisplayType.BUTTON){
+				VLookupButton lookupButton = null;
+				if(field.ColumnName.equals("DocAction")){
+					lookupButton = new VLookupButtonDocAction(getActivity(), field, (DocAction) model);
+				} else if(field.ColumnName.equals("PaymentRule")){
+					//	Payment Rule Button
+					lookupButton = new LookupButtonPaymentRule(getActivity(), field);
+				} else {
+					lookupButton = new VLookupButton(getActivity(), field);
+				}
+				//	Set Parameters
+				lookupButton.setTabParameter(tabParam);
+				lookup = lookupButton;
+			}
+			//	is Filled
+			if(lookup != null){
+				//	Set Listener
+				lookup.setOnFieldChangeListener(m_Listener);
+				GridTab index = new GridTab(lookup, field.ColumnName, model.getColumnIndex(field.ColumnName));
+				lookup.setLayoutParams(v_param);
+				//	Set Value
+				if(m_Record_ID >= 0){
+					lookup.setValue(model.get_Value(index.getColumnIndex()));
+					//	Load Default
+					if(m_Record_ID == 0){
+						if(field.IsParent) {
+							lookup.setValue(DisplayType.getContextValue(getActivity(), 
+									tabParam.getActivityNo(), tabParam.getParentTabNo(), field));
+						} else if(tabParam.getTabLevel() > 0) {
+							lookup.setValue(DisplayType.getContextValue(getActivity(), 
+								tabParam.getActivityNo(), tabParam.getTabNo(), field));
+						}
+					}
+		    		//	Set Current Values
+		    		DisplayType.setContextValue(getActivity(), tabParam.getActivityNo(), 
+			    				tabParam.getTabNo(), field, lookup.getValue());
+				}
+				//	Add to Row
+				v_row.addView(lookup);
+				//	
+				mGridTab.add(index);
+				
+			}
+			//	Add Row
+			if((lookup != null && !isSameLine)
+					|| isFirst)
+				v_view.addView(v_row);
+	    }
+		
 	}	
 }
