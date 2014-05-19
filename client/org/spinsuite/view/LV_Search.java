@@ -26,7 +26,7 @@ import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.FilterValue;
 import org.spinsuite.util.LogM;
-import org.spinsuite.util.GridTab;
+import org.spinsuite.util.GridField;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.InfoTab;
 import org.spinsuite.view.lookup.LookupDisplayType;
@@ -87,7 +87,7 @@ public class LV_Search extends FragmentActivity {
 	/**	Info Field				*/
 	private InfoTab					tabInfo = null;
 	/**	View Index Array		*/
-	private ArrayList<GridTab>	viewList = null;
+	private ArrayList<GridField>	viewList = null;
 	/**	Parameter				*/
 	private LayoutParams			v_param	= null;
 	
@@ -138,7 +138,7 @@ public class LV_Search extends FragmentActivity {
 	private void loadConfig(){
 		if(m_SPS_Tab_ID != 0){
 			tabInfo = new InfoTab(getApplicationContext(), m_SPS_Tab_ID, true, null);
-			viewList = new ArrayList<GridTab>();
+			viewList = new ArrayList<GridField>();
 	    	//	Set Parameter
 	    	v_param = new LayoutParams(LayoutParams.MATCH_PARENT, 
 	    			LayoutParams.MATCH_PARENT, WEIGHT);
@@ -180,7 +180,7 @@ public class LV_Search extends FragmentActivity {
 	private void addCriteriaQuery(){
     	//	Get Values
 		StringBuffer sqlWhere = new StringBuffer();
-    	for (GridTab vIndex: viewList) {
+    	for (GridField vIndex: viewList) {
     		VLookup lookup = vIndex.getVLookup();
     		//	Only Filled
     		if(lookup.isEmpty())
@@ -227,7 +227,7 @@ public class LV_Search extends FragmentActivity {
 		}
 		//	is Filled
 		if(lookup != null){
-			GridTab index = new GridTab(lookup, field.ColumnName);
+			GridField index = new GridField(lookup, field.ColumnName);
 			viewList.add(index);
 			llc_Search.addView(lookup, v_param);
 		}

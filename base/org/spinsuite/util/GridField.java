@@ -15,24 +15,25 @@
  *************************************************************************************/
 package org.spinsuite.util;
 
+import java.util.logging.Level;
+
+import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.VLookup;
 
 /**
  * @author Yamel Senih
  *
  */
-public class GridTab {
+public class GridField {
 	
 	/**
 	 * 
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/02/2014, 22:46:37
 	 * @param v_lookup
-	 * @param ColumnName
 	 */
-	public GridTab(VLookup v_lookup, String columnName){
+	public GridField(VLookup v_lookup){
 		this.v_lookup = v_lookup;
-		this.columnName = columnName;
 	}
 	
 	/**
@@ -40,17 +41,14 @@ public class GridTab {
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2014, 22:06:18
 	 * @param v_lookup
-	 * @param columnName
 	 * @param columnIndex
 	 */
-	public GridTab(VLookup v_lookup, String columnName, int columnIndex){
+	public GridField(VLookup v_lookup, int columnIndex){
 		this.v_lookup = v_lookup;
-		this.columnName = columnName;
 		this.columnIndex = columnIndex;
 	}
 	
 	private int 		columnIndex = -1;
-	private	String		columnName = null;
 	private VLookup 	v_lookup;
 	
 	/**
@@ -60,7 +58,10 @@ public class GridTab {
 	 * @return String
 	 */
 	public String getColumnName(){
-		return columnName;
+		//	
+		if(v_lookup.getField() != null)
+			return v_lookup.getField().ColumnName;
+		return null;
 	}
 	
 	/**
@@ -83,9 +84,92 @@ public class GridTab {
 		return v_lookup;
 	}
 	
+	/**
+	 * Get Value
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 12:04:01
+	 * @return
+	 * @return Object
+	 */
+	public Object getValue() {
+		return v_lookup.getValue();
+	}
+	
+	/**
+	 * Get Value As String
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 12:14:23
+	 * @return
+	 * @return String
+	 */
+	public String getValueAsString() {
+		//	Valid Field
+		InfoField field = v_lookup.getField();
+		if(field == null
+				|| v_lookup.getValue() == null)
+			return null;
+		//	String Case
+		if(DisplayType.isText(field.DisplayType))
+			return (String) v_lookup.getValue();
+		//	Boolean Value
+		if(DisplayType.isBoolean(field.DisplayType)) { 
+			Boolean bValue = (Boolean)v_lookup.getValue();
+			return (bValue? "Y": "N");
+		}
+		//	Numeric
+		else
+			return String.valueOf(v_lookup.getValue());
+	}
+	
+	/**
+	 * Get Value As Boolean
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 12:19:46
+	 * @return
+	 * @return boolean
+	 */
+	public boolean getValueAsBoolean() {
+		//	Valid Field
+		InfoField field = v_lookup.getField();
+		if(field == null
+				|| v_lookup.getValue() == null)
+			return false;
+		//	String
+		if(DisplayType.isText(field.DisplayType))
+			return (String.valueOf(v_lookup.getValue()).equals("N")? 
+									false: 
+										true);
+		else
+			return false;
+	}
+	
+	/**
+	 * Get Value As Integer
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 12:27:14
+	 * @return
+	 * @return int
+	 */
+	public int getValueAsInt() {
+		//	Valid Field
+		InfoField field = v_lookup.getField();
+		if(field == null
+				|| v_lookup.getValue() == null)
+			return 0;
+		//	String
+		if(DisplayType.isText(field.DisplayType)
+				|| DisplayType.isNumeric(field.DisplayType)
+				|| DisplayType.isID(field.DisplayType)
+				|| DisplayType.isLookup(field.DisplayType)) {
+			try {
+				return Integer.parseInt((String) v_lookup.getValue());
+			} catch (Exception e) {
+				LogM.log(v_lookup.getContext(), this.getClass(), Level.SEVERE, "Parse Error", e);
+			}
+			return 0;
+		} else
+			return 0;
+	}
+	
 	@Override
 	public String toString() {
-		return "ColumnName=" + (columnName != null? columnName: "") + "\n" +
+		return "ColumnName=" + (v_lookup.getField() != null? v_lookup.getField().ColumnName: "") + "\n" +
 				"ColumnIndex=" + columnIndex + "\n" +
 				"v_lookup=" + (v_lookup != null? v_lookup.toString(): "");
 	}

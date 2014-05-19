@@ -15,22 +15,15 @@
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
-import java.util.ArrayList;
-import java.util.logging.Level;
-
 import org.spinsuite.base.DB;
 import org.spinsuite.util.DisplayLookupSpinner;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
-import org.spinsuite.util.LogM;
 import org.spinsuite.util.TabParameter;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 /**
@@ -38,39 +31,6 @@ import android.widget.Spinner;
  *
  */
 public class VLookupSpinner extends VLookup {
-
-	/**
-	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/02/2014, 08:27:59
-	 * @param context
-	 */
-	public VLookupSpinner(Context context) {
-		super(context);
-		init();
-	}
-
-	/**
-	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/02/2014, 08:27:59
-	 * @param context
-	 * @param attrs
-	 */
-	public VLookupSpinner(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		init();
-	}
-
-	/**
-	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/02/2014, 08:27:59
-	 * @param context
-	 * @param attrs
-	 * @param defStyle
-	 */
-	public VLookupSpinner(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		init();
-	}
 
 	/**
 	 * *** Constructor ***
@@ -95,6 +55,20 @@ public class VLookupSpinner extends VLookup {
 	}
 	
 	/**
+	 * 
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 09:48:47
+	 * @param context
+	 * @param m_field
+	 * @param tabParam
+	 */
+	public VLookupSpinner(Context context, InfoField m_field, TabParameter tabParam, Lookup m_Lookup) {
+		super(context, m_field, tabParam);
+		this.m_Lookup = m_Lookup;
+		init();
+	}
+	
+	/**
 	 * With Tab Parameter
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/05/2014, 14:00:56
@@ -105,30 +79,25 @@ public class VLookupSpinner extends VLookup {
 	 */
 	public VLookupSpinner(Context context, InfoField m_field, TabParameter tabParam, DB conn) {
 		super(context, m_field, tabParam);
-		this.conn = conn;
+		m_Lookup = new Lookup(context, m_field, tabParam, conn);
 		init();
 	}
 	
 	/**	String 				*/
 	private Spinner 			v_Spinner = null;
-	/**	Syntax Error		*/
-	private boolean 			isSyntaxError = false;
-	/**	Connection			*/
-	private DB					conn = null;
-	/**	Lookup Handler		*/
-	private LookupDisplayType 	lookup = null;
+	/**	Lookup				*/
+	private Lookup				m_Lookup = null;
 	//	
 	@Override
 	protected void init() {
 		v_Spinner = new Spinner(getContext());
-		//	Lookup
-		lookup = new LookupDisplayType(getContext(), getActivityNo(), getTabNo(), m_field);
 		//	
 		setEnabled(!m_field.IsReadOnly);
 		//	Add to View
 		addView(v_Spinner);
 		//	Load Data
-		load();
+		if(m_Lookup != null)
+			m_Lookup.load(v_Spinner, false);
 		//	Set Default Value
 		if(m_field.DefaultValue != null
 					&& m_field.DefaultValue.length() > 0)
@@ -158,7 +127,7 @@ public class VLookupSpinner extends VLookup {
 			@Override
 			public boolean onLongClick(View v) {
 				//	Re-Query
-				load();
+				m_Lookup.load(v_Spinner, true);
 				return false;
 			}
 		});
@@ -204,9 +173,9 @@ public class VLookupSpinner extends VLookup {
 		int pos = getPosition(value);
 		//	Reload
 		if(pos == -1
-				&& !isSyntaxError) {
+				&& m_Lookup != null) {
 			//	Load
-			load();
+			m_Lookup.load(v_Spinner, true);
 			//	Set Value
 			pos = getPosition(value);
 		}
@@ -265,66 +234,6 @@ public class VLookupSpinner extends VLookup {
 		return v_Spinner;
 	}
 	
-	/**
-	 * Load Data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 23:27:09
-	 * @return void
-	 */
-	private void load(){
-		try{
-			//	
-			boolean isHandleConnection = false;
-			if(conn == null){
-				conn = new DB(getContext());
-				isHandleConnection = true;
-			}
-			//	
-			DB.loadConnection(conn, DB.READ_ONLY);
-			Cursor rs = null;
-			//	Query
-			rs = conn.querySQL(lookup.getSQL(), null);
-			ArrayList<DisplayLookupSpinner> data = new ArrayList<DisplayLookupSpinner>();
-			if(rs.moveToFirst()){
-				if(!m_field.IsMandatory) {
-					if(m_field.DisplayType == DisplayType.LIST)
-						data.add(new DisplayLookupSpinner(null, null));
-					else
-						data.add(new DisplayLookupSpinner(-1, null));
-				}
-				//	Loop
-				do{
-					if(m_field.DisplayType == DisplayType.LIST)
-						data.add(new DisplayLookupSpinner(rs.getString(0), rs.getString(1)));
-					else
-						data.add(new DisplayLookupSpinner(rs.getInt(0), rs.getString(1)));
-				}while(rs.moveToNext());
-			}
-			//	Set Adapter
-			ArrayAdapter<DisplayLookupSpinner> sp_adapter = 
-	    			new ArrayAdapter<DisplayLookupSpinner>(getContext(), android.R.layout.simple_spinner_item, data);
-			//	
-			sp_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			//	
-			v_Spinner.setAdapter(sp_adapter);
-			//	Close
-			if(isHandleConnection)
-				DB.closeConnection(conn);
-		} catch(Exception e){
-			isSyntaxError = true;
-			LogM.log(getContext(), getClass(), Level.SEVERE, "Error in Load", e);
-		}
-	}
-	
-	/**
-	 * Is Syntax Error
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/03/2014, 11:36:25
-	 * @return
-	 * @return boolean
-	 */
-	public boolean isSyntaxError(){
-		return isSyntaxError;
-	}
-	
 	@Override
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
@@ -339,5 +248,15 @@ public class VLookupSpinner extends VLookup {
 		if(item != null)
 			return item.getValueAsString();
 		return null;
+	}
+	
+	/**
+	 * 
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 08:44:34
+	 * @param m_lookup
+	 * @return void
+	 */
+	public void setLookup(Lookup m_lookup){
+		this.m_Lookup = m_lookup;
 	}
 }
