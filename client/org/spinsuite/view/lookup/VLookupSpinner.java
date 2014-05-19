@@ -87,6 +87,8 @@ public class VLookupSpinner extends VLookup {
 	private Spinner 			v_Spinner = null;
 	/**	Lookup				*/
 	private Lookup				m_Lookup = null;
+	/**	Old Value			*/
+	private Object 				m_OldValue = null;
 	//	
 	@Override
 	protected void init() {
@@ -168,6 +170,9 @@ public class VLookupSpinner extends VLookup {
 
 	@Override
 	public void setValue(Object value) {
+		//	Set Old Value
+		m_OldValue = getValue();
+		//	
 		if(value == null)
 			return;
 		int pos = getPosition(value);
@@ -196,6 +201,21 @@ public class VLookupSpinner extends VLookup {
 		return null;
 	}
 
+	@Override
+	public Object getOldValue() {
+		if(m_OldValue != null) {
+			if(m_field.DisplayType != DisplayType.LIST) { 
+				if(String.valueOf(m_OldValue).length() > 0
+						&& m_OldValue instanceof Integer)
+					return (Integer) m_OldValue;
+			} else if(String.valueOf(m_OldValue).length() > 0) {
+				return String.valueOf(m_OldValue);
+			}
+		}
+		return null;
+	}
+	
+	
 	/**
 	 * Get Value at Position
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/05/2014, 14:21:55

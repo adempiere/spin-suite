@@ -65,6 +65,32 @@ public class GridField {
 	}
 	
 	/**
+	 * Get Callout
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 14:54:40
+	 * @return
+	 * @return String
+	 */
+	public String getCallout() {
+		//	
+		if(v_lookup.getField() != null)
+			return v_lookup.getField().Callout;
+		return null;
+	}
+	
+	/**
+	 * Is Always Updateable
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 15:03:01
+	 * @return
+	 * @return boolean
+	 */
+	public boolean isAlwaysUpdateable() {
+		//	
+		if(v_lookup.getField() != null)
+			return v_lookup.getField().IsAlwaysUpdateable;
+		return false;
+	}
+	
+	/**
 	 * Get Column Index
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2014, 22:05:31
 	 * @return
@@ -92,6 +118,16 @@ public class GridField {
 	 */
 	public Object getValue() {
 		return v_lookup.getValue();
+	}
+	
+	/***
+	 * Get Old Value
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 15:26:54
+	 * @return
+	 * @return Object
+	 */
+	public Object getOldValue() {
+		return v_lookup.getOldValue();
 	}
 	
 	/**

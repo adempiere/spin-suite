@@ -90,6 +90,8 @@ public class VLookupDateBox extends VLookup {
 
 	/**	Date Box			*/
 	private VDateBox		v_DateBox = null;
+	/**	Old Value			*/
+	private Date			m_OldValue = null;
 
 	@Override
 	protected void init() {
@@ -107,6 +109,9 @@ public class VLookupDateBox extends VLookup {
 
 	@Override
 	public void setValue(Object value) {
+		//	Set Old Value
+		m_OldValue = v_DateBox.getDate();
+		//	
 		if(value != null
 				&& value instanceof Date)
 			v_DateBox.setDate((Date)value);
@@ -119,6 +124,11 @@ public class VLookupDateBox extends VLookup {
 		return v_DateBox.getDate();
 	}
 
+	@Override
+	public Object getOldValue() {
+		return m_OldValue;
+	}
+	
 	@Override
 	public boolean isEmpty() {
 		return (v_DateBox.getDate() == null);

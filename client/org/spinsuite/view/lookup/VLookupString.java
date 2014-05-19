@@ -88,6 +88,8 @@ public class VLookupString extends VLookup {
 	
 	/**	String Edit Text	*/
 	private EditText 		v_String = null;
+	/**	Old Value			*/
+	private String 			m_OldValue = null;
 	
 
 	@Override
@@ -121,6 +123,9 @@ public class VLookupString extends VLookup {
 
 	@Override
 	public void setValue(Object value) {
+		//	Set Old Value
+		m_OldValue = v_String.getText().toString();
+		//	
 		if(value == null
 				|| ((String)value).length() <= 0)
 			v_String.setText("");
@@ -131,6 +136,11 @@ public class VLookupString extends VLookup {
 	@Override
 	public Object getValue() {
 		return v_String.getText().toString();
+	}
+	
+	@Override
+	public Object getOldValue() {
+		return m_OldValue;
 	}
 
 	@Override

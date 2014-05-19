@@ -177,6 +177,14 @@ public abstract class VLookup extends LinearLayout {
 	public abstract Object getValue();
 	
 	/**
+	 * Get Old Value
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 15:05:03
+	 * @return
+	 * @return Object
+	 */
+	public abstract Object getOldValue();
+	
+	/**
 	 * Get Display Value
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/04/2014, 10:34:36
 	 * @return

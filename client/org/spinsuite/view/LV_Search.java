@@ -227,7 +227,7 @@ public class LV_Search extends FragmentActivity {
 		}
 		//	is Filled
 		if(lookup != null){
-			GridField index = new GridField(lookup, field.ColumnName);
+			GridField index = new GridField(lookup);
 			viewList.add(index);
 			llc_Search.addView(lookup, v_param);
 		}

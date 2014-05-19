@@ -554,7 +554,7 @@ public class V_Process extends FragmentActivity {
 		//	is Filled
 		if(lookup != null){
 			lookup.setLayoutParams(v_rowParam);
-			GridField index = new GridField(lookup, field.ColumnName);
+			GridField index = new GridField(lookup);
 			viewList.add(index);
 			v_row.addView(lookup);
 			//	Add Row

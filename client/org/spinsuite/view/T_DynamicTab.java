@@ -38,6 +38,7 @@ import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
 import org.spinsuite.util.GridField;
+import org.spinsuite.util.GridTab;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.TabParameter;
@@ -110,7 +111,7 @@ public class T_DynamicTab extends Fragment
 	private 	TabParameter	 		tabParam			= null;
 	private 	DB 						conn 				= null;
 	private 	PO 						model				= null;
-	private 	ArrayList<GridField>		mGridTab			= null;
+	private 	GridTab 				mGridTab			= null;
 	private 	InfoTab 				tabInfo				= null;
 	private 	ScrollView 				v_scroll			= null;
 	private 	TableLayout 			v_tableLayout		= null;
@@ -206,7 +207,7 @@ public class T_DynamicTab extends Fragment
     	//	Add View
     	v_scroll.addView(v_tableLayout);
     	//	View
-    	mGridTab = new ArrayList<GridField>();
+    	mGridTab = new GridTab(getActivity(), tabParam);
     	//	
     	//loadView();
     	new LoadViewTask().execute(v_tableLayout);
@@ -427,7 +428,7 @@ public class T_DynamicTab extends Fragment
     		return false;
     	}
     	//	Get Values
-    	for (GridField vIndex: mGridTab) {
+    	for (GridField vIndex: mGridTab.getFields()) {
     		VLookup lookup = vIndex.getVLookup();
     		InfoField field = lookup.getField();
     		if((field.IsMandatory
@@ -522,21 +523,7 @@ public class T_DynamicTab extends Fragment
      * @return void
      */
     private void loadData(){
-    	for (GridField vIndex: mGridTab) {
-    		VLookup lookup = vIndex.getVLookup();
-    		InfoField field = lookup.getField();
-    		lookup.setValue(model.get_Value(vIndex.getColumnIndex()));
-    		//	
-    		if(m_Record_ID <= 0){
-				if(field.IsParent) {
-					lookup.setValue(DisplayType.getContextValue(getActivity(), 
-							tabParam.getActivityNo(), tabParam.getParentTabNo(), field));
-				}
-			}
-    		//	Set Current Values
-    		DisplayType.setContextValue(getActivity(), tabParam.getActivityNo(), 
-	    				tabParam.getTabNo(), field, lookup.getValue());
-    	}
+    	mGridTab.loadData(model);
     }
     
     /**
@@ -585,7 +572,7 @@ public class T_DynamicTab extends Fragment
      */
     public void enableView(int mode){
 		if(mode == NEW){
-			for(GridField vIndex : mGridTab){
+			for(GridField vIndex : mGridTab.getFields()){
 	    		VLookup lookup = vIndex.getVLookup();
 	    		InfoField field = lookup.getField();
 	    		if(!field.IsReadOnly 
@@ -601,7 +588,7 @@ public class T_DynamicTab extends Fragment
 			boolean isProcessed = Env.getContextAsBoolean(getActivity(), tabParam.getActivityNo(), 
 	    				tabParam.getTabNo(), "Processed");
 			//	
-			for(GridField vIndex : mGridTab){
+			for(GridField vIndex : mGridTab.getFields()){
 	    		VLookup lookup = vIndex.getVLookup();
 	    		InfoField field = lookup.getField();
 	    		if(
@@ -622,12 +609,12 @@ public class T_DynamicTab extends Fragment
 	    		}
 	    	}	
 		} else if(mode == DELETED){
-			for(GridField vIndex : mGridTab){
+			for(GridField vIndex : mGridTab.getFields()){
 	    		VLookup lookup = vIndex.getVLookup();
 	    		lookup.setEnabled(false);
 	    	}
 		} else if(mode == SEE){
-			for(GridField vIndex : mGridTab){
+			for(GridField vIndex : mGridTab.getFields()){
 	    		VLookup lookup = vIndex.getVLookup();
 	    		InfoField field = lookup.getField();
 	    		if(field.ColumnName.equals("DocAction")
@@ -845,7 +832,7 @@ public class T_DynamicTab extends Fragment
 					String columnName = bundle.getString("ColumnName");
 		    		//	if a field or just search
 		    		if(columnName != null){
-		    			for (GridField vIndex: mGridTab) {
+		    			for (GridField vIndex: mGridTab.getFields()) {
 		    	    		VLookup lookup = vIndex.getVLookup();
 		    	    		if(vIndex.getColumnName().equals(columnName)){
 		    	    			((VLookupSearch) lookup).setItem(item);
@@ -1053,7 +1040,7 @@ public class T_DynamicTab extends Fragment
 			if(lookup != null){
 				//	Set Listener
 				lookup.setOnFieldChangeListener(m_Listener);
-				GridField index = new GridField(lookup, field.ColumnName, model.getColumnIndex(field.ColumnName));
+				GridField index = new GridField(lookup, model.getColumnIndex(field.ColumnName));
 				lookup.setLayoutParams(v_param);
 				//	Set Value
 				if(m_Record_ID >= 0){
@@ -1075,7 +1062,7 @@ public class T_DynamicTab extends Fragment
 				//	Add to Row
 				v_row.addView(lookup);
 				//	
-				mGridTab.add(index);
+				mGridTab.addField(index);
 				
 			}
 			//	Add Row

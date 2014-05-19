@@ -96,6 +96,8 @@ public class VLookupButton extends VLookup {
 	protected Button 		v_Button 		= null;
 	/**	Value				*/
 	private String 			m_Value 		= null;
+	/**	Old Value			*/
+	private String 			m_OldValue 		= null;
 	/**	Load Action Menu	*/
 	private LoadActionMenu	loadActionMenu 	= null;
 	/**	Activity from		*/
@@ -142,6 +144,9 @@ public class VLookupButton extends VLookup {
 	
 	@Override
 	public void setValue(Object value) {
+		//	Set Old Value
+		m_OldValue = m_Value;
+		//	
 		if(value == null
 				|| ((String)value).length() <= 0)
 			m_Value = null;
@@ -155,6 +160,14 @@ public class VLookupButton extends VLookup {
 		if(m_Value == null)
 			return m_Value;
 		return m_Value.toString();
+	}
+	
+	@Override
+	public Object getOldValue() {
+		//	Default
+		if(m_OldValue == null)
+			return m_OldValue;
+		return m_OldValue.toString();
 	}
 
 	@Override

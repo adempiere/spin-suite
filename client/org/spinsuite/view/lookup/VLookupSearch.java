@@ -99,6 +99,8 @@ public class VLookupSearch extends VLookup {
 	private VSearch 		v_Search = null;
 	/**	Activity from		*/
 	private Activity 		activity = null;
+	/**	Set Old Value		*/
+	private Object			m_OldValue = null;
 	
 	@Override
 	protected void init() {
@@ -111,6 +113,9 @@ public class VLookupSearch extends VLookup {
 
 	@Override
 	public void setValue(Object value) {
+		//	Set Old Value
+		m_OldValue = getValue();
+		//	
 		if(value instanceof Integer
 				&& ((Integer)value) == v_Search.getRecord_ID())
 			return;
@@ -120,6 +125,11 @@ public class VLookupSearch extends VLookup {
 	@Override
 	public Object getValue() {
 		return v_Search.getRecord_ID();
+	}
+	
+	@Override
+	public Object getOldValue() {
+		return m_OldValue;
 	}
 
 	@Override

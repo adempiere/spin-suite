@@ -92,6 +92,9 @@ public class VLookupCheckBox extends VLookup {
 	
 	/**	Check Box 			*/
 	private CheckBox 		v_CheckBox = null;
+	/**	Old Value			*/
+	private boolean			m_OldValue = false;
+	
 	
 	@Override
 	protected void init() {
@@ -122,6 +125,9 @@ public class VLookupCheckBox extends VLookup {
 
 	@Override
 	public void setValue(Object value) {
+		//	Set Old Value
+		m_OldValue = v_CheckBox.isChecked();
+		//	
 		boolean flag = false;
 		if(value != null){
 			if(value instanceof Boolean)
@@ -138,6 +144,11 @@ public class VLookupCheckBox extends VLookup {
 		return v_CheckBox.isChecked();
 	}
 
+	@Override
+	public Object getOldValue() {
+		return m_OldValue;
+	}
+	
 	@Override
 	public boolean isEmpty() {
 		return false;
