@@ -30,7 +30,7 @@ import org.spinsuite.util.GridField;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.InfoTab;
 import org.spinsuite.view.lookup.LookupDisplayType;
-import org.spinsuite.view.lookup.VLookup;
+import org.spinsuite.view.lookup.GridField;
 import org.spinsuite.view.lookup.VLookupCheckBox;
 import org.spinsuite.view.lookup.VLookupDateBox;
 import org.spinsuite.view.lookup.VLookupSearch;
@@ -181,7 +181,7 @@ public class LV_Search extends FragmentActivity {
     	//	Get Values
 		StringBuffer sqlWhere = new StringBuffer();
     	for (GridField vIndex: viewList) {
-    		VLookup lookup = vIndex.getVLookup();
+    		GridField lookup = vIndex.getVLookup();
     		//	Only Filled
     		if(lookup.isEmpty())
     			continue;
@@ -207,7 +207,7 @@ public class LV_Search extends FragmentActivity {
 	 */
 	private void addView(InfoField field){
     	
-    	VLookup lookup = null;
+    	GridField lookup = null;
 		//	Add
 		if(DisplayType.isDate(field.DisplayType)){
 			lookup = new VLookupDateBox(this, field);

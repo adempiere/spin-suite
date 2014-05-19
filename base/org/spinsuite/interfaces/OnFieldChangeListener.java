@@ -15,7 +15,7 @@
  *************************************************************************************/
 package org.spinsuite.interfaces;
 
-import org.spinsuite.view.lookup.InfoField;
+import org.spinsuite.view.lookup.GridField;
 
 /**
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
@@ -26,8 +26,7 @@ public interface OnFieldChangeListener {
 	 * Field Change Event
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/05/2014, 20:51:53
 	 * @param mField
-	 * @param value
 	 * @return void
 	 */
-	public void onFieldEvent(InfoField mField, Object value);
+	public void onFieldEvent(GridField mField);
 }

@@ -27,7 +27,7 @@ import android.widget.EditText;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class VLookupString extends VLookup {
+public class VLookupString extends GridField {
 
 	/**
 	 * *** Constructor ***
@@ -101,7 +101,7 @@ public class VLookupString extends VLookup {
 			public void onFocusChange(View v, boolean hasFocus) {
 		        //	Listener
 		        if(m_Listener != null)
-		        	m_Listener.onFieldEvent(m_field, getValue());
+		        	m_Listener.onFieldEvent(m_field);
 			}
 		});
 		//	Set Hint

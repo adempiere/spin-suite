@@ -44,7 +44,7 @@ import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.GridField;
 import org.spinsuite.view.lookup.InfoField;
-import org.spinsuite.view.lookup.VLookup;
+import org.spinsuite.view.lookup.GridField;
 import org.spinsuite.view.lookup.VLookupCheckBox;
 import org.spinsuite.view.lookup.VLookupDateBox;
 import org.spinsuite.view.lookup.VLookupSearch;
@@ -533,7 +533,7 @@ public class V_Process extends FragmentActivity {
 			v_row.setOrientation(LinearLayout.HORIZONTAL);
 			v_row.setWeightSum(WEIGHT_SUM);
 		}
-    	VLookup lookup = null;
+    	GridField lookup = null;
 		//	Add
 		if(DisplayType.isDate(field.DisplayType)){
 			lookup = new VLookupDateBox(this, field);
@@ -579,7 +579,7 @@ public class V_Process extends FragmentActivity {
     	m_pInfo.setParameter(null);
 		//	Get Values
     	for (GridField vIndex: viewList) {
-    		VLookup lookup = vIndex.getVLookup();
+    		GridField lookup = vIndex.getVLookup();
     		InfoField field = lookup.getField();
     		if((field.IsMandatory)
     				&& lookup.isEmpty()){
@@ -849,7 +849,7 @@ public class V_Process extends FragmentActivity {
 	    		//	if a field or just search
 	    		if(columnName != null){
 	    			for (GridField vIndex: viewList) {
-	    	    		VLookup lookup = vIndex.getVLookup();
+	    	    		GridField lookup = vIndex.getVLookup();
 	    	    		if(vIndex.getColumnName().equals(columnName)){
 	    	    			((VLookupSearch) lookup).setItem(item);
 	    	    			break;

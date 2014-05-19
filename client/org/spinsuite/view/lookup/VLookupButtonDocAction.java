@@ -240,7 +240,7 @@ public class VLookupButtonDocAction extends VLookupButton
 		processDocAction(item.getValue());
 		//	Listener
 		if(m_Listener != null)
-			m_Listener.onFieldEvent(getField(), item.getValue());
+			m_Listener.onFieldEvent(getField());
 	}
 
 	@Override

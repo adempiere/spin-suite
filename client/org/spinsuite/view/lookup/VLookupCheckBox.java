@@ -32,7 +32,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class VLookupCheckBox extends VLookup {
+public class VLookupCheckBox extends GridField {
 
 	/**
 	 * *** Constructor ***
@@ -108,7 +108,7 @@ public class VLookupCheckBox extends VLookup {
 					boolean isChecked) {
 		        //	Listener
 		        if(m_Listener != null)
-		        	m_Listener.onFieldEvent(m_field, isChecked);
+		        	m_Listener.onFieldEvent(m_field);
 			}
 			
 		});

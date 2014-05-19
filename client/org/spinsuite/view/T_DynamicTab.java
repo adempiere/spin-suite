@@ -37,7 +37,6 @@ import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
-import org.spinsuite.util.GridField;
 import org.spinsuite.util.GridTab;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
@@ -46,7 +45,7 @@ import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.InfoTab;
 import org.spinsuite.view.lookup.Lookup;
 import org.spinsuite.view.lookup.LookupButtonPaymentRule;
-import org.spinsuite.view.lookup.VLookup;
+import org.spinsuite.view.lookup.GridField;
 import org.spinsuite.view.lookup.VLookupButton;
 import org.spinsuite.view.lookup.VLookupButtonDocAction;
 import org.spinsuite.view.lookup.VLookupCheckBox;
@@ -123,12 +122,11 @@ public class T_DynamicTab extends Fragment
 	private 	I_DynamicTab			m_FromTab			= null;
 	/**	Listener					*/
 	private 	OnFieldChangeListener	m_Listener			= null;
-	
 	/**	Current Status				*/
-	protected static final int NEW 		= 0;
-	protected static final int MODIFY 	= 1;
-	protected static final int SEE 		= 3;
-	protected static final int DELETED 	= 4;
+	protected static final int 			NEW 				= 0;
+	protected static final int 			MODIFY 				= 1;
+	protected static final int 			SEE 				= 3;
+	protected static final int 			DELETED 			= 4;
 	
 	/**	Option Menu Item			*/
 	private final int O_SHARE			= 1;
@@ -176,8 +174,8 @@ public class T_DynamicTab extends Fragment
     	//	Instance Listener
     	m_Listener = new OnFieldChangeListener() {
     		@Override
-    		public void onFieldEvent(InfoField mField, Object value) {
-    			Msg.toastMsg(getActivity(), mField.ColumnName + " Value= " + value);	
+    		public void onFieldEvent(GridField mField) {
+    			mGridTab.processCallout(mField);	
     		}
 		};
     	//	Init Load
@@ -209,7 +207,6 @@ public class T_DynamicTab extends Fragment
     	//	View
     	mGridTab = new GridTab(getActivity(), tabParam);
     	//	
-    	//loadView();
     	new LoadViewTask().execute(v_tableLayout);
 	}
 	
@@ -429,7 +426,7 @@ public class T_DynamicTab extends Fragment
     	}
     	//	Get Values
     	for (GridField vIndex: mGridTab.getFields()) {
-    		VLookup lookup = vIndex.getVLookup();
+    		GridField lookup = vIndex.getVLookup();
     		InfoField field = lookup.getField();
     		if((field.IsMandatory
     				|| field.IsParent) && lookup.isEmpty()){
@@ -573,7 +570,7 @@ public class T_DynamicTab extends Fragment
     public void enableView(int mode){
 		if(mode == NEW){
 			for(GridField vIndex : mGridTab.getFields()){
-	    		VLookup lookup = vIndex.getVLookup();
+	    		GridField lookup = vIndex.getVLookup();
 	    		InfoField field = lookup.getField();
 	    		if(!field.IsReadOnly 
 	    				&& !field.IsParent
@@ -589,7 +586,7 @@ public class T_DynamicTab extends Fragment
 	    				tabParam.getTabNo(), "Processed");
 			//	
 			for(GridField vIndex : mGridTab.getFields()){
-	    		VLookup lookup = vIndex.getVLookup();
+	    		GridField lookup = vIndex.getVLookup();
 	    		InfoField field = lookup.getField();
 	    		if(
 	    			//	Any Field
@@ -610,12 +607,12 @@ public class T_DynamicTab extends Fragment
 	    	}	
 		} else if(mode == DELETED){
 			for(GridField vIndex : mGridTab.getFields()){
-	    		VLookup lookup = vIndex.getVLookup();
+	    		GridField lookup = vIndex.getVLookup();
 	    		lookup.setEnabled(false);
 	    	}
 		} else if(mode == SEE){
 			for(GridField vIndex : mGridTab.getFields()){
-	    		VLookup lookup = vIndex.getVLookup();
+	    		GridField lookup = vIndex.getVLookup();
 	    		InfoField field = lookup.getField();
 	    		if(field.ColumnName.equals("DocAction")
 	    				|| (field.DisplayType == DisplayType.BUTTON
@@ -833,7 +830,7 @@ public class T_DynamicTab extends Fragment
 		    		//	if a field or just search
 		    		if(columnName != null){
 		    			for (GridField vIndex: mGridTab.getFields()) {
-		    	    		VLookup lookup = vIndex.getVLookup();
+		    	    		GridField lookup = vIndex.getVLookup();
 		    	    		if(vIndex.getColumnName().equals(columnName)){
 		    	    			((VLookupSearch) lookup).setItem(item);
 		    	    			break;
@@ -996,7 +993,7 @@ public class T_DynamicTab extends Fragment
 	    	
 	    	boolean isSameLine = field.IsSameLine;
 	    	boolean isFirst = false;
-			VLookup lookup = null;
+			GridField lookup = null;
 	    	//	Add New Row
 			if(isFirst = (v_row == null)
 					|| !isSameLine) {
@@ -1040,7 +1037,6 @@ public class T_DynamicTab extends Fragment
 			if(lookup != null){
 				//	Set Listener
 				lookup.setOnFieldChangeListener(m_Listener);
-				GridField index = new GridField(lookup, model.getColumnIndex(field.ColumnName));
 				lookup.setLayoutParams(v_param);
 				//	Set Value
 				if(m_Record_ID >= 0){

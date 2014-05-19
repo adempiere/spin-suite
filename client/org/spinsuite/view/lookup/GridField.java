@@ -16,7 +16,11 @@
 package org.spinsuite.view.lookup;
 
 
+import java.util.logging.Level;
+
 import org.spinsuite.interfaces.OnFieldChangeListener;
+import org.spinsuite.util.DisplayType;
+import org.spinsuite.util.LogM;
 import org.spinsuite.util.TabParameter;
 
 import android.content.Context;
@@ -29,14 +33,14 @@ import android.widget.TextView;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public abstract class VLookup extends LinearLayout {
+public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 16:46:15
 	 * @param context
 	 */
-	public VLookup(Context context) {
+	public GridField(Context context) {
 		super(context);
 		mainInit();
 	}
@@ -47,7 +51,7 @@ public abstract class VLookup extends LinearLayout {
 	 * @param context
 	 * @param attrs
 	 */
-	public VLookup(Context context, AttributeSet attrs) {
+	public GridField(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mainInit();
 	}
@@ -59,7 +63,7 @@ public abstract class VLookup extends LinearLayout {
 	 * @param attrs
 	 * @param defStyle
 	 */
-	public VLookup(Context context, AttributeSet attrs, int defStyle) {
+	public GridField(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		mainInit();
 	}
@@ -72,7 +76,7 @@ public abstract class VLookup extends LinearLayout {
 	 * @param m_field
 	 * @param m_TabParam
 	 */
-	public VLookup(Context context, InfoField m_field, TabParameter m_TabParam) {
+	public GridField(Context context, InfoField m_field, TabParameter m_TabParam) {
 		super(context);
 		this.m_field = m_field;
 		this.m_TabParam = m_TabParam;
@@ -87,6 +91,8 @@ public abstract class VLookup extends LinearLayout {
 	protected TabParameter 				m_TabParam = null;
 	/**	Listener			*/
 	protected OnFieldChangeListener 	m_Listener = null;
+	/**	Column Index		*/
+	private int							m_ColumnIndex = 0;
 	
 	/**
 	 * Main Init
@@ -224,5 +230,148 @@ public abstract class VLookup extends LinearLayout {
 	 */
 	public void setOnFieldChangeListener(OnFieldChangeListener m_Listener){
 		this.m_Listener = m_Listener;
+	}
+	
+	/**
+	 * Get Value As String
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 12:14:23
+	 * @return
+	 * @return String
+	 */
+	public String getValueAsString() {
+		//	Valid Field
+		InfoField field = getField();
+		if(field == null
+				|| getValue() == null)
+			return null;
+		//	String Case
+		if(DisplayType.isText(field.DisplayType))
+			return (String) getValue();
+		//	Boolean Value
+		if(DisplayType.isBoolean(field.DisplayType)) { 
+			Boolean bValue = (Boolean)getValue();
+			return (bValue? "Y": "N");
+		}
+		//	Numeric
+		else
+			return String.valueOf(getValue());
+	}
+	
+	/**
+	 * Get Value As Boolean
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 12:19:46
+	 * @return
+	 * @return boolean
+	 */
+	public boolean getValueAsBoolean() {
+		//	Valid Field
+		if(m_field == null
+				|| getValue() == null)
+			return false;
+		//	String
+		if(DisplayType.isText(m_field.DisplayType))
+			return (String.valueOf(getValue()).equals("N")? 
+									false: 
+										true);
+		else
+			return false;
+	}
+	
+	/**
+	 * Get Value As Integer
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 12:27:14
+	 * @return
+	 * @return int
+	 */
+	public int getValueAsInt() {
+		//	Valid Field
+		if(m_field == null
+				|| getValue() == null)
+			return 0;
+		//	String
+		if(DisplayType.isText(m_field.DisplayType)
+				|| DisplayType.isNumeric(m_field.DisplayType)
+				|| DisplayType.isID(m_field.DisplayType)
+				|| DisplayType.isLookup(m_field.DisplayType)) {
+			try {
+				return Integer.parseInt((String) getValue());
+			} catch (Exception e) {
+				LogM.log(getContext(), this.getClass(), Level.SEVERE, "Parse Error", e);
+			}
+			return 0;
+		} else
+			return 0;
+	}
+	
+	/**
+	 * Get Callout
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:16:50
+	 * @return
+	 * @return String
+	 */
+	public String getCallout() {
+		if(m_field == null)
+			return null;
+		//	Default
+		return m_field.Callout;
+	}
+	
+	/**
+	 * Is Always Updateable
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:19:20
+	 * @return
+	 * @return boolean
+	 */
+	public boolean isAlwaysUpdateable() {
+		if(m_field == null)
+			return false;
+		//	Default
+		return m_field.IsAlwaysUpdateable;
+	}
+	
+	/**
+	 * Get Column Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:20:44
+	 * @return
+	 * @return String
+	 */
+	public String getColumnName() {
+		if(m_field == null)
+			return null;
+		//	Default
+		return m_field.ColumnName;
+	}
+	
+	/**
+	 * Set Column Index
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:23:17
+	 * @param m_ColumnIndex
+	 * @return void
+	 */
+	public void setColumnIndex(int m_ColumnIndex) {
+		this.m_ColumnIndex = m_ColumnIndex;
+	}
+	
+	/**
+	 * Get Column Index
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:23:38
+	 * @return
+	 * @return int
+	 */
+	public int getColumnIndex() {
+		return m_ColumnIndex;
+	}
+	
+	/**
+	 * Is Parent
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:25:33
+	 * @return
+	 * @return boolean
+	 */
+	public boolean isParent() {
+		if(m_field == null)
+			return false;
+		//	Default
+		return m_field.IsParent;
 	}
 }

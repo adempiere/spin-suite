@@ -33,7 +33,7 @@ import android.view.View;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class VLookupSearch extends VLookup {
+public class VLookupSearch extends GridField {
 
 	/**
 	 * *** Constructor ***
@@ -165,7 +165,7 @@ public class VLookupSearch extends VLookup {
 		DisplayType.setContextValue(getContext(), getActivityNo(), getTabNo(), m_field, value);
         //	Listener
         if(m_Listener != null)
-        	m_Listener.onFieldEvent(m_field, value);
+        	m_Listener.onFieldEvent(m_field);
 	}
 
 	@Override

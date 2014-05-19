@@ -30,7 +30,7 @@ import android.widget.TextView;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class VLookupButton extends VLookup {
+public class VLookupButton extends GridField {
 
 	/**
 	 * *** Constructor ***

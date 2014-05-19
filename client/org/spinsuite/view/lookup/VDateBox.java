@@ -161,7 +161,7 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
                 updateDisplay();
                 //	Listener
                 if(m_Listener != null)
-                	m_Listener.onFieldEvent(m_Field, getDate());
+                	m_Listener.onFieldEvent(m_Field);
     		}
     };
     

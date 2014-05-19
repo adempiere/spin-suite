@@ -22,8 +22,7 @@ import java.util.logging.Level;
 
 import org.spinsuite.model.Callout;
 import org.spinsuite.model.PO;
-import org.spinsuite.view.lookup.InfoField;
-import org.spinsuite.view.lookup.VLookup;
+import org.spinsuite.view.lookup.GridField;
 
 import android.content.Context;
 
@@ -67,17 +66,6 @@ public class GridTab {
 	 */
 	public void addField(GridField m_GridField) {
 		m_fields.add(m_GridField);
-	}
-	
-	/**
-	 * Add Field to Grid Tab with index
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 11:49:39
-	 * @param v_lookup
-	 * @param columnIndex
-	 * @return void
-	 */
-	public void addField(VLookup v_lookup, int columnIndex) {
-		m_fields.add(new GridField(v_lookup, columnIndex));
 	}
 	
 	/**
@@ -186,20 +174,18 @@ public class GridTab {
 		//	Get Record Identifier
 		int m_Record_ID = model.get_ID();
 		//	
-		for (GridField vIndex: m_fields) {
-    		VLookup lookup = vIndex.getVLookup();
-    		InfoField field = lookup.getField();
-    		lookup.setValue(model.get_Value(vIndex.getColumnIndex()));
+		for (GridField vField: m_fields) {
+    		vField.setValue(model.get_Value(vField.getColumnIndex()));
     		//	
     		if(m_Record_ID <= 0){
-				if(field.IsParent) {
-					lookup.setValue(DisplayType.getContextValue(m_ctx, 
-							m_TabParam.getActivityNo(), m_TabParam.getParentTabNo(), field));
+				if(vField.isParent()) {
+					vField.setValue(DisplayType.getContextValue(m_ctx, 
+							m_TabParam.getActivityNo(), m_TabParam.getParentTabNo(), vField.getField()));
 				}
 			}
     		//	Set Current Values
     		DisplayType.setContextValue(m_ctx, m_TabParam.getActivityNo(), 
-    				m_TabParam.getTabNo(), field, lookup.getValue());
+    				m_TabParam.getTabNo(), vField.getField(), vField.getValue());
     	}
 	}
 	

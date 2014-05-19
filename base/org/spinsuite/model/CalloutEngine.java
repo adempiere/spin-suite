@@ -173,8 +173,6 @@ public class CalloutEngine implements Callout {
 
 	/*************************************************************************/
 	
-	//private static boolean s_calloutActive = false;
-	
 	/**
 	 * 	Is the current callout being called in the middle of 
      *  another callout doing her works.
@@ -184,38 +182,8 @@ public class CalloutEngine implements Callout {
 	 */
 	protected boolean isCalloutActive() {
 		//greater than 1 instead of 0 to discount this callout instance
-		return true;//m_mTab != null ? m_mTab.getActiveCallouts().length > 1 : false;
+		return m_mTab != null ? m_mTab.getActiveCallouts().length > 1 : false;
 	}	//	isCalloutActive
-	
-	/**
-	 *	Rate - set Multiply Rate from Divide Rate and vice versa
-	 *	org.compiere.model.CalloutEngine.rate
-	 *	@param ctx context
-	 *	@param WindowNo window no
-	 *	@param mTab tab
-	 *	@param mField field
-	 *	@param value value
-	 *	@return null or error message
-	 */
-	/*public String rate (Properties ctx, int WindowNo, GridTab mTab, GridField mField, Object value)
-	{
-		if (isCalloutActive() || value == null)		//	assuming it is Conversion_Rate
-			return NO_ERROR;
-
-		BigDecimal rate1 = (BigDecimal)value;
-		BigDecimal rate2 = Env.ZERO;
-		BigDecimal one = new BigDecimal(1.0);
-
-		if (rate1.doubleValue() != 0.0)	//	no divide by zero
-			rate2 = one.divide(rate1, 12, BigDecimal.ROUND_HALF_UP);
-		//
-		if (mField.getColumnName().equals("MultiplyRate"))
-			mTab.setValue("DivideRate", rate2);
-		else
-			mTab.setValue("MultiplyRate", rate2);
-		log.info(mField.getColumnName() + "=" + rate1 + " => " + rate2);
-		return NO_ERROR;
-	}	//	rate*/
 	
 	/**
 	 * 

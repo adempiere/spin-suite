@@ -30,7 +30,7 @@ import android.widget.Spinner;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class VLookupSpinner extends VLookup {
+public class VLookupSpinner extends GridField {
 
 	/**
 	 * *** Constructor ***
@@ -115,7 +115,7 @@ public class VLookupSpinner extends VLookup {
 				DisplayType.setContextValue(getContext(), getActivityNo(), getTabNo(), m_field, value);
                 //	Listener
                 if(m_Listener != null)
-                	m_Listener.onFieldEvent(m_field, value);
+                	m_Listener.onFieldEvent(m_field);
 			}
 
 			@Override

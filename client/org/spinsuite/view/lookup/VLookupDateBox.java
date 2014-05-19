@@ -30,7 +30,7 @@ import android.view.View;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class VLookupDateBox extends VLookup {
+public class VLookupDateBox extends GridField {
 
 	/**
 	 * *** Constructor ***
