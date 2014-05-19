@@ -108,7 +108,7 @@ public class VLookupCheckBox extends GridField {
 					boolean isChecked) {
 		        //	Listener
 		        if(m_Listener != null)
-		        	m_Listener.onFieldEvent(m_field);
+		        	m_Listener.onFieldEvent(this);
 			}
 			
 		});

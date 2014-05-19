@@ -109,13 +109,12 @@ public class T_DynamicTab extends Fragment
 	/**	Parameters	*/
 	private 	TabParameter	 		tabParam			= null;
 	private 	DB 						conn 				= null;
-	private 	PO 						model				= null;
 	private 	GridTab 				mGridTab			= null;
 	private 	InfoTab 				tabInfo				= null;
 	private 	ScrollView 				v_scroll			= null;
 	private 	TableLayout 			v_tableLayout		= null;
-	private 	int						m_Record_ID			= 0;
-	private 	int 					m_Parent_Record_ID 	= 0;
+	//private 	int						m_Record_ID			= 0;
+	//private 	int 					m_Parent_Record_ID 	= 0;
 	private 	boolean					m_IsLoadOk			= false;
 	private 	boolean 				m_IsModifying		= false;
 	/**	From Tab					*/
@@ -192,20 +191,11 @@ public class T_DynamicTab extends Fragment
 		m_IsLoadOk = true;
     	//	Retain Instance
     	if(tabParam.getTabLevel() == 0)
-    		setRetainInstance(true);
-    	
-    	m_Record_ID = Env.getTabRecord_ID(getActivity(), 
-    			tabParam.getActivityNo(), tabParam.getTabNo());
-    	//	Parent
-    	m_Parent_Record_ID = Env.getTabRecord_ID(getActivity(), 
-    			tabParam.getActivityNo(), tabParam.getParentTabNo());
-    	
+    		setRetainInstance(true);    	
     	//	Table Layout
     	v_tableLayout = new TableLayout(getActivity());
     	//	Add View
     	v_scroll.addView(v_tableLayout);
-    	//	View
-    	mGridTab = new GridTab(getActivity(), tabParam);
     	//	
     	new LoadViewTask().execute(v_tableLayout);
 	}
@@ -279,15 +269,17 @@ public class T_DynamicTab extends Fragment
 			showPopupMenu();
 			return true;
 		} else if (itemId == R.id.action_cancel) {
-			if(m_Record_ID == 0){
-				model.backCopy();
+			if(mGridTab.getRecord_ID() == 0){
+				mGridTab.backCopy();
 			}
-			refresh(model.getID(), false);
+			refresh(mGridTab.getRecord_ID(), false);
 			lockView(SEE);
 			return true;
 		} else if (itemId == R.id.action_save) {
 			if(save()) {
-				refresh(model.getID(), false);
+	    		//	Refresh
+	    		refreshIndex();
+				refresh(mGridTab.getRecord_ID(), false);
 				lockView(SEE);
 			}
 			return true;
@@ -314,12 +306,12 @@ public class T_DynamicTab extends Fragment
 		popupMenu.getMenu().add(Menu.NONE, O_ATTACH, 
 				Menu.NONE, getString(R.string.Action_AttachImage));
 		//	View Attachment
-		if(model != null
-				&& model.getID() > 0){
+		if(mGridTab.getPO() != null
+				&& mGridTab.getRecord_ID() > 0){
 			int count = DB.getSQLValue(getActivity(), "SELECT COUNT(att.AD_Attachment_ID) FROM AD_Attachment att " +
 					"WHERE att.AD_Table_ID = ? AND att.Record_ID = ?", 
 					new String[]{String.valueOf(tabInfo.getSPS_Table_ID()), 
-											String.valueOf(model.get_ID())});
+											String.valueOf(mGridTab.getRecord_ID())});
 			//	Exist a Attachment
 			if(count != 0)
 				popupMenu.getMenu().add(Menu.NONE, O_VIEW_ATTACH, 
@@ -359,7 +351,7 @@ public class T_DynamicTab extends Fragment
     private void viewAttachment(){
     	Bundle bundle = new Bundle();
 		ActivityParameter param = new ActivityParameter();
-		param.setFrom_Record_ID(model.get_ID());
+		param.setFrom_Record_ID(mGridTab.getRecord_ID());
 		param.setFrom_SPS_Table_ID(tabInfo.getSPS_Table_ID());
     	bundle.putParcelable("Param", param);
     	Intent intent = new Intent(getActivity(), LV_AttachView.class);
@@ -378,7 +370,7 @@ public class T_DynamicTab extends Fragment
 		ask.setPositiveButton(msg_Acept, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.cancel();
-				if(model.delete()){
+				if(mGridTab.delete()){
 					refresh(0, false);
 					lockView(DELETED);
 		    		//	Refresh
@@ -386,7 +378,7 @@ public class T_DynamicTab extends Fragment
 				}
 				else
 					Msg.alertMsg(getActivity(), 
-							getResources().getString(R.string.msg_Error), model.getError());
+							getResources().getString(R.string.msg_Error), mGridTab.getError());
 			}
 		});
 		ask.show();
@@ -407,65 +399,6 @@ public class T_DynamicTab extends Fragment
     	intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tmpFile));
 	    getActivity().startActivityForResult(intent, ACTION_TAKE_PHOTO);
 	}
-        
-    /**
-     * valid and save data
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 14:07:20
-     * @return
-     * @return boolean
-     */
-    public boolean save(){
-    	boolean ok = true;
-    	m_Record_ID = Env.getTabRecord_ID(getActivity(), 
-    			tabParam.getActivityNo(), tabParam.getTabNo());
-    	//	Error
-    	if(model == null){
-    		Msg.alertMsg(getActivity(), getResources().getString(R.string.msg_Error)
-    				, getResources().getString(R.string.msg_Error));
-    		return false;
-    	}
-    	//	Get Values
-    	for (GridField vIndex: mGridTab.getFields()) {
-    		GridField lookup = vIndex.getVLookup();
-    		InfoField field = lookup.getField();
-    		if((field.IsMandatory
-    				|| field.IsParent) && lookup.isEmpty()){
-    			Msg.alertMustFillField(getActivity(), "\"" + field.Name + "\"", lookup.getChildView());
-    			//	set ok to false
-    			ok = false;
-    			break;
-    		}
-    		//	Set to model
-    		model.set_Value(vIndex.getColumnIndex(), lookup.getValue());
-			//	Set on Context
-    		DisplayType.setContextValue(getActivity(), tabParam.getActivityNo(), 
-    				tabParam.getTabNo(), field, lookup.getValue());
-			//
-		}
-    	//	Set Record Identifier
-    	model.set_Value(tabInfo.getTableKeyName(), m_Record_ID);
-    	//	No saved
-    	if(!ok)
-    		return ok;
-    	//	Save
-    	ok = model.save();
-    	//	Set Record Identifier
-    	m_Record_ID = model.get_ID();
-    	if(ok) {
-    		Env.setTabRecord_ID(getActivity(), 
-    				tabParam.getActivityNo(), tabParam.getTabNo(), m_Record_ID);
-    		//	
-    		Env.setContext(getActivity(), tabParam.getActivityNo(), 
-    				tabParam.getTabNo(), tabInfo.getTableKeyName(), m_Record_ID);
-    		//	Refresh
-    		refreshIndex();
-    	} else {
-    		Msg.alertMsg(getActivity(), getResources().getString(R.string.msg_Error), 
-    				model.getError());
-    	}
-    	//	Return
-    	return ok;
-    }
 
     /**
      * Refresh Header Index
@@ -476,51 +409,6 @@ public class T_DynamicTab extends Fragment
     	//	Refresh
     	if(m_FromTab != null)
     		m_FromTab.refreshFromChange(true);
-    }
-    
-    /**
-     * Refresh Query
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 06/03/2014, 16:12:59
-     * @param m_Record_ID
-     * @param parentChanged
-     * @return boolean
-     */
-    private boolean refresh(int record_ID, boolean parentChanged){
-    	//	Refresh Child Index
-    	if(this.m_Record_ID != record_ID)
-    		refreshIndex();
-    	this.m_Record_ID = record_ID;
-    	//	Set record Identifier in context
-    	Env.setTabRecord_ID(getActivity(), 
-    			tabParam.getActivityNo(), tabParam.getTabNo(), m_Record_ID);
-    	//	Parent changed
-    	if(parentChanged
-    			|| record_ID <= 0)
-    		model.clear(false);
-    	
-    	//	Reload
-    	model.loadData(m_Record_ID);
-    	//	Refresh
-    	loadData();
-    	//	Set Identifier
-    	Env.setContext(getActivity(), tabParam.getActivityNo(), 
-				tabParam.getTabNo(), tabInfo.getTableKeyName(), model.getID());
-    	//	Set Parent Record Identifier
-    	m_Parent_Record_ID = Env.getTabRecord_ID(getActivity(), 
-    			tabParam.getActivityNo(), tabParam.getParentTabNo());
-    	//	
-    	changeMenuView();
-    	//	Return
-    	return !mGridTab.isEmpty();
-    }
-    
-    /**
-     * Load Data in View
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 06/05/2014, 23:28:32
-     * @return void
-     */
-    private void loadData(){
-    	mGridTab.loadData(model);
     }
     
     /**
@@ -551,9 +439,9 @@ public class T_DynamicTab extends Fragment
     	} else if(mode == SEE) {
     		mi_Cancel.setVisible(false);
     		mi_Save.setVisible(false);
-    		mi_More.setVisible(m_Record_ID != 0);
+    		mi_More.setVisible(mGridTab.getRecord_ID() != 0);
     		mi_Add.setVisible(true);
-    		mi_Edit.setVisible(m_Record_ID != 0);
+    		mi_Edit.setVisible(mGridTab.getRecord_ID() != 0);
     		mi_Search.setVisible(true);
     		m_IsModifying = false;
     	}
@@ -569,58 +457,13 @@ public class T_DynamicTab extends Fragment
      */
     public void enableView(int mode){
 		if(mode == NEW){
-			for(GridField vIndex : mGridTab.getFields()){
-	    		GridField lookup = vIndex.getVLookup();
-	    		InfoField field = lookup.getField();
-	    		if(!field.IsReadOnly 
-	    				&& !field.IsParent
-	    				&& !field.ColumnName.equals("DocAction")){
-	    			lookup.setEnabled(true);
-	    		} else {
-	    			lookup.setEnabled(false);
-	    		}
-	    	}
+			mGridTab.dataNew();
 		} else if(mode == MODIFY){
-			//	Check Is Processed
-			boolean isProcessed = Env.getContextAsBoolean(getActivity(), tabParam.getActivityNo(), 
-	    				tabParam.getTabNo(), "Processed");
-			//	
-			for(GridField vIndex : mGridTab.getFields()){
-	    		GridField lookup = vIndex.getVLookup();
-	    		InfoField field = lookup.getField();
-	    		if(
-	    			//	Any Field
-	    			!field.ColumnName.equals("DocAction")
-	    				&& (
-	    						//	Updateable and not Processed
-	    						((field.IsUpdateable && !isProcessed)
-	    							&& !field.IsReadOnly
-	    							&& !field.IsParent)
-	    						//	Always Updateable
-	    						|| field.IsAlwaysUpdateable
-	    					)
-	    			){
-	    			lookup.setEnabled(true);
-	    		} else {
-	    			lookup.setEnabled(false);
-	    		}
-	    	}	
+			mGridTab.dataModify();
 		} else if(mode == DELETED){
-			for(GridField vIndex : mGridTab.getFields()){
-	    		GridField lookup = vIndex.getVLookup();
-	    		lookup.setEnabled(false);
-	    	}
+			mGridTab.dataDeleted();
 		} else if(mode == SEE){
-			for(GridField vIndex : mGridTab.getFields()){
-	    		GridField lookup = vIndex.getVLookup();
-	    		InfoField field = lookup.getField();
-	    		if(field.ColumnName.equals("DocAction")
-	    				|| (field.DisplayType == DisplayType.BUTTON
-	    						&& !field.IsReadOnly))
-	    			lookup.setEnabled(true);
-	    		else
-	    			lookup.setEnabled(false);
-	    	}
+			mGridTab.dataSee();
 		}
 	}
     
@@ -631,12 +474,30 @@ public class T_DynamicTab extends Fragment
      */
     private void newOption(){
     	//	Backup
-    	if(m_Record_ID != 0){
-    		model.copyValues(true);
+    	if(mGridTab.getRecord_ID() != 0){
+    		mGridTab.copyValues(true);
     	}
     	//	
     	refresh(-1, false);
     	lockView(NEW);
+    }
+    
+    /**
+     * Refresh Grid Tab
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 21:48:52
+     * @param record_ID
+     * @param parentChanged
+     * @return boolean
+     */
+    private boolean refresh(int record_ID, boolean parentChanged) {
+    	//	Refresh Child Index
+    	if(mGridTab.getRecord_ID() != record_ID)
+    		refreshIndex();
+    	boolean ok = mGridTab.refresh(record_ID, parentChanged);
+    	if(ok)
+    		changeMenuView();
+    	//	
+    	return ok;
     }
     
     /**
@@ -663,7 +524,7 @@ public class T_DynamicTab extends Fragment
             //	Lock View
     		if(m_IsModifying)
     			lockView(MODIFY);
-    		else if(m_Record_ID == 0)
+    		else if(mGridTab.getRecord_ID() == 0)
         		lockView(NEW);
         	else
         		lockView(SEE);
@@ -682,15 +543,15 @@ public class T_DynamicTab extends Fragment
     		return false;
     	//	do it
     	if(reQuery){
-    		ok = refresh(m_Record_ID, true);
+    		refresh(mGridTab.getRecord_ID(), true);
     	} else if(tabParam.getTabLevel() > 0){
     		int currentParent_Record_ID = Env.getTabRecord_ID(getActivity(), 
         			tabParam.getActivityNo(), tabParam.getParentTabNo());
-        	if(m_Parent_Record_ID != currentParent_Record_ID){
-        		ok = refresh(0, true);
+        	if(mGridTab.getParent_Record_ID() != currentParent_Record_ID){
+        		refresh(0, true);
         	}
     	} else {
-    		loadData();
+    		mGridTab.loadData();
     	}
     	//	
     	changeMenuView();
@@ -759,7 +620,7 @@ public class T_DynamicTab extends Fragment
 		values.put("AD_Org_ID", Env.getAD_Org_ID(getActivity()));
 		values.put("IsActive", "Y");
 		values.put("AD_Table_ID", tabInfo.getSPS_Table_ID());
-		values.put("Record_ID", model.getID());
+		values.put("Record_ID", mGridTab.getRecord_ID());
 		values.put("Title", new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()));
 		values.put("Created", format.format(new Date()));
 		values.put("CreatedBy", Env.getAD_User_ID(getActivity()));
@@ -829,10 +690,9 @@ public class T_DynamicTab extends Fragment
 					String columnName = bundle.getString("ColumnName");
 		    		//	if a field or just search
 		    		if(columnName != null){
-		    			for (GridField vIndex: mGridTab.getFields()) {
-		    	    		GridField lookup = vIndex.getVLookup();
-		    	    		if(vIndex.getColumnName().equals(columnName)){
-		    	    			((VLookupSearch) lookup).setItem(item);
+		    			for (GridField vField: mGridTab.getFields()) {
+		    	    		if(vField.getColumnName().equals(columnName)){
+		    	    			((VLookupSearch) vField).setItem(item);
 		    	    			break;
 		    	    		}
 		    			}
@@ -845,26 +705,10 @@ public class T_DynamicTab extends Fragment
     	}
     }
     
-    /**
-     * Load Persistence Object
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/05/2014, 11:03:25
-     * @return
-     * @return boolean
-     */
-    private boolean loadPO(){
-    	m_Record_ID = Env.getTabRecord_ID(getActivity(), 
-				tabParam.getActivityNo(), tabParam.getTabNo());
-    	//	Get Model
-		if (model == null)
-    		model = MSPSTable.getPO(getActivity(), m_Record_ID, tabInfo.getTableName(), conn);
-		if(model == null){
-    		return false;
-    	}
-		//	Set identifier
-		Env.setContext(getActivity(), tabParam.getActivityNo(), 
-				tabParam.getTabNo(), tabInfo.getTableName() + "_ID", model.getID());
-		//	
-		return true;
+    @Override
+    public boolean save() {
+    	mGridTab.save();
+    	return true;
     }
 
 	@Override
@@ -901,10 +745,10 @@ public class T_DynamicTab extends Fragment
 		private ArrayList<Lookup>	m_Lookup = null;
 		private int 				m_currentLookup = 0;
 		/**	Progress Bar			*/
-		private ProgressDialog 	v_PDialog;
+		private ProgressDialog 		v_PDialog;
 		/**	Constant				*/
-		private static final float WEIGHT_SUM 	= 2;
-		private static final float WEIGHT 		= 1;
+		private static final float 	WEIGHT_SUM 	= 2;
+		private static final float 	WEIGHT 		= 1;
 		/**
 		 * Init Values
 		 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/05/2014, 12:18:42
@@ -916,10 +760,11 @@ public class T_DynamicTab extends Fragment
 	    			LayoutParams.MATCH_PARENT, WEIGHT);   
 	    	//	Load Table Info
 	    	tabInfo = new InfoTab(getActivity(), tabParam.getSPS_Tab_ID(), conn);
+	    	//	View
+	    	mGridTab = new GridTab(getActivity(), tabParam, tabInfo, conn);
+	    	//	
 	    	v_PDialog.setMax(tabInfo.getLength());
 	    	m_Lookup = new ArrayList<Lookup>();
-	    	//	Load PO
-	    	loadPO();
 		}
 		
 		@Override
@@ -1022,7 +867,7 @@ public class T_DynamicTab extends Fragment
 			} else if(field.DisplayType == DisplayType.BUTTON){
 				VLookupButton lookupButton = null;
 				if(field.ColumnName.equals("DocAction")){
-					lookupButton = new VLookupButtonDocAction(getActivity(), field, (DocAction) model);
+					lookupButton = new VLookupButtonDocAction(getActivity(), field, (DocAction) mGridTab.getPO());
 				} else if(field.ColumnName.equals("PaymentRule")){
 					//	Payment Rule Button
 					lookupButton = new LookupButtonPaymentRule(getActivity(), field);
@@ -1039,7 +884,7 @@ public class T_DynamicTab extends Fragment
 				lookup.setOnFieldChangeListener(m_Listener);
 				lookup.setLayoutParams(v_param);
 				//	Set Value
-				if(m_Record_ID >= 0){
+				/*if(m_Record_ID >= 0){
 					lookup.setValue(model.get_Value(index.getColumnIndex()));
 					//	Load Default
 					if(m_Record_ID == 0){
@@ -1054,11 +899,11 @@ public class T_DynamicTab extends Fragment
 		    		//	Set Current Values
 		    		DisplayType.setContextValue(getActivity(), tabParam.getActivityNo(), 
 			    				tabParam.getTabNo(), field, lookup.getValue());
-				}
+				}*/
 				//	Add to Row
 				v_row.addView(lookup);
 				//	
-				mGridTab.addField(index);
+				mGridTab.addField(lookup);
 				
 			}
 			//	Add Row

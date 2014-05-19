@@ -343,6 +343,32 @@ public abstract class GridField extends LinearLayout {
 	}
 	
 	/**
+	 * Get Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 21:37:21
+	 * @return
+	 * @return String
+	 */
+	public String getName() {
+		if(m_field == null)
+			return null;
+		//	Default
+		return m_field.Name;
+	}
+	
+	/**
+	 * Get Display Type
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:54:16
+	 * @return
+	 * @return int
+	 */
+	public int getDisplayType() {
+		if(m_field == null)
+			return 0;
+		//	Default
+		return m_field.DisplayType;
+	}
+	
+	/**
 	 * Set Column Index
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:23:17
 	 * @param m_ColumnIndex
@@ -373,5 +399,31 @@ public abstract class GridField extends LinearLayout {
 			return false;
 		//	Default
 		return m_field.IsParent;
+	}
+	
+	/**
+	 * Is Updateable
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:47:34
+	 * @return
+	 * @return boolean
+	 */
+	public boolean isUpdateable() {
+		if(m_field == null)
+			return false;
+		//	Default
+		return m_field.IsUpdateable;
+	}
+	
+	/**
+	 * Is Read Only
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:44:15
+	 * @return
+	 * @return boolean
+	 */
+	public boolean isReadOnly() {
+		if(m_field == null)
+			return false;
+		//	Default
+		return m_field.IsReadOnly;
 	}
 }

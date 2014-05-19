@@ -165,7 +165,7 @@ public class VLookupSearch extends GridField {
 		DisplayType.setContextValue(getContext(), getActivityNo(), getTabNo(), m_field, value);
         //	Listener
         if(m_Listener != null)
-        	m_Listener.onFieldEvent(m_field);
+        	m_Listener.onFieldEvent(this);
 	}
 
 	@Override
