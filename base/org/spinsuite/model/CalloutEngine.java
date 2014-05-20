@@ -19,9 +19,9 @@ package org.spinsuite.model;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 
-import org.spinsuite.util.GridField;
 import org.spinsuite.util.GridTab;
 import org.spinsuite.util.LogM;
+import org.spinsuite.view.lookup.GridField;
 
 import android.content.Context;
 
@@ -59,14 +59,14 @@ public class CalloutEngine implements Callout {
 	 *
 	 *  @param ctx      Context
 	 *  @param methodName   Method name
-	 *  @param WindowNo current Window No
+	 *  @param m_ActivityNo current Window No
 	 *  @param mTab     Model Tab
 	 *  @param mField   Model Field
 	 *  @param value    The new value
 	 *  @param oldValue The old value
 	 *  @return Error message or ""
 	 */
-	public String start (Context ctx, String methodName, int WindowNo,
+	public String start (Context ctx, String methodName, int m_ActivityNo,
 		GridTab mTab, GridField mField, Object value, Object oldValue) {
 		if (methodName == null || methodName.length() == 0)
 			throw new IllegalArgumentException ("No Method Name");
@@ -97,9 +97,9 @@ public class CalloutEngine implements Callout {
 		try {
 			Object[] args = null;
 			if (argLength == 6)
-				args = new Object[] {ctx, WindowNo, mTab, mField, value, oldValue};
+				args = new Object[] {ctx, m_ActivityNo, mTab, mField, value, oldValue};
 			else
-				args = new Object[] {ctx, WindowNo, mTab, mField, value}; 
+				args = new Object[] {ctx, m_ActivityNo, mTab, mField, value}; 
 			retValue = (String)method.invoke(this, args);
 		} catch (Exception e) {
 			Throwable ex = e.getCause();	//	InvocationTargetException
@@ -107,8 +107,7 @@ public class CalloutEngine implements Callout {
 				ex = e;
 			LogM.log(ctx, getClass(), Level.SEVERE, "start: " + methodName, ex);
 			retValue = ex.getLocalizedMessage();
-			if (retValue == null)
-			{
+			if (retValue == null) {
 				retValue = ex.toString();
 			}
 		} finally {

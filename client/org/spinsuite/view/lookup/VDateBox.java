@@ -66,7 +66,7 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	 * @param format
 	 * @param m_Field
 	 */
-	public VDateBox(Context context, SimpleDateFormat format, InfoField m_Field){
+	public VDateBox(Context context, SimpleDateFormat format, GridField m_Field){
 		super(context);
 		ctx = context;
 		LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -98,7 +98,7 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
     private SimpleDateFormat 		formatBack = null;
     private Calendar 				cal;
     private OnFieldChangeListener 	m_Listener = null;
-    private InfoField				m_Field = null;
+    private GridField				m_Field = null;
     
     /**
      * Set Field Listener

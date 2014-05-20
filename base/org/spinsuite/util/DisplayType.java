@@ -128,13 +128,13 @@ public final class DisplayType
 	//  See DBA_DisplayType.sql ----------------------------------------------
 
 	/** Maximum number of digits    */
-	private static final int    MAX_DIGITS = 28;        //  Oracle Standard Limitation 38 digits
+	private static final int    MAX_DIGITS 			= 28;        //  Oracle Standard Limitation 38 digits
 	/** Digits of an Integer        */
-	private static final int    INTEGER_DIGITS = 10;
+	private static final int    INTEGER_DIGITS 		= 10;
 	/** Maximum number of fractions */
-	private static final int    MAX_FRACTION = 12;
+	private static final int    MAX_FRACTION 		= 12;
 	/** Default Amount Precision    */
-	private static final int    AMOUNT_FRACTION = 2;
+	private static final int    AMOUNT_FRACTION 	= 2;
 
 	/**
 	 *	Returns true if (numeric) ID (Table, Search, Account, ..).
@@ -280,40 +280,28 @@ public final class DisplayType
 		DecimalFormat format = null;
 		format = (DecimalFormat)NumberFormat.getNumberInstance(locale);
 		//
-		if (pattern != null && pattern.length() > 0)
-		{
+		if (pattern != null && pattern.length() > 0) {
 			try {
 			format.applyPattern(pattern);
 			return format;
 			}
-			catch (IllegalArgumentException e) {
-			}
-		}
-		else if (displayType == INTEGER)
-		{
+			catch (IllegalArgumentException e) {}
+		} else if (displayType == INTEGER) {
 			format.setParseIntegerOnly(true);
 			format.setMaximumIntegerDigits(INTEGER_DIGITS);
 			format.setMaximumFractionDigits(0);
-		}
-		else if (displayType == QUANTITY)
-		{
+		} else if (displayType == QUANTITY) {
 			format.setMaximumIntegerDigits(MAX_DIGITS);
 			format.setMaximumFractionDigits(MAX_FRACTION);
-		}
-		else if (displayType == AMOUNT)
-		{
+		} else if (displayType == AMOUNT) {
 			format.setMaximumIntegerDigits(MAX_DIGITS);
 			format.setMaximumFractionDigits(MAX_FRACTION);
 			format.setMinimumFractionDigits(AMOUNT_FRACTION);
-		}
-		else if (displayType == COST_PRICE)
-		{
+		} else if (displayType == COST_PRICE) {
 			format.setMaximumIntegerDigits(MAX_DIGITS);
 			format.setMaximumFractionDigits(MAX_FRACTION);
 			format.setMinimumFractionDigits(AMOUNT_FRACTION);
-		}
-		else //	if (displayType == Number)
-		{
+		} else {
 			format.setMaximumIntegerDigits(MAX_DIGITS);
 			format.setMaximumFractionDigits(MAX_FRACTION);
 			format.setMinimumFractionDigits(1);
@@ -336,8 +324,7 @@ public final class DisplayType
 	 *	Return Date Format
 	 *  @return date format
 	 */
-	public static SimpleDateFormat getDateFormat(Context ctx)
-	{
+	public static SimpleDateFormat getDateFormat(Context ctx) {
 		return getDateFormat (ctx, DisplayType.DATE, null);
 	}   //  getDateFormat
 
@@ -346,8 +333,7 @@ public final class DisplayType
 	 *  @param language Language
 	 *  @return date format
 	 */
-	public static SimpleDateFormat getDateFormat (Context ctx, String language)
-	{
+	public static SimpleDateFormat getDateFormat (Context ctx, String language) {
 		return getDateFormat (ctx, DisplayType.DATE, language);
 	}	//	getDateFormat
 
@@ -356,8 +342,7 @@ public final class DisplayType
 	 *  @param displayType Display Type
 	 *  @return date format
 	 */
-	public static SimpleDateFormat getDateFormat (Context ctx, int displayType)
-	{
+	public static SimpleDateFormat getDateFormat (Context ctx, int displayType) {
 		return getDateFormat (ctx, displayType, null);
 	}   //  getDateFormat
 	
@@ -367,17 +352,14 @@ public final class DisplayType
 	 *  @param pattern Java Simple Date Format pattern e.g. "dd/MM/yy"
 	 *  @return date format
 	 */
-	public static SimpleDateFormat getDateFormat (Context ctx, int displayType, String pattern)
-	{
+	public static SimpleDateFormat getDateFormat (Context ctx, int displayType, String pattern) {
 		//
-		if ( pattern != null && pattern.length() > 0)
-		{
+		if ( pattern != null && pattern.length() > 0) {
 			SimpleDateFormat format = (SimpleDateFormat)DateFormat.getInstance();
 			try {
 			format.applyPattern(pattern);
 			return format;
-			}
-			catch (IllegalArgumentException e) {
+			} catch (IllegalArgumentException e) {
 				LogM.log(ctx, "DisplayType", Level.FINE, "Invalid date pattern: " + pattern);
 			}
 		}
@@ -394,8 +376,7 @@ public final class DisplayType
 	 *	JDBC Date Format YYYY-MM-DD
 	 *  @return date format
 	 */
-	static public SimpleDateFormat getDateFormat_JDBC()
-	{
+	public static SimpleDateFormat getDateFormat_JDBC() {
 		return new SimpleDateFormat ("yyyy-MM-dd");
 	}   //  getDateFormat_JDBC
 
@@ -403,8 +384,7 @@ public final class DisplayType
 	 *	JDBC Timestamp Format yyyy-mm-dd hh:mm:ss
 	 *  @return timestamp format
 	 */
-	static public SimpleDateFormat getTimestampFormat_Default()
-	{
+	public static SimpleDateFormat getTimestampFormat_Default() {
 		return new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
 	}   //  getTimestampFormat_JDBC
 
@@ -415,8 +395,7 @@ public final class DisplayType
 	 *  @param yesNoAsBoolean - yes or no as boolean
 	 *  @return class Integer - BigDecimal - Timestamp - String - Boolean
 	 */
-	public static Class<?> getClass (int displayType, boolean yesNoAsBoolean)
-	{
+	public static Class<?> getClass (int displayType, boolean yesNoAsBoolean) {
 		if (isText(displayType) || displayType == LIST)
 			return String.class;
 		else if (isID(displayType) || displayType == INTEGER)    //  note that Integer is stored as BD
@@ -445,8 +424,7 @@ public final class DisplayType
 	 * @return
 	 * @return Object
 	 */
-	public static Object getJDBC_Value (int displayType, Object value, boolean yesNoAsBoolean, boolean dateAsDate)
-	{
+	public static Object getJDBC_Value (int displayType, Object value, boolean yesNoAsBoolean, boolean dateAsDate) {
 		if(value == null)
 			return null;
 		//	Else
@@ -478,10 +456,18 @@ public final class DisplayType
 			format = getDateFormat_JDBC();
 			return format.format((Date) value);
 		} else if (displayType == YES_NO) {
+			boolean yesNo = false;
+			//	
+			if(value instanceof String)
+				yesNo = ((String) value).equals("Y");
+			else if(value instanceof Boolean)
+				yesNo = ((Boolean) value);
+			//	Yes No As Boolean
 			if(!yesNoAsBoolean) {
-				return (((Boolean) value)? "Y": "N");
-			} else
-				return ((Boolean) value);
+				return (yesNo? "Y": "N");
+			} else {
+				return yesNo;
+			}
 		} else if (isLOB(displayType))	//	CLOB is String
 			return byte[].class;
 		//
@@ -496,7 +482,7 @@ public final class DisplayType
 	 * @return
 	 * @return Object
 	 */
-	public static Object getJDBC_Value (int displayType, Object value){
+	public static Object getJDBC_Value (int displayType, Object value) {
 		return getJDBC_Value (displayType, value, false, false);
 	}
 	
@@ -510,8 +496,7 @@ public final class DisplayType
 	 * @param value
 	 * @return void
 	 */
-	public static void setContextValue (Context ctx, int m_ActivityNo, int TabNo, InfoField field, Object value)
-	{
+	public static void setContextValue (Context ctx, int m_ActivityNo, int TabNo, InfoField field, Object value) {
 		if (isText(field.DisplayType) 
 				|| field.DisplayType == LIST
 				|| field.DisplayType == BUTTON) {
@@ -555,8 +540,7 @@ public final class DisplayType
 	 * @return
 	 * @return Object
 	 */
-	public static Object getContextValue (Context ctx, int m_ActivityNo, int TabNo, InfoField field)
-	{
+	public static Object getContextValue (Context ctx, int m_ActivityNo, int TabNo, InfoField field) {
 		if (isText(field.DisplayType) 
 				|| field.DisplayType == LIST
 				|| field.DisplayType == BUTTON) {
@@ -578,81 +562,49 @@ public final class DisplayType
 		return null;
 	}   //  getContext
 	
+	
 	/**
-	 * 	Get SQL DataType
-	 *	@param displayType AD_Reference_ID
-	 *	@param columnName name
-	 *	@param fieldLength length
-	 *	@return SQL Data Type in Oracle Notation
+	 * Parse Value
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/05/2014, 15:47:33
+	 * @param value
+	 * @param displayType
+	 * @return
+	 * @return Object
 	 */
-	/*public static String getSQLDataType (int displayType, String columnName, int fieldLength)
-	{
-		if (columnName.equals("EntityType")
-			|| columnName.equals ("AD_Language"))
-			return "VARCHAR2(" + fieldLength + ")";
-		//	ID
-		if (DisplayType.isID(displayType))
-		{
-			if (displayType == DisplayType.Image 	//	FIXTHIS
-				&& columnName.equals("BinaryData"))
-				return "BLOB";
-			//	ID, CreatedBy/UpdatedBy, Acct
-			else if (columnName.endsWith("_ID") 
-				|| columnName.endsWith("tedBy") 
-				|| columnName.endsWith("_Acct") )
-				return "NUMBER(10)";
-			else if (fieldLength < 4)
-				return "CHAR(" + fieldLength + ")";
-			else	//	EntityType, AD_Language	fallback
-				return "VARCHAR2(" + fieldLength + ")";
-		}
-		//
-		if (displayType == DisplayType.Integer)
-			return "NUMBER(10)";
-		if (DisplayType.isDate(displayType))
-			return "DATE";
-		if (DisplayType.isNumeric(displayType))
-			return "NUMBER";
-		if (displayType == DisplayType.Binary)
-			return "BLOB";
-		if (displayType == DisplayType.TextLong 
-			|| (displayType == DisplayType.Text && fieldLength >= 4000))
-			return "CLOB";
-		if (displayType == DisplayType.YesNo)
-			return "CHAR(1)";
-		if (displayType == DisplayType.List) {
-			if (fieldLength == 1)
-				return "CHAR(" + fieldLength + ")";
+	public static Object parseValue (Object value, int displayType) {
+		//	Valid Null
+		if(value == null)
+			return null;
+		//	
+		if (isText(displayType) 
+				|| displayType == LIST
+				|| displayType == BUTTON) {
+			return String.valueOf(value);
+		} else if (isID(displayType) || displayType == INTEGER) {
+			if(value instanceof Integer)
+				return (Integer) value;
 			else
-				return "NVARCHAR2(" + fieldLength + ")";			
-		}
-		if (displayType == DisplayType.Color) // this condition is never reached - filtered above in isID
-		{
-			if (columnName.endsWith("_ID"))
-				return "NUMBER(10)";
-			else
-				return "CHAR(" + fieldLength + ")";
-		}
-		if (displayType == DisplayType.Button)
-		{
-			if (columnName.endsWith("_ID"))
-				return "NUMBER(10)";
-			else
-				return "CHAR(" + fieldLength + ")";
-		}
-		if (!DisplayType.isText(displayType))
-			Log.w("DisplayType.getSQLDataType()", "Unhandled Data Type = " + displayType);
-				
-		return "NVARCHAR2(" + fieldLength + ")";
-	}	//	getSQLDataType*/
+				return Integer.parseInt(String.valueOf(value));
+		} else if (isNumeric(displayType)) {
+			return getNumber(String.valueOf(value));
+		} else if (isDate(displayType)) {
+			return getDate(String.valueOf(value));
+		} else if (displayType == YES_NO) {
+			if(value instanceof Boolean)
+				return value;
+			else if(value instanceof String)
+				return ((String)value).equals("Y");
+		} else if (isLOB(displayType))
+			return null;
+		return null;
+	}   //  getContext
 	
 	/**
 	 * 	Get Description
 	 *	@param displayType display Type
 	 *	@return display type description
 	 */
-	public static String getDescription (int displayType)
-	{
+	public static String getDescription (int displayType) {
 		if (displayType == STRING)
 			return "String";
 		if (displayType == INTEGER)
@@ -745,7 +697,7 @@ public final class DisplayType
     		inputType = InputType.TYPE_CLASS_NUMBER;
     	else if(DisplayType.isDate(displayType))
     		inputType = InputType.TYPE_CLASS_DATETIME;
-    		
+    	//	Default
 		return inputType;
 	}
 	
@@ -756,7 +708,7 @@ public final class DisplayType
 	 * @return
 	 * @return BigDecimal
 	 */
-	public static BigDecimal getNumber(String value){
+	public static BigDecimal getNumber(String value) {
 		if(value != null 
 				&& value.length() > 0){
 			return new BigDecimal(value);

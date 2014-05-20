@@ -100,8 +100,7 @@ public class VLookupString extends GridField {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 		        //	Listener
-		        if(m_Listener != null)
-		        	m_Listener.onFieldEvent(this);
+				event();
 			}
 		});
 		//	Set Hint
@@ -109,6 +108,17 @@ public class VLookupString extends GridField {
 		setEnabled(!m_field.IsReadOnly);
 		//	Add to View
 		addView(v_String);
+	}
+	
+	/**
+	 * Listener
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/05/2014, 08:41:28
+	 * @return void
+	 */
+	private void event(){
+        //	Listener
+        if(m_Listener != null)
+        	m_Listener.onFieldEvent(this);
 	}
 	
 	/**

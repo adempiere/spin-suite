@@ -357,7 +357,7 @@ public abstract class PO {
 			for(int i = 0; i < m_TableInfo.getColumnLength(); i++){
 				//	Get Column
 				POInfoColumn column = m_TableInfo.getPOInfoColumn(i);
-				m_currentValues[i] = parseValue(column, i, false);
+				m_currentValues[i] = parseValue(column, i, false, false);
 				//	
 				LogM.log(getCtx(), getClass(), Level.FINE, "Old Value=" + m_oldValues[i]);	
 			}
@@ -752,7 +752,7 @@ public abstract class PO {
 					columns.append(column.ColumnName);
 					sym.append("?");
 					//	
-					Object value = parseValue(column, i, true);
+					Object value = parseValue(column, i, true, true);
 					if(column.IsMandatory 
 							&& value == null)
 						throw new Exception(m_ctx.getResources().getString(R.string.MustFillField) + 
@@ -808,7 +808,7 @@ public abstract class PO {
 							.append("=")
 							.append("?");
 					//	
-					Object value = parseValue(column, i, false);
+					Object value = parseValue(column, i, false, true);
 					if(column.IsMandatory 
 							&& value == null)
 						throw new Exception(m_ctx.getResources().getString(R.string.MustFillField) + 
@@ -862,11 +862,12 @@ public abstract class PO {
 	 * @param column
 	 * @param index
 	 * @param isNew
+	 * @param toSave
 	 * @return
 	 * @throws Exception
 	 * @return Object
 	 */
-	public final Object parseValue(POInfoColumn column, int index, boolean isNew) throws Exception{
+	public final Object parseValue(POInfoColumn column, int index, boolean isNew, boolean toSave) throws Exception{
 		if(index >= 0){
 			Object value = m_currentValues[index]; 
 			if(isNew
@@ -897,9 +898,12 @@ public abstract class PO {
 					String documentNo = MSequence.getDocumentNo(getCtx(), m_C_DocType_ID, m_TableInfo.getTableName(), false, conn);
 					return documentNo;
 				} else if(value != null){
-					return DisplayType.getJDBC_Value(column.DisplayType, value);
+					return DisplayType.getJDBC_Value(column.DisplayType, value, !toSave, !toSave);
 				} else if(column.DefaultValue != null){
-					return Env.parseContext(getCtx(), (String)column.DefaultValue, false);
+					if(toSave)
+						return Env.parseContext(getCtx(), (String)column.DefaultValue, false);
+					else
+						DisplayType.parseValue(Env.parseContext(getCtx(), (String)column.DefaultValue, false), column.DisplayType);
 				} else
 					return null;
 			}

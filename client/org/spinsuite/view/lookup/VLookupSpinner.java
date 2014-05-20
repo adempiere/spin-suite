@@ -114,8 +114,7 @@ public class VLookupSpinner extends GridField {
 				//	Set Context
 				DisplayType.setContextValue(getContext(), getActivityNo(), getTabNo(), m_field, value);
                 //	Listener
-                if(m_Listener != null)
-                	m_Listener.onFieldEvent(this);
+				event();
 			}
 
 			@Override
@@ -134,6 +133,17 @@ public class VLookupSpinner extends GridField {
 			}
 		});
 		
+	}
+	
+	/**
+	 * Listener
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/05/2014, 08:41:28
+	 * @return void
+	 */
+	private void event(){
+        //	Listener
+        if(m_Listener != null)
+        	m_Listener.onFieldEvent(this);
 	}
 	
 	/**

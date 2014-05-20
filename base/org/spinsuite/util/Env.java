@@ -1092,7 +1092,7 @@ public final class Env {
 			}
 
 			token = inStr.substring(0, j);
-			//Msg.alertMsg(ctx, "Epale", token);
+			//	
 			String ctxInfo = getContext(ctx, m_ActivityNo, m_TabNo, token);	// get context
 			if (ctxInfo != null && ctxInfo.length() == 0 && (token.startsWith("#") || token.startsWith("$")) )
 				ctxInfo = getContext(ctx, token);	// get global context

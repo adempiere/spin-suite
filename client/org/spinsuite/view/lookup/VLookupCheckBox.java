@@ -106,9 +106,7 @@ public class VLookupCheckBox extends GridField {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
-		        //	Listener
-		        if(m_Listener != null)
-		        	m_Listener.onFieldEvent(this);
+				event();
 			}
 			
 		});
@@ -121,6 +119,17 @@ public class VLookupCheckBox extends GridField {
 		if(m_field.DefaultValue != null
 					&& m_field.DefaultValue.length() > 0)
 			setValue(Env.parseContext(getContext(), m_field.DefaultValue, false));
+	}
+	
+	/**
+	 * Listener
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/05/2014, 08:41:28
+	 * @return void
+	 */
+	private void event(){
+        //	Listener
+        if(m_Listener != null)
+        	m_Listener.onFieldEvent(this);
 	}
 
 	@Override

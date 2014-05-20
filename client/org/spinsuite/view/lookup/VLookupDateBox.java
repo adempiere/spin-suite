@@ -102,7 +102,7 @@ public class VLookupDateBox extends GridField {
 		else
 			format = DisplayType.getDateFormat(getContext(), m_field.DisplayType);
 		//	Instance
-		v_DateBox = new VDateBox(getContext(), format, m_field);
+		v_DateBox = new VDateBox(getContext(), format, this);
 		setEnabled(!m_field.IsReadOnly);
 		addView(v_DateBox);
 	}

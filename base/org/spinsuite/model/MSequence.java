@@ -145,8 +145,9 @@ public class MSequence extends X_AD_Sequence {
 		} else if(!conn.isOpen()){
 			handleConnection = true;
 		}
-		//	
+		//	Load Connection
 		DB.loadConnection(conn, DB.READ_WRITE);
+		//	
 		try {
 			//	Result Set
 			Cursor rs = null;
@@ -183,6 +184,7 @@ public class MSequence extends X_AD_Sequence {
 						"AND s.IsTableID = ? ";
 				
 				LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> selectSQL:" + selectSQL);
+				LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> C_DocType_ID:" + C_DocType_ID);
 				//	
 				rs = conn.querySQL(selectSQL, new String[]{String.valueOf(C_DocType_ID), "Y", "N"});
 
@@ -226,12 +228,14 @@ public class MSequence extends X_AD_Sequence {
 		} catch (Exception e) {
 			LogM.log(ctx, MSequence.class, Level.SEVERE, "Msequence.getDocumentNo >> Error:" + e.getMessage(), e);
 		}
-		//	Close Connection
-		if(handleConnection)
-			DB.closeConnection(conn);
 		//	No Sequence
-		if(next < 0)
+		if(next < 0) {
+			//	Close Connection
+			if(handleConnection)
+				DB.closeConnection(conn);
+			//	Return
 			return null;
+		}
 		
 		//	Log
 		LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> next=" +  next);
@@ -267,6 +271,9 @@ public class MSequence extends X_AD_Sequence {
 			conn.executeSQL(updateSQL, new Object[]{m_AD_Sequence_ID});
 			LogM.log(ctx, "MSequence", Level.FINE, "m_AD_Sequence_ID=" + m_AD_Sequence_ID);
 		}
+		//	Close Connection
+		if(handleConnection)
+			DB.closeConnection(conn);
 		//	
 		return documentNo;
 	}	//	getDocumentNo

@@ -42,7 +42,6 @@ import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.KeyNamePair;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
-import org.spinsuite.util.GridField;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.GridField;
 import org.spinsuite.view.lookup.VLookupCheckBox;
@@ -554,8 +553,7 @@ public class V_Process extends FragmentActivity {
 		//	is Filled
 		if(lookup != null){
 			lookup.setLayoutParams(v_rowParam);
-			GridField index = new GridField(lookup);
-			viewList.add(index);
+			viewList.add(lookup);
 			v_row.addView(lookup);
 			//	Add Row
 			if(!isSameLine
@@ -578,8 +576,7 @@ public class V_Process extends FragmentActivity {
     	ProcessInfoParameter parameter = null;
     	m_pInfo.setParameter(null);
 		//	Get Values
-    	for (GridField vIndex: viewList) {
-    		GridField lookup = vIndex.getVLookup();
+    	for (GridField lookup: viewList) {
     		InfoField field = lookup.getField();
     		if((field.IsMandatory)
     				&& lookup.isEmpty()){
@@ -848,9 +845,8 @@ public class V_Process extends FragmentActivity {
 	    		String columnName = bundle.getString("ColumnName");
 	    		//	if a field or just search
 	    		if(columnName != null){
-	    			for (GridField vIndex: viewList) {
-	    	    		GridField lookup = vIndex.getVLookup();
-	    	    		if(vIndex.getColumnName().equals(columnName)){
+	    			for (GridField lookup: viewList) {
+	    	    		if(lookup.getColumnName().equals(columnName)){
 	    	    			((VLookupSearch) lookup).setItem(item);
 	    	    			break;
 	    	    		}

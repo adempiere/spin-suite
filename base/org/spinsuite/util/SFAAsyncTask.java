@@ -20,6 +20,7 @@ import java.util.concurrent.Executors;
 
 import org.spinsuite.base.R;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -201,6 +202,7 @@ public class SFAAsyncTask{
 	
 }
 
+@SuppressLint("ValidFragment")
 class SFAAsyncTaskDF extends DialogFragment{
 	
 	public SFAAsyncTaskDF(int p_pbType,ProgressBar p_ProgressBar) {

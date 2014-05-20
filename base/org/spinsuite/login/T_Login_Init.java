@@ -24,6 +24,7 @@ import org.spinsuite.base.R;
 import org.spinsuite.initialload.InitialLoad;
 import org.spinsuite.util.SFAAsyncTask;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -35,6 +36,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+@SuppressLint("ValidFragment")
 public class T_Login_Init extends DialogFragment implements OnClickListener{
 	
 	/** Text User*/

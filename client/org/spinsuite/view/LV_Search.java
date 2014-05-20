@@ -26,7 +26,6 @@ import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.FilterValue;
 import org.spinsuite.util.LogM;
-import org.spinsuite.util.GridField;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.InfoTab;
 import org.spinsuite.view.lookup.LookupDisplayType;
@@ -180,8 +179,7 @@ public class LV_Search extends FragmentActivity {
 	private void addCriteriaQuery(){
     	//	Get Values
 		StringBuffer sqlWhere = new StringBuffer();
-    	for (GridField vIndex: viewList) {
-    		GridField lookup = vIndex.getVLookup();
+    	for (GridField lookup: viewList) {
     		//	Only Filled
     		if(lookup.isEmpty())
     			continue;
@@ -227,8 +225,7 @@ public class LV_Search extends FragmentActivity {
 		}
 		//	is Filled
 		if(lookup != null){
-			GridField index = new GridField(lookup);
-			viewList.add(index);
+			viewList.add(lookup);
 			llc_Search.addView(lookup, v_param);
 		}
     }

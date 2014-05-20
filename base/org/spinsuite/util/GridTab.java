@@ -51,7 +51,7 @@ public class GridTab {
 		this.m_TabInfo = m_TabInfo;
 		this.conn = conn;
 		m_fields = new ArrayList<GridField>();
-		//	Set Identifers
+		//	Set Identifiers
 		m_Record_ID = Env.getTabRecord_ID(m_ctx, 
 				m_TabParam.getActivityNo(), m_TabParam.getTabNo());
     	//	Parent
@@ -89,6 +89,8 @@ public class GridTab {
 	 * @return void
 	 */
 	public void addField(GridField m_GridField) {
+		if(model != null)
+			m_GridField.setColumnIndex(model.getColumnIndex(m_GridField.getColumnName()));
 		m_fields.add(m_GridField);
 	}
 	
@@ -154,6 +156,38 @@ public class GridTab {
 		}
 		//	Return
 		return 0;
+	}
+	
+	/**
+	 * Set Value to Field
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/05/2014, 10:02:12
+	 * @param columnName
+	 * @param value
+	 * @return void
+	 */
+	public void setValue(String columnName, Object value) {
+		for(GridField field : m_fields) {
+			if(field.getColumnName().equals(columnName)) {
+				field.setValue(value);
+				break;
+			}
+		}
+	}
+	
+	/**
+	 * Set Value to Field
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/05/2014, 10:03:48
+	 * @param mField
+	 * @param value
+	 * @return void
+	 */
+	public void setValue(GridField mField, Object value) {
+		for(GridField field : m_fields) {
+			if(field.equals(mField)) {
+				field.setValue(value);
+				break;
+			}
+		}
 	}
 	
 	/**
@@ -276,8 +310,7 @@ public class GridTab {
 			}
 			//	
 			if (retValue != null
-					&& retValue.length() != 0)		//	interrupt on first error
-			{
+					&& retValue.length() != 0) {
 				LogM.log(m_ctx, getClass(), Level.SEVERE, "Error: " + retValue);
 				return retValue;
 			}

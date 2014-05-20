@@ -27,9 +27,7 @@ import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.interfaces.I_FragmentSelectListener;
 import org.spinsuite.interfaces.OnFieldChangeListener;
-import org.spinsuite.model.MSPSTable;
 import org.spinsuite.model.MSequence;
-import org.spinsuite.model.PO;
 import org.spinsuite.process.DocAction;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
@@ -41,11 +39,11 @@ import org.spinsuite.util.GridTab;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.TabParameter;
+import org.spinsuite.view.lookup.GridField;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.InfoTab;
 import org.spinsuite.view.lookup.Lookup;
 import org.spinsuite.view.lookup.LookupButtonPaymentRule;
-import org.spinsuite.view.lookup.GridField;
 import org.spinsuite.view.lookup.VLookupButton;
 import org.spinsuite.view.lookup.VLookupButtonDocAction;
 import org.spinsuite.view.lookup.VLookupCheckBox;
@@ -113,8 +111,6 @@ public class T_DynamicTab extends Fragment
 	private 	InfoTab 				tabInfo				= null;
 	private 	ScrollView 				v_scroll			= null;
 	private 	TableLayout 			v_tableLayout		= null;
-	//private 	int						m_Record_ID			= 0;
-	//private 	int 					m_Parent_Record_ID 	= 0;
 	private 	boolean					m_IsLoadOk			= false;
 	private 	boolean 				m_IsModifying		= false;
 	/**	From Tab					*/
@@ -174,11 +170,25 @@ public class T_DynamicTab extends Fragment
     	m_Listener = new OnFieldChangeListener() {
     		@Override
     		public void onFieldEvent(GridField mField) {
-    			mGridTab.processCallout(mField);	
+    			processCallout(mField);
     		}
 		};
     	//	Init Load
     	initLoad();
+	}
+	
+	/**
+	 * Process Callout
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/05/2014, 10:27:16
+	 * @param mField
+	 * @return void
+	 */
+	private void processCallout(GridField mField) {
+		String retValue = mGridTab.processCallout(mField);
+		//	Show Error
+		if(retValue != null
+				&& retValue.length() != 0)
+			Msg.toastMsg(getActivity(), getString(R.string.msg_Error) + ": " + retValue);
 	}
 	
 	/**
@@ -238,7 +248,7 @@ public class T_DynamicTab extends Fragment
         mi_Cancel 	= menu.getItem(4);
         mi_Save 	= menu.getItem(5);
         //	Lock View
-    	changeMenuView();
+    	//changeMenuView();
     }
     
     @Override
@@ -455,14 +465,14 @@ public class T_DynamicTab extends Fragment
      * @param mode
      * @return void
      */
-    public void enableView(int mode){
-		if(mode == NEW){
+    public void enableView(int mode) {
+		if(mode == NEW) {
 			mGridTab.dataNew();
-		} else if(mode == MODIFY){
+		} else if(mode == MODIFY) {
 			mGridTab.dataModify();
-		} else if(mode == DELETED){
+		} else if(mode == DELETED) {
 			mGridTab.dataDeleted();
-		} else if(mode == SEE){
+		} else if(mode == SEE) {
 			mGridTab.dataSee();
 		}
 	}
@@ -472,13 +482,14 @@ public class T_DynamicTab extends Fragment
      * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/03/2014, 00:22:33
      * @return void
      */
-    private void newOption(){
+    private void newOption() {
     	//	Backup
     	if(mGridTab.getRecord_ID() != 0){
     		mGridTab.copyValues(true);
     	}
     	//	
     	refresh(-1, false);
+    	//	
     	lockView(NEW);
     }
     
@@ -524,7 +535,8 @@ public class T_DynamicTab extends Fragment
             //	Lock View
     		if(m_IsModifying)
     			lockView(MODIFY);
-    		else if(mGridTab.getRecord_ID() == 0)
+    		else if(mGridTab != null
+    				&& mGridTab.getRecord_ID() == 0)
         		lockView(NEW);
         	else
         		lockView(SEE);
@@ -799,6 +811,8 @@ public class T_DynamicTab extends Fragment
 		@Override
 		protected void onPostExecute(Integer result) {
 			loadView();
+			mGridTab.loadData();
+			changeMenuView();
 			v_PDialog.dismiss();
 		}
 		
@@ -883,23 +897,6 @@ public class T_DynamicTab extends Fragment
 				//	Set Listener
 				lookup.setOnFieldChangeListener(m_Listener);
 				lookup.setLayoutParams(v_param);
-				//	Set Value
-				/*if(m_Record_ID >= 0){
-					lookup.setValue(model.get_Value(index.getColumnIndex()));
-					//	Load Default
-					if(m_Record_ID == 0){
-						if(field.IsParent) {
-							lookup.setValue(DisplayType.getContextValue(getActivity(), 
-									tabParam.getActivityNo(), tabParam.getParentTabNo(), field));
-						} else if(tabParam.getTabLevel() > 0) {
-							lookup.setValue(DisplayType.getContextValue(getActivity(), 
-								tabParam.getActivityNo(), tabParam.getTabNo(), field));
-						}
-					}
-		    		//	Set Current Values
-		    		DisplayType.setContextValue(getActivity(), tabParam.getActivityNo(), 
-			    				tabParam.getTabNo(), field, lookup.getValue());
-				}*/
 				//	Add to Row
 				v_row.addView(lookup);
 				//	
