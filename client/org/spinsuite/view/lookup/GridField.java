@@ -16,15 +16,20 @@
 package org.spinsuite.view.lookup;
 
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 
+import org.spinsuite.base.DB;
 import org.spinsuite.interfaces.OnFieldChangeListener;
 import org.spinsuite.util.DisplayType;
+import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.TabParameter;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -425,5 +430,129 @@ public abstract class GridField extends LinearLayout {
 			return false;
 		//	Default
 		return m_field.IsReadOnly;
+	}
+	
+	/**
+	 * Create Lookup from Column
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/05/2014, 17:40:35
+	 * @param ctx
+	 * @param m_SPS_Column_ID
+	 * @return
+	 * @return GridField
+	 */
+	public static GridField createLookup(Context ctx, int m_SPS_Column_ID){
+		
+		return null;
+	}
+	
+	/**
+	 * Load Column
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/05/2014, 17:58:13
+	 * @param ctx
+	 * @param m_SPS_Column_ID
+	 * @return
+	 * @return InfoField
+	 */
+	private InfoField loadInfoColumnField(Context ctx, int m_SPS_Column_ID){
+		//	Is Mandatory
+		if(m_SPS_Column_ID == 0)
+			return null;
+		//	
+		String language = Env.getAD_Language(ctx);
+		boolean isBaseLanguage = Env.isBaseLanguage(ctx);
+		StringBuffer sql = new StringBuffer();
+		//	if Base Language
+		if(isBaseLanguage){
+			sql.append("SELECT c.AD_Element_ID, c.AD_Reference_ID, c.AD_Reference_Value_ID, c.AD_Val_Rule_ID, c.DefaultValue, " + 
+					"c.Callout, c.ColumnName, c.ColumnSQL, c.EntityType, c.FieldLength, c.FormatPattern, c.IsAlwaysUpdateable, " +
+					"c.IsCentrallyMaintained, c.IsEncrypted, c.IsIdentifier, c.IsKey, c.IsMandatory, c.IsParent, c.IsSelectionColumn, " +
+					"c.IsUpdateable, c.SelectionSeqNo, c.SeqNo, c.SPS_Column_ID, c.SPS_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, " +
+					"c.AD_Process_ID, p.AD_Form_ID, c.Name, c.Description, c.Help, c.IsActive " +
+					//	From
+					"FROM SPS_Column c ");
+		} else {
+			sql.append("SELECT c.AD_Element_ID, c.AD_Reference_ID, c.AD_Reference_Value_ID, c.AD_Val_Rule_ID, c.DefaultValue, " + 
+					"c.Callout, c.ColumnName, c.ColumnSQL, c.EntityType, c.FieldLength, c.FormatPattern, c.IsAlwaysUpdateable, " +
+					"c.IsCentrallyMaintained, c.IsEncrypted, c.IsIdentifier, c.IsKey, c.IsMandatory, c.IsParent, c.IsSelectionColumn, " +
+					"c.IsUpdateable, c.SelectionSeqNo, c.SeqNo, c.SPS_Column_ID, c.SPS_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, " +
+					"c.AD_Process_ID, p.AD_Form_ID, c.Name, c.Description, c.Help, c.IsActive " +
+					//	From
+					"FROM SPS_Column c " +
+					"INNER JOIN SPS_Column_Trl ct ON(ct.SPS_Column_ID = c.SPS_Column_ID AND ct.AD_Language = '").append(language).append("') ");
+		}
+		//	Where
+		sql.append("WHERE c.SPS_Column_ID = ").append(m_SPS_Column_ID).append(" ");		
+		LogM.log(ctx, getClass(), Level.FINE, "SQL TableInfo SQL:" + sql);
+		//	Create Connection
+		DB conn = new DB(ctx);
+		DB.loadConnection(conn, DB.READ_ONLY);
+		//	
+		Cursor rs = null;
+		rs = conn.querySQL(sql.toString(), null);
+		//	
+		InfoField iFieldColumn = null;
+		if(rs.moveToFirst()){
+			int i = 0;
+			iFieldColumn = new InfoField();
+			String booleanValue = null;
+			iFieldColumn.AD_Element_ID = rs.getInt(i++);
+			iFieldColumn.DisplayType = rs.getInt(i++);
+			iFieldColumn.AD_Reference_Value_ID = rs.getInt(i++);
+			iFieldColumn.AD_Val_Rule_ID = rs.getInt(i++);
+			iFieldColumn.DefaultValue = rs.getString(i++);
+			iFieldColumn.Callout = rs.getString(i++);
+			iFieldColumn.ColumnName = rs.getString(i++);
+			iFieldColumn.ColumnSQL = rs.getString(i++);
+			iFieldColumn.EntityType = rs.getString(i++);
+			iFieldColumn.FieldLength = rs.getInt(i++);
+			iFieldColumn.FormatPattern = rs.getString(i++);
+			booleanValue = rs.getString(i++);
+			iFieldColumn.IsAlwaysUpdateable = (booleanValue != null && booleanValue.equals("Y"));
+			booleanValue = rs.getString(i++);
+			iFieldColumn.IsCentrallyMaintained = (booleanValue != null && booleanValue.equals("Y"));
+			booleanValue = rs.getString(i++);
+			iFieldColumn.IsEncrypted= (booleanValue != null && booleanValue.equals("Y"));
+			booleanValue = rs.getString(i++);
+			iFieldColumn.IsIdentifier= (booleanValue != null && booleanValue.equals("Y"));
+			booleanValue = rs.getString(i++);
+			iFieldColumn.IsKey= (booleanValue != null && booleanValue.equals("Y"));
+			booleanValue = rs.getString(i++);
+			iFieldColumn.IsMandatory= (booleanValue != null && booleanValue.equals("Y"));
+			booleanValue = rs.getString(i++);
+			iFieldColumn.IsParent= (booleanValue != null && booleanValue.equals("Y"));
+			booleanValue = rs.getString(i++);
+			iFieldColumn.IsSelectionColumn = (booleanValue != null && booleanValue.equals("Y"));
+			booleanValue = rs.getString(i++);
+			iFieldColumn.IsUpdateable = (booleanValue != null && booleanValue.equals("Y"));
+			iFieldColumn.SelectionSeqNo = rs.getInt(i++);
+			iFieldColumn.SeqNo = rs.getInt(i++);
+			iFieldColumn.SPS_Column_ID= rs.getInt(i++);
+			iFieldColumn.SPS_Table_ID= rs.getInt(i++);
+			iFieldColumn.ValueMax = rs.getString(i++);
+			iFieldColumn.ValueMin = rs.getString(i++);
+			iFieldColumn.VFormat = rs.getString(i++);
+			iFieldColumn.AD_Process_ID = rs.getInt(i++);
+			iFieldColumn.AD_Form_ID = rs.getInt(i++);
+			//	Fields
+			iFieldColumn.Name = rs.getString(i++);
+			iFieldColumn.Description = rs.getString(i++);
+			iFieldColumn.Help = rs.getString(i++);
+			iFieldColumn.AD_FieldGroup_ID = rs.getInt(i++);
+			iFieldColumn.DisplayLogic = rs.getString(i++);
+			booleanValue = rs.getString(i++);
+			iFieldColumn.IsActive = (booleanValue != null && booleanValue.equals("Y"));
+			booleanValue = rs.getString(i++);
+			iFieldColumn.IsDisplayed = (booleanValue != null && booleanValue.equals("Y"));
+			booleanValue = rs.getString(i++);
+			iFieldColumn.IsReadOnly = (booleanValue != null && booleanValue.equals("Y"));
+			booleanValue = rs.getString(i++);
+			iFieldColumn.IsSameLine = (booleanValue != null && booleanValue.equals("Y"));
+			iFieldColumn.FieldSeqNo = rs.getInt(i++);
+			iFieldColumn.SPS_Field_ID = rs.getInt(i++);
+		}
+		//	Close DB
+		DB.closeConnection(conn);
+		//	
+		return iFieldColumn;
 	}
 }
