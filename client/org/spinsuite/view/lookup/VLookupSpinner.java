@@ -183,8 +183,13 @@ public class VLookupSpinner extends GridField {
 		//	Set Old Value
 		m_OldValue = getValue();
 		//	
-		if(value == null)
+		if(value == null) {
+			//	
+			if(v_Spinner.getAdapter() != null
+					&& !v_Spinner.getAdapter().isEmpty())
+				v_Spinner.setSelection(0);
 			return;
+		}
 		int pos = getPosition(value);
 		//	Reload
 		if(pos == -1

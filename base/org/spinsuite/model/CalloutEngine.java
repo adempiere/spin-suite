@@ -19,9 +19,9 @@ package org.spinsuite.model;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 
-import org.spinsuite.util.GridTab;
 import org.spinsuite.util.LogM;
 import org.spinsuite.view.lookup.GridField;
+import org.spinsuite.view.lookup.GridTab;
 
 import android.content.Context;
 

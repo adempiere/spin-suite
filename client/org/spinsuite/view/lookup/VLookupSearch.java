@@ -180,6 +180,10 @@ public class VLookupSearch extends GridField {
 	 * @return void
 	 */
 	private void loadValue(Object value){
+		//	Null Value
+		if(value == null)
+			setItem(new DisplayRecordItem(0, null));
+		//	
 		if(!(value instanceof Integer))
 			return;
 		try{

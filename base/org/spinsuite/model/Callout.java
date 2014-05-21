@@ -16,8 +16,8 @@
  *****************************************************************************/
 package org.spinsuite.model;
 
-import org.spinsuite.util.GridTab;
 import org.spinsuite.view.lookup.GridField;
+import org.spinsuite.view.lookup.GridTab;
 
 import android.content.Context;
 

@@ -13,7 +13,7 @@
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
  *************************************************************************************/
-package org.spinsuite.util;
+package org.spinsuite.view.lookup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +25,11 @@ import org.spinsuite.base.R;
 import org.spinsuite.model.Callout;
 import org.spinsuite.model.MSPSTable;
 import org.spinsuite.model.PO;
-import org.spinsuite.view.lookup.GridField;
-import org.spinsuite.view.lookup.InfoTab;
+import org.spinsuite.util.DisplayType;
+import org.spinsuite.util.Env;
+import org.spinsuite.util.LogM;
+import org.spinsuite.util.Msg;
+import org.spinsuite.util.TabParameter;
 
 import android.content.Context;
 
@@ -328,7 +331,7 @@ public class GridTab {
 		if(model == null)
 			return;
 		//	Get Record Identifier
-		int m_Record_ID = model.get_ID();
+		int m_Record_ID = model.getID();
 		//	
 		for (GridField vField: m_fields) {
     		vField.setValue(model.get_Value(vField.getColumnIndex()));
@@ -507,8 +510,7 @@ public class GridTab {
     	if(parentChanged
     			|| record_ID <= 0)
     		model.clear(false);
-    	
-    	//	Reload
+    	//	
     	model.loadData(m_Record_ID);
     	//	Refresh
     	loadData();
@@ -561,6 +563,7 @@ public class GridTab {
      */
     public void backCopy() {
     	model.backCopy();
+    	m_Record_ID = model.getID();
     }
     
     /**
@@ -591,5 +594,4 @@ public class GridTab {
     public void copyValues(boolean deleteOld) {
     	model.copyValues(deleteOld);
     }
-    
 }

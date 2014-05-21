@@ -679,7 +679,7 @@ public abstract class PO {
 			deleteEx();
 			error = null;
 			return true;
-		}catch (Exception e) {
+		} catch (Exception e) {
 			error = e.getMessage();
 			LogM.log(getCtx(), getClass(), Level.SEVERE, " Error ", e);
 		}

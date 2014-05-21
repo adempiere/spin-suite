@@ -35,11 +35,11 @@ import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
-import org.spinsuite.util.GridTab;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.TabParameter;
 import org.spinsuite.view.lookup.GridField;
+import org.spinsuite.view.lookup.GridTab;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.InfoTab;
 import org.spinsuite.view.lookup.Lookup;
@@ -184,6 +184,12 @@ public class T_DynamicTab extends Fragment
 	 * @return void
 	 */
 	private void processCallout(GridField mField) {
+		//	Change Document Status
+		/*if(mField.getColumnName().equals("DocStatus")) {
+			save();
+			return;
+		}*/
+		//	
 		String retValue = mGridTab.processCallout(mField);
 		//	Show Error
 		if(retValue != null
@@ -279,7 +285,7 @@ public class T_DynamicTab extends Fragment
 			showPopupMenu();
 			return true;
 		} else if (itemId == R.id.action_cancel) {
-			if(mGridTab.getRecord_ID() == 0){
+			if(mGridTab.getRecord_ID() <= 0){
 				mGridTab.backCopy();
 			}
 			refresh(mGridTab.getRecord_ID(), false);
@@ -508,6 +514,7 @@ public class T_DynamicTab extends Fragment
     	if(mGridTab.getRecord_ID() != record_ID)
     		refreshIndex();
     	boolean ok = mGridTab.refresh(record_ID, parentChanged);
+    	//	
     	if(ok)
     		changeMenuView();
     	//	
