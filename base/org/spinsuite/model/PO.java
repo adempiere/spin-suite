@@ -15,6 +15,8 @@
  *************************************************************************************/
 package org.spinsuite.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -74,9 +76,8 @@ public abstract class PO {
 	 * @param m_AD_Table_ID
 	 * @param tableName
 	 */
-	private PO(Context ctx, int ID, Cursor rs, DB pConn)
-	{
-		
+	private PO(Context ctx, int ID, Cursor rs, DB pConn) {
+		//	
 		if (ctx == null)
 			throw new IllegalArgumentException ("No Context");
 		m_ctx = ctx;
@@ -137,14 +138,13 @@ public abstract class PO {
 	 *  @param ctx context
 	 *  @return POInfo
 	 */
-	abstract protected POInfo initPO (Context ctx);
+	protected abstract POInfo initPO (Context ctx);
 	
 	/**
 	 *  Return Single Key Record ID
 	 *  @return ID or 0
 	 */
-	public int get_ID()
-	{
+	public int get_ID() {
 		Object oo = m_IDs[0];
 		if (oo != null && oo instanceof Integer)
 			return ((Integer)oo).intValue();
@@ -155,8 +155,7 @@ public abstract class PO {
 	 *  Return Deleted Single Key Record ID
 	 *  @return ID or 0
 	 */
-	public int get_IDOld()
-	{
+	public int get_IDOld() {
 		return m_idOld;
 	}   //  getID
 	
@@ -166,7 +165,7 @@ public abstract class PO {
 	 * @param rs
 	 * @return void
 	 */
-	private void loadData(Cursor rs){
+	private void loadData(Cursor rs) {
 		if(rs != null){
 			//	Load Data
 			loadDataQuery(rs, true);
@@ -181,7 +180,7 @@ public abstract class PO {
 	 * @param ID
 	 * @return void
 	 */
-	public boolean loadData(int ID){
+	public boolean loadData(int ID) {
 		boolean ok = false;
 		LogM.log(getCtx(), getClass(), Level.FINE, "loadData=" + String.valueOf(ID));
 		if(ID > 0){
@@ -204,7 +203,7 @@ public abstract class PO {
 	 * @return
 	 * @return int
 	 */
-	public int getID(){
+	public int getID() {
 		return m_currentId;
 	}
 	
@@ -214,7 +213,7 @@ public abstract class PO {
 	 * @param deleteOld
 	 * @return void
 	 */
-	public void copyValues(boolean deleteOld){
+	public void copyValues(boolean deleteOld) {
 		m_oldValues = m_currentValues;
 		if(deleteOld){
 			isNew = true;
@@ -228,7 +227,7 @@ public abstract class PO {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/05/2012, 04:46:14
 	 * @return void
 	 */
-	public void backCopy(){
+	public void backCopy() {
 		this.isNew = false;
 		m_currentValues = m_oldValues;
 		m_currentId = m_oldId;
@@ -240,7 +239,7 @@ public abstract class PO {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean isNew(){
+	public boolean isNew() {
 		return isNew;
 	}
 	
@@ -250,7 +249,7 @@ public abstract class PO {
 	 * @param ID
 	 * @return boolean
 	 */
-	private boolean loadDataQuery(int ID){
+	private boolean loadDataQuery(int ID) {
 		boolean ok = false;
 		StringBuffer sql = new StringBuffer("SELECT ");
 		for(int i = 0; i < m_TableInfo.getColumnLength(); i++){
@@ -258,9 +257,9 @@ public abstract class PO {
 			if (i != 0)
 				sql.append(",");
 			if(!column.isColumnSQL()){
-				if(DisplayType.isDate(column.DisplayType))
-					sql.append("(strftime('%s', ").append(column.ColumnName).append(")*1000)");
-				else
+				//if(DisplayType.isDate(column.DisplayType))
+					//sql.append("(strftime('%s', ").append(column.ColumnName).append(")*1000)");
+				//else
 					sql.append(column.ColumnName);
 			}
 			else
@@ -296,11 +295,13 @@ public abstract class PO {
 	 * @return
 	 * @return boolean
 	 */
-	private boolean loadDataQuery(Cursor rs, boolean isCursor){
+	private boolean loadDataQuery(Cursor rs, boolean isCursor) {
 		boolean ok = false;
 		if(!isCursor 
 				&& !rs.moveToFirst())
 			return ok;
+		//	For Parse Date
+		SimpleDateFormat sdf = DisplayType.getTimestampFormat_Default();
 		//	Iterate
 		for(int i = 0; i < m_TableInfo.getColumnLength(); i++){
 			//	Get Column
@@ -328,18 +329,25 @@ public abstract class PO {
 				String value = rs.getString(index);
 				m_currentValues[i] = (value != null && value.equals("Y"));
 			} else if(DisplayType.isDate(displayType)){
-				long millis = rs.getLong(i);
-				if(millis != 0)
-					m_currentValues[i] = new Date(millis);
-				else
+				String date = rs.getString(i);
+				if(date != null) {
+					try {
+						m_currentValues[i] = sdf.parse(date);
+					} catch (ParseException e) {
+						m_currentValues[i] = null;
+						LogM.log(getCtx(), getClass(), Level.SEVERE, "Parse Error", e);
+					}
+				} else { 
 					m_currentValues[i] = null;
+				}
+				
 			}
 			//	Set Is Ok
 			if(!ok){
 				isNew = false;
 				ok = true;
 			}
-			LogM.log(getCtx(), getClass(), Level.FINE, "Old Value=" + m_oldValues[i]);	
+			LogM.log(getCtx(), getClass(), Level.FINE, "Old Value=" + m_oldValues[i] + " New Value=" + m_currentValues[i]);	
 		}
 		return ok;
 	}
@@ -350,7 +358,7 @@ public abstract class PO {
 	 * @return
 	 * @return boolean
 	 */
-	private boolean loadDefaultValues(){
+	private boolean loadDefaultValues() {
 		boolean ok = false;
 		try {
 			//	Iterate
@@ -375,7 +383,7 @@ public abstract class PO {
 	 * @param ID
 	 * @return void
 	 */
-	public void setIDUpdate(int ID){
+	public void setIDUpdate(int ID) {
 		if(ID > 0){
 			m_IDs = new Object[] {ID};
 			m_currentId = ID;
@@ -390,8 +398,7 @@ public abstract class PO {
 	 * 	@param withValues if true uses actual values otherwise ?
 	 * 	@return where clause
 	 */
-	protected String get_WhereClause (boolean withValues)
-	{
+	protected String get_WhereClause (boolean withValues) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < m_IDs.length; i++)
 		{
@@ -453,7 +460,7 @@ public abstract class PO {
 	 * @return
 	 * @return int
 	 */
-	public final int getColumnIndex(String columnName){
+	public final int getColumnIndex(String columnName) {
 		return m_TableInfo.getColumnIndex(columnName);
 	}
 	
@@ -465,7 +472,7 @@ public abstract class PO {
 	 * @return
 	 * @return boolean
 	 */
-	public final boolean set_Value(int index, Object value){
+	public final boolean set_Value(int index, Object value) {
 		LogM.log(getCtx(), getClass(), Level.FINE, "index = " + index + ", value = " + value);
 		if(index >= 0){
 			if(value != null)
@@ -502,7 +509,7 @@ public abstract class PO {
 	 * @return
 	 * @return Object
 	 */
-	public final Object get_Value(String columnName){
+	public final Object get_Value(String columnName) {
 		int index = m_TableInfo.getColumnIndex(columnName);
 		LogM.log(getCtx(), getClass(), Level.FINE, "columnName = " + columnName);
 		return get_Value(index);
@@ -515,7 +522,7 @@ public abstract class PO {
 	 * @return
 	 * @return Object
 	 */
-	public final Object get_Value(int index){
+	public final Object get_Value(int index) {
 		if(index >= 0){
 			LogM.log(getCtx(), getClass(), Level.FINE, "Value = " + m_currentValues[index]);
 			return m_currentValues[index];
@@ -530,7 +537,7 @@ public abstract class PO {
 	 * @return
 	 * @return int
 	 */
-	public final int get_ValueAsInt(String columnName){
+	public final int get_ValueAsInt(String columnName) {
 		return get_ValueAsInt(columnName, m_currentValues);
 	}
 	
@@ -541,7 +548,7 @@ public abstract class PO {
 	 * @return
 	 * @return int
 	 */
-	public final int get_OldValueAsInt(String columnName){
+	public final int get_OldValueAsInt(String columnName) {
 		return get_ValueAsInt(columnName, m_oldValues);
 	}
 	
@@ -553,7 +560,7 @@ public abstract class PO {
 	 * @return
 	 * @return int
 	 */
-	private int get_ValueAsInt(String columnName, Object [] m_arrayValues){
+	private int get_ValueAsInt(String columnName, Object [] m_arrayValues) {
 		int index = m_TableInfo.getColumnIndex(columnName);
 		int displayType = m_TableInfo.getDisplayType(index);
 		if(index >= 0){
@@ -576,7 +583,7 @@ public abstract class PO {
 	 * @return
 	 * @return int
 	 */
-	public final int get_ValueAsInt(int index){
+	public final int get_ValueAsInt(int index) {
 		int displayType = m_TableInfo.getDisplayType(index);
 		if(index >= 0){
 			if(m_currentValues[index] != null){
@@ -605,7 +612,7 @@ public abstract class PO {
 	 * @return
 	 * @return boolean
 	 */
-	public final boolean get_ValueAsBoolean(String columnName){
+	public final boolean get_ValueAsBoolean(String columnName) {
 		int index = m_TableInfo.getColumnIndex(columnName);
 		LogM.log(getCtx(), getClass(), Level.FINE, "columnName = " + columnName);
 		if(index >= 0){
@@ -625,7 +632,7 @@ public abstract class PO {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean save(){
+	public boolean save() {
 		try{
 			saveEx();
 			error = null;
@@ -643,7 +650,7 @@ public abstract class PO {
 	 * @throws Exception
 	 * @return void
 	 */
-	public void saveEx() throws Exception{
+	public void saveEx() throws Exception {
 		loadConnection(DB.READ_WRITE);
 		boolean fine = beforeSave(isNew);
 		if(!fine)
@@ -667,7 +674,7 @@ public abstract class PO {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean delete(){
+	public boolean delete() {
 		try{
 			deleteEx();
 			error = null;
@@ -685,7 +692,7 @@ public abstract class PO {
 	 * @throws Exception
 	 * @return void
 	 */
-	public void deleteEx() throws Exception{
+	public void deleteEx() throws Exception {
 		
 		try{
 			loadConnection(DB.READ_WRITE);
@@ -713,7 +720,7 @@ public abstract class PO {
 	 * @param deleteBackup
 	 * @return void
 	 */
-	public void clear(boolean deleteBackup){
+	public void clear(boolean deleteBackup) {
 		isNew = true;
 		m_oldId = m_currentId;
 		m_currentId = 0;
@@ -736,7 +743,7 @@ public abstract class PO {
 	 * @return boolean
 	 * @throws Exception 
 	 */
-	private boolean saveNew() throws Exception{
+	private boolean saveNew() throws Exception {
 		StringBuffer columns = new StringBuffer();
 		StringBuffer sym = new StringBuffer();
 		ArrayList<Object> listValues = new ArrayList<Object>();
@@ -844,7 +851,7 @@ public abstract class PO {
 	 * @param isNew
 	 * @return void
 	 */
-	private void setLogValues(boolean isNew){
+	private void setLogValues(boolean isNew) {
 		int m_AD_User_ID = Env.getAD_User_ID(m_ctx);
 		Date currentDate = Env.getCurrentDate();
 		if(isNew){
@@ -867,7 +874,7 @@ public abstract class PO {
 	 * @throws Exception
 	 * @return Object
 	 */
-	public final Object parseValue(POInfoColumn column, int index, boolean isNew, boolean toSave) throws Exception{
+	public final Object parseValue(POInfoColumn column, int index, boolean isNew, boolean toSave) throws Exception {
 		if(index >= 0){
 			Object value = m_currentValues[index]; 
 			if(isNew
@@ -898,53 +905,21 @@ public abstract class PO {
 					String documentNo = MSequence.getDocumentNo(getCtx(), m_C_DocType_ID, m_TableInfo.getTableName(), false, conn);
 					return documentNo;
 				} else if(value != null){
-					return DisplayType.getJDBC_Value(column.DisplayType, value, !toSave, !toSave);
+					Object returnValue = DisplayType.getJDBC_Value(column.DisplayType, value, !toSave, !toSave);
+					return returnValue;
 				} else if(column.DefaultValue != null){
 					if(toSave)
 						return Env.parseContext(getCtx(), (String)column.DefaultValue, false);
 					else
-						DisplayType.parseValue(Env.parseContext(getCtx(), (String)column.DefaultValue, false), column.DisplayType);
+						return DisplayType.parseValue(
+										Env.parseContext(getCtx(), (String)column.DefaultValue, false)
+										, column.DisplayType);
 				} else
 					return null;
 			}
 		}
 		return null;
 	}
-
-	/**
-	 * Get value for update
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/05/2012, 21:10:48
-	 * @param index
-	 * @return
-	 * @throws Exception
-	 * @return String
-	 */
-	/*public final Object get_ValueForUpdate(int index) throws Exception{
-		int displayType = m_TableInfo.getDisplayType(index);
-		if(index >= 0){
-			Object value = m_currentValues[index];
-			Log.d("PO.get_ValueForInssert", (String) value);
-			if(DisplayType.isBoolean(displayType)){
-				return value;
-			} else {
-				if(value != null)
-					return value;
-				else
-					return null;
-			}
-		}
-		return null;
-	}*/
-	
-	/**
-	 * Get Table Information (Meta-Data)
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/04/2012, 17:15:32
-	 * @return
-	 * @return MPTableInfo
-	 */
-	/*private POInfo getTableInfo(){
-		return m_TableInfo;
-	}*/
 	
 	/**
 	 * Trigger before save
@@ -953,7 +928,7 @@ public abstract class PO {
 	 * @return
 	 * @return boolean
 	 */
-	protected boolean beforeSave(boolean isNew){
+	protected boolean beforeSave(boolean isNew) {
 		return true;
 	}
 	
@@ -964,7 +939,7 @@ public abstract class PO {
 	 * @return
 	 * @return boolean
 	 */
-	protected boolean afterSave(boolean isNew){
+	protected boolean afterSave(boolean isNew) {
 		return true;
 	}
 	
@@ -974,7 +949,7 @@ public abstract class PO {
 	 * @return
 	 * @return boolean
 	 */
-	protected boolean beforeDelete(){
+	protected boolean beforeDelete() {
 		return true;
 	}
 	
@@ -984,7 +959,7 @@ public abstract class PO {
 	 * @return
 	 * @return boolean
 	 */
-	protected boolean afterDelete(){
+	protected boolean afterDelete() {
 		return true;
 	}
 	
@@ -993,7 +968,7 @@ public abstract class PO {
 	 *  @param ctxInto context
 	 *  @return int
 	 */
-	protected int getSPS_Table_ID(){
+	protected int getSPS_Table_ID() {
 		return m_TableInfo.getSPS_Table_ID();
 	}
 	
@@ -1003,7 +978,7 @@ public abstract class PO {
 	 * @return
 	 * @return String
 	 */
-	protected String getTableName(){
+	protected String getTableName() {
 		return m_TableInfo.getTableName();
 	}
 	
@@ -1029,7 +1004,7 @@ public abstract class PO {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/07/2012, 18:13:44
 	 * @return void
 	 */
-	public void closeConnection(){
+	public void closeConnection() {
 		LogM.log(getCtx(), getClass(), Level.FINE, "Close");
 		if(conn.isOpen()){
 			if(handConnection){
@@ -1047,7 +1022,7 @@ public abstract class PO {
 	 * @return
 	 * @return DB
 	 */
-	public DB get_Connection(){
+	public DB get_Connection() {
 		return conn;
 	}
 	
@@ -1057,7 +1032,7 @@ public abstract class PO {
 	 * @return
 	 * @return String
 	 */
-	public String getError(){
+	public String getError() {
 		return error;
 	}
 	
@@ -1065,9 +1040,7 @@ public abstract class PO {
 	 * 	Set AD_Client
 	 * 	@param AD_Client_ID client
 	 */
-	final public void setAD_Client_ID (int AD_Client_ID)
-	{
-		//set_ValueNoCheck ("AD_Client_ID", new Integer(AD_Client_ID));
+	public final void setAD_Client_ID (int AD_Client_ID) {
 		set_Value("AD_Client_ID", AD_Client_ID);
 	}	//	setAD_Client_ID
 
@@ -1087,9 +1060,7 @@ public abstract class PO {
 	 * 	Set AD_Org
 	 * 	@param AD_Org_ID org
 	 */
-	final public void setAD_Org_ID (int AD_Org_ID)
-	{
-		//set_ValueNoCheck ("AD_Org_ID", new Integer(AD_Org_ID));
+	public final void setAD_Org_ID (int AD_Org_ID) {
 		set_Value("AD_Org_ID", AD_Org_ID);
 	}	//	setAD_Org_ID
 
@@ -1097,8 +1068,7 @@ public abstract class PO {
 	 * 	Get AD_Org
 	 * 	@return AD_Org_ID
 	 */
-	public int getAD_Org_ID()
-	{
+	public int getAD_Org_ID() {
 		Integer ii = (Integer)get_Value("AD_Org_ID");
 		if (ii == null)
 			return 0;
@@ -1110,8 +1080,7 @@ public abstract class PO {
 	 *	@param AD_Client_ID client
 	 *	@param AD_Org_ID org
 	 */
-	protected void setClientOrg (int AD_Client_ID, int AD_Org_ID)
-	{
+	protected void setClientOrg (int AD_Client_ID, int AD_Org_ID) {
 		if (AD_Client_ID != getAD_Client_ID())
 			setAD_Client_ID(AD_Client_ID);
 		if (AD_Org_ID != getAD_Org_ID())
@@ -1122,8 +1091,7 @@ public abstract class PO {
 	 * 	Overwrite Client Org if different
 	 *	@param po persistent object
 	 */
-	protected void setClientOrg (PO po)
-	{
+	protected void setClientOrg (PO po) {
 		setClientOrg(po.getAD_Client_ID(), po.getAD_Org_ID());
 	}	//	setClientOrg
 
@@ -1131,8 +1099,7 @@ public abstract class PO {
 	 * 	Set Active
 	 * 	@param active active
 	 */
-	public final void setIsActive (boolean active)
-	{
+	public final void setIsActive (boolean active) {
 		set_Value("IsActive", active);
 	}	//	setActive
 
@@ -1140,8 +1107,7 @@ public abstract class PO {
 	 *	Is Active
 	 *  @return is active
 	 */
-	public final boolean isActive()
-	{
+	public final boolean isActive() {
 		Boolean bb = (Boolean)get_Value("IsActive");
 		if (bb != null)
 			return bb.booleanValue();
@@ -1152,8 +1118,7 @@ public abstract class PO {
 	 * 	Get Created
 	 * 	@return created
 	 */
-	final public Date getCreated()
-	{
+	public final Date getCreated() {
 		return (Date)get_Value("Created");
 	}	//	getCreated
 
@@ -1161,8 +1126,7 @@ public abstract class PO {
 	 * 	Get Updated
 	 *	@return updated
 	 */
-	final public Date getUpdated()
-	{
+	public final Date getUpdated() {
 		return (Date)get_Value("Updated");
 	}	//	getUpdated
 
@@ -1170,8 +1134,7 @@ public abstract class PO {
 	 * 	Get CreatedBy
 	 * 	@return AD_User_ID
 	 */
-	final public int getCreatedBy()
-	{
+	public final int getCreatedBy() {
 		Integer ii = (Integer)get_Value("CreatedBy");
 		if (ii == null)
 			return 0;
@@ -1182,8 +1145,7 @@ public abstract class PO {
 	 * 	Get UpdatedBy
 	 * 	@return AD_User_ID
 	 */
-	final public int getUpdatedBy()
-	{
+	public final int getUpdatedBy() {
 		Integer ii = (Integer)get_Value("UpdatedBy");
 		if (ii == null)
 			return 0;
@@ -1194,7 +1156,7 @@ public abstract class PO {
 	 * 	Set UpdatedBy
 	 * 	@param p_UpdateBy user
 	 */
-	final protected void setUpdatedBy (int p_UpdateBy) {
+	protected final void setUpdatedBy (int p_UpdateBy) {
 		set_Value("UpdatedBy", p_UpdateBy);
 	}	//	setUpdatedBy
 
@@ -1202,7 +1164,7 @@ public abstract class PO {
 	 * 	Set CreatedBy
 	 * 	@param p_CreatedBy user
 	 */
-	final protected void setCreatedBy (int p_CreatedBy) {
+	protected final void setCreatedBy (int p_CreatedBy) {
 		set_Value("CreatedBy", p_CreatedBy);
 	}	//	setCreatedBy
 	
@@ -1210,7 +1172,7 @@ public abstract class PO {
 	 * 	Set Created
 	 * 	@param created
 	 */
-	final protected void setCreated (Date created) {
+	protected final void setCreated (Date created) {
 		set_Value("Created", created);
 	}	//	setCreated
 	
@@ -1218,7 +1180,7 @@ public abstract class PO {
 	 * 	Set Updated
 	 * 	@param updated
 	 */
-	final protected void setUpdated (Date updated) {
+	protected final void setUpdated (Date updated) {
 		set_Value("Updated", updated);
 	}	//	setCreated
 	
@@ -1228,7 +1190,7 @@ public abstract class PO {
 	 * @return
 	 * @return Context
 	 */
-	public Context getCtx(){
+	public Context getCtx() {
 		return m_ctx;
 	}
 	

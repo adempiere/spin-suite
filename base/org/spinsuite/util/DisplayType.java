@@ -446,15 +446,14 @@ public final class DisplayType
 				return value;
 			//	Format
 			SimpleDateFormat format;
-			//	Date and Time
-			if (displayType == DATE_TIME)
-				format = getTimestampFormat_Default();
-			//	Time
-			else if (displayType == TIME)
-				format = getTimestampFormat_Default();
-			//	Any
-			format = getDateFormat_JDBC();
-			return format.format((Date) value);
+			//	For Any
+			format = getTimestampFormat_Default();
+			//	Date
+			Date valueDate = (Date) value;
+			//	Date to String
+			String valueString = format.format(valueDate);
+			//	Return
+			return valueString;
 		} else if (displayType == YES_NO) {
 			boolean yesNo = false;
 			//	

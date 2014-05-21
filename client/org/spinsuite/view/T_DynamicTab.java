@@ -248,7 +248,7 @@ public class T_DynamicTab extends Fragment
         mi_Cancel 	= menu.getItem(4);
         mi_Save 	= menu.getItem(5);
         //	Lock View
-    	//changeMenuView();
+    	changeMenuView();
     }
     
     @Override
@@ -449,9 +449,9 @@ public class T_DynamicTab extends Fragment
     	} else if(mode == SEE) {
     		mi_Cancel.setVisible(false);
     		mi_Save.setVisible(false);
-    		mi_More.setVisible(mGridTab.getRecord_ID() != 0);
+    		mi_More.setVisible(mGridTab!= null && mGridTab.getRecord_ID() > 0);
     		mi_Add.setVisible(true);
-    		mi_Edit.setVisible(mGridTab.getRecord_ID() != 0);
+    		mi_Edit.setVisible(mGridTab!= null && mGridTab.getRecord_ID() > 0);
     		mi_Search.setVisible(true);
     		m_IsModifying = false;
     	}
@@ -466,7 +466,9 @@ public class T_DynamicTab extends Fragment
      * @return void
      */
     public void enableView(int mode) {
-		if(mode == NEW) {
+		if(mGridTab == null)
+			return;
+    	if(mode == NEW) {
 			mGridTab.dataNew();
 		} else if(mode == MODIFY) {
 			mGridTab.dataModify();
@@ -484,7 +486,8 @@ public class T_DynamicTab extends Fragment
      */
     private void newOption() {
     	//	Backup
-    	if(mGridTab.getRecord_ID() != 0){
+    	if(mGridTab != null 
+    			&& mGridTab.getRecord_ID() > 0){
     		mGridTab.copyValues(true);
     	}
     	//	
@@ -533,12 +536,14 @@ public class T_DynamicTab extends Fragment
     private void changeMenuView(){
     	if(mi_Search != null){
             //	Lock View
-    		if(m_IsModifying)
-    			lockView(MODIFY);
-    		else if(mGridTab != null
-    				&& mGridTab.getRecord_ID() == 0)
-        		lockView(NEW);
-        	else
+    		if(m_IsModifying) {
+    			if(mGridTab != null
+    					&& mGridTab.getRecord_ID() <= 0)
+    				lockView(NEW);
+    			else
+    				lockView(MODIFY);
+    		}
+    		else
         		lockView(SEE);
         }
     }
@@ -563,7 +568,7 @@ public class T_DynamicTab extends Fragment
         		refresh(0, true);
         	}
     	} else {
-    		mGridTab.loadData();
+    		//mGridTab.loadData();
     	}
     	//	
     	changeMenuView();
@@ -719,8 +724,7 @@ public class T_DynamicTab extends Fragment
     
     @Override
     public boolean save() {
-    	mGridTab.save();
-    	return true;
+    	return mGridTab.save();
     }
 
 	@Override
@@ -812,6 +816,10 @@ public class T_DynamicTab extends Fragment
 		protected void onPostExecute(Integer result) {
 			loadView();
 			mGridTab.loadData();
+			//	Modifying
+			if(mGridTab.getRecord_ID() <= 0)
+				m_IsModifying = true;
+			//	
 			changeMenuView();
 			v_PDialog.dismiss();
 		}
