@@ -219,15 +219,32 @@ public final class Env {
 	 * @param value
 	 * @return void
 	 */
-	public static void setContext (Context ctx, int m_ActivityNo, int TabNo, String context, boolean value){
+	public static void setContext (Context ctx, int m_ActivityNo, int TabNo, String context, boolean value) {
 		if (ctx == null || context == null)
 			return;
 		if (m_ActivityNo != WINDOW_FIND && m_ActivityNo != WINDOW_MLOOKUP)
 			LogM.log(ctx, "Env", Level.FINE, "Context("+m_ActivityNo+","+TabNo+") " + context + "==" + value);
-		//
+		//	
 		setContext(ctx, m_ActivityNo+"|"+TabNo+"|"+context, value);
 	}	//	Set Context
-		
+	
+	/**
+	 * Set Context as Boolean
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/05/2014, 17:01:51
+	 * @param ctx
+	 * @param m_ActivityNo
+	 * @param context
+	 * @param value
+	 * @return void
+	 */
+	public static void setContext (Context ctx, int m_ActivityNo, String context, boolean value) {
+		if (ctx == null || context == null)
+			return;
+		if (m_ActivityNo != WINDOW_FIND && m_ActivityNo != WINDOW_MLOOKUP)
+			LogM.log(ctx, "Env", Level.FINE, "Context("+m_ActivityNo+") " + context + "==" + value);
+		//
+		setContext(ctx, m_ActivityNo+"|"+context, value);
+	}	//	Set Context
 	/**
 	 * Set Context with Activity No and Tab No
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/02/2014, 13:16:11
@@ -257,8 +274,7 @@ public final class Env {
 	 * @param value
 	 * @return void
 	 */
-	public static void setContext (Context ctx, int m_ActivityNo, String context, int value)
-	{
+	public static void setContext (Context ctx, int m_ActivityNo, String context, int value) {
 		if (ctx == null || context == null)
 			return;
 		if (m_ActivityNo != WINDOW_FIND && m_ActivityNo != WINDOW_MLOOKUP)
@@ -274,8 +290,7 @@ public final class Env {
 	 *  @param context context key
 	 *  @return value or 0
 	 */
-	public static int getContextAsInt(Context ctx, int m_ActivityNo, String context)
-	{
+	public static int getContextAsInt(Context ctx, int m_ActivityNo, String context) {
 		String s = getContext(ctx, m_ActivityNo, context, false);
 		if (s == null || s.length() == 0)
 			return 0;
@@ -1094,10 +1109,11 @@ public final class Env {
 			token = inStr.substring(0, j);
 			//	
 			String ctxInfo = getContext(ctx, m_ActivityNo, m_TabNo, token);	// get context
+			if (ctxInfo != null && ctxInfo.length() == 0)
+				ctxInfo = getContext(ctx, m_ActivityNo, token);	//	get from windows
 			if (ctxInfo != null && ctxInfo.length() == 0 && (token.startsWith("#") || token.startsWith("$")) )
 				ctxInfo = getContext(ctx, token);	// get global context
-			if (ctxInfo != null && ctxInfo.length() == 0)
-			{
+			if (ctxInfo != null && ctxInfo.length() == 0) {
 				LogM.log(ctx, "Env", Level.INFO, "No Context for: " + token);
 				if (!ignoreUnparsable && defaultUnparseable==null)
 					return "";						//	token not found

@@ -275,7 +275,8 @@ public class LookupDisplayType {
 			//	Display Value
 			if(isValueDisplayed != null
 					&& isValueDisplayed.equals("Y"))
-				longColumn.append("COALESCE(").append(tableName).append("Value").append(", '')").append("||'_'||");
+				longColumn.append("COALESCE(").append(tableName).append(".")
+						.append("Value").append(", '')").append("||'_'||");
 			//	Display Column
 			longColumn.append("COALESCE(").append(tableName).append(".").append(dColumnName).append(",'')");
 			sql.append(longColumn);
@@ -294,6 +295,8 @@ public class LookupDisplayType {
 				//	Add And
 				if(where.length() > 0)
 					where.append(" AND ");
+				else
+					where.append(" WHERE ");
 				//	
 				where.append(getValRule());
 			}
@@ -301,15 +304,17 @@ public class LookupDisplayType {
 			if(m_optionalWhereClause != null){
 				if(where.length() > 0)
 					where.append(" AND ");
+				else
+					where.append(" WHERE ");
 				//	Add Where
 				where.append(m_optionalWhereClause);
 			}
+			//	Set SQL
+			sql.append(where);
 			//	Order By Clause
 			if(orderByClause != null
 					&& orderByClause.length() > 0)
 				sql.append(" ORDER BY ").append(orderByClause);
-			//	Set SQL
-			sql.append(where);
 		}
 		//	Return
 		return sql.toString();

@@ -59,6 +59,31 @@ public class Lookup {
 		lookup = new LookupDisplayType(m_ctx, m_ActivityNo, m_TabNo, m_field);
 	}
 	
+	/**
+	 * Lookup from Column
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/05/2014, 11:14:57
+	 * @param m_ctx
+	 * @param m_SPS_Column_ID
+	 * @param tabParam
+	 * @param conn
+	 */
+	public Lookup(Context m_ctx, int m_SPS_Column_ID, TabParameter tabParam, DB conn) {
+		this.m_ctx = m_ctx;
+		this.conn = conn;
+		//	Load Field
+		m_field = GridField.loadInfoColumnField(m_ctx, m_SPS_Column_ID);
+		int m_ActivityNo = 0;
+		int m_TabNo = 0;
+		//	Set Property
+		if(tabParam != null){
+			m_ActivityNo = tabParam.getActivityNo();
+			m_TabNo = tabParam.getTabNo();
+		}
+		//	Lookup
+		lookup = new LookupDisplayType(m_ctx, m_ActivityNo, m_TabNo, m_field);
+	}
+	
 	/** Context					*/
 	private Context 			m_ctx = null;
 	/**	Field					*/

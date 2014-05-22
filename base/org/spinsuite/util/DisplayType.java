@@ -500,19 +500,22 @@ public final class DisplayType
 				|| field.DisplayType == LIST
 				|| field.DisplayType == BUTTON) {
 			if(value != null
-					&& String.valueOf(value).length() > 0)
+					&& String.valueOf(value).length() > 0) {
 				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, String.valueOf(value));
-			else
+				Env.setContext(ctx, m_ActivityNo, field.ColumnName, String.valueOf(value));
+			} else
 				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, null);
 		} else if (isID(field.DisplayType) || field.DisplayType == INTEGER) {    //  note that Integer is stored as BD
-			if(value != null)
+			if(value != null) {
 				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, (Integer)value);
-			else
+				Env.setContext(ctx, m_ActivityNo, field.ColumnName, (Integer)value);
+			} else
 				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, -1);
 		} else if (isNumeric(field.DisplayType)) {
-			if(value != null)
+			if(value != null) {
 				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, (String) value);
-			else
+				Env.setContext(ctx, m_ActivityNo, field.ColumnName, (String) value);
+			} else
 				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, null);
 		} else if (isDate(field.DisplayType)) {
 			if(value != null){
@@ -520,11 +523,14 @@ public final class DisplayType
 				SimpleDateFormat format;
 				//	Date and Time
 				format = getTimestampFormat_Default();
-				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, format.format((Date) value));
+				String dateString = format.format((Date) value);
+				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, dateString);
+				Env.setContext(ctx, m_ActivityNo, field.ColumnName, dateString);
 			} else 
 				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, null);
 		} else if (field.DisplayType == YES_NO) {
 			Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, (Boolean)value);
+			Env.setContext(ctx, m_ActivityNo, field.ColumnName, (Boolean)value);
 		} else if (isLOB(field.DisplayType))	//	CLOB is String
 			return;
 	}   //  Set Context

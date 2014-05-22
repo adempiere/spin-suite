@@ -16,7 +16,6 @@
 package org.spinsuite.view.lookup;
 
 
-import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
@@ -26,10 +25,10 @@ import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.TabParameter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -433,16 +432,95 @@ public abstract class GridField extends LinearLayout {
 	}
 	
 	/**
+	 * Create Lookup Optional Spinner from Lookup
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/05/2014, 11:56:31
+	 * @param act
+	 * @param m_SPS_Column_ID
+	 * @param m_Lookup
+	 * @param m_TabParameter
+	 * @return
+	 * @return GridField
+	 */
+	public static GridField createLookup(Activity act, int m_SPS_Column_ID, Lookup m_Lookup, TabParameter m_TabParameter) {
+		InfoField field = loadInfoColumnField(act, m_SPS_Column_ID);
+		GridField gridField = null;
+		//	Add
+		if(DisplayType.isDate(field.DisplayType)){
+			gridField = new VLookupDateBox(act, field);
+		} else if(DisplayType.isText(field.DisplayType)){
+			VLookupString lookupString = new VLookupString(act, field);
+			lookupString.setInputType(DisplayType.getInputType(field.DisplayType));
+			gridField = lookupString;
+		} else if(DisplayType.isBoolean(field.DisplayType)){
+			gridField = new VLookupCheckBox(act, field);
+		} else if(DisplayType.isLookup(field.DisplayType)){
+			//	Table Direct
+			if(field.DisplayType == DisplayType.TABLE_DIR
+					|| field.DisplayType == DisplayType.LIST
+					|| field.DisplayType == DisplayType.TABLE){
+				gridField = new VLookupSpinner(act, field, m_TabParameter, m_Lookup);
+			} else if(field.DisplayType == DisplayType.SEARCH){
+				gridField = new VLookupSearch(act, field);
+			}
+		} else if(field.DisplayType == DisplayType.BUTTON){
+			VLookupButton lookupButton = null;
+			if(field.ColumnName.equals("DocAction")){
+				//lookupButton = new VLookupButtonDocAction(act, field, (DocAction) mGridTab.getPO());
+			} else if(field.ColumnName.equals("PaymentRule")){
+				//	Payment Rule Button
+				lookupButton = new LookupButtonPaymentRule(act, field);
+			} else {
+				lookupButton = new VLookupButton(act, field);
+			}
+			//	Set Parameters
+			gridField = lookupButton;
+		}
+		return gridField;
+	}
+	
+	/**
 	 * Create Lookup from Column
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/05/2014, 17:40:35
-	 * @param ctx
+	 * @param act
 	 * @param m_SPS_Column_ID
 	 * @return
 	 * @return GridField
 	 */
-	public static GridField createLookup(Context ctx, int m_SPS_Column_ID){
-		
-		return null;
+	public static GridField createLookup(Activity act, int m_SPS_Column_ID){
+		InfoField field = loadInfoColumnField(act, m_SPS_Column_ID);
+		GridField gridField = null;
+		//	Add
+		if(DisplayType.isDate(field.DisplayType)){
+			gridField = new VLookupDateBox(act, field);
+		} else if(DisplayType.isText(field.DisplayType)){
+			VLookupString lookupString = new VLookupString(act, field);
+			lookupString.setInputType(DisplayType.getInputType(field.DisplayType));
+			gridField = lookupString;
+		} else if(DisplayType.isBoolean(field.DisplayType)){
+			gridField = new VLookupCheckBox(act, field);
+		} else if(DisplayType.isLookup(field.DisplayType)){
+			//	Table Direct
+			if(field.DisplayType == DisplayType.TABLE_DIR
+					|| field.DisplayType == DisplayType.LIST
+					|| field.DisplayType == DisplayType.TABLE){
+				gridField = new VLookupSpinner(act, field);
+			} else if(field.DisplayType == DisplayType.SEARCH){
+				gridField = new VLookupSearch(act, field);
+			}
+		} else if(field.DisplayType == DisplayType.BUTTON){
+			VLookupButton lookupButton = null;
+			if(field.ColumnName.equals("DocAction")){
+				//lookupButton = new VLookupButtonDocAction(act, field, (DocAction) mGridTab.getPO());
+			} else if(field.ColumnName.equals("PaymentRule")){
+				//	Payment Rule Button
+				lookupButton = new LookupButtonPaymentRule(act, field);
+			} else {
+				lookupButton = new VLookupButton(act, field);
+			}
+			//	Set Parameters
+			gridField = lookupButton;
+		}
+		return gridField;
 	}
 	
 	/**
@@ -453,7 +531,7 @@ public abstract class GridField extends LinearLayout {
 	 * @return
 	 * @return InfoField
 	 */
-	private InfoField loadInfoColumnField(Context ctx, int m_SPS_Column_ID){
+	public static InfoField loadInfoColumnField(Context ctx, int m_SPS_Column_ID){
 		//	Is Mandatory
 		if(m_SPS_Column_ID == 0)
 			return null;
@@ -467,7 +545,7 @@ public abstract class GridField extends LinearLayout {
 					"c.Callout, c.ColumnName, c.ColumnSQL, c.EntityType, c.FieldLength, c.FormatPattern, c.IsAlwaysUpdateable, " +
 					"c.IsCentrallyMaintained, c.IsEncrypted, c.IsIdentifier, c.IsKey, c.IsMandatory, c.IsParent, c.IsSelectionColumn, " +
 					"c.IsUpdateable, c.SelectionSeqNo, c.SeqNo, c.SPS_Column_ID, c.SPS_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, " +
-					"c.AD_Process_ID, p.AD_Form_ID, c.Name, c.Description, c.Help, c.IsActive " +
+					"c.AD_Process_ID, c.Name, c.Description, c.IsActive " +
 					//	From
 					"FROM SPS_Column c ");
 		} else {
@@ -475,14 +553,14 @@ public abstract class GridField extends LinearLayout {
 					"c.Callout, c.ColumnName, c.ColumnSQL, c.EntityType, c.FieldLength, c.FormatPattern, c.IsAlwaysUpdateable, " +
 					"c.IsCentrallyMaintained, c.IsEncrypted, c.IsIdentifier, c.IsKey, c.IsMandatory, c.IsParent, c.IsSelectionColumn, " +
 					"c.IsUpdateable, c.SelectionSeqNo, c.SeqNo, c.SPS_Column_ID, c.SPS_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, " +
-					"c.AD_Process_ID, p.AD_Form_ID, c.Name, c.Description, c.Help, c.IsActive " +
+					"c.AD_Process_ID, ct.Name, ct.Description, c.IsActive " +
 					//	From
 					"FROM SPS_Column c " +
 					"INNER JOIN SPS_Column_Trl ct ON(ct.SPS_Column_ID = c.SPS_Column_ID AND ct.AD_Language = '").append(language).append("') ");
 		}
 		//	Where
 		sql.append("WHERE c.SPS_Column_ID = ").append(m_SPS_Column_ID).append(" ");		
-		LogM.log(ctx, getClass(), Level.FINE, "SQL TableInfo SQL:" + sql);
+		LogM.log(ctx, GridField.class, Level.FINE, "SQL TableInfo SQL:" + sql);
 		//	Create Connection
 		DB conn = new DB(ctx);
 		DB.loadConnection(conn, DB.READ_ONLY);
@@ -532,23 +610,11 @@ public abstract class GridField extends LinearLayout {
 			iFieldColumn.ValueMin = rs.getString(i++);
 			iFieldColumn.VFormat = rs.getString(i++);
 			iFieldColumn.AD_Process_ID = rs.getInt(i++);
-			iFieldColumn.AD_Form_ID = rs.getInt(i++);
 			//	Fields
 			iFieldColumn.Name = rs.getString(i++);
 			iFieldColumn.Description = rs.getString(i++);
-			iFieldColumn.Help = rs.getString(i++);
-			iFieldColumn.AD_FieldGroup_ID = rs.getInt(i++);
-			iFieldColumn.DisplayLogic = rs.getString(i++);
 			booleanValue = rs.getString(i++);
 			iFieldColumn.IsActive = (booleanValue != null && booleanValue.equals("Y"));
-			booleanValue = rs.getString(i++);
-			iFieldColumn.IsDisplayed = (booleanValue != null && booleanValue.equals("Y"));
-			booleanValue = rs.getString(i++);
-			iFieldColumn.IsReadOnly = (booleanValue != null && booleanValue.equals("Y"));
-			booleanValue = rs.getString(i++);
-			iFieldColumn.IsSameLine = (booleanValue != null && booleanValue.equals("Y"));
-			iFieldColumn.FieldSeqNo = rs.getInt(i++);
-			iFieldColumn.SPS_Field_ID = rs.getInt(i++);
 		}
 		//	Close DB
 		DB.closeConnection(conn);
