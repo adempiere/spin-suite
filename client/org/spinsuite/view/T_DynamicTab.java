@@ -880,7 +880,6 @@ public class T_DynamicTab extends Fragment
 				lookup = new VLookupDateBox(getActivity(), field);
 			} else if(DisplayType.isText(field.DisplayType)){
 				VLookupString lookupString = new VLookupString(getActivity(), field);
-				lookupString.setInputType(DisplayType.getInputType(field.DisplayType));
 				lookup = lookupString;
 			} else if(DisplayType.isBoolean(field.DisplayType)){
 				lookup = new VLookupCheckBox(getActivity(), field);

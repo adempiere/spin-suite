@@ -16,6 +16,7 @@
 package org.spinsuite.view.lookup;
 
 
+import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.TabParameter;
 
 import android.content.Context;
@@ -106,6 +107,13 @@ public class VLookupString extends GridField {
 		//	Set Hint
 		v_String.setHint(m_field.Name);
 		setEnabled(!m_field.IsReadOnly);
+		//	Set Display Type
+		v_String.setInputType(DisplayType.getInputType(m_field.DisplayType));
+		//	Set Multiline
+		if(m_field.DisplayType == DisplayType.TEXT
+				|| m_field.DisplayType == DisplayType.TEXT_LONG
+				|| m_field.DisplayType == DisplayType.MEMO)
+			v_String.setSingleLine(false);
 		//	Add to View
 		addView(v_String);
 	}
@@ -119,16 +127,6 @@ public class VLookupString extends GridField {
         //	Listener
         if(m_Listener != null)
         	m_Listener.onFieldEvent(this);
-	}
-	
-	/**
-	 * Set Input Type
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/02/2014, 08:22:22
-	 * @param type
-	 * @return void
-	 */
-	public void setInputType(int type){
-		v_String.setInputType(type);
 	}
 
 	@Override

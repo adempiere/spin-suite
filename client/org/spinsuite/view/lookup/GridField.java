@@ -449,7 +449,6 @@ public abstract class GridField extends LinearLayout {
 			gridField = new VLookupDateBox(act, field);
 		} else if(DisplayType.isText(field.DisplayType)){
 			VLookupString lookupString = new VLookupString(act, field);
-			lookupString.setInputType(DisplayType.getInputType(field.DisplayType));
 			gridField = lookupString;
 		} else if(DisplayType.isBoolean(field.DisplayType)){
 			gridField = new VLookupCheckBox(act, field);
@@ -494,7 +493,6 @@ public abstract class GridField extends LinearLayout {
 			gridField = new VLookupDateBox(act, field);
 		} else if(DisplayType.isText(field.DisplayType)){
 			VLookupString lookupString = new VLookupString(act, field);
-			lookupString.setInputType(DisplayType.getInputType(field.DisplayType));
 			gridField = lookupString;
 		} else if(DisplayType.isBoolean(field.DisplayType)){
 			gridField = new VLookupCheckBox(act, field);

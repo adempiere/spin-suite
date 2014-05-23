@@ -73,7 +73,7 @@ public class LookupDisplayType {
 	/**	Context					*/
 	private Context			ctx 					= null;
 	/**	Optional where clause	*/
-	private String			m_optionalWhereClause 	= null;
+	private String			m_OptionalWhereClause 	= null;
 	/**	Validation Rule			*/
 	private String 			m_ValRule				= null;
 	/**	Lookup Information		*/
@@ -90,6 +90,35 @@ public class LookupDisplayType {
 	private int				m_ActivityNo			= 0;
 	/**	Tab No					*/
 	private int 			m_TabNo					= 0;
+	/**	Has Where				*/
+	private boolean 		m_IsHasWhere			= false;
+	/**	Context Value Prefix	*/
+	private final String	CTX_VALUE_PREFIX 		= "#LK|C|";
+	private final String	CTX_VALUE_PREFIX_TABLE	= "#LK|T|";
+	private final String	CTX_HAS_WHERE			= "#LK|HW|C|";
+	private final String	CTX_HAS_WHERE_TABLE		= "#LK|HW|T|";
+	private final String	MARK_WHERE				= "<MARK_WHERE>";
+	
+	/**
+	 * Get Parsed SQL
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 23/05/2014, 15:08:05
+	 * @param sql
+	 * @return
+	 * @return String
+	 */
+	private String getParsedSQL(String sql) {
+		//	If Null
+		if(m_OptionalWhereClause == null
+				|| m_OptionalWhereClause.length() == 0)
+			return sql.replaceAll(MARK_WHERE, "");
+		//	Add Where
+		String where = " WHERE ";
+		//	Evaluate where
+		if(m_IsHasWhere)
+			where = " AND ";
+		//	Return
+		return sql.replaceAll(MARK_WHERE, where + m_OptionalWhereClause + " ");
+	}
 	
 	/**
 	 * Get SQL
@@ -102,7 +131,28 @@ public class LookupDisplayType {
 		if(m_IsLoaded)
 			return Env.parseContext(ctx, m_ActivityNo, m_TabNo, m_SQL, false, null);
 		//	
-		if(m_SPS_Table_ID == 0){ 
+		boolean isCache = false;
+		String ctx_lookup_value = null;
+		String ctx_lookup_has_where = null;
+		String sqlParsed = null;
+		//	
+		if(m_SPS_Table_ID == 0){
+			//	Context
+			ctx_lookup_value = CTX_VALUE_PREFIX + m_field.SPS_Column_ID;
+			ctx_lookup_has_where = CTX_HAS_WHERE + m_field.SPS_Column_ID;
+			//	
+			m_SQL = Env.getContext(ctx, ctx_lookup_value);
+			isCache = m_SQL != null;
+			//	Return Cache
+			if(isCache) {
+				m_IsHasWhere = Env.getContextAsBoolean(ctx, ctx_lookup_has_where);
+				//	Parse
+				sqlParsed = getParsedSQL(m_SQL);
+				//	
+				LogM.log(ctx, getClass(), Level.FINE, "From Cache[SQL=" + sqlParsed + "]");
+				return Env.parseContext(ctx, m_ActivityNo, m_TabNo, sqlParsed, false, null);
+			}
+			//	Reload
 			if(m_field.DisplayType == DisplayType.TABLE_DIR){
 				m_SQL = loadSQLTableDirect();
 				LogM.log(ctx, getClass(), Level.FINE, "SQL=" + m_SQL);
@@ -120,13 +170,36 @@ public class LookupDisplayType {
 				LogM.log(ctx, getClass(), Level.FINE, "SQL=" + m_SQL);
 			}
 		} else {
+			//	Context
+			ctx_lookup_value = CTX_VALUE_PREFIX_TABLE + m_SPS_Table_ID;
+			ctx_lookup_has_where = CTX_HAS_WHERE_TABLE + m_SPS_Table_ID;
+			//	
+			m_SQL = Env.getContext(ctx, ctx_lookup_value);
+			isCache = m_SQL != null;
+			//	Return Cache
+			if(isCache) {
+				m_IsHasWhere = Env.getContextAsBoolean(ctx, ctx_lookup_has_where);
+				//	Parse
+				sqlParsed = getParsedSQL(m_SQL);
+				//	
+				LogM.log(ctx, getClass(), Level.FINE, "From Cache[SQL=" + sqlParsed + "]");
+				return Env.parseContext(ctx, m_ActivityNo, m_TabNo, sqlParsed, false, null);
+			}
+			//	
 			m_SQL = loadFromTable();
 			LogM.log(ctx, getClass(), Level.FINE, "SQL=" + m_SQL);
 		}
 		//	Set Is Loaded
 		m_IsLoaded = true;
+		//	Set to Cache
+		Env.setContext(ctx, ctx_lookup_value, m_SQL);
+		Env.setContext(ctx, ctx_lookup_has_where, m_IsHasWhere);
+		//	Parse SQL
+		sqlParsed = getParsedSQL(m_SQL);
+		//	
+		LogM.log(ctx, getClass(), Level.FINE, "[SQL Without Cache=" + sqlParsed + "]");
 		//	Return
-		return Env.parseContext(ctx, m_ActivityNo, m_TabNo, m_SQL, false, null);
+		return Env.parseContext(ctx, m_ActivityNo, m_TabNo, sqlParsed, false, null);
 	}
 	
 	/**
@@ -219,16 +292,12 @@ public class LookupDisplayType {
 		if(getValRule() != null
 				&& getValRule().length() > 0){
 			where.append(" WHERE ").append(getValRule());
+			//	Add Mark
+			m_IsHasWhere = true;
+		} else {
+			m_IsHasWhere = false;
 		}
-		//	Add Optional Where
-		if(m_optionalWhereClause != null){
-			if(where.length() > 0)
-				where.append(" AND ");
-			else
-				where.append(" WHERE ");
-			//	Add Where
-			where.append(m_optionalWhereClause);
-		}
+		where.append(MARK_WHERE);
 		//	Add Where Clause to SQL
 		sql.append(where);
 		//	Return
@@ -300,15 +369,12 @@ public class LookupDisplayType {
 				//	
 				where.append(getValRule());
 			}
-			//	Add Optional Where
-			if(m_optionalWhereClause != null){
-				if(where.length() > 0)
-					where.append(" AND ");
-				else
-					where.append(" WHERE ");
-				//	Add Where
-				where.append(m_optionalWhereClause);
-			}
+			//	Add Mark Where
+			if(where.length() > 0)
+				m_IsHasWhere = true;
+			else
+				m_IsHasWhere = false;
+			where.append(MARK_WHERE);
 			//	Set SQL
 			sql.append(where);
 			//	Order By Clause
@@ -349,6 +415,11 @@ public class LookupDisplayType {
 			//	Add And
 			sql.append(" AND ").append(getValRule());
 		}
+		//	Add Mark
+		m_IsHasWhere = true;
+		sql.append(MARK_WHERE);
+		//	
+		sql.append(" ORDER BY 2 ");
 		//	Return
 		return sql.toString();
 	}
@@ -404,10 +475,8 @@ public class LookupDisplayType {
 		DB.closeConnection(conn);
 		sql.append(" FROM ").append(tableName);
 		//	Optional Where
-		if(m_optionalWhereClause != null){
-			//	Add Where
-			sql.append(" WHERE ").append(m_optionalWhereClause);
-		}
+		m_IsHasWhere = false;
+		sql.append(MARK_WHERE);
 		//	Return
 		return sql.toString();
 	}
@@ -419,7 +488,7 @@ public class LookupDisplayType {
 	 * @return void
 	 */
 	public void setCriteria(String whereClause){
-		m_optionalWhereClause = whereClause;
+		m_OptionalWhereClause = whereClause;
 		m_IsLoaded = false;
 	}
 
@@ -427,7 +496,7 @@ public class LookupDisplayType {
 	public String toString() {
 		return "LookupDisplayType [m_field=" + m_field + ", m_SPS_Table_ID="
 				+ m_SPS_Table_ID + ", ctx=" + ctx + ", m_optionalWhereClause="
-				+ m_optionalWhereClause + ", m_InfoLookup=" + m_InfoLookup
+				+ m_OptionalWhereClause + ", m_InfoLookup=" + m_InfoLookup
 				+ ", m_IsLoaded=" + m_IsLoaded + ", m_SQL=" + m_SQL + "]";
 	}
 }

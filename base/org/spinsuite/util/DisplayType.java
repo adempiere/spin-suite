@@ -680,7 +680,7 @@ public final class DisplayType
 	
 	
 	/**
-	 * Get nput Type
+	 * Get input Type
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/05/2012, 04:05:28
 	 * @param displayType
 	 * @return

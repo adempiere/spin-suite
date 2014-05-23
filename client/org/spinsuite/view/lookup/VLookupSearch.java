@@ -205,7 +205,7 @@ public class VLookupSearch extends GridField {
 			//	Close
 			DB.closeConnection(conn);
 		} catch(Exception e){
-			LogM.log(getContext(), getClass(), Level.SEVERE, "Error in Load", e);
+			LogM.log(getContext(), getClass(), Level.SEVERE, "Error in Load " + e.toString(), e);
 		}
 	}
 

@@ -211,7 +211,6 @@ public class LV_Search extends FragmentActivity {
 			lookup = new VLookupDateBox(this, field);
 		} else if(DisplayType.isText(field.DisplayType)){
 			VLookupString lookupString = new VLookupString(this, field);
-			lookupString.setInputType(DisplayType.getInputType(field.DisplayType));
 			lookup = lookupString;
 		} else if(DisplayType.isBoolean(field.DisplayType)){
 			lookup = new VLookupCheckBox(this, field);
