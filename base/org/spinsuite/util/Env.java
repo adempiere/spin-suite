@@ -164,7 +164,11 @@ public final class Env {
 	public static Object getContextObject(Context ctx, String context, Class<?> clazz){
 		Gson gson = new Gson();
 		SharedPreferences pf = PreferenceManager.getDefaultSharedPreferences(ctx);
-		String json = pf.getString(context, "");
+		String json = pf.getString(context, null);
+		//	Valid null
+		if(json == null)
+			return null;
+		//	
 	    return gson.fromJson(json, clazz);
 	}
 	

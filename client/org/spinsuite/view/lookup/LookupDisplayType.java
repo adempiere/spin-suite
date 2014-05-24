@@ -44,11 +44,14 @@ public class LookupDisplayType {
 	public LookupDisplayType(Context ctx, int m_ActivityNo, int m_TabNo, InfoField field){
 		this.m_field = field;
 		this.ctx = ctx;
-		m_InfoLookup = new InfoLookup();
+		ctx_lookup_value = CTX_VALUE_PREFIX + m_field.SPS_Column_ID;
+		ctx_lookup_has_where = CTX_HAS_WHERE + m_field.SPS_Column_ID;
+		ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX + m_field.SPS_Column_ID;
 		m_Language = Env.getAD_Language(ctx);
 		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
 		this.m_ActivityNo = m_ActivityNo;
 		this.m_TabNo = m_TabNo;
+		
 	}
 	
 	/**
@@ -61,7 +64,9 @@ public class LookupDisplayType {
 	public LookupDisplayType(Context ctx, int m_SPS_Table_ID){
 		this.m_SPS_Table_ID = m_SPS_Table_ID;
 		this.ctx = ctx;
-		m_InfoLookup = new InfoLookup();
+		ctx_lookup_value = CTX_VALUE_PREFIX_TABLE + m_SPS_Table_ID;
+		ctx_lookup_has_where = CTX_HAS_WHERE_TABLE + m_SPS_Table_ID;
+		ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX_TABLE + m_SPS_Table_ID;
 		m_Language = Env.getAD_Language(ctx);
 		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
 	}
@@ -92,12 +97,18 @@ public class LookupDisplayType {
 	private int 			m_TabNo					= 0;
 	/**	Has Where				*/
 	private boolean 		m_IsHasWhere			= false;
+	private String			ctx_lookup_value 		= null;
+	private String 			ctx_lookup_has_where 	= null;
+	private String 			ctx_lookup_info		 	= null;
 	/**	Context Value Prefix	*/
-	private final String	CTX_VALUE_PREFIX 		= "#LK|C|";
-	private final String	CTX_VALUE_PREFIX_TABLE	= "#LK|T|";
-	private final String	CTX_HAS_WHERE			= "#LK|HW|C|";
-	private final String	CTX_HAS_WHERE_TABLE		= "#LK|HW|T|";
-	private final String	MARK_WHERE				= "<MARK_WHERE>";
+	private final String	CTX_VALUE_PREFIX 				= "#LK|C|";
+	private final String	CTX_VALUE_PREFIX_TABLE			= "#LK|T|";
+	private final String	CTX_HAS_WHERE					= "#LK|HW|C|";
+	private final String	CTX_HAS_WHERE_TABLE				= "#LK|HW|T|";
+	private final String	CTX_LOOKUP_INFO_PREFIX 			= "#LKI|C|";
+	private final String	CTX_LOOKUP_INFO_PREFIX_TABLE	= "#LKI|T|";
+	private final String	MARK_WHERE						= "<MARK_WHERE>";
+	
 	
 	/**
 	 * Get Parsed SQL
@@ -129,17 +140,12 @@ public class LookupDisplayType {
 	public String getSQL(){
 		//	Cache
 		if(m_IsLoaded)
-			return Env.parseContext(ctx, m_ActivityNo, m_TabNo, m_SQL, false, null);
+			return Env.parseContext(ctx, m_ActivityNo, m_TabNo, getParsedSQL(m_SQL), false, null);
 		//	
 		boolean isCache = false;
-		String ctx_lookup_value = null;
-		String ctx_lookup_has_where = null;
 		String sqlParsed = null;
 		//	
-		if(m_SPS_Table_ID == 0){
-			//	Context
-			ctx_lookup_value = CTX_VALUE_PREFIX + m_field.SPS_Column_ID;
-			ctx_lookup_has_where = CTX_HAS_WHERE + m_field.SPS_Column_ID;
+		if(m_SPS_Table_ID == 0) {
 			//	
 			m_SQL = Env.getContext(ctx, ctx_lookup_value);
 			isCache = m_SQL != null;
@@ -170,9 +176,6 @@ public class LookupDisplayType {
 				LogM.log(ctx, getClass(), Level.FINE, "SQL=" + m_SQL);
 			}
 		} else {
-			//	Context
-			ctx_lookup_value = CTX_VALUE_PREFIX_TABLE + m_SPS_Table_ID;
-			ctx_lookup_has_where = CTX_HAS_WHERE_TABLE + m_SPS_Table_ID;
 			//	
 			m_SQL = Env.getContext(ctx, ctx_lookup_value);
 			isCache = m_SQL != null;
@@ -194,6 +197,7 @@ public class LookupDisplayType {
 		//	Set to Cache
 		Env.setContext(ctx, ctx_lookup_value, m_SQL);
 		Env.setContext(ctx, ctx_lookup_has_where, m_IsHasWhere);
+		Env.setContextObject(ctx, ctx_lookup_info, m_InfoLookup);
 		//	Parse SQL
 		sqlParsed = getParsedSQL(m_SQL);
 		//	
@@ -210,7 +214,10 @@ public class LookupDisplayType {
 	 */
 	public InfoLookup getInfoLookup(){
 		//	Get SQL
-		getSQL();
+		if(m_InfoLookup == null)
+			m_InfoLookup = (InfoLookup) Env.getContextObject(ctx, ctx_lookup_info, InfoLookup.class);
+		if(m_InfoLookup == null)
+			getSQL();
 		//	Load ending
 		return m_InfoLookup;
 	}
@@ -241,6 +248,9 @@ public class LookupDisplayType {
 	 * @return String
 	 */
 	private String loadSQLTableDirect(){
+		//	Instance Lookup
+		m_InfoLookup = new InfoLookup();
+		//	
 		StringBuffer sql = new StringBuffer();
 		StringBuffer where = new StringBuffer();
 		String tableName = m_field.ColumnName.replaceAll("_ID", "");
@@ -309,7 +319,10 @@ public class LookupDisplayType {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 22:32:49
 	 * @return String
 	 */
-	private String loadSQLTableSearch(){
+	private String loadSQLTableSearch() {
+		//	Instance Lookup
+		m_InfoLookup = new InfoLookup();
+		//	
 		StringBuffer sql = new StringBuffer();
 		StringBuffer where = new StringBuffer();
 		sql.append("SELECT ");
@@ -430,7 +443,10 @@ public class LookupDisplayType {
 	 * @return
 	 * @return String
 	 */
-	private String loadFromTable(){
+	private String loadFromTable() {
+		//	Instance Lookup
+		m_InfoLookup = new InfoLookup();
+		//	
 		StringBuffer sql = new StringBuffer();
 		String tableName = null;
 		DB conn = new DB(ctx);

@@ -328,6 +328,7 @@ public class GridTab {
 	 * @return void
 	 */
 	public void loadData() {
+		LogM.log(m_ctx, getClass(), Level.FINE, "loadData()");
 		if(model == null)
 			return;
 		//	Get Record Identifier
@@ -346,6 +347,9 @@ public class GridTab {
     		DisplayType.setContextValue(m_ctx, m_TabParam.getActivityNo(), 
     				m_TabParam.getTabNo(), vField.getField(), vField.getValue());
     	}
+		//	Set ID to Context
+		Env.setContext(m_ctx, m_TabParam.getActivityNo(), m_TabParam.getTabNo(), m_TabInfo.getTableKeyName(), m_Record_ID);
+		Env.setContext(m_ctx, m_TabParam.getActivityNo(), m_TabInfo.getTableKeyName(), m_Record_ID);
 	}
 	
 	/**

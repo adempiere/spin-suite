@@ -298,9 +298,13 @@ public abstract class GridField extends LinearLayout {
 				|| DisplayType.isID(m_field.DisplayType)
 				|| DisplayType.isLookup(m_field.DisplayType)) {
 			try {
-				return Integer.parseInt((String) getValue());
+				Object value = getValue();
+				if(value instanceof Integer)
+					return (Integer) value;
+				else
+					return Integer.parseInt((String) getValue());
 			} catch (Exception e) {
-				LogM.log(getContext(), this.getClass(), Level.SEVERE, "Parse Error", e);
+				LogM.log(getContext(), this.getClass(), Level.SEVERE, "Parse Error " + e.toString(), e);
 			}
 			return 0;
 		} else
