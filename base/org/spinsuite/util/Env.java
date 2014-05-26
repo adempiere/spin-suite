@@ -525,6 +525,29 @@ public final class Env {
 		return s != null ? s.equals("Y") : false;
 	}	//	getContext
 	
+	/**
+	 * Get Context as Boolean with Activity No
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/05/2014, 12:02:34
+	 * @param ctx
+	 * @param m_ActivityNo
+	 * @param context
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean getContextAsBoolean (Context ctx, int m_ActivityNo, String context)
+	{
+		if (ctx == null || context == null)
+			throw new IllegalArgumentException ("Require Context");
+		SharedPreferences pf = PreferenceManager.getDefaultSharedPreferences(ctx);
+		String s = pf.getString(m_ActivityNo+"|"+context, null);
+		LogM.log(ctx, "Env", Level.INFO, "getContext=" + m_ActivityNo+"|"+context);
+		// If TAB_INFO, don't check Window and Global context - teo_sarca BF [ 2017987 ]
+		//
+		if (s == null)
+			s = getContext(ctx, m_ActivityNo, context);
+		return s != null ? s.equals("Y") : false;
+	}	//	getContext
+	
 	
 	/**
 	 * Verifica si la actividad está cargada

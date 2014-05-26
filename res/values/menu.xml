@@ -18,7 +18,7 @@
  -->
 <resources>
     <string name="Action_Cancel">Cancel</string>
-	<string name="Action_Ok">Next</string>
+	<string name="Action_Ok">Ok</string>
 	<string name="Action_Config">Configuration</string>
 	<string name="Action_Search">Search</string>
 	<string name="Action_Edit">Edit</string>

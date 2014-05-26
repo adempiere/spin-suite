@@ -22,7 +22,7 @@ import android.os.Parcelable;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class DisplayRecordItem implements Parcelable{
+public class DisplayRecordItem implements Parcelable {
 
 	/**
 	 * 
