@@ -56,15 +56,22 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
     
-    <!-- Text Report Header -->
-    <style name="TextFunctionReport" parent="TextStandard">
-        <item name="android:textStyle">bold|italic</item>
+    <!-- Text Tile List -->
+    <style name="TextTitleList" parent="TextStandard">
+        <item name="android:textStyle">bold|normal</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
     
     <!-- Text Item -->
-    <style name="TextItem" parent="TextStandard">
-        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    <style name="TextItemList" parent="TextStandard">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+    
+    <!-- Text Report Header -->
+    <style name="TextFunctionReport" parent="TextStandard">
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
     
     <!-- Small Text Menu -->

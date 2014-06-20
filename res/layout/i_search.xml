@@ -22,6 +22,6 @@
     android:layout_height="match_parent"
     android:drawableLeft="@drawable/contruction_h"
     android:maxLines="2"
-    style="@style/TextItem" >
+    style="@style/TextTitleList" >
 
 </TextView>
