@@ -181,18 +181,21 @@ public class TV_DynamicActivity extends TV_Base implements I_FragmentSelectListe
 	    		else
 	    			Env.setTabRecord_ID(getApplicationContext(), 
 	    					tabParam.getActivityNo(), tabParam.getTabNo(), 0);
-	    		
-	    		//	Parent Tab
-	    		if(tabParam.getTabLevel() != 0){
-	    			Env.setParentTabRecord_ID(getApplicationContext(), 
-	    					tabParam.getActivityNo(), tabParam.getTabNo(), m_Record_ID);
-	    			addFagment(T_DynamicTabDetail.class, tabParam.getName(), tabParam.getName(), bundle);
-	    		} else if(tabParam.getSPS_Table_ID() != 0){	//	Add Dynamic Tab
-	    			addFagment(T_DynamicTab.class, tabParam.getName(), tabParam.getName(), bundle);
+	    		//	Dynamic Tab
+	    		if(tabParam.getSPS_Table_ID() != 0) {
+		    		//	Parent Tab
+		    		if(tabParam.getTabLevel() != 0) {
+		    			Env.setParentTabRecord_ID(getApplicationContext(), 
+		    					tabParam.getActivityNo(), tabParam.getTabNo(), m_Record_ID);
+		    			addFagment(T_DynamicTabDetail.class, tabParam.getName(), tabParam.getName(), bundle);
+		    		} else {	//	Add Dynamic Tab
+		    			addFagment(T_DynamicTab.class, tabParam.getName(), tabParam.getName(), bundle);
+		    		}
+
 	    		}
 	    		//	Add Custom Tab
 	    		else if(tabParam.getClassname() != null
-	    				&& tabParam.getClassname().length() > 0){
+	    				&& tabParam.getClassname().length() > 0) {
 	    			try {
 	    				Class<?> clazz = Class.forName(tabParam.getClassname());
 	    				//	Add
@@ -200,7 +203,8 @@ public class TV_DynamicActivity extends TV_Base implements I_FragmentSelectListe
 	    			} catch (ClassNotFoundException e) {
 	    				LogM.log(getApplicationContext(), getClass(), Level.SEVERE, "Error:", e);
 	    			}
-	    		}
+	    		} else 
+	    			LogM.log(getApplicationContext(), getClass(), Level.WARNING, "No Class for Tab: " + tabParam.getName());
 				//	Reset index
 	    		index = 0;
 			}while(rs.moveToNext());
