@@ -124,4 +124,5 @@
 	<string name="msg_FunctionVariance">Varianza</string>
 	<string name="msg_FunctionDeviation">Desviación Estandar</string>
 	<string name="msg_ErrorCreatingDirectory">Error Creando Directorio</string>
+	<string name="msg_InvalidProcessState">Estado del Proceso Invalido</string>
 </resources>

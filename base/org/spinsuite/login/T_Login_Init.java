@@ -23,6 +23,7 @@ import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.initialload.InitialLoad;
 import org.spinsuite.util.SFAAsyncTask;
+import org.spinsuite.util.TestProcess;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -87,7 +88,9 @@ public class T_Login_Init extends DialogFragment implements OnClickListener{
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		// TODO Auto-generated method stub
-		SoapObject reps = null;
+		
+		TestProcess tp = new TestProcess(getActivity());
+		/*SoapObject reps = null;
 		SFAAsyncTask task= new SFAAsyncTask(getActivity(),SFAAsyncTask.progressBarCircleLarge); 
 		
 		InitialLoad il = new InitialLoad(m_Url, m_NameSpace, m_Method, true, m_NameSpace + m_Method, et_User.getText().toString(), et_PassWord.getText().toString(), "SFAndroidService");
@@ -131,7 +134,7 @@ public class T_Login_Init extends DialogFragment implements OnClickListener{
 			e.printStackTrace();
 		}
 	
-
+*/
 		
 		//Env.setContext(this.getActivity(), "#SUser", et_User.getText().toString());
 		//Env.setContext(this.getActivity(), "#SPass", et_PassWord.getText().toString());
