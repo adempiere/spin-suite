@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*************************************************************************************
+ * Product: Spin-Suite (Making your Business Spin)                                   *
+ * This program is free software; you can redistribute it and/or modify it    		 *
+ * under the terms version 2 of the GNU General Public License as published   		 *
+ * by the Free Software Foundation. This program is distributed in the hope   		 *
+ * that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 		 *
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.           		 *
+ * See the GNU General Public License for more details.                       		 *
+ * You should have received a copy of the GNU General Public License along    		 *
+ * with this program; if not, write to the Free Software Foundation, Inc.,    		 *
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                     		 *
+ * For the text or an alternative of this public license, you may reach us    		 *
+ * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com				  		 *
+ ************************************************************************************/
+ -->
+<resources>
+    <string name="Action_Cancel">Cancel</string>
+	<string name="Action_Ok">Ok</string>
+	<string name="Action_Config">Configuration</string>
+	<string name="Action_Search">Search</string>
+	<string name="Action_Edit">Edit</string>
+	<string name="Action_Add">Add</string>
+	<string name="Action_Close">Close</string>
+	<string name="Action_Delete">Delete</string>
+	<string name="Action_Param">Parameters</string>
+	<string name="Action_Process">Process Now</string>
+	<string name="Action_PrintFormat">Change Print Format</string>
+	<string name="Action_AttachImage">Attach Image</string>
+	<string name="Action_ViewAttachment">View Attachment</string>
+	<string name="Action_DownloadAttachment">Download</string>
+	
+	<!-- Drawer Option -->
+	<string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    
+    <!-- Export Option -->
+    <string name="Action_Share">Share</string>
+    <string name="Action_Export_XLS">Export to XLS</string>
+    <string name="Action_Export_PDF">Export to PDF</string>
+    <string name="Action_Export_XML">Export to XML</string>
+    <string name="Action_Export_HTML">Export to HTML</string>
+    
+</resources>
