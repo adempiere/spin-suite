@@ -41,7 +41,7 @@ import android.widget.EditText;
 public class T_Login_Init extends DialogFragment implements OnClickListener{
 	
 	/** Text User*/
-	private EditText et_User;
+	public EditText et_User;
 	
 	/** Text Password*/
 	private EditText et_PassWord;
@@ -89,7 +89,7 @@ public class T_Login_Init extends DialogFragment implements OnClickListener{
 	public void onClick(DialogInterface dialog, int which) {
 		// TODO Auto-generated method stub
 		
-		TestProcess tp = new TestProcess(getActivity());
+		
 		/*SoapObject reps = null;
 		SFAAsyncTask task= new SFAAsyncTask(getActivity(),SFAAsyncTask.progressBarCircleLarge); 
 		

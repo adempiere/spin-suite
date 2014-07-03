@@ -24,6 +24,7 @@ import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
+import org.spinsuite.util.TestProcess;
 
 import android.app.ActionBar;
 import android.content.Intent;
@@ -51,7 +52,7 @@ import android.widget.Spinner;
 public class T_Connection extends FragmentActivity implements I_Login {
 
 	/**	URL SOAP Comunication	*/
-	private EditText 	et_UrlSoap;
+	public EditText 	et_UrlSoap;
 	/**	Synchronization Method	*/
 	private EditText 	et_Method;
 	private EditText 	et_Timeout;
@@ -204,12 +205,14 @@ public class T_Connection extends FragmentActivity implements I_Login {
     		}
     	};
     	m_load.LoadSoapFromContext(this);*/
-    	et_UrlSoap.setEnabled(true);
+    	
+    	TestProcess tp = new TestProcess(this);
+    	/*et_UrlSoap.setEnabled(true);
 		et_Method.setEnabled(true);
 		et_NameSpace.setEnabled(true);
     	DialogFragment df = new T_Login_Init(et_UrlSoap.getText().toString(),et_Method.getText().toString(),et_NameSpace.getText().toString());
     	df.show(getSupportFragmentManager(), this.getResources().getString(R.string.InitSync));
-    	
+    	*/
 		if(!Env.isEnvLoad(this)){
 			
 			/*RemoteViews contentView = new RemoteViews(this.getPackageName(), R.layout.v_progressdialog);
