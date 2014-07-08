@@ -20,7 +20,9 @@ import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
+import org.spinsuite.initialload.InitialLoad;
 import org.spinsuite.interfaces.I_Login;
+import org.spinsuite.util.BackGroundTask;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
@@ -86,7 +88,7 @@ public class T_Connection extends FragmentActivity implements I_Login {
     	ch_SaveSD = (CheckBox) findViewById(R.id.ch_SaveSD);
     	
     	// Carlos Parada Setting Parameters for SFAndroid Service Call 
-    	et_UrlSoap.setText("http://193.1.1.243:8080/ADInterface/services/SFAndroidService");
+    	et_UrlSoap.setText("http://192.168.1.196:8081/ADInterface/services/SpinSuiteService");
     	et_NameSpace.setText("http://www.erpcya.com/");
     	et_Method.setText("InitialLoad");
     	//End Carlos Parada
@@ -206,29 +208,12 @@ public class T_Connection extends FragmentActivity implements I_Login {
     	};
     	m_load.LoadSoapFromContext(this);*/
     	
-    	TestProcess tp = new TestProcess(this);
-    	/*et_UrlSoap.setEnabled(true);
-		et_Method.setEnabled(true);
-		et_NameSpace.setEnabled(true);
-    	DialogFragment df = new T_Login_Init(et_UrlSoap.getText().toString(),et_Method.getText().toString(),et_NameSpace.getText().toString());
+    	//TestProcess tp = new TestProcess(this);
+    	//InitialLoad il = new InitialLoad(m_Url, m_NameSpace, m_Method, true, m_NameSpace + m_Method, et_User.getText().toString(), et_PassWord.getText().toString(), "SFAndroidService");
+		
+    	T_Login_Init df = new T_Login_Init(this);
     	df.show(getSupportFragmentManager(), this.getResources().getString(R.string.InitSync));
-    	*/
-		if(!Env.isEnvLoad(this)){
-			
-			/*RemoteViews contentView = new RemoteViews(this.getPackageName(), R.layout.v_progressdialog);
-	        contentView.setImageViewResource(R.id.iV_Synchronizing, R.drawable.syncserver_m);
-	        contentView.setTextViewText(R.id.tV_CurrentSinchronizing, this.getResources().getString(R.string.msg_CallingWebService));
-	        contentView.setTextViewText(R.id.tV_Percentaje, "0%");
-	        
-	        NotificationManager notify = Msg.notificationMsg(this, R.drawable.syncserver_h, "",0, this.getParent().getIntent(), contentView);
-	        m_load.setContentView(contentView);
-	        m_load.setM_NotificationManager(notify);
-			m_load.execute();*/
-			
-		} else {
-			loadContext();
-		}
-    
+    	
     }
     
     /**
@@ -439,5 +424,48 @@ public class T_Connection extends FragmentActivity implements I_Login {
 	public boolean loadData() {
 		return false;
 	}
+
+	/**
+	 * Start Synchronization for Initial Load
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> Jul 8, 2014, 11:25:21 AM
+	 * @param p_User
+	 * @param p_Pass
+	 * @return void
+	 */
+	public void startSynchronization(String p_User,String p_Pass){
+		if (!p_User.equals("") && !p_Pass.equals("")){
+    		InitialLoad il = new InitialLoad(et_UrlSoap.getText().toString(), 
+    											et_NameSpace.getText().toString(), 
+    												et_Method.getText().toString(), 
+    													true, 
+    													et_NameSpace.getText().toString() + et_Method.getText().toString(), 
+    														p_User, 
+    															p_Pass, 
+    																"initLoad",
+    																	this);
+    		il.runTask();
+    		
+    		
+    		
+    	}
+    		
+    	
+		if(!Env.isEnvLoad(this)){
+			
+			/*RemoteViews contentView = new RemoteViews(this.getPackageName(), R.layout.v_progressdialog);
+	        contentView.setImageViewResource(R.id.iV_Synchronizing, R.drawable.syncserver_m);
+	        contentView.setTextViewText(R.id.tV_CurrentSinchronizing, this.getResources().getString(R.string.msg_CallingWebService));
+	        contentView.setTextViewText(R.id.tV_Percentaje, "0%");
+	        
+	        NotificationManager notify = Msg.notificationMsg(this, R.drawable.syncserver_h, "",0, this.getParent().getIntent(), contentView);
+	        m_load.setContentView(contentView);
+	        m_load.setM_NotificationManager(notify);
+			m_load.execute();*/
+			
+		} else {
+			loadContext();
+		}
     
+
+	}
 }

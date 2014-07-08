@@ -16,21 +16,12 @@
 package org.spinsuite.login;
 
 
-import java.util.concurrent.ExecutionException;
-
-import org.ksoap2.serialization.SoapObject;
-import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
-import org.spinsuite.initialload.InitialLoad;
-import org.spinsuite.util.SFAAsyncTask;
-import org.spinsuite.util.TestProcess;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -41,27 +32,19 @@ import android.widget.EditText;
 public class T_Login_Init extends DialogFragment implements OnClickListener{
 	
 	/** Text User*/
-	public EditText et_User;
+	private EditText et_User;
 	
 	/** Text Password*/
 	private EditText et_PassWord;
 	
-	/** Url*/
-	private String m_Url;
 	
-	/** Method*/
-	private String m_Method;
+	/** */
+	private T_Connection m_T_Connection = null;
 	
-	/** Name space*/
-	private String m_NameSpace;
-	
-	public T_Login_Init(String p_Url, String p_Method, String p_NameSpace) {
+	public T_Login_Init(T_Connection p_Con) {
 		// TODO Auto-generated constructor stub
-		m_Url = p_Url;
-		m_Method = p_Method;
-		m_NameSpace = p_NameSpace;
+		m_T_Connection = p_Con;
 	}
-	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -73,8 +56,8 @@ public class T_Login_Init extends DialogFragment implements OnClickListener{
 		et_User = (EditText) view.findViewById(R.id.et_User);
 		et_PassWord = (EditText) view.findViewById(R.id.et_Pass);
 		///Set Authentication for test
-		et_User.setText("SuperUser");
-		et_PassWord.setText("System");
+		et_User.setText("cParada");
+		et_PassWord.setText("16964840");
 		
 		builder.setView(view);
 		
@@ -89,53 +72,13 @@ public class T_Login_Init extends DialogFragment implements OnClickListener{
 	public void onClick(DialogInterface dialog, int which) {
 		// TODO Auto-generated method stub
 		
+		String m_ValidUser = et_User.getText().toString();
+		String m_ValidPass = et_PassWord.getText().toString();
 		
-		/*SoapObject reps = null;
-		SFAAsyncTask task= new SFAAsyncTask(getActivity(),SFAAsyncTask.progressBarCircleLarge); 
-		
-		InitialLoad il = new InitialLoad(m_Url, m_NameSpace, m_Method, true, m_NameSpace + m_Method, et_User.getText().toString(), et_PassWord.getText().toString(), "SFAndroidService");
-		
-		task.run(il, "callService", null);
-		
-		try {
-			while (!task.isDone()){
-				//System.out.println("Pase");
-		//System.out.println(task.isCancel());
-		//System.out.println(task.isDone());
-			}
-			reps=  (SoapObject)task.getResult();
-			//System.out.println(reps.toString());
-			//task.run(il, "writeDB", new Object[]{reps,getActivity()});
-			//il.writeDB(reps);
-			
-			//while (!task.isDone()){
-				//System.out.println("Pase");
-		//System.out.println(task.isCancel());
-		//System.out.println(task.isDone());
-			//}
-			il.writeDB(reps, getActivity());
-			String sql = new String("SELECT * FROM AD_Client");
-	    	DB con = new DB(getActivity());
-	    	con.openDB(DB.READ_ONLY);
-	    	Cursor rs = con.querySQL(sql, null);
-	    	if(rs.moveToFirst()){
-				do {
-					System.out.println(rs.getString(0));
-					System.out.println(rs.getString(1));
-				} while(rs.moveToNext());
-			}
-	    	con.closeDB(rs);
-	    	
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	
-*/
-		
+		if (which == -1){
+			if (!m_ValidUser.equals("") && !m_ValidPass.equals(""))
+				m_T_Connection.startSynchronization(m_ValidUser, m_ValidPass);
+		}		
 		//Env.setContext(this.getActivity(), "#SUser", et_User.getText().toString());
 		//Env.setContext(this.getActivity(), "#SPass", et_PassWord.getText().toString());
 	}

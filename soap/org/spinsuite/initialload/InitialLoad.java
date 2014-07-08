@@ -2,23 +2,33 @@ package org.spinsuite.initialload;
 
 import java.io.IOException;
 
-import org.ksoap2.SoapFault;
+
 import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
 import org.spinsuite.base.DB;
 import org.spinsuite.conn.CommunicationSoap;
+import org.spinsuite.interfaces.BackGroundProcess;
+import org.spinsuite.login.T_Connection;
+import org.spinsuite.util.BackGroundTask;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.Context;
-import android.database.Cursor;
 
 /**
  * 
  * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a>
  *
  */
-public class InitialLoad extends CommunicationSoap{
+public class InitialLoad extends CommunicationSoap implements BackGroundProcess{
 
+	/** Public Msg*/
+	private String m_PublicMsg = new String();
+
+	/** Background Task */ 
+	private BackGroundTask m_Task = null;
+	
+	/** Connection Windows*/
+	private T_Connection m_Conn = null;
+	
 	/**
 	 * *** Constructor ***
 	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 25/02/2014, 23:15:06
@@ -30,6 +40,7 @@ public class InitialLoad extends CommunicationSoap{
 	public InitialLoad(String p_Url, String p_NameSpace, String p_Method_Name,
 			boolean isNetService) {
 		super(p_Url, p_NameSpace, p_Method_Name, isNetService);
+		
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -63,11 +74,11 @@ public class InitialLoad extends CommunicationSoap{
 	 * @param p_ServiceType
 	 */
 	public InitialLoad(String p_Url, String p_NameSpace, String p_Method_Name,
-			boolean isNetService, String p_SoapAction, String p_User, String p_PassWord, String p_ServiceType) {
+			boolean isNetService, String p_SoapAction, String p_User, String p_PassWord, String p_ServiceType,T_Connection p_con) {
 		// TODO Auto-generated constructor stub
 		this(p_Url, p_NameSpace, p_Method_Name,
 				isNetService, p_SoapAction);
-		
+		m_Conn = p_con;
 		ILCall call = new ILCall(p_NameSpace, p_User, p_PassWord, p_ServiceType);
 		addSoapObject(call);
 	}
@@ -90,6 +101,7 @@ public class InitialLoad extends CommunicationSoap{
 		//Call Service
 		try {
 			call();
+			
 			result = (SoapObject) getM_Envelope().getResponse();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -139,5 +151,43 @@ public class InitialLoad extends CommunicationSoap{
 		}
 		return "sucess";
 	}
+
+	@Override
+	public void publishBeforeInit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void publishOnRunning() {
+		// TODO Auto-generated method stub
+		System.out.println(m_PublicMsg);
+	}
+
+	@Override
+	public void publishAfterEnd() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Object run() {
+		// TODO Auto-generated method stub
+		m_PublicMsg = "Calling";
+		System.out.println(this);
+		SoapObject so = callService();
+		System.out.println(so);
+		m_PublicMsg = "End";
+		return so;
+	}
 	
+	public void setM_PublicMsg(String m_PublicMsg) {
+		this.m_PublicMsg = m_PublicMsg;
+	}
+	
+	public void runTask(){
+		
+		m_Task = new BackGroundTask(this, m_Conn);
+		m_Task.runTask();
+	}
 }
