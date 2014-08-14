@@ -5,9 +5,12 @@ import java.io.IOException;
 
 import org.ksoap2.serialization.SoapObject;
 import org.spinsuite.base.DB;
+import org.spinsuite.base.R;
 import org.spinsuite.conn.CommunicationSoap;
 import org.spinsuite.interfaces.BackGroundProcess;
 import org.spinsuite.login.T_Connection;
+import org.spinsuite.login.T_Login_Init;
+import org.spinsuite.login.T_Login_ProgressSync;
 import org.spinsuite.util.BackGroundTask;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -101,14 +104,17 @@ public class InitialLoad extends CommunicationSoap implements BackGroundProcess{
 		//Call Service
 		try {
 			call();
-			
 			result = (SoapObject) getM_Envelope().getResponse();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			m_PublicMsg = e.getMessage();
+			publishOnRunning();
 		} catch (XmlPullParserException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			m_PublicMsg = e.getMessage();
+			publishOnRunning();
 		}
 		return result;
 	}
@@ -187,6 +193,9 @@ public class InitialLoad extends CommunicationSoap implements BackGroundProcess{
 	
 	public void runTask(){
 		
+
+    	T_Login_ProgressSync df = new T_Login_ProgressSync(this);
+    	df.show(m_Conn.getSupportFragmentManager(), m_Conn.getResources().getString(R.string.InitSync));
 		m_Task = new BackGroundTask(this, m_Conn);
 		m_Task.runTask();
 	}

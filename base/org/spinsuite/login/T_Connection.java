@@ -22,11 +22,9 @@ import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.initialload.InitialLoad;
 import org.spinsuite.interfaces.I_Login;
-import org.spinsuite.util.BackGroundTask;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
-import org.spinsuite.util.TestProcess;
 
 import android.app.ActionBar;
 import android.content.Intent;
@@ -34,7 +32,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
@@ -87,7 +84,7 @@ public class T_Connection extends FragmentActivity implements I_Login {
     	et_NameSpace = (EditText) findViewById(R.id.et_NameSpace);
     	ch_SaveSD = (CheckBox) findViewById(R.id.ch_SaveSD);
     	
-    	// Carlos Parada Setting Parameters for SFAndroid Service Call 
+    	// Carlos Parada Setting Parameters for Spin-Suite Service Call 
     	et_UrlSoap.setText("http://192.168.1.196:8081/ADInterface/services/SpinSuiteService");
     	et_NameSpace.setText("http://www.erpcya.com/");
     	et_Method.setText("InitialLoad");
