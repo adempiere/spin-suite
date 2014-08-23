@@ -49,18 +49,27 @@ public class T_Role extends Fragment implements I_Login {
 	private int org_ID = 0;
 	private int warehouse_ID = 0;
 	private String m_IsUseUserOrgAccess = "N";
-	
+	private View m_View = null;
+	private boolean	m_IsLoadOk = false;
 	private Context ctx = null;
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.t_role, container, false);
+        if(m_View != null)
+        	return m_View;
+        //	Re-Load
+        m_View = inflater.inflate(R.layout.t_role, container, false);
+        //	
+        return m_View;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
+    	if(m_IsLoadOk)
+    		return;
+    	//	
     	ctx = this.getActivity();
     	
     	sp_Role =		(Spinner) getActivity().findViewById(R.id.sp_Role);
@@ -143,8 +152,6 @@ public class T_Role extends Fragment implements I_Login {
     		
     	});
     	
-
-    	//loadData();
     }
     
     @Override
@@ -362,7 +369,8 @@ public class T_Role extends Fragment implements I_Login {
 
 	@Override
 	public boolean loadData() {
-		if(Env.isEnvLoad(ctx)){
+		if(Env.isEnvLoad(ctx)
+				&& !m_IsLoadOk) {
 			role_ID = loadRole();
 		}
 		return false;

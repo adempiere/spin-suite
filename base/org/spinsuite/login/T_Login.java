@@ -43,14 +43,25 @@ public class T_Login extends Fragment implements I_Login {
 	private CheckBox 		ch_SavePass;
 	private CheckBox 		ch_AutomaticVisitClosing;
 	private Cust_Spinner	sp_Language;
+	private View 			m_View = null;
+	private boolean			m_IsLoadOk = false;
+	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.t_login, container, false);
+        //	Current
+    	if(m_View != null)
+        	return m_View;
+        //	RE-Load
+        m_View = inflater.inflate(R.layout.t_login, container, false);
+    	return m_View;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
+    	if(m_IsLoadOk)
+    		return;
+    	//	
     	et_User = (EditText) getActivity().findViewById(R.id.et_User);
     	et_Pass = (EditText) getActivity().findViewById(R.id.et_Pass);
     	ch_SavePass = (CheckBox) getActivity().findViewById(R.id.ch_SavePass);
@@ -62,7 +73,7 @@ public class T_Login extends Fragment implements I_Login {
     		data.add(new DisplaySpinner(0, loc.getDisplayName(), loc.toString()));
     	}
 		sp_Language.load(data);
-    	
+		m_IsLoadOk = true;
     }
     
     /**
