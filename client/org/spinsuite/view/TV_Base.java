@@ -15,49 +15,38 @@
  *************************************************************************************/
 package org.spinsuite.view;
 
-import org.spinsuite.adapters.FragmentTabsAdapter;
+import org.spinsuite.adapters.FragmentTabArray;
 import org.spinsuite.base.R;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.Env;
-import org.spinsuite.view.custom.Cust_ViewPager;
 
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TabHost;
-import android.widget.TabWidget;
 
 /**
  * 
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class TV_Base extends FragmentActivity 
-									implements TabHost.OnTabChangeListener, 
-												ViewPager.OnPageChangeListener{
+public class TV_Base extends Activity {
 	
-	/**	Adapter Fragment			*/
-	private FragmentTabsAdapter		mAdapterList;
-	/**	Pager						*/
-	private Cust_ViewPager			mViewPager;
 	/**	Parameters						*/
 	protected ActivityParameter 	param;
 	/**	Activity No					*/
 	protected int					m_ActivityNo = 0;
-	/**	Tab Host					*/
-	private TabHost 				mTabHost;
 	/**	Drawer Layout				*/
 	private DrawerLayout 			m_DLayout;
 	/**	List View with options		*/
@@ -66,12 +55,21 @@ public class TV_Base extends FragmentActivity
     private ActionBarDrawerToggle 	m_DToggle;
     /**	Flag (Drawer Loaded)		*/
     private boolean 				isDrawerLoaded = false;
+    /**	Action Bar					*/
+    private ActionBar 				actionBar = null;
+    /**	Array with fragments		*/
+    FragmentTabArray				m_FragmentArray = null;
     
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
     	super.setContentView(R.layout.tv_base);
+    	
+    	actionBar = getActionBar();
+    	 
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+    	
     	Bundle bundle = getIntent().getExtras();
 		if(bundle != null){
 			param = (ActivityParameter)bundle.getParcelable("Param");
@@ -80,19 +78,11 @@ public class TV_Base extends FragmentActivity
     		param = new ActivityParameter();
 		//	
     	m_ActivityNo = Env.getActivityNo(this);
-    	
-    	mTabHost = (TabHost)findViewById(android.R.id.tabhost);
-        mTabHost.setup();
-        
-    	mViewPager = (Cust_ViewPager)findViewById(R.id.v_pager);
-        mAdapterList = new FragmentTabsAdapter(this, mTabHost, mViewPager);
-        
-        //	Add Listener
-        mTabHost.setOnTabChangedListener(this);
-        mViewPager.setOnPageChangeListener(this);
-        //	
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+    	//	
+    	actionBar.setDisplayHomeAsUpEnabled(true);
+    	actionBar.setHomeButtonEnabled(true);
+    	//	Instance Array
+    	m_FragmentArray = new FragmentTabArray(this);
     }
     
     /**
@@ -235,7 +225,11 @@ public class TV_Base extends FragmentActivity
      * @return void
      */
     protected void addFagment(Class<?> clazz, String tag, int title, Bundle bundle){
-    	mAdapterList.addTab(clazz, tag, title, bundle);
+    	Tab tab = actionBar.newTab();
+    	tab.setTabListener(m_FragmentArray.addTab(tag, clazz, bundle));
+        tab.setText(getResources().getString(title));
+        actionBar.addTab(tab);
+    	
     }
     
     /**
@@ -246,7 +240,10 @@ public class TV_Base extends FragmentActivity
      * @return void
      */
     protected void addFagment(Class<?> clazz, String tag, int title){
-    	mAdapterList.addTab(clazz, tag, title, null);
+    	Tab tab = actionBar.newTab();
+    	tab.setTabListener(m_FragmentArray.addTab(tag, clazz, null));
+    	tab.setText(getResources().getString(title));
+        actionBar.addTab(tab);
     }
     
     /**
@@ -258,7 +255,10 @@ public class TV_Base extends FragmentActivity
      * @return void
      */
     protected void addFagment(Class<?> clazz, String tag, String title){
-    	mAdapterList.addTab(clazz, tag, title, null);
+    	Tab tab = actionBar.newTab();
+    	tab.setText(title);
+    	tab.setTabListener(m_FragmentArray.addTab(tag, clazz, null));
+        actionBar.addTab(tab);
     }
     
     /**
@@ -271,7 +271,10 @@ public class TV_Base extends FragmentActivity
      * @return void
      */
     protected void addFagment(Class<?> clazz, String tag, String title, Bundle param){
-    	mAdapterList.addTab(clazz, tag, title, param);
+    	Tab tab = actionBar.newTab();
+    	tab.setTabListener(m_FragmentArray.addTab(tag, clazz, param));
+    	tab.setText(title);
+        actionBar.addTab(tab);
     }
     /**
      * Get Current Fragment from View Pager
@@ -280,7 +283,8 @@ public class TV_Base extends FragmentActivity
      * @return Fragment
      */
     protected Fragment getCurrentFragment() {
-		return mAdapterList.getCurrentFragment(mViewPager);
+		int index = actionBar.getSelectedTab().getPosition();
+    	return getFragment(index);
 	}
     
     /**
@@ -291,7 +295,8 @@ public class TV_Base extends FragmentActivity
      * @return Fragment
      */
     protected Fragment getFragment(int index) {
-		return mAdapterList.getActiveFragment(index, mViewPager);
+		TabListener tab = m_FragmentArray.getTab(index);
+    	return tab.getFragment();
 	}
     
     /**
@@ -301,7 +306,7 @@ public class TV_Base extends FragmentActivity
      * @return void
      */
     protected void setCurrentFragment(int index) {
-		mViewPager.setCurrentItem(index);
+		actionBar.setSelectedNavigationItem(index);
 	}
     
     /**
@@ -311,32 +316,6 @@ public class TV_Base extends FragmentActivity
      * @return void
      */
     public void setPagingEnabled(boolean enabled){
-    	mViewPager.setPagingEnabled(enabled);
-    }
-
-    @Override
-    public void onTabChanged(String tabId) {
-        int position = mTabHost.getCurrentTab();
-        mViewPager.setCurrentItem(position);
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    	
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-    	Env.setCurrentTab(this, m_ActivityNo, position);
-        TabWidget widget = mTabHost.getTabWidget();
-        int oldFocusability = widget.getDescendantFocusability();
-        widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-        mTabHost.setCurrentTab(position);
-        widget.setDescendantFocusability(oldFocusability);
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-    	
-    }   
+    	//	
+    } 
 }

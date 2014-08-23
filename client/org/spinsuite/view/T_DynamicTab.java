@@ -54,6 +54,7 @@ import org.spinsuite.view.lookup.VLookupString;
 
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -64,7 +65,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -117,6 +117,8 @@ public class T_DynamicTab extends Fragment
 	private 	I_DynamicTab			m_FromTab			= null;
 	/**	Listener					*/
 	private 	OnFieldChangeListener	m_Listener			= null;
+	/**	View 						*/
+	private 	View 					m_view 				= null;
 	/**	Current Status				*/
 	protected static final int 			NEW 				= 0;
 	protected static final int 			MODIFY 				= 1;
@@ -147,10 +149,13 @@ public class T_DynamicTab extends Fragment
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View v =  inflater.inflate(R.layout.t_dynamic_tab, container, false);
+		if(m_view != null)
+			return m_view;
+		//	Inflate
+		m_view =  inflater.inflate(R.layout.t_dynamic_tab, container, false);
     	//	Scroll
-    	v_scroll = (ScrollView) v.findViewById(R.id.sv_DynamicTab);
-		return v;
+    	v_scroll = (ScrollView) m_view.findViewById(R.id.sv_DynamicTab);
+		return m_view;
 	}
 	
 	@Override
@@ -174,7 +179,8 @@ public class T_DynamicTab extends Fragment
     		}
 		};
     	//	Init Load
-    	initLoad();
+		if(!m_IsLoadOk)
+			initLoad();
 	}
 	
 	/**
@@ -751,7 +757,8 @@ public class T_DynamicTab extends Fragment
 		//	Set Parameter
 		this.tabParam = tabParam;
 		//	Initial Load
-		initLoad();
+		if(!m_IsLoadOk)
+			initLoad();
 	}
 	
 	/**
