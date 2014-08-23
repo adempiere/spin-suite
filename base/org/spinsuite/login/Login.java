@@ -130,7 +130,7 @@ public class Login extends TV_Base implements I_CancelOk {
     public boolean processActionOk(){
     	I_Login fr = (I_Login)getCurrentFragment();
     	boolean ret = fr.aceptAction();
-		if(getCurrentFragment() instanceof T_Login){
+		if(fr instanceof T_Login){
 			if(ret){
 				if(!Env.isEnvLoad(this)){
 					Intent intent = new Intent(this, T_Connection.class);
@@ -138,20 +138,15 @@ public class Login extends TV_Base implements I_CancelOk {
 				} else {
 					//	Is Logged
 					if(Env.isLogin(this)){
-						//pager.getChildAt(2).setEnabled(true);
-						setCurrentFragment(2);
-						fr = (I_Login)getCurrentFragment();
-						ret = fr.loadData();	
+						setCurrentFragment(1);
+						fr = (I_Login)getCurrentFragment();	
 					} else {
 						//pager.getChildAt(2).setEnabled(true);
 					}
 				}
 			}
-		} else if(getCurrentFragment() instanceof T_Role){
+		} else if(fr instanceof T_Role){
 			if(ret){
-				//Intent intent = new Intent(this, MV_Menu.class);
-				//startActivity(intent);
-				//Msg.toastMsg(getApplication(), "Hi");
 				Intent intent = new Intent(this, LV_Menu.class);
 				startActivity(intent);
 			} else {

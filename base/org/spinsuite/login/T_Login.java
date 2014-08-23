@@ -27,10 +27,10 @@ import org.spinsuite.util.Env;
 import org.spinsuite.util.Msg;
 import org.spinsuite.view.custom.Cust_Spinner;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

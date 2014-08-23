@@ -25,9 +25,9 @@ import org.spinsuite.util.Env;
 import org.spinsuite.util.LoadDataSpinner;
 import org.spinsuite.util.Msg;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -362,7 +362,7 @@ public class T_Role extends Fragment implements I_Login {
 
 	@Override
 	public boolean loadData() {
-		if(Env.isEnvLoad(getActivity())){
+		if(Env.isEnvLoad(ctx)){
 			role_ID = loadRole();
 		}
 		return false;
