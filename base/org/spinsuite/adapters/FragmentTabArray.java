@@ -17,7 +17,7 @@ package org.spinsuite.adapters;
 
 import java.util.ArrayList;
 
-import org.spinsuite.view.TabListener;
+import org.spinsuite.util.TabListener;
 
 import android.app.Activity;
 import android.os.Bundle;

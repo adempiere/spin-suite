@@ -27,12 +27,12 @@ import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,7 +48,7 @@ import android.widget.Spinner;
  * @author Yamel Senih
  *
  */
-public class T_Connection extends FragmentActivity implements I_Login {
+public class T_Connection extends Activity implements I_Login {
 
 	/**	URL SOAP Comunication	*/
 	public EditText 	et_UrlSoap;
@@ -209,7 +209,7 @@ public class T_Connection extends FragmentActivity implements I_Login {
     	//InitialLoad il = new InitialLoad(m_Url, m_NameSpace, m_Method, true, m_NameSpace + m_Method, et_User.getText().toString(), et_PassWord.getText().toString(), "SFAndroidService");
 		
     	T_Login_Init df = new T_Login_Init(this);
-    	df.show(getSupportFragmentManager(), this.getResources().getString(R.string.InitSync));
+    	df.show(getFragmentManager(), this.getResources().getString(R.string.InitSync));
     	
     }
     

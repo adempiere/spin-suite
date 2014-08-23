@@ -20,10 +20,10 @@ import org.spinsuite.base.R;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -42,12 +42,10 @@ public class T_Login_Init extends DialogFragment implements OnClickListener{
 	private T_Connection m_T_Connection = null;
 	
 	public T_Login_Init(T_Connection p_Con) {
-		// TODO Auto-generated constructor stub
 		m_T_Connection = p_Con;
 	}
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		
 		LayoutInflater inflater = getActivity().getLayoutInflater();
