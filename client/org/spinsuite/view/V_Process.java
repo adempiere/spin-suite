@@ -61,7 +61,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -89,7 +88,7 @@ import com.itextpdf.text.DocumentException;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class V_Process extends FragmentActivity {
+public class V_Process extends Activity {
 	
 	/**	Adapter					*/
 	private SearchAdapter 			logAdapter 		= null;

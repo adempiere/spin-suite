@@ -40,7 +40,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SearchViewCompat;
@@ -63,7 +62,7 @@ import android.widget.ListView;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class LV_Search extends FragmentActivity {
+public class LV_Search extends Activity {
 	
 	/**	Adapter					*/
 	private SearchAdapter 			adapter = null;

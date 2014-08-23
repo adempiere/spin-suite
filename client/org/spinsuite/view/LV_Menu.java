@@ -32,7 +32,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,7 +42,7 @@ import android.widget.ListView;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class LV_Menu extends FragmentActivity {
+public class LV_Menu extends Activity {
 	
 	/**	List				*/
 	private ListView 			menu;

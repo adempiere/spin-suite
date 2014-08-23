@@ -31,6 +31,7 @@ import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 
+import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -41,7 +42,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore.Images;
-import android.support.v4.app.FragmentActivity;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -54,7 +54,7 @@ import android.widget.ListView;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class LV_AttachView extends FragmentActivity {
+public class LV_AttachView extends Activity {
 	
 	/**	Parameter				*/
 	private ActivityParameter		m_activityParam 	= null;

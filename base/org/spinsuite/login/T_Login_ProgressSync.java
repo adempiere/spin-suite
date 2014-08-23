@@ -22,13 +22,12 @@ import org.spinsuite.initialload.InitialLoad;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 
 @SuppressLint("ValidFragment")
 public class T_Login_ProgressSync extends DialogFragment implements OnClickListener{
@@ -37,7 +36,6 @@ public class T_Login_ProgressSync extends DialogFragment implements OnClickListe
 	InitialLoad m_ILoad  = null;
 	
 	public T_Login_ProgressSync(InitialLoad iload) {
-		// TODO Auto-generated constructor stub
 		m_ILoad = iload;
 	}
 	@Override
@@ -59,7 +57,6 @@ public class T_Login_ProgressSync extends DialogFragment implements OnClickListe
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
-		// TODO Auto-generated method stub
 		
 	}
 }
