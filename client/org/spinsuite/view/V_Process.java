@@ -25,11 +25,12 @@ import java.util.logging.Level;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
-import org.spinsuite.adapters.ReportAdapter;
-import org.spinsuite.adapters.ReportExportMenuAdapter;
 import org.spinsuite.adapters.SearchAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
+import org.spinsuite.print.ReportPrintData;
+import org.spinsuite.print.layout.ReportAdapter;
+import org.spinsuite.print.layout.ReportExportMenuAdapter;
 import org.spinsuite.process.InfoPara;
 import org.spinsuite.process.ProcessCtl;
 import org.spinsuite.process.ProcessInfo;
@@ -49,7 +50,6 @@ import org.spinsuite.view.lookup.VLookupDateBox;
 import org.spinsuite.view.lookup.VLookupSearch;
 import org.spinsuite.view.lookup.VLookupSpinner;
 import org.spinsuite.view.lookup.VLookupString;
-import org.spinsuite.view.report.ReportPrintData;
 
 import android.app.Activity;
 import android.app.AlertDialog;

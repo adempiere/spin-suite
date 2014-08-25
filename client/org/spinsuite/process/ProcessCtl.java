@@ -19,11 +19,11 @@ import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
+import org.spinsuite.print.ReportPrintData;
 import org.spinsuite.process.ClientProcess;
 import org.spinsuite.process.ProcessInfo;
 import org.spinsuite.process.StdProcess;
 import org.spinsuite.util.LogM;
-import org.spinsuite.view.report.ReportPrintData;
 
 import android.content.Context;
 

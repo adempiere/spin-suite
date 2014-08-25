@@ -13,7 +13,7 @@
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
  *************************************************************************************/
-package org.spinsuite.view.report;
+package org.spinsuite.print;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -13,7 +13,7 @@
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
  *************************************************************************************/
-package org.spinsuite.adapters;
+package org.spinsuite.print.layout;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -21,11 +21,11 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.spinsuite.base.R;
+import org.spinsuite.print.ColumnPrintData;
+import org.spinsuite.print.InfoReportField;
+import org.spinsuite.print.RowPrintData;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.TextViewArrayHolder;
-import org.spinsuite.view.report.ColumnPrintData;
-import org.spinsuite.view.report.InfoReportField;
-import org.spinsuite.view.report.RowPrintData;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

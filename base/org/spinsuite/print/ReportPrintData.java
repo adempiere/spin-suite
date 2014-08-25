@@ -13,7 +13,7 @@
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
  *************************************************************************************/
-package org.spinsuite.view.report;
+package org.spinsuite.print;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,6 +41,7 @@ import jxl.write.biff.RowsExceededException;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
+import org.spinsuite.print.layout.PDFHeaderAndFooter;
 import org.spinsuite.process.ProcessInfo;
 import org.spinsuite.process.ProcessInfoParameter;
 import org.spinsuite.util.DisplayType;

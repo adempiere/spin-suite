@@ -16,8 +16,8 @@
 package org.spinsuite.view.lookup;
 
 import org.spinsuite.model.POInfoColumn;
+import org.spinsuite.print.InfoReportField;
 import org.spinsuite.process.InfoPara;
-import org.spinsuite.view.report.InfoReportField;
 
 import android.os.Parcel;
 import android.os.Parcelable;
