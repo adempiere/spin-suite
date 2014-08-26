@@ -102,11 +102,20 @@ public class LoadActionMenu {
 			} else if(item.getDeploymentType().equals(DisplayMenuItem.DEPLOYMENTTYPE_List)
 					|| item.getDeploymentType().equals(DisplayMenuItem.DEPLOYMENTTYPE_ListWithQuickAction)) {
 				//	Start Search
-				bundle.putInt("SPS_Table_ID", item.getSPS_Table_ID());
-            	intent = new Intent(activity, LV_Search.class);
-    			intent.putExtras(bundle);
-    			//	Start with result
-    			activity.startActivityForResult(intent, 0);
+				int m_SPS_Table_ID = item.getSPS_Table_ID();
+				//	Valid Table
+				if(m_SPS_Table_ID == 0) {
+					Msg.toastMsg(activity, activity.getString(R.string.msg_LoadError) 
+							+ ": " + activity.getString(R.string.msg_TableNotFound));
+					loadActivityWithAction(item, bundle);
+				} else {
+					//	
+					bundle.putInt("SPS_Table_ID", m_SPS_Table_ID);
+	            	intent = new Intent(activity, LV_Search.class);
+	    			intent.putExtras(bundle);
+	    			//	Start with result
+	    			activity.startActivityForResult(intent, 0);
+				}
 			} else if(item.getDeploymentType().equals(DisplayMenuItem.DEPLOYMENTTYPE_MenuWithQuickAction)) {
 				
 			}

@@ -125,4 +125,5 @@
 	<string name="msg_FunctionDeviation">Desviación Estandar</string>
 	<string name="msg_ErrorCreatingDirectory">Error Creando Directorio</string>
 	<string name="msg_InvalidProcessState">Estado del Proceso Invalido</string>
+	<string name="msg_TableNotFound">Tabla No Encontrada</string>
 </resources>

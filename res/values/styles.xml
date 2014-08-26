@@ -14,7 +14,7 @@
     <style name="TextColor">
     	<item name="android:textColor">@android:color/black</item>
     </style>
-
+    
     <!-- Error Color -->
     <style name="TextColorError">
     	<item name="android:textColor">@android:color/holo_red_dark</item>
@@ -60,6 +60,12 @@
     <style name="TextTitleList" parent="TextStandard">
         <item name="android:textStyle">bold|normal</item>
         <item name="android:textColor">@android:color/black</item>
+    </style>
+    
+    <style name="TextTitleListWC" parent="TextStandard">
+        <item name="android:textStyle">bold|normal</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@android:color/black</item>
     </style>
     
     <!-- Text Item -->

@@ -62,6 +62,12 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
     
+    <style name="TextTitleListWC" parent="TextStandard">
+        <item name="android:textStyle">bold|normal</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@android:color/black</item>
+    </style>
+    
     <!-- Text Item -->
     <style name="TextItemList" parent="TextStandard">
         <item name="android:textStyle">normal</item>
