@@ -27,7 +27,6 @@ import org.spinsuite.print.RowPrintData;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.TextViewArrayHolder;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -44,7 +43,6 @@ import android.widget.TextView;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-@SuppressLint("ResourceAsColor")
 public class ReportAdapter extends BaseAdapter implements Filterable {
 
 	/**
