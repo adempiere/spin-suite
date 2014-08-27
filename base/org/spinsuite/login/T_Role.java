@@ -363,7 +363,6 @@ public class T_Role extends Fragment implements I_Login {
 
 	@Override
 	public boolean cancelAction() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

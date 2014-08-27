@@ -17,7 +17,7 @@ package org.spinsuite.adapters;
 
 import java.util.ArrayList;
 
-import org.spinsuite.util.TabListener;
+import org.spinsuite.util.TabHandler;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -42,7 +42,7 @@ public class FragmentTabArray {
 	/**	Activity						*/
 	private Activity activity;
 	/**	Array with Tab  Listener		*/
-	private ArrayList<TabListener> m_Array = new ArrayList<TabListener>();
+	private ArrayList<TabHandler> m_Array = new ArrayList<TabHandler>();
 	
 	/**
 	 * Add Tab to Array
@@ -52,10 +52,9 @@ public class FragmentTabArray {
 	 * @param args
 	 * @return TabListener
 	 */
-	public TabListener addTab(String tag, Class<?> clazz, Bundle args) {
-		TabListener tabListener = new TabListener(activity, tag, clazz, args);
+	public void addTab(String tag, Class<?> clazz, Bundle args) {
+		TabHandler tabListener = new TabHandler(activity, tag, clazz, args);
 		m_Array.add(tabListener);
-		return tabListener;
 	}
 	
 	/**
@@ -65,7 +64,7 @@ public class FragmentTabArray {
 	 * @return
 	 * @return TabListener
 	 */
-	public TabListener getTab(int index) {
+	public TabHandler getTab(int index) {
 		return m_Array.get(index);
 	}
 	
