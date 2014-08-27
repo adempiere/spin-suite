@@ -166,4 +166,9 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 		return data.size();
 	}
 	
+	@Override
+	public DisplayRecordItem getItem(int position) {
+		return data.get(position);
+	}
+	
 }
