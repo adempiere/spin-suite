@@ -555,7 +555,7 @@ public abstract class GridField extends LinearLayout {
 					"c.Callout, c.ColumnName, c.ColumnSQL, c.EntityType, c.FieldLength, c.FormatPattern, c.IsAlwaysUpdateable, " +
 					"c.IsCentrallyMaintained, c.IsEncrypted, c.IsIdentifier, c.IsKey, c.IsMandatory, c.IsParent, c.IsSelectionColumn, " +
 					"c.IsUpdateable, c.SelectionSeqNo, c.SeqNo, c.SPS_Column_ID, c.SPS_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, " +
-					"c.AD_Process_ID, ct.Name, ct.Description, c.IsActive " +
+					"c.AD_Process_ID, ct.Name, c.Description, c.IsActive " +
 					//	From
 					"FROM SPS_Column c " +
 					"INNER JOIN SPS_Column_Trl ct ON(ct.SPS_Column_ID = c.SPS_Column_ID AND ct.AD_Language = '").append(language).append("') ");
