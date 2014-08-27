@@ -26,10 +26,10 @@ import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.FilterValue;
 import org.spinsuite.util.LogM;
+import org.spinsuite.view.lookup.GridField;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.InfoTab;
 import org.spinsuite.view.lookup.LookupDisplayType;
-import org.spinsuite.view.lookup.GridField;
 import org.spinsuite.view.lookup.VLookupCheckBox;
 import org.spinsuite.view.lookup.VLookupDateBox;
 import org.spinsuite.view.lookup.VLookupSearch;
@@ -37,8 +37,10 @@ import org.spinsuite.view.lookup.VLookupSpinner;
 import org.spinsuite.view.lookup.VLookupString;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
@@ -88,6 +90,8 @@ public class LV_Search extends Activity {
 	private ArrayList<GridField>	viewList = null;
 	/**	Parameter				*/
 	private LayoutParams			v_param	= null;
+	/**	Activity				*/
+	private Activity				v_activity = null;
 	
 	/**	View Weight				*/
 	private static final float 		WEIGHT = 1;
@@ -104,6 +108,8 @@ public class LV_Search extends Activity {
 			m_SPS_Tab_ID = bundle.getInt("SPS_Tab_ID");
 			m_criteria = bundle.getParcelable("Criteria");
 		}
+		//	Set Activity
+		v_activity = this;
 		//	
 		llc_Search = (LinearLayout) findViewById(R.id.llc_Search);
 		lv_Search = (ListView) findViewById(R.id.lv_Search);
@@ -116,7 +122,7 @@ public class LV_Search extends Activity {
 		loadConfig();
 		
 		//	Load
-		load();
+		new LoadViewTask().execute();
     	//	Listener
 		lv_Search.setOnItemClickListener(new ListView.OnItemClickListener() {
 			@Override
@@ -160,7 +166,7 @@ public class LV_Search extends Activity {
 						m_criteria = m_oldCriteria;
 					//	Add Criteria
 					addCriteriaQuery();
-					load();
+					new LoadViewTask().execute();
 				}
 			});
 	    	//	Add Button
@@ -216,6 +222,8 @@ public class LV_Search extends Activity {
 		} else if(DisplayType.isLookup(field.DisplayType)){
 			//	Table Direct
 			if(field.DisplayType == DisplayType.TABLE_DIR){
+				//	Optional Null Value
+				field.IsMandatory = false;
 				lookup = new VLookupSpinner(this, field);
 			} else if(field.DisplayType == DisplayType.SEARCH){
 				lookup = new VLookupSearch(this, field);
@@ -308,7 +316,7 @@ public class LV_Search extends Activity {
 				llc_Search.setVisibility(LinearLayout.GONE);
 				m_criteria = m_oldCriteria;
 				//	Load New
-				load();
+				new LoadViewTask().execute();
 			}
 			return true;
 		} else if (itemId == android.R.id.home) {
@@ -316,49 +324,7 @@ public class LV_Search extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-	
-	/**
-	 * Load Data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/03/2014, 13:32:16
-	 * @return void
-	 */
-	private void load(){
-		try{
-			if(lookup == null)
-				throw new Exception("No Parameter");
-			//	
-			DB conn = new DB(this);
-			DB.loadConnection(conn, DB.READ_ONLY);
-			Cursor rs = null;
-			//	Query
-			String[] values = null;
-			if(m_criteria != null) {
-				lookup.setCriteria(m_criteria.getWhereClause());
-				values = m_criteria.getValues();
-			} else
-				lookup.setCriteria(null);
-			rs = conn.querySQL(lookup.getSQL(), values);
-			ArrayList<DisplayRecordItem> data = new ArrayList<DisplayRecordItem>();
-			if(rs.moveToFirst()){
-				//	Loop
-				do{
-					data.add(new DisplayRecordItem(
-							rs.getInt(0), 
-							rs.getString(1)));
-				}while(rs.moveToNext());
-			}
-			//	Close
-			DB.closeConnection(conn);
-			//	Set Adapter
-			adapter = new SearchAdapter(this, R.layout.i_search, data);
-			adapter.setDropDownViewResource(R.layout.i_search);
-			lv_Search.setAdapter(adapter);
-		} catch(Exception e){
-			LogM.log(this, getClass(), Level.SEVERE, "Error in Load", e);
-		}
-	}
-	
+	}	
 	
 	/**
 	 * On Selected Record
@@ -381,5 +347,136 @@ public class LV_Search extends Activity {
 		intent.putExtras(bundle);
 		setResult(Activity.RESULT_OK, intent);
 		finish();
-	}	  
+	}
+	
+	@Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	//	
+    	if (resultCode == Activity.RESULT_OK) {
+	    	if(data != null){
+	    		Bundle bundle = data.getExtras();
+	    		//	Item
+	    		DisplayRecordItem item = (DisplayRecordItem) bundle.getParcelable("Record");
+	    		switch (bundle.getInt(DisplayMenuItem.CONTEXT_ACTIVITY_TYPE)) {
+	    			case DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_SearchColumn:
+						String columnName = bundle.getString("ColumnName");
+			    		//	if a field or just search
+			    		if(columnName != null){
+			    			for (GridField vField: viewList) {
+			    	    		if(vField.getColumnName().equals(columnName)){
+			    	    			((VLookupSearch) vField).setItem(item);
+			    	    			break;
+			    	    		}
+			    			}
+			    		}
+						break;
+				default:
+					break;
+	    		}
+	    	}
+    	}
+    }
+	
+	/**
+	 * Include Class Thread
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+	 *
+	 */
+	private class LoadViewTask extends AsyncTask<Void, Integer, Integer> {
+
+		/**	Progress Bar			*/
+		private ProgressDialog 			v_PDialog;
+		/**	Data					*/
+		ArrayList<DisplayRecordItem> 	data = null;
+		
+		/**
+		 * Init Values
+		 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/05/2014, 12:18:42
+		 * @return void
+		 */
+		private void init(){
+	    	//	Load Table Info
+			data = new ArrayList<DisplayRecordItem>();
+			//	View
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			v_PDialog = ProgressDialog.show(v_activity, null, 
+					getString(R.string.msg_Loading), false, false);
+			//	Set Max
+		}
+		
+		@Override
+		protected Integer doInBackground(Void... params) {
+			init();
+			//	Load Data
+			loadData();
+			//	
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Integer... progress) {
+			
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			loadView();
+			v_PDialog.dismiss();
+		}
+		
+	    /**
+	     * Load View Objects
+	     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 16:37:56
+	     * @return
+	     * @return boolean
+	     */
+	    protected boolean loadView(){
+	    	//	Set Adapter
+			adapter = new SearchAdapter(getApplicationContext(), R.layout.i_search, data);
+			adapter.setDropDownViewResource(R.layout.i_search);
+			lv_Search.setAdapter(adapter);
+			//	
+			return true;
+	    }
+	    
+	    /**
+		 * Load Data
+		 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/03/2014, 13:32:16
+		 * @return void
+		 */
+		private void loadData() {
+			try{
+				if(lookup == null)
+					throw new Exception("No Parameter");
+				//	
+				DB conn = new DB(v_activity);
+				DB.loadConnection(conn, DB.READ_ONLY);
+				Cursor rs = null;
+				//	Query
+				String[] values = null;
+				if(m_criteria != null) {
+					lookup.setCriteria(m_criteria.getWhereClause());
+					values = m_criteria.getValues();
+				} else
+					lookup.setCriteria(null);
+				rs = conn.querySQL(lookup.getSQL(), values);
+				//	
+				if(rs.moveToFirst()){
+					//	Loop
+					do{
+						data.add(new DisplayRecordItem(
+								rs.getInt(0), 
+								rs.getString(1)));
+					}while(rs.moveToNext());
+				}
+				//	Close
+				DB.closeConnection(conn);
+			} catch(Exception e){
+				LogM.log(v_activity, getClass(), Level.SEVERE, "Error in Load", e);
+			}
+		}
+	}
 }
