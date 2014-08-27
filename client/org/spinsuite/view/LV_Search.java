@@ -67,7 +67,7 @@ import android.widget.ListView;
 public class LV_Search extends Activity {
 	
 	/**	Adapter					*/
-	private SearchAdapter 			adapter = null;
+	private SearchAdapter 			m_SearchAdapter = null;
 	/**	Main Layout				*/
 	private LinearLayout			llc_Search = null;
 	/**	List View				*/
@@ -129,7 +129,7 @@ public class LV_Search extends Activity {
 			public void onItemClick(AdapterView<?> adapter, View arg1, int position,
 					long arg3) {
 				//	Load from Action
-				selectedRecord((DisplayRecordItem) adapter.getItemAtPosition(position));
+				selectedRecord(m_SearchAdapter.getItem(position));
 			}
         });
 	}
@@ -258,9 +258,9 @@ public class LV_Search extends Activity {
 					new OnQueryTextListenerCompat() {
 				@Override
 				public boolean onQueryTextChange(String newText) {
-					if(adapter != null){
+					if(m_SearchAdapter != null){
 						String mFilter = !TextUtils.isEmpty(newText) ? newText : null;
-						adapter.getFilter().filter(mFilter);
+						m_SearchAdapter.getFilter().filter(mFilter);
 					}
 					return true;
 				}
@@ -435,9 +435,9 @@ public class LV_Search extends Activity {
 	     */
 	    protected boolean loadView(){
 	    	//	Set Adapter
-			adapter = new SearchAdapter(getApplicationContext(), R.layout.i_search, data);
-			adapter.setDropDownViewResource(R.layout.i_search);
-			lv_Search.setAdapter(adapter);
+			m_SearchAdapter = new SearchAdapter(getApplicationContext(), R.layout.i_search, data);
+			m_SearchAdapter.setDropDownViewResource(R.layout.i_search);
+			lv_Search.setAdapter(m_SearchAdapter);
 			//	
 			return true;
 	    }
