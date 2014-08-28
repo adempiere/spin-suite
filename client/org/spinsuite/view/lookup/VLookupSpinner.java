@@ -65,6 +65,7 @@ public class VLookupSpinner extends GridField {
 	public VLookupSpinner(Context context, InfoField m_field, TabParameter tabParam, Lookup m_Lookup) {
 		super(context, m_field, tabParam);
 		this.m_Lookup = m_Lookup;
+		//	Init
 		init();
 	}
 	
