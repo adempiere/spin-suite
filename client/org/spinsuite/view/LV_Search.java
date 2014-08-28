@@ -210,9 +210,11 @@ public class LV_Search extends Activity {
 	 */
 	private void addView(InfoField field){
     	
-    	GridField lookup = null;
+		field.IsMandatory = false;
+		//	Get Lookup
+    	GridField lookup = GridField.createLookup(this, field);//null;
 		//	Add
-		if(DisplayType.isDate(field.DisplayType)){
+		/*if(DisplayType.isDate(field.DisplayType)){
 			lookup = new VLookupDateBox(this, field);
 		} else if(DisplayType.isText(field.DisplayType)){
 			VLookupString lookupString = new VLookupString(this, field);
@@ -228,7 +230,7 @@ public class LV_Search extends Activity {
 			} else if(field.DisplayType == DisplayType.SEARCH){
 				lookup = new VLookupSearch(this, field);
 			}
-		}
+		}*/
 		//	is Filled
 		if(lookup != null){
 			viewList.add(lookup);

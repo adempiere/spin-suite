@@ -447,38 +447,8 @@ public abstract class GridField extends LinearLayout {
 	 */
 	public static GridField createLookup(Activity act, int m_SPS_Column_ID, Lookup m_Lookup, TabParameter m_TabParameter) {
 		InfoField field = loadInfoColumnField(act, m_SPS_Column_ID);
-		GridField gridField = null;
-		//	Add
-		if(DisplayType.isDate(field.DisplayType)){
-			gridField = new VLookupDateBox(act, field);
-		} else if(DisplayType.isText(field.DisplayType)){
-			VLookupString lookupString = new VLookupString(act, field);
-			gridField = lookupString;
-		} else if(DisplayType.isBoolean(field.DisplayType)){
-			gridField = new VLookupCheckBox(act, field);
-		} else if(DisplayType.isLookup(field.DisplayType)){
-			//	Table Direct
-			if(field.DisplayType == DisplayType.TABLE_DIR
-					|| field.DisplayType == DisplayType.LIST
-					|| field.DisplayType == DisplayType.TABLE){
-				gridField = new VLookupSpinner(act, field, m_TabParameter, m_Lookup);
-			} else if(field.DisplayType == DisplayType.SEARCH){
-				gridField = new VLookupSearch(act, field);
-			}
-		} else if(field.DisplayType == DisplayType.BUTTON){
-			VLookupButton lookupButton = null;
-			if(field.ColumnName.equals("DocAction")){
-				//lookupButton = new VLookupButtonDocAction(act, field, (DocAction) mGridTab.getPO());
-			} else if(field.ColumnName.equals("PaymentRule")){
-				//	Payment Rule Button
-				lookupButton = new LookupButtonPaymentRule(act, field);
-			} else {
-				lookupButton = new VLookupButton(act, field);
-			}
-			//	Set Parameters
-			gridField = lookupButton;
-		}
-		return gridField;
+		//	Create Grid Field
+		return createLookup(act, field, m_Lookup, m_TabParameter);
 	}
 	
 	/**
@@ -489,8 +459,37 @@ public abstract class GridField extends LinearLayout {
 	 * @return
 	 * @return GridField
 	 */
-	public static GridField createLookup(Activity act, int m_SPS_Column_ID){
+	public static GridField createLookup(Activity act, int m_SPS_Column_ID) {
 		InfoField field = loadInfoColumnField(act, m_SPS_Column_ID);
+		//	Create Lookup
+		return createLookup(act, field, null, null);
+	}
+	
+	/**
+	 * Create Lookup from Field Info
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 15:17:07
+	 * @param act
+	 * @param field
+	 * @return
+	 * @return GridField
+	 */
+	public static GridField createLookup(Activity act, InfoField field) {
+		return createLookup(act, field, null, null);
+	}
+	
+	/**
+	 * 
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 15:10:34
+	 * @param act
+	 * @param field
+	 * @return
+	 * @return GridField
+	 */
+	public static GridField createLookup(Activity act, InfoField field, Lookup m_Lookup, TabParameter m_TabParameter) {
+		//	Valid Null
+		if(field == null)
+			return null;
+		//	
 		GridField gridField = null;
 		//	Add
 		if(DisplayType.isDate(field.DisplayType)){
@@ -498,22 +497,27 @@ public abstract class GridField extends LinearLayout {
 		} else if(DisplayType.isText(field.DisplayType)){
 			VLookupString lookupString = new VLookupString(act, field);
 			gridField = lookupString;
-		} else if(DisplayType.isBoolean(field.DisplayType)){
+		} else if(DisplayType.isBoolean(field.DisplayType)) {
 			gridField = new VLookupCheckBox(act, field);
-		} else if(DisplayType.isLookup(field.DisplayType)){
+		} else if(DisplayType.isLookup(field.DisplayType)) {
 			//	Table Direct
 			if(field.DisplayType == DisplayType.TABLE_DIR
 					|| field.DisplayType == DisplayType.LIST
-					|| field.DisplayType == DisplayType.TABLE){
-				gridField = new VLookupSpinner(act, field);
-			} else if(field.DisplayType == DisplayType.SEARCH){
+					|| field.DisplayType == DisplayType.TABLE) {
+				//	Valid Null
+				if(m_TabParameter != null
+						&& m_Lookup != null)
+					gridField = new VLookupSpinner(act, field, m_TabParameter, m_Lookup);
+				else 
+					gridField = new VLookupSpinner(act, field);
+			} else if(field.DisplayType == DisplayType.SEARCH) {
 				gridField = new VLookupSearch(act, field);
 			}
-		} else if(field.DisplayType == DisplayType.BUTTON){
+		} else if(field.DisplayType == DisplayType.BUTTON) {
 			VLookupButton lookupButton = null;
-			if(field.ColumnName.equals("DocAction")){
+			if(field.ColumnName.equals("DocAction")) {
 				//lookupButton = new VLookupButtonDocAction(act, field, (DocAction) mGridTab.getPO());
-			} else if(field.ColumnName.equals("PaymentRule")){
+			} else if(field.ColumnName.equals("PaymentRule")) {
 				//	Payment Rule Button
 				lookupButton = new LookupButtonPaymentRule(act, field);
 			} else {
