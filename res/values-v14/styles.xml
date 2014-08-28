@@ -28,6 +28,10 @@
 	    <item name="android:layout_height">wrap_content</item>
     </style>
     
+    <style name="EditTextStandard" parent="TextStandard" >
+        <item name="android:background">@android:color/background_light</item>
+    </style>
+    
     <!-- Standard Error Text -->
     <style name="TextStandardError" parent="TextColorError" >
         <item name="android:padding">0dip</item>
