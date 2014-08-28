@@ -17,6 +17,7 @@ package org.spinsuite.view.lookup;
 
 
 import org.spinsuite.base.R;
+import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.TabParameter;
 
@@ -130,6 +131,9 @@ public class VLookupCheckBox extends GridField {
         //	Listener
         if(m_Listener != null)
         	m_Listener.onFieldEvent(this);
+		//	Set Context
+		DisplayType.setContextValue(getContext(), 
+				getActivityNo(), getTabNo(), m_field, getValue());
 	}
 
 	@Override
@@ -150,6 +154,11 @@ public class VLookupCheckBox extends GridField {
 
 	@Override
 	public Object getValue() {
+		return v_CheckBox.isChecked();
+	}
+	
+	@Override
+	public boolean getValueAsBoolean() {
 		return v_CheckBox.isChecked();
 	}
 
