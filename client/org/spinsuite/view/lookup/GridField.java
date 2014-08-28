@@ -466,6 +466,38 @@ public abstract class GridField extends LinearLayout {
 	}
 	
 	/**
+	 * Create Lookup from Column Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 18:07:18
+	 * @param act
+	 * @param p_TableName
+	 * @param p_ColumnName
+	 * @return
+	 * @return GridField
+	 */
+	public static GridField createLookup(Activity act, String p_TableName, String p_ColumnName) {
+		InfoField field = loadInfoColumnField(act, p_TableName, p_ColumnName);
+		//	Create Lookup
+		return createLookup(act, field, null, null);
+	}
+	
+	/**
+	 * Get Lookup with Tab Parameter
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 18:53:28
+	 * @param act
+	 * @param p_TableName
+	 * @param p_ColumnName
+	 * @param p_TabParameter
+	 * @return
+	 * @return GridField
+	 */
+	public static GridField createLookup(Activity act, String p_TableName, 
+			String p_ColumnName, TabParameter p_TabParameter) {
+		InfoField field = loadInfoColumnField(act, p_TableName, p_ColumnName);
+		//	Create Lookup
+		return createLookup(act, field, null, p_TabParameter);
+	}
+	
+	/**
 	 * Create Lookup from Field Info
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 15:17:07
 	 * @param act
@@ -485,7 +517,8 @@ public abstract class GridField extends LinearLayout {
 	 * @return
 	 * @return GridField
 	 */
-	public static GridField createLookup(Activity act, InfoField field, Lookup m_Lookup, TabParameter m_TabParameter) {
+	public static GridField createLookup(Activity act, InfoField field, 
+			Lookup m_Lookup, TabParameter p_TabParameter) {
 		//	Valid Null
 		if(field == null)
 			return null;
@@ -505,11 +538,8 @@ public abstract class GridField extends LinearLayout {
 					|| field.DisplayType == DisplayType.LIST
 					|| field.DisplayType == DisplayType.TABLE) {
 				//	Valid Null
-				if(m_TabParameter != null
-						&& m_Lookup != null)
-					gridField = new VLookupSpinner(act, field, m_TabParameter, m_Lookup);
-				else 
-					gridField = new VLookupSpinner(act, field);
+				gridField = new VLookupSpinner(act, field, p_TabParameter, m_Lookup);
+					//gridField = new VLookupSpinner(act, field);
 			} else if(field.DisplayType == DisplayType.SEARCH) {
 				gridField = new VLookupSearch(act, field);
 			}
@@ -530,17 +560,51 @@ public abstract class GridField extends LinearLayout {
 	}
 	
 	/**
-	 * Load Column
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/05/2014, 17:58:13
+	 * Get Info Field from Table Name and Column Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 18:03:32
 	 * @param ctx
-	 * @param m_SPS_Column_ID
+	 * @param p_TableName
+	 * @param p_ColumnName
 	 * @return
 	 * @return InfoField
 	 */
-	public static InfoField loadInfoColumnField(Context ctx, int m_SPS_Column_ID){
-		//	Is Mandatory
-		if(m_SPS_Column_ID == 0)
-			return null;
+	public static InfoField loadInfoColumnField(Context ctx, String p_TableName, String p_ColumnName) {
+		if(p_TableName != null
+				&& p_TableName.length() > 0
+				&& p_ColumnName != null
+				&& p_ColumnName.length() > 0)
+			return loadInfoColumnField(ctx, p_TableName, p_ColumnName, 0);
+		//	Default validation
+		return null;
+	}
+	
+	/**
+	 * Get Info Field from Column Identifier
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 18:05:05
+	 * @param ctx
+	 * @param p_SPS_Column_ID
+	 * @return
+	 * @return InfoField
+	 */
+	public static InfoField loadInfoColumnField(Context ctx, int p_SPS_Column_ID) {
+		if(p_SPS_Column_ID != 0)
+			return loadInfoColumnField(ctx, null, null, p_SPS_Column_ID);
+		//	Default validation
+		return null;
+	}
+	
+	/**
+	 * Load Column
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/05/2014, 17:58:13
+	 * @param ctx
+	 * @param p_TableName
+	 * @param p_ColumnName
+	 * @param p_SPS_Column_ID
+	 * @return
+	 * @return InfoField
+	 */
+	private static InfoField loadInfoColumnField(Context ctx, String p_TableName, 
+			String p_ColumnName, int p_SPS_Column_ID){
 		//	
 		String language = Env.getAD_Language(ctx);
 		boolean isBaseLanguage = Env.isBaseLanguage(ctx);
@@ -553,7 +617,8 @@ public abstract class GridField extends LinearLayout {
 					"c.IsUpdateable, c.SelectionSeqNo, c.SeqNo, c.SPS_Column_ID, c.SPS_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, " +
 					"c.AD_Process_ID, c.Name, c.Description, c.IsActive " +
 					//	From
-					"FROM SPS_Column c ");
+					"FROM SPS_Table t " +
+					"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) ");
 		} else {
 			sql.append("SELECT c.AD_Element_ID, c.AD_Reference_ID, c.AD_Reference_Value_ID, c.AD_Val_Rule_ID, c.DefaultValue, " + 
 					"c.Callout, c.ColumnName, c.ColumnSQL, c.EntityType, c.FieldLength, c.FormatPattern, c.IsAlwaysUpdateable, " +
@@ -561,18 +626,31 @@ public abstract class GridField extends LinearLayout {
 					"c.IsUpdateable, c.SelectionSeqNo, c.SeqNo, c.SPS_Column_ID, c.SPS_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, " +
 					"c.AD_Process_ID, ct.Name, c.Description, c.IsActive " +
 					//	From
-					"FROM SPS_Column c " +
+					"FROM SPS_Table t " +
+					"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) " +
 					"INNER JOIN SPS_Column_Trl ct ON(ct.SPS_Column_ID = c.SPS_Column_ID AND ct.AD_Language = '").append(language).append("') ");
 		}
+		//	Parameters
+		String [] values = null;
 		//	Where
-		sql.append("WHERE c.SPS_Column_ID = ").append(m_SPS_Column_ID).append(" ");		
+		if(p_TableName != null
+				&& p_ColumnName != null) {
+			sql.append("WHERE t.TableName = ? AND c.ColumnName = ? ");
+			//	Set Parameters
+			values = new String[]{p_TableName, p_ColumnName};
+		} else {
+			sql.append("WHERE c.SPS_Column_ID = ? ");
+			//	Set Parameters
+			values = new String[]{String.valueOf(p_SPS_Column_ID)};
+		}
+		//	Log
 		LogM.log(ctx, GridField.class, Level.FINE, "SQL TableInfo SQL:" + sql);
 		//	Create Connection
 		DB conn = new DB(ctx);
 		DB.loadConnection(conn, DB.READ_ONLY);
 		//	
 		Cursor rs = null;
-		rs = conn.querySQL(sql.toString(), null);
+		rs = conn.querySQL(sql.toString(), values);
 		//	
 		InfoField iFieldColumn = null;
 		if(rs.moveToFirst()){

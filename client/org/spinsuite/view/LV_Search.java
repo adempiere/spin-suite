@@ -30,11 +30,7 @@ import org.spinsuite.view.lookup.GridField;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.InfoTab;
 import org.spinsuite.view.lookup.LookupDisplayType;
-import org.spinsuite.view.lookup.VLookupCheckBox;
-import org.spinsuite.view.lookup.VLookupDateBox;
 import org.spinsuite.view.lookup.VLookupSearch;
-import org.spinsuite.view.lookup.VLookupSpinner;
-import org.spinsuite.view.lookup.VLookupString;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -212,25 +208,7 @@ public class LV_Search extends Activity {
     	
 		field.IsMandatory = false;
 		//	Get Lookup
-    	GridField lookup = GridField.createLookup(this, field);//null;
-		//	Add
-		/*if(DisplayType.isDate(field.DisplayType)){
-			lookup = new VLookupDateBox(this, field);
-		} else if(DisplayType.isText(field.DisplayType)){
-			VLookupString lookupString = new VLookupString(this, field);
-			lookup = lookupString;
-		} else if(DisplayType.isBoolean(field.DisplayType)){
-			lookup = new VLookupCheckBox(this, field);
-		} else if(DisplayType.isLookup(field.DisplayType)){
-			//	Table Direct
-			if(field.DisplayType == DisplayType.TABLE_DIR){
-				//	Optional Null Value
-				field.IsMandatory = false;
-				lookup = new VLookupSpinner(this, field);
-			} else if(field.DisplayType == DisplayType.SEARCH){
-				lookup = new VLookupSearch(this, field);
-			}
-		}*/
+    	GridField lookup = GridField.createLookup(this, field);
 		//	is Filled
 		if(lookup != null){
 			viewList.add(lookup);
