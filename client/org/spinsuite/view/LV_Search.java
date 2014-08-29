@@ -48,9 +48,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -76,8 +74,8 @@ public class LV_Search extends Activity {
 	private int						m_SPS_Tab_ID = 0;
 	/**	Criteria				*/
 	private FilterValue				m_criteria = null;
-	/**	Old Criteria			*/
-	private FilterValue				m_oldCriteria = null;
+	/**	Criteria Old			*/
+	private String					m_oldWhereClause = null;
 	/**	Lookup 					*/
 	private LookupDisplayType 		lookup = null;
 	/**	Info Field				*/
@@ -149,24 +147,6 @@ public class LV_Search extends Activity {
 	    		//	Add View to Layout
 	    		addView(field);
 	    	}
-	    	//	Add Button
-	    	Button btn_Search = new Button(this);
-	    	btn_Search.setText(getResources().getString(R.string.msg_Search));
-	    	//	Action
-	    	btn_Search.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					m_criteria = new FilterValue();
-					if(m_oldCriteria != null)
-						m_criteria = m_oldCriteria;
-					//	Add Criteria
-					addCriteriaQuery();
-					new LoadViewTask().execute();
-				}
-			});
-	    	//	Add Button
-	    	llc_Search.addView(btn_Search, v_param);
 		}
 		//	Hide
 		llc_Search.setVisibility(LinearLayout.GONE);
@@ -178,6 +158,7 @@ public class LV_Search extends Activity {
 	 * @return void
 	 */
 	private void addCriteriaQuery(){
+		m_criteria = new FilterValue();
     	//	Get Values
 		StringBuffer sqlWhere = new StringBuffer();
     	for (GridField lookup: viewList) {
@@ -291,12 +272,13 @@ public class LV_Search extends Activity {
 			//	Show
 			if(llc_Search.getVisibility() == LinearLayout.GONE){
 				llc_Search.setVisibility(LinearLayout.VISIBLE);
-				m_oldCriteria = m_criteria;
+				m_oldWhereClause = (m_criteria != null
+											? m_criteria.getWhereClause()
+													: "");
 			} else {
 				llc_Search.setVisibility(LinearLayout.GONE);
-				m_criteria = m_oldCriteria;
-				//	Load New
-				new LoadViewTask().execute();
+				//	Search
+				search();
 			}
 			return true;
 		} else if (itemId == android.R.id.home) {
@@ -304,7 +286,26 @@ public class LV_Search extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}	
+	}
+	
+	/**
+	 * Search Records
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/08/2014, 15:39:31
+	 * @return void
+	 */
+	private void search() {
+		//	Add Criteria
+		addCriteriaQuery();
+		String whereClause = (m_criteria != null
+									? m_criteria.getWhereClause()
+											: "");
+		//	Load New
+		if(!m_oldWhereClause.equals(whereClause)) {
+			//	Set New Criteria
+			m_oldWhereClause = m_criteria.getWhereClause();
+			new LoadViewTask().execute();
+		}
+	}
 	
 	/**
 	 * On Selected Record
