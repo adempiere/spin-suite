@@ -188,6 +188,7 @@ public class LV_Search extends Activity {
 	private void addView(InfoField field){
     	
 		field.IsMandatory = false;
+		field.IsReadOnly = false;
 		//	Get Lookup
     	GridField lookup = GridField.createLookup(this, field);
 		//	is Filled

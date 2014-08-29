@@ -191,10 +191,17 @@ public class T_DynamicTab extends Fragment
 	 */
 	private void processCallout(GridField mField) {
 		//	Change Document Status
-		/*if(mField.getColumnName().equals("DocStatus")) {
-			save();
+		if(mField.getColumnName().equals("DocAction")) {
+			//	Valid Ok
+			VLookupButtonDocAction docAction = (VLookupButtonDocAction) mField;
+			if(docAction.isProcessed()) {
+				//	Save Model
+				mGridTab.modelSave();
+				refreshFromChange(true);
+			}
+			//	
 			return;
-		}*/
+		}
 		//	
 		String retValue = mGridTab.processCallout(mField);
 		//	Show Error
