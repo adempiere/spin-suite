@@ -20,12 +20,13 @@ import org.spinsuite.base.R;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.Env;
-import org.spinsuite.util.TabListener;
+import org.spinsuite.util.TabHandler;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -42,7 +43,7 @@ import android.widget.ListView;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class TV_Base extends Activity {
+public class TV_Base extends Activity implements ActionBar.TabListener {
 	
 	/**	Parameters						*/
 	protected ActivityParameter 	param;
@@ -227,7 +228,8 @@ public class TV_Base extends Activity {
      */
     protected void addFagment(Class<?> clazz, String tag, int title, Bundle bundle){
     	Tab tab = actionBar.newTab();
-    	tab.setTabListener(m_FragmentArray.addTab(tag, clazz, bundle));
+    	m_FragmentArray.addTab(tag, clazz, bundle);
+    	tab.setTabListener(this);
         tab.setText(getResources().getString(title));
         actionBar.addTab(tab);
     	
@@ -242,7 +244,8 @@ public class TV_Base extends Activity {
      */
     protected void addFagment(Class<?> clazz, String tag, int title){
     	Tab tab = actionBar.newTab();
-    	tab.setTabListener(m_FragmentArray.addTab(tag, clazz, null));
+    	m_FragmentArray.addTab(tag, clazz, null);
+    	tab.setTabListener(this);
     	tab.setText(getResources().getString(title));
         actionBar.addTab(tab);
     }
@@ -258,7 +261,8 @@ public class TV_Base extends Activity {
     protected void addFagment(Class<?> clazz, String tag, String title){
     	Tab tab = actionBar.newTab();
     	tab.setText(title);
-    	tab.setTabListener(m_FragmentArray.addTab(tag, clazz, null));
+    	m_FragmentArray.addTab(tag, clazz, null);
+    	tab.setTabListener(this);
         actionBar.addTab(tab);
     }
     
@@ -273,7 +277,8 @@ public class TV_Base extends Activity {
      */
     protected void addFagment(Class<?> clazz, String tag, String title, Bundle param){
     	Tab tab = actionBar.newTab();
-    	tab.setTabListener(m_FragmentArray.addTab(tag, clazz, param));
+    	m_FragmentArray.addTab(tag, clazz, param);
+    	tab.setTabListener(this);
     	tab.setText(title);
         actionBar.addTab(tab);
     }
@@ -296,9 +301,32 @@ public class TV_Base extends Activity {
      * @return Fragment
      */
     protected Fragment getFragment(int index) {
-		TabListener tab = m_FragmentArray.getTab(index);
+		TabHandler tab = m_FragmentArray.getTab(index);
     	return tab.getFragment();
 	}
+    
+    /**
+     * Get Tab Handler
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/08/2014, 10:21:40
+     * @param index
+     * @return
+     * @return TabListener
+     */
+    private TabHandler getTabHandler(int index) {
+		TabHandler tab = m_FragmentArray.getTab(index);
+    	return tab;
+	}
+    
+    /**
+     * Get Current Tab Handler
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/08/2014, 10:52:35
+     * @return
+     * @return TabHandler
+     */
+    private TabHandler getCurrentTabHandler() {
+    	int index = actionBar.getSelectedTab().getPosition();
+		return getTabHandler(index);
+    }
     
     /**
      * Set Current Fragment Tab
@@ -318,5 +346,22 @@ public class TV_Base extends Activity {
      */
     public void setPagingEnabled(boolean enabled){
     	//	
-    } 
+    }
+
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		
+	}
+	
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		TabHandler tabHandler = getCurrentTabHandler();
+		tabHandler.loadFragment(tab, ft);
+	}
+
+	@Override
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		TabHandler tabHandler = getCurrentTabHandler();
+		tabHandler.unLoadFragment(tab, ft);
+	} 
 }

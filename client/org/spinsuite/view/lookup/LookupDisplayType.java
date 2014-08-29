@@ -41,6 +41,15 @@ public class LookupDisplayType {
 		this(ctx, 0, 0, field);
 	}
 	
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 14:58:02
+	 * @param ctx
+	 * @param m_ActivityNo
+	 * @param m_TabNo
+	 * @param field
+	 */
 	public LookupDisplayType(Context ctx, int m_ActivityNo, int m_TabNo, InfoField field){
 		this.m_field = field;
 		this.ctx = ctx;

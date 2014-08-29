@@ -14,7 +14,7 @@
     <style name="TextColor">
     	<item name="android:textColor">@android:color/black</item>
     </style>
-
+    
     <!-- Error Color -->
     <style name="TextColorError">
     	<item name="android:textColor">@android:color/holo_red_dark</item>
@@ -26,6 +26,10 @@
         <item name="android:padding">0dip</item>
         <item name="android:layout_width">wrap_content</item>
 	    <item name="android:layout_height">wrap_content</item>
+    </style>
+    
+    <style name="EditTextStandard" parent="TextStandard" >
+        <item name="android:background">@android:color/background_light</item>
     </style>
     
     <!-- Standard Error Text -->
@@ -60,6 +64,12 @@
     <style name="TextTitleList" parent="TextStandard">
         <item name="android:textStyle">bold|normal</item>
         <item name="android:textColor">@android:color/black</item>
+    </style>
+    
+    <style name="TextTitleListWC" parent="TextStandard">
+        <item name="android:textStyle">bold|normal</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@android:color/black</item>
     </style>
     
     <!-- Text Item -->
