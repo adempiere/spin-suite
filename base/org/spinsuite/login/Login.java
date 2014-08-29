@@ -72,7 +72,7 @@ public class Login extends TV_Base implements I_CancelOk {
     		
     	} else {
     		LoadInitData initData = new LoadInitData(this);
-    		//initData.initialLoad_copyDB();
+    		initData.initialLoad_copyDB();
     	}
     	//	
     }  
