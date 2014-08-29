@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.initialload.InitialLoad;
+import org.spinsuite.initialload.InitialLoadTask;
 import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
@@ -85,7 +86,7 @@ public class T_Connection extends Activity implements I_Login {
     	ch_SaveSD = (CheckBox) findViewById(R.id.ch_SaveSD);
     	
     	// Carlos Parada Setting Parameters for Spin-Suite Service Call 
-    	et_UrlSoap.setText("http://192.168.1.196:8081/ADInterface/services/SpinSuiteService");
+    	et_UrlSoap.setText("http://193.1.1.246:8080/ADInterface/services/SpinSuiteService");
     	et_NameSpace.setText("http://www.erpcya.com/");
     	et_Method.setText("InitialLoad");
     	//End Carlos Parada
@@ -429,9 +430,23 @@ public class T_Connection extends Activity implements I_Login {
 	 * @param p_Pass
 	 * @return void
 	 */
-	public void startSynchronization(String p_User,String p_Pass){
-		if (!p_User.equals("") && !p_Pass.equals("")){
-    		InitialLoad il = new InitialLoad(et_UrlSoap.getText().toString(), 
+	public void startSynchronization(String p_User,String p_PassWord){
+		if (!p_User.equals("") && !p_PassWord.equals("")){
+    		InitialLoadTask ilt = new InitialLoadTask(et_UrlSoap.getText().toString(), 
+    													et_NameSpace.getText().toString(), 
+    														et_Method.getText().toString(), 
+    															true, 
+    																p_User,
+    																	p_PassWord , 
+    																	et_NameSpace.getText().toString() + et_Method.getText().toString(),
+    																	this);
+    		
+    		
+    		ilt.runTask();
+    		
+    		/*
+    		 * 
+InitialLoad il = new InitialLoad(et_UrlSoap.getText().toString(), 
     											et_NameSpace.getText().toString(), 
     												et_Method.getText().toString(), 
     													true, 
@@ -440,9 +455,8 @@ public class T_Connection extends Activity implements I_Login {
     															p_Pass, 
     																"initLoad",
     																	this);
-    		il.runTask();
-    		
-    		
+    		 * 
+    		 */
     		
     	}
     		

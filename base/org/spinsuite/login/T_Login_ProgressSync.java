@@ -25,19 +25,21 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 @SuppressLint("ValidFragment")
 public class T_Login_ProgressSync extends DialogFragment implements OnClickListener{
 	
 	
-	InitialLoad m_ILoad  = null;
+	private TextView tv_Msg = null; 
+	private ProgressBar pb_Progress = null;
 	
-	public T_Login_ProgressSync(InitialLoad iload) {
-		m_ILoad = iload;
-	}
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -46,6 +48,11 @@ public class T_Login_ProgressSync extends DialogFragment implements OnClickListe
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View view =inflater.inflate(R.layout.v_progressbar, null);
 		
+		tv_Msg =(TextView) view.findViewById(R.id.tv_MsgText);
+		tv_Msg.setVisibility(TextView.VISIBLE);
+		
+		pb_Progress  = (ProgressBar) view.findViewById(R.id.pb_Large);
+		pb_Progress.setVisibility(ProgressBar.VISIBLE);
 		
 		builder.setView(view);
 		
@@ -58,5 +65,29 @@ public class T_Login_ProgressSync extends DialogFragment implements OnClickListe
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		
+	}
+	
+	
+	public void setMsg(String msg,boolean error) {
+		tv_Msg.setText(msg);
+		if (error)
+			tv_Msg.setTextColor(Color.RED);
+	}
+	
+	public void setProgress(int progress, boolean error){
+		
+		if (progress <= 0 )
+			pb_Progress.setIndeterminate(true);
+		else
+			pb_Progress.setProgress(progress);
+		
+		if (error)
+			pb_Progress.setVisibility(ProgressBar.GONE);
+		
+	}
+	
+	public void setMaxValueProgressBar(int p_Max){
+		pb_Progress.setIndeterminate(false);
+		pb_Progress.setMax(p_Max);
 	}
 }

@@ -31,12 +31,11 @@ public class ILCall extends SoapObject{
 	 * @param p_PassWord
 	 * @param p_ServiceType
 	 */
-	public ILCall(String p_NameSpace, String p_User, String p_PassWord, String p_ServiceType) {
+	public ILCall(String p_NameSpace, String p_User, String p_PassWord) {
 		// TODO Auto-generated constructor stub
 		super(p_NameSpace, m_ILCALLService);
 		addProperty(m_UserField, p_User);
 		addProperty(m_PassWordField, p_PassWord);
-		addProperty(m_ServiceTypeField, p_ServiceType);
 	}
 	
 	
@@ -46,5 +45,10 @@ public class ILCall extends SoapObject{
 	
 	public static String m_PassWordField = "PassWord";
 	
+	public static String m_ServiceDefinitionField = "serviceDefinition";
+	
+	public static String m_ServiceMethodField = "serviceMethod";
+	
 	public static String m_ServiceTypeField = "serviceType";
+	
 }
