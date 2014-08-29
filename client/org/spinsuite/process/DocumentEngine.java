@@ -213,9 +213,11 @@ public class DocumentEngine implements DocAction
 			LogM.log(getCtx(), getClass(), Level.INFO, 
 					"**** Action=" + m_action + " (Prc=" + processAction + "/Doc=" + docAction + ") " + m_document);
 		boolean success = processIt (m_action);
-		if (m_document != null)
+		if (m_document != null) {
+			m_message = m_document.getProcessMsg();
 			LogM.log(getCtx(), getClass(), Level.INFO, 
 					"**** Action=" + m_action + " - Success=" + success);
+		}
 		return success;
 	}	//	process
 	
@@ -228,47 +230,52 @@ public class DocumentEngine implements DocAction
 	public boolean processIt (String action){
 		m_message = null;
 		m_action = action;
+		boolean success = false;
 		//
 		if (ACTION_Unlock.equals(m_action))
-			return unlockIt();
-		if (ACTION_Invalidate.equals(m_action))
-			return invalidateIt();
-		if (ACTION_Prepare.equals(m_action))
-			return STATUS_InProgress.equals(prepareIt());
-		if (ACTION_Approve.equals(m_action))
-			return approveIt();
-		if (ACTION_Reject.equals(m_action))
-			return rejectIt();
-		if (ACTION_Complete.equals(m_action) || ACTION_WaitComplete.equals(m_action))
-		{
+			success = unlockIt();
+		else if (ACTION_Invalidate.equals(m_action))
+			success = invalidateIt();
+		else if (ACTION_Prepare.equals(m_action))
+			success = STATUS_InProgress.equals(prepareIt());
+		else if (ACTION_Approve.equals(m_action))
+			success = approveIt();
+		else if (ACTION_Reject.equals(m_action))
+			success = rejectIt();
+		else if (ACTION_Complete.equals(m_action) || ACTION_WaitComplete.equals(m_action)) {
 			String status = null;
-			if (isDrafted() || isInvalid())		//	prepare if not prepared yet
-			{
+			if (isDrafted() || isInvalid()) {
 				status = prepareIt();
 				if (!STATUS_InProgress.equals(status))
-					return false;
+					success =  false;
 			}
+			//	
 			status = completeIt();
-			boolean ok =   STATUS_Completed.equals(status)
+			success = STATUS_Completed.equals(status)
 						|| STATUS_InProgress.equals(status)
 						|| STATUS_WaitingPayment.equals(status)
 						|| STATUS_WaitingConfirmation.equals(status);
-			return ok;
+		} 
+		else if (ACTION_ReActivate.equals(m_action))
+			success = reActivateIt();
+		else if (ACTION_Reverse_Accrual.equals(m_action))
+			success = reverseAccrualIt();
+		else if (ACTION_Reverse_Correct.equals(m_action))
+			success = reverseCorrectIt();
+		else if (ACTION_Close.equals(m_action))
+			success = closeIt();
+		else if (ACTION_Void.equals(m_action))
+			success = voidIt();
+		else if (ACTION_Post.equals(m_action))
+			success = postIt();
+		//	Get Msg
+		if (m_document != null) {
+			m_message = m_document.getProcessMsg();
+			LogM.log(getCtx(), getClass(), Level.INFO, 
+					"**** Action=" + m_action + " - Success=" + success);
 		}
-		if (ACTION_ReActivate.equals(m_action))
-			return reActivateIt();
-		if (ACTION_Reverse_Accrual.equals(m_action))
-			return reverseAccrualIt();
-		if (ACTION_Reverse_Correct.equals(m_action))
-			return reverseCorrectIt();
-		if (ACTION_Close.equals(m_action))
-			return closeIt();
-		if (ACTION_Void.equals(m_action))
-			return voidIt();
-		if (ACTION_Post.equals(m_action))
-			return postIt();
 		//
-		return false;
+		return success;
 	}	//	processDocument
 	
 	/**

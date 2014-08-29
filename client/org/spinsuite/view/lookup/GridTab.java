@@ -461,6 +461,19 @@ public class GridTab {
     	if(!ok)
     		return ok;
     	//	Save
+    	ok = modelSave();
+    	//	Return
+    	return ok;
+    }
+    
+    /**
+     * Save only model
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/08/2014, 16:51:48
+     * @return
+     * @return boolean
+     */
+    public boolean modelSave() {
+    	boolean ok = true;
     	ok = model.save();
     	//	Set Record Identifier
     	m_Record_ID = model.get_ID();
@@ -474,7 +487,7 @@ public class GridTab {
     		Msg.alertMsg(m_ctx, m_ctx.getString(R.string.msg_Error), 
     				model.getError());
     	}
-    	//	Return
+    	//	
     	return ok;
     }
     

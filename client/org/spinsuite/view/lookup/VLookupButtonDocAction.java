@@ -88,6 +88,8 @@ public class VLookupButtonDocAction extends VLookupButton
 	private QuickAction 		mQAct;
 	/**	Document Engine				*/
 	private DocumentEngine		docEngine = null;
+	/**	Processed					*/
+	private boolean				m_IsProcessed = false;
 	
 	@Override	
 	protected void init() {
@@ -154,15 +156,19 @@ public class VLookupButtonDocAction extends VLookupButton
 	 * Set Document Action
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/05/2012, 00:35:12
 	 * @param action
-	 * @return void
+	 * @return boolean
 	 */
-	public void processDocAction(String action){
+	public boolean processDocAction(String action){
 		if(!docEngine.processIt(action)){
-			Msg.alertMsg(getContext(), getResources().getString(R.string.msg_Error), docEngine.getProcessMsg());
-			return;
+			Msg.alertMsg(getContext(), 
+					getResources().getString(R.string.msg_Error), 
+					docEngine.getProcessMsg());
+			return false;
 		}
 		//	
 		updateDisplay(action);
+		//	Return
+		return true;
 	}
 	
 	/**
@@ -237,7 +243,7 @@ public class VLookupButtonDocAction extends VLookupButton
 	@Override
 	public void onItemClick(QuickAction source, int pos, int actionId) {
 		ActionItemList item = (ActionItemList) source.getActionItem(pos);
-		processDocAction(item.getValue());
+		m_IsProcessed = processDocAction(item.getValue());
 		//	Listener
 		if(m_Listener != null)
 			m_Listener.onFieldEvent(this);
@@ -268,6 +274,16 @@ public class VLookupButtonDocAction extends VLookupButton
 	public boolean isEmpty() {
 		return (getDocStatus() == null 
 				|| getDocStatus().length() == 0);
+	}
+	
+	/**
+	 * Is Processed
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/08/2014, 17:33:28
+	 * @return
+	 * @return boolean
+	 */
+	public boolean isProcessed() {
+		return m_IsProcessed;
 	}
 
 }
