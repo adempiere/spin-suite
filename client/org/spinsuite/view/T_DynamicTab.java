@@ -175,7 +175,13 @@ public class T_DynamicTab extends Fragment
     	m_Listener = new OnFieldChangeListener() {
     		@Override
     		public void onFieldEvent(GridField mField) {
+    			LogM.log(getActivity(), T_DynamicTab.class, 
+    					Level.FINE, "Field Event = " + mField.getColumnName());
+    			//	Process Callout
     			processCallout(mField);
+    			//	Reload depending fields
+    			if(m_IsModifying)
+    				reloadDepending(mField);
     		}
 		};
     	//	Init Load
@@ -190,6 +196,9 @@ public class T_DynamicTab extends Fragment
 	 * @return void
 	 */
 	private void processCallout(GridField mField) {
+		//	Log
+		LogM.log(getActivity(), T_DynamicTab.class, 
+				Level.FINE, "processCallout(" + mField.getColumnName() + ")");
 		//	Change Document Status
 		if(mField.getColumnName().equals("DocAction")) {
 			//	Valid Ok
@@ -208,6 +217,21 @@ public class T_DynamicTab extends Fragment
 		if(retValue != null
 				&& retValue.length() != 0)
 			Msg.toastMsg(getActivity(), getString(R.string.msg_Error) + ": " + retValue);
+	}
+	
+	/**
+	 * Reload depending field
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/08/2014, 20:25:24
+	 * @param mField
+	 * @return void
+	 */
+	private void reloadDepending(GridField mField) {
+		//	Log
+		LogM.log(getActivity(), T_DynamicTab.class, 
+				Level.FINE, "processCallout(" + mField.getColumnName() + ")");
+		if(!mField.getColumnName().equals("DocAction")) {
+			mGridTab.reloadDepending(mField);
+		}
 	}
 	
 	/**
@@ -468,9 +492,11 @@ public class T_DynamicTab extends Fragment
     	} else if(mode == SEE) {
     		mi_Cancel.setVisible(false);
     		mi_Save.setVisible(false);
-    		mi_More.setVisible(mGridTab!= null && mGridTab.getRecord_ID() > 0);
+    		mi_More.setVisible(mGridTab!= null 
+    				&& mGridTab.getRecord_ID() > 0);
     		mi_Add.setVisible(true);
-    		mi_Edit.setVisible(mGridTab!= null && mGridTab.getRecord_ID() > 0);
+    		mi_Edit.setVisible(mGridTab!= null 
+    				&& mGridTab.getRecord_ID() > 0);
     		mi_Search.setVisible(true);
     		m_IsModifying = false;
     	}
@@ -562,8 +588,7 @@ public class T_DynamicTab extends Fragment
     				lockView(NEW);
     			else
     				lockView(MODIFY);
-    		}
-    		else
+    		} else
         		lockView(SEE);
         }
     }

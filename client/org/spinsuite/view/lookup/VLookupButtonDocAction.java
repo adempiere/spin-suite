@@ -162,7 +162,7 @@ public class VLookupButtonDocAction extends VLookupButton
 		if(!docEngine.processIt(action)){
 			Msg.alertMsg(getContext(), 
 					getResources().getString(R.string.msg_Error), 
-					docEngine.getProcessMsg());
+					Msg.parseTranslation(getContext(), docEngine.getProcessMsg()));
 			return false;
 		}
 		//	
