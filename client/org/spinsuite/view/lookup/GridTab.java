@@ -83,7 +83,7 @@ public class GridTab {
 	private int 					m_Record_ID = 0;
 	/**	Parent Record Identifier*/
 	private int 					m_Parent_Record_ID = 0;
-
+	
 	
 	/**
 	 * Add Field to Grid Tab
@@ -351,6 +351,38 @@ public class GridTab {
 		Env.setContext(m_ctx, m_TabParam.getActivityNo(), m_TabParam.getTabNo(), m_TabInfo.getTableKeyName(), m_Record_ID);
 		Env.setContext(m_ctx, m_TabParam.getActivityNo(), m_TabInfo.getTableKeyName(), m_Record_ID);
 	}
+	
+	/**
+	 * Reload depending fields
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/08/2014, 20:39:26
+	 * @param vParentField
+	 * @return void
+	 */
+	public void reloadDepending(GridField vParentField) {
+		//	
+		int position = m_fields.indexOf(vParentField);
+		//	
+		for (int index = position + 1; index < m_fields.size(); index ++) {
+			GridField vField = m_fields.get(index);
+			//	Get Field Meta-Data
+			InfoField fieldMD = vField.getField();
+			if(fieldMD == null)
+				continue;
+			//	Load
+			if(DisplayType.isLookup(fieldMD.DisplayType)) {
+				if(fieldMD.DisplayType != DisplayType.SEARCH
+						&& vField instanceof VLookupSpinner) {
+					VLookupSpinner spinner = (VLookupSpinner) vField;
+					Object oldValue = spinner.getValue();
+					spinner.load(true);
+					//	
+					spinner.setValueNoReload(oldValue);
+					//	Set Default Value
+				}
+			}
+    	}
+	}
+	
 	
 	/**
 	 * Prepare data for New

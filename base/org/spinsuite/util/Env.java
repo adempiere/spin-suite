@@ -1507,8 +1507,8 @@ public final class Env {
 	 */
 
 	/** Context Language identifier */
-	static public final String      LANGUAGE = "#AD_Language";
-	static public final String      BASE_LANGUAGE = "en_US";
+	public static final String      LANGUAGE = "#AD_Language";
+	public static final String      BASE_LANGUAGE = "en_US";
 	
 	/************************************Env***************************************
 	 * Database Context
@@ -1540,10 +1540,10 @@ public final class Env {
 	public static final String		SUMMARY_RECORD_ID = "#SummRID";
 	
 	/**	Big Decimal 0	 */
-	static final public BigDecimal 	ZERO = new BigDecimal(0.0);
+	public static final BigDecimal 	ZERO = new BigDecimal(0.0);
 	/**	Big Decimal 1	 */
-	static final public BigDecimal 	ONE = new BigDecimal(1.0);
+	public static final BigDecimal 	ONE = new BigDecimal(1.0);
 	/**	Big Decimal 100	 */
-	static final public BigDecimal 	ONEHUNDRED = new BigDecimal(100.0);
+	public static final BigDecimal 	ONEHUNDRED = new BigDecimal(100.0);
 	
 }

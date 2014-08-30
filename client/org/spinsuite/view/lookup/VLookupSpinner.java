@@ -181,6 +181,31 @@ public class VLookupSpinner extends GridField {
 		return pos;
 	}
 
+	/**
+	 * Set Value and no reload
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/08/2014, 22:59:45
+	 * @param value
+	 * @return void
+	 */
+	public void setValueNoReload(Object value) {
+		//	Set Old Value
+		m_OldValue = getValue();
+		//	
+		if(value == null) {
+			//	
+			if(v_Spinner.getAdapter() != null
+					&& !v_Spinner.getAdapter().isEmpty())
+				v_Spinner.setSelection(0);
+			return;
+		}
+		int pos = getPosition(value);
+		//	
+		if(pos > -1)
+			v_Spinner.setSelection(pos);
+		else
+			v_Spinner.setSelection(0);
+	}
+	
 	@Override
 	public void setValue(Object value) {
 		//	Set Old Value
@@ -242,6 +267,11 @@ public class VLookupSpinner extends GridField {
 	 * @return Object
 	 */
 	private Object getValueAtPosition(int position) {
+		//	Valid no Adapter
+		if(v_Spinner.getAdapter() == null
+				|| v_Spinner.getAdapter().isEmpty())
+			return null;
+		//	Get Value
 		DisplayLookupSpinner item = (DisplayLookupSpinner) v_Spinner.getItemAtPosition(position);
 		if(item != null) {
 			if(m_field.DisplayType != DisplayType.LIST)
@@ -249,6 +279,7 @@ public class VLookupSpinner extends GridField {
 			else
 				return item.getIDToString();
 		}
+		//	Return
 		return null;
 	}
 	
@@ -296,5 +327,15 @@ public class VLookupSpinner extends GridField {
 	 */
 	public void setLookup(Lookup m_lookup){
 		this.m_Lookup = m_lookup;
+	}
+	
+	/**
+	 * Load data
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/08/2014, 21:08:47
+	 * @param reQuery
+	 * @return void
+	 */
+	public void load(boolean reQuery) {
+		m_Lookup.load(v_Spinner, reQuery);
 	}
 }

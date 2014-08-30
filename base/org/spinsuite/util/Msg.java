@@ -15,6 +15,10 @@
  *************************************************************************************/
 package org.spinsuite.util;
 
+import java.text.MessageFormat;
+import java.util.logging.Level;
+
+import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 
 import android.app.AlertDialog;
@@ -130,42 +134,15 @@ public class Msg {
 		toast.show();
 	}
 
-	/**************************************************************************
-	 *	Get translated text for AD_Message
-	 *  @param  ad_language - Language
-	 *  @param	AD_Message - Message Key
-	 *  @return translated text
-	 */
-	/*public static String getMsg (Context ctx, String ad_language, String AD_Message)
-	{
-		if (AD_Message == null || AD_Message.length() == 0)
-			return "";
-		//
-		String AD_Language = ad_language;
-		if (AD_Language == null || AD_Language.length() == 0)
-			AD_Language = Env.BASE_LANGUAGE;
-		//	Get Message
-		String retStr = null;//get().lookup (AD_Language, AD_Message);
-		//
-		if (retStr == null || retStr.length() == 0)
-		{
-			LogM.log(ctx, "Msg", Level.WARNING, "NOT found: " + AD_Message);
-			return AD_Message;
-		}
-
-		return retStr;
-	}	//	getMsg*/
-
 	/**
 	 *  Get translated text message for AD_Message
 	 *  @param  ctx Context to retrieve language
 	 *  @param	AD_Message - Message Key
 	 *  @return translated text
 	 */
-	/*public static String getMsg (Context ctx, String AD_Message)
-	{
+	public static String getMsg (Context ctx, String AD_Message) {
 		return getMsg (ctx, Env.getAD_Language(ctx), AD_Message);
-	}   //  getMeg*/
+	}   //  getMeg
 	
 	/**
 	 *	Get clear text for AD_Message with parameters
@@ -175,10 +152,9 @@ public class Msg {
 	 *  @return translated text
 	 *  @see java.text.MessageFormat for formatting options
 	 */
-	/*public static String getMsg(Context ctx, String AD_Message, Object[] args)
-	{
+	public static String getMsg(Context ctx, String AD_Message, Object[] args) {
 		return getMsg (ctx, Env.getAD_Language(ctx), AD_Message, args);
-	}	//	getMsg*/
+	}	//	getMsg
 
 	/**
 	 *	Get clear text for AD_Message with parameters
@@ -188,20 +164,17 @@ public class Msg {
 	 *  @return translated text
 	 *  @see java.text.MessageFormat for formatting options
 	 */
-	/*public static String getMsg (Context ctx, String ad_language, String AD_Message, Object[] args)
-	{
+	public static String getMsg (Context ctx, String ad_language, String AD_Message, Object[] args) {
 		String msg = getMsg(ctx, ad_language, AD_Message);
 		String retStr = msg;
-		try
-		{
+		try {
 			retStr = MessageFormat.format(msg, args);	//	format string
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			LogM.log(ctx, "Msg", Level.SEVERE, "NOT found: " + AD_Message);
 		}
+		//	Return
 		return retStr;
-	}	//	getMsg*/
+	}	//	getMsg
 
 
 	/**************************************************************************
@@ -253,84 +226,160 @@ public class Msg {
 		return sb.toString();
 	}	//	getAmtInWords
 
+	
+	/**
+	 * Get translation from Cache
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/08/2014, 18:16:22
+	 * @param ctx
+	 * @param p_AD_Language
+	 * @param p_Msg
+	 * @return
+	 * @return String
+	 */
+	public static String getTranslationCache(Context ctx, String p_AD_Language, String p_Msg) {
+		//	Language
+		if(p_AD_Language == null
+				|| p_AD_Language.length() == 0)
+			p_AD_Language = Env.BASE_LANGUAGE;
+		//	
+		return Env.getContext(ctx, MSG_PREFIX + "|" + p_AD_Language + "|" + p_Msg);
+	}
+	
+	/**
+	 * Set Translation to Cache
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/08/2014, 18:21:34
+	 * @param ctx
+	 * @param p_AD_Language
+	 * @param p_Msg
+	 * @param p_Value
+	 * @return void
+	 */
+	private static void setTranslationCache(Context ctx, String p_AD_Language, String p_Msg, String p_Value) {
+		//	Language
+		if(p_AD_Language == null
+				|| p_AD_Language.length() == 0)
+			p_AD_Language = Env.BASE_LANGUAGE;
+		//	
+		Env.setContext(ctx, MSG_PREFIX + "|" + p_AD_Language + "|" + p_Msg, p_Value);
+	}
+	
 
 	/**************************************************************************
 	 *  Get Translation for Element
-	 *  @param ad_language language
-	 *  @param ColumnName column name
+	 *  @param p_AD_Language language
+	 *  @param p_ColumnName column name
 	 *  @param isSOTrx if false PO terminology is used (if exists)
 	 *  @return Name of the Column or "" if not found
 	 */
-	/*public static String getElement (Context ctx, String ad_language, String ColumnName, boolean isSOTrx)
-	{
-		if (ColumnName == null || ColumnName.equals(""))
+	public static String getElement (Context ctx, String p_AD_Language, String p_ColumnName, boolean isSOTrx) {
+		if (p_ColumnName == null 
+				|| p_ColumnName.equals(""))
 			return "";
-		String AD_Language = ad_language;
-		if (AD_Language == null || AD_Language.length() == 0)
-			AD_Language = Language.getBaseAD_Language();
-
+		String m_AD_Language = p_AD_Language;
+		if (m_AD_Language == null 
+				|| m_AD_Language.length() == 0)
+			m_AD_Language = Env.BASE_LANGUAGE;
+		//	Get from Cahce
+		String retStr = getTranslationCache(ctx, p_AD_Language, 
+				p_ColumnName + (isSOTrx? "|Y|": "|N|"));
+		//	Valid Cache
+		if(retStr != null) {
+			LogM.log(ctx, "Msg", Level.FINE, "From Cache[Element="  + retStr + "]");
+			return retStr;
+		}
 		//	Check AD_Element
-		String retStr = "";
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try
-		{
-			try
-			{
-				if (AD_Language == null || AD_Language.length() == 0 || Env.isBaseLanguage(AD_Language, "AD_Element"))
-					pstmt = DB.prepareStatement("SELECT Name, PO_Name FROM AD_Element WHERE UPPER(ColumnName)=?", null);
-				else
-				{
-					pstmt = DB.prepareStatement("SELECT t.Name, t.PO_Name FROM AD_Element_Trl t, AD_Element e "
-						+ "WHERE t.AD_Element_ID=e.AD_Element_ID AND UPPER(e.ColumnName)=? "
-						+ "AND t.AD_Language=?", null);
-					pstmt.setString(2, AD_Language);
-				}
-			}
-			catch (Exception e)
-			{
-				return ColumnName;
-			}
-			finally {
-				DB.close(rs);
-				rs = null;
-			}
-			pstmt.setString(1, ColumnName.toUpperCase());
-			rs = pstmt.executeQuery();
-			if (rs.next())
-			{
-				retStr = rs.getString(1);
-				if (!isSOTrx)
-				{
-					String temp = rs.getString(2);
-					if (temp != null && temp.length() > 0)
-						retStr = temp;
-				}
-			}
-		} catch (SQLException e) {
-			LogM.log(ctx, "Msg", Level.SEVERE, "getElement", e);
-			return "";
+		String sql = null;
+		String [] params = null;
+		String columnName = (isSOTrx? "Name": "PO_Name");
+		//	Get from Language
+		if (m_AD_Language == null 
+				|| m_AD_Language.length() == 0 
+				|| Env.BASE_LANGUAGE.equals(m_AD_Language)) {
+			sql = "SELECT " + columnName + " FROM AD_Element WHERE ColumnName = ?";
+			params = new String[] {p_ColumnName};
+		} else {
+			sql = "SELECT t." + columnName + " " 
+				+ "FROM AD_Element e "
+				+ "INNER JOIN AD_Element_Trl t ON(t.AD_Element_ID = e.AD_Element_ID) "
+				+ "WHERE e.ColumnName = ? "
+				+ "AND t.AD_Language = ?";
+			params = new String[] {p_ColumnName, m_AD_Language};
 		}
-		finally
-		{
-			DB.close(rs, pstmt);
-			rs = null; pstmt = null;
-		}
+		//	
+		retStr = DB.getSQLValueString(ctx, sql, params);
+		//	Set to Cache
+		setTranslationCache(ctx, p_AD_Language, 
+				p_ColumnName + (isSOTrx? "|Y|": "|N|"), retStr);
+		//	Return Translation
 		if (retStr != null)
 			return retStr.trim();
+		//	Return
 		return retStr;
-	}   //  getElement*/
+	}   //  getElement
 
+	
+	/**
+	 * Get Message
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/08/2014, 19:02:12
+	 * @param ctx
+	 * @param p_AD_Language
+	 * @param p_MessageName
+	 * @return
+	 * @return String
+	 */
+	public static String getMsg(Context ctx, String p_AD_Language, String p_MessageName) {
+		if (p_MessageName == null 
+				|| p_MessageName.equals(""))
+			return "";
+		String m_AD_Language = p_AD_Language;
+		if (m_AD_Language == null 
+				|| m_AD_Language.length() == 0)
+			m_AD_Language = Env.BASE_LANGUAGE;
+		//	Get from Cahce
+		String retStr = getTranslationCache(ctx, p_AD_Language, p_MessageName);
+		//	Valid Cache
+		if(retStr != null) {
+			LogM.log(ctx, "Msg", Level.FINE, "From Cache[Message="  + retStr + "]");
+			return retStr;
+		}
+		//	Check AD_Element
+		String sql = null;
+		String [] params = null;
+		//	Get from Language
+		if (m_AD_Language == null 
+				|| m_AD_Language.length() == 0 
+				|| Env.BASE_LANGUAGE.equals(m_AD_Language)) {
+			sql = "SELECT MsgText FROM AD_Message WHERE Value = ?";
+			params = new String[] {p_MessageName};
+		} else {
+			sql = "SELECT t.MsgText " 
+				+ "FROM AD_Message m "
+				+ "INNER JOIN AD_Message_Trl t ON(t.AD_Message_ID = m.AD_Message_ID) "
+				+ "WHERE m.Value = ? "
+				+ "AND t.AD_Language = ?";
+			params = new String[] {p_MessageName, m_AD_Language};
+		}
+		//	
+		retStr = DB.getSQLValueString(ctx, sql, params);
+		//	Set to Cache
+		setTranslationCache(ctx, p_AD_Language, p_MessageName, retStr);
+		//	Return Translation
+		if (retStr != null)
+			return retStr.trim();
+		//	Return
+		return retStr;
+	}   //  getElement
+	
+	
 	/**
 	 *  Get Translation for Element using Sales terminology
 	 *  @param ctx context
 	 *  @param ColumnName column name
 	 *  @return Name of the Column or "" if not found
 	 */
-	/*public static String getElement (Context ctx, String ColumnName)
-	{
-		return getElement (Env.getAD_Language(ctx), ColumnName, true);
-	}   //  getElement*/
+	public static String getElement (Context ctx, String ColumnName) {
+		return getElement (ctx, Env.getAD_Language(ctx), ColumnName, true);
+	}   //  getElement
 	
 	/**
 	 *  Get Translation for Element
@@ -339,10 +388,9 @@ public class Msg {
 	 *  @param isSOTrx sales transaction
 	 *  @return Name of the Column or "" if not found
 	 */
-	/*public static String getElement (Context ctx, String ColumnName, boolean isSOTrx)
-	{
-		return getElement (Env.getAD_Language(ctx), ColumnName, isSOTrx);
-	}   //  getElement*/
+	public static String getElement (Context ctx, String ColumnName, boolean isSOTrx) {
+		return getElement (ctx, Env.getAD_Language(ctx), ColumnName, isSOTrx);
+	}   //  getElement
 
 
 	/**************************************************************************
@@ -352,34 +400,33 @@ public class Msg {
 	 *		- Check AD_Element.ColumnName	->	Name
 	 *  </pre>
 	 *  If checking AD_Element, the SO terminology is used.
-	 *  @param ad_language  Language
+	 *  @param p_AD_Language  Language
 	 *  @param isSOTrx sales order context
 	 *  @param text	Text - MsgText or Element Name
 	 *  @return translated text or original text if not found
 	 */
-	/*public static String translate(String ad_language, boolean isSOTrx, String text)
-	{
+	public static String translate(Context ctx, String p_AD_Language, boolean isSOTrx, String text) {
 		if (text == null || text.equals(""))
 			return "";
-		String AD_Language = ad_language;
-		if (AD_Language == null || AD_Language.length() == 0)
-			AD_Language = Env.BASE_LANGUAGE;
+		String m_AD_Language = p_AD_Language;
+		if (m_AD_Language == null || m_AD_Language.length() == 0)
+			m_AD_Language = Env.BASE_LANGUAGE;
 
 		//	Check AD_Message
-		String retStr = null;//get().lookup (AD_Language, text);
+		String retStr = getMsg(ctx, m_AD_Language, text);
 		if (retStr != null)
 			return retStr;
 
 		//	Check AD_Element
-		retStr = getElement(AD_Language, text, isSOTrx);
-		if (!retStr.equals(""))
+		retStr = getElement(ctx, m_AD_Language, text, isSOTrx);
+		if (retStr != null)
 			return retStr.trim();
 
 		//	Nothing found
 		if (!text.startsWith("*"))
-			s_log.warning("NOT found: " + text);
+			LogM.log(ctx, "Msg", Level.WARNING, "NOT found: " + text);
 		return text;
-	}	//	translate*/
+	}	//	translate
 
 	/***
 	 *	"Translate" text (SO Context).
@@ -392,10 +439,9 @@ public class Msg {
 	 *  @param text	Text - MsgText or Element Name
 	 *  @return translated text or original text if not found
 	 */
-	/*public static String translate(String ad_language, String text)
-	{
-		return translate (ad_language, true, text);
-	}	//	translate*/
+	public static String translate(Context ctx, String ad_language, String text) {
+		return translate (ctx, ad_language, true, text);
+	}	//	translate
 
 	/**
 	 *	"Translate" text.
@@ -407,14 +453,10 @@ public class Msg {
 	 *  @param text	Text - MsgText or Element Name
 	 *  @return translated text or original text if not found
 	 */
-	/*public static String translate(Context ctx, String text)
-	{
+	public static String translate(Context ctx, String text) {
 		if (text == null || text.length() == 0)
 			return text;
-		String s = (String)ctx.getProperty(text);
-		if (s != null && s.length() > 0)
-			return s;
-		return translate (Env.getAD_Language(ctx), Env.isSOTrx(ctx), text);
+		return translate(ctx, Env.getAD_Language(ctx), Env.isSOTrx(ctx), text);
 	}   //  translate*/
 
 	/**
@@ -423,8 +465,7 @@ public class Msg {
 	 *  @param text     Text
 	 *  @return translated text or original text if not found
 	 */
-	/*public static String parseTranslation(Context ctx, String text)
-	{
+	public static String parseTranslation(Context ctx, String text) {
 		if (text == null || text.length() == 0)
 			return text;
 
@@ -433,14 +474,12 @@ public class Msg {
 		StringBuffer outStr = new StringBuffer();
 
 		int i = inStr.indexOf('@');
-		while (i != -1)
-		{
+		while (i != -1) {
 			outStr.append(inStr.substring(0, i));			// up to @
 			inStr = inStr.substring(i+1, inStr.length());	// from first @
 
 			int j = inStr.indexOf('@');						// next @
-			if (j < 0)										// no second tag
-			{
+			if (j < 0) {									// no second tag
 				inStr = "@" + inStr;
 				break;
 			}
@@ -454,6 +493,9 @@ public class Msg {
 
 		outStr.append(inStr);           					//	add remainder
 		return outStr.toString();
-	}   //  parseTranslation*/
+	}   //  parseTranslation
+	
+	/**	Prefix Message				*/
+	private static final String		MSG_PREFIX = "MSG";
 	
 }
