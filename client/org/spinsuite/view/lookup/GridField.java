@@ -284,13 +284,14 @@ public abstract class GridField extends LinearLayout {
 	/**
 	 * Get Value As Integer
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 12:27:14
+	 * @param p_Value
 	 * @return
 	 * @return int
 	 */
-	public int getValueAsInt() {
+	private int getValueAsInt(Object p_Value) {
 		//	Valid Field
 		if(m_field == null
-				|| getValue() == null)
+				|| p_Value == null)
 			return 0;
 		//	String
 		if(DisplayType.isText(m_field.DisplayType)
@@ -298,17 +299,37 @@ public abstract class GridField extends LinearLayout {
 				|| DisplayType.isID(m_field.DisplayType)
 				|| DisplayType.isLookup(m_field.DisplayType)) {
 			try {
-				Object value = getValue();
+				Object value = p_Value;
 				if(value instanceof Integer)
 					return (Integer) value;
 				else
-					return Integer.parseInt((String) getValue());
+					return Integer.parseInt((String) value);
 			} catch (Exception e) {
 				LogM.log(getContext(), this.getClass(), Level.SEVERE, "Parse Error " + e.toString(), e);
 			}
 			return 0;
 		} else
 			return 0;
+	}
+	
+	/**
+	 * Get Value as Int
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/08/2014, 02:56:04
+	 * @return
+	 * @return int
+	 */
+	public int getValueAsInt() {
+		return getValueAsInt(getValue());
+	}
+	
+	/**
+	 * Get Old Value as Int
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/08/2014, 02:56:25
+	 * @return
+	 * @return int
+	 */
+	public int getOldValueAsInt() {
+		return getValueAsInt(getOldValue());
 	}
 	
 	/**
@@ -507,6 +528,39 @@ public abstract class GridField extends LinearLayout {
 	 */
 	public static GridField createLookup(Activity act, InfoField field) {
 		return createLookup(act, field, null, null);
+	}
+	
+	/**
+	 * Create Lookup
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/08/2014, 02:32:50
+	 * @param act
+	 * @param m_Lookup
+	 * @return
+	 * @return GridField
+	 */
+	public static GridField createLookup(Activity act, Lookup m_Lookup) {
+		//	Valid Null value forf lookup
+		if(m_Lookup == null)
+			return null;
+		//	Return
+		return createLookup(act, m_Lookup, m_Lookup.getTabParameter());
+	}
+	
+	/**
+	 * Create a Lookup
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/08/2014, 02:31:48
+	 * @param act
+	 * @param m_Lookup
+	 * @param p_TabParameter
+	 * @return
+	 * @return GridField
+	 */
+	public static GridField createLookup(Activity act, Lookup m_Lookup, TabParameter p_TabParameter) {
+		//	Valid Null value forf lookup
+		if(m_Lookup == null)
+			return null;
+		//	Return
+		return createLookup(act, m_Lookup.getField(), m_Lookup, p_TabParameter);
 	}
 	
 	/**

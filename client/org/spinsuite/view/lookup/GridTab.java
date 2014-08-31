@@ -375,9 +375,8 @@ public class GridTab {
 					VLookupSpinner spinner = (VLookupSpinner) vField;
 					Object oldValue = spinner.getValue();
 					spinner.load(true);
-					//	
+					//	set old value
 					spinner.setValueNoReload(oldValue);
-					//	Set Default Value
 				}
 			}
     	}
