@@ -177,11 +177,12 @@ public class T_DynamicTab extends Fragment
     		public void onFieldEvent(GridField mField) {
     			LogM.log(getActivity(), T_DynamicTab.class, 
     					Level.FINE, "Field Event = " + mField.getColumnName());
-    			//	Process Callout
-    			processCallout(mField);
-    			//	Reload depending fields
-    			if(m_IsModifying)
-    				reloadDepending(mField);
+    			if(m_IsModifying) {
+        			//	Process Callout
+        			processCallout(mField);
+        			//	Reload depending fields
+        			reloadDepending(mField);
+    			}
     		}
 		};
     	//	Init Load
