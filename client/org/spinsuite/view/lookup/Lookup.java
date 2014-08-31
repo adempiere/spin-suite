@@ -51,7 +51,8 @@ public class Lookup {
 		int m_ActivityNo = 0;
 		int m_TabNo = 0;
 		//	Set Property
-		if(tabParam != null){
+		m_TabParameter = tabParam;
+		if(m_TabParameter != null){
 			m_ActivityNo = tabParam.getActivityNo();
 			m_TabNo = tabParam.getTabNo();
 		}
@@ -76,7 +77,8 @@ public class Lookup {
 		int m_ActivityNo = 0;
 		int m_TabNo = 0;
 		//	Set Property
-		if(tabParam != null){
+		m_TabParameter = tabParam;
+		if(m_TabParameter != null){
 			m_ActivityNo = tabParam.getActivityNo();
 			m_TabNo = tabParam.getTabNo();
 		}
@@ -102,7 +104,8 @@ public class Lookup {
 		int m_ActivityNo = 0;
 		int m_TabNo = 0;
 		//	Set Property
-		if(tabParam != null){
+		m_TabParameter = tabParam;
+		if(m_TabParameter != null) {
 			m_ActivityNo = tabParam.getActivityNo();
 			m_TabNo = tabParam.getTabNo();
 		}
@@ -120,6 +123,8 @@ public class Lookup {
 	private LookupDisplayType 	lookup = null;
 	/**	Syntax Error			*/
 	private boolean 			isSyntaxError = false;
+	/**	Tab Parameter			*/
+	private TabParameter		m_TabParameter = null;
 	/**	Display Lookup Spinner	*/
 	private ArrayList<DisplayLookupSpinner> data = null;
 	
@@ -217,5 +222,25 @@ public class Lookup {
 	 */
 	public boolean isSyntaxError(){
 		return isSyntaxError;
+	}
+	
+	/**
+	 * Get Field
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/08/2014, 02:29:42
+	 * @return
+	 * @return InfoField
+	 */
+	public InfoField getField() {
+		return m_field;
+	}
+	
+	/**
+	 * Get Tab Parameter
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/08/2014, 02:35:44
+	 * @return
+	 * @return TabParameter
+	 */
+	public TabParameter getTabParameter() {
+		return m_TabParameter;
 	}
 }
