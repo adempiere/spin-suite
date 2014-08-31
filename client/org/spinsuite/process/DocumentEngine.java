@@ -40,8 +40,7 @@ public class DocumentEngine implements DocAction
 	 * 	Doc Engine (Drafted)
 	 * 	@param po document
 	 */
-	public DocumentEngine (DocAction po)
-	{
+	public DocumentEngine (DocAction po) {
 		this (po, STATUS_Drafted);
 	}	//	DocActionEngine
 	
@@ -50,8 +49,7 @@ public class DocumentEngine implements DocAction
 	 * 	@param po document
 	 * 	@param docStatus initial document status
 	 */
-	public DocumentEngine (DocAction po, String docStatus)
-	{
+	public DocumentEngine (DocAction po, String docStatus) {
 		m_document = po;
 		if (docStatus != null)
 			m_status = docStatus;
@@ -70,7 +68,7 @@ public class DocumentEngine implements DocAction
 	 * 	Get Doc Status
 	 *	@return document status
 	 */
-	public String getDocStatus(){
+	public String getDocStatus() {
 		return m_status;
 	}	//	getDocStatus
 
@@ -79,14 +77,14 @@ public class DocumentEngine implements DocAction
 	 *	@param ignored Status is not set directly
 	 * @see org.compiere.process.DocAction#processDocAction(String)
 	 */
-	public void setDocStatus(String ignored){
+	public void setDocStatus(String ignored) {
 	}	//	setDocStatus
 
 	/**
 	 * 	Document is Drafted
 	 *	@return true if drafted
 	 */
-	public boolean isDrafted(){
+	public boolean isDrafted() {
 		return STATUS_Drafted.equals(m_status);
 	}	//	isDrafted
 	
@@ -94,7 +92,7 @@ public class DocumentEngine implements DocAction
 	 * 	Document is Invalid
 	 *	@return true if Invalid
 	 */
-	public boolean isInvalid(){
+	public boolean isInvalid() {
 		return STATUS_Invalid.equals(m_status);
 	}	//	isInvalid
 	
@@ -102,7 +100,7 @@ public class DocumentEngine implements DocAction
 	 * 	Document is In Progress
 	 *	@return true if In Progress
 	 */
-	public boolean isInProgress(){
+	public boolean isInProgress() {
 		return STATUS_InProgress.equals(m_status);
 	}	//	isInProgress
 	
@@ -110,7 +108,7 @@ public class DocumentEngine implements DocAction
 	 * 	Document is Approved
 	 *	@return true if Approved
 	 */
-	public boolean isApproved(){
+	public boolean isApproved() {
 		return STATUS_Approved.equals(m_status);
 	}	//	isApproved
 	
@@ -118,7 +116,7 @@ public class DocumentEngine implements DocAction
 	 * 	Document is Not Approved
 	 *	@return true if Not Approved
 	 */
-	public boolean isNotApproved(){
+	public boolean isNotApproved() {
 		return STATUS_NotApproved.equals(m_status);
 	}	//	isNotApproved
 	
@@ -126,7 +124,7 @@ public class DocumentEngine implements DocAction
 	 * 	Document is Waiting Payment or Confirmation
 	 *	@return true if Waiting Payment
 	 */
-	public boolean isWaiting(){
+	public boolean isWaiting() {
 		return STATUS_WaitingPayment.equals(m_status)
 			|| STATUS_WaitingConfirmation.equals(m_status);
 	}	//	isWaitingPayment
@@ -135,7 +133,7 @@ public class DocumentEngine implements DocAction
 	 * 	Document is Completed
 	 *	@return true if Completed
 	 */
-	public boolean isCompleted(){
+	public boolean isCompleted() {
 		return STATUS_Completed.equals(m_status);
 	}	//	isCompleted
 	
@@ -143,7 +141,7 @@ public class DocumentEngine implements DocAction
 	 * 	Document is Reversed
 	 *	@return true if Reversed
 	 */
-	public boolean isReversed(){
+	public boolean isReversed() {
 		return STATUS_Reversed.equals(m_status);
 	}	//	isReversed
 	
@@ -151,7 +149,7 @@ public class DocumentEngine implements DocAction
 	 * 	Document is Closed
 	 *	@return true if Closed
 	 */
-	public boolean isClosed(){
+	public boolean isClosed() {
 		return STATUS_Closed.equals(m_status);
 	}	//	isClosed
 	
@@ -159,7 +157,7 @@ public class DocumentEngine implements DocAction
 	 * 	Document is Voided
 	 *	@return true if Voided
 	 */
-	public boolean isVoided(){
+	public boolean isVoided() {
 		return STATUS_Voided.equals(m_status);
 	}	//	isVoided
 	
@@ -167,11 +165,11 @@ public class DocumentEngine implements DocAction
 	 * 	Document Status is Unknown
 	 *	@return true if unknown
 	 */
-	public boolean isUnknown(){
+	public boolean isUnknown() {
 		return STATUS_Unknown.equals(m_status) || 
 			!(isDrafted() || isInvalid() || isInProgress() || isNotApproved()
 				|| isApproved() || isWaiting() || isCompleted()
-				|| isReversed() || isClosed() || isVoided() );
+				|| isReversed() || isClosed() || isVoided());
 	}	//	isUnknown
 
 	
@@ -183,7 +181,7 @@ public class DocumentEngine implements DocAction
 	 *	@param docAction document action based on document
 	 *	@return true if performed
 	 */
-	public boolean processIt (String processAction, String docAction){
+	public boolean processIt (String processAction, String docAction) {
 		m_message = null;
 		m_action = null;
 		//	Std User Workflows - see MWFNodeNext.isValidFor
@@ -195,20 +193,18 @@ public class DocumentEngine implements DocAction
 			m_action = docAction;
 		//	Nothing to do
 		else if (processAction.equals(ACTION_None)
-			|| docAction.equals(ACTION_None))
-		{
+			|| docAction.equals(ACTION_None)) {
 			if (m_document != null)
 				LogM.log(getCtx(), getClass(), Level.INFO, 
 						"**** No Action (Prc=" + processAction + "/Doc=" + docAction + ") " + m_document);
 			return true;	
-		}
-		else
-		{
+		} else {
 			throw new IllegalStateException("@InvalidAction@: "
 				+ "@ProcessAction@="  + processAction 
 				+ ", @DocAction@=" + docAction
 				+ ", @DocStatus@=" + getDocStatus());
 		}
+		//	
 		if (m_document != null)
 			LogM.log(getCtx(), getClass(), Level.INFO, 
 					"**** Action=" + m_action + " (Prc=" + processAction + "/Doc=" + docAction + ") " + m_document);
@@ -227,7 +223,7 @@ public class DocumentEngine implements DocAction
 	 *	@param action document action
 	 *	@return true if performed
 	 */
-	public boolean processIt (String action){
+	public boolean processIt (String action) {
 		m_message = null;
 		m_action = action;
 		boolean success = false;
@@ -247,14 +243,18 @@ public class DocumentEngine implements DocAction
 			if (isDrafted() || isInvalid()) {
 				status = prepareIt();
 				if (!STATUS_InProgress.equals(status))
-					success =  false;
+					success = false;
+				else
+					success = true;
 			}
 			//	
-			status = completeIt();
-			success = STATUS_Completed.equals(status)
-						|| STATUS_InProgress.equals(status)
-						|| STATUS_WaitingPayment.equals(status)
-						|| STATUS_WaitingConfirmation.equals(status);
+			if(success) {
+				status = completeIt();
+				success = STATUS_Completed.equals(status)
+							|| STATUS_InProgress.equals(status)
+							|| STATUS_WaitingPayment.equals(status)
+							|| STATUS_WaitingConfirmation.equals(status);
+			}
 		} 
 		else if (ACTION_ReActivate.equals(m_action))
 			success = reActivateIt();
@@ -272,7 +272,7 @@ public class DocumentEngine implements DocAction
 		if (m_document != null) {
 			m_message = m_document.getProcessMsg();
 			LogM.log(getCtx(), getClass(), Level.INFO, 
-					"**** Action=" + m_action + " - Success=" + success);
+					"**** Action = " + m_action + " Status = "  + m_status + " - Success=" + success);
 		}
 		//
 		return success;
@@ -284,13 +284,11 @@ public class DocumentEngine implements DocAction
 	 * 	@return true if success 
 	 * 	@see org.compiere.process.DocAction#unlockIt()
 	 */
-	public boolean unlockIt(){
+	public boolean unlockIt() {
 		if (!isValidAction(ACTION_Unlock))
 			return false;
-		if (m_document != null)
-		{
-			if (m_document.unlockIt())
-			{
+		if (m_document != null) {
+			if (m_document.unlockIt()) {
 				m_status = STATUS_Drafted;
 				m_document.setDocStatus(m_status);
 				return true;
@@ -307,13 +305,11 @@ public class DocumentEngine implements DocAction
 	 * 	@return true if success 
 	 * 	@see org.compiere.process.DocAction#invalidateIt()
 	 */
-	public boolean invalidateIt(){
+	public boolean invalidateIt() {
 		if (!isValidAction(ACTION_Invalidate))
 			return false;
-		if (m_document != null)
-		{
-			if (m_document.invalidateIt())
-			{
+		if (m_document != null) {
+			if (m_document.invalidateIt()) {
 				m_status = STATUS_Invalid;
 				m_document.setDocStatus(m_status);
 				return true;
@@ -330,11 +326,10 @@ public class DocumentEngine implements DocAction
 	 * 	@return new status (In Progress or Invalid) 
 	 * 	@see org.compiere.process.DocAction#prepareIt()
 	 */
-	public String prepareIt(){
+	public String prepareIt() {
 		if (!isValidAction(ACTION_Prepare))
 			return m_status;
-		if (m_document != null)
-		{
+		if (m_document != null) {
 			m_status = m_document.prepareIt();
 			m_document.setDocStatus(m_status);
 		}
@@ -347,13 +342,11 @@ public class DocumentEngine implements DocAction
 	 * 	@return true if success 
 	 * 	@see org.compiere.process.DocAction#approveIt()
 	 */
-	public boolean  approveIt(){
+	public boolean  approveIt() {
 		if (!isValidAction(ACTION_Approve))
 			return false;
-		if (m_document != null)
-		{
-			if (m_document.approveIt())
-			{
+		if (m_document != null) {
+			if (m_document.approveIt()) {
 				m_status = STATUS_Approved;
 				m_document.setDocStatus(m_status);
 				return true;
@@ -370,13 +363,11 @@ public class DocumentEngine implements DocAction
 	 * 	@return true if success 
 	 * 	@see org.compiere.process.DocAction#rejectIt()
 	 */
-	public boolean rejectIt(){
+	public boolean rejectIt() {
 		if (!isValidAction(ACTION_Reject))
 			return false;
-		if (m_document != null)
-		{
-			if (m_document.rejectIt())
-			{
+		if (m_document != null) {
+			if (m_document.rejectIt()) {
 				m_status = STATUS_NotApproved;
 				m_document.setDocStatus(m_status);
 				return true;
@@ -393,11 +384,10 @@ public class DocumentEngine implements DocAction
 	 * 	@return new document status (Complete, In Progress, Invalid, Waiting ..)
 	 * 	@see org.compiere.process.DocAction#completeIt()
 	 */
-	public String completeIt(){
+	public String completeIt() {
 		if (!isValidAction(ACTION_Complete))
 			return m_status;
-		if (m_document != null)
-		{
+		if (m_document != null) {
 			m_status = m_document.completeIt();
 			m_document.setDocStatus(m_status);
 		}
@@ -409,7 +399,7 @@ public class DocumentEngine implements DocAction
 	 * 	Does not change status
 	 * 	@return true if success 
 	 */
-	public boolean postIt(){
+	public boolean postIt() {
 		if (!isValidAction(ACTION_Post) 
 			|| m_document == null)
 			return false;
@@ -424,13 +414,11 @@ public class DocumentEngine implements DocAction
 	 * 	@return true if success 
 	 * 	@see org.compiere.process.DocAction#voidIt()
 	 */
-	public boolean voidIt(){
+	public boolean voidIt() {
 		if (!isValidAction(ACTION_Void))
 			return false;
-		if (m_document != null)
-		{
-			if (m_document.voidIt())
-			{
+		if (m_document != null) {
+			if (m_document.voidIt()) {
 				m_status = STATUS_Voided;
 				m_document.setDocStatus(m_status);
 				return true;
@@ -447,13 +435,11 @@ public class DocumentEngine implements DocAction
 	 * 	@return true if success 
 	 * 	@see org.compiere.process.DocAction#closeIt()
 	 */
-	public boolean closeIt(){
+	public boolean closeIt() {
 		if (!isValidAction(ACTION_Close))
 			return false;
-		if (m_document != null)
-		{
-			if (m_document.closeIt())
-			{
+		if (m_document != null) {
+			if (m_document.closeIt()) {
 				m_status = STATUS_Closed;
 				m_document.setDocStatus(m_status);
 				return true;
@@ -470,13 +456,11 @@ public class DocumentEngine implements DocAction
 	 * 	@return true if success 
 	 * 	@see org.compiere.process.DocAction#reverseCorrectIt()
 	 */
-	public boolean reverseCorrectIt(){
+	public boolean reverseCorrectIt() {
 		if (!isValidAction(ACTION_Reverse_Correct))
 			return false;
-		if (m_document != null)
-		{
-			if (m_document.reverseCorrectIt())
-			{
+		if (m_document != null) {
+			if (m_document.reverseCorrectIt()) {
 				m_status = STATUS_Reversed;
 				m_document.setDocStatus(m_status);
 				return true;
@@ -493,13 +477,11 @@ public class DocumentEngine implements DocAction
 	 * 	@return true if success 
 	 * 	@see org.compiere.process.DocAction#reverseAccrualIt()
 	 */
-	public boolean reverseAccrualIt(){
+	public boolean reverseAccrualIt() {
 		if (!isValidAction(ACTION_Reverse_Accrual))
 			return false;
-		if (m_document != null)
-		{
-			if (m_document.reverseAccrualIt())
-			{
+		if (m_document != null) {
+			if (m_document.reverseAccrualIt()) {
 				m_status = STATUS_Reversed;
 				m_document.setDocStatus(m_status);
 				return true;
@@ -516,13 +498,11 @@ public class DocumentEngine implements DocAction
 	 * 	@return true if success 
 	 * 	@see org.compiere.process.DocAction#reActivateIt()
 	 */
-	public boolean reActivateIt(){
+	public boolean reActivateIt() {
 		if (!isValidAction(ACTION_ReActivate))
 			return false;
-		if (m_document != null)
-		{
-			if (m_document.reActivateIt())
-			{
+		if (m_document != null) {
+			if (m_document.reActivateIt()) {
 				m_status = STATUS_InProgress;
 				m_document.setDocStatus(m_status);
 				return true;
@@ -538,7 +518,7 @@ public class DocumentEngine implements DocAction
 	 * 	Set Document Status to new Status
 	 *	@param newStatus new status
 	 */
-	void setStatus (String newStatus){
+	void setStatus (String newStatus) {
 		m_status = newStatus;
 	}	//	setStatus
 
@@ -547,7 +527,7 @@ public class DocumentEngine implements DocAction
 	 * 	Get Action Options based on current Status
 	 *	@return array of actions
 	 */
-	public String[] getActionOptions(){
+	public String[] getActionOptions() {
 		m_status = m_document.getDocStatus();
 		//	Customized Valid Actions
 		if(m_document instanceof DocOptions)
@@ -591,10 +571,9 @@ public class DocumentEngine implements DocAction
 	 *	@param action action
 	 *	@return true if valid
 	 */
-	public boolean isValidAction (String action){
+	public boolean isValidAction (String action) {
 		String[] options = getActionOptions();
-		for (int i = 0; i < options.length; i++)
-		{
+		for (int i = 0; i < options.length; i++) {
 			if (options[i].equals(action))
 				return true;
 		}
@@ -605,7 +584,7 @@ public class DocumentEngine implements DocAction
 	 * 	Get Process Message
 	 *	@return clear text error message
 	 */
-	public String getProcessMsg (){
+	public String getProcessMsg () {
 		return m_message;
 	}	//	getProcessMsg
 	
@@ -613,7 +592,7 @@ public class DocumentEngine implements DocAction
 	 * 	Get Process Message
 	 *	@param msg clear text error message
 	 */
-	public void setProcessMsg (String msg){
+	public void setProcessMsg (String msg) {
 		m_message = msg;
 	}	//	setProcessMsg
 	
@@ -625,7 +604,7 @@ public class DocumentEngine implements DocAction
 	 * 	Get Summary
 	 *	@return throw exception
 	 */
-	public String getSummary(){
+	public String getSummary() {
 		throw new IllegalStateException(EXCEPTION_MSG);
 	}
 	
@@ -633,7 +612,7 @@ public class DocumentEngine implements DocAction
 	 * 	Get Document No
 	 *	@return throw exception
 	 */
-	public String getDocumentNo(){
+	public String getDocumentNo() {
 		throw new IllegalStateException(EXCEPTION_MSG);
 	}
 
@@ -641,7 +620,7 @@ public class DocumentEngine implements DocAction
 	 * 	Get Document Info
 	 *	@return throw exception
 	 */
-	public String getDocumentInfo(){
+	public String getDocumentInfo() {
 		throw new IllegalStateException(EXCEPTION_MSG);
 	}
 
@@ -649,7 +628,7 @@ public class DocumentEngine implements DocAction
 	 * 	Get Document Owner
 	 *	@return throw exception
 	 */
-	public int getDoc_User_ID(){
+	public int getDoc_User_ID() {
 		throw new IllegalStateException(EXCEPTION_MSG);
 	}
 	
@@ -657,7 +636,7 @@ public class DocumentEngine implements DocAction
 	 * 	Get Document Currency
 	 *	@return throw exception
 	 */
-	public int getC_Currency_ID(){
+	public int getC_Currency_ID() {
 		throw new IllegalStateException(EXCEPTION_MSG);
 	}
 
@@ -665,7 +644,7 @@ public class DocumentEngine implements DocAction
 	 * 	Get Document Approval Amount
 	 *	@return throw exception
 	 */
-	public BigDecimal getApprovalAmt(){
+	public BigDecimal getApprovalAmt() {
 		throw new IllegalStateException(EXCEPTION_MSG);
 	}
 
@@ -673,7 +652,7 @@ public class DocumentEngine implements DocAction
 	 * 	Get Document Client
 	 *	@return throw exception
 	 */
-	public int getAD_Client_ID(){
+	public int getAD_Client_ID() {
 		throw new IllegalStateException(EXCEPTION_MSG);
 	}
 
@@ -681,7 +660,7 @@ public class DocumentEngine implements DocAction
 	 * 	Get Document Organization
 	 *	@return throw exception
 	 */
-	public int getAD_Org_ID(){
+	public int getAD_Org_ID() {
 		throw new IllegalStateException(EXCEPTION_MSG);
 	}
 	
@@ -689,7 +668,7 @@ public class DocumentEngine implements DocAction
 	 * 	Get Doc Action
 	 *	@return Document Action
 	 */
-	public String getDocAction(){
+	public String getDocAction() {
 		return m_action;
 	}
 
@@ -697,7 +676,7 @@ public class DocumentEngine implements DocAction
 	 * 	Save Document
 	 *	@return throw exception
 	 */
-	public boolean save(){
+	public boolean save() {
 		throw new IllegalStateException(EXCEPTION_MSG);
 	}
 	
@@ -705,7 +684,7 @@ public class DocumentEngine implements DocAction
 	 * 	Get Context
 	 *	@return context
 	 */
-	public Context getCtx(){
+	public Context getCtx() {
 		if (m_document != null)
 			return m_document.getCtx();
 		throw new IllegalStateException(EXCEPTION_MSG);
@@ -715,7 +694,7 @@ public class DocumentEngine implements DocAction
 	 * 	Get ID of record
 	 *	@return ID
 	 */
-	public int get_ID(){
+	public int get_ID() {
 		if (m_document != null)
 			return m_document.get_ID();
 		throw new IllegalStateException(EXCEPTION_MSG);
@@ -725,7 +704,7 @@ public class DocumentEngine implements DocAction
 	 * 	Get AD_Table_ID
 	 *	@return AD_Table_ID
 	 */
-	public int get_Table_ID(){
+	public int get_Table_ID() {
 		if (m_document != null)
 			return m_document.get_Table_ID();
 		throw new IllegalStateException(EXCEPTION_MSG);
@@ -735,7 +714,7 @@ public class DocumentEngine implements DocAction
 	 * 	Get Transaction
 	 *	@return trx name
 	 */
-	public DB get_DB(){
+	public DB get_DB() {
 		if (m_document != null)
 			return m_document.get_DB();
 		throw new IllegalStateException(EXCEPTION_MSG);
