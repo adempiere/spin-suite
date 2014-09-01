@@ -27,198 +27,599 @@ public final class R {
         public static int ArrayLogLevel=0x7f060000;
     }
     public static final class attr {
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ab_add=0x7f010004;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ab_attach=0x7f010007;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ab_cancel=0x7f010001;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ab_delete=0x7f010005;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ab_drawer=0x7f01000d;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ab_drawer_shadow=0x7f01000e;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ab_edit=0x7f010003;
+        /**  Icon for Action Bar 
+         <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ab_ok=0x7f010000;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ab_overflow=0x7f010009;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ab_process=0x7f01000c;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ab_report=0x7f01000a;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ab_save=0x7f010002;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ab_search=0x7f010006;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ab_settings=0x7f010008;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ab_share=0x7f01000b;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_dr_construction=0x7f010013;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_dr_folder=0x7f010017;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_dr_html=0x7f010012;
+        /**  Drawer 
+         <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_dr_pdf=0x7f01000f;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_dr_process=0x7f010016;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_dr_report=0x7f010015;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_dr_window=0x7f010014;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_dr_xls=0x7f010010;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_dr_xml=0x7f010011;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_lt_date=0x7f010020;
+        /**  Icon for Layout 
+         <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_lt_search=0x7f01001d;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_lt_search_bpartner=0x7f01001f;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_lt_search_product=0x7f01001e;
+        /**  Menu 
+         <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ml_construction=0x7f010018;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ml_folder=0x7f01001c;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ml_process=0x7f01001b;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ml_report=0x7f01001a;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static int ic_ml_window=0x7f010019;
     }
     public static final class drawable {
-        public static int add_h=0x7f020000;
-        public static int add_l=0x7f020001;
-        public static int add_m=0x7f020002;
-        public static int bpartner_h=0x7f020003;
-        public static int bpartner_l=0x7f020004;
-        public static int bpartner_m=0x7f020005;
-        public static int calendar_h=0x7f020006;
-        public static int calendar_l=0x7f020007;
-        public static int calendar_m=0x7f020008;
-        public static int cancel_h=0x7f020009;
-        public static int cancel_l=0x7f02000a;
-        public static int cancel_m=0x7f02000b;
-        public static int cash_h=0x7f02000c;
-        public static int cash_l=0x7f02000d;
-        public static int cash_m=0x7f02000e;
-        public static int check_h=0x7f02000f;
-        public static int check_l=0x7f020010;
-        public static int check_m=0x7f020011;
-        public static int collect_money_h=0x7f020012;
-        public static int collect_money_l=0x7f020013;
-        public static int collect_money_m=0x7f020014;
-        public static int config_h=0x7f020015;
-        public static int config_l=0x7f020016;
-        public static int config_m=0x7f020017;
-        public static int contruction_h=0x7f020018;
-        public static int contruction_l=0x7f020019;
-        public static int contruction_m=0x7f02001a;
-        public static int delete_h=0x7f02001b;
-        public static int delete_l=0x7f02001c;
-        public static int delete_m=0x7f02001d;
-        public static int direct_credit_h=0x7f02001e;
-        public static int direct_credit_l=0x7f02001f;
-        public static int direct_credit_m=0x7f020020;
-        public static int direct_debit_h=0x7f020021;
-        public static int direct_debit_l=0x7f020022;
-        public static int direct_debit_m=0x7f020023;
-        public static int direct_deposit_h=0x7f020024;
-        public static int direct_deposit_l=0x7f020025;
-        public static int direct_deposit_m=0x7f020026;
-        public static int doc_completed_h=0x7f020027;
-        public static int doc_completed_l=0x7f020028;
-        public static int doc_completed_m=0x7f020029;
-        public static int doc_progress_h=0x7f02002a;
-        public static int doc_progress_l=0x7f02002b;
-        public static int doc_progress_m=0x7f02002c;
-        public static int download_h=0x7f02002d;
-        public static int download_l=0x7f02002e;
-        public static int download_m=0x7f02002f;
-        public static int drawer_shadow=0x7f020030;
-        public static int edit_h=0x7f020031;
-        public static int edit_l=0x7f020032;
-        public static int edit_m=0x7f020033;
-        public static int errorsync_h=0x7f020034;
-        public static int errorsync_l=0x7f020035;
-        public static int errorsync_m=0x7f020036;
-        public static int folder_h=0x7f020037;
-        public static int folder_l=0x7f020038;
-        public static int folder_m=0x7f020039;
-        public static int html_h=0x7f02003a;
-        public static int html_l=0x7f02003b;
-        public static int html_m=0x7f02003c;
-        public static int ic_drawer=0x7f02003d;
-        public static int ic_launcher=0x7f02003e;
-        public static int ic_menu_moreoverflow_normal_holo_dark=0x7f02003f;
-        public static int ic_menu_moreoverflow_normal_holo_light=0x7f020040;
-        public static int inventory_h=0x7f020041;
-        public static int inventory_l=0x7f020042;
-        public static int inventory_m=0x7f020043;
-        public static int klipper_h=0x7f020044;
-        public static int klipper_l=0x7f020045;
-        public static int klipper_m=0x7f020046;
-        public static int listadd_h=0x7f020047;
-        public static int listadd_l=0x7f020048;
-        public static int listadd_m=0x7f020049;
-        public static int location_h=0x7f02004a;
-        public static int location_l=0x7f02004b;
-        public static int location_m=0x7f02004c;
-        public static int loginkey_h=0x7f02004d;
-        public static int loginkey_l=0x7f02004e;
-        public static int loginkey_m=0x7f02004f;
-        public static int logo_erp=0x7f020050;
-        public static int logo_lubo=0x7f020051;
-        public static int meet_h=0x7f020052;
-        public static int meet_l=0x7f020053;
-        public static int meet_m=0x7f020054;
-        public static int meeting_h=0x7f020055;
-        public static int meeting_l=0x7f020056;
-        public static int meeting_m=0x7f020057;
-        public static int new_h=0x7f020058;
-        public static int new_l=0x7f020059;
-        public static int new_m=0x7f02005a;
-        public static int nosales_h=0x7f02005b;
-        public static int nosales_l=0x7f02005c;
-        public static int nosales_m=0x7f02005d;
-        public static int ok_h=0x7f02005e;
-        public static int ok_l=0x7f02005f;
-        public static int ok_m=0x7f020060;
-        public static int oncredit_h=0x7f020061;
-        public static int oncredit_l=0x7f020062;
-        public static int oncredit_m=0x7f020063;
-        public static int package_h=0x7f020064;
-        public static int package_l=0x7f020065;
-        public static int package_m=0x7f020066;
-        public static int payment_mixed_h=0x7f020067;
-        public static int payment_mixed_l=0x7f020068;
-        public static int payment_mixed_m=0x7f020069;
-        public static int pdf_h=0x7f02006a;
-        public static int pdf_l=0x7f02006b;
-        public static int pdf_m=0x7f02006c;
-        public static int process_h=0x7f02006d;
-        public static int process_l=0x7f02006e;
-        public static int process_m=0x7f02006f;
-        public static int pship_h=0x7f020070;
-        public static int pship_l=0x7f020071;
-        public static int pship_m=0x7f020072;
-        public static int quickaction_arrow_down=0x7f020073;
-        public static int quickaction_arrow_up=0x7f020074;
-        public static int quickaction_bottom_frame=0x7f020075;
-        public static int quickaction_slider_background=0x7f020076;
-        public static int quickaction_slider_btn=0x7f020077;
-        public static int quickaction_slider_btn_normal=0x7f020078;
-        public static int quickaction_slider_btn_on=0x7f020079;
-        public static int quickaction_slider_btn_pressed=0x7f02007a;
-        public static int quickaction_slider_btn_selected=0x7f02007b;
-        public static int quickaction_slider_grip_left=0x7f02007c;
-        public static int quickaction_slider_grip_right=0x7f02007d;
-        public static int quickaction_top_frame=0x7f02007e;
-        public static int quickcontact_drop_shadow=0x7f02007f;
-        public static int remove_h=0x7f020080;
-        public static int remove_l=0x7f020081;
-        public static int remove_m=0x7f020082;
-        public static int report_h=0x7f020083;
-        public static int report_l=0x7f020084;
-        public static int report_m=0x7f020085;
-        public static int return_h=0x7f020086;
-        public static int return_l=0x7f020087;
-        public static int return_m=0x7f020088;
-        public static int returnm_h=0x7f020089;
-        public static int returnm_l=0x7f02008a;
-        public static int returnm_m=0x7f02008b;
-        public static int sales_order_h=0x7f02008c;
-        public static int sales_order_l=0x7f02008d;
-        public static int sales_order_m=0x7f02008e;
-        public static int salesman_h=0x7f02008f;
-        public static int salesman_l=0x7f020090;
-        public static int salesman_m=0x7f020091;
-        public static int save_h=0x7f020092;
-        public static int save_l=0x7f020093;
-        public static int save_m=0x7f020094;
-        public static int search_h=0x7f020095;
-        public static int search_l=0x7f020096;
-        public static int search_m=0x7f020097;
-        public static int server_h=0x7f020098;
-        public static int server_l=0x7f020099;
-        public static int server_m=0x7f02009a;
-        public static int share_h=0x7f02009b;
-        public static int share_l=0x7f02009c;
-        public static int share_m=0x7f02009d;
-        public static int spinsuite_icon=0x7f02009e;
-        public static int syncserver_h=0x7f02009f;
-        public static int syncserver_l=0x7f0200a0;
-        public static int syncserver_m=0x7f0200a1;
-        public static int syncupdate_h=0x7f0200a2;
-        public static int syncupdate_l=0x7f0200a3;
-        public static int syncupdate_m=0x7f0200a4;
-        public static int textfield_default=0x7f0200a5;
-        public static int undo_h=0x7f0200a6;
-        public static int undo_l=0x7f0200a7;
-        public static int undo_m=0x7f0200a8;
-        public static int upload_h=0x7f0200a9;
-        public static int upload_l=0x7f0200aa;
-        public static int upload_m=0x7f0200ab;
-        public static int uploadr_h=0x7f0200ac;
-        public static int uploadr_l=0x7f0200ad;
-        public static int uploadr_m=0x7f0200ae;
-        public static int user_h=0x7f0200af;
-        public static int user_l=0x7f0200b0;
-        public static int user_m=0x7f0200b1;
-        public static int window_h=0x7f0200b2;
-        public static int window_l=0x7f0200b3;
-        public static int window_m=0x7f0200b4;
-        public static int wire_transfer_h=0x7f0200b5;
-        public static int wire_transfer_l=0x7f0200b6;
-        public static int wire_transfer_m=0x7f0200b7;
-        public static int xls_h=0x7f0200b8;
-        public static int xls_l=0x7f0200b9;
-        public static int xls_m=0x7f0200ba;
-        public static int xml_h=0x7f0200bb;
-        public static int xml_l=0x7f0200bc;
-        public static int xml_m=0x7f0200bd;
+        public static int bpartner_h=0x7f020000;
+        public static int bpartner_l=0x7f020001;
+        public static int bpartner_m=0x7f020002;
+        public static int calendar_h=0x7f020003;
+        public static int calendar_l=0x7f020004;
+        public static int calendar_m=0x7f020005;
+        public static int cash_h=0x7f020006;
+        public static int cash_l=0x7f020007;
+        public static int cash_m=0x7f020008;
+        public static int check_h=0x7f020009;
+        public static int check_l=0x7f02000a;
+        public static int check_m=0x7f02000b;
+        public static int collect_money_h=0x7f02000c;
+        public static int collect_money_l=0x7f02000d;
+        public static int collect_money_m=0x7f02000e;
+        public static int config_h=0x7f02000f;
+        public static int config_l=0x7f020010;
+        public static int config_m=0x7f020011;
+        public static int contruction_h=0x7f020012;
+        public static int contruction_l=0x7f020013;
+        public static int contruction_m=0x7f020014;
+        public static int direct_credit_h=0x7f020015;
+        public static int direct_credit_l=0x7f020016;
+        public static int direct_credit_m=0x7f020017;
+        public static int direct_debit_h=0x7f020018;
+        public static int direct_debit_l=0x7f020019;
+        public static int direct_debit_m=0x7f02001a;
+        public static int direct_deposit_h=0x7f02001b;
+        public static int direct_deposit_l=0x7f02001c;
+        public static int direct_deposit_m=0x7f02001d;
+        public static int doc_completed_h=0x7f02001e;
+        public static int doc_completed_l=0x7f02001f;
+        public static int doc_completed_m=0x7f020020;
+        public static int doc_progress_h=0x7f020021;
+        public static int doc_progress_l=0x7f020022;
+        public static int doc_progress_m=0x7f020023;
+        public static int download_h=0x7f020024;
+        public static int download_l=0x7f020025;
+        public static int download_m=0x7f020026;
+        public static int drawer_shadow=0x7f020027;
+        public static int edit_h=0x7f020028;
+        public static int edit_l=0x7f020029;
+        public static int edit_m=0x7f02002a;
+        public static int errorsync_h=0x7f02002b;
+        public static int errorsync_l=0x7f02002c;
+        public static int errorsync_m=0x7f02002d;
+        public static int folder_h=0x7f02002e;
+        public static int folder_l=0x7f02002f;
+        public static int folder_m=0x7f020030;
+        public static int html_h=0x7f020031;
+        public static int html_l=0x7f020032;
+        public static int html_m=0x7f020033;
+        public static int ic_action_about_dark=0x7f020034;
+        public static int ic_action_about_light=0x7f020035;
+        public static int ic_action_accept_dark=0x7f020036;
+        public static int ic_action_accept_light=0x7f020037;
+        public static int ic_action_accounts_dark=0x7f020038;
+        public static int ic_action_accounts_light=0x7f020039;
+        public static int ic_action_add_alarm_dark=0x7f02003a;
+        public static int ic_action_add_alarm_light=0x7f02003b;
+        public static int ic_action_add_group_dark=0x7f02003c;
+        public static int ic_action_add_group_light=0x7f02003d;
+        public static int ic_action_add_person_dark=0x7f02003e;
+        public static int ic_action_add_person_light=0x7f02003f;
+        public static int ic_action_add_to_queue_dark=0x7f020040;
+        public static int ic_action_add_to_queue_light=0x7f020041;
+        public static int ic_action_airplane_mode_off_dark=0x7f020042;
+        public static int ic_action_airplane_mode_off_light=0x7f020043;
+        public static int ic_action_airplane_mode_on_dark=0x7f020044;
+        public static int ic_action_airplane_mode_on_light=0x7f020045;
+        public static int ic_action_alarms_dark=0x7f020046;
+        public static int ic_action_alarms_light=0x7f020047;
+        public static int ic_action_attachment_dark=0x7f020048;
+        public static int ic_action_attachment_light=0x7f020049;
+        public static int ic_action_back_dark=0x7f02004a;
+        public static int ic_action_back_light=0x7f02004b;
+        public static int ic_action_backspace_dark=0x7f02004c;
+        public static int ic_action_backspace_light=0x7f02004d;
+        public static int ic_action_bad_dark=0x7f02004e;
+        public static int ic_action_bad_light=0x7f02004f;
+        public static int ic_action_battery_dark=0x7f020050;
+        public static int ic_action_battery_light=0x7f020051;
+        public static int ic_action_bightness_low_dark=0x7f020052;
+        public static int ic_action_bightness_low_light=0x7f020053;
+        public static int ic_action_bluetooth_connected_dark=0x7f020054;
+        public static int ic_action_bluetooth_connected_light=0x7f020055;
+        public static int ic_action_bluetooth_dark=0x7f020056;
+        public static int ic_action_bluetooth_light=0x7f020057;
+        public static int ic_action_bluetooth_searching_dark=0x7f020058;
+        public static int ic_action_bluetooth_searching_light=0x7f020059;
+        public static int ic_action_brightness_auto_dark=0x7f02005a;
+        public static int ic_action_brightness_auto_light=0x7f02005b;
+        public static int ic_action_brightness_high_dark=0x7f02005c;
+        public static int ic_action_brightness_high_light=0x7f02005d;
+        public static int ic_action_brightness_medium_dark=0x7f02005e;
+        public static int ic_action_brightness_medium_light=0x7f02005f;
+        public static int ic_action_call_dark=0x7f020060;
+        public static int ic_action_call_light=0x7f020061;
+        public static int ic_action_camera_dark=0x7f020062;
+        public static int ic_action_camera_light=0x7f020063;
+        public static int ic_action_cancel_dark=0x7f020064;
+        public static int ic_action_cancel_light=0x7f020065;
+        public static int ic_action_cast_dark=0x7f020066;
+        public static int ic_action_cast_light=0x7f020067;
+        public static int ic_action_cc_bcc_dark=0x7f020068;
+        public static int ic_action_cc_bcc_light=0x7f020069;
+        public static int ic_action_chat_dark=0x7f02006a;
+        public static int ic_action_chat_light=0x7f02006b;
+        public static int ic_action_cloud_dark=0x7f02006c;
+        public static int ic_action_cloud_light=0x7f02006d;
+        public static int ic_action_collapse_dark=0x7f02006e;
+        public static int ic_action_collapse_light=0x7f02006f;
+        public static int ic_action_collection_dark=0x7f020070;
+        public static int ic_action_collection_light=0x7f020071;
+        public static int ic_action_computer_dark=0x7f020072;
+        public static int ic_action_computer_light=0x7f020073;
+        public static int ic_action_copy_dark=0x7f020074;
+        public static int ic_action_copy_light=0x7f020075;
+        public static int ic_action_crop_dark=0x7f020076;
+        public static int ic_action_crop_light=0x7f020077;
+        public static int ic_action_cut_dark=0x7f020078;
+        public static int ic_action_cut_light=0x7f020079;
+        public static int ic_action_data_usage_dark=0x7f02007a;
+        public static int ic_action_data_usage_light=0x7f02007b;
+        public static int ic_action_dial_pad_dark=0x7f02007c;
+        public static int ic_action_dial_pad_light=0x7f02007d;
+        public static int ic_action_directions_dark=0x7f02007e;
+        public static int ic_action_directions_light=0x7f02007f;
+        public static int ic_action_discard_dark=0x7f020080;
+        public static int ic_action_discard_light=0x7f020081;
+        public static int ic_action_dock_dark=0x7f020082;
+        public static int ic_action_dock_light=0x7f020083;
+        public static int ic_action_download_dark=0x7f020084;
+        public static int ic_action_download_light=0x7f020085;
+        public static int ic_action_edit_dark=0x7f020086;
+        public static int ic_action_edit_light=0x7f020087;
+        public static int ic_action_email_dark=0x7f020088;
+        public static int ic_action_email_light=0x7f020089;
+        public static int ic_action_end_call_dark=0x7f02008a;
+        public static int ic_action_end_call_light=0x7f02008b;
+        public static int ic_action_error_dark=0x7f02008c;
+        public static int ic_action_error_light=0x7f02008d;
+        public static int ic_action_event_dark=0x7f02008e;
+        public static int ic_action_event_light=0x7f02008f;
+        public static int ic_action_expand_dark=0x7f020090;
+        public static int ic_action_expand_light=0x7f020091;
+        public static int ic_action_fast_forward_dark=0x7f020092;
+        public static int ic_action_fast_forward_light=0x7f020093;
+        public static int ic_action_favorite_dark=0x7f020094;
+        public static int ic_action_favorite_light=0x7f020095;
+        public static int ic_action_flash_automatic_dark=0x7f020096;
+        public static int ic_action_flash_automatic_light=0x7f020097;
+        public static int ic_action_flash_off_dark=0x7f020098;
+        public static int ic_action_flash_off_light=0x7f020099;
+        public static int ic_action_flash_on_dark=0x7f02009a;
+        public static int ic_action_flash_on_light=0x7f02009b;
+        public static int ic_action_forward_dark=0x7f02009c;
+        public static int ic_action_forward_light=0x7f02009d;
+        public static int ic_action_full_screen_dark=0x7f02009e;
+        public static int ic_action_full_screen_light=0x7f02009f;
+        public static int ic_action_gamepad_dark=0x7f0200a0;
+        public static int ic_action_gamepad_light=0x7f0200a1;
+        public static int ic_action_go_to_today_dark=0x7f0200a2;
+        public static int ic_action_go_to_today_light=0x7f0200a3;
+        public static int ic_action_good_dark=0x7f0200a4;
+        public static int ic_action_good_light=0x7f0200a5;
+        public static int ic_action_group_dark=0x7f0200a6;
+        public static int ic_action_group_light=0x7f0200a7;
+        public static int ic_action_half_important_dark=0x7f0200a8;
+        public static int ic_action_half_important_light=0x7f0200a9;
+        public static int ic_action_headphones_dark=0x7f0200aa;
+        public static int ic_action_headphones_light=0x7f0200ab;
+        public static int ic_action_headset_dark=0x7f0200ac;
+        public static int ic_action_headset_light=0x7f0200ad;
+        public static int ic_action_help_dark=0x7f0200ae;
+        public static int ic_action_help_light=0x7f0200af;
+        public static int ic_action_import_export_dark=0x7f0200b0;
+        public static int ic_action_import_export_light=0x7f0200b1;
+        public static int ic_action_important_dark=0x7f0200b2;
+        public static int ic_action_important_light=0x7f0200b3;
+        public static int ic_action_keyboard_dark=0x7f0200b4;
+        public static int ic_action_keyboard_light=0x7f0200b5;
+        public static int ic_action_labels_dark=0x7f0200b6;
+        public static int ic_action_labels_light=0x7f0200b7;
+        public static int ic_action_location_found_dark=0x7f0200b8;
+        public static int ic_action_location_found_light=0x7f0200b9;
+        public static int ic_action_location_off_dark=0x7f0200ba;
+        public static int ic_action_location_off_light=0x7f0200bb;
+        public static int ic_action_location_searching_dark=0x7f0200bc;
+        public static int ic_action_location_searching_light=0x7f0200bd;
+        public static int ic_action_make_available_offline_dark=0x7f0200be;
+        public static int ic_action_make_available_offline_light=0x7f0200bf;
+        public static int ic_action_map_dark=0x7f0200c0;
+        public static int ic_action_map_light=0x7f0200c1;
+        public static int ic_action_merge_dark=0x7f0200c2;
+        public static int ic_action_merge_light=0x7f0200c3;
+        public static int ic_action_mic_dark=0x7f0200c4;
+        public static int ic_action_mic_light=0x7f0200c5;
+        public static int ic_action_mic_muted_dark=0x7f0200c6;
+        public static int ic_action_mic_muted_light=0x7f0200c7;
+        public static int ic_action_mouse_dark=0x7f0200c8;
+        public static int ic_action_mouse_light=0x7f0200c9;
+        public static int ic_action_network_cell_dark=0x7f0200ca;
+        public static int ic_action_network_cell_light=0x7f0200cb;
+        public static int ic_action_network_wifi_dark=0x7f0200cc;
+        public static int ic_action_network_wifi_light=0x7f0200cd;
+        public static int ic_action_new_account_dark=0x7f0200ce;
+        public static int ic_action_new_account_light=0x7f0200cf;
+        public static int ic_action_new_attachment_dark=0x7f0200d0;
+        public static int ic_action_new_attachment_light=0x7f0200d1;
+        public static int ic_action_new_dark=0x7f0200d2;
+        public static int ic_action_new_email_dark=0x7f0200d3;
+        public static int ic_action_new_email_light=0x7f0200d4;
+        public static int ic_action_new_event_dark=0x7f0200d5;
+        public static int ic_action_new_event_light=0x7f0200d6;
+        public static int ic_action_new_label_dark=0x7f0200d7;
+        public static int ic_action_new_label_light=0x7f0200d8;
+        public static int ic_action_new_light=0x7f0200d9;
+        public static int ic_action_new_picture_dark=0x7f0200da;
+        public static int ic_action_new_picture_light=0x7f0200db;
+        public static int ic_action_next_dark=0x7f0200dc;
+        public static int ic_action_next_item_dark=0x7f0200dd;
+        public static int ic_action_next_item_light=0x7f0200de;
+        public static int ic_action_next_light=0x7f0200df;
+        public static int ic_action_not_important_dark=0x7f0200e0;
+        public static int ic_action_not_important_light=0x7f0200e1;
+        public static int ic_action_not_secure_dark=0x7f0200e2;
+        public static int ic_action_not_secure_light=0x7f0200e3;
+        public static int ic_action_overflow_dark=0x7f0200e4;
+        public static int ic_action_overflow_light=0x7f0200e5;
+        public static int ic_action_paste_dark=0x7f0200e6;
+        public static int ic_action_paste_light=0x7f0200e7;
+        public static int ic_action_pause_dark=0x7f0200e8;
+        public static int ic_action_pause_light=0x7f0200e9;
+        public static int ic_action_pause_over_video_dark=0x7f0200ea;
+        public static int ic_action_pause_over_video_light=0x7f0200eb;
+        public static int ic_action_person_dark=0x7f0200ec;
+        public static int ic_action_person_light=0x7f0200ed;
+        public static int ic_action_phone_dark=0x7f0200ee;
+        public static int ic_action_phone_light=0x7f0200ef;
+        public static int ic_action_picture_dark=0x7f0200f0;
+        public static int ic_action_picture_light=0x7f0200f1;
+        public static int ic_action_place_dark=0x7f0200f2;
+        public static int ic_action_place_light=0x7f0200f3;
+        public static int ic_action_play_dark=0x7f0200f4;
+        public static int ic_action_play_light=0x7f0200f5;
+        public static int ic_action_play_over_video_dark=0x7f0200f6;
+        public static int ic_action_play_over_video_light=0x7f0200f7;
+        public static int ic_action_previous_dark=0x7f0200f8;
+        public static int ic_action_previous_item_dark=0x7f0200f9;
+        public static int ic_action_previous_item_light=0x7f0200fa;
+        public static int ic_action_previous_light=0x7f0200fb;
+        public static int ic_action_read_dark=0x7f0200fc;
+        public static int ic_action_read_light=0x7f0200fd;
+        public static int ic_action_refresh_dark=0x7f0200fe;
+        public static int ic_action_refresh_light=0x7f0200ff;
+        public static int ic_action_remove_dark=0x7f020100;
+        public static int ic_action_remove_light=0x7f020101;
+        public static int ic_action_repeat_dark=0x7f020102;
+        public static int ic_action_repeat_light=0x7f020103;
+        public static int ic_action_replay_dark=0x7f020104;
+        public static int ic_action_replay_light=0x7f020105;
+        public static int ic_action_reply_all_dark=0x7f020106;
+        public static int ic_action_reply_all_light=0x7f020107;
+        public static int ic_action_reply_dark=0x7f020108;
+        public static int ic_action_reply_light=0x7f020109;
+        public static int ic_action_return_from_full_screen_dark=0x7f02010a;
+        public static int ic_action_return_from_full_screen_light=0x7f02010b;
+        public static int ic_action_rewind_dark=0x7f02010c;
+        public static int ic_action_rewind_light=0x7f02010d;
+        public static int ic_action_ring_volume_dark=0x7f02010e;
+        public static int ic_action_ring_volume_light=0x7f02010f;
+        public static int ic_action_rotate_left_dark=0x7f020110;
+        public static int ic_action_rotate_left_light=0x7f020111;
+        public static int ic_action_rotate_right_dark=0x7f020112;
+        public static int ic_action_rotate_right_light=0x7f020113;
+        public static int ic_action_save_dark=0x7f020114;
+        public static int ic_action_save_light=0x7f020115;
+        public static int ic_action_screen_locked_to_landscape_dark=0x7f020116;
+        public static int ic_action_screen_locked_to_landscape_light=0x7f020117;
+        public static int ic_action_screen_locked_to_portrait_dark=0x7f020118;
+        public static int ic_action_screen_locked_to_portrait_light=0x7f020119;
+        public static int ic_action_screen_rotation_dark=0x7f02011a;
+        public static int ic_action_screen_rotation_light=0x7f02011b;
+        public static int ic_action_sd_storage_dark=0x7f02011c;
+        public static int ic_action_sd_storage_light=0x7f02011d;
+        public static int ic_action_search_dark=0x7f02011e;
+        public static int ic_action_search_light=0x7f02011f;
+        public static int ic_action_secure_dark=0x7f020120;
+        public static int ic_action_secure_light=0x7f020121;
+        public static int ic_action_select_all_dark=0x7f020122;
+        public static int ic_action_select_all_light=0x7f020123;
+        public static int ic_action_send_now_dark=0x7f020124;
+        public static int ic_action_send_now_light=0x7f020125;
+        public static int ic_action_settings_dark=0x7f020126;
+        public static int ic_action_settings_light=0x7f020127;
+        public static int ic_action_share_dark=0x7f020128;
+        public static int ic_action_share_light=0x7f020129;
+        public static int ic_action_shuffle_dark=0x7f02012a;
+        public static int ic_action_shuffle_light=0x7f02012b;
+        public static int ic_action_slideshow_dark=0x7f02012c;
+        public static int ic_action_slideshow_light=0x7f02012d;
+        public static int ic_action_sort_by_size_dark=0x7f02012e;
+        public static int ic_action_sort_by_size_light=0x7f02012f;
+        public static int ic_action_split_dark=0x7f020130;
+        public static int ic_action_split_light=0x7f020131;
+        public static int ic_action_stop_dark=0x7f020132;
+        public static int ic_action_stop_light=0x7f020133;
+        public static int ic_action_storage_dark=0x7f020134;
+        public static int ic_action_storage_light=0x7f020135;
+        public static int ic_action_switch_camera_dark=0x7f020136;
+        public static int ic_action_switch_camera_light=0x7f020137;
+        public static int ic_action_switch_video_dark=0x7f020138;
+        public static int ic_action_switch_video_light=0x7f020139;
+        public static int ic_action_time_dark=0x7f02013a;
+        public static int ic_action_time_light=0x7f02013b;
+        public static int ic_action_undo_dark=0x7f02013c;
+        public static int ic_action_undo_light=0x7f02013d;
+        public static int ic_action_unread_dark=0x7f02013e;
+        public static int ic_action_unread_light=0x7f02013f;
+        public static int ic_action_upload_dark=0x7f020140;
+        public static int ic_action_upload_light=0x7f020141;
+        public static int ic_action_usb_dark=0x7f020142;
+        public static int ic_action_usb_light=0x7f020143;
+        public static int ic_action_video_dark=0x7f020144;
+        public static int ic_action_video_light=0x7f020145;
+        public static int ic_action_view_as_grid_dark=0x7f020146;
+        public static int ic_action_view_as_grid_light=0x7f020147;
+        public static int ic_action_view_as_list_dark=0x7f020148;
+        public static int ic_action_view_as_list_light=0x7f020149;
+        public static int ic_action_volume_muted_dark=0x7f02014a;
+        public static int ic_action_volume_muted_light=0x7f02014b;
+        public static int ic_action_volume_on_dark=0x7f02014c;
+        public static int ic_action_volume_on_light=0x7f02014d;
+        public static int ic_action_warning_dark=0x7f02014e;
+        public static int ic_action_warning_light=0x7f02014f;
+        public static int ic_action_web_site_dark=0x7f020150;
+        public static int ic_action_web_site_light=0x7f020151;
+        public static int ic_drawer=0x7f020152;
+        public static int ic_launcher=0x7f020153;
+        public static int ic_menu_moreoverflow_normal_holo_dark=0x7f020154;
+        public static int ic_menu_moreoverflow_normal_holo_light=0x7f020155;
+        public static int inventory_h=0x7f020156;
+        public static int inventory_l=0x7f020157;
+        public static int inventory_m=0x7f020158;
+        public static int klipper_h=0x7f020159;
+        public static int klipper_l=0x7f02015a;
+        public static int klipper_m=0x7f02015b;
+        public static int location_h=0x7f02015c;
+        public static int location_l=0x7f02015d;
+        public static int location_m=0x7f02015e;
+        public static int loginkey_h=0x7f02015f;
+        public static int loginkey_l=0x7f020160;
+        public static int loginkey_m=0x7f020161;
+        public static int logo_erp=0x7f020162;
+        public static int logo_lubo=0x7f020163;
+        public static int meet_h=0x7f020164;
+        public static int meet_l=0x7f020165;
+        public static int meet_m=0x7f020166;
+        public static int meeting_h=0x7f020167;
+        public static int meeting_l=0x7f020168;
+        public static int meeting_m=0x7f020169;
+        public static int new_h=0x7f02016a;
+        public static int new_l=0x7f02016b;
+        public static int new_m=0x7f02016c;
+        public static int nosales_h=0x7f02016d;
+        public static int nosales_l=0x7f02016e;
+        public static int nosales_m=0x7f02016f;
+        public static int ok_h=0x7f020170;
+        public static int ok_l=0x7f020171;
+        public static int ok_m=0x7f020172;
+        public static int oncredit_h=0x7f020173;
+        public static int oncredit_l=0x7f020174;
+        public static int oncredit_m=0x7f020175;
+        public static int package_h=0x7f020176;
+        public static int package_l=0x7f020177;
+        public static int package_m=0x7f020178;
+        public static int payment_mixed_h=0x7f020179;
+        public static int payment_mixed_l=0x7f02017a;
+        public static int payment_mixed_m=0x7f02017b;
+        public static int pdf_h=0x7f02017c;
+        public static int pdf_l=0x7f02017d;
+        public static int pdf_m=0x7f02017e;
+        public static int process_h=0x7f02017f;
+        public static int process_l=0x7f020180;
+        public static int process_m=0x7f020181;
+        public static int pship_h=0x7f020182;
+        public static int pship_l=0x7f020183;
+        public static int pship_m=0x7f020184;
+        public static int quickaction_arrow_down=0x7f020185;
+        public static int quickaction_arrow_up=0x7f020186;
+        public static int quickaction_bottom_frame=0x7f020187;
+        public static int quickaction_slider_background=0x7f020188;
+        public static int quickaction_slider_btn=0x7f020189;
+        public static int quickaction_slider_btn_normal=0x7f02018a;
+        public static int quickaction_slider_btn_on=0x7f02018b;
+        public static int quickaction_slider_btn_pressed=0x7f02018c;
+        public static int quickaction_slider_btn_selected=0x7f02018d;
+        public static int quickaction_slider_grip_left=0x7f02018e;
+        public static int quickaction_slider_grip_right=0x7f02018f;
+        public static int quickaction_top_frame=0x7f020190;
+        public static int quickcontact_drop_shadow=0x7f020191;
+        public static int remove_h=0x7f020192;
+        public static int remove_l=0x7f020193;
+        public static int remove_m=0x7f020194;
+        public static int report_h=0x7f020195;
+        public static int report_l=0x7f020196;
+        public static int report_m=0x7f020197;
+        public static int return_h=0x7f020198;
+        public static int return_l=0x7f020199;
+        public static int return_m=0x7f02019a;
+        public static int sales_order_h=0x7f02019b;
+        public static int sales_order_l=0x7f02019c;
+        public static int sales_order_m=0x7f02019d;
+        public static int salesman_h=0x7f02019e;
+        public static int salesman_l=0x7f02019f;
+        public static int salesman_m=0x7f0201a0;
+        public static int save_h=0x7f0201a1;
+        public static int save_l=0x7f0201a2;
+        public static int save_m=0x7f0201a3;
+        public static int search_h=0x7f0201a4;
+        public static int search_l=0x7f0201a5;
+        public static int search_m=0x7f0201a6;
+        public static int server_h=0x7f0201a7;
+        public static int server_l=0x7f0201a8;
+        public static int server_m=0x7f0201a9;
+        public static int spinsuite_icon=0x7f0201aa;
+        public static int syncserver_h=0x7f0201ab;
+        public static int syncserver_l=0x7f0201ac;
+        public static int syncserver_m=0x7f0201ad;
+        public static int syncupdate_h=0x7f0201ae;
+        public static int syncupdate_l=0x7f0201af;
+        public static int syncupdate_m=0x7f0201b0;
+        public static int textfield_default=0x7f0201b1;
+        public static int upload_h=0x7f0201b2;
+        public static int upload_l=0x7f0201b3;
+        public static int upload_m=0x7f0201b4;
+        public static int uploadr_h=0x7f0201b5;
+        public static int uploadr_l=0x7f0201b6;
+        public static int uploadr_m=0x7f0201b7;
+        public static int user_h=0x7f0201b8;
+        public static int user_l=0x7f0201b9;
+        public static int user_m=0x7f0201ba;
+        public static int window_h=0x7f0201bb;
+        public static int window_l=0x7f0201bc;
+        public static int window_m=0x7f0201bd;
+        public static int wire_transfer_h=0x7f0201be;
+        public static int wire_transfer_l=0x7f0201bf;
+        public static int wire_transfer_m=0x7f0201c0;
+        public static int xls_h=0x7f0201c1;
+        public static int xls_l=0x7f0201c2;
+        public static int xls_m=0x7f0201c3;
+        public static int xml_h=0x7f0201c4;
+        public static int xml_l=0x7f0201c5;
+        public static int xml_m=0x7f0201c6;
     }
     public static final class id {
         public static int action_add=0x7f0a004f;

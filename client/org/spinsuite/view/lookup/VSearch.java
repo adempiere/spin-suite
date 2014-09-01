@@ -17,6 +17,7 @@ package org.spinsuite.view.lookup;
 
 import org.spinsuite.base.R;
 import org.spinsuite.util.DisplayRecordItem;
+import org.spinsuite.util.Env;
 import org.spinsuite.view.LV_Search;
 
 import android.app.Activity;
@@ -106,6 +107,13 @@ public class VSearch extends LinearLayout implements OnClickListener {
 		ib_Search = (ImageButton) findViewById(R.id.ib_Search);
 		//	
 		ib_Search.setOnClickListener(this);
+		//	Optional Business Partner and Product
+		if(m_field.ColumnName.equals("C_BPartner_ID"))
+			ib_Search.setImageResource(
+					Env.getResourceID(activity, R.attr.ic_lt_search_bpartner));
+		else if(m_field.ColumnName.equals("M_Product_ID"))
+			ib_Search.setImageResource(
+					Env.getResourceID(activity, R.attr.ic_lt_search_product));
 	}
 	
 	/**

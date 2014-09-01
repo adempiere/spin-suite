@@ -98,7 +98,8 @@ public class TV_Base extends Activity implements ActionBar.TabListener {
         //	
     	m_DList = (ListView) findViewById(R.id.left_drawer);
         //	
-        m_DLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        m_DLayout.setDrawerShadow(
+        		Env.getResourceID(this, R.attr.ic_ab_drawer_shadow), GravityCompat.START);
         
         m_DList.setOnItemClickListener(new ListView.OnItemClickListener() {
 
@@ -111,7 +112,7 @@ public class TV_Base extends Activity implements ActionBar.TabListener {
         });
 
         m_DToggle = new ActionBarDrawerToggle(this, m_DLayout, 
-        		R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
+        		Env.getResourceID(this, R.attr.ic_ab_drawer), R.string.drawer_open, R.string.drawer_close) {
             
         	public void onDrawerClosed(View view) {
                 invalidateOptionsMenu();

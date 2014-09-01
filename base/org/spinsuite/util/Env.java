@@ -32,6 +32,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 
 import com.google.gson.Gson;
 
@@ -1480,6 +1481,24 @@ public final class Env {
 	 */
 	public static String getAppBaseDirectory(Context ctx){
 		return getContext(ctx, APP_BASE_DIRECTORY_CTX_NAME);
+	}
+	
+	/**
+	 * Get Resource Identifier from Attribute
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/09/2014, 16:30:25
+	 * @param ctx
+	 * @param att
+	 * @return
+	 * @return int
+	 */
+	public static int getResourceID(Context ctx, int att) {
+		if(ctx == null)
+			throw new IllegalArgumentException ("Require Context");
+		//	
+		TypedValue typedValueAttr = new TypedValue();
+		ctx.getTheme().resolveAttribute(att, typedValueAttr, true);
+		//	Return
+		return typedValueAttr.resourceId;
 	}
 	
 	/**************************************************************************

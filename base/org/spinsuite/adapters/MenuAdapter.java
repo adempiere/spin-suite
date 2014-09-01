@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import org.spinsuite.base.R;
 import org.spinsuite.util.DisplayMenuItem;
+import org.spinsuite.util.Env;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -108,27 +109,35 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 			}
 		} else if(mi.isSummary()){
 			if(!isActivityMenu)
-				img_Menu.setImageResource(R.drawable.folder_h);
+				img_Menu.setImageResource(
+						Env.getResourceID(ctx, R.attr.ic_dr_folder));
 			else
-				img_Menu.setImageResource(R.drawable.folder_l);
+				img_Menu.setImageResource(
+						Env.getResourceID(ctx, R.attr.ic_ml_folder));
 		} else if(!mi.isSummary()) {
 			if(!isActivityMenu){
 				if(mi.getAction().equals(DisplayMenuItem.ACTION_Form)
 						|| mi.getAction().equals(DisplayMenuItem.ACTION_Window)){
-					img_Menu.setImageResource(R.drawable.window_h);
+					img_Menu.setImageResource(
+							Env.getResourceID(ctx, R.attr.ic_dr_window));
 				} else if(mi.getAction().equals(DisplayMenuItem.ACTION_Process)){
-					img_Menu.setImageResource(R.drawable.process_h);
+					img_Menu.setImageResource(
+							Env.getResourceID(ctx, R.attr.ic_dr_process));
 				} else if(mi.getAction().equals(DisplayMenuItem.ACTION_Report)){
-					img_Menu.setImageResource(R.drawable.report_h);
+					img_Menu.setImageResource(
+							Env.getResourceID(ctx, R.attr.ic_dr_report));
 				}
 			} else {
 				if(mi.getAction().equals(DisplayMenuItem.ACTION_Form)
 						|| mi.getAction().equals(DisplayMenuItem.ACTION_Window)){
-					img_Menu.setImageResource(R.drawable.window_l);
+					img_Menu.setImageResource(
+							Env.getResourceID(ctx, R.attr.ic_ml_window));
 				} else if(mi.getAction().equals(DisplayMenuItem.ACTION_Process)){
-					img_Menu.setImageResource(R.drawable.process_l);
+					img_Menu.setImageResource(
+							Env.getResourceID(ctx, R.attr.ic_ml_process));
 				} else if(mi.getAction().equals(DisplayMenuItem.ACTION_Report)){
-					img_Menu.setImageResource(R.drawable.report_l);
+					img_Menu.setImageResource(
+							Env.getResourceID(ctx, R.attr.ic_ml_report));
 				}
 			}
 			

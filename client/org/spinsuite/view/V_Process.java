@@ -40,6 +40,7 @@ import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
+import org.spinsuite.util.Env;
 import org.spinsuite.util.KeyNamePair;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
@@ -213,7 +214,8 @@ public class V_Process extends Activity {
         //	
     	m_DList = (ListView) findViewById(R.id.left_drawer);
         //	
-        m_DLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        m_DLayout.setDrawerShadow(
+        		Env.getResourceID(this, R.attr.ic_ab_drawer_shadow), GravityCompat.START);
         
         m_DList.setOnItemClickListener(new ListView.OnItemClickListener() {
 
@@ -226,7 +228,7 @@ public class V_Process extends Activity {
         });
 
         m_DToggle = new ActionBarDrawerToggle(this, m_DLayout, 
-        		R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
+        		Env.getResourceID(this, R.attr.ic_ab_drawer), R.string.drawer_open, R.string.drawer_close) {
             
         	public void onDrawerClosed(View view) {
                 invalidateOptionsMenu();
@@ -383,11 +385,11 @@ public class V_Process extends Activity {
 		loadDrawer();
 		//	Populate
 		ArrayList<DisplayMenuItem> listMenu = new ArrayList<DisplayMenuItem>();
-		listMenu.add(new DisplayMenuItem(SHARE_FOR, getResources().getString(R.string.Action_Share), null, "share_m"));
-		listMenu.add(new DisplayMenuItem(EXPORT_TO_PDF, getResources().getString(R.string.Action_Export_PDF), null, "pdf_m"));
-		listMenu.add(new DisplayMenuItem(EXPORT_TO_XLS, getResources().getString(R.string.Action_Export_XLS), null, "xls_m"));
-		listMenu.add(new DisplayMenuItem(EXPORT_TO_XML, getResources().getString(R.string.Action_Export_XML), null, "xml_m"));
-		listMenu.add(new DisplayMenuItem(EXPORT_TO_HTML, getResources().getString(R.string.Action_Export_HTML), null, "html_m"));
+		listMenu.add(new DisplayMenuItem(SHARE_FOR, getResources().getString(R.string.Action_Share), null, R.attr.ic_ab_share));
+		listMenu.add(new DisplayMenuItem(EXPORT_TO_PDF, getResources().getString(R.string.Action_Export_PDF), null, R.attr.ic_dr_pdf));
+		listMenu.add(new DisplayMenuItem(EXPORT_TO_XLS, getResources().getString(R.string.Action_Export_XLS), null, R.attr.ic_dr_xls));
+		listMenu.add(new DisplayMenuItem(EXPORT_TO_XML, getResources().getString(R.string.Action_Export_XML), null, R.attr.ic_dr_xml));
+		listMenu.add(new DisplayMenuItem(EXPORT_TO_HTML, getResources().getString(R.string.Action_Export_HTML), null, R.attr.ic_dr_html));
 		
 		//	Set Adapter
 		ReportExportMenuAdapter mi_adapter = new ReportExportMenuAdapter(this, R.layout.i_activity_menu, true, listMenu);
@@ -670,7 +672,7 @@ public class V_Process extends Activity {
 		if (itemId == R.id.action_process) {
 			if(isLoaded){
 				ll_ProcessPara.setVisibility(ScrollView.VISIBLE);
-				item.setIcon(R.drawable.process_m);
+				item.setIcon(Env.getResourceID(this, R.attr.ic_ab_process));
 				if(m_pInfo.isReport()){
 					iSearch.setVisible(false);
 					iPrintFormat.setVisible(false);
@@ -710,7 +712,7 @@ public class V_Process extends Activity {
 			//	Hide Parameter
 			if(!m_pInfo.isError()){
 				ll_ProcessPara.setVisibility(ScrollView.GONE);
-				item.setIcon(R.drawable.config_m);
+				item.setIcon(Env.getResourceID(this, R.attr.ic_ab_settings));
 				//	Set Is Loaded
 				isLoaded = true;
 			}
