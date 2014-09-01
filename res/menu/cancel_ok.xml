@@ -21,15 +21,17 @@
     <item android:id="@+id/action_config"
         android:title="@string/Action_Config"
         android:showAsAction="ifRoom"
-        android:icon="@drawable/config_m"
+        android:icon="?attr/ic_ab_settings"
         android:visible="false" />
     
     <item android:id="@+id/action_cancel"
         android:title="@string/Action_Cancel"
+        android:icon="?attr/ic_ab_cancel"
         android:showAsAction="always" />
     
     <item android:id="@+id/action_ok"
         android:title="@string/Action_Ok"
+        android:icon="?attr/ic_ab_ok"
         android:showAsAction="always" />
 
 </menu>

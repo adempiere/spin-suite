@@ -69,6 +69,22 @@ public class DisplayMenuItem implements Parcelable {
 		this.m_Description = m_Description;
 		this.m_ImageURL = m_ImageURL;
 	}
+	
+	/**
+	 * Constructor with Resource ID 
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/09/2014, 17:01:29
+	 * @param m_SPS_Menu_ID
+	 * @param m_Name
+	 * @param m_Description
+	 * @param m_AttResourceID
+	 */
+	public DisplayMenuItem(int m_SPS_Menu_ID, String m_Name, String m_Description, int m_AttResourceID){
+		this.m_SPS_Menu_ID = m_SPS_Menu_ID;
+		this.m_Name = m_Name;
+		this.m_Description = m_Description;
+		this.m_AttResourceID = m_AttResourceID;
+	}
 
 	/**
 	 * 
@@ -162,6 +178,8 @@ public class DisplayMenuItem implements Parcelable {
 	private int				m_Parent_ID = 0;
 	/**	Sequence			*/
 	private int 			m_SeqNo = 0;
+	/**	Resource			*/
+	private int 			m_AttResourceID = 0;
 
 	
 	/** Action AD_Reference_ID=53504 	*/
@@ -241,6 +259,7 @@ public class DisplayMenuItem implements Parcelable {
 		parcel.writeString(m_IsReadWrite);
 		parcel.writeString(m_IsInsertRecord);
 		parcel.writeString((m_IsSummary? "Y": "N"));
+		parcel.writeInt(m_AttResourceID);
 	}
 	
 	public void readToParcel(Parcel parcel){
@@ -269,6 +288,7 @@ public class DisplayMenuItem implements Parcelable {
 		String summary = parcel.readString();
 		m_IsSummary = (summary != null 
 								&& summary.equals("Y"));
+		m_AttResourceID = parcel.readInt();
 	}
 
 	
@@ -377,6 +397,26 @@ public class DisplayMenuItem implements Parcelable {
 	 */
 	public void setImageURL(String img){
 		this.m_ImageURL = img;
+	}
+	
+	/**
+	 * Get Attribute Resource ID
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/09/2014, 17:03:03
+	 * @return
+	 * @return int
+	 */
+	public int getAttResourceID() {
+		return m_AttResourceID;
+	}
+	
+	/**
+	 * Set Attribute Resource ID
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/09/2014, 17:03:34
+	 * @param m_AttResourceID
+	 * @return void
+	 */
+	public void setAttResourceID(int m_AttResourceID) {
+		this.m_AttResourceID = m_AttResourceID;
 	}
 	
 	/**

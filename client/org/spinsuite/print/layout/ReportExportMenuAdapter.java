@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import org.spinsuite.base.R;
 import org.spinsuite.util.DisplayMenuItem;
+import org.spinsuite.util.Env;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -106,10 +107,15 @@ public class ReportExportMenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 				Drawable drawable = res.getDrawable(resID);
 				img_Menu.setImageDrawable(drawable);
 			}
-		} else if(!isActivityMenu){
-			img_Menu.setImageResource(R.drawable.contruction_h);
+		} else if(mi.getAttResourceID() != 0) {
+			img_Menu.setImageResource(
+					Env.getResourceID(ctx, mi.getAttResourceID()));
+		}else if(!isActivityMenu){
+			img_Menu.setImageResource(
+					Env.getResourceID(ctx, R.attr.ic_dr_construction));
 		} else {
-			img_Menu.setImageResource(R.drawable.contruction_l);
+			img_Menu.setImageResource(
+					Env.getResourceID(ctx, R.attr.ic_ml_construction));
 		}
 		//	Return
 		return item;
