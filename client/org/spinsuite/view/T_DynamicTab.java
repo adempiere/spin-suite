@@ -330,12 +330,13 @@ public class T_DynamicTab extends Fragment
 			lockView(SEE);
 			return true;
 		} else if (itemId == R.id.action_save) {
-			if(save()) {
+			//if(save()) {
 	    		//	Refresh
-	    		refreshIndex();
-				refresh(mGridTab.getRecord_ID(), false);
-				lockView(SEE);
-			}
+	    		//refreshIndex();
+				//refresh(mGridTab.getRecord_ID(), false);
+				//lockView(SEE);
+			//}
+			new SaveDataTask().execute();
 			return true;
 		}
 		//	
@@ -962,6 +963,49 @@ public class T_DynamicTab extends Fragment
 					|| isFirst)
 				v_view.addView(v_row);
 	    }
+	}
+	
+	/**
+	 * Save data in thread
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+	 *
+	 */
+	private class SaveDataTask extends AsyncTask<Void, Void, Void> {
+
+		/**	Progress Bar			*/
+		private ProgressDialog 		v_PDialog;
+		private boolean				is_OK = false;
 		
-	}	
+		@Override
+		protected void onPreExecute() {
+			v_PDialog = ProgressDialog.show(getActivity(), null, 
+					getString(R.string.msg_Saving), false, false);
+			//	Set Max
+		}
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			//	Load Data
+			is_OK = save();
+			//	
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Void... progress) {
+			
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			if(is_OK) {
+				refreshIndex();
+				refresh(mGridTab.getRecord_ID(), false);
+				lockView(SEE);
+			} else {
+				Msg.alertMsg(getActivity(), null, mGridTab.getError());
+			}
+			v_PDialog.dismiss();
+		}
+	}
 }

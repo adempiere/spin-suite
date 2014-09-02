@@ -134,7 +134,7 @@ public class VLookupSearch extends GridField {
 
 	@Override
 	public boolean isEmpty() {
-		return (v_Search.getRecord_ID() == -1);
+		return (v_Search.getRecord_ID() <= 0);
 	}
 
 	@Override

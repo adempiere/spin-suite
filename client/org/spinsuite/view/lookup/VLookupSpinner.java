@@ -228,7 +228,7 @@ public class VLookupSpinner extends GridField {
 			pos = getPosition(value);
 		}
 		//	
-		if(pos > -1)
+		if(pos > 0)
 			v_Spinner.setSelection(pos);
 	}
 
