@@ -51,7 +51,7 @@ public class Msg {
 			}
 		});
 		dialog.setTitle(title);
-		dialog.setMessage(msg);
+		dialog.setMessage(parseTranslation(ctx, msg));
 		dialog.show();
 	}
 	
@@ -96,7 +96,7 @@ public class Msg {
 	 * @return Builder
 	 */
 	public static Builder confirmMsg(Context ctx, String msg) {
-		return confirmMsg(ctx, ctx.getResources().getString(R.string.msg_Ask), msg);
+		return confirmMsg(ctx, ctx.getResources().getString(R.string.msg_Ask), parseTranslation(ctx, msg));
 	}
 	
 	/**
@@ -111,7 +111,7 @@ public class Msg {
 	public static Builder confirmMsg(Context ctx, String title, String msg){
 		Builder builder = new AlertDialog.Builder(ctx);
 		builder.setTitle(title);
-		builder.setMessage(msg);
+		builder.setMessage(parseTranslation(ctx, msg));
 		//	
 		builder.setNegativeButton(ctx.getResources().getString(R.string.msg_Cancel), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
@@ -130,7 +130,7 @@ public class Msg {
 	 * @return void
 	 */
 	public static void toastMsg(Context ctx, String msg){
-		Toast toast = Toast.makeText(ctx, msg, Toast.LENGTH_SHORT);
+		Toast toast = Toast.makeText(ctx, parseTranslation(ctx, msg), Toast.LENGTH_SHORT);
 		toast.show();
 	}
 
@@ -187,9 +187,9 @@ public class Msg {
 		if (amount == null || language == null)
 			return amount;
 		//	Try to find Class
-		String className = "org.compiere.util.AmtInWords_";
+		String className = "org.spinsuite.util.AmtInWords_";
 		try {
-			className += language.substring(3).toUpperCase();
+			className += language.substring(0, 2).toUpperCase();
 			Class<?> clazz = Class.forName(className);
 			AmtInWords aiw = (AmtInWords)clazz.newInstance();
 			return aiw.getAmtInWords(amount);
@@ -259,7 +259,7 @@ public class Msg {
 		if(p_AD_Language == null
 				|| p_AD_Language.length() == 0)
 			p_AD_Language = Env.BASE_LANGUAGE;
-		//	
+		//	Set Context
 		Env.setContext(ctx, MSG_PREFIX + "|" + p_AD_Language + "|" + p_Msg, p_Value);
 	}
 	
@@ -307,6 +307,8 @@ public class Msg {
 		}
 		//	
 		retStr = DB.getSQLValueString(ctx, sql, params);
+		//	Log
+		LogM.log(ctx, "Msg", Level.FINE, "From DB[Element="  + retStr + "]");
 		//	Set to Cache
 		setTranslationCache(ctx, p_AD_Language, 
 				p_ColumnName + (isSOTrx? "|Y|": "|N|"), retStr);
@@ -335,7 +337,7 @@ public class Msg {
 		if (m_AD_Language == null 
 				|| m_AD_Language.length() == 0)
 			m_AD_Language = Env.BASE_LANGUAGE;
-		//	Get from Cahce
+		//	Get from Cache
 		String retStr = getTranslationCache(ctx, p_AD_Language, p_MessageName);
 		//	Valid Cache
 		if(retStr != null) {
@@ -361,6 +363,8 @@ public class Msg {
 		}
 		//	
 		retStr = DB.getSQLValueString(ctx, sql, params);
+		//	Log
+		LogM.log(ctx, "Msg", Level.FINE, "From DB[Message="  + retStr + "]");
 		//	Set to Cache
 		setTranslationCache(ctx, p_AD_Language, p_MessageName, retStr);
 		//	Return Translation
@@ -414,14 +418,18 @@ public class Msg {
 
 		//	Check AD_Message
 		String retStr = getMsg(ctx, m_AD_Language, text);
-		if (retStr != null)
-			return retStr;
+		if (retStr != null
+				&& retStr.length() != 0)
+			return retStr.trim();
 
 		//	Check AD_Element
 		retStr = getElement(ctx, m_AD_Language, text, isSOTrx);
-		if (retStr != null)
+		if (retStr != null
+				&& retStr.length() != 0)
 			return retStr.trim();
-
+		//	Set default cache
+		setTranslationCache(ctx, p_AD_Language, 
+				text + (isSOTrx? "|Y|": "|N|"), text);
 		//	Nothing found
 		if (!text.startsWith("*"))
 			LogM.log(ctx, "Msg", Level.WARNING, "NOT found: " + text);

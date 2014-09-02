@@ -21,14 +21,12 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
-import org.spinsuite.base.R;
 import org.spinsuite.model.Callout;
 import org.spinsuite.model.MSPSTable;
 import org.spinsuite.model.PO;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
-import org.spinsuite.util.Msg;
 import org.spinsuite.util.TabParameter;
 
 import android.content.Context;
@@ -83,6 +81,8 @@ public class GridTab {
 	private int 					m_Record_ID = 0;
 	/**	Parent Record Identifier*/
 	private int 					m_Parent_Record_ID = 0;
+	/**	Error Message			*/
+	private String					m_ErrorMsg = null;
 	
 	
 	/**
@@ -465,17 +465,16 @@ public class GridTab {
     			m_TabParam.getActivityNo(), m_TabParam.getTabNo());
     	//	Error
     	if(model == null){
-    		Msg.alertMsg(m_ctx, m_ctx.getString(R.string.msg_Error)
-    				, m_ctx.getString(R.string.msg_Error));
+    		m_ErrorMsg = "@NoModelClass@";
     		return false;
     	}
     	//	Get Values
     	for (GridField vField: m_fields) {
+    		System.out.println(vField.getName() + " " + vField.isMandatory() + "  " + vField.isParent() + " " + vField.isEmpty());
     		if((vField.isMandatory()
     				|| vField.isParent()) && vField.isEmpty()){
-    			Msg.alertMustFillField(m_ctx, "\"" + vField.getName() 
-    					+ "\"", vField.getChildView());
-    			//	set ok to false
+    			m_ErrorMsg = "@MustFillField@ \"" + vField.getName() + "\"";
+    			//	Set ok to false
     			ok = false;
     			break;
     		}
@@ -515,8 +514,8 @@ public class GridTab {
     		Env.setContext(m_ctx, m_TabParam.getActivityNo(), 
     				m_TabParam.getTabNo(), m_TabInfo.getTableKeyName(), m_Record_ID);
     	} else {
-    		Msg.alertMsg(m_ctx, m_ctx.getString(R.string.msg_Error), 
-    				model.getError());
+    		m_ErrorMsg = model.getError();
+    		ok = false;
     	}
     	//	
     	return ok;
@@ -630,7 +629,7 @@ public class GridTab {
      * @return String
      */
     public String getError() { 
-    	return model.getError();
+    	return m_ErrorMsg;
     }
     
     /**

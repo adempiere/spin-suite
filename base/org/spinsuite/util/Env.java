@@ -129,6 +129,8 @@ public final class Env {
 	public static void setContext (Context ctx, String context, String value){
 		if (ctx == null || context == null)
 			return;
+		//	Log
+		LogM.log(ctx, "Env", Level.FINE, "setContext("  + context + ", " + value + ")");
 		//
 		if (value == null)
 			value = "";
@@ -366,12 +368,11 @@ public final class Env {
 	 *  @param ctx context
 	 *  @param isSOTrx SO Context
 	 */
-	/*public static void setISOTrx (Context ctx, boolean isSOTrx)
-	{
+	public static void setISOTrx (Context ctx, boolean isSOTrx) {
 		if (ctx == null)
 			return;
-		setContext(ctx, "IsSOTrx", isSOTrx);
-	}	//	setSOTrx*/
+		setContext(ctx, "IsSOTrx", isSOTrx? "Y": "N");
+	}	//	setSOTrx
 	
 	/**
 	 *	Get global Value of Context
@@ -745,8 +746,7 @@ public final class Env {
 	 */
 	public static boolean isSOTrx (Context ctx)
 	{
-		SharedPreferences pf = PreferenceManager.getDefaultSharedPreferences(ctx);
-		return pf.getBoolean("IsSOTrx", false);
+		return getContextAsBoolean(ctx, "IsSOTrx");
 	}	//	isSOTrx
 	
 	/**

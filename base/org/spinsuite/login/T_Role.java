@@ -72,11 +72,11 @@ public class T_Role extends Fragment implements I_Login {
     	//	
     	ctx = this.getActivity();
     	
-    	sp_Role =		(Spinner) getActivity().findViewById(R.id.sp_Role);
-    	sp_Client = 	(Spinner) getActivity().findViewById(R.id.sp_Client);
-    	sp_Org = 		(Spinner) getActivity().findViewById(R.id.sp_Org);
-    	sp_Warehouse = 	(Spinner) getActivity().findViewById(R.id.sp_Warehouse);
-    	dp_Date = 		(DatePicker) getActivity().findViewById(R.id.dp_Date);
+    	sp_Role 		= (Spinner) getActivity().findViewById(R.id.sp_Role);
+    	sp_Client 		= (Spinner) getActivity().findViewById(R.id.sp_Client);
+    	sp_Org 			= (Spinner) getActivity().findViewById(R.id.sp_Org);
+    	sp_Warehouse 	= (Spinner) getActivity().findViewById(R.id.sp_Warehouse);
+    	dp_Date 		= (DatePicker) getActivity().findViewById(R.id.dp_Date);
     	
     	
     	sp_Role.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
