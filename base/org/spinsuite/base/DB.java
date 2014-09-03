@@ -72,7 +72,7 @@ public class DB extends SQLiteOpenHelper {
 	private SQLiteStatement 	stm;
 	public static final int 	READ_ONLY = 0;
 	public static final int 	READ_WRITE = 1;
-	public static final String 	DB_NAME = "SFAndroid";
+	public static final String 	DB_NAME = "SpinSuite";
 	public static final int 	DB_VERSION = 1;
 	
 	private Context 			ctx;
