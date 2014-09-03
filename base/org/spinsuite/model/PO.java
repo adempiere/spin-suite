@@ -372,7 +372,7 @@ public abstract class PO {
 			//	Set Ok Value
 			ok = true;
 		} catch(Exception e){
-			LogM.log(getCtx(), getClass(), Level.SEVERE, "Error: " + e.getMessage(), e);
+			LogM.log(getCtx(), getClass(), Level.SEVERE, "Error: " + e.getLocalizedMessage(), e);
 		}
 		return ok;
 	}
@@ -638,7 +638,7 @@ public abstract class PO {
 			error = null;
 			return true;
 		}catch (Exception e) {
-			error = e.getMessage();
+			error = e.getLocalizedMessage();
 			LogM.log(getCtx(), getClass(), Level.SEVERE, "Error: ", e);
 		}
 		return false;
@@ -680,7 +680,7 @@ public abstract class PO {
 			error = null;
 			return true;
 		} catch (Exception e) {
-			error = e.getMessage();
+			error = e.getLocalizedMessage();
 			LogM.log(getCtx(), getClass(), Level.SEVERE, " Error ", e);
 		}
 		return false;
@@ -693,14 +693,17 @@ public abstract class PO {
 	 * @return void
 	 */
 	public void deleteEx() throws Exception {
-		
 		try{
+			//	Valid Is Deleteable
+			if(!isDeleteable())
+				throw new Exception("Cannot Delete Record (Is Not Deleteable)");
+			
 			loadConnection(DB.READ_WRITE);
 			//	Before Delete
 			boolean fine = beforeDelete();
 			if(!fine)
-				throw new Exception("delete.beforeDelete");
-			
+				throw new Exception("@Error@ " + getError());
+			//	
 			conn.deleteSQL(m_TableInfo.getTableName(), get_WhereClause(false), get_WhereClauseValues());
 			if(handConnection)
 				conn.setTransactionSuccessful();
@@ -708,7 +711,7 @@ public abstract class PO {
 			clear(true);
 			LogM.log(getCtx(), getClass(), Level.FINE, (String)m_oldValues[0]);
 		} catch (Exception e) {
-			throw new Exception(e);
+			throw e;
 		} finally {
 			closeConnection();
 		}
@@ -1197,6 +1200,16 @@ public abstract class PO {
 	@Override
 	public String toString() {
 		return "TableName=" + getTableName();
+	}
+	
+	/**
+	 * Get Is Deleteable Record
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 19:48:49
+	 * @return
+	 * @return boolean
+	 */
+	public boolean isDeleteable() {
+		return m_TableInfo.isDeleteable();
 	}
 	
 }

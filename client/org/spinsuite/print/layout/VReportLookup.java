@@ -78,7 +78,7 @@ public abstract class VReportLookup extends LinearLayout {
 	/**	Text View			*/
 	protected TextView				v_Label = null;
 	/**	Field Object		*/
-	protected InfoReportField 	m_field = null;
+	protected InfoReportField 		m_field = null;
 	
 	/**
 	 * Main Init

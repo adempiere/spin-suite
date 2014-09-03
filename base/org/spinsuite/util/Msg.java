@@ -56,6 +56,17 @@ public class Msg {
 	}
 	
 	/**
+	 * Show Alert Message without title
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 19:12:07
+	 * @param ctx
+	 * @param msg
+	 * @return void
+	 */
+	public static void alertMsg(Context ctx, String msg){
+		alertMsg(ctx, null, msg);
+	}
+	
+	/**
 	 * Show a dialog with error message, must fill field
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 14:02:20
 	 * @param ctx
@@ -96,7 +107,8 @@ public class Msg {
 	 * @return Builder
 	 */
 	public static Builder confirmMsg(Context ctx, String msg) {
-		return confirmMsg(ctx, ctx.getResources().getString(R.string.msg_Ask), parseTranslation(ctx, msg));
+		return confirmMsg(ctx, ctx.getResources().getString(R.string.msg_Ask), 
+				parseTranslation(ctx, msg));
 	}
 	
 	/**

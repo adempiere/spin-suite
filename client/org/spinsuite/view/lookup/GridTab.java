@@ -504,6 +504,7 @@ public class GridTab {
      */
     public boolean modelSave() {
     	boolean ok = true;
+    	m_ErrorMsg = null;
     	ok = model.save();
     	//	Set Record Identifier
     	m_Record_ID = model.get_ID();
@@ -515,7 +516,6 @@ public class GridTab {
     				m_TabParam.getTabNo(), m_TabInfo.getTableKeyName(), m_Record_ID);
     	} else {
     		m_ErrorMsg = model.getError();
-    		ok = false;
     	}
     	//	
     	return ok;
@@ -619,7 +619,13 @@ public class GridTab {
      * @return boolean
      */
     public boolean delete() {
-    	return model.delete();
+    	m_ErrorMsg = null;
+    	//	Valid Error
+    	if(!model.delete()) {
+    		m_ErrorMsg = model.getError();
+    		return false;
+    	}
+    	return true;
     }
     
     /**
@@ -640,5 +646,15 @@ public class GridTab {
      */
     public void copyValues(boolean deleteOld) {
     	model.copyValues(deleteOld);
+    }
+    
+    /**
+     * Get Is Deleteable
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 19:52:21
+     * @return
+     * @return boolean
+     */
+    public boolean isDeleteable() {
+    	return model.isDeleteable();
     }
 }

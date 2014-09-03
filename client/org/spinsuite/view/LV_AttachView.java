@@ -159,7 +159,7 @@ public class LV_AttachView extends Activity {
 			startActivity(intent);
 		} catch (ActivityNotFoundException e){
 			LogM.log(this, getClass(), Level.WARNING, 
-					"Error Launch Image: " + e.getMessage());
+					"Error Launch Image: " + e.getLocalizedMessage());
 		}
 	}
 	
@@ -218,7 +218,7 @@ public class LV_AttachView extends Activity {
 			LogM.log(getApplicationContext(), getClass(), 
 					Level.SEVERE, "Error Download Image:", e);
 			msg = getResources().getString(R.string.msg_IOException) 
-						+ " " + e.getMessage();
+						+ " " + e.getLocalizedMessage();
 		}
 		//	Show Message
 		if(msg != null)

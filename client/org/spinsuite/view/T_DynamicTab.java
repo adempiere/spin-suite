@@ -182,6 +182,21 @@ public class T_DynamicTab extends Fragment
         			processCallout(mField);
         			//	Reload depending fields
         			reloadDepending(mField);
+    			} else if(mField.getColumnName().equals("DocAction")) {
+    				//	Valid Ok
+    				VLookupButtonDocAction docAction = (VLookupButtonDocAction) mField;
+    				if(docAction.isProcessed()) {
+    					//	Save Model
+    					boolean ok = mGridTab.modelSave();
+    					if(ok)
+    						refreshFromChange(true);
+    					else 
+    						Msg.alertMsg(getActivity(), null, mGridTab.getError());
+    				} else {
+    					Msg.alertMsg(getActivity(), null, docAction.getProcessMsg());
+    				}
+    				//	
+    				return;
     			}
     		}
 		};
@@ -197,21 +212,12 @@ public class T_DynamicTab extends Fragment
 	 * @return void
 	 */
 	private void processCallout(GridField mField) {
+		//	No Action
+		if(mField.getColumnName().equals("DocAction"))
+			return;
 		//	Log
 		LogM.log(getActivity(), T_DynamicTab.class, 
 				Level.FINE, "processCallout(" + mField.getColumnName() + ")");
-		//	Change Document Status
-		if(mField.getColumnName().equals("DocAction")) {
-			//	Valid Ok
-			VLookupButtonDocAction docAction = (VLookupButtonDocAction) mField;
-			if(docAction.isProcessed()) {
-				//	Save Model
-				mGridTab.modelSave();
-				refreshFromChange(true);
-			}
-			//	
-			return;
-		}
 		//	
 		String retValue = mGridTab.processCallout(mField);
 		//	Show Error
@@ -420,8 +426,17 @@ public class T_DynamicTab extends Fragment
      * @return void
      */
     private void deleteRecord(){
+    	//	
+    	if(mGridTab.isProcessed()) {			//	Valid Processed
+    		Msg.alertMsg(getActivity(), "@CannotDeleteTrx@");
+    		return;
+    	} else if(!mGridTab.isDeleteable()) {	//	Valid Deleteable
+    		Msg.alertMsg(getActivity(), "@CannotDelete@");
+    		return;
+    	}
+    	//	
     	String msg_Acept = this.getResources().getString(R.string.msg_Acept);
-		Builder ask = Msg.confirmMsg(getActivity(), getResources().getString(R.string.msg_AskDelete));
+		Builder ask = Msg.confirmMsg(getActivity(), "@DeleteRecord?@");
 		ask.setPositiveButton(msg_Acept, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.cancel();
@@ -430,10 +445,10 @@ public class T_DynamicTab extends Fragment
 					lockView(DELETED);
 		    		//	Refresh
 		    		refreshIndex();
-				}
-				else
+				} else {
 					Msg.alertMsg(getActivity(), 
 							getResources().getString(R.string.msg_Error), mGridTab.getError());
+				}
 			}
 		});
 		ask.show();

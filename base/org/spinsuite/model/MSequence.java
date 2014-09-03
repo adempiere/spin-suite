@@ -226,7 +226,7 @@ public class MSequence extends X_AD_Sequence {
 				}
 			}
 		} catch (Exception e) {
-			LogM.log(ctx, MSequence.class, Level.SEVERE, "Msequence.getDocumentNo >> Error:" + e.getMessage(), e);
+			LogM.log(ctx, MSequence.class, Level.SEVERE, "Msequence.getDocumentNo >> Error:" + e.getLocalizedMessage(), e);
 		}
 		//	No Sequence
 		if(next < 0) {

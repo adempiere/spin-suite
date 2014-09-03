@@ -246,6 +246,8 @@ public class DocumentEngine implements DocAction
 					success = false;
 				else
 					success = true;
+			} else {
+				success = true;
 			}
 			//	
 			if(success) {

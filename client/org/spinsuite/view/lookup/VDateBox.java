@@ -217,6 +217,11 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	 */
 	public Date getDate(){
 		String date = et_Date.getText().toString();
+		//	Valid Null
+		if(date == null
+				|| date.length() == 0)
+			return null;
+		//	do it
         try {
 			return formatFront.parse(date);
 		} catch (ParseException e) {

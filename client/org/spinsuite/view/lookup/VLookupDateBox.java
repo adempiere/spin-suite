@@ -95,6 +95,7 @@ public class VLookupDateBox extends GridField {
 
 	@Override
 	protected void init() {
+		initField();
 		//	Set Date Box
 		SimpleDateFormat format = null;
 		if(m_field.FormatPattern != null)
@@ -105,6 +106,18 @@ public class VLookupDateBox extends GridField {
 		v_DateBox = new VDateBox(getContext(), format, this);
 		setEnabled(!m_field.IsReadOnly);
 		addView(v_DateBox);
+	}
+	
+	/**
+	 * Init Field if is null
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 11:11:58
+	 * @return void
+	 */
+	private void initField() {
+		if(m_field == null) {
+			m_field = new InfoField();
+			m_field.DisplayType = DisplayType.DATE;
+		}
 	}
 
 	@Override

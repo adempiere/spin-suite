@@ -85,7 +85,7 @@ public class LV_Menu extends Activity {
         try {
         	load();
         } catch(Exception e) {
-        	LogM.log(this, getClass(), Level.SEVERE, "Error:" + e.getMessage());
+        	LogM.log(this, getClass(), Level.SEVERE, "Error:" + e.getLocalizedMessage());
         	finish();
         }
         //	Action Menu Loader
