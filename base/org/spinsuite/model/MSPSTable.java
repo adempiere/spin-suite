@@ -191,7 +191,7 @@ public class MSPSTable extends X_SPS_Table {
 				constructor = clazz.getDeclaredConstructor(new Class[]{Context.class, int.class, DB.class});
 			}
 			catch (Exception e) {
-				String msg = e.getMessage();
+				String msg = e.getLocalizedMessage();
 				if (msg == null)
 					msg = e.toString();
 				LogM.log(ctx, "MSFATable", Level.WARNING, "PO.getPO(int, DB) No transaction Constructor for " + clazz + " (" + msg + ")");

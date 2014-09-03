@@ -180,7 +180,7 @@ public class ReportPrintData {
 		try {
 			loadResult();
 		} catch(Exception e){
-			m_pi.setSummary(ctx.getResources().getString(R.string.msg_Error) + ":" + e.getMessage(), true);
+			m_pi.setSummary(ctx.getResources().getString(R.string.msg_Error) + ":" + e.getLocalizedMessage(), true);
 			LogM.log(ctx, getClass(), Level.SEVERE, "Error In Load Report:", e);
 		}
 		//	Result

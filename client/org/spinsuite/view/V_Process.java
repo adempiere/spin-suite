@@ -323,12 +323,12 @@ public class V_Process extends Activity {
 				LogM.log(getApplicationContext(), getClass(), 
 						Level.SEVERE, "Error in Export to PDF:", e);
 				msg = getResources().getString(R.string.msg_FileNotFoundException) 
-							+ " " + e.getMessage();
+							+ " " + e.getLocalizedMessage();
 			} catch (DocumentException e) {
 				LogM.log(getApplicationContext(), getClass(), 
 						Level.SEVERE, "Error in Export to PDF:", e);
 				msg = getResources().getString(R.string.msg_DocumentException) 
-							+ " " + e.getMessage();
+							+ " " + e.getLocalizedMessage();
 			}
     	} else if(item.getSPS_Menu_ID() == EXPORT_TO_XLS){
     		try {
@@ -338,17 +338,17 @@ public class V_Process extends Activity {
 				LogM.log(getApplicationContext(), getClass(), 
 						Level.SEVERE, "Error in Export to XLS:", e);
 				msg = getResources().getString(R.string.msg_RowsExceededException) 
-							+ " " + e.getMessage();
+							+ " " + e.getLocalizedMessage();
 			} catch (WriteException e) {
 				LogM.log(getApplicationContext(), getClass(), 
 						Level.SEVERE, "Error in Export to XLS:", e);
 				msg = getResources().getString(R.string.msg_WriteException) 
-							+ " " + e.getMessage();
+							+ " " + e.getLocalizedMessage();
 			} catch (IOException e) {
 				LogM.log(getApplicationContext(), getClass(), 
 						Level.SEVERE, "Error in Export to XLS:", e);
 				msg = getResources().getString(R.string.msg_IOException) 
-							+ " " + e.getMessage();
+							+ " " + e.getLocalizedMessage();
 			}
     	} else if(item.getSPS_Menu_ID() == EXPORT_TO_XML){
     		
@@ -367,7 +367,7 @@ public class V_Process extends Activity {
 				startActivity(intent);
 			} catch (ActivityNotFoundException e){
 				LogM.log(this, getClass(), Level.WARNING, 
-						"Error Launch Application: " + e.getMessage());
+						"Error Launch Application: " + e.getLocalizedMessage());
 			}
 		} else if(msg != null){	//	Show Message
 			Msg.alertMsg(this, getResources().getString(R.string.msg_Error), msg);

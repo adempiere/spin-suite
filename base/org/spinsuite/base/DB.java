@@ -346,16 +346,30 @@ public class DB extends SQLiteOpenHelper {
 	 * @param ctx
 	 * @param sql
 	 * @param param
+	 * @param conn
 	 * @return
 	 * @return int
 	 */
-	public static int executeUpdate (Context ctx, String sql, int param){
+	public static int executeUpdate(Context ctx, String sql, int param, DB conn) {
 		int no = -1;
 		try {
-			no = executeUpdate (ctx, sql, param, true);
+			no = executeUpdate (ctx, sql, param, true, conn);
 		} catch(Exception e) {}
 		return no;
 	}	//	executeUpdate
+	
+	/**
+	 * Execute Update
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 22:22:56
+	 * @param ctx
+	 * @param sql
+	 * @param param
+	 * @return
+	 * @return int
+	 */
+	public static int executeUpdate(Context ctx, String sql, int param) {
+		return executeUpdate(ctx, sql, param, null);
+	}
 
 	/**
 	 * Execute Update.
@@ -369,7 +383,23 @@ public class DB extends SQLiteOpenHelper {
 	 * @throws Exception 
 	 */
 	public static int executeUpdate (Context ctx, String sql, int param, boolean ignoreError) throws Exception{
-		return executeUpdate(ctx, sql, new Object[]{param}, ignoreError);
+		return executeUpdate(ctx, sql, new Object[]{param}, ignoreError, null);
+	}
+	
+	/**
+	 * Execute Update
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 22:21:36
+	 * @param ctx
+	 * @param sql
+	 * @param param
+	 * @param ignoreError
+	 * @param conn
+	 * @return
+	 * @throws Exception
+	 * @return int
+	 */
+	public static int executeUpdate (Context ctx, String sql, int param, boolean ignoreError, DB conn) throws Exception{
+		return executeUpdate(ctx, sql, new Object[]{param}, ignoreError, conn);
 	}
 	
 	/**
@@ -379,28 +409,40 @@ public class DB extends SQLiteOpenHelper {
 	 * @param sql
 	 * @param params
 	 * @param ignoreError
+	 * @param conn
 	 * @return
 	 * @return int
 	 * @throws Exception 
 	 */
-	public static int executeUpdate (Context ctx, String sql, Object[] params, boolean ignoreError) throws Exception{
+	public static int executeUpdate (Context ctx, String sql, Object[] params, boolean ignoreError, DB conn) throws Exception{
 		if (sql == null || sql.length() == 0)
 			throw new IllegalArgumentException("Required parameter missing - " + sql);
-		//
+		//	
+		boolean handConnection = false;
 		int no = -1;
-		DB conn = new DB(ctx);
-		loadConnection(conn, READ_WRITE);
 		try {
+			//	Instance Connection
+			if(conn == null) {
+				conn = new DB(ctx);
+				//	load
+				loadConnection(conn, READ_WRITE);
+				handConnection = true;
+			}
+			//	
 			conn.executeSQL(sql, params);
-			conn.setTransactionSuccessful();
+			//	End Transaction
+			if(handConnection)
+				conn.setTransactionSuccessful();
 		} catch (Exception e) {
 			if (ignoreError)
-				LogM.log(ctx, DB.class, Level.SEVERE, "SQL=[" + sql + "] " +  e.getMessage());
+				LogM.log(ctx, DB.class, Level.SEVERE, "SQL=[" + sql + "] " +  e.getLocalizedMessage());
 			else
 				throw e;
+		} finally {
+			//	Close Connection
+			if(handConnection)
+				closeConnection(conn);
 		}
-		//	Close Connection
-		closeConnection(conn);
 		return no;
 	}	//	executeUpdate
 	
@@ -409,22 +451,44 @@ public class DB extends SQLiteOpenHelper {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/02/2014, 09:21:49
 	 * @param ctx
 	 * @param sql
+	 * @param conn
 	 * @param params
 	 * @return
 	 * @return String
 	 */
-	public static String getSQLValueStringEx(Context ctx, String sql, String... params){
-		DB conn = new DB(ctx);
-		loadConnection(conn, READ_ONLY);
+	public static String getSQLValueStringEx(Context ctx, String sql, DB conn, String... params) {
+		boolean handConnection = false;
+		//	Instance Connection
+		if(conn == null) {
+			conn = new DB(ctx);
+			//	load
+			loadConnection(conn, READ_WRITE);
+			handConnection = true;
+		}
 		Cursor rs = null;
 		rs = conn.querySQL(sql, params);
 		String retValue = null;
 		if(rs.moveToFirst()){
 			retValue = rs.getString(0);
 		}
-		closeConnection(conn);
+		//	Close Connection
+		if(handConnection)
+			closeConnection(conn);
 		//	Return
 		return retValue;
+	}
+	
+	/**
+	 * Without connection
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 22:28:54
+	 * @param ctx
+	 * @param sql
+	 * @param params
+	 * @return
+	 * @return String
+	 */
+	public static String getSQLValueStringEx(Context ctx, String sql, String... params) {
+		 return getSQLValueStringEx(ctx, sql, null, params);
 	}
 	
 	/**
@@ -433,19 +497,25 @@ public class DB extends SQLiteOpenHelper {
 	 * @param ctx
 	 * @param sql
 	 * @param optional
+	 * @param conn
 	 * @param params
 	 * @return
 	 * @return KeyNamePair[]
 	 */
-	public static KeyNamePair[] getKeyNamePairsEx(Context ctx, String sql, boolean optional, String... params){
+	public static KeyNamePair[] getKeyNamePairsEx(Context ctx, String sql, boolean optional, DB conn, String... params) {
 		ArrayList<KeyNamePair> list = new ArrayList<KeyNamePair>();
         //	If is Optional
 		if (optional){
             list.add (new KeyNamePair(-1, ""));
         }
-		//	
-		DB conn = new DB(ctx);
-		loadConnection(conn, READ_ONLY);
+		boolean handConnection = false;
+		//	Instance Connection
+		if(conn == null) {
+			conn = new DB(ctx);
+			//	load
+			loadConnection(conn, READ_WRITE);
+			handConnection = true;
+		}
 		Cursor rs = null;
 		rs = conn.querySQL(sql, params);
 		//	Add to List
@@ -454,7 +524,10 @@ public class DB extends SQLiteOpenHelper {
 				list.add(new KeyNamePair(rs.getInt(0), rs.getString(1)));
 			}while(rs.moveToNext());
 		}
-		closeConnection(conn);
+		//	Close Connection
+		if(handConnection)
+			closeConnection(conn);
+		//	
 		KeyNamePair[] retValue = new KeyNamePair[list.size()];
         list.toArray(retValue);
 		//	Return
@@ -462,18 +535,33 @@ public class DB extends SQLiteOpenHelper {
 	}
 	
 	/**
-	 * Get Key Name Pairs
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/03/2014, 11:15:56
+	 * Get Key Name Pairs without connection
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 22:30:30
 	 * @param ctx
 	 * @param sql
+	 * @param optional
 	 * @param params
 	 * @return
 	 * @return KeyNamePair[]
 	 */
-	public static KeyNamePair[] getKeyNamePairs(Context ctx, String sql, String... params){
+	public static KeyNamePair[] getKeyNamePairsEx(Context ctx, String sql, boolean optional, String... params) {
+		return getKeyNamePairsEx(ctx, sql, optional, null, params);
+	}
+	
+	/**
+	 * Get Key Name Pairs
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/03/2014, 11:15:56
+	 * @param ctx
+	 * @param sql
+	 * @param conn
+	 * @param params
+	 * @return
+	 * @return KeyNamePair[]
+	 */
+	public static KeyNamePair[] getKeyNamePairs(Context ctx, String sql, DB conn, String... params) {
 		KeyNamePair[] retValue = null;
 		try{
-			retValue = getKeyNamePairsEx(ctx, sql, false, params);
+			retValue = getKeyNamePairsEx(ctx, sql, false, conn, params);
 		} catch(Exception e){
 			LogM.log(ctx, "DB", Level.SEVERE, "SQLError", e);
 		}
@@ -481,16 +569,38 @@ public class DB extends SQLiteOpenHelper {
 	}
 	
 	/**
-	 * Get Value from SQL as int
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 14:24:00
+	 * Get Key Name Pairs without connection
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 22:31:49
 	 * @param ctx
 	 * @param sql
 	 * @param params
 	 * @return
+	 * @return KeyNamePair[]
+	 */
+	public static KeyNamePair[] getKeyNamePairs(Context ctx, String sql, String... params) {
+		return getKeyNamePairs(ctx, sql, null, params);
+	}
+	
+	/**
+	 * Get Value from SQL as int
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 14:24:00
+	 * @param ctx
+	 * @param sql
+	 * @param conn
+	 * @param params
+	 * @return
 	 * @return int
 	 */
-	public static int getSQLValueEx(Context ctx, String sql, String... params){
-		DB conn = new DB(ctx);
+	public static int getSQLValueEx(Context ctx, String sql, DB conn, String... params){
+		boolean handConnection = false;
+		//	Instance Connection
+		if(conn == null) {
+			conn = new DB(ctx);
+			//	load
+			loadConnection(conn, READ_WRITE);
+			handConnection = true;
+		}
+		//	
 		loadConnection(conn, READ_ONLY);
 		Cursor rs = null;
 		rs = conn.querySQL(sql, params);
@@ -498,7 +608,9 @@ public class DB extends SQLiteOpenHelper {
 		if(rs.moveToFirst()){
 			retValue = rs.getInt(0);
 		}
-		closeConnection(conn);
+		//	Close Connection
+		if(handConnection)
+			closeConnection(conn);
 		//	Return
 		return retValue;
 	}
@@ -512,7 +624,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return int
 	 */
 	public static int getSQLValueEx(Context ctx, String sql){
-		return getSQLValueEx(ctx, sql, (String[])null);
+		return getSQLValueEx(ctx, sql, null, (String[])null);
 	}
 	
 	/**
@@ -524,7 +636,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return int
 	 */
 	public static int getSQLValue(Context ctx, String sql){
-		return getSQLValue(ctx, sql, (String[])null);
+		return getSQLValue(ctx, sql, null, (String[])null);
 	}
 	
 	/**
@@ -532,18 +644,32 @@ public class DB extends SQLiteOpenHelper {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 10:55:44
 	 * @param ctx
 	 * @param sql
+	 * @param conn
 	 * @param params
 	 * @return
 	 * @return int
 	 */
-	public static int getSQLValue(Context ctx, String sql, String... params){
+	public static int getSQLValue(Context ctx, String sql, DB conn, String... params) {
 		int retValue = -1;
 		try{
-			retValue = getSQLValueEx(ctx, sql, params);
+			retValue = getSQLValueEx(ctx, sql, conn, params);
 		} catch(Exception e){
 			LogM.log(ctx, "DB", Level.SEVERE, "SQLError", e);
 		}
 		return retValue;
+	}
+	
+	/**
+	 * get SQL Value without connection
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 22:34:51
+	 * @param ctx
+	 * @param sql
+	 * @param params
+	 * @return
+	 * @return int
+	 */
+	public static int getSQLValue(Context ctx, String sql, String... params) {
+		return getSQLValue(ctx, sql, null, params);
 	}
 	
 	/**

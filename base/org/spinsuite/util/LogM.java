@@ -25,9 +25,8 @@ import android.util.Log;
  *
  */
 public class LogM {
-	
+	/**	Trace Level Constant		*/
 	private final static String 	TRACE_LEVEL_KEY = "#TraceLevel";
-	
 	
 	/**
 	 * Log
@@ -97,7 +96,7 @@ public class LogM {
 	 * @return void
 	 */
 	public static void log(Context ctx, Class<?> clazz, Level level, String msg, Throwable tr) {
-		log(ctx, clazz.getName(), level, msg);
+		log(ctx, clazz.getName(), level, msg, tr);
 	}
 	
 	/**

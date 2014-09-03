@@ -39,7 +39,7 @@ public class VLookupButton extends GridField {
 	 */
 	public VLookupButton(Activity activity) {
 		super(activity);
-		this.activity = activity;
+		this.v_activity = activity;
 		init();
 	}
 
@@ -51,7 +51,7 @@ public class VLookupButton extends GridField {
 	 */
 	public VLookupButton(Activity activity, AttributeSet attrs) {
 		super(activity, attrs);
-		this.activity = activity;
+		this.v_activity = activity;
 		init();
 	}
 
@@ -64,7 +64,7 @@ public class VLookupButton extends GridField {
 	 */
 	public VLookupButton(Activity activity, AttributeSet attrs, int defStyle) {
 		super(activity, attrs, defStyle);
-		this.activity = activity;
+		this.v_activity = activity;
 		init();
 	}
 
@@ -88,7 +88,7 @@ public class VLookupButton extends GridField {
 	 */
 	public VLookupButton(Activity activity, InfoField m_field, TabParameter tabParam) {
 		super(activity, m_field, tabParam);
-		this.activity = activity;
+		this.v_activity = activity;
 		init();
 	}
 	
@@ -101,13 +101,13 @@ public class VLookupButton extends GridField {
 	/**	Load Action Menu	*/
 	private LoadActionMenu	loadActionMenu 	= null;
 	/**	Activity from		*/
-	private Activity 		activity	 	= null;
+	private Activity 		v_activity	 	= null;
 	/**	Tab Parameter		*/
 	private TabParameter	tabParam		= null;
 	
 	@Override	
 	protected void init() {
-		loadActionMenu = new LoadActionMenu(activity, true);
+		loadActionMenu = new LoadActionMenu(v_activity, true);
 		v_Button = new Button(getContext());
 		v_Button.setGravity(Gravity.CENTER_VERTICAL);
 		v_Button.setText(m_field.Name);
@@ -190,5 +190,15 @@ public class VLookupButton extends GridField {
 	@Override
 	public String getDisplayValue() {
 		return v_Button.getText().toString();
+	}
+	
+	/**
+	 * Get Own Activity
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 18:06:40
+	 * @return
+	 * @return Activity
+	 */
+	public Activity getActivity() {
+		return v_activity;
 	}
 }

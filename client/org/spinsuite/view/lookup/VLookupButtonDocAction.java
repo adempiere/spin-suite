@@ -19,13 +19,14 @@ import org.spinsuite.base.R;
 import org.spinsuite.process.DocAction;
 import org.spinsuite.process.DocumentEngine;
 import org.spinsuite.util.ActionItemList;
-import org.spinsuite.util.Msg;
 import org.spinsuite.util.contribution.QuickAction;
 import org.spinsuite.util.contribution.QuickAction.OnActionItemClickListener;
 import org.spinsuite.util.contribution.QuickAction.OnDismissListener;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -90,6 +91,10 @@ public class VLookupButtonDocAction extends VLookupButton
 	private DocumentEngine		docEngine = null;
 	/**	Processed					*/
 	private boolean				m_IsProcessed = false;
+	/**	Process Message				*/
+	private String 				m_ProcessMsg = null;
+	/**	This Grid Field				*/
+	private GridField			m_GridField = null;
 	
 	@Override	
 	protected void init() {
@@ -159,14 +164,12 @@ public class VLookupButtonDocAction extends VLookupButton
 	 * @return boolean
 	 */
 	public boolean processDocAction(String action){
+		m_ProcessMsg = null;
+		//	Process
 		if(!docEngine.processIt(action)){
-			Msg.alertMsg(getContext(), 
-					getResources().getString(R.string.msg_Error), 
-					Msg.parseTranslation(getContext(), docEngine.getProcessMsg()));
+			m_ProcessMsg = docEngine.getProcessMsg();
 			return false;
 		}
-		//	
-		updateDisplay(action);
 		//	Return
 		return true;
 	}
@@ -243,10 +246,11 @@ public class VLookupButtonDocAction extends VLookupButton
 	@Override
 	public void onItemClick(QuickAction source, int pos, int actionId) {
 		ActionItemList item = (ActionItemList) source.getActionItem(pos);
-		m_IsProcessed = processDocAction(item.getValue());
-		//	Listener
-		if(m_Listener != null)
-			m_Listener.onFieldEvent(this);
+		//	Set Grid Field
+		if(m_GridField == null)
+			m_GridField = this;
+		//	Execute thread
+		new ProcessDocActionTask().execute(item.getValue());
 	}
 
 	@Override
@@ -284,6 +288,59 @@ public class VLookupButtonDocAction extends VLookupButton
 	 */
 	public boolean isProcessed() {
 		return m_IsProcessed;
+	}
+	
+	/**
+	 * Get Process Message
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 18:29:54
+	 * @return
+	 * @return String
+	 */
+	public String getProcessMsg() {
+		return m_ProcessMsg;
+	}
+	
+	/**
+	 * Process Document Action in Thread
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+	 *
+	 */
+	private class ProcessDocActionTask extends AsyncTask<String, Void, Void> {
+
+		/**	Progress Bar			*/
+		private ProgressDialog 		v_PDialog;
+		private String 				m_Action;
+		@Override
+		protected void onPreExecute() {
+			v_PDialog = ProgressDialog.show(getActivity(), null, 
+					getActivity().getString(R.string.msg_Processing), false, false);
+			//	Set Max
+		}
+		
+		@Override
+		protected Void doInBackground(String... params) {
+			m_Action = params[0];
+			//	Load Data
+			m_IsProcessed = processDocAction(m_Action);
+			//	
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Void... progress) {
+			//	
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			v_PDialog.dismiss();
+			//	Update Display
+			updateDisplay(m_Action);
+			//	Listener
+			if(m_Listener != null)
+				m_Listener.onFieldEvent(m_GridField);
+
+		}
 	}
 
 }
