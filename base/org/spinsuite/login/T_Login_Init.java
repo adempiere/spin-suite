@@ -54,8 +54,8 @@ public class T_Login_Init extends DialogFragment implements OnClickListener{
 		et_User = (EditText) view.findViewById(R.id.et_User);
 		et_PassWord = (EditText) view.findViewById(R.id.et_Pass);
 		///Set Authentication for test
-		et_User.setText("cParada");
-		et_PassWord.setText("16964840");
+		et_User.setText("SuperUser");
+		et_PassWord.setText("System");
 		
 		builder.setView(view);
 		
