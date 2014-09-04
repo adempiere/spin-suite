@@ -86,7 +86,7 @@ public class T_Connection extends Activity implements I_Login {
     	ch_SaveSD = (CheckBox) findViewById(R.id.ch_SaveSD);
     	
     	// Carlos Parada Setting Parameters for Spin-Suite Service Call 
-    	et_UrlSoap.setText("http://193.1.1.246:8080/ADInterface/services/SpinSuiteService");
+    	et_UrlSoap.setText("http://200.71.185.123:9090/ADInterface/services/SpinSuiteService");
     	et_NameSpace.setText("http://www.erpcya.com/");
     	et_Method.setText("InitialLoad");
     	//End Carlos Parada
@@ -438,8 +438,9 @@ public class T_Connection extends Activity implements I_Login {
     															true, 
     																p_User,
     																	p_PassWord , 
-    																	et_NameSpace.getText().toString() + et_Method.getText().toString(),
-    																	this);
+    																		et_NameSpace.getText().toString() + et_Method.getText().toString(),
+    																			this,
+    																				et_Timeout.getText().toString());
     		
     		
     		ilt.runTask();
