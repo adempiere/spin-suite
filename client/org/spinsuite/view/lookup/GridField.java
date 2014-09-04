@@ -759,4 +759,28 @@ public abstract class GridField extends LinearLayout {
 		//	
 		return iFieldColumn;
 	}
+	
+	/**
+	 *  Get a list of variables, this field is dependent on.
+	 *  - for display purposes or
+	 *  - for lookup purposes
+	 *  @return ArrayList
+	 */
+	//public ArrayList<String> getDependentOn() {
+		//	Valid Null
+		//if(m_field == null)
+			//return null;
+		//ArrayList<String> list = new ArrayList<String>();
+		//  Display
+		//Evaluator.parseDepends(list, m_field.DisplayLogic);
+		//Evaluator.parseDepends(list, m_field.ReadOnlyLogic);
+		//Evaluator.parseDepends(list, m_field.MandatoryLogic);
+		//  Lookup
+		//if (DisplayType.isLookup(m_field.DisplayType)) {
+			//LookupDisplayType lookup = new LookupDisplayType(getContext(), m_field);
+			//Evaluator.parseDepends(list, lookup.getValidation());
+		//}
+		//
+		//return list;
+	//}   //  getDependentOn
 }

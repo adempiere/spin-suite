@@ -42,7 +42,7 @@ public class VLookupSearch extends GridField {
 	 */
 	public VLookupSearch(Activity activity) {
 		super(activity);
-		this.activity = activity;
+		this.v_Activity = activity;
 		init();
 	}
 
@@ -54,7 +54,7 @@ public class VLookupSearch extends GridField {
 	 */
 	public VLookupSearch(Activity activity, AttributeSet attrs) {
 		super(activity, attrs);
-		this.activity = activity;
+		this.v_Activity = activity;
 		init();
 	}
 
@@ -67,7 +67,7 @@ public class VLookupSearch extends GridField {
 	 */
 	public VLookupSearch(Activity activity, AttributeSet attrs, int defStyle) {
 		super(activity, attrs, defStyle);
-		this.activity = activity;
+		this.v_Activity = activity;
 		init();
 	}
 
@@ -91,24 +91,28 @@ public class VLookupSearch extends GridField {
 	 */
 	public VLookupSearch(Activity activity, InfoField m_field, TabParameter tabParam) {
 		super(activity, m_field, tabParam);
-		this.activity = activity;
+		this.v_Activity = activity;
 		init();
 	}
 	
 	/**	Search 				*/
-	private VSearch 		v_Search = null;
+	private VSearch 			v_Search = null;
 	/**	Activity from		*/
-	private Activity 		activity = null;
+	private Activity 			v_Activity = null;
 	/**	Set Old Value		*/
-	private Object			m_OldValue = null;
+	private Object				m_OldValue = null;
+	/**	Lookup				*/
+	private LookupDisplayType 	m_Lookup = null;
 	
 	@Override
 	protected void init() {
 		//activity.ona
-		v_Search = new VSearch(activity, m_field);
+		v_Search = new VSearch(v_Activity, m_field);
 		setEnabled(!m_field.IsReadOnly);
 		//	Add to View
 		addView(v_Search);
+		//	Instance Lookup
+		m_Lookup = new LookupDisplayType(getContext(), m_field);
 	}
 
 	@Override
@@ -187,17 +191,16 @@ public class VLookupSearch extends GridField {
 		if(!(value instanceof Integer))
 			return;
 		try{
-			LookupDisplayType lookup = new LookupDisplayType(getContext(), m_field);
 			DB conn = new DB(getContext());
 			DB.loadConnection(conn, DB.READ_ONLY);
 			Cursor rs = null;
 			FilterValue criteria = new FilterValue();
-			InfoLookup lookupInfo = lookup.getInfoLookup();
+			InfoLookup lookupInfo = m_Lookup.getInfoLookup();
 			criteria.setWhereClause(lookupInfo.TableName + "." + lookupInfo.KeyColumn + " = ?");
 			criteria.addValue(value);
-			lookup.setCriteria(criteria.getWhereClause());
+			m_Lookup.setCriteria(criteria.getWhereClause());
 			//	Query
-			rs = conn.querySQL(lookup.getSQL(), criteria.getValues());
+			rs = conn.querySQL(m_Lookup.getSQL(), criteria.getValues());
 			if(rs.moveToFirst())
 				setItem(new DisplayRecordItem(rs.getInt(0), rs.getString(1)));
 			else
