@@ -109,7 +109,10 @@ public class GridTab {
 			return;
 		//	Iterate
 		for (int i = 0; i < list.size(); i++) {
-			m_depOnField.put(list.get(i), m_Field);   //  ColumnName, Field
+			String m_FieldName = list.get(i);
+			m_depOnField.put(m_FieldName, m_Field);   //  ColumnName, Field
+			LogM.log(m_ctx, getClass(), Level.FINE, 
+					"Dependent Field Added [" + m_FieldName + ", " + m_Field.getColumnName() + "]");
 		}
 		//  Add fields all fields are dependent on
 		if (m_Field.getColumnName().equals("IsActive")
@@ -376,31 +379,33 @@ public class GridTab {
 	/**
 	 * Reload depending fields
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/08/2014, 20:39:26
-	 * @param vParentField
+	 * @param m_FieldChanged
 	 * @return void
 	 */
-	public void reloadDepending(GridField vParentField) {
+	public void reloadDepending(GridField m_FieldChanged) {
 		//	
-		int position = m_fields.indexOf(vParentField);
-		//	
-		for (int index = position + 1; index < m_fields.size(); index ++) {
-			GridField vField = m_fields.get(index);
+		
+		ArrayList<GridField> list = getDependantFields(m_FieldChanged.getColumnName());
+		for (int index = 0; index < list.size(); index++){
+			GridField m_Field = list.get(index);
+			LogM.log(m_ctx, getClass(), Level.FINE, 
+					"Callout process dependent child [" + m_FieldChanged.getColumnName() + " --> " + m_Field.getColumnName() + "]");
 			//	Get Field Meta-Data
-			InfoField fieldMD = vField.getField();
+			InfoField fieldMD = m_Field.getField();
 			if(fieldMD == null)
 				continue;
 			//	Load
 			if(DisplayType.isLookup(fieldMD.DisplayType)) {
 				if(fieldMD.DisplayType != DisplayType.SEARCH
-						&& vField instanceof VLookupSpinner) {
-					VLookupSpinner spinner = (VLookupSpinner) vField;
+						&& m_Field instanceof VLookupSpinner) {
+					VLookupSpinner spinner = (VLookupSpinner) m_Field;
 					Object oldValue = spinner.getValue();
 					spinner.load(true);
 					//	set old value
 					spinner.setValueNoReload(oldValue);
 				}
 			}
-    	}
+		}
 	}
 	
 	
