@@ -16,12 +16,15 @@
 package org.spinsuite.view.lookup;
 
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
+import org.spinsuite.interfaces.I_Lookup;
 import org.spinsuite.interfaces.OnFieldChangeListener;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.Evaluator;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.TabParameter;
 
@@ -97,6 +100,8 @@ public abstract class GridField extends LinearLayout {
 	protected OnFieldChangeListener 	m_Listener = null;
 	/**	Column Index		*/
 	private int							m_ColumnIndex = 0;
+	/**	Dependent On		*/
+	private ArrayList<String> 			m_DependentOn = null;
 	
 	/**
 	 * Main Init
@@ -764,23 +769,38 @@ public abstract class GridField extends LinearLayout {
 	 *  Get a list of variables, this field is dependent on.
 	 *  - for display purposes or
 	 *  - for lookup purposes
+	 *  Copied from ADempiere
 	 *  @return ArrayList
 	 */
-	//public ArrayList<String> getDependentOn() {
+	public ArrayList<String> getDependentOn() {
 		//	Valid Null
-		//if(m_field == null)
-			//return null;
-		//ArrayList<String> list = new ArrayList<String>();
+		if(m_DependentOn == null)
+			m_DependentOn = loadDependentOn();
+		//
+		return m_DependentOn;
+	}   //  getDependentOn
+	
+	/**
+	 * Load Dependent On from Evaluation
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/09/2014, 15:33:34
+	 * @return
+	 * @return ArrayList<String>
+	 */
+	private ArrayList<String> loadDependentOn() {
+		//	Valid Null
+		if(m_field == null)
+			return null;
+		ArrayList<String> list = new ArrayList<String>();
 		//  Display
-		//Evaluator.parseDepends(list, m_field.DisplayLogic);
+		Evaluator.parseDepends(list, m_field.DisplayLogic);
 		//Evaluator.parseDepends(list, m_field.ReadOnlyLogic);
 		//Evaluator.parseDepends(list, m_field.MandatoryLogic);
 		//  Lookup
-		//if (DisplayType.isLookup(m_field.DisplayType)) {
-			//LookupDisplayType lookup = new LookupDisplayType(getContext(), m_field);
-			//Evaluator.parseDepends(list, lookup.getValidation());
-		//}
-		//
-		//return list;
-	//}   //  getDependentOn
+		if (DisplayType.isLookup(m_field.DisplayType)) {
+			I_Lookup lookup = ((I_Lookup)this);
+			Evaluator.parseDepends(list, lookup.getValidation());
+		}
+		//	Return
+		return list;
+	}
 }

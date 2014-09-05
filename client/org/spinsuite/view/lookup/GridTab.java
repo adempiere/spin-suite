@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import org.spinsuite.base.DB;
 import org.spinsuite.model.Callout;
 import org.spinsuite.model.MSPSTable;
+import org.spinsuite.model.MultiMap;
 import org.spinsuite.model.PO;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
@@ -62,27 +63,29 @@ public class GridTab {
 	}
 	
 	/**	Fields					*/
-	private ArrayList<GridField> 	m_fields = null;
+	private ArrayList<GridField> 		m_fields = null;
 	/**	Context					*/
-	private Context					m_ctx = null;
+	private Context						m_ctx = null;
 	/**	Activity No				*/
-	private TabParameter 			m_TabParam = null;
+	private TabParameter 				m_TabParam = null;
 	/**	Tab Info				*/
-	private InfoTab 				m_TabInfo = null;
+	private InfoTab 					m_TabInfo = null;
 	/**	Persistence Object		*/
-	private PO 						model = null;
+	private PO 							model = null;
 	/**	Connection				*/
-	private DB						conn = null;
+	private DB							conn = null;
 	/**	Active Callouts			*/
-	private List<String> 			activeCallouts = new ArrayList<String>();
+	private List<String> 				activeCallouts = new ArrayList<String>();
 	/**	Active Instance			*/
-	private List<Callout> 			activeCalloutInstance = new ArrayList<Callout>();
+	private List<Callout> 				activeCalloutInstance = new ArrayList<Callout>();
 	/**	Record Identifier		*/
-	private int 					m_Record_ID = 0;
+	private int 						m_Record_ID = 0;
 	/**	Parent Record Identifier*/
-	private int 					m_Parent_Record_ID = 0;
+	private int 						m_Parent_Record_ID = 0;
 	/**	Error Message			*/
-	private String					m_ErrorMsg = null;
+	private String						m_ErrorMsg = null;
+	/** Map of ColumnName of source field (key) and the dependent field (value) */
+	private MultiMap<String,GridField>	m_depOnField = new MultiMap<String,GridField>();
 	
 	
 	/**
@@ -91,10 +94,28 @@ public class GridTab {
 	 * @param v_lookup
 	 * @return void
 	 */
-	public void addField(GridField m_GridField) {
+	public void addField(GridField m_Field) {
+		//	Valid Null
+		if(m_Field == null)
+			return;
 		if(model != null)
-			m_GridField.setColumnIndex(model.getColumnIndex(m_GridField.getColumnName()));
-		m_fields.add(m_GridField);
+			m_Field.setColumnIndex(model.getColumnIndex(m_Field.getColumnName()));
+		m_fields.add(m_Field);
+		//	Add Dependent On
+		//  List of ColumnNames, this field is dependent on
+		ArrayList<String> list = m_Field.getDependentOn();
+		//	Valid Null
+		if(list == null)
+			return;
+		//	Iterate
+		for (int i = 0; i < list.size(); i++) {
+			m_depOnField.put(list.get(i), m_Field);   //  ColumnName, Field
+		}
+		//  Add fields all fields are dependent on
+		if (m_Field.getColumnName().equals("IsActive")
+			|| m_Field.getColumnName().equals("Processed")
+			|| m_Field.getColumnName().equals("Processing"))
+			m_depOnField.put(m_Field.getColumnName(), null);
 	}
 	
 	/**
@@ -657,4 +678,35 @@ public class GridTab {
     public boolean isDeleteable() {
     	return model.isDeleteable();
     }
+    
+	/**************************************************************************
+	 *  Has this field dependents ?
+	 *  @param columnName column name
+	 *  @return true if column has dependent
+	 */
+	public boolean hasDependants (String columnName) {
+	//	m_depOnField.printToLog();
+		return m_depOnField.containsKey(columnName);
+	}   //  isDependentOn
+
+	/**
+	 *  Get dependents fields of columnName
+	 *  @param columnName column name
+	 *  @return ArrayList with GridFields dependent on columnName
+	 */
+	public ArrayList<GridField> getDependantFields (String columnName) {
+		return m_depOnField.getValues(columnName);
+	}   //  getDependentFields
+	
+	/**
+	 * Add Dependent
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/09/2014, 16:05:38
+	 * @param key
+	 * @param m_Field
+	 * @return void
+	 */
+	public void addDependentField(String key, GridField m_Field) {
+		m_depOnField.put(key, m_Field);
+	}
+	
 }

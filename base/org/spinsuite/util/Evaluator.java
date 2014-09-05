@@ -233,7 +233,6 @@ public class Evaluator {
 	{
 		if (parseString == null || parseString.length() == 0)
 			return;
-	//	log.fine( "MField.parseDepends", parseString);
 		String s = parseString;
 		//  while we have variables
 		while (s.indexOf('@') != -1)
