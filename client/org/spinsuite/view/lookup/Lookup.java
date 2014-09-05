@@ -81,6 +81,50 @@ public class Lookup {
 	}
 	
 	/**
+	 * With Column
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/09/2014, 12:19:50
+	 * @param ctx
+	 * @param m_SPS_Column_ID
+	 * @param tabParam
+	 */
+	public Lookup(Context ctx, int m_SPS_Column_ID, TabParameter tabParam) {
+		//	Load Field
+		m_field = GridField.loadInfoColumnField(ctx, m_SPS_Column_ID);
+		//	Set Property
+		this.ctx = ctx;
+		ctx_lookup_value = CTX_VALUE_PREFIX + m_field.SPS_Column_ID;
+		ctx_lookup_has_where = CTX_HAS_WHERE + m_field.SPS_Column_ID;
+		ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX + m_field.SPS_Column_ID;
+		m_Language = Env.getAD_Language(ctx);
+		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
+		m_TabParam = tabParam;
+	}
+	
+	/**
+	 * With Table Name
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/09/2014, 12:20:36
+	 * @param ctx
+	 * @param m_TableName
+	 * @param m_ColumnName
+	 * @param tabParam
+	 */
+	public Lookup(Context ctx, String m_TableName, String m_ColumnName, TabParameter tabParam) {
+		//	Load Field
+		m_field = GridField.loadInfoColumnField(ctx, m_TableName, m_ColumnName);
+		//	Set Property
+		this.ctx = ctx;
+		ctx_lookup_value = CTX_VALUE_PREFIX + m_field.SPS_Column_ID;
+		ctx_lookup_has_where = CTX_HAS_WHERE + m_field.SPS_Column_ID;
+		ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX + m_field.SPS_Column_ID;
+		m_Language = Env.getAD_Language(ctx);
+		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
+		m_TabParam = tabParam;
+	}
+	
+	
+	/**
 	 * 
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/03/2014, 16:20:14
