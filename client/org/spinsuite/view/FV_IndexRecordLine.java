@@ -24,7 +24,7 @@ import org.spinsuite.util.FilterValue;
 import org.spinsuite.util.KeyNamePair;
 import org.spinsuite.util.TabParameter;
 import org.spinsuite.view.lookup.InfoTab;
-import org.spinsuite.view.lookup.LookupDisplayType;
+import org.spinsuite.view.lookup.Lookup;
 
 import android.app.Activity;
 import android.app.ListFragment;
@@ -44,7 +44,7 @@ public class FV_IndexRecordLine extends ListFragment implements I_DynamicTab {
 	/**	Tab Info					*/
 	private InfoTab 					tabInfo				= null;
 	/**	Lookup 						*/
-	private LookupDisplayType 			lookup 				= null;
+	private Lookup 			lookup 				= null;
 	/**	Layout Type					*/
 	private int 						layout				= 0;
 	/**	Adapter						*/
@@ -93,7 +93,7 @@ public class FV_IndexRecordLine extends ListFragment implements I_DynamicTab {
 				tabParam.getActivityNo(), tabParam.getParentTabNo());
     	//	Load SQL
     	if(lookup == null){
-    		lookup = new LookupDisplayType(getActivity(), tabParam.getSPS_Table_ID());
+    		lookup = new Lookup(getActivity(), tabParam.getSPS_Table_ID());
     		//	Get Where Clause
     		lookup.setCriteria(criteria.getWhereClause());
     	}

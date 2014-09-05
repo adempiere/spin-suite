@@ -102,7 +102,7 @@ public class VLookupSearch extends GridField {
 	/**	Set Old Value		*/
 	private Object				m_OldValue = null;
 	/**	Lookup				*/
-	private LookupDisplayType 	m_Lookup = null;
+	private Lookup 	m_Lookup = null;
 	
 	@Override
 	protected void init() {
@@ -112,7 +112,7 @@ public class VLookupSearch extends GridField {
 		//	Add to View
 		addView(v_Search);
 		//	Instance Lookup
-		m_Lookup = new LookupDisplayType(getContext(), m_field);
+		m_Lookup = new Lookup(getContext(), m_field);
 	}
 
 	@Override

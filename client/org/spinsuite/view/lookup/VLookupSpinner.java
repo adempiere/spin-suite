@@ -24,6 +24,7 @@ import org.spinsuite.util.TabParameter;
 import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 /**
@@ -58,15 +59,15 @@ public class VLookupSpinner extends GridField {
 	 * 
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 09:48:47
-	 * @param context
+	 * @param ctx
 	 * @param m_field
 	 * @param tabParam
 	 */
-	public VLookupSpinner(Context context, InfoField m_field, TabParameter tabParam, Lookup m_Lookup) {
-		super(context, m_field, tabParam);
+	public VLookupSpinner(Context ctx, InfoField m_field, TabParameter tabParam, Lookup m_Lookup) {
+		super(ctx, m_field, tabParam);
 		this.m_Lookup = m_Lookup;
 		if(m_Lookup == null)
-			this.m_Lookup = new Lookup(context, m_field, tabParam, null);
+			this.m_Lookup = new Lookup(ctx, tabParam, m_field);
 		//	Init
 		init();
 	}
@@ -75,21 +76,21 @@ public class VLookupSpinner extends GridField {
 	 * With Tab Parameter
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/05/2014, 14:00:56
-	 * @param context
+	 * @param ctx
 	 * @param m_field
 	 * @param tabParam
 	 * @param conn
 	 */
-	public VLookupSpinner(Context context, InfoField m_field, TabParameter tabParam, DB conn) {
-		super(context, m_field, tabParam);
-		m_Lookup = new Lookup(context, m_field, tabParam, conn);
+	public VLookupSpinner(Context ctx, InfoField m_field, TabParameter tabParam, DB conn) {
+		super(ctx, m_field, tabParam);
+		m_Lookup = new Lookup(ctx, tabParam.getActivityNo(), tabParam.getTabNo(), m_field);
 		init();
 	}
 	
 	/**	String 				*/
 	private Spinner 			v_Spinner = null;
 	/**	Lookup				*/
-	private Lookup				m_Lookup = null;
+	private Lookup	m_Lookup = null;
 	/**	Old Value			*/
 	private Object 				m_OldValue = null;
 	//	
@@ -101,8 +102,10 @@ public class VLookupSpinner extends GridField {
 		//	Add to View
 		addView(v_Spinner);
 		//	Load Data
-		if(m_Lookup != null)
-			m_Lookup.load(v_Spinner, false);
+		if(m_Lookup != null) {
+			m_Lookup.load(false);
+			populate();
+		}
 		//	Set Default Value
 		if(m_field.DefaultValue != null
 					&& m_field.DefaultValue.length() > 0)
@@ -131,7 +134,8 @@ public class VLookupSpinner extends GridField {
 			@Override
 			public boolean onLongClick(View v) {
 				//	Re-Query
-				m_Lookup.load(v_Spinner, true);
+				m_Lookup.load(true);
+				populate();
 				return false;
 			}
 		});
@@ -223,7 +227,8 @@ public class VLookupSpinner extends GridField {
 		if(pos == -1
 				&& m_Lookup != null) {
 			//	Load
-			m_Lookup.load(v_Spinner, true);
+			m_Lookup.load(true);
+			populate();
 			//	Set Value
 			pos = getPosition(value);
 		}
@@ -336,6 +341,22 @@ public class VLookupSpinner extends GridField {
 	 * @return void
 	 */
 	public void load(boolean reQuery) {
-		m_Lookup.load(v_Spinner, reQuery);
+		m_Lookup.load(reQuery);
+	}
+	
+	/**
+	 * Set adapter
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 09:37:16
+	 * @param v_Spinner
+	 * @return void
+	 */
+	private void populate(){
+		//	Set Adapter
+		ArrayAdapter<DisplayLookupSpinner> sp_adapter = 
+    			new ArrayAdapter<DisplayLookupSpinner>(getContext(), android.R.layout.simple_spinner_item, m_Lookup.getData());
+		//	
+		sp_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		//	
+		v_Spinner.setAdapter(sp_adapter);
 	}
 }

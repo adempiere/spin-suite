@@ -861,7 +861,7 @@ public class T_DynamicTab extends Fragment
 						&& DisplayType.isLookup(field.DisplayType)
 						&& field.DisplayType != DisplayType.SEARCH){
 					//	Add View to Layout
-					Lookup lookup = new Lookup(getActivity(), field, getTabParameter(), conn);
+					Lookup lookup = new Lookup(getActivity(), getTabParameter(), field);
 					lookup.load();
 					//	Add
 					m_Lookup.add(lookup);

@@ -29,7 +29,7 @@ import org.spinsuite.util.LogM;
 import org.spinsuite.view.lookup.GridField;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.InfoTab;
-import org.spinsuite.view.lookup.LookupDisplayType;
+import org.spinsuite.view.lookup.Lookup;
 import org.spinsuite.view.lookup.VLookupSearch;
 
 import android.app.Activity;
@@ -77,7 +77,7 @@ public class LV_Search extends Activity {
 	/**	Criteria Old			*/
 	private String					m_oldWhereClause = null;
 	/**	Lookup 					*/
-	private LookupDisplayType 		lookup = null;
+	private Lookup 		lookup = null;
 	/**	Info Field				*/
 	private InfoTab					tabInfo = null;
 	/**	View Index Array		*/
@@ -109,9 +109,9 @@ public class LV_Search extends Activity {
 		lv_Search = (ListView) findViewById(R.id.lv_Search);
 		//	
 		if(m_SPS_Table_ID != 0)
-			lookup = new LookupDisplayType(getApplicationContext(), m_SPS_Table_ID);
+			lookup = new Lookup(getApplicationContext(), m_SPS_Table_ID);
 		else if(m_field != null)
-			lookup = new LookupDisplayType(getApplicationContext(), m_field);
+			lookup = new Lookup(getApplicationContext(), m_field);
 		//	
 		loadConfig();
 		
