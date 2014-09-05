@@ -24,15 +24,17 @@ public class InfoLookup {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 20:36:33
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/09/2014, 23:44:28
 	 * @param m_TableName
 	 * @param m_KeyColumn
 	 * @param m_DisplayColumn
+	 * @param m_WhereClause
 	 */
-	public InfoLookup(String m_TableName, String m_KeyColumn, String m_DisplayColumn) {
+	public InfoLookup(String m_TableName, String m_KeyColumn, String m_DisplayColumn, String m_WhereClause) {
 		this.TableName = m_TableName;
 		this.KeyColumn = m_KeyColumn;
 		this.DisplayColumn = m_DisplayColumn;
+		this.WhereClause = m_WhereClause;
 	}
 	
 	/**
@@ -45,15 +47,18 @@ public class InfoLookup {
 	}
 
 	/**	Table Name			*/
-	public String 		TableName = null;
+	public String 		TableName 		= null;
 	/**	Key Column			*/
-	public String 		KeyColumn = null;
+	public String 		KeyColumn 		= null;
 	/**	Display Column		*/
-	public String 		DisplayColumn = null;
+	public String 		DisplayColumn 	= null;
+	/**	Where Clause		*/
+	public String		WhereClause 	= null;
 	
 	@Override
 	public String toString() {
 		return "InfoLookup [TableName=" + TableName + ", KeyColumn="
-				+ KeyColumn + ", DisplayColumn=" + DisplayColumn + "]";
+				+ KeyColumn + ", DisplayColumn=" + DisplayColumn
+				+ ", WhereClause=" + WhereClause + "]";
 	}
 }

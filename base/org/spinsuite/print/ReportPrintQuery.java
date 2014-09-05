@@ -25,7 +25,7 @@ import org.spinsuite.util.LogM;
 import org.spinsuite.util.ReportSortColumnPair;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.InfoLookup;
-import org.spinsuite.view.lookup.LookupDisplayType;
+import org.spinsuite.view.lookup.Lookup;
 
 import android.content.Context;
 
@@ -269,7 +269,7 @@ public class ReportPrintQuery {
 	 */
 	private InfoLookup getInfoLookup(InfoReportField field){
 		InfoField lookupField = new InfoField(field);
-		LookupDisplayType m_lookup = new LookupDisplayType(ctx, lookupField);
+		Lookup m_lookup = new Lookup(ctx, lookupField);
 		return m_lookup.getInfoLookup();
 	}
 	
