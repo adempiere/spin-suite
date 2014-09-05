@@ -18,6 +18,7 @@ package org.spinsuite.view.lookup;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
+import org.spinsuite.interfaces.I_Lookup;
 import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.FilterValue;
@@ -33,7 +34,8 @@ import android.view.View;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class VLookupSearch extends GridField {
+public class VLookupSearch extends GridField 
+								implements I_Lookup {
 
 	/**
 	 * *** Constructor ***
@@ -212,4 +214,15 @@ public class VLookupSearch extends GridField {
 		}
 	}
 
+	@Override
+	public String getValidation() {
+		return m_Lookup.getValidation();
+	}
+	
+	@Override
+	public String toString() {
+		return "VLookupSearch [v_Search=" + v_Search + ", v_Activity="
+				+ v_Activity + ", m_OldValue=" + m_OldValue + ", m_Lookup="
+				+ m_Lookup + "]";
+	}
 }

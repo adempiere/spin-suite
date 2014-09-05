@@ -15,10 +15,14 @@
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
+import java.util.logging.Level;
+
 import org.spinsuite.base.DB;
+import org.spinsuite.interfaces.I_Lookup;
 import org.spinsuite.util.DisplayLookupSpinner;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.LogM;
 import org.spinsuite.util.TabParameter;
 
 import android.content.Context;
@@ -31,28 +35,31 @@ import android.widget.Spinner;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class VLookupSpinner extends GridField {
+public class VLookupSpinner extends GridField 
+								implements I_Lookup {
 
 	/**
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/02/2014, 08:27:59
-	 * @param context
+	 * @param ctx
 	 * @param m_field
 	 */
-	public VLookupSpinner(Context context, InfoField m_field) {
-		this(context, m_field, null);
+	public VLookupSpinner(Context ctx, InfoField m_field) {
+		this(ctx, m_field, null);
+		this.m_Lookup = new Lookup(ctx, null, m_field);
 	}
 	
 	/**
 	 * 
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/05/2014, 21:12:18
-	 * @param context
+	 * @param ctx
 	 * @param m_field
 	 * @param conn
 	 */
-	public VLookupSpinner(Context context, InfoField m_field, DB conn) {
-		this(context, m_field, null, conn);
+	public VLookupSpinner(Context ctx, InfoField m_field, DB conn) {
+		this(ctx, m_field, null, conn);
+		this.m_Lookup = new Lookup(ctx, null, m_field);
 	}
 	
 	/**
@@ -90,7 +97,7 @@ public class VLookupSpinner extends GridField {
 	/**	String 				*/
 	private Spinner 			v_Spinner = null;
 	/**	Lookup				*/
-	private Lookup	m_Lookup = null;
+	private Lookup				m_Lookup = null;
 	/**	Old Value			*/
 	private Object 				m_OldValue = null;
 	//	
@@ -342,6 +349,14 @@ public class VLookupSpinner extends GridField {
 	 */
 	public void load(boolean reQuery) {
 		m_Lookup.load(reQuery);
+		populate();
+	}
+	
+	@Override
+	public String getValidation() {
+		String whereClause = m_Lookup.getValidation();
+		LogM.log(getContext(), getClass(), Level.FINE, "Where Clause = " + m_Lookup.getValidation());
+		return whereClause;
 	}
 	
 	/**

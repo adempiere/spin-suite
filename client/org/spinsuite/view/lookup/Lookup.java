@@ -246,6 +246,7 @@ public class Lookup {
 			//	Return Cache
 			if(isCache) {
 				m_IsHasWhere = Env.getContextAsBoolean(ctx, ctx_lookup_has_where);
+				m_InfoLookup = (InfoLookup) Env.getContextObject(ctx, ctx_lookup_info, InfoLookup.class);
 				//	Parse
 				sqlParsed = getParsedSQL(m_SQL);
 				//	
@@ -276,6 +277,7 @@ public class Lookup {
 			//	Return Cache
 			if(isCache) {
 				m_IsHasWhere = Env.getContextAsBoolean(ctx, ctx_lookup_has_where);
+				m_InfoLookup = (InfoLookup) Env.getContextObject(ctx, ctx_lookup_info, InfoLookup.class);
 				//	Parse
 				sqlParsed = getParsedSQL(m_SQL);
 				//	
@@ -717,7 +719,11 @@ public class Lookup {
 	 * @return String
 	 */
 	public String getValidation() {
-		return getInfoLookup().WhereClause;
+		getInfoLookup();
+		if(m_InfoLookup != null)
+			return m_InfoLookup.WhereClause;
+		//	Default
+		return null;
 	}
 	
 	@Override
