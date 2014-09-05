@@ -78,6 +78,12 @@ public class Lookup {
 		m_Language = Env.getAD_Language(ctx);
 		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
 		m_TabParam = tabParam;
+		//	Valid Null
+		if(m_TabParam == null) {
+			m_TabParam = new TabParameter();
+			m_TabParam.setActivityNo(0);
+			m_TabParam.setTabNo(0);
+		}
 	}
 	
 	/**
@@ -99,6 +105,12 @@ public class Lookup {
 		m_Language = Env.getAD_Language(ctx);
 		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
 		m_TabParam = tabParam;
+		//	Valid Null
+		if(m_TabParam == null) {
+			m_TabParam = new TabParameter();
+			m_TabParam.setActivityNo(0);
+			m_TabParam.setTabNo(0);
+		}
 	}
 	
 	/**
@@ -121,6 +133,12 @@ public class Lookup {
 		m_Language = Env.getAD_Language(ctx);
 		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
 		m_TabParam = tabParam;
+		//	Valid Null
+		if(m_TabParam == null) {
+			m_TabParam = new TabParameter();
+			m_TabParam.setActivityNo(0);
+			m_TabParam.setTabNo(0);
+		}
 	}
 	
 	
@@ -139,6 +157,9 @@ public class Lookup {
 		ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX_TABLE + m_SPS_Table_ID;
 		m_Language = Env.getAD_Language(ctx);
 		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
+		m_TabParam = new TabParameter();
+		m_TabParam.setActivityNo(0);
+		m_TabParam.setTabNo(0);
 	}
 	
 	/**	Field					*/
