@@ -175,6 +175,25 @@ public final class Env {
 	    return gson.fromJson(json, clazz);
 	}
 	
+	/*public static void setContextObject(Context ctx, String context, Object value, boolean isExternal) {
+		if(ctx == null
+				|| context == null
+				|| value == null) {
+			return;
+		}
+		//	Get Cache Dir
+		File cacheDir = ctx.getCacheDir();
+		//	Valid if Exists
+	    if(!cacheDir.exists())
+	        cacheDir.mkdirs();
+	    //	
+	    File fileName = new File(cacheDir, context);
+	    FileOutputStream fos = null;
+	    fos = new FileOutputStream(fileName.getAbsolutePath());
+	    fos.write(value.getBytes());
+	    fos.close();
+	}*/
+	
 	/**
 	 * Set Context
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:56:56

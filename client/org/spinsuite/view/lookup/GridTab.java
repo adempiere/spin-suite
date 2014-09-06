@@ -27,6 +27,7 @@ import org.spinsuite.model.MultiMap;
 import org.spinsuite.model.PO;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.Evaluatee;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.TabParameter;
 
@@ -37,7 +38,7 @@ import android.content.Context;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class GridTab {
+public class GridTab implements Evaluatee {
 	
 	/**
 	 * 
@@ -367,6 +368,8 @@ public class GridTab {
 							m_TabParam.getActivityNo(), m_TabParam.getParentTabNo(), vField.getField()));
 				}
 			}
+    		//	Refresh Display
+    		changeDisplayDepending(vField);
     		//	Set Current Values
     		DisplayType.setContextValue(m_ctx, m_TabParam.getActivityNo(), 
     				m_TabParam.getTabNo(), vField.getField(), vField.getValue());
@@ -382,29 +385,58 @@ public class GridTab {
 	 * @param m_FieldChanged
 	 * @return void
 	 */
-	public void reloadDepending(GridField m_FieldChanged) {
+	public void changeDepending(GridField m_FieldChanged) {
 		//	
-		
 		ArrayList<GridField> list = getDependantFields(m_FieldChanged.getColumnName());
 		for (int index = 0; index < list.size(); index++){
-			GridField m_Field = list.get(index);
+			GridField m_DependentField = list.get(index);
+			//	Valid Null
+			if(m_DependentField == null)
+				continue;
 			LogM.log(m_ctx, getClass(), Level.FINE, 
-					"Callout process dependent child [" + m_FieldChanged.getColumnName() + " --> " + m_Field.getColumnName() + "]");
+					"Callout process dependent child [" + m_FieldChanged.getColumnName() 
+							+ " --> " + m_DependentField.getColumnName() + "]");
 			//	Get Field Meta-Data
-			InfoField fieldMD = m_Field.getField();
+			InfoField fieldMD = m_DependentField.getField();
 			if(fieldMD == null)
 				continue;
 			//	Load
 			if(DisplayType.isLookup(fieldMD.DisplayType)) {
 				if(fieldMD.DisplayType != DisplayType.SEARCH
-						&& m_Field instanceof VLookupSpinner) {
-					VLookupSpinner spinner = (VLookupSpinner) m_Field;
+						&& m_DependentField instanceof VLookupSpinner) {
+					VLookupSpinner spinner = (VLookupSpinner) m_DependentField;
 					Object oldValue = spinner.getValue();
 					spinner.load(true);
 					//	set old value
 					spinner.setValueNoReload(oldValue);
 				}
 			}
+		}
+	}
+	
+	/**
+	 * Change Display Logic
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 06/09/2014, 14:27:59
+	 * @param m_FieldChanged
+	 * @return void
+	 */
+	public void changeDisplayDepending(GridField m_FieldChanged) {
+		//	
+		ArrayList<GridField> list = getDependantFields(m_FieldChanged.getColumnName());
+		for (int index = 0; index < list.size(); index++){
+			GridField m_DependentField = list.get(index);
+			//	Valid Null
+			if(m_DependentField == null)
+				continue;
+			LogM.log(m_ctx, getClass(), Level.FINE, 
+					"Display Logic dependent child [" + m_FieldChanged.getColumnName() 
+							+ " --> " + m_DependentField.getColumnName() + "]");
+			//	Get Field Meta-Data
+			InfoField fieldMD = m_DependentField.getField();
+			if(fieldMD == null)
+				continue;
+			//	Display Logic
+			m_DependentField.setVisible(this);
 		}
 	}
 	
@@ -712,6 +744,11 @@ public class GridTab {
 	 */
 	public void addDependentField(String key, GridField m_Field) {
 		m_depOnField.put(key, m_Field);
+	}
+
+	@Override
+	public String get_ValueAsString(String variableName) {
+		return Env.getContext(m_ctx, m_TabParam.getActivityNo(), variableName);
 	}
 	
 }

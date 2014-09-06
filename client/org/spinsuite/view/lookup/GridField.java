@@ -24,6 +24,7 @@ import org.spinsuite.interfaces.I_Lookup;
 import org.spinsuite.interfaces.OnFieldChangeListener;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.Evaluatee;
 import org.spinsuite.util.Evaluator;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.TabParameter;
@@ -802,5 +803,27 @@ public abstract class GridField extends LinearLayout {
 		}
 		//	Return
 		return list;
+	}
+	
+	/**
+	 * Set Visible from validation
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 06/09/2014, 14:12:05
+	 * @param tab
+	 * @return void
+	 */
+	public void setVisible(Evaluatee tab) {
+		//	Get Display Logic
+		String logic = m_field.DisplayLogic;
+		LogM.log(getContext(), getClass(), Level.INFO, 
+				"Display Logic From Field = " + logic);
+		//	Valid Logic
+		if (logic != null && logic.length() > 0) {
+			//	
+			boolean display = Evaluator.evaluateLogic(tab, logic);
+			//	
+			LogM.log(getContext(), getClass(), Level.INFO, 
+					"Display Logic = " + logic + " - Displayed = " + display);
+			setVisibility(display ? VISIBLE: GONE);
+		}
 	}
 }
