@@ -177,11 +177,14 @@ public class T_DynamicTab extends Fragment
     		public void onFieldEvent(GridField mField) {
     			LogM.log(getActivity(), T_DynamicTab.class, 
     					Level.FINE, "Field Event = " + mField.getColumnName());
+    			//	Change Display Dependent
+    			mGridTab.changeDisplayDepending(mField);
+    			//	
     			if(m_IsModifying) {
         			//	Process Callout
         			processCallout(mField);
         			//	Reload depending fields
-        			reloadDepending(mField);
+        			changeDepending(mField);
     			} else if(mField.getColumnName().equals("DocAction")) {
     				//	Valid Ok
     				VLookupButtonDocAction docAction = (VLookupButtonDocAction) mField;
@@ -232,12 +235,12 @@ public class T_DynamicTab extends Fragment
 	 * @param mField
 	 * @return void
 	 */
-	private void reloadDepending(GridField mField) {
+	private void changeDepending(GridField mField) {
 		//	Log
 		LogM.log(getActivity(), T_DynamicTab.class, 
 				Level.FINE, "processCallout(" + mField.getColumnName() + ")");
 		if(!mField.getColumnName().equals("DocAction")) {
-			mGridTab.reloadDepending(mField);
+			mGridTab.changeDepending(mField);
 		}
 	}
 	
@@ -971,7 +974,6 @@ public class T_DynamicTab extends Fragment
 				v_row.addView(lookup);
 				//	
 				mGridTab.addField(lookup);
-				
 			}
 			//	Add Row
 			if((lookup != null && !isSameLine)
