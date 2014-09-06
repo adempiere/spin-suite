@@ -140,6 +140,10 @@ public class Evaluator {
 			first = first.replace ('@', ' ').trim (); 			//	strip 'tag'
 			firstEval = source.get_ValueAsString (first);		//	replace with it's value
 		}
+		//	Valid Null
+		if(firstEval == null)
+			firstEval = "";
+		//	
 		firstEval = firstEval.replace('\'', ' ').replace('"', ' ').trim();	//	strip ' and "
 
 		//	Comperator
@@ -153,6 +157,10 @@ public class Evaluator {
 			second = second.replace('@', ' ').trim();			// strip tag
 			secondEval = source.get_ValueAsString (second);		//	replace with it's value
 		}
+		//	Valid Null
+		if(secondEval == null)
+			secondEval = "";
+		//	
 		secondEval = secondEval.replace('\'', ' ').replace('"', ' ').trim();	//	strip ' and "
 
 		//	Handling of ID compare (null => 0)
