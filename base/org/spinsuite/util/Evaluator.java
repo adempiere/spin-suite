@@ -143,8 +143,8 @@ public class Evaluator {
 		//	Valid Null
 		if(firstEval == null)
 			firstEval = "";
-		//	
-		firstEval = firstEval.replace('\'', ' ').replace('"', ' ').trim();	//	strip ' and "
+		else
+			firstEval = firstEval.replace('\'', ' ').replace('"', ' ').trim();	//	strip ' and "
 
 		//	Comperator
 		String operand = st.nextToken();
@@ -160,8 +160,8 @@ public class Evaluator {
 		//	Valid Null
 		if(secondEval == null)
 			secondEval = "";
-		//	
-		secondEval = secondEval.replace('\'', ' ').replace('"', ' ').trim();	//	strip ' and "
+		else
+			secondEval = secondEval.replace('\'', ' ').replace('"', ' ').trim();	//	strip ' and "
 
 		//	Handling of ID compare (null => 0)
 		if (first.indexOf("_ID") != -1 && firstEval.length() == 0)
