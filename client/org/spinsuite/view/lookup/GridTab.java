@@ -350,12 +350,12 @@ public class GridTab implements Evaluatee {
 	 * Load Data from Model
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 13:55:23
 	 * @param model
-	 * @return void
+	 * @return boolean
 	 */
-	public void loadData() {
+	public boolean loadData() {
 		LogM.log(m_ctx, getClass(), Level.FINE, "loadData()");
 		if(model == null)
-			return;
+			return false;
 		//	Get Record Identifier
 		int m_Record_ID = model.getID();
 		//	
@@ -377,6 +377,8 @@ public class GridTab implements Evaluatee {
 		//	Set ID to Context
 		Env.setContext(m_ctx, m_TabParam.getActivityNo(), m_TabParam.getTabNo(), m_TabInfo.getTableKeyName(), m_Record_ID);
 		Env.setContext(m_ctx, m_TabParam.getActivityNo(), m_TabInfo.getTableKeyName(), m_Record_ID);
+		//	Return
+		return true;
 	}
 	
 	/**

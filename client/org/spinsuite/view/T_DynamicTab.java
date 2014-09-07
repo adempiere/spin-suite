@@ -112,6 +112,7 @@ public class T_DynamicTab extends Fragment
 	private 	ScrollView 				v_scroll			= null;
 	private 	TableLayout 			v_tableLayout		= null;
 	private 	boolean					m_IsLoadOk			= false;
+	private 	boolean					m_IsLoadDataOk		= false;
 	private 	boolean 				m_IsModifying		= false;
 	/**	From Tab					*/
 	private 	I_DynamicTab			m_FromTab			= null;
@@ -178,7 +179,8 @@ public class T_DynamicTab extends Fragment
     			LogM.log(getActivity(), T_DynamicTab.class, 
     					Level.FINE, "Field Event = " + mField.getColumnName());
     			//	Change Display Dependent
-    			mGridTab.changeDisplayDepending(mField);
+    			if(m_IsLoadDataOk)
+    				mGridTab.changeDisplayDepending(mField);
     			//	
     			if(m_IsModifying) {
         			//	Process Callout
@@ -880,8 +882,8 @@ public class T_DynamicTab extends Fragment
 
 		@Override
 		protected void onPostExecute(Integer result) {
-			loadView();
-			mGridTab.loadData();
+			m_IsLoadDataOk = loadView();
+			m_IsLoadDataOk = mGridTab.loadData();
 			//	Modifying
 			if(mGridTab.getRecord_ID() <= 0)
 				m_IsModifying = true;
@@ -907,6 +909,8 @@ public class T_DynamicTab extends Fragment
 		    		//	Add View to Layout
 		    		addView(field);
 		    	}
+		    	//	Ok
+		    	ok = true;
 			} catch(Exception e){
 				LogM.log(getActivity(), getClass(), Level.SEVERE, e.getLocalizedMessage());
 				//	Message
@@ -1017,7 +1021,7 @@ public class T_DynamicTab extends Fragment
 		protected void onPostExecute(Void result) {
 			if(is_OK) {
 				refreshIndex();
-				refresh(mGridTab.getRecord_ID(), false);
+				m_IsLoadDataOk = refresh(mGridTab.getRecord_ID(), false);
 				lockView(SEE);
 			} else {
 				Msg.alertMsg(getActivity(), null, mGridTab.getError());
