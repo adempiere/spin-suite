@@ -222,7 +222,7 @@ public class LV_AttachView extends Activity {
 		}
 		//	Show Message
 		if(msg != null)
-			Msg.alertMsg(this, getResources().getString(R.string.msg_Error), msg);
+			Msg.alertMsg(this, msg);
 		//	Return
 		return null;
 	}

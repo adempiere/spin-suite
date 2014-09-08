@@ -35,7 +35,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class FV_IndexRecordLine extends ListFragment implements I_DynamicTab {
+public class FV_IndexRecordLine extends ListFragment 
+									implements I_DynamicTab {
     
 	/**	Fragment Listener Call Back	*/
 	private I_FragmentSelectListener 	m_Callback 			= null;
@@ -44,7 +45,7 @@ public class FV_IndexRecordLine extends ListFragment implements I_DynamicTab {
 	/**	Tab Info					*/
 	private InfoTab 					tabInfo				= null;
 	/**	Lookup 						*/
-	private Lookup 			lookup 				= null;
+	private Lookup 						lookup 				= null;
 	/**	Layout Type					*/
 	private int 						layout				= 0;
 	/**	Adapter						*/
@@ -203,5 +204,15 @@ public class FV_IndexRecordLine extends ListFragment implements I_DynamicTab {
 	@Override
 	public boolean save() {
 		return false;
+	}
+
+	@Override
+	public boolean isModifying() {
+		return false;
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		//	
 	}
 }

@@ -20,7 +20,6 @@ import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
-import org.spinsuite.initialload.InitialLoad;
 import org.spinsuite.initialload.InitialLoadTask;
 import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.util.Env;

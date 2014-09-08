@@ -50,13 +50,11 @@ public class Login extends TV_Base implements I_CancelOk {
         
     	//*/
     	//CreatePDFTest.GenerarPDF(this);
-    	setPagingEnabled(false);
     	// Validate SD
     	if(Env.isEnvLoad(this)){
     		if(!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
     			if(!Env.getDB_PathName(this).equals(DB.DB_NAME)){
-    				Msg.alertMsg(this, getResources().getString(R.string.msg_SDNotFound), 
-    						getResources().getString(R.string.msg_SDNotFoundDetail));
+    				Msg.alertMsg(this, getResources().getString(R.string.msg_SDNotFoundDetail));
     				finish();
         		}	
     		}

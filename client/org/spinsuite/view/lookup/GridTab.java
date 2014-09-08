@@ -389,6 +389,9 @@ public class GridTab implements Evaluatee {
 	 */
 	public void changeDepending(GridField m_FieldChanged) {
 		//	
+		if(!hasDependants(m_FieldChanged.getColumnName()))
+			return;
+		//	
 		ArrayList<GridField> list = getDependantFields(m_FieldChanged.getColumnName());
 		for (int index = 0; index < list.size(); index++){
 			GridField m_DependentField = list.get(index);
@@ -423,6 +426,9 @@ public class GridTab implements Evaluatee {
 	 * @return void
 	 */
 	public void changeDisplayDepending(GridField m_FieldChanged) {
+		//	
+		if(!hasDependants(m_FieldChanged.getColumnName()))
+			return;
 		//	
 		ArrayList<GridField> list = getDependantFields(m_FieldChanged.getColumnName());
 		for (int index = 0; index < list.size(); index++){
@@ -530,7 +536,6 @@ public class GridTab implements Evaluatee {
     	}
     	//	Get Values
     	for (GridField vField: m_fields) {
-    		System.out.println(vField.getName() + " " + vField.isMandatory() + "  " + vField.isParent() + " " + vField.isEmpty());
     		if((vField.isMandatory()
     				|| vField.isParent()) && vField.isEmpty()){
     			m_ErrorMsg = "@MustFillField@ \"" + vField.getName() + "\"";

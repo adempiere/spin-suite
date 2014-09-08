@@ -43,7 +43,7 @@ public class Msg {
 	 * @param msg
 	 * @return void
 	 */
-	public static void alertMsg(Context ctx, String title, String msg){
+	private static void alertMsg(Context ctx, String title, String msg){
 		Builder dialog = new AlertDialog.Builder(ctx);
 		dialog.setPositiveButton(ctx.getResources().getString(R.string.msg_Acept), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
@@ -67,22 +67,6 @@ public class Msg {
 	}
 	
 	/**
-	 * Show a dialog with error message, must fill field
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 14:02:20
-	 * @param ctx
-	 * @param label
-	 * @param field
-	 * @return void
-	 */
-	public static void alertMustFillField(Context ctx, String label, View field){
-		Msg.alertMsg(ctx, ctx.getResources().getString(R.string.msg_ValidError), 
-				ctx.getResources().getString(R.string.MustFillField) + 
-				" " + label);
-		if(field != null)
-			field.requestFocus();
-	}
-	
-	/**
 	 * Show a dialog with error message, must fll field
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 14:08:24
 	 * @param ctx
@@ -91,8 +75,7 @@ public class Msg {
 	 * @return void
 	 */
 	public static void alertMustFillField(Context ctx, int field_ID, View field){
-		Msg.alertMsg(ctx, ctx.getResources().getString(R.string.msg_ValidError), 
-				ctx.getResources().getString(R.string.MustFillField) + 
+		Msg.alertMsg(ctx, ctx.getResources().getString(R.string.MustFillField) + 
 				" " + ctx.getResources().getString(field_ID));
 		if(field != null)
 			field.requestFocus();

@@ -114,7 +114,7 @@ public class T_Login extends Fragment implements I_Login {
     			else if(findUser(user, pass)){
     				return true;
     			} else {
-    				Msg.alertMsg(this.getActivity(), getResources().getString(R.string.msg_ValidError), 
+    				Msg.alertMsg(this.getActivity(), 
     						getResources().getString(R.string.msg_UserPassDoNotMatch));
     			}
     		} else {

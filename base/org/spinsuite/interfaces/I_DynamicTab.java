@@ -72,4 +72,20 @@ public interface I_DynamicTab {
 	 * @return boolean
 	 */
 	public boolean onKeyDown(int keyCode, KeyEvent event);
+	
+	/**
+	 * Verify if is Modifying
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/09/2014, 11:34:45
+	 * @return
+	 * @return boolean
+	 */
+	public boolean isModifying();
+	
+	/**
+	 * Set Enabled
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/09/2014, 19:03:46
+	 * @param enabled
+	 * @return void
+	 */
+	public void setEnabled(boolean enabled);
 }

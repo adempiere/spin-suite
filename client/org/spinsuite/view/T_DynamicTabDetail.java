@@ -176,4 +176,14 @@ public class T_DynamicTabDetail extends Fragment
 	public boolean save() {
 		return false;
 	}
+
+	@Override
+	public boolean isModifying() {
+		return false;
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		//	
+	}
 }
