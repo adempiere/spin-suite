@@ -589,7 +589,8 @@ public final class DisplayType
 			if(value instanceof Integer)
 				return (Integer) value;
 			else
-				return Integer.parseInt(String.valueOf(value));
+				return 0;
+			//Integer.parseInt(String.valueOf(value));
 		} else if (isNumeric(displayType)) {
 			return getNumber(String.valueOf(value));
 		} else if (isDate(displayType)) {

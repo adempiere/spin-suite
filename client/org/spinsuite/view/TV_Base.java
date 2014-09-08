@@ -21,6 +21,7 @@ import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.TabHandler;
+import org.spinsuite.util.TabParameter;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -223,17 +224,17 @@ public class TV_Base extends Activity
     
     /**
      * Add Fragment Tab in FragmentActivity
-     * @author Yamel Senih 03/05/2012, 19:08:05
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/09/2014, 21:47:41
      * @param clazz
-     * @param bundle
-     * @param tabTag
+     * @param tag
      * @param title
-     * @param img
+     * @param tabParameter
+     * @param bundle
      * @return void
      */
-    protected void addFagment(Class<?> clazz, String tag, int title, Bundle bundle){
+    protected void addFagment(Class<?> clazz, String tag, int title, TabParameter tabParameter, Bundle bundle){
     	Tab tab = actionBar.newTab();
-    	m_FragmentArray.addTab(tag, clazz, bundle);
+    	m_FragmentArray.addTab(tag, clazz, tabParameter, bundle);
     	tab.setTabListener(this);
         tab.setText(getResources().getString(title));
         actionBar.addTab(tab);
@@ -245,14 +246,27 @@ public class TV_Base extends Activity
      * @author Yamel Senih 05/02/2013, 16:58:49
      * @param clazz
      * @param title
+     * @param tabParameter
      * @return void
      */
-    protected void addFagment(Class<?> clazz, String tag, int title){
+    protected void addFagment(Class<?> clazz, String tag, int title, TabParameter tabParameter) {
     	Tab tab = actionBar.newTab();
-    	m_FragmentArray.addTab(tag, clazz, null);
+    	m_FragmentArray.addTab(tag, clazz, tabParameter, null);
     	tab.setTabListener(this);
     	tab.setText(getResources().getString(title));
         actionBar.addTab(tab);
+    }
+    
+    /**
+     * Add Fragment without Tab Parameter
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/09/2014, 21:51:47
+     * @param clazz
+     * @param tag
+     * @param title
+     * @return void
+     */
+    protected void addFagment(Class<?> clazz, String tag, int title) {
+    	addFagment(clazz, tag, title, null);
     }
     
     /**
@@ -261,12 +275,13 @@ public class TV_Base extends Activity
      * @param clazz
      * @param tag
      * @param title
+     * @param tabParameter
      * @return void
      */
-    protected void addFagment(Class<?> clazz, String tag, String title){
+    protected void addFagment(Class<?> clazz, String tag, String title, TabParameter tabParameter) {
     	Tab tab = actionBar.newTab();
     	tab.setText(title);
-    	m_FragmentArray.addTab(tag, clazz, null);
+    	m_FragmentArray.addTab(tag, clazz, tabParameter, null);
     	tab.setTabListener(this);
         actionBar.addTab(tab);
     }
@@ -277,12 +292,13 @@ public class TV_Base extends Activity
      * @param clazz
      * @param tag
      * @param title
+     * @param tabParameter
      * @param param
      * @return void
      */
-    protected void addFagment(Class<?> clazz, String tag, String title, Bundle param){
+    protected void addFagment(Class<?> clazz, String tag, String title, TabParameter tabParameter, Bundle param){
     	Tab tab = actionBar.newTab();
-    	m_FragmentArray.addTab(tag, clazz, param);
+    	m_FragmentArray.addTab(tag, clazz, tabParameter, param);
     	tab.setTabListener(this);
     	tab.setText(title);
         actionBar.addTab(tab);
@@ -379,5 +395,16 @@ public class TV_Base extends Activity
 	 */
 	protected boolean isModifying() {
 		return m_IsModifying;
+	}
+	
+	/**
+	 * Get Current Tab Parameter
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/09/2014, 21:49:34
+	 * @return
+	 * @return TabParameter
+	 */
+	protected TabParameter getCurrentTabParameter() {
+		TabHandler tabHandler = getCurrentTabHandler();
+		return tabHandler.getTabParameter();
 	}
 }

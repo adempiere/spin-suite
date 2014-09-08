@@ -130,7 +130,7 @@ public class TV_DynamicActivity extends TV_Base
     	invalidateOptionsMenu();
     	I_DynamicTab curFr = (I_DynamicTab) getCurrentFragment();
     	if(curFr != null) {
-    		TabParameter tabParam = curFr.getTabParameter();
+    		TabParameter tabParam = getCurrentTabParameter();
     		if(tabParam != null) {
     			if(tabParam.getTabLevel() == 0)
     				setIsModifying(curFr.isModifying());
@@ -148,7 +148,7 @@ public class TV_DynamicActivity extends TV_Base
     public void onTabUnselected(Tab tab, FragmentTransaction ft) {
     	I_DynamicTab curFr = (I_DynamicTab) getCurrentFragment();
     	if(curFr != null) {
-    		TabParameter tabParam = curFr.getTabParameter();
+    		TabParameter tabParam = getCurrentTabParameter();
     		if(tabParam != null
     				&& tabParam.getTabLevel() == 0)
     			setIsModifying(curFr.isModifying());
@@ -216,9 +216,9 @@ public class TV_DynamicActivity extends TV_Base
 		    		if(tabParam.getTabLevel() != 0) {
 		    			Env.setParentTabRecord_ID(getApplicationContext(), 
 		    					tabParam.getActivityNo(), tabParam.getTabNo(), m_Record_ID);
-		    			addFagment(T_DynamicTabDetail.class, tabParam.getName(), tabParam.getName(), bundle);
+		    			addFagment(T_DynamicTabDetail.class, tabParam.getName(), tabParam.getName(), tabParam, bundle);
 		    		} else {	//	Add Dynamic Tab
-		    			addFagment(T_DynamicTab.class, tabParam.getName(), tabParam.getName(), bundle);
+		    			addFagment(T_DynamicTab.class, tabParam.getName(), tabParam.getName(), tabParam, bundle);
 		    		}
 
 	    		}
@@ -228,7 +228,7 @@ public class TV_DynamicActivity extends TV_Base
 	    			try {
 	    				Class<?> clazz = Class.forName(tabParam.getClassname());
 	    				//	Add
-	    				addFagment(clazz, tabParam.getName(), tabParam.getName(), bundle);
+	    				addFagment(clazz, tabParam.getName(), tabParam.getName(), tabParam, bundle);
 	    			} catch (ClassNotFoundException e) {
 	    				LogM.log(getApplicationContext(), getClass(), Level.SEVERE, "Error:", e);
 	    			}
