@@ -43,7 +43,8 @@ import android.widget.ListView;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class TV_Base extends Activity implements ActionBar.TabListener {
+public class TV_Base extends Activity 
+						implements ActionBar.TabListener {
 	
 	/**	Parameters						*/
 	protected ActivityParameter 	param;
@@ -60,7 +61,10 @@ public class TV_Base extends Activity implements ActionBar.TabListener {
     /**	Action Bar					*/
     private ActionBar 				actionBar = null;
     /**	Array with fragments		*/
-    FragmentTabArray				m_FragmentArray = null;
+    private FragmentTabArray		m_FragmentArray = null;
+    /**	Log Tabs					*/
+    private boolean					m_IsModifying = false;
+    
     
     /** Called when the activity is first created. */
     @Override
@@ -338,16 +342,6 @@ public class TV_Base extends Activity implements ActionBar.TabListener {
     protected void setCurrentFragment(int index) {
 		actionBar.setSelectedNavigationItem(index);
 	}
-    
-    /**
-     * Enabled ViewPager Navigation
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/06/2013, 17:29:58
-     * @param enabled
-     * @return void
-     */
-    public void setPagingEnabled(boolean enabled){
-    	//	
-    }
 
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
@@ -362,7 +356,28 @@ public class TV_Base extends Activity implements ActionBar.TabListener {
 
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		//	Set Old Position
 		TabHandler tabHandler = getCurrentTabHandler();
 		tabHandler.unLoadFragment(tab, ft);
-	} 
+	}
+	
+	/**
+	 * Set Lock Tabs
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/09/2014, 18:28:19
+	 * @param m_IsModifying
+	 * @return void
+	 */
+	protected void setIsModifying(boolean m_IsModifying) {
+		this.m_IsModifying = m_IsModifying;
+	}
+	
+	/**
+	 * Is Modifying
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/09/2014, 18:31:05
+	 * @return
+	 * @return boolean
+	 */
+	protected boolean isModifying() {
+		return m_IsModifying;
+	}
 }

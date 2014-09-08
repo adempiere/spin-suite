@@ -370,7 +370,7 @@ public class V_Process extends Activity {
 						"Error Launch Application: " + e.getLocalizedMessage());
 			}
 		} else if(msg != null){	//	Show Message
-			Msg.alertMsg(this, getResources().getString(R.string.msg_Error), msg);
+			Msg.alertMsg(this, msg);
 		}
     	//	Close Drawer
     	m_DLayout.closeDrawer(m_DList);
@@ -580,7 +580,7 @@ public class V_Process extends Activity {
     		InfoField field = lookup.getField();
     		if((field.IsMandatory)
     				&& lookup.isEmpty()){
-    			Msg.alertMustFillField(this, field.Name, lookup.getChildView());
+    			Msg.alertMsg(this, "@MustFillField@ \"" + field.Name + "\"");
     			//	set ok to false
     			ok = false;
     			break;

@@ -114,6 +114,7 @@ public class T_DynamicTab extends Fragment
 	private 	boolean					m_IsLoadOk			= false;
 	private 	boolean					m_IsLoadDataOk		= false;
 	private 	boolean 				m_IsModifying		= false;
+	//private 	boolean 				m_Enabled 			= false;
 	/**	From Tab					*/
 	private 	I_DynamicTab			m_FromTab			= null;
 	/**	Listener					*/
@@ -196,9 +197,9 @@ public class T_DynamicTab extends Fragment
     					if(ok)
     						refreshFromChange(true);
     					else 
-    						Msg.alertMsg(getActivity(), null, mGridTab.getError());
+    						Msg.alertMsg(getActivity(), mGridTab.getError());
     				} else {
-    					Msg.alertMsg(getActivity(), null, docAction.getProcessMsg());
+    					Msg.alertMsg(getActivity(), docAction.getProcessMsg());
     				}
     				//	
     				return;
@@ -341,12 +342,7 @@ public class T_DynamicTab extends Fragment
 			lockView(SEE);
 			return true;
 		} else if (itemId == R.id.action_save) {
-			//if(save()) {
-	    		//	Refresh
-	    		//refreshIndex();
-				//refresh(mGridTab.getRecord_ID(), false);
-				//lockView(SEE);
-			//}
+			//	Save Thread
 			new SaveDataTask().execute();
 			return true;
 		}
@@ -451,8 +447,7 @@ public class T_DynamicTab extends Fragment
 		    		//	Refresh
 		    		refreshIndex();
 				} else {
-					Msg.alertMsg(getActivity(), 
-							getResources().getString(R.string.msg_Error), mGridTab.getError());
+					Msg.alertMsg(getActivity(), mGridTab.getError());
 				}
 			}
 		});
@@ -748,8 +743,7 @@ public class T_DynamicTab extends Fragment
 					boolean isError = bundle.getBoolean("IsError");
 					//	Is a Error
 					if(isError){
-						Msg.alertMsg(getActivity(), 
-								getString(R.string.msg_ProcessError), summary);
+						Msg.alertMsg(getActivity(), summary);
 					} else {
 						if(summary != null
 								&& summary.length() > 0)
@@ -914,7 +908,7 @@ public class T_DynamicTab extends Fragment
 			} catch(Exception e){
 				LogM.log(getActivity(), getClass(), Level.SEVERE, e.getLocalizedMessage());
 				//	Message
-				Msg.alertMsg(getActivity(), getString(R.string.msg_LoadError), 
+				Msg.alertMsg(getActivity(), 
 						getString(R.string.msg_Error) + ": " + e.getLocalizedMessage());
 			}
 			return ok;
@@ -1024,9 +1018,19 @@ public class T_DynamicTab extends Fragment
 				m_IsLoadDataOk = refresh(mGridTab.getRecord_ID(), false);
 				lockView(SEE);
 			} else {
-				Msg.alertMsg(getActivity(), null, mGridTab.getError());
+				Msg.alertMsg(getActivity(), mGridTab.getError());
 			}
 			v_PDialog.dismiss();
 		}
+	}
+
+	@Override
+	public boolean isModifying() {
+		return m_IsModifying;
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		//m_Enabled = enabled;
 	}
 }

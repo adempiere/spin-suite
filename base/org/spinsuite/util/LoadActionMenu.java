@@ -194,7 +194,7 @@ public class LoadActionMenu {
 		}
 		//	Show Message
 		if(!ok)
-			Msg.alertMsg(activity, activity.getResources().getString(R.string.msg_LoadError), 
+			Msg.alertMsg(activity, 
 					activity.getResources().getString(R.string.msg_ClassNotFound));
 		//	Close Connection
 		if(handleConnection)

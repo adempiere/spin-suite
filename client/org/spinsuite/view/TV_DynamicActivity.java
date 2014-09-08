@@ -43,7 +43,8 @@ import android.view.Menu;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class TV_DynamicActivity extends TV_Base implements I_FragmentSelectListener {
+public class TV_DynamicActivity extends TV_Base 
+									implements I_FragmentSelectListener {
 	
 	/**	Parameters					*/
 	private ActivityParameter 	param			= null;
@@ -125,10 +126,35 @@ public class TV_DynamicActivity extends TV_Base implements I_FragmentSelectListe
     @Override
     public void onTabSelected(Tab tab, FragmentTransaction ft) {
     	super.onTabSelected(tab, ft);
+    	//	
     	invalidateOptionsMenu();
     	I_DynamicTab curFr = (I_DynamicTab) getCurrentFragment();
-    	if(curFr != null)
+    	if(curFr != null) {
+    		TabParameter tabParam = curFr.getTabParameter();
+    		if(tabParam != null) {
+    			if(tabParam.getTabLevel() == 0)
+    				setIsModifying(curFr.isModifying());
+    			else if(tabParam.getTabLevel() > 0)
+        			curFr.setEnabled(!isModifying());
+    		} else {
+    			curFr.setEnabled(!isModifying());
+    		}
+    		//	
     		curFr.refreshFromChange(false);
+    	}
+    }
+    
+    @Override
+    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+    	I_DynamicTab curFr = (I_DynamicTab) getCurrentFragment();
+    	if(curFr != null) {
+    		TabParameter tabParam = curFr.getTabParameter();
+    		if(tabParam != null
+    				&& tabParam.getTabLevel() == 0)
+    			setIsModifying(curFr.isModifying());
+    	}
+    	//	
+    	super.onTabUnselected(tab, ft);
     }
     
     /**
