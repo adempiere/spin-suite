@@ -46,14 +46,20 @@ public class InfoLookup {
 		//	
 	}
 
-	/**	Table Name			*/
-	public String 		TableName 		= null;
-	/**	Key Column			*/
-	public String 		KeyColumn 		= null;
-	/**	Display Column		*/
-	public String 		DisplayColumn 	= null;
-	/**	Where Clause		*/
-	public String		WhereClause 	= null;
+	/**	Table Name					*/
+	public String 			TableName 				= null;
+	/**	Key Column					*/
+	public String 			KeyColumn 				= null;
+	/**	Display Column				*/
+	public String 			DisplayColumn 			= null;
+	/**	Where Clause				*/
+	public String			WhereClause 			= null;
+	/**	Reference (Table Name)		*/
+	public static String	REFERENCE_TN		 	= "AD_Reference";
+	/**	Reference List (Table Name)	*/
+	public static String	REF_LIST_TN 			= "AD_Ref_List";
+	/**	Reference Table (Table Name)*/
+	public static String	REF_TABLE_TN 			= "AD_Ref_Table";
 	
 	@Override
 	public String toString() {

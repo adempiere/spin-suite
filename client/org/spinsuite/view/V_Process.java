@@ -54,12 +54,14 @@ import org.spinsuite.view.lookup.VLookupString;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -145,6 +147,8 @@ public class V_Process extends Activity {
     private ActionBarDrawerToggle 	m_DToggle		= null;
     /**	Flag (Drawer Loaded)	*/
     private boolean 				isDrawerLoaded 	= false;
+    /**	Activity				*/
+    private Activity				v_activity		= null;
 	
 	/**	View Weight				*/
 	private static final float 		WEIGHT_SUM 		= 2;
@@ -188,6 +192,8 @@ public class V_Process extends Activity {
     	sv_Param.addView(v_tableLayout);
     	//	
     	viewList = new ArrayList<GridField>();
+    	//	Get Activity
+    	v_activity = this;
     	//	Title
     	getActionBar().setSubtitle(m_activityParam.getName());
     	//	
@@ -245,63 +251,15 @@ public class V_Process extends Activity {
     }
     
     /**
-     * Share Report
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/04/2014, 14:42:18
-     * @param position
-     * @param printData
-     * @return void
-     */
-    private void shareReport(int position, ReportPrintData printData){
-		//	Path
-		String localPath = null;
-    	String type = null;
-    	try {
-    		if(position == 0){
-    			localPath = printData.createPDF();
-    			type = "pdf";
-    		} else if(position == 1){
-    			localPath = printData.createXLS();
-    			type = "excel";
-    		}
-    		//	
-    		if(localPath != null) {
-    			//	Share
-    			Uri sourceUri = Uri.fromFile(new File(localPath));
-    			//	
-    			Intent shareIntent = new Intent();
-    			shareIntent.setAction(Intent.ACTION_SEND);
-    			shareIntent.putExtra(Intent.EXTRA_STREAM, sourceUri);
-    			shareIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getText(R.string.msg_Report) 
-    					+ " \"" + printData.getInfoReport().getName() + "\"");
-    			shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_SharedFromSFAndroid));
-    			//	
-    			shareIntent.setType("application/" + type);
-    			//	
-    			startActivity(Intent.createChooser(shareIntent, 
-    					getResources().getText(R.string.Action_Share)));
-    		}
-		} catch (Exception e) {}
-    }
-    
-    /**
      * On Selected Item
      * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/03/2014, 22:13:32
      * @param item
      * @return void
      */
-    protected void onSelectedDrawerOption(DisplayMenuItem item){
-    	final ReportPrintData printData = m_pControl.getReportPrintData();
-		if(printData == null
-				|| !isLoaded)
-			return;
-		//	Message
-		String msg = null;
-		//	Path
-		String path = null;
-		//	App Type
-		String appType = null;
+    protected void onSelectedDrawerOption(final DisplayMenuItem item){
 		//	
 		if(item.getSPS_Menu_ID() == SHARE_FOR){
+			//	Do it
 			new AlertDialog.Builder(this)
 	        .setSingleChoiceItems(new String[]{
 	        			getString(R.string.msg_SendAsPDF),
@@ -312,66 +270,14 @@ public class V_Process extends Activity {
 	                dialog.dismiss();
 	                int selectedPosition = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
 	                //	Share Report
-	                shareReport(selectedPosition, printData);
+	                new ExportReportTask().execute(
+	                		item.getSPS_Menu_ID(), selectedPosition);
 	            }
 	        }).show();
-    	} else if(item.getSPS_Menu_ID() == EXPORT_TO_PDF){
-    		try {
-    			path = printData.createPDF();
-    			appType = "pdf";
-			} catch (FileNotFoundException e) {
-				LogM.log(getApplicationContext(), getClass(), 
-						Level.SEVERE, "Error in Export to PDF:", e);
-				msg = getResources().getString(R.string.msg_FileNotFoundException) 
-							+ " " + e.getLocalizedMessage();
-			} catch (DocumentException e) {
-				LogM.log(getApplicationContext(), getClass(), 
-						Level.SEVERE, "Error in Export to PDF:", e);
-				msg = getResources().getString(R.string.msg_DocumentException) 
-							+ " " + e.getLocalizedMessage();
-			}
-    	} else if(item.getSPS_Menu_ID() == EXPORT_TO_XLS){
-    		try {
-				path = printData.createXLS();
-				appType = "vnd.ms-excel";
-			} catch (RowsExceededException e) {
-				LogM.log(getApplicationContext(), getClass(), 
-						Level.SEVERE, "Error in Export to XLS:", e);
-				msg = getResources().getString(R.string.msg_RowsExceededException) 
-							+ " " + e.getLocalizedMessage();
-			} catch (WriteException e) {
-				LogM.log(getApplicationContext(), getClass(), 
-						Level.SEVERE, "Error in Export to XLS:", e);
-				msg = getResources().getString(R.string.msg_WriteException) 
-							+ " " + e.getLocalizedMessage();
-			} catch (IOException e) {
-				LogM.log(getApplicationContext(), getClass(), 
-						Level.SEVERE, "Error in Export to XLS:", e);
-				msg = getResources().getString(R.string.msg_IOException) 
-							+ " " + e.getLocalizedMessage();
-			}
-    	} else if(item.getSPS_Menu_ID() == EXPORT_TO_XML){
-    		
-    	} else if(item.getSPS_Menu_ID() == EXPORT_TO_HTML){
-    		
+    	} else {
+    		//	Export Thread
+    		new ExportReportTask().execute(item.getSPS_Menu_ID());
     	}
-		//	Show Path
-		if(path != null){
-			try {
-				//	Launch Application
-				Uri uriPath = Uri.fromFile(new File(path));
-				Intent intent = new Intent(Intent.ACTION_VIEW);
-				intent.setDataAndType(uriPath, "application/" + appType);
-				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				//	Start Activity
-				startActivity(intent);
-			} catch (ActivityNotFoundException e){
-				LogM.log(this, getClass(), Level.WARNING, 
-						"Error Launch Application: " + e.getLocalizedMessage());
-			}
-		} else if(msg != null){	//	Show Message
-			Msg.alertMsg(this, msg);
-		}
     	//	Close Drawer
     	m_DLayout.closeDrawer(m_DList);
     }
@@ -385,7 +291,7 @@ public class V_Process extends Activity {
 		loadDrawer();
 		//	Populate
 		ArrayList<DisplayMenuItem> listMenu = new ArrayList<DisplayMenuItem>();
-		listMenu.add(new DisplayMenuItem(SHARE_FOR, getResources().getString(R.string.Action_Share), null, R.attr.ic_ab_share));
+		listMenu.add(new DisplayMenuItem(SHARE_FOR, getResources().getString(R.string.Action_Share), null, R.attr.ic_dr_share));
 		listMenu.add(new DisplayMenuItem(EXPORT_TO_PDF, getResources().getString(R.string.Action_Export_PDF), null, R.attr.ic_dr_pdf));
 		listMenu.add(new DisplayMenuItem(EXPORT_TO_XLS, getResources().getString(R.string.Action_Export_XLS), null, R.attr.ic_dr_xls));
 		listMenu.add(new DisplayMenuItem(EXPORT_TO_XML, getResources().getString(R.string.Action_Export_XML), null, R.attr.ic_dr_xml));
@@ -708,7 +614,7 @@ public class V_Process extends Activity {
 				iSearch.setVisible(true);
 				iPrintFormat.setVisible(true);
 				ll_HeaderReport.setVisibility(LinearLayout.VISIBLE);
-				showReport(0);
+				new LoadReportTask().execute(0);
 			}
 			//	Hide Parameter
 			if(!m_pInfo.isError()){
@@ -764,7 +670,7 @@ public class V_Process extends Activity {
 			public boolean onMenuItemClick(MenuItem item) {
 				int m_AD_PrintFormatItem_ID = item.getItemId();
 				if(isLoaded){
-					showReport(m_AD_PrintFormatItem_ID);
+					new LoadReportTask().execute(m_AD_PrintFormatItem_ID);
 				}
 				return false;
 			}
@@ -800,23 +706,6 @@ public class V_Process extends Activity {
 		logAdapter = new SearchAdapter(this, R.layout.i_search, data);
 		logAdapter.setDropDownViewResource(R.layout.i_search);
 		lv_LogReport.setAdapter(logAdapter);
-	}
-	
-	/**
-	 * Show report from data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 20:52:23
-	 * @param m_AD_PrintFormat_ID
-	 * @return void
-	 */
-	private void showReport(int m_AD_PrintFormat_ID){
-		//	Get Print Data
-		ReportPrintData printData = m_pControl.getReportPrintData(m_AD_PrintFormat_ID);
-		if(printData != null){
-			//	
-			reportAdapter = new ReportAdapter(getApplicationContext(), 
-					printData.getData(), printData.getColumns(), ll_HeaderReport);
-			lv_LogReport.setAdapter(reportAdapter);
-		}
 	}
 	
 	/**
@@ -873,5 +762,202 @@ public class V_Process extends Activity {
 		intent.putExtras(bundle);
 		setResult(Activity.RESULT_OK, intent);
 		finish();
+	}
+	
+	/**
+	 * Load Report
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+	 *
+	 */
+	private class LoadReportTask extends AsyncTask<Integer, Void, Void> {
+
+		/**	Progress Bar			*/
+		private ProgressDialog 		v_PDialog;
+		private ReportPrintData 	printData = null;
+		
+		@Override
+		protected void onPreExecute() {
+			v_PDialog = ProgressDialog.show(v_activity, null, 
+					getString(R.string.msg_Loading), false, false);
+		}
+		
+		@Override
+		protected Void doInBackground(Integer... params) {
+			//	Load Data
+			//	Get Print Data
+			printData = m_pControl.getReportPrintData(params[0]);
+			//	
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Void... progress) {
+			
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			if(printData != null){
+				//	
+				reportAdapter = new ReportAdapter(getApplicationContext(), 
+						printData.getData(), printData.getColumns(), ll_HeaderReport);
+				lv_LogReport.setAdapter(reportAdapter);
+			}
+			//	Hide dialog
+			v_PDialog.dismiss();
+		}
+	}
+	
+	/**
+	 * Export Report Thread
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+	 *
+	 */
+	private class ExportReportTask extends AsyncTask<Integer, Void, Void> {
+
+		/**	Progress Bar			*/
+		private ProgressDialog 		v_PDialog;
+		private String 				m_Msg = null;
+		private String 				m_Path = null;
+		private String 				m_AppType = null;
+		
+		@Override
+		protected void onPreExecute() {
+			v_PDialog = ProgressDialog.show(v_activity, null, 
+					getString(R.string.msg_Exporting), false, false);
+			//	Set Max
+		}
+		
+		@Override
+		protected Void doInBackground(Integer... params) {
+			//	Load Data
+			exportData(params);
+			//	
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Void... progress) {
+			
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			//	Show Path
+			if(m_Path != null){
+				try {
+					//	Launch Application
+					Uri uriPath = Uri.fromFile(new File(m_Path));
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					intent.setDataAndType(uriPath, "application/" + m_AppType);
+					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					//	Start Activity
+					startActivity(intent);
+				} catch (ActivityNotFoundException e){
+					LogM.log(v_activity, getClass(), Level.WARNING, 
+							"Error Launch Application: " + e.getLocalizedMessage());
+				}
+			} else if(m_Msg != null){	//	Show Message
+				Msg.alertMsg(v_activity, m_Msg);
+			}
+			//	Hide dialog
+			v_PDialog.dismiss();
+		}
+		
+		/**
+		 * Export Data
+		 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/09/2014, 20:32:19
+		 * @param params
+		 * @return void
+		 */
+		private void exportData(Integer... params) {
+			ReportPrintData printData = m_pControl.getReportPrintData();
+			if(printData == null
+					|| !isLoaded)
+				return;
+			//	Do it
+			if(params[0] == SHARE_FOR){
+				shareReport(params[1], printData);
+			} else if(params[0] == EXPORT_TO_PDF){
+	    		try {
+	    			m_Path = printData.createPDF();
+	    			m_AppType = "pdf";
+				} catch (FileNotFoundException e) {
+					LogM.log(getApplicationContext(), getClass(), 
+							Level.SEVERE, "Error in Export to PDF:", e);
+					m_Msg = getResources().getString(R.string.msg_FileNotFoundException) 
+								+ " " + e.getLocalizedMessage();
+				} catch (DocumentException e) {
+					LogM.log(getApplicationContext(), getClass(), 
+							Level.SEVERE, "Error in Export to PDF:", e);
+					m_Msg = getResources().getString(R.string.msg_DocumentException) 
+								+ " " + e.getLocalizedMessage();
+				}
+	    	} else if(params[0] == EXPORT_TO_XLS){
+	    		try {
+					m_Path = printData.createXLS();
+					m_AppType = "vnd.ms-excel";
+				} catch (RowsExceededException e) {
+					LogM.log(getApplicationContext(), getClass(), 
+							Level.SEVERE, "Error in Export to XLS:", e);
+					m_Msg = getResources().getString(R.string.msg_RowsExceededException) 
+								+ " " + e.getLocalizedMessage();
+				} catch (WriteException e) {
+					LogM.log(getApplicationContext(), getClass(), 
+							Level.SEVERE, "Error in Export to XLS:", e);
+					m_Msg = getResources().getString(R.string.msg_WriteException) 
+								+ " " + e.getLocalizedMessage();
+				} catch (IOException e) {
+					LogM.log(getApplicationContext(), getClass(), 
+							Level.SEVERE, "Error in Export to XLS:", e);
+					m_Msg = getResources().getString(R.string.msg_IOException) 
+								+ " " + e.getLocalizedMessage();
+				}
+	    	} else if(params[0] == EXPORT_TO_XML){
+	    		
+	    	} else if(params[0] == EXPORT_TO_HTML){
+	    		
+	    	}
+		}
+		
+		/**
+	     * Share Report
+	     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/04/2014, 14:42:18
+	     * @param position
+	     * @param printData
+	     * @return void
+	     */
+	    private void shareReport(int position, ReportPrintData printData){
+			//	Path
+			String localPath = null;
+	    	String type = null;
+	    	try {
+	    		if(position == 0){
+	    			localPath = printData.createPDF();
+	    			type = "pdf";
+	    		} else if(position == 1){
+	    			localPath = printData.createXLS();
+	    			type = "excel";
+	    		}
+	    		//	
+	    		if(localPath != null) {
+	    			//	Share
+	    			Uri sourceUri = Uri.fromFile(new File(localPath));
+	    			//	
+	    			Intent shareIntent = new Intent();
+	    			shareIntent.setAction(Intent.ACTION_SEND);
+	    			shareIntent.putExtra(Intent.EXTRA_STREAM, sourceUri);
+	    			shareIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getText(R.string.msg_Report) 
+	    					+ " \"" + printData.getInfoReport().getName() + "\"");
+	    			shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_SharedFromSFAndroid));
+	    			//	
+	    			shareIntent.setType("application/" + type);
+	    			//	
+	    			startActivity(Intent.createChooser(shareIntent, 
+	    					getResources().getText(R.string.Action_Share)));
+	    		}
+			} catch (Exception e) {}
+	    }
+		
 	}
 }

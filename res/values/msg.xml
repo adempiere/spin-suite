@@ -30,6 +30,7 @@
 	<string name="msg_LoadError">Load Error</string>
 	<string name="msg_Loading">Loading....</string>
 	<string name="msg_Saving">Saving....</string>
+	<string name="msg_Exporting">Exporting....</string>
 	<string name="msg_Processing">Processing....</string>
 	<string name="msg_NewRecord">Add New Record</string>
 	<string name="msg_New">New</string>

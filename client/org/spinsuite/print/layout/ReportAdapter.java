@@ -178,9 +178,12 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 			InfoReportField column = m_columns[i];
 			//	Load Text View
 			TextView tv_column = loadTextView(
-					column.PrintName + (column.PrintNameSuffix != null
-														? " " + column.PrintNameSuffix
-														:""), i, true);
+					(column.PrintName != null
+								? column.PrintName
+								: "") 
+					+ (column.PrintNameSuffix != null
+								? " " + column.PrintNameSuffix
+								:""), i, true);
 			//	Add to Layout
 			ll_HeaderReport.addView(tv_column);
 		}
