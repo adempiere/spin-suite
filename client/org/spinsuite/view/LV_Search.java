@@ -51,8 +51,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import android.widget.ScrollView;
 
 /**
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
@@ -63,7 +65,9 @@ public class LV_Search extends Activity {
 	/**	Adapter					*/
 	private SearchAdapter 			m_SearchAdapter = null;
 	/**	Main Layout				*/
-	private LinearLayout			llc_Search = null;
+	private ScrollView				sv_Search = null;
+	/**	Table Layout			*/
+	private TableLayout 			v_tableLayout = null;
 	/**	List View				*/
 	private ListView				lv_Search = null;
 	/**	Field					*/
@@ -77,7 +81,7 @@ public class LV_Search extends Activity {
 	/**	Criteria Old			*/
 	private String					m_oldWhereClause = null;
 	/**	Lookup 					*/
-	private Lookup 		lookup = null;
+	private Lookup 					lookup = null;
 	/**	Info Field				*/
 	private InfoTab					tabInfo = null;
 	/**	View Index Array		*/
@@ -105,7 +109,11 @@ public class LV_Search extends Activity {
 		//	Set Activity
 		v_activity = this;
 		//	
-		llc_Search = (LinearLayout) findViewById(R.id.llc_Search);
+		sv_Search = (ScrollView) findViewById(R.id.sv_Search);
+    	//	Table Layout
+    	v_tableLayout = new TableLayout(this);
+    	sv_Search.addView(v_tableLayout);
+    	//	
 		lv_Search = (ListView) findViewById(R.id.lv_Search);
 		//	
 		if(m_SPS_Table_ID != 0)
@@ -149,7 +157,7 @@ public class LV_Search extends Activity {
 	    	}
 		}
 		//	Hide
-		llc_Search.setVisibility(LinearLayout.GONE);
+		sv_Search.setVisibility(LinearLayout.GONE);
 	}
 	
 	/**
@@ -194,7 +202,7 @@ public class LV_Search extends Activity {
 		//	is Filled
 		if(lookup != null){
 			viewList.add(lookup);
-			llc_Search.addView(lookup, v_param);
+			v_tableLayout.addView(lookup, v_param);
 		}
     }
 	  
@@ -271,13 +279,13 @@ public class LV_Search extends Activity {
 			return true;
 		} else if (itemId == R.id.action_config) {
 			//	Show
-			if(llc_Search.getVisibility() == LinearLayout.GONE){
-				llc_Search.setVisibility(LinearLayout.VISIBLE);
+			if(sv_Search.getVisibility() == LinearLayout.GONE){
+				sv_Search.setVisibility(LinearLayout.VISIBLE);
 				m_oldWhereClause = (m_criteria != null
 											? m_criteria.getWhereClause()
 													: "");
 			} else {
-				llc_Search.setVisibility(LinearLayout.GONE);
+				sv_Search.setVisibility(LinearLayout.GONE);
 				//	Search
 				search();
 			}

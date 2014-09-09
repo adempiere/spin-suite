@@ -509,6 +509,7 @@ public class V_Process extends Activity {
 		v_row.setWeightSum(WEIGHT_SUM);
 		//	
 		tv_Summary = new TextView(this);
+		tv_Summary.setTextIsSelectable(true);
 		tv_Summary.setVisibility(TextView.GONE);
 		v_row.addView(tv_Summary, v_rowParam);
 		v_tableLayout.addView(v_row);

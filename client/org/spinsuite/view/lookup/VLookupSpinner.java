@@ -90,7 +90,7 @@ public class VLookupSpinner extends GridField
 	 */
 	public VLookupSpinner(Context ctx, InfoField m_field, TabParameter tabParam, DB conn) {
 		super(ctx, m_field, tabParam);
-		m_Lookup = new Lookup(ctx, tabParam.getActivityNo(), tabParam.getTabNo(), m_field);
+		m_Lookup = new Lookup(ctx, tabParam, m_field);
 		init();
 	}
 	

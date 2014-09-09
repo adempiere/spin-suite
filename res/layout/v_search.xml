@@ -21,12 +21,12 @@
    	android:layout_height="match_parent"
     android:orientation="vertical" 
   	android:id="@+id/ll_Search">
-  	<LinearLayout
+  	<ScrollView
   	    android:layout_width="match_parent"
    		android:layout_height="wrap_content"
    		android:orientation="vertical"
-   		android:id="@+id/llc_Search">
-  	</LinearLayout>
+   		android:id="@+id/sv_Search">
+  	</ScrollView>
 	<ListView
 		android:id="@+id/lv_Search"
 	    android:layout_width="match_parent"

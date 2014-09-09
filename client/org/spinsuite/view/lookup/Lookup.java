@@ -446,7 +446,7 @@ public class Lookup {
 				"INNER JOIN SPS_Column ck ON(ck.AD_Column_ID = rl.AD_Key) " +
 				"INNER JOIN SPS_Column cd ON(cd.AD_Column_ID = rl.AD_Display) " +
 				"WHERE rl.AD_Reference_ID = " + m_field.AD_Reference_Value_ID, null);
-		
+		//	
 		if(rs.moveToFirst()){
 			String tableName = rs.getString(0);
 			String pkColumnName = rs.getString(1);
