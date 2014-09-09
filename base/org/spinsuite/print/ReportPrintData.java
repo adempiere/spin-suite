@@ -619,7 +619,9 @@ public class ReportPrintData {
 		if((value1 == null
 				&& value2 != null)
 			|| (value1 != null
-					&& value2 == null))
+					&& value2 == null)
+			|| ((value1 == null
+					&& value2 == null)))
 			return true;
 		//	
 		return !value1.equals(value2);

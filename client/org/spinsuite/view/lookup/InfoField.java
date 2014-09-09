@@ -58,39 +58,39 @@ public class InfoField extends POInfoColumn {
 	public InfoField(InfoPara from){
 		this();
 		//	Set from Info Parameter
-		DisplayType = from.DisplayType;
-		DisplayLogic = from.DisplayLogic;
-		Help = from.Help;
-		IsActive = from.IsActive;
-		IsDisplayed = from.IsDisplayed;
-		IsReadOnly = from.IsReadOnly;
-		FieldSeqNo = from.FieldSeqNo;
-		AD_Element_ID = from.AD_Element_ID;
-		AD_Reference_Value_ID = from.AD_Reference_Value_ID;
-		AD_Val_Rule_ID = from.AD_Val_Rule_ID;
-		ColumnName = from.ColumnName;
-		DefaultValue = from.DefaultValue;
-		Description = from.Description;
-		EntityType = from.EntityType;
-		FieldLength = from.FieldLength;
-		FormatPattern = from.FormatPattern;
-		IsAlwaysUpdateable = from.IsAlwaysUpdateable;
-		IsCentrallyMaintained = from.IsCentrallyMaintained;
-		IsEncrypted = from.IsEncrypted;
-		IsIdentifier = from.IsIdentifier;
-		IsKey = from.IsKey;
-		IsMandatory = from.IsMandatory;
-		IsParent = from.IsParent;
-		IsSelectionColumn = from.IsSelectionColumn;
-		IsUpdateable = from.IsUpdateable;
-		Name = from.Name;
-		SelectionSeqNo = from.SelectionSeqNo;
-		SeqNo = from.SeqNo;
-		SPS_Column_ID = from.SPS_Column_ID;
-		SPS_Table_ID = from.SPS_Table_ID;
-		ValueMax = from.ValueMax;
-		ValueMin = from.ValueMin;
-		VFormat = from.VFormat;	
+		DisplayType 			= from.DisplayType;
+		DisplayLogic 			= from.DisplayLogic;
+		Help 					= from.Help;
+		IsActive 				= from.IsActive;
+		IsDisplayed 			= from.IsDisplayed;
+		IsReadOnly 				= from.IsReadOnly;
+		FieldSeqNo 				= from.FieldSeqNo;
+		AD_Element_ID 			= from.AD_Element_ID;
+		AD_Reference_Value_ID 	= from.AD_Reference_Value_ID;
+		AD_Val_Rule_ID 			= from.AD_Val_Rule_ID;
+		ColumnName 				= from.ColumnName;
+		DefaultValue 			= from.DefaultValue;
+		Description 			= from.Description;
+		EntityType 				= from.EntityType;
+		FieldLength 			= from.FieldLength;
+		FormatPattern 			= from.FormatPattern;
+		IsAlwaysUpdateable 		= from.IsAlwaysUpdateable;
+		IsCentrallyMaintained 	= from.IsCentrallyMaintained;
+		IsEncrypted 			= from.IsEncrypted;
+		IsIdentifier 			= from.IsIdentifier;
+		IsKey 					= from.IsKey;
+		IsMandatory 			= from.IsMandatory;
+		IsParent 				= from.IsParent;
+		IsSelectionColumn 		= from.IsSelectionColumn;
+		IsUpdateable 			= from.IsUpdateable;
+		Name 					= from.Name;
+		SelectionSeqNo 			= from.SelectionSeqNo;
+		SeqNo 					= from.SeqNo;
+		SPS_Column_ID 			= from.SPS_Column_ID;
+		SPS_Table_ID 			= from.SPS_Table_ID;
+		ValueMax 				= from.ValueMax;
+		ValueMin 				= from.ValueMin;
+		VFormat 				= from.VFormat;	
 	}
 	
 	
@@ -102,37 +102,36 @@ public class InfoField extends POInfoColumn {
 	 */
 	public InfoField(InfoReportField from){
 		//	Set from Info Parameter
-		DisplayType = from.DisplayType;
-		IsActive = true;
-		IsDisplayed = true;
-		FieldSeqNo = from.FieldSeqNo;
-		AD_Element_ID = from.AD_Element_ID;
-		AD_Reference_Value_ID = from.AD_Reference_Value_ID;
-		AD_Val_Rule_ID = from.AD_Val_Rule_ID;
-		ColumnName = from.ColumnName;
-		DefaultValue = from.DefaultValue;
-		Description = from.Description;
-		EntityType = from.EntityType;
-		FieldLength = from.FieldLength;
-		FormatPattern = from.FormatPattern;
-		IsAlwaysUpdateable = from.IsAlwaysUpdateable;
-		IsCentrallyMaintained = from.IsCentrallyMaintained;
-		IsEncrypted = from.IsEncrypted;
-		IsIdentifier = from.IsIdentifier;
-		IsKey = from.IsKey;
-		IsMandatory = from.IsMandatory;
-		IsParent = from.IsParent;
-		IsSelectionColumn = from.IsSelectionColumn;
-		IsUpdateable = from.IsUpdateable;
-		Name = from.Name;
-		SelectionSeqNo = from.SelectionSeqNo;
-		SeqNo = from.SeqNo;
-		SPS_Column_ID = from.SPS_Column_ID;
-		SPS_Table_ID = from.SPS_Table_ID;
-		ValueMax = from.ValueMax;
-		ValueMin = from.ValueMin;
-		VFormat = from.VFormat;	
-
+		DisplayType 			= from.DisplayType;
+		IsActive 				= true;
+		IsDisplayed 			= true;
+		FieldSeqNo 				= from.FieldSeqNo;
+		AD_Element_ID 			= from.AD_Element_ID;
+		AD_Reference_Value_ID 	= from.AD_Reference_Value_ID;
+		AD_Val_Rule_ID 			= from.AD_Val_Rule_ID;
+		ColumnName 				= from.ColumnName;
+		DefaultValue 			= from.DefaultValue;
+		Description 			= from.Description;
+		EntityType 				= from.EntityType;
+		FieldLength 			= from.FieldLength;
+		FormatPattern 			= from.FormatPattern;
+		IsAlwaysUpdateable 		= from.IsAlwaysUpdateable;
+		IsCentrallyMaintained 	= from.IsCentrallyMaintained;
+		IsEncrypted 			= from.IsEncrypted;
+		IsIdentifier 			= from.IsIdentifier;
+		IsKey 					= from.IsKey;
+		IsMandatory 			= from.IsMandatory;
+		IsParent 				= from.IsParent;
+		IsSelectionColumn 		= from.IsSelectionColumn;
+		IsUpdateable 			= from.IsUpdateable;
+		Name 					= from.Name;
+		SelectionSeqNo 			= from.SelectionSeqNo;
+		SeqNo 					= from.SeqNo;
+		SPS_Column_ID 			= from.SPS_Column_ID;
+		SPS_Table_ID 			= from.SPS_Table_ID;
+		ValueMax 				= from.ValueMax;
+		ValueMin 				= from.ValueMin;
+		VFormat 				= from.VFormat;	
 	}
 
 	/**	Field Group			*/

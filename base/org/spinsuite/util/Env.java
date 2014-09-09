@@ -399,12 +399,13 @@ public final class Env {
 	 *  @param context context key
 	 *  @return value or ""
 	 */
-	public static String getContext (Context ctx, String context)
-	{
+	public static String getContext(Context ctx, String context) {
 		if (ctx == null || context == null)
 			throw new IllegalArgumentException ("Require Context");
 		SharedPreferences pf = PreferenceManager.getDefaultSharedPreferences(ctx);
-		return pf.getString(context, null);
+		String value = pf.getString(context, null);
+		LogM.log(ctx, "Env", Level.FINE, "getContext(" + context + ") = " + value);
+		return value;
 	}	//	getContext
 	
 	/**
@@ -1131,7 +1132,7 @@ public final class Env {
 	 * 	@param ignoreUnparsable if true, unsuccessful @return parsed String or "" if not successful and ignoreUnparsable
 	 *	@return parsed context 
 	 */
-	public static String parseContext (Context ctx, int m_ActivityNo, int m_TabNo, 
+	public static String parseContext(Context ctx, int m_ActivityNo, int m_TabNo, 
 			String whereClause, boolean ignoreUnparsable,String defaultUnparseable) {
 		if (whereClause == null || whereClause.length() == 0)
 			return "";
@@ -1175,7 +1176,9 @@ public final class Env {
 			i = inStr.indexOf('@');
 		}
 		outStr.append(inStr);						// add the rest of the string
-
+		//	
+		LogM.log(ctx, "Env", Level.FINE, "parseContext(" + inStr + ")");
+		//	
 		return outStr.toString();
 	}	//	parseContext
 
