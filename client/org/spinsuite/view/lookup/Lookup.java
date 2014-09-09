@@ -533,8 +533,7 @@ public class Lookup {
 			//	From
 			sql.append("FROM AD_Ref_List rl ");
 			//	Set Lookup Info
-			m_InfoLookup.TableName = "AD_Ref_List";
-			m_InfoLookup.DisplayColumn = "COALESCE(" + m_InfoLookup.TableName + ".Name,'')";
+			m_InfoLookup.DisplayColumn = "COALESCE(AD_Ref_List.Name,'')";
 		} else {
 			sql.append("rlt.Name ");
 			//	From
@@ -543,8 +542,7 @@ public class Lookup {
 			sql.append("INNER JOIN AD_Ref_List_Trl rlt ON(rlt.AD_Ref_List_ID = rl.AD_Ref_List_ID " +
 					"AND rlt.AD_Language = '").append(m_Language).append("') ");
 			//	Set Lookup Info
-			m_InfoLookup.TableName = "AD_Ref_List_Trl";
-			m_InfoLookup.DisplayColumn = "COALESCE(" + m_InfoLookup.TableName + ".Name,'')";
+			m_InfoLookup.DisplayColumn = "COALESCE(AD_Ref_List_Trl.Name,'')";
 		}
 		//	Where Clause			
 		sql.append("WHERE rl.AD_Reference_ID = ").append(m_field.AD_Reference_Value_ID);
@@ -558,6 +556,7 @@ public class Lookup {
 		}
 		//	Set Lookup Info
 		m_InfoLookup.KeyColumn = "Value";
+		m_InfoLookup.TableName = "AD_Ref_List";
 		//	Add Mark
 		m_IsHasWhere = true;
 		sql.append(MARK_WHERE);

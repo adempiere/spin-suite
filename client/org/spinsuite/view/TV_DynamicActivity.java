@@ -164,17 +164,35 @@ public class TV_DynamicActivity extends TV_Base
      */
     private void loadTabs(){
     	//	Get Tabs from windows activity
-    	DB conn = new DB(getApplicationContext());
+    	DB conn = new DB(this);
     	DB.loadConnection(conn, DB.READ_ONLY);
 		Cursor rs = null;
-		rs = conn.querySQL("SELECT t.SPS_Tab_ID, t.SeqNo, t.TabLevel, " +
-				"COALESCE(t.IsReadOnly, 'N'), t.Name, t.Description, " +
-				"t.OrderByClause, t.SPS_Table_ID, t.SPS_Window_ID, " +
-				"t.WhereClause, t.Classname " +
-				"FROM SPS_Tab t " +
-				"WHERE t.IsActive = 'Y' " +
-				"AND t.SPS_Window_ID = " + param.getSPS_Window_ID() + " " + 
-				"ORDER BY t.SeqNo", null);
+		String language = Env.getAD_Language(this);
+		boolean isBaseLanguage = Env.isBaseLanguage(this);
+		String sql = null;
+		//	Handle Translation
+		if(isBaseLanguage) {
+			sql = new String("SELECT t.SPS_Tab_ID, t.SeqNo, t.TabLevel, " +
+					"COALESCE(t.IsReadOnly, 'N'), t.Name, t.Description, " +
+					"t.OrderByClause, t.SPS_Table_ID, t.SPS_Window_ID, " +
+					"t.WhereClause, t.Classname " +
+					"FROM SPS_Tab t " +
+					"WHERE t.IsActive = 'Y' " +
+					"AND t.SPS_Window_ID = " + param.getSPS_Window_ID() + " " + 
+					"ORDER BY t.SeqNo");
+		} else {
+			sql = new String("SELECT t.SPS_Tab_ID, t.SeqNo, t.TabLevel, " +
+					"COALESCE(t.IsReadOnly, 'N'), tt.Name, tt.Description, " +
+					"t.OrderByClause, t.SPS_Table_ID, t.SPS_Window_ID, " +
+					"t.WhereClause, t.Classname " +
+					"FROM SPS_Tab t " +
+					"LEFT JOIN SPS_Tab_Trl tt ON(tt.SPS_Tab_ID = t.SPS_Tab_ID AND tt.AD_Language = '" + language + "') " + 
+					"WHERE t.IsActive = 'Y' " +
+					"AND t.SPS_Window_ID = " + param.getSPS_Window_ID() + " " + 
+					"ORDER BY t.SeqNo");
+		}
+		//	Execute
+		rs = conn.querySQL(sql, null);
 		if(rs.moveToFirst()){
 			//	Index
 			int index = 0;

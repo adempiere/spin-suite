@@ -875,6 +875,13 @@ public class V_Process extends Activity {
 			if(printData == null
 					|| !isLoaded)
 				return;
+			//	Set from Adapter
+			//if(reportAdapter != null) {
+				//if(reportAdapter.isEmpty())
+					//return;
+				//	Set data
+				//printData.setData(reportAdapter.getItems());
+			//}
 			//	Do it
 			if(params[0] == SHARE_FOR){
 				shareReport(params[1], printData);
