@@ -35,7 +35,7 @@
     
     <item android:id="@+id/action_config"
         android:title="@string/Action_Config"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always|collapseActionView"
         android:icon="?attr/ic_ab_settings" />
     
 </menu>
