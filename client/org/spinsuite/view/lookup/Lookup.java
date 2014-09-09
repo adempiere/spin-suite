@@ -257,21 +257,25 @@ public class Lookup {
 				return Env.parseContext(ctx, m_TabParam.getActivityNo(), m_TabParam.getTabNo(), sqlParsed, false, null);
 			}
 			//	Reload
+			LogM.log(ctx, getClass(), Level.FINE, 
+					"Reload Field=(" + m_field.ColumnName + ", " 
+							+ m_field.DisplayType + ", " + m_field.AD_Reference_Value_ID + ")");
+			//	
 			if(m_field.DisplayType == DisplayType.TABLE_DIR){
 				m_SQL = loadSQLTableDirect();
-				LogM.log(ctx, getClass(), Level.FINE, "SQL=" + m_SQL);
+				LogM.log(ctx, getClass(), Level.FINE, "SQLTableDirect=" + m_SQL);
 			} else if((m_field.DisplayType == DisplayType.TABLE 
 					|| m_field.DisplayType == DisplayType.SEARCH)
 					&& m_field.AD_Reference_Value_ID != 0){
 				m_SQL = loadSQLTableSearch();
-				LogM.log(ctx, getClass(), Level.FINE, "SQL=" + m_SQL);
+				LogM.log(ctx, getClass(), Level.FINE, "SQLTableSearch=" + m_SQL);
 			} else if((m_field.DisplayType == DisplayType.LIST)
 					&& m_field.AD_Reference_Value_ID != 0){
 				m_SQL = loadSQLList();
-				LogM.log(ctx, getClass(), Level.FINE, "SQL=" + m_SQL);
+				LogM.log(ctx, getClass(), Level.FINE, "SQLList=" + m_SQL);
 			} else {
 				m_SQL = loadSQLTableDirect();
-				LogM.log(ctx, getClass(), Level.FINE, "SQL=" + m_SQL);
+				LogM.log(ctx, getClass(), Level.FINE, "SQLTableDirectDefault=" + m_SQL);
 			}
 		} else {
 			//	
@@ -320,8 +324,10 @@ public class Lookup {
 	 */
 	public InfoLookup getInfoLookup(){
 		//	Get SQL
-		if(m_InfoLookup == null)
+		if(m_InfoLookup == null) {
 			m_InfoLookup = (InfoLookup) Env.getContextObject(ctx, ctx_lookup_info, InfoLookup.class);
+			LogM.log(ctx, getClass(), Level.FINE, "[Get Lookup From Cache=" + m_InfoLookup + "]");
+		}
 		if(m_InfoLookup == null)
 			getSQL();
 		//	Load ending
@@ -517,6 +523,8 @@ public class Lookup {
 	 * @return String
 	 */
 	private String loadSQLList(){
+		//	Instance Lookup
+		m_InfoLookup = new InfoLookup();
 		//	Set SQL
 		StringBuffer sql = new StringBuffer("SELECT rl.Value, ");
 		//	Handle Language
@@ -524,6 +532,9 @@ public class Lookup {
 			sql.append("rl.Name ");
 			//	From
 			sql.append("FROM AD_Ref_List rl ");
+			//	Set Lookup Info
+			m_InfoLookup.TableName = "AD_Ref_List";
+			m_InfoLookup.DisplayColumn = "COALESCE(" + m_InfoLookup.TableName + ".Name,'')";
 		} else {
 			sql.append("rlt.Name ");
 			//	From
@@ -531,6 +542,9 @@ public class Lookup {
 			//	Join
 			sql.append("INNER JOIN AD_Ref_List_Trl rlt ON(rlt.AD_Ref_List_ID = rl.AD_Ref_List_ID " +
 					"AND rlt.AD_Language = '").append(m_Language).append("') ");
+			//	Set Lookup Info
+			m_InfoLookup.TableName = "AD_Ref_List_Trl";
+			m_InfoLookup.DisplayColumn = "COALESCE(" + m_InfoLookup.TableName + ".Name,'')";
 		}
 		//	Where Clause			
 		sql.append("WHERE rl.AD_Reference_ID = ").append(m_field.AD_Reference_Value_ID);
@@ -542,6 +556,8 @@ public class Lookup {
 			//	Set Where
 			m_InfoLookup.WhereClause = getValRule();
 		}
+		//	Set Lookup Info
+		m_InfoLookup.KeyColumn = "Value";
 		//	Add Mark
 		m_IsHasWhere = true;
 		sql.append(MARK_WHERE);

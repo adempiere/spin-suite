@@ -312,7 +312,7 @@ public class InfoReport {
 					"pfi.IsVarianceCalc, pfi.LineAlignmentType, pfi.LineWidth, pfi.MaxHeight, pfi.MaxWidth, pfi.Name, pfi.PrintAreaType, pfi.PrintFormatType, " +
 					"pfi.PrintName, pfi.PrintNameSuffix, pfi.RunningTotalLines, pfi.ShapeType, pfi.SortNo, pfi.XPosition, pfi.XSpace, pfi.YPosition, pfi.YSpace, pfi.SeqNo, " +
 					//	Column
-					"c.ColumnName, c.IsMandatory, c.AD_Reference_ID " +
+					"c.SPS_Column_ID, c.ColumnName, c.IsMandatory, c.AD_Reference_ID, c.AD_Reference_Value_ID " +
 					//	From
 					"FROM AD_PrintFormat pf " +
 					"INNER JOIN AD_PrintFormatItem pfi ON(pfi.AD_PrintFormat_ID = pf.AD_PrintFormat_ID) " +
@@ -337,7 +337,7 @@ public class InfoReport {
 					"pfi.IsVarianceCalc, pfi.LineAlignmentType, pfi.LineWidth, pfi.MaxHeight, pfi.MaxWidth, pfi.Name, pfi.PrintAreaType, pfi.PrintFormatType, " +
 					"pfit.PrintName, pfit.PrintNameSuffix, pfi.RunningTotalLines, pfi.ShapeType, pfi.SortNo, pfi.XPosition, pfi.XSpace, pfi.YPosition, pfi.YSpace, pfi.SeqNo, " +
 					//	Column
-					"c.ColumnName, c.IsMandatory, c.AD_Reference_ID " +
+					"c.SPS_Column_ID, c.ColumnName, c.IsMandatory, c.AD_Reference_ID, c.AD_Reference_Value_ID " +
 					//	From
 					"FROM AD_PrintFormat pf " +
 					"INNER JOIN AD_PrintFormatItem pfi ON(pfi.AD_PrintFormat_ID = pf.AD_PrintFormat_ID) " +
@@ -473,10 +473,12 @@ public class InfoReport {
 				iItemField.YPosition = rs.getInt(i++);
 				iItemField.YSpace = rs.getInt(i++);
 				iItemField.SeqNo = rs.getInt(i++);
+				iItemField.SPS_Column_ID = rs.getInt(i++);
 				iItemField.ColumnName = rs.getString(i++);
 				booleanValue = rs.getString(i++);
 				iItemField.IsMandatory = (booleanValue != null && booleanValue.equals("Y"));
 				iItemField.DisplayType = rs.getInt(i++);
+				iItemField.AD_Reference_Value_ID = rs.getInt(i++);
 				//	Add Field
 				items.add(iItemField);
 				//	Set index

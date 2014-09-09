@@ -70,6 +70,7 @@ public class ReportPrintQuery {
 	private final String 	LEFT_JOIN 	= "LEFT JOIN";
 	private final String	FROM		= "FROM";
 	private final String 	ON 			= "ON";
+	private final String 	AND 		= "AND";
 	private final String 	EQUAL 		= "=";
 	private final String	POINT		= ".";
 	private final String 	ORDER_BY 	= "ORDER BY";
@@ -181,7 +182,7 @@ public class ReportPrintQuery {
 				m_SQL.append(lookupField);
 				//	Add Join
 				if(DisplayType.isLookup(field.DisplayType))
-					addJoin(m_tableName, field.ColumnName, lookup, field.IsMandatory);
+					addJoin(m_tableName, field, lookup, field.IsMandatory);
 				//	Not is first
 				if(isFirst)
 					isFirst = false;
@@ -256,6 +257,7 @@ public class ReportPrintQuery {
 		} else {
 			lookupField = tableName + POINT + field.ColumnName;
 		}
+		LogM.log(ctx, getClass(), Level.FINE, "getLookupColumn(" + tableName + ", " + field.ColumnName + " - " + field.SPS_Column_ID + ") = " + lookupField);
 		//	Return
 		return lookupField;
 	}
@@ -268,6 +270,9 @@ public class ReportPrintQuery {
 	 * @return InfoLookup
 	 */
 	private InfoLookup getInfoLookup(InfoReportField field){
+		if(!DisplayType.isLookup(field.DisplayType))
+			return null;
+		//	Do it
 		InfoField lookupField = new InfoField(field);
 		Lookup m_lookup = new Lookup(ctx, lookupField);
 		return m_lookup.getInfoLookup();
@@ -281,7 +286,7 @@ public class ReportPrintQuery {
 	 * @param isMandatory
 	 * @return void
 	 */
-	private void addJoin(String tableName, String linkColumn, InfoLookup lookup, boolean isMandatory){
+	private void addJoin(String tableName, InfoReportField linkColumn, InfoLookup lookup, boolean isMandatory){
 		//	Is Mandatory
 		if(isMandatory)
 			m_from.append(INNER_JOIN).append(" ");
@@ -292,7 +297,13 @@ public class ReportPrintQuery {
 		//	On
 		m_from.append(ON).append("(")
 							.append(lookup.TableName).append(POINT).append(lookup.KeyColumn)
-							.append(EQUAL).append(tableName).append(POINT).append(linkColumn)
-							.append(")").append(" ");
+							.append(EQUAL).append(tableName).append(POINT).append(linkColumn.ColumnName);
+		if(linkColumn.DisplayType == DisplayType.LIST) {
+			m_from.append(" ").append(AND)
+								.append(lookup.TableName).append(POINT).append(lookup.TableName.replace("_Trl", ""))
+								.append(EQUAL).append(linkColumn.AD_Reference_Value_ID);
+		}
+		//	Add finish
+		m_from.append(")").append(" ");
 	}
 }
