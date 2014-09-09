@@ -735,8 +735,12 @@ public class ReportPrintData {
 					} else if(DisplayType.isDate(column.DisplayType)){			//	Is Date
 						String pattern = DisplayType.getDateFormat(ctx, column.DisplayType).toPattern();
 						DateFormat customDateFormat = new DateFormat (pattern); 
-						WritableCellFormat dateFormat = new WritableCellFormat (customDateFormat); 
-						long date = Long.parseLong(cPrintData.getValue());
+						WritableCellFormat dateFormat = new WritableCellFormat (customDateFormat);
+						String value = cPrintData.getValue();
+						long date = 0;
+						if(value.trim().length() > 0) {
+							date = Long.parseLong(cPrintData.getValue());
+						}
 						cell = new DateTime(col, row+1, new Date(date), dateFormat); 
 					}
 
@@ -912,7 +916,8 @@ public class ReportPrintData {
 						cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 					} else if(DisplayType.isDate(column.DisplayType)){			//	Is Date
 						SimpleDateFormat dateFormat = cDateFormat[col];
-						if(dateFormat != null){
+						if(dateFormat != null
+								&& value.trim().length() > 0){
 							long date = Long.parseLong(value);
 							value = dateFormat.format(new Date(date));
 						}

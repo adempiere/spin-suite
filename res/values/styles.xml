@@ -25,11 +25,12 @@
         <item name="ic_ab_drawer">@drawable/ic_drawer</item>
         <item name="ic_ab_drawer_shadow">@drawable/drawer_shadow</item>
         <!-- Drawer Icon -->
-        <item name="ic_dr_pdf">@drawable/ic_action_view_as_list_dark</item>
-        <item name="ic_dr_xls">@drawable/ic_action_view_as_list_dark</item>
-        <item name="ic_dr_xml">@drawable/ic_action_view_as_list_dark</item>
-        <item name="ic_dr_html">@drawable/ic_action_view_as_list_dark</item>
-        <item name="ic_dr_construction">@drawable/ic_action_warning_dark</item>
+        <item name="ic_dr_share">@drawable/ic_action_share_light</item>
+        <item name="ic_dr_pdf">@drawable/ic_action_view_as_list_light</item>
+        <item name="ic_dr_xls">@drawable/ic_action_view_as_list_light</item>
+        <item name="ic_dr_xml">@drawable/ic_action_view_as_list_light</item>
+        <item name="ic_dr_html">@drawable/ic_action_view_as_list_light</item>
+        <item name="ic_dr_construction">@drawable/ic_action_warning_light</item>
         <item name="ic_dr_window">@drawable/ic_action_dock_light</item>
 		<item name="ic_dr_report">@drawable/ic_action_view_as_list_light</item>
 		<item name="ic_dr_process">@drawable/ic_action_forward_light</item>

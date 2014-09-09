@@ -64,6 +64,8 @@ public class ReportPrintQuery {
 	private ArrayList<InfoReportField>			m_columns = null;
 	/**	Column Quantity						*/
 	private int 								m_columnQty = 0;
+	/**	Mark with where clause				*/
+	private final String						MARK_WHERE = "<MARK_WHERE>";
 	
 	/**	Constant to Inner	*/
 	private final String 	INNER_JOIN 	= "INNER JOIN";
@@ -96,8 +98,13 @@ public class ReportPrintQuery {
 	 * @return String
 	 */
 	public String getSQL(String whereClause){
-		loadQuery(whereClause);
-		return m_SQL.toString();
+		boolean hasWhereClause = (whereClause != null && whereClause.length() > 0);
+		loadQuery(hasWhereClause);
+		//	append Where Clause
+		if(!hasWhereClause)
+			return m_SQL.toString().replaceAll(MARK_WHERE, "");
+		//	Default return
+		return m_SQL.toString().replace(MARK_WHERE, whereClause);
 	}
 	
 	/**
@@ -146,10 +153,11 @@ public class ReportPrintQuery {
 	/**
 	 * Load Query for report
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 21:41:02
-	 * @param whereClause
+	 * @param hasWhereClause
 	 * @return void
 	 */
-	private void loadQuery(String whereClause){
+	private void loadQuery(boolean hasWhereClause) {
+		//	Reload
 		m_SQL = new StringBuffer("SELECT ");
 		String m_tableName = m_IR.getTableName();
 		//	
@@ -221,18 +229,16 @@ public class ReportPrintQuery {
 			m_SQL.append(WHERE).append(" ")
 				.append(m_IR.getWhereClause()).append(" ");
 			//	Criteria
-			if(whereClause != null
-					&& whereClause.length() > 0)
-				m_SQL.append("AND ").append(whereClause).append(" ");
-		} else if(whereClause != null
-				&& whereClause.length() > 0)
+			if(hasWhereClause)
+				m_SQL.append("AND ").append(MARK_WHERE).append(" ");
+		} else if(hasWhereClause)
 			m_SQL.append(WHERE).append(" ")
-				.append(whereClause).append(" ");
+				.append(MARK_WHERE).append(" ");
 		//	Set Order By
 		if(m_OrderBy.length() > 0)
 			m_SQL.append(ORDER_BY).append(" ").append(m_OrderBy);
 		//	Log
-		LogM.log(ctx, getClass(), Level.FINE, m_SQL.toString());
+		LogM.log(ctx, getClass(), Level.FINE, "SQL Report Reloaded=[" + m_SQL.toString() + "]");
 	}
 	
 	/**
@@ -299,8 +305,9 @@ public class ReportPrintQuery {
 							.append(lookup.TableName).append(POINT).append(lookup.KeyColumn)
 							.append(EQUAL).append(tableName).append(POINT).append(linkColumn.ColumnName);
 		if(linkColumn.DisplayType == DisplayType.LIST) {
-			m_from.append(" ").append(AND)
-								.append(lookup.TableName).append(POINT).append(lookup.TableName.replace("_Trl", ""))
+			m_from.append(" ").append(AND).append(" ")
+								.append(lookup.TableName).append(POINT)
+								.append(InfoLookup.REFERENCE_TN).append("_ID")
 								.append(EQUAL).append(linkColumn.AD_Reference_Value_ID);
 		}
 		//	Add finish
