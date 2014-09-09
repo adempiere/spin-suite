@@ -21,6 +21,7 @@ import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.util.DisplayType;
+import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.ReportSortColumnPair;
 import org.spinsuite.view.lookup.InfoField;
@@ -48,6 +49,8 @@ public class ReportPrintQuery {
 		//	Load Report Information
 		m_IR = new InfoReport(ctx, m_AD_PrintFormat_ID, conn);
 		m_orderColumns = new ArrayList<ReportSortColumnPair>();
+		m_AD_Language = Env.getAD_Language(ctx);
+		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
 	}
 	
 	/**	Context								*/
@@ -64,6 +67,10 @@ public class ReportPrintQuery {
 	private ArrayList<InfoReportField>			m_columns = null;
 	/**	Column Quantity						*/
 	private int 								m_columnQty = 0;
+	/**	Language							*/
+	private String 								m_AD_Language = "en_US";
+	/**	Is Base Language					*/
+	private boolean 							m_IsBaseLanguage = true;
 	/**	Mark with where clause				*/
 	private final String						MARK_WHERE = "<MARK_WHERE>";
 	
@@ -263,7 +270,8 @@ public class ReportPrintQuery {
 		} else {
 			lookupField = tableName + POINT + field.ColumnName;
 		}
-		LogM.log(ctx, getClass(), Level.FINE, "getLookupColumn(" + tableName + ", " + field.ColumnName + " - " + field.SPS_Column_ID + ") = " + lookupField);
+		LogM.log(ctx, getClass(), Level.FINE, "getLookupColumn(" + tableName + ", " 
+								+ field.ColumnName + " - " + field.SPS_Column_ID + ") = " + lookupField);
 		//	Return
 		return lookupField;
 	}
@@ -312,5 +320,24 @@ public class ReportPrintQuery {
 		}
 		//	Add finish
 		m_from.append(")").append(" ");
+		//	Add Translation to List
+		if(linkColumn.DisplayType == DisplayType.LIST
+				&& !m_IsBaseLanguage) {
+			if(isMandatory)
+				m_from.append(INNER_JOIN).append(" ");
+			else
+				m_from.append(LEFT_JOIN).append(" ");
+			//	Table Name
+			m_from.append(lookup.TableName).append("_Trl ");
+			//	On
+			m_from.append(ON).append("(")
+								.append(InfoLookup.REF_LIST_TN).append("_Trl")
+								.append(POINT).append(InfoLookup.REF_LIST_TN).append("_ID")
+								.append(EQUAL).append(InfoLookup.REF_LIST_TN)
+								.append(POINT).append(InfoLookup.REF_LIST_TN).append("_ID ")
+								.append(AND).append(" ").append(InfoLookup.REF_LIST_TN).append("_Trl")
+								.append(POINT).append(InfoLookup.AD_LANGUAGE_CN)
+								.append(EQUAL).append("'").append(m_AD_Language).append("'").append(")").append(" ");
+		}
 	}
 }

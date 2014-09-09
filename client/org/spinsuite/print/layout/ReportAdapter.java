@@ -236,6 +236,7 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 			tv_column.setTextAppearance(ctx, R.style.TextItemReport);
 		//	Set Text
 		tv_column.setText(text);
+		tv_column.setTextIsSelectable(true);
 		//	Return
 		return tv_column;
 	}

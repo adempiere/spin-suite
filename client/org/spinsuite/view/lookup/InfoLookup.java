@@ -60,6 +60,8 @@ public class InfoLookup {
 	public static String	REF_LIST_TN 			= "AD_Ref_List";
 	/**	Reference Table (Table Name)*/
 	public static String	REF_TABLE_TN 			= "AD_Ref_Table";
+	/**	Reference (Column Name)		*/
+	public static String	AD_LANGUAGE_CN 			= "AD_Language";
 	
 	@Override
 	public String toString() {

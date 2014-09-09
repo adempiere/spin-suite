@@ -259,6 +259,16 @@ public class ReportPrintData {
 	}
 	
 	/**
+	 * Set Data
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/09/2014, 21:29:49
+	 * @param m_data
+	 * @return void
+	 */
+	public void setData(ArrayList<RowPrintData> m_data) {
+		this.m_data = m_data;
+	}
+	
+	/**
 	 * Load Criteria filter from Parameters
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/03/2014, 16:42:11
 	 * @param tableName
@@ -674,6 +684,8 @@ public class ReportPrintData {
 		String path = Env.getDoc_DirectoryPathName(ctx);
 		String title = m_reportQuery.getInfoReport().getName();
 		path = path + File.separator + title + ".xls";
+		//	Log
+		LogM.log(ctx, getClass(), Level.FINE, "Export Path=[" + path + "]");
 		File export = new File(path);
 		//	Delete before generate
 		if(export.exists())
@@ -698,7 +710,12 @@ public class ReportPrintData {
 			return;
 		//	Create Sheet
 		WritableWorkbook workbook = Workbook.createWorkbook(outFile);
-		WritableSheet sheet = workbook.createSheet(m_pi.getTitle(), 0);
+		String title = m_pi.getTitle();
+		//	Valid Name
+		if(title == null)
+			title = m_reportQuery.getInfoReport().getName();
+		//	
+		WritableSheet sheet = workbook.createSheet(title, 0);
 		//	
 		InfoReportField[] columns = m_reportQuery.getColumns();
 		//	Add Header
@@ -767,6 +784,8 @@ public class ReportPrintData {
 		String path = Env.getDoc_DirectoryPathName(ctx);
 		String title = m_reportQuery.getInfoReport().getName();
 		path = path + File.separator + title + ".pdf";
+		//	Log
+		LogM.log(ctx, getClass(), Level.FINE, "Export Path=[" + path + "]");
 		File export = new File(path);
 		//	Delete before generate
 		if(export.exists())
