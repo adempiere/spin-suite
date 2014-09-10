@@ -380,6 +380,7 @@ public class V_Process extends Activity {
 				&& info.length() > 0){
 			//	Set Info
 			tv_Description.setText(info);
+			tv_Description.setTextIsSelectable(true);
 			tv_Description.setVisibility(TextView.VISIBLE);
 		}
 		//	Set Help
@@ -388,6 +389,7 @@ public class V_Process extends Activity {
 				&& info.length() > 0){
 			//	Set Info
 			tv_Help.setText(info);
+			tv_Help.setTextIsSelectable(true);
 			tv_Help.setVisibility(TextView.VISIBLE);
 		}
 		//	Get for Load
