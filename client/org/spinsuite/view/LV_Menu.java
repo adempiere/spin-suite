@@ -56,10 +56,8 @@ public class LV_Menu extends Activity {
 	private Bundle 				currentOptionBundle = null;
 	/**	Current Option Menu	*/
 	private DisplayMenuItem 	currentMenuItem = null;
-	
 	/**	Lookup Menu			*/
 	private LookupMenu 			lookupMenu = null;
-	
 	/**	Load Action Menu	*/
 	private LoadActionMenu		loadActionMenu = null;;
 	
