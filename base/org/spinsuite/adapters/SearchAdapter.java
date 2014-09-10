@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import org.spinsuite.base.R;
 import org.spinsuite.util.DisplayRecordItem;
+import org.spinsuite.util.Env;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -99,7 +100,8 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 				tv_Value.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
 			}
 		} else {
-			tv_Value.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ok_h, 0, 0, 0);
+			tv_Value.setCompoundDrawablesWithIntrinsicBounds(
+					Env.getResourceID(getContext(), R.attr.ic_ls_ok), 0, 0, 0);
 		}
 		//	Return
 		return item;
