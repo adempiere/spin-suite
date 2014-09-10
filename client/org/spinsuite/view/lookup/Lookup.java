@@ -72,11 +72,11 @@ public class Lookup {
 	public Lookup(Context ctx, TabParameter tabParam, InfoField field){
 		this.m_field = field;
 		this.ctx = ctx;
-		ctx_lookup_value = CTX_VALUE_PREFIX + m_field.SPS_Column_ID;
-		ctx_lookup_has_where = CTX_HAS_WHERE + m_field.SPS_Column_ID;
-		ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX + m_field.SPS_Column_ID;
 		m_Language = Env.getAD_Language(ctx);
 		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
+		ctx_lookup_value = CTX_VALUE_PREFIX + m_Language + "|" + m_field.SPS_Column_ID;
+		ctx_lookup_has_where = CTX_HAS_WHERE + m_Language + "|" + m_field.SPS_Column_ID;
+		ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX + m_Language + "|" + m_field.SPS_Column_ID;
 		m_TabParam = tabParam;
 		//	Valid Null
 		if(m_TabParam == null) {
@@ -99,11 +99,11 @@ public class Lookup {
 		m_field = GridField.loadInfoColumnField(ctx, m_SPS_Column_ID);
 		//	Set Property
 		this.ctx = ctx;
-		ctx_lookup_value = CTX_VALUE_PREFIX + m_field.SPS_Column_ID;
-		ctx_lookup_has_where = CTX_HAS_WHERE + m_field.SPS_Column_ID;
-		ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX + m_field.SPS_Column_ID;
 		m_Language = Env.getAD_Language(ctx);
 		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
+		ctx_lookup_value = CTX_VALUE_PREFIX + m_Language + "|" + m_field.SPS_Column_ID;
+		ctx_lookup_has_where = CTX_HAS_WHERE + m_Language + "|" + m_field.SPS_Column_ID;
+		ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX + m_Language + "|" + m_field.SPS_Column_ID;
 		m_TabParam = tabParam;
 		//	Valid Null
 		if(m_TabParam == null) {
@@ -127,11 +127,11 @@ public class Lookup {
 		m_field = GridField.loadInfoColumnField(ctx, m_TableName, m_ColumnName);
 		//	Set Property
 		this.ctx = ctx;
-		ctx_lookup_value = CTX_VALUE_PREFIX + m_field.SPS_Column_ID;
-		ctx_lookup_has_where = CTX_HAS_WHERE + m_field.SPS_Column_ID;
-		ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX + m_field.SPS_Column_ID;
 		m_Language = Env.getAD_Language(ctx);
 		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
+		ctx_lookup_value = CTX_VALUE_PREFIX + m_Language + "|" + m_field.SPS_Column_ID;
+		ctx_lookup_has_where = CTX_HAS_WHERE + m_Language + "|" + m_field.SPS_Column_ID;
+		ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX + m_Language + "|" + m_field.SPS_Column_ID;
 		m_TabParam = tabParam;
 		//	Valid Null
 		if(m_TabParam == null) {
@@ -152,11 +152,11 @@ public class Lookup {
 	public Lookup(Context ctx, int m_SPS_Table_ID){
 		this.m_SPS_Table_ID = m_SPS_Table_ID;
 		this.ctx = ctx;
-		ctx_lookup_value = CTX_VALUE_PREFIX_TABLE + m_SPS_Table_ID;
-		ctx_lookup_has_where = CTX_HAS_WHERE_TABLE + m_SPS_Table_ID;
-		ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX_TABLE + m_SPS_Table_ID;
 		m_Language = Env.getAD_Language(ctx);
 		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
+		ctx_lookup_value = CTX_VALUE_PREFIX_TABLE + m_Language + "|" + m_SPS_Table_ID;
+		ctx_lookup_has_where = CTX_HAS_WHERE_TABLE + m_Language + "|" + m_SPS_Table_ID;
+		ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX_TABLE + m_Language + "|" + m_SPS_Table_ID;
 		m_TabParam = new TabParameter();
 		m_TabParam.setActivityNo(0);
 		m_TabParam.setTabNo(0);
