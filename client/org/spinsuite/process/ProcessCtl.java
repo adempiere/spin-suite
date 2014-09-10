@@ -121,6 +121,7 @@ public class ProcessCtl {
 	 */
 	private boolean startProcess (){
 		LogM.log(m_pi.getCtx(), this.getClass(), Level.FINE, m_pi.toString());
+		m_pi.clearInfoLog();
 		boolean started = false;
 		boolean clientOnly = false;
 		boolean isScriptProcess = m_pi.getClassName().toLowerCase().startsWith(SCRIPT_PREFIX);

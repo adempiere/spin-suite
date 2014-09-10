@@ -21,6 +21,7 @@ import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.Msg;
 
 import android.content.Context;
 
@@ -98,7 +99,7 @@ public abstract class StdProcess {
 		
 		//	Parse Variables
 		//msg = Env.parseTranslation(m_ctx, msg);
-		m_pi.setSummary (msg, !success);
+		m_pi.setSummary (Msg.parseTranslation(getCtx(), msg), !success);
 		//	
 		return success;
 	}   //  process
@@ -137,7 +138,7 @@ public abstract class StdProcess {
 	 */
 	public void addLog (int id, Date date, BigDecimal number, String msg){
 		if (m_pi != null)
-			m_pi.addLog(id, date, number, msg);
+			m_pi.addLog(id, date, number, Msg.parseTranslation(getCtx(), msg));
 		LogM.log(m_pi.getCtx(), this.getClass(), Level.INFO, id + " - " + date + " - " + number + " - " + msg);
 	}	//	addLog
 
@@ -147,7 +148,7 @@ public abstract class StdProcess {
 	 */
 	public void addLog (String msg){
 		if (msg != null)
-			addLog (0, null, null, msg);
+			addLog (0, null, null, Msg.parseTranslation(getCtx(), msg));
 	}	//	addLog
 	
 	/**

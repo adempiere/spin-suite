@@ -46,6 +46,8 @@
         <item name="ic_lt_search_product">@drawable/ic_action_search_light</item>
         <item name="ic_lt_search_bpartner">@drawable/ic_action_person_light</item>
         <item name="ic_lt_date">@drawable/ic_action_event_light</item>
+        <!-- Icon List -->
+        <item name="ic_ls_ok">@drawable/ic_action_accept_light</item>
     </style>
     
     <!-- Color -->

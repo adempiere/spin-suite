@@ -591,38 +591,8 @@ public class V_Process extends Activity {
 			//	Run Process
 			if(!getValuesFromParameters())
 				return false;
-			m_pControl.runProcess();
-			tv_Summary.setTextAppearance(this, R.style.TextStandard);
-			tv_Summary.setVisibility(TextView.VISIBLE);
-			//	If Error
-			if(m_pInfo.isError())
-				tv_Summary.setTextColor(Color.RED);
-			else
-				tv_Summary.setTextColor(Color.BLUE);
-			//	Set Summary
-			tv_Summary.setText(m_pInfo.getSummary());
-			//	Show all logs
-			if(!m_pInfo.isReport()
-					|| m_pInfo.isError()){
-				if(!m_activityParam.isFromActivity())
-					showLog();
-				else 
-					setActivityResult();
-			}
-			//	Show report
-			else if(m_pInfo.isReport()){
-				iSearch.setVisible(true);
-				iPrintFormat.setVisible(true);
-				ll_HeaderReport.setVisibility(LinearLayout.VISIBLE);
-				new LoadReportTask().execute(0);
-			}
-			//	Hide Parameter
-			if(!m_pInfo.isError()){
-				ll_ProcessPara.setVisibility(ScrollView.GONE);
-				item.setIcon(Env.getResourceID(this, R.attr.ic_ab_settings));
-				//	Set Is Loaded
-				isLoaded = true;
-			}
+			//	Process
+			new LoadReportProcessTask().execute(item);
 			return true;
 		} else if (itemId == R.id.action_print_format) {
 			showPrintFormat();
@@ -668,9 +638,8 @@ public class V_Process extends Activity {
 			
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
-				int m_AD_PrintFormatItem_ID = item.getItemId();
 				if(isLoaded){
-					new LoadReportTask().execute(m_AD_PrintFormatItem_ID);
+					new LoadReportProcessTask().execute(item);
 				}
 				return false;
 			}
@@ -769,23 +738,39 @@ public class V_Process extends Activity {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
 	 *
 	 */
-	private class LoadReportTask extends AsyncTask<Integer, Void, Void> {
+	private class LoadReportProcessTask extends AsyncTask<MenuItem, Void, Void> {
 
 		/**	Progress Bar			*/
 		private ProgressDialog 		v_PDialog;
 		private ReportPrintData 	printData = null;
+		private MenuItem 			currentItem = null;
 		
 		@Override
 		protected void onPreExecute() {
 			v_PDialog = ProgressDialog.show(v_activity, null, 
-					getString(R.string.msg_Loading), false, false);
+					getString((m_pInfo.isReport()
+							? R.string.msg_Loading
+							: R.string.msg_Processing)), false, false);
 		}
 		
 		@Override
-		protected Void doInBackground(Integer... params) {
+		protected Void doInBackground(MenuItem... params) {
 			//	Load Data
 			//	Get Print Data
-			printData = m_pControl.getReportPrintData(params[0]);
+			currentItem = params[0];
+			int m_AD_PrintFormat_ID = 0;
+			//	Valid Item
+			if(currentItem != null
+					&& currentItem.getItemId() != R.id.action_process)
+				m_AD_PrintFormat_ID = currentItem.getItemId();
+			//	Set Print Format
+			if(m_AD_PrintFormat_ID < -1)
+				m_AD_PrintFormat_ID = 0;
+			//	Run Process
+			m_pControl.runProcess();
+			//	Report load Data
+			if(m_pInfo.isReport())
+				printData = m_pControl.getReportPrintData(m_AD_PrintFormat_ID);
 			//	
 			return null;
 		}
@@ -797,11 +782,41 @@ public class V_Process extends Activity {
 
 		@Override
 		protected void onPostExecute(Void result) {
-			if(printData != null){
-				//	
-				reportAdapter = new ReportAdapter(getApplicationContext(), 
-						printData.getData(), printData.getColumns(), ll_HeaderReport);
-				lv_LogReport.setAdapter(reportAdapter);
+			tv_Summary.setTextAppearance(v_activity, R.style.TextStandard);
+			tv_Summary.setVisibility(TextView.VISIBLE);
+			//	If Error
+			if(m_pInfo.isError())
+				tv_Summary.setTextColor(Color.RED);
+			else
+				tv_Summary.setTextColor(Color.BLUE);
+			//	Set Summary
+			tv_Summary.setText(m_pInfo.getSummary());
+			//	Show all logs
+			if(!m_pInfo.isReport()
+					|| m_pInfo.isError()){
+				if(!m_activityParam.isFromActivity())
+					showLog();
+				else 
+					setActivityResult();
+			}
+			//	Show report
+			else if(m_pInfo.isReport()){
+				iSearch.setVisible(true);
+				iPrintFormat.setVisible(true);
+				ll_HeaderReport.setVisibility(LinearLayout.VISIBLE);
+				if(printData != null){
+					//	
+					reportAdapter = new ReportAdapter(v_activity, 
+							printData.getData(), printData.getColumns(), ll_HeaderReport);
+					lv_LogReport.setAdapter(reportAdapter);
+				}
+			}
+			//	Hide Parameter
+			if(!m_pInfo.isError()){
+				ll_ProcessPara.setVisibility(ScrollView.GONE);
+				currentItem.setIcon(Env.getResourceID(v_activity, R.attr.ic_ab_settings));
+				//	Set Is Loaded
+				isLoaded = true;
 			}
 			//	Hide dialog
 			v_PDialog.dismiss();
@@ -875,13 +890,6 @@ public class V_Process extends Activity {
 			if(printData == null
 					|| !isLoaded)
 				return;
-			//	Set from Adapter
-			//if(reportAdapter != null) {
-				//if(reportAdapter.isEmpty())
-					//return;
-				//	Set data
-				//printData.setData(reportAdapter.getItems());
-			//}
 			//	Do it
 			if(params[0] == SHARE_FOR){
 				shareReport(params[1], printData);
@@ -964,7 +972,6 @@ public class V_Process extends Activity {
 	    					getResources().getText(R.string.Action_Share)));
 	    		}
 			} catch (Exception e) {}
-	    }
-		
+	    }	
 	}
 }

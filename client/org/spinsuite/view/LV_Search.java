@@ -425,7 +425,7 @@ public class LV_Search extends Activity {
 	     */
 	    protected boolean loadView(){
 	    	//	Set Adapter
-			m_SearchAdapter = new SearchAdapter(getApplicationContext(), R.layout.i_search, data);
+			m_SearchAdapter = new SearchAdapter(v_activity, R.layout.i_search, data);
 			m_SearchAdapter.setDropDownViewResource(R.layout.i_search);
 			lv_Search.setAdapter(m_SearchAdapter);
 			//	

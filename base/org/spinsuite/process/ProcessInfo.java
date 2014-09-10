@@ -749,4 +749,17 @@ public class ProcessInfo {
 		m_logs.toArray (logs);
 		return logs;
 	}	//	getLogs
+	
+	/**
+	 * Clear Log Msg and Summary
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/09/2014, 17:48:49
+	 * @return void
+	 */
+	public void clearInfoLog() {
+		if(m_logs == null)
+			return;
+		//	Clear
+		m_Summary = "";
+		m_logs.clear();
+	}
 }

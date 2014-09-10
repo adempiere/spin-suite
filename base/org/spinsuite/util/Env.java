@@ -121,6 +121,24 @@ public final class Env {
 	}
 	
 	/**
+	 * Remove a context value
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/09/2014, 16:13:50
+	 * @param ctx
+	 * @param context
+	 * @return void
+	 */
+	public static void removeContext(Context ctx, String context) {
+		if (ctx == null || context == null)
+			return;
+		//	Log
+		LogM.log(ctx, "Env", Level.FINE, "removeContext("  + context + ")");
+		//	
+		Editor ep = getEditor(ctx);
+		ep.remove(context);
+		ep.commit();
+	}
+	
+	/**
 	 *	Set Global Context to Value
 	 *  @param ctx context
 	 *  @param context context key
