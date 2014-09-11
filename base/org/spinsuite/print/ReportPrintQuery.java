@@ -85,7 +85,8 @@ public class ReportPrintQuery {
 	private final String 	ORDER_BY 	= "ORDER BY";
 	private final String 	WHERE 		= "WHERE";
 	private final String 	AS 			= "AS";
-	private final String	ALIAS_PREFIX= "dc";
+	private final String	COLUMN_ALIAS= "ca";
+	private final String	TABLE_ALIAS	= "ta";
 	
 	/**
 	 * Get Table Name
@@ -176,20 +177,28 @@ public class ReportPrintQuery {
 						.append(m_IR.getTableName()).append(" ");
 		//	Iterate
 		int columnIndex = 1;
+		int tableIndex = 1;
 		//	New Columns
 		m_columns = new ArrayList<InfoReportField>();
 		//	Iterate
 		for(InfoReportField field : m_IR.getInfoReportFields()){
-			//	Get Lookup
-			InfoLookup lookup = getInfoLookup(field);
+			InfoLookup lookup = null;
+			String tableAlias = null;
+			//	Get Display
+			if(DisplayType.isLookup(field.DisplayType)) {
+				//	Get Table Alias
+				tableAlias = TABLE_ALIAS + tableIndex++;
+				//	Get Lookup
+				lookup = getInfoLookup(tableAlias, field);
+			}
 			//	Get Lookup Field
 			String lookupField = getLookupColumn(m_tableName, field, lookup);
 			lookupField = "(" + lookupField + ")";
 			//	Add to Query
 			if(field.IsPrinted){
-				String alias = ALIAS_PREFIX + columnIndex++;
+				String columnAlias = COLUMN_ALIAS + columnIndex++;
 				//	Add Alias
-				lookupField = lookupField + " " + AS + " " + alias;
+				lookupField = lookupField + " " + AS + " " + columnAlias;
 				//	Add Separator
 				if(!isFirst)
 					m_SQL.append(", ");
@@ -203,7 +212,7 @@ public class ReportPrintQuery {
 					isFirst = false;
 				//	Add to Sort Columns
 				if(field.IsOrderBy)
-					m_orderColumns.add(new ReportSortColumnPair(field.SortNo, alias));
+					m_orderColumns.add(new ReportSortColumnPair(field.SortNo, columnAlias));
 				//	Update Column Quantity
 				m_columnQty++;
 				//	Add Columns
@@ -279,16 +288,15 @@ public class ReportPrintQuery {
 	/**
 	 * Get Lookup Column Name
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 20:33:33
+	 * @param tableAlias
 	 * @param field
 	 * @return
 	 * @return InfoLookup
 	 */
-	private InfoLookup getInfoLookup(InfoReportField field){
-		if(!DisplayType.isLookup(field.DisplayType))
-			return null;
+	private InfoLookup getInfoLookup(String tableAlias, InfoReportField field){
 		//	Do it
 		InfoField lookupField = new InfoField(field);
-		Lookup m_lookup = new Lookup(ctx, lookupField);
+		Lookup m_lookup = new Lookup(ctx, lookupField, tableAlias);
 		return m_lookup.getInfoLookup();
 	}
 	
@@ -307,14 +315,14 @@ public class ReportPrintQuery {
 		else
 			m_from.append(LEFT_JOIN).append(" ");
 		//	Table Name
-		m_from.append(lookup.TableName).append(" ");
+		m_from.append(lookup.TableName).append(" ").append(AS).append(" ").append(lookup.TableAlias).append(" ");
 		//	On
 		m_from.append(ON).append("(")
-							.append(lookup.TableName).append(POINT).append(lookup.KeyColumn)
+							.append(lookup.TableAlias).append(POINT).append(lookup.KeyColumn)
 							.append(EQUAL).append(tableName).append(POINT).append(linkColumn.ColumnName);
 		if(linkColumn.DisplayType == DisplayType.LIST) {
 			m_from.append(" ").append(AND).append(" ")
-								.append(lookup.TableName).append(POINT)
+								.append(lookup.TableAlias).append(POINT)
 								.append(InfoLookup.REFERENCE_TN).append("_ID")
 								.append(EQUAL).append(linkColumn.AD_Reference_Value_ID);
 		}
@@ -328,14 +336,15 @@ public class ReportPrintQuery {
 			else
 				m_from.append(LEFT_JOIN).append(" ");
 			//	Table Name
-			m_from.append(lookup.TableName).append("_Trl ");
+			m_from.append(lookup.TableName).append(InfoLookup.TR_TABLE_SUFFIX).append(" ")
+								.append(AS).append(" ").append(lookup.TableAlias).append(InfoLookup.TR_TABLE_SUFFIX).append(" ");
 			//	On
 			m_from.append(ON).append("(")
-								.append(InfoLookup.REF_LIST_TN).append("_Trl")
+								.append(lookup.TableAlias).append(InfoLookup.TR_TABLE_SUFFIX)
 								.append(POINT).append(InfoLookup.REF_LIST_TN).append("_ID")
-								.append(EQUAL).append(InfoLookup.REF_LIST_TN)
+								.append(EQUAL).append(lookup.TableAlias)
 								.append(POINT).append(InfoLookup.REF_LIST_TN).append("_ID ")
-								.append(AND).append(" ").append(InfoLookup.REF_LIST_TN).append("_Trl")
+								.append(AND).append(" ").append(lookup.TableAlias).append(InfoLookup.TR_TABLE_SUFFIX)
 								.append(POINT).append(InfoLookup.AD_LANGUAGE_CN)
 								.append(EQUAL).append("'").append(m_AD_Language).append("'").append(")").append(" ");
 		}
