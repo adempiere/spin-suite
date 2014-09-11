@@ -82,13 +82,6 @@ public class Login extends TV_Base implements I_CancelOk {
         getMenuInflater().inflate(R.menu.cancel_ok, menu);
         MenuItem item = menu.getItem(0);
         item.setVisible(true);
-        // Add either a "next" or "finish" button to the action bar, depending on which page
-        // is currently selected.
-        /*MenuItem item = menu.add(Menu.NONE, R.id.action_next, Menu.NONE,
-                (mPager.getCurrentItem() == mPagerAdapter.getCount() - 1)
-                        ? R.string.action_finish
-                        : R.string.action_next);
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);*/
         return true;
     }
     

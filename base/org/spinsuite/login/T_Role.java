@@ -273,7 +273,7 @@ public class T_Role extends Fragment implements I_Login {
 	}
     
     /**
-     * Load Organizarion
+     * Load Organization
      * @author Yamel Senih 04/02/2013, 19:50:28
      * @param client_ID
      * @return
