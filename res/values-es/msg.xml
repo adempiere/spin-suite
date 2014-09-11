@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*************************************************************************************
+ * Product: Spin-Suite (Making your Business Spin)                                   *
+ * This program is free software; you can redistribute it and/or modify it    		 *
+ * under the terms version 2 of the GNU General Public License as published   		 *
+ * by the Free Software Foundation. This program is distributed in the hope   		 *
+ * that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 		 *
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.           		 *
+ * See the GNU General Public License for more details.                       		 *
+ * You should have received a copy of the GNU General Public License along    		 *
+ * with this program; if not, write to the Free Software Foundation, Inc.,    		 *
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                     		 *
+ * For the text or an alternative of this public license, you may reach us    		 *
+ * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com				  		 *
+ ************************************************************************************/
+ -->
+<resources>
+    <string name="msg_ValidError">Error de Validación</string>
+    <string name="msg_Ok">OK</string>
+    <string name="msg_Ask">Confirmación</string>
+    <string name="msg_Acept">Aceptar</string>
+	<string name="msg_Cancel">Cancelar</string>
+	<string name="msg_Save">Guardar</string>
+	<string name="msg_UserPassDoNotMatch">Usuario / Contraseña no Coinciden</string>
+	<string name="msg_InIsOut">Está Seguro de Salir?</string>
+	<string name="msg_Filter">Filtro de Búsqueda</string>
+	<string name="msg_ClassNotFound">Clase no Encontrada</string>
+	<string name="msg_LoadError">Error de Carga</string>
+	<string name="msg_Loading">Cargando....</string>
+	<string name="msg_Saving">Guardando....</string>
+	<string name="msg_Exporting">Exportando....</string>
+	<string name="msg_Processing">Procesando....</string>
+	<string name="msg_NewRecord">Agregar Nuevo Registro</string>
+	<string name="msg_New">Nuevo</string>
+	<string name="msg_Yes">Si</string>
+	<string name="msg_No">No</string>
+	<string name="msg_AskDelete">Desea Eliminar el Registro?</string>
+	<string name="msg_IllegalAccessException">Acceso Ilegal</string>
+	<string name="msg_InstantiationException">Error de Instancia de Clase</string>
+	<string name="msg_AddModifyProducts">Agregar/Modificar Productos</string>
+	<string name="msg_SQLFailed">SQL Fallido</string>
+	<string name="msg_ListProducts">Lista Productos</string>
+	<string name="msg_ProductCode">Código de Producto</string>
+	<string name="msg_ProductName">Nombre de Producto</string>
+	<string name="msg_SyncFailed" >Sincronización Fallida</string>
+	<string name="msg_SyncSucess" >Sincronización Exitosa</string>
+	<string name="msg_SyncFinish" >Sincronización Finalizada</string>
+	<string name="msg_Synchronizing" >Sincronizando</string>
+	<string name="msg_Search" >Buscar</string>
+	<string name="msg_Delete" >Eliminar</string>
+	<string name="msg_ProcessError">Error de Proceso</string>
+	<string name="msg_STATUS_Completed">Documento Completado</string>
+	<string name="msg_STATUS_Voided">Documento Cancelado</string>
+	<string name="msg_AskVoid">Está Seguro de Cancelar el Documento?</string>
+	<string name="msg_Error">Error</string>
+	<string name="msg_IsNoDeleteable">El Registro no es Eliminable</string>
+	<string name="msg_DocNoLinesFound">El Documento no Tiene Líneas</string>
+	<string name="msg_ProductInfo">Información de Producto</string>
+	<string name="msg_Inventory">Inventario</string>
+	<string name="msg_AskCloseVisit">Cerrar Visita?</string>
+	<string name="msg_RecordNo">Nro de Registros:</string>
+	<string name="msg_TestOk">Conexión Establecida Correctamente</string>
+	<string name="msg_FailedConnection">Conexión Fallida</string>
+	<string name="msg_Billing">Facturación</string>
+	<string name="msg_Shipment">Entrega</string>
+	<string name="msg_AutomaticVisitClosing">Cierre Automático de Visita</string>
+	<string name="msg_ReadOnly">Registro de Sólo Lectura</string>
+	<string name="msg_LoginOffDate">Inicio de Sesión Fuera de Fecha</string>
+	<string name="msg_WritePermissionsBlocked">Permisos de Escritura Bloqueados</string>
+	<string name="msg_UndoSelection">Deshacer Selección?</string>
+	<string name="msg_CallingWebService">Llamando Servicio Web</string>
+	<string name="msg_CouldNotFindServer">Could Not Find Server</string>
+	<string name="msg_Synchronization">Sincronización</string>
+	<string name="msg_QtyOverMA">La Cantidad Supera al Máximo Permitido</string>
+	<string name="msg_QtyAllowed">Cantidad Permitida</string>
+	<string name="msg_Diff">Dif.</string>
+	<string name="msg_Date">Fecha</string>
+	<string name="msg_Time">Hora</string>
+	<string name="msg_Actions">Acciones</string>
+	<string name="msg_AddEvent">Agregar Evento</string>
+	<string name="msg_SDNotFound">Tarjeta SD Extraída</string>
+	<string name="msg_SDNotFoundDetail">No se encuentra la Base de Datos de la Aplicación, por favor Inserte la tarjeta SD e inicie la Aplicación Nuevamente</string>
+	<string name="msg_VisitClosed">Visita Cerrada</string>
+	<string name="msg_CantDEDocument">No puede Eliminar Eventos Generados a partir de Documentos</string>
+	<string name="msg_AskRMA_InOutCh">El Valor de la Columna \"Entrega\" ha Cambiado</string>
+	<string name="msg_AskRMA_InOutChDetail">Las Líneas de la ADM Actual Serán Eliminadas. Desea Continuar?</string>
+	<string name="msg_OrderGenerateFromInventory">Generar Orden de Venta desde Inventario</string>
+	<string name="msg_DocNoSaved">Documento no Guardado</string>
+	<string name="msg_OrderGeneratedSuccessFul">Orden Generada Correctamente</string>
+	<string name="msg_AskOrderGenerateFromInventory">Generar Orden de Venta desde Inventario?</string>
+	<string name="msg_AskLoadQtySuggested">Cargar Cantidades Sugeridas?</string>
+	<string name="msg_AddTenderType">Agregar Forma de Pago</string>
+	<string name="msg_AddCollect">Agregar Cobranza</string>
+	<string name="msg_AmtOverMA">El Monto Supera al Máximo Permitido</string>
+	<string name="msg_AmtAllowed">Monto Permitido</string>
+	<string name="msg_Collect">Cobro</string>
+	<string name="msg_AmtReceiptZero">El Monto del Cobro es igual a Cero</string>
+	<string name="msg_OpenAmtZero">El Monto Pendiente es igual a Cero</string>
+	<string name="msg_AmtReceiptOverOpen">El Monto Cobrado debe ser Menor o Igual al Monto Pendiente</string>
+	<string name="msg_ViewCollect">Ver Cobranzas</string>
+	<string name="msg_AddModifyCollect">Agregar/Modificar Cobranza</string>
+	<string name="msg_ExistsDeposit">Ya Existe un Depósito Relacionado al Documento</string>
+	<string name="msg_Other">Otros</string>
+	<string name="msg_Receivable">CxC</string>
+	<string name="msg_CantInstance">No se Puede Instanciar Clase</string>
+	<string name="msg_Total">Total</string>
+	<string name="msg_RowsExceededException">Filas Excedidas</string>
+	<string name="msg_WriteException">Error de Escritura</string>
+	<string name="msg_IOException">Error de Entrada/Salida</string>
+	<string name="msg_FileNotFoundException">Archivo no Encontrado</string>
+	<string name="msg_DocumentException">Error en Documento</string>
+	<string name="msg_Exported">Exportado</string>
+	<string name="msg_Path">Ruta</string>
+	<string name="msg_Report">Reporte</string>
+	<string name="msg_Image">Imagen</string>
+	<string name="msg_SharedFromSFAndroid">Compartido desde Aplicación Spin-Suite</string>
+	<string name="msg_ReportParameters">Parámetros de Reporte</string>
+	<string name="msg_SendAsXLS">Enviar como XLS</string>
+	<string name="msg_SendAsPDF">Enviar como PDF</string>
+	<string name="msg_FunctionSum">Suma</string>
+	<string name="msg_FunctionMean">Promedio</string>
+	<string name="msg_FunctionCount">Conteo</string>
+	<string name="msg_FunctionMinimum">Mínimo</string>
+	<string name="msg_FunctionMaximum">Máximo</string>
+	<string name="msg_FunctionVariance">Varianza</string>
+	<string name="msg_FunctionDeviation">Desviación Estandar</string>
+	<string name="msg_ErrorCreatingDirectory">Error Creando Directorio</string>
+	<string name="msg_InvalidProcessState">Estado del Proceso Invalido</string>
+	<string name="msg_TableNotFound">Tabla No Encontrada</string>
+</resources>

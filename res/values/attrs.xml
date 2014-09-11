@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Icon for Action Bar -->
+	<attr name="ic_ab_ok" format="reference"/>
+	<attr name="ic_ab_cancel" format="reference"/>
+	<attr name="ic_ab_save" format="reference"/>
+	<attr name="ic_ab_edit" format="reference"/>
+	<attr name="ic_ab_add" format="reference"/>
+	<attr name="ic_ab_delete" format="reference"/>
+	<attr name="ic_ab_search" format="reference"/>
+	<attr name="ic_ab_attach" format="reference"/>
+	<attr name="ic_ab_settings" format="reference"/>
+	<attr name="ic_ab_overflow" format="reference"/>
+	<attr name="ic_ab_report" format="reference"/>
+	<attr name="ic_ab_share" format="reference"/>
+	<attr name="ic_ab_process" format="reference"/>
+	<attr name="ic_ab_drawer" format="reference"/>
+	<attr name="ic_ab_drawer_shadow" format="reference"/>
+	<!-- Drawer -->
+	<attr name="ic_dr_share" format="reference"/>
+	<attr name="ic_dr_pdf" format="reference"/>
+	<attr name="ic_dr_xls" format="reference"/>
+	<attr name="ic_dr_xml" format="reference"/>
+	<attr name="ic_dr_html" format="reference"/>
+	<attr name="ic_dr_construction" format="reference"/>
+	<attr name="ic_dr_window" format="reference"/>
+	<attr name="ic_dr_report" format="reference"/>
+	<attr name="ic_dr_process" format="reference"/>
+	<attr name="ic_dr_folder" format="reference"/>
+	<!-- Menu -->
+	<attr name="ic_ml_construction" format="reference"/>
+	<attr name="ic_ml_window" format="reference"/>
+	<attr name="ic_ml_report" format="reference"/>
+	<attr name="ic_ml_process" format="reference"/>
+	<attr name="ic_ml_folder" format="reference"/>
+	<!-- Icon for Layout -->
+	<attr name="ic_lt_search" format="reference"/>
+	<attr name="ic_lt_search_product" format="reference"/>
+	<attr name="ic_lt_search_bpartner" format="reference"/>
+	<attr name="ic_lt_date" format="reference"/>
+	<!-- Icon List -->
+	<attr name="ic_ls_ok" format="reference"/>
+</resources>
