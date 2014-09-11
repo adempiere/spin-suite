@@ -581,12 +581,7 @@ public class V_Process extends Activity {
     	}
 		//	
 		int itemId = item.getItemId();
-		if(itemId == android.R.id.home) {
-			// Navigate "up" the demo structure to the launchpad activity.
-			// See http://developer.android.com/design/patterns/navigation.html for more.
-			NavUtils.navigateUpTo(this, new Intent(this, Login.class));
-			return true;
-		} if(itemId == R.id.action_process) {
+		if(itemId == R.id.action_process) {
 			if(isLoaded){
 				ll_ProcessPara.setVisibility(ScrollView.VISIBLE);
 				item.setIcon(Env.getResourceID(this, R.attr.ic_ab_process));
