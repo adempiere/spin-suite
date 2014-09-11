@@ -125,9 +125,6 @@ public class InitialLoadTask implements BackGroundProcess{
 	public Object run() {
 		// TODO Auto-generated method stub
  
-		m_PublicMsg = "Calling";
-		m_Task.refreshGUINow();
-		
 		//Call List of Web Services
 		CallListWebServices();
 		
@@ -203,11 +200,15 @@ public class InitialLoadTask implements BackGroundProcess{
 	private void CallListWebServices(){
 		
 		//Call Web Service Method Create Metadata
+		m_PublicMsg = "Calling " + "Create Metadata";
+		m_Task.refreshGUINow();
 		if (!CallWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
 				new StringNamePair(ILCall.m_ServiceMethodField, InitialLoad.INITIALLOAD_ServiceMethodCreateMetaData)))
 			return;
 		
 		//Call Web Service Method Web Sevice Definition
+		m_PublicMsg = "Calling " + "Web Sevice Definition";
+		m_Task.refreshGUINow();
 		if (!CallWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
 				new StringNamePair(ILCall.m_ServiceMethodField, InitialLoad.INITIALLOAD_ServiceMethodWebServiceDefinition)))
 			return;
@@ -219,14 +220,17 @@ public class InitialLoadTask implements BackGroundProcess{
 			//Call Web Service Method Data Synchronization
 			String sql = new String("SELECT wst.Value " +
 									"FROM SPS_SyncMenu sm " +
-									"INNER JOIN WS_WebServiceType wst ON sm.WS_WebServiceType_ID = wm.WS_WebServiceType_ID " +
+									"INNER JOIN WS_WebServiceType wst ON sm.WS_WebServiceType_ID = wst.WS_WebServiceType_ID " +
 									"INNER JOIN WS_WebServiceMethod wsm ON wsm.WS_WebServiceMethod_ID = wst.WS_WebServiceMethod_ID " +
 									"INNER JOIN WS_WebService ws ON ws.WS_WebService_ID = wst.WS_WebService_ID " +
-									"WHERE ws.Value = ? AND wst.Value = ? ");
+									"WHERE ws.Value = ? AND wsm.Value = ? ");
 			
 			rs = conn.querySQL(sql, new String[]{InitialLoad.INITIALLOAD_ServiceDefinition,InitialLoad.INITIALLOAD_ServiceMethodDataSynchronization});    	
 	    	if(rs.moveToFirst()){
 	    		do{
+	    			m_PublicMsg = "Calling " + rs.getString(0);
+	    			m_Progress = -1;
+	    			m_Task.refreshGUINow();
 		    		//Call Web Service Method Web Sevice Definition
 		    		CallWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
 		    							new StringNamePair(ILCall.m_ServiceMethodField, InitialLoad.INITIALLOAD_ServiceMethodDataSynchronization),
@@ -259,19 +263,30 @@ public class InitialLoadTask implements BackGroundProcess{
 		
 		for (int i=0;i<Params.length;i++)
 			il.addPropertyToCall(Params[i].getKey(), Params[i].getName());
+
 		
 		//Call Service
 		SoapObject so = il.callService();
 		
 		//Write On Database
-		if (so!= null)
+		if (so!= null){
 			if (!il.writeDB(so))
 				return false;
+		}
 		else
 			return false;
 		
 		return true;
 		
+	}
+	/**
+	 * 
+	 * @author <a href="mailto:carlosapardam@gmail.com">Carlos Parada</a> 09/09/2014, 21:46:44
+	 * @return
+	 * @return int
+	 */
+	public int getM_Progress() {
+		return m_Progress;
 	}
 		
 }

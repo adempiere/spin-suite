@@ -16,6 +16,7 @@
 package org.spinsuite.initialload;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.logging.Level;
 
 import org.ksoap2.serialization.SoapObject;
@@ -54,9 +55,6 @@ public class InitialLoad extends CommunicationSoap{
 	public static String INITIALLOAD_ServiceMethodDataSynchronization = "DataSynchronization";
 	
 	
-	
-	
-	
 	/**
 	 * *** Constructor ***
 	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 25/02/2014, 23:15:06
@@ -69,7 +67,6 @@ public class InitialLoad extends CommunicationSoap{
 			boolean isNetService,Context p_Ctx) {
 		super(p_Url, p_NameSpace, p_Method_Name, isNetService);
 		m_Ctx = p_Ctx;
-		
 	}
 	
 	/**
@@ -101,7 +98,8 @@ public class InitialLoad extends CommunicationSoap{
 	 * @param p_ServiceType
 	 */
 	public InitialLoad(String p_Url, String p_NameSpace, String p_Method_Name,
-			boolean isNetService, String p_SoapAction, String p_User, String p_PassWord,InitialLoadTask p_Task, int p_Timeout, Context p_Ctx) {
+			boolean isNetService, String p_SoapAction, String p_User, String p_PassWord,InitialLoadTask p_Task, 
+				int p_Timeout, Context p_Ctx) {
 		this(p_Url, p_NameSpace, p_Method_Name,
 				isNetService, p_SoapAction, p_Ctx);
 		m_Task = p_Task;
@@ -161,8 +159,9 @@ public class InitialLoad extends CommunicationSoap{
 			for (int i= 0;i< countrec;i++){
 				SoapObject query = (SoapObject) resp.getProperty(i);
 							
-				m_Task.setM_PublicMsg(query.getPropertyAsString("Name"));
+				
 				m_Task.setM_Progress(i+1);
+				m_Task.setM_PublicMsg(query.getPropertyAsString("Name") + " "+m_Task.getM_Progress() + " / " + countrec );
 				m_Task.refreshGUINow();
 				
 		    	String sql = query.getPropertyAsString("SQL");
@@ -178,16 +177,18 @@ public class InitialLoad extends CommunicationSoap{
 							params[j]=values.getPrimitiveProperty("Value");
 					}
 				}
+		    	System.out.println(sql);
 		    	//Execute SQL
 				if (params==null)
 					conn.executeSQL(sql);
 		    	else
 		    		conn.executeSQL(sql, params);
 				
-				System.out.println(sql);
+				
 			}
 		}
     	catch (Exception ex){
+    		ex.printStackTrace();
     		m_Task.setM_PublicMsg(ex.getLocalizedMessage());
     		m_Task.setM_Error(true);
 			m_Task.refreshGUINow();
@@ -210,4 +211,5 @@ public class InitialLoad extends CommunicationSoap{
 	public void addPropertyToCall(String p_Name, Object p_Value) {
 		call.addProperty(p_Name, p_Value);
 	}
+	
 }
