@@ -37,11 +37,24 @@ public class Lookup {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/03/2014, 15:03:15
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/09/2014, 10:07:25
+	 * @param ctx
+	 * @param field
+	 * @param tableAlias
+	 */
+	public Lookup(Context ctx, InfoField field, String tableAlias){
+		this(ctx, 0, 0, field, tableAlias);
+	}
+	
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/09/2014, 10:08:19
+	 * @param ctx
 	 * @param field
 	 */
 	public Lookup(Context ctx, InfoField field){
-		this(ctx, 0, 0, field);
+		this(ctx, 0, 0, field, null);
 	}
 	
 	/**
@@ -52,9 +65,10 @@ public class Lookup {
 	 * @param m_ActivityNo
 	 * @param m_TabNo
 	 * @param field
+	 * @param tableAlias
 	 */
-	public Lookup(Context ctx, int m_ActivityNo, int m_TabNo, InfoField field){
-		this(ctx, null, field);
+	public Lookup(Context ctx, int m_ActivityNo, int m_TabNo, InfoField field, String tableAlias){
+		this(ctx, null, field, tableAlias);
 		//	New
 		m_TabParam = new TabParameter();
 		m_TabParam.setActivityNo(m_ActivityNo);
@@ -68,22 +82,44 @@ public class Lookup {
 	 * @param ctx
 	 * @param tabParam
 	 * @param field
+	 * @param tableAlias
 	 */
-	public Lookup(Context ctx, TabParameter tabParam, InfoField field){
+	public Lookup(Context ctx, TabParameter tabParam, InfoField field, String tableAlias) {
 		this.m_field = field;
 		this.ctx = ctx;
 		m_Language = Env.getAD_Language(ctx);
 		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
-		ctx_lookup_value = CTX_VALUE_PREFIX + m_Language + "|" + m_field.SPS_Column_ID;
-		ctx_lookup_has_where = CTX_HAS_WHERE + m_Language + "|" + m_field.SPS_Column_ID;
-		ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX + m_Language + "|" + m_field.SPS_Column_ID;
 		m_TabParam = tabParam;
+		m_TableAlias = tableAlias;
+		//	Add Alias
+		if(tableAlias != null
+				&& tableAlias.length() > 0) {
+			ctx_lookup_value = CTX_VALUE_PREFIX + m_Language + "|" + tableAlias + "|" + m_field.SPS_Column_ID;
+			ctx_lookup_has_where = CTX_HAS_WHERE + m_Language + "|" + tableAlias + "|" + m_field.SPS_Column_ID;
+			ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX + m_Language + "|" + tableAlias + "|" + m_field.SPS_Column_ID;
+		} else {
+			ctx_lookup_value = CTX_VALUE_PREFIX + m_Language + "|" + m_field.SPS_Column_ID;
+			ctx_lookup_has_where = CTX_HAS_WHERE + m_Language + "|" + m_field.SPS_Column_ID;
+			ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX + m_Language + "|" + m_field.SPS_Column_ID;
+		}
 		//	Valid Null
 		if(m_TabParam == null) {
 			m_TabParam = new TabParameter();
 			m_TabParam.setActivityNo(0);
 			m_TabParam.setTabNo(0);
 		}
+	}
+	
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/09/2014, 10:09:45
+	 * @param ctx
+	 * @param tabParam
+	 * @param field
+	 */
+	public Lookup(Context ctx, TabParameter tabParam, InfoField field) {
+		this(ctx, tabParam, field, null);
 	}
 	
 	/**
@@ -114,7 +150,7 @@ public class Lookup {
 	}
 	
 	/**
-	 * With Table Name
+	 * With Table Name and column Name for lookup manual
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/09/2014, 12:20:36
 	 * @param ctx
@@ -143,7 +179,7 @@ public class Lookup {
 	
 	
 	/**
-	 * 
+	 * Get from Search
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/03/2014, 16:20:14
 	 * @param ctx
@@ -189,18 +225,20 @@ public class Lookup {
 	/**	Display Lookup Spinner	*/
 	private ArrayList<DisplayLookupSpinner> 	data 					= null;
 	/**	Tab Parameter			*/
-	protected TabParameter 						m_TabParam = null;
+	protected TabParameter 						m_TabParam 				= null;
+	/**	Table Alias				*/
+	private String								m_TableAlias			= null;
 	
 	private String			ctx_lookup_value 		= null;
 	private String 			ctx_lookup_has_where 	= null;
 	private String 			ctx_lookup_info		 	= null;
 	/**	Context Value Prefix	*/
-	private final String	CTX_VALUE_PREFIX 				= "#LK|C|";
-	private final String	CTX_VALUE_PREFIX_TABLE			= "#LK|T|";
-	private final String	CTX_HAS_WHERE					= "#LK|HW|C|";
-	private final String	CTX_HAS_WHERE_TABLE				= "#LK|HW|T|";
-	private final String	CTX_LOOKUP_INFO_PREFIX 			= "#LKI|C|";
-	private final String	CTX_LOOKUP_INFO_PREFIX_TABLE	= "#LKI|T|";
+	private final String	CTX_VALUE_PREFIX 				= "LK|C|";
+	private final String	CTX_VALUE_PREFIX_TABLE			= "LK|T|";
+	private final String	CTX_HAS_WHERE					= "LK|HW|C|";
+	private final String	CTX_HAS_WHERE_TABLE				= "LK|HW|T|";
+	private final String	CTX_LOOKUP_INFO_PREFIX 			= "LKI|C|";
+	private final String	CTX_LOOKUP_INFO_PREFIX_TABLE	= "LKI|T|";
 	private final String	MARK_WHERE						= "<MARK_WHERE>";
 	
 	
@@ -370,6 +408,12 @@ public class Lookup {
 		//	Set Info Lookup
 		m_InfoLookup.TableName = tableName;
 		m_InfoLookup.KeyColumn = m_field.ColumnName;
+		//	Set Table Alias
+		if(m_TableAlias == null
+				|| m_TableAlias.length() == 0)
+			m_TableAlias = tableName;
+		//	
+		m_InfoLookup.TableAlias = m_TableAlias;		
 		//	
 		DB conn = new DB(ctx);
 		DB.loadConnection(conn, DB.READ_ONLY);
@@ -391,7 +435,7 @@ public class Lookup {
 				if(!isFirst)
 					longColumn.append("||'_'||");
 				//	
-				longColumn.append("COALESCE(").append(tableName).append(".").append(columnName).append(",'')");
+				longColumn.append("COALESCE(").append(m_TableAlias).append(".").append(columnName).append(",'')");
 				//	Set false
 				if(isFirst)
 					isFirst = false;
@@ -436,7 +480,7 @@ public class Lookup {
 	 */
 	private String loadSQLTableSearch() {
 		//	Instance Lookup
-		m_InfoLookup = new InfoLookup();
+		m_InfoLookup = new InfoLookup();		
 		//	
 		StringBuffer sql = new StringBuffer();
 		StringBuffer where = new StringBuffer();
@@ -462,9 +506,15 @@ public class Lookup {
 			String orderByClause = rs.getString(5);
 			//	Close
 			DB.closeConnection(conn);
-			//	Set Info Lookup
+			//	Set Lookup Info
 			m_InfoLookup.TableName = tableName;
-			m_InfoLookup.KeyColumn = pkColumnName;			
+			m_InfoLookup.KeyColumn = pkColumnName;
+			//	Set Table Alias
+			if(m_TableAlias == null
+					|| m_TableAlias.length() == 0)
+				m_TableAlias = tableName;
+			//	
+			m_InfoLookup.TableAlias = m_TableAlias;
 			//	
 			sql.append(tableName).append(".").append(pkColumnName).append(", ");
 			//	Display Column
@@ -475,7 +525,7 @@ public class Lookup {
 				longColumn.append("COALESCE(").append(tableName).append(".")
 						.append("Value").append(", '')").append("||'_'||");
 			//	Display Column
-			longColumn.append("COALESCE(").append(tableName).append(".").append(dColumnName).append(",'')");
+			longColumn.append("COALESCE(").append(m_TableAlias).append(".").append(dColumnName).append(",'')");
 			sql.append(longColumn);
 			//	Set Info Lookup
 			m_InfoLookup.DisplayColumn = longColumn.toString();
@@ -525,6 +575,16 @@ public class Lookup {
 	private String loadSQLList(){
 		//	Instance Lookup
 		m_InfoLookup = new InfoLookup();
+		//	Set Table Alias
+		if(m_TableAlias == null
+				|| m_TableAlias.length() == 0)
+			m_TableAlias = "AD_Ref_List";
+		
+		//	Set Lookup Info
+		m_InfoLookup.KeyColumn = "Value";
+		m_InfoLookup.TableName = "AD_Ref_List";
+		m_InfoLookup.TableAlias = m_TableAlias;
+		
 		//	Set SQL
 		StringBuffer sql = new StringBuffer("SELECT rl.Value, ");
 		//	Handle Language
@@ -533,7 +593,7 @@ public class Lookup {
 			//	From
 			sql.append("FROM AD_Ref_List rl ");
 			//	Set Lookup Info
-			m_InfoLookup.DisplayColumn = "COALESCE(AD_Ref_List.Name,'')";
+			m_InfoLookup.DisplayColumn = "COALESCE(" + m_TableAlias + ".Name,'')";
 		} else {
 			sql.append("rlt.Name ");
 			//	From
@@ -542,7 +602,10 @@ public class Lookup {
 			sql.append("INNER JOIN AD_Ref_List_Trl rlt ON(rlt.AD_Ref_List_ID = rl.AD_Ref_List_ID " +
 					"AND rlt.AD_Language = '").append(m_Language).append("') ");
 			//	Set Lookup Info
-			m_InfoLookup.DisplayColumn = "COALESCE(AD_Ref_List_Trl.Name,'')";
+			m_InfoLookup.DisplayColumn = "COALESCE(" + 
+											m_TableAlias + 
+											InfoLookup.TR_TABLE_SUFFIX + 
+											".Name,'')";
 		}
 		//	Where Clause			
 		sql.append("WHERE rl.AD_Reference_ID = ").append(m_field.AD_Reference_Value_ID);
@@ -554,9 +617,6 @@ public class Lookup {
 			//	Set Where
 			m_InfoLookup.WhereClause = getValRule();
 		}
-		//	Set Lookup Info
-		m_InfoLookup.KeyColumn = "Value";
-		m_InfoLookup.TableName = "AD_Ref_List";
 		//	Add Mark
 		m_IsHasWhere = true;
 		sql.append(MARK_WHERE);
