@@ -79,6 +79,8 @@ public class LookupMenu {
 		//	
 		String language = Env.getAD_Language(ctx);
 		boolean isBaseLanguage = Env.isBaseLanguage(ctx);
+		//	Get Role
+		int m_AD_Role_ID = Env.getAD_Role_ID(ctx);
 		//	SQL
 		StringBuffer sql = new StringBuffer();
 		//	if Base Language
@@ -86,23 +88,38 @@ public class LookupMenu {
 			sql.append("SELECT m.SPS_Menu_ID, m.Name, m.Description, m.Action, m.ImageURL, " +
 					"m.SPS_Table_ID, m.WhereClause, m.GroupByClause, m.OrderByClause, " +
 					"tn.Parent_ID, m.IsSummary, m.DeploymentType, m.AD_Form_ID, m.SPS_Window_ID, m.AD_Process_ID, " +
-					"m.ActivityMenu_ID, m.isReadWrite, m.IsInsertRecord, tn.SeqNo " +
+					"m.ActivityMenu_ID, COALESCE(m.IsReadWrite, pa.IsReadWrite, wa.IsReadWrite) IsReadWrite, " +
+					"m.IsInsertRecord, tn.SeqNo " +
 					"FROM SPS_Menu m " +
 					"INNER JOIN AD_Tree t ON(t.AD_Table_ID = 53518) " +
-					"LEFT JOIN AD_TreeNode tn ON(tn.AD_Tree_ID = t.AD_Tree_ID AND tn.Node_ID = m.SPS_Menu_ID) ");
+					"LEFT JOIN AD_TreeNode tn ON(tn.AD_Tree_ID = t.AD_Tree_ID AND tn.Node_ID = m.SPS_Menu_ID)" +
+					"LEFT JOIN AD_Process_Access pa ON(pa.AD_Process_ID = m.AD_Process_ID) " +
+					"LEFT JOIN SPS_Window_Access wa ON(wa.SPS_Window_ID = m.SPS_Window_ID) ");
 		} else {
 			sql.append("SELECT m.SPS_Menu_ID, mt.Name, mt.Description, m.Action, m.ImageURL, " +
 					"m.SPS_Table_ID, m.WhereClause, m.GroupByClause, m.OrderByClause, " +
 					"tn.Parent_ID, m.IsSummary, m.DeploymentType, m.AD_Form_ID, m.SPS_Window_ID, m.AD_Process_ID, " +
-					"m.ActivityMenu_ID, m.isReadWrite, m.IsInsertRecord, tn.SeqNo " +
+					"m.ActivityMenu_ID, COALESCE(m.IsReadWrite, pa.IsReadWrite, wa.IsReadWrite) IsReadWrite, " +
+					"m.IsInsertRecord, tn.SeqNo " +
 					"FROM SPS_Menu m " +
 					"INNER JOIN AD_Tree t ON(t.AD_Table_ID = 53518) " +
 					"INNER JOIN SPS_Menu_Trl mt ON(mt.SPS_Menu_ID = m.SPS_Menu_ID AND mt.AD_Language = '").append(language).append("') " +
-					"LEFT JOIN AD_TreeNode tn ON(tn.AD_Tree_ID = t.AD_Tree_ID AND tn.Node_ID = m.SPS_Menu_ID) ");
+					"LEFT JOIN AD_TreeNode tn ON(tn.AD_Tree_ID = t.AD_Tree_ID AND tn.Node_ID = m.SPS_Menu_ID)" +
+					"LEFT JOIN AD_Process_Access pa ON(pa.AD_Process_ID = m.AD_Process_ID) " +
+					"LEFT JOIN SPS_Window_Access wa ON(wa.SPS_Window_ID = m.SPS_Window_ID) ");
 		}
 		//	Where Clause
-		sql.append("WHERE m.MenuType = ? " +
+		//	Process Access Role
+		sql.append("WHERE (pa.AD_Role_ID = ").append(m_AD_Role_ID).append(" ");
+		//	Window Access Role
+		sql.append("OR wa.AD_Role_ID = ").append(m_AD_Role_ID).append(") ");
+		//	
+		sql.append("AND m.MenuType = ? " +
 				"AND m.IsActive = 'Y' " +
+				"AND (" +
+				"		(m.AD_Process_ID IS NOT NULL AND pa.AD_Process_ID IS NOT NULL AND pa.IsActive = 'Y') " +
+				"		OR (m.SPS_Window_ID IS NOT NULL AND wa.SPS_Window_ID IS NOT NULL AND wa.IsActive = 'Y')" +
+				"	) " +
 				"AND tn.Parent_ID = ").append(parent_ID).append(" ");
 		//	If is context menu
 		if(!menuType.equals("M"))

@@ -28,6 +28,7 @@ import jxl.write.biff.RowsExceededException;
 import org.spinsuite.adapters.SearchAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
+import org.spinsuite.login.Login;
 import org.spinsuite.print.ReportPrintData;
 import org.spinsuite.print.layout.ReportAdapter;
 import org.spinsuite.print.layout.ReportExportMenuAdapter;
@@ -64,6 +65,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -577,8 +579,14 @@ public class V_Process extends Activity {
                 return true;
             }
     	}
+		//	
 		int itemId = item.getItemId();
-		if (itemId == R.id.action_process) {
+		if(itemId == android.R.id.home) {
+			// Navigate "up" the demo structure to the launchpad activity.
+			// See http://developer.android.com/design/patterns/navigation.html for more.
+			NavUtils.navigateUpTo(this, new Intent(this, Login.class));
+			return true;
+		} if(itemId == R.id.action_process) {
 			if(isLoaded){
 				ll_ProcessPara.setVisibility(ScrollView.VISIBLE);
 				item.setIcon(Env.getResourceID(this, R.attr.ic_ab_process));
