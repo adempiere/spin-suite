@@ -25,7 +25,10 @@ import org.spinsuite.view.LV_Menu;
 import org.spinsuite.view.TV_Base;
 
 import test.LoadInitData;
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.NavUtils;
@@ -38,16 +41,26 @@ import android.view.MenuItem;
  */
 public class Login extends TV_Base implements I_CancelOk {
     
+	/**	Data Base			*/
+	private final String 	DATA_BASE 		= "D";
+	/**	Role Access			*/
+	private final String 	ROLE_ACCESS 	= "R";
+	/**	Load Access Type	*/
+	private String			m_LoadType 		= ROLE_ACCESS;
+	/**	Activity			*/
+	private Activity		v_activity		= null;
+	
     @Override
 	public void onCreate(Bundle savedInstanceState) {
     	//	Reset Activity No
     	Env.resetActivityNo(getApplicationContext());
     	//	
     	super.onCreate(savedInstanceState);
-        
-        addFagment(T_Login.class, "Conn", R.string.tt_Conn);
+    	//	
+    	addFagment(T_Login.class, "Conn", R.string.tt_Conn);
         addFagment(T_Role.class, "LoginRole", R.string.tt_LoginRole);
-        
+        //	Set Activity
+        v_activity = this;
     	//*/
     	//CreatePDFTest.GenerarPDF(this);
     	// Validate SD
@@ -69,8 +82,8 @@ public class Login extends TV_Base implements I_CancelOk {
     		}
     		
     	} else {
-    		LoadInitData initData = new LoadInitData(this);
-    		initData.initialLoad_copyDB();
+    		m_LoadType = DATA_BASE;
+			new LoadAccessTask().execute();
     	}
     	//	
     }  
@@ -108,7 +121,7 @@ public class Login extends TV_Base implements I_CancelOk {
 			startActivity(intent);
 			return true;
 		}
-
+		//	
         return super.onOptionsItemSelected(item);
     }
     
@@ -138,10 +151,15 @@ public class Login extends TV_Base implements I_CancelOk {
 			}
 		} else if(fr instanceof T_Role){
 			if(ret){
-				Intent intent = new Intent(this, LV_Menu.class);
-				startActivity(intent);
-			} else {
-				
+				if(!Env.isAccessLoaded(this)) {
+					//	Load Access Role
+					m_LoadType = ROLE_ACCESS;
+					new LoadAccessTask().execute();
+				} else {
+					//	Start Activity
+					Intent intent = new Intent(this, LV_Menu.class);
+					startActivity(intent);
+				}
 			}
 		}
 		return true;
@@ -183,5 +201,56 @@ public class Login extends TV_Base implements I_CancelOk {
 	@Override
 	public Intent getParam() {
 		return null;
+	}
+	
+	/**
+	 * Load Access
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+	 *
+	 */
+	private class LoadAccessTask extends AsyncTask<Void, Void, Void> {
+
+		/**	Progress Bar			*/
+		private ProgressDialog 		v_PDialog;
+		
+		@Override
+		protected void onPreExecute() {
+			v_PDialog = ProgressDialog.show(v_activity, null, 
+					getString((m_LoadType.equals(ROLE_ACCESS)
+									? R.string.msg_LoadingAccess
+									: R.string.msg_LoadingDB)), false, false);
+		}
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			if(m_LoadType.equals(DATA_BASE)) {
+				LoadInitData initData = new LoadInitData(v_activity);
+	    		initData.initialLoad_copyDB();
+			} else if(m_LoadType.equals(ROLE_ACCESS)) {
+				//	Load Role Access
+				Env.loadRoleAccess(v_activity);
+			}
+			//	
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Void... progress) {
+			
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			//	
+			if(m_LoadType.equals(DATA_BASE)) {
+				
+			} else if(m_LoadType.equals(ROLE_ACCESS)) {
+				//	Start Activity
+				Intent intent = new Intent(v_activity, LV_Menu.class);
+				startActivity(intent);				
+			}
+			//	Hide dialog
+			v_PDialog.dismiss();
+		}
 	}
 }

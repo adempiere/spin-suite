@@ -452,7 +452,7 @@ public class TabParameter implements Parcelable {
 	 * @param m_IsInsertRecord
 	 * @return void
 	 */
-	public void setInsertRecord(boolean m_IsInsertRecord){
+	public void setIsInsertRecord(boolean m_IsInsertRecord){
 		this.m_IsInsertRecord = m_IsInsertRecord;
 	}
 	

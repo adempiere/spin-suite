@@ -120,7 +120,6 @@ public class LoadInitData {
 				e.printStackTrace();
 			}
 			loadContext();
-			Msg.toastMsg(ctx, "Load OK");
     	}		
 	}	//	initialLoad_copyDB
 
