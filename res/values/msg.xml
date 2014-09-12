@@ -29,6 +29,8 @@
 	<string name="msg_ClassNotFound">Class Not Found</string>
 	<string name="msg_LoadError">Load Error</string>
 	<string name="msg_Loading">Loading....</string>
+	<string name="msg_LoadingAccess">Loading Access....</string>
+	<string name="msg_LoadingDB">Loading Data Base....</string>
 	<string name="msg_Saving">Saving....</string>
 	<string name="msg_Exporting">Exporting....</string>
 	<string name="msg_Processing">Processing....</string>

@@ -48,8 +48,6 @@ public class ActivityParameter implements Parcelable {
 	private String			m_GroupByClause = null;
 	/**	Menu is Insert Record	*/
 	private String			m_IsInsertRecord = null;
-	/**	Menu is Read and Write	*/
-	private String		 	m_IsReadWrite = null;
 	/**	Is Summary Menu			*/
 	private boolean			m_IsSummary = false;
 	/**	Name Item				*/
@@ -132,7 +130,6 @@ public class ActivityParameter implements Parcelable {
 		dest.writeString(m_WhereClause);
 		dest.writeInt(m_Parent_ID);
 		//	Read Write
-		dest.writeString(m_IsReadWrite);
 		dest.writeString(m_IsInsertRecord);
 		dest.writeString((m_IsSummary? "Y": "N"));
 		dest.writeInt(m_ActivityNo);
@@ -160,7 +157,6 @@ public class ActivityParameter implements Parcelable {
 		m_WhereClause = parcel.readString();
 		m_Parent_ID = parcel.readInt();
 		//	Read Write
-		m_IsReadWrite = parcel.readString();
 		m_IsInsertRecord = parcel.readString();
 		String summary = parcel.readString();
 		m_IsSummary = (summary != null 
@@ -198,7 +194,6 @@ public class ActivityParameter implements Parcelable {
 		setWhereClause(from.getWhereClause());
 		setParent_ID(from.getParent_ID());
 		//	Read Write
-		setIsReadWrite((from.isReadWrite() != null && from.isReadWrite().equals("Y")));
 		setInsertRecord(from.isInsertRecord());
 		setIsSummary(from.isSummary());
 	}
@@ -424,26 +419,6 @@ public class ActivityParameter implements Parcelable {
 	}
 	
 	/**
-	 * Is Read and Write
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/02/2014, 01:00:31
-	 * @return
-	 * @return String
-	 */
-	public String isReadWrite(){
-		return m_IsReadWrite;
-	}
-	
-	/**
-	 * Set Read and Write
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/02/2014, 01:00:43
-	 * @param m_IsReadWrite
-	 * @return void
-	 */
-	public void setIsReadWrite(boolean m_IsReadWrite){
-		this.m_IsReadWrite = (m_IsReadWrite? "Y": "N");
-	}
-	
-	/**
 	 * Get Where Clause
 	 * @author Yamel Senih 04/05/2012, 17:34:31
 	 * @return
@@ -542,29 +517,6 @@ public class ActivityParameter implements Parcelable {
 	 */
 	public void setDeploymentType(String activitType){
 		this.m_DeploymentType = activitType;
-	}
-	
-	/**
-	 * Is Read Write Menu Level
-	 * @author Yamel Senih 31/07/2012, 18:46:44
-	 * @return
-	 * @return String
-	 */
-	public String isReadWriteM(){
-		return m_IsReadWrite;
-	}
-	
-	/**
-	 * Set Read Write Menu Level
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/02/2014, 01:02:07
-	 * @param m_IsReadWrite
-	 * @return void
-	 */
-	public void setIsReadWriteM(String m_IsReadWrite){
-		if(m_IsReadWrite != null){
-			this.m_IsReadWrite = m_IsReadWrite;
-		}
-		this.m_IsReadWrite = m_IsReadWrite;
 	}
 	
 	/**
@@ -677,8 +629,8 @@ public class ActivityParameter implements Parcelable {
 				+ ", m_ActivityMenu_ID=" + m_ActivityMenu_ID
 				+ ", m_DeploymentType=" + m_DeploymentType + ", m_Description="
 				+ m_Description + ", m_GroupByClause=" + m_GroupByClause
-				+ ", m_IsInsertRecord=" + m_IsInsertRecord + ", m_IsReadWrite="
-				+ m_IsReadWrite + ", m_IsSummary=" + m_IsSummary + ", m_Name="
+				+ ", m_IsInsertRecord=" + m_IsInsertRecord 
+				+ ", m_IsSummary=" + m_IsSummary + ", m_Name="
 				+ m_Name + ", m_OrderByClause=" + m_OrderByClause
 				+ ", m_SPS_Menu_ID=" + m_SPS_Menu_ID + ", m_SPS_SyncMenu_ID="
 				+ m_SPS_SyncMenu_ID + ", m_SPS_Table_ID=" + m_SPS_Table_ID

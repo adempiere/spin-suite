@@ -26,12 +26,12 @@
     	android:layout_height="match_parent"
     	android:orientation="vertical"
     	android:id="@+id/ll_Process" >
-        <!-- Process Parameters -->
+    	<!-- Process Info -->
 		<LinearLayout 
 		    android:layout_width="match_parent"
 	    	android:layout_height="wrap_content"
 	    	android:orientation="vertical"
-	    	android:id="@+id/ll_ProcessPara" >
+	    	android:id="@+id/ll_ProcessInfo" >
 			<TextView
 		  	    android:id="@+id/tv_Description"
 		  	    android:text="@string/Description"
@@ -44,6 +44,13 @@
 		  	    android:visibility="gone"
 		  	    style="@style/TextStandard">
 		  	</TextView>
+	    </LinearLayout>
+        <!-- Process Parameters -->
+		<LinearLayout 
+		    android:layout_width="match_parent"
+	    	android:layout_height="wrap_content"
+	    	android:orientation="vertical"
+	    	android:id="@+id/ll_ProcessPara" >
 		  	<ScrollView 
 				android:id="@+id/sv_Param"
 		   		android:layout_width="match_parent"

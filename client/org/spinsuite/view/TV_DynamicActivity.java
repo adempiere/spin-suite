@@ -173,7 +173,8 @@ public class TV_DynamicActivity extends TV_Base
 		//	Handle Translation
 		if(isBaseLanguage) {
 			sql = new String("SELECT t.SPS_Tab_ID, t.SeqNo, t.TabLevel, " +
-					"COALESCE(t.IsReadOnly, 'N'), t.Name, t.Description, " +
+					"COALESCE(t.IsReadOnly, 'N') IsReadOnly, " +
+					"COALESCE(t.IsInsertRecord, 'N') IsInsertRecord, t.Name, t.Description, " +
 					"t.OrderByClause, t.SPS_Table_ID, t.SPS_Window_ID, " +
 					"t.WhereClause, t.Classname " +
 					"FROM SPS_Tab t " +
@@ -182,7 +183,8 @@ public class TV_DynamicActivity extends TV_Base
 					"ORDER BY t.SeqNo");
 		} else {
 			sql = new String("SELECT t.SPS_Tab_ID, t.SeqNo, t.TabLevel, " +
-					"COALESCE(t.IsReadOnly, 'N'), tt.Name, tt.Description, " +
+					"COALESCE(t.IsReadOnly, 'N') IsReadOnly, " +
+					"COALESCE(t.IsInsertRecord, 'N') IsInsertRecord, tt.Name, tt.Description, " +
 					"t.OrderByClause, t.SPS_Table_ID, t.SPS_Window_ID, " +
 					"t.WhereClause, t.Classname " +
 					"FROM SPS_Tab t " +
@@ -207,6 +209,7 @@ public class TV_DynamicActivity extends TV_Base
 	    		tabParam.setSeqNo(rs.getInt(index++));
 	    		tabParam.setTabLevel(rs.getInt(index++));
 	    		tabParam.setIsReadOnly(rs.getString(index++).equals("Y"));
+	    		tabParam.setIsInsertRecord(rs.getString(index++).equals("Y"));
 	    		tabParam.setName(rs.getString(index++));
 	    		tabParam.setDescription(rs.getString(index++));
 	    		tabParam.setOrderByClause(rs.getString(index++));

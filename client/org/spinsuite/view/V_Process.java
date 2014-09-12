@@ -28,7 +28,6 @@ import jxl.write.biff.RowsExceededException;
 import org.spinsuite.adapters.SearchAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
-import org.spinsuite.login.Login;
 import org.spinsuite.print.ReportPrintData;
 import org.spinsuite.print.layout.ReportAdapter;
 import org.spinsuite.print.layout.ReportExportMenuAdapter;
@@ -45,8 +44,8 @@ import org.spinsuite.util.Env;
 import org.spinsuite.util.KeyNamePair;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
-import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.GridField;
+import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.VLookupCheckBox;
 import org.spinsuite.view.lookup.VLookupDateBox;
 import org.spinsuite.view.lookup.VLookupSearch;
@@ -65,7 +64,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -96,61 +94,65 @@ import com.itextpdf.text.DocumentException;
 public class V_Process extends Activity {
 	
 	/**	Adapter					*/
-	private SearchAdapter 			logAdapter 		= null;
+	private SearchAdapter 			logAdapter 				= null;
 	/**	Report Adapter			*/
-	private ReportAdapter 			reportAdapter	= null;
+	private ReportAdapter 			reportAdapter			= null;
 	/**	Field					*/
-	private InfoField 				m_field 		= null;
+	private InfoField 				m_field 				= null;
 	/**	View Index Array		*/
-	private ArrayList<GridField>	viewList 		= null;
+	private ArrayList<GridField>	viewList 				= null;
 	/**	Parameter				*/
-	private ActivityParameter		m_activityParam = null;
+	private ActivityParameter		m_activityParam 		= null;
 	/**	Process Info			*/
-	private ProcessInfo				m_pInfo			= null;
+	private ProcessInfo				m_pInfo					= null;
 	/**	Process Control			*/
-	private ProcessCtl 				m_pControl 		= null;
+	private ProcessCtl 				m_pControl 				= null;
 	/**	Row						*/
-	private LinearLayout			v_row			= null;
+	private LinearLayout			v_row					= null;
 	/**	Header Report			*/
-	private LinearLayout			ll_HeaderReport = null;
+	private LinearLayout			ll_HeaderReport 		= null;
+	/**	Process Info			*/
+	private LinearLayout			ll_ProcessInfo 			= null;
 	/**	Process Parameters		*/
-	private LinearLayout			ll_ProcessPara 	= null;
+	private LinearLayout			ll_ProcessPara 			= null;
 	/**	Main Layout				*/
-	private ScrollView				sv_Param 		= null;
+	private ScrollView				sv_Param 				= null;
 	/**	List View				*/
-	private ListView				lv_LogReport 	= null;
+	private ListView				lv_LogReport 			= null;
 	/**	Row Parameter			*/
-	private LayoutParams 			v_rowParam		= null;
+	private LayoutParams 			v_rowParam				= null;
 	/**	Table Layout			*/
-	private TableLayout				v_tableLayout 	= null;
+	private TableLayout				v_tableLayout 			= null;
 	/**	Text Description		*/
-	private TextView				tv_Description	= null;
+	private TextView				tv_Description			= null;
 	/**	Text Help				*/
-	private TextView				tv_Help			= null;
+	private TextView				tv_Help					= null;
 	/**	Text Summary			*/
-	private TextView				tv_Summary		= null;
+	private TextView				tv_Summary				= null;
 	/**	Item Search				*/
-	private MenuItem 				iSearch			= null;
+	private MenuItem 				iSearch					= null;
 	/**	Item Print Format		*/
-	private MenuItem 				iPrintFormat	= null;
+	private MenuItem 				iPrintFormat			= null;
 	/**	Item Process			*/
-	private MenuItem 				iProcess		= null;
+	private MenuItem 				iProcess				= null;
 	/**	Print Format			*/
-	private KeyNamePair[] 			m_PrintFormats	= null;
+	private KeyNamePair[] 			m_PrintFormats			= null;
 	/**	Popup Menu				*/
-	private PopupMenu				pPrintFormat	= null;
+	private PopupMenu				pPrintFormat			= null;
 	/**	Is Loaded				*/
-	private boolean 				isLoaded		= false;
+	private boolean 				isLoaded				= false;
 	/**	Drawer Layout			*/
-	private DrawerLayout 			m_DLayout		= null;
+	private DrawerLayout 			m_DLayout				= null;
 	/**	List View with options	*/
-    private ListView 				m_DList			= null;
+    private ListView 				m_DList					= null;
     /**	Toggle					*/
-    private ActionBarDrawerToggle 	m_DToggle		= null;
+    private ActionBarDrawerToggle 	m_DToggle				= null;
     /**	Flag (Drawer Loaded)	*/
-    private boolean 				isDrawerLoaded 	= false;
+    private boolean 				isDrawerLoaded 			= false;
     /**	Activity				*/
-    private Activity				v_activity		= null;
+    private Activity				v_activity				= null;
+    /**	Current Print Format	*/
+    private int						m_CurrentPrintFormat_ID = 0;
 	
 	/**	View Weight				*/
 	private static final float 		WEIGHT_SUM 		= 2;
@@ -180,6 +182,7 @@ public class V_Process extends Activity {
 			m_activityParam = new ActivityParameter();
 		//	Get Elements
 		ll_HeaderReport	= (LinearLayout) findViewById(R.id.ll_HeaderReport);
+		ll_ProcessInfo 	= (LinearLayout) findViewById(R.id.ll_ProcessInfo);
 		ll_ProcessPara 	= (LinearLayout) findViewById(R.id.ll_ProcessPara);
 		tv_Description 	= (TextView) findViewById(R.id.tv_Description);
 		tv_Help 		= (TextView) findViewById(R.id.tv_Help);
@@ -421,7 +424,7 @@ public class V_Process extends Activity {
 		tv_Summary = new TextView(this);
 		tv_Summary.setTextIsSelectable(true);
 		tv_Summary.setVisibility(TextView.GONE);
-		v_row.addView(tv_Summary, v_rowParam);
+		ll_ProcessInfo.addView(tv_Summary, v_rowParam);
 		v_tableLayout.addView(v_row);
 		//	Instance Process Control
 		m_pControl = new ProcessCtl(m_pInfo);
@@ -582,10 +585,17 @@ public class V_Process extends Activity {
 		//	
 		int itemId = item.getItemId();
 		if(itemId == R.id.action_process) {
-			if(isLoaded){
-				ll_ProcessPara.setVisibility(ScrollView.VISIBLE);
-				item.setIcon(Env.getResourceID(this, R.attr.ic_ab_process));
-				if(m_pInfo.isReport()){
+			//	
+			if(isLoaded
+					&& m_pInfo.hasParameter()) {
+				//	If has Parameter
+				if(m_pInfo.hasParameter()) {
+					ll_ProcessInfo.setVisibility(TextView.VISIBLE);
+					ll_ProcessPara.setVisibility(ScrollView.VISIBLE);
+					tv_Summary.setVisibility(TextView.GONE);
+					item.setIcon(Env.getResourceID(this, R.attr.ic_ab_process));
+				}
+				if(m_pInfo.isReport()) {
 					iSearch.setVisible(false);
 					iPrintFormat.setVisible(false);
 				}
@@ -596,6 +606,12 @@ public class V_Process extends Activity {
 			//	Run Process
 			if(!getValuesFromParameters())
 				return false;
+			//	Hide Parameters
+			if(m_pInfo.hasParameter()) {
+				ll_ProcessInfo.setVisibility(TextView.GONE);
+				ll_ProcessPara.setVisibility(ScrollView.GONE);
+				tv_Summary.setVisibility(TextView.GONE);
+			}
 			//	Process
 			new LoadReportProcessTask().execute(item);
 			return true;
@@ -644,6 +660,7 @@ public class V_Process extends Activity {
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
 				if(isLoaded){
+					m_CurrentPrintFormat_ID = item.getItemId();
 					new LoadReportProcessTask().execute(item);
 				}
 				return false;
@@ -763,19 +780,16 @@ public class V_Process extends Activity {
 			//	Load Data
 			//	Get Print Data
 			currentItem = params[0];
-			int m_AD_PrintFormat_ID = 0;
 			//	Valid Item
 			if(currentItem != null
-					&& currentItem.getItemId() != R.id.action_process)
-				m_AD_PrintFormat_ID = currentItem.getItemId();
-			//	Set Print Format
-			if(m_AD_PrintFormat_ID < -1)
-				m_AD_PrintFormat_ID = 0;
+					&& currentItem.getItemId() != R.id.action_process
+					&& m_CurrentPrintFormat_ID == 0)
+				m_CurrentPrintFormat_ID = currentItem.getItemId();
 			//	Run Process
 			m_pControl.runProcess();
 			//	Report load Data
 			if(m_pInfo.isReport())
-				printData = m_pControl.getReportPrintData(m_AD_PrintFormat_ID);
+				printData = m_pControl.getReportPrintData(m_CurrentPrintFormat_ID);
 			//	
 			return null;
 		}
@@ -787,25 +801,29 @@ public class V_Process extends Activity {
 
 		@Override
 		protected void onPostExecute(Void result) {
-			tv_Summary.setTextAppearance(v_activity, R.style.TextStandard);
-			tv_Summary.setVisibility(TextView.VISIBLE);
-			//	If Error
-			if(m_pInfo.isError())
-				tv_Summary.setTextColor(Color.RED);
-			else
-				tv_Summary.setTextColor(Color.BLUE);
-			//	Set Summary
-			tv_Summary.setText(m_pInfo.getSummary());
-			//	Show all logs
+			isLoaded = true;
+			//	Handle Visibility
 			if(!m_pInfo.isReport()
-					|| m_pInfo.isError()){
-				if(!m_activityParam.isFromActivity())
+					&& !m_activityParam.isFromActivity()) {
+				ll_ProcessInfo.setVisibility(TextView.VISIBLE);
+				tv_Summary.setVisibility(TextView.VISIBLE);
+				tv_Summary.setTextAppearance(v_activity, R.style.TextStandard);
+				//	If Error
+				if(m_pInfo.isError())
+					tv_Summary.setTextColor(Color.RED);
+				else
+					tv_Summary.setTextColor(Color.BLUE);
+				//	Set Summary
+				tv_Summary.setText(m_pInfo.getSummary());
+				//	Show all logs
+				if(!m_pInfo.isReport()
+						|| m_pInfo.isError()){
 					showLog();
-				else 
-					setActivityResult();
+				}
 			}
 			//	Show report
 			else if(m_pInfo.isReport()){
+				ll_ProcessInfo.setVisibility(TextView.GONE);
 				iSearch.setVisible(true);
 				iPrintFormat.setVisible(true);
 				ll_HeaderReport.setVisibility(LinearLayout.VISIBLE);
@@ -817,14 +835,18 @@ public class V_Process extends Activity {
 				}
 			}
 			//	Hide Parameter
-			if(!m_pInfo.isError()){
-				ll_ProcessPara.setVisibility(ScrollView.GONE);
-				currentItem.setIcon(Env.getResourceID(v_activity, R.attr.ic_ab_settings));
-				//	Set Is Loaded
-				isLoaded = true;
+			if(!m_pInfo.isError()
+					&& !m_activityParam.isFromActivity()){
+				if(m_pInfo.hasParameter()) {
+					ll_ProcessPara.setVisibility(ScrollView.GONE);
+					currentItem.setIcon(Env.getResourceID(v_activity, R.attr.ic_ab_settings));
+				}
 			}
 			//	Hide dialog
 			v_PDialog.dismiss();
+			//	Is From Activity
+			if(m_activityParam.isFromActivity())
+				setActivityResult();
 		}
 	}
 	

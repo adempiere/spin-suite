@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
@@ -107,7 +108,195 @@ public final class Env {
 	public static void setIsLogin(Context ctx, boolean value){
 		setContext(ctx, "#IsLogin", value);
 	}
-		
+	
+	/**
+	 * Load Role Access from Current Role
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 18:55:17
+	 * @param ctx
+	 * @return void
+	 */
+	public static void loadRoleAccess(Context ctx) {
+		int m_AD_Role_ID = getAD_Role_ID(ctx);
+		if(m_AD_Role_ID == 0
+				|| isAccessLoaded(ctx, m_AD_Role_ID))
+			return;
+		//	Do it
+		loadRoleAccess(ctx, m_AD_Role_ID);
+		//	Set Loaded
+		setAccessLoaded(ctx, m_AD_Role_ID, true);
+	}
+	
+	/**
+	 * Set access loaded
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 19:01:04
+	 * @param ctx
+	 * @param loaded
+	 * @return void
+	 */
+	public static void setAccessLoaded(Context ctx, int m_AD_Role_ID, boolean loaded) {
+		if(m_AD_Role_ID == 0)
+			return;
+		//	Set
+		setContext(ctx, S_IS_ACCESS_LOADED + "|" + m_AD_Role_ID, loaded);
+	}
+	
+	/**
+	 * Set Access Loaded for current role
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 19:08:00
+	 * @param ctx
+	 * @param loaded
+	 * @return void
+	 */
+	public static void setAccessLoaded(Context ctx, boolean loaded) {
+		setAccessLoaded(ctx, getAD_Role_ID(ctx), loaded);
+	}
+	
+	/**
+	 * Is Access Loaded
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 19:02:12
+	 * @param ctx
+	 * @param m_AD_Role_ID
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean isAccessLoaded(Context ctx, int m_AD_Role_ID) {
+		if(m_AD_Role_ID == 0)
+			return false;
+		//	Set
+		return getContextAsBoolean(ctx, S_IS_ACCESS_LOADED + "|" + m_AD_Role_ID);
+	}
+	
+	/**
+	 * Is Access Loaded with current role
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 19:09:17
+	 * @param ctx
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean isAccessLoaded(Context ctx) {
+		return isAccessLoaded(ctx, Env.getAD_Role_ID(ctx));
+	}
+	
+	/**
+	 * Load Role Access
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 16:31:03
+	 * @param ctx
+	 * @param m_AD_Role_ID
+	 * @return void
+	 */
+	public static void loadRoleAccess(Context ctx, int m_AD_Role_ID) {
+		//	Get Process Access
+		KeyNamePair[] processAccess = DB.getKeyNamePairs(ctx, 
+				"SELECT pa.AD_Process_ID, COALESCE(pa.IsReadWrite, 'N') " +
+				"FROM AD_Process_Access pa " +
+				"WHERE pa.AD_Role_ID = ?", m_AD_Role_ID);
+		//	Delete if not exists
+		if(processAccess == null
+				|| processAccess.length == 0) {
+			//	Cache Reset
+			int deleted = cacheReset(ctx, S_PROCESS_ACCESS + "|" + m_AD_Role_ID + "|", false);
+			LogM.log(ctx, "Env", Level.FINE, "Process Access Deleted = " + deleted);
+		} else {
+			for(KeyNamePair pAccess : processAccess) {
+				setProcessAccess(ctx, m_AD_Role_ID, pAccess.getKey(), pAccess.getName().equals("Y"));
+			}
+		}
+		//	Get Windows Access
+		KeyNamePair[] windowsAccess = DB.getKeyNamePairs(ctx, 
+				"SELECT wa.SPS_Window_ID, COALESCE(wa.IsReadWrite, 'N') " +
+				"FROM SPS_Window_Access wa " +
+				"WHERE wa.AD_Role_ID = ?", m_AD_Role_ID);
+		//	Delete if not exists
+		if(windowsAccess == null
+				|| windowsAccess.length == 0) {
+			//	Cache Reset
+			int deleted = cacheReset(ctx, S_WINDOW_ACCESS + "|" + m_AD_Role_ID + "|", false);
+			LogM.log(ctx, "Env", Level.FINE, "Windows Access Deleted = " + deleted);
+		} else {
+			for(KeyNamePair wAccess : windowsAccess) {
+				setWindowsAccess(ctx, m_AD_Role_ID, wAccess.getKey(), wAccess.getName().equals("Y"));
+			}
+		}
+	}
+	
+	/**
+	 * Set Process Access
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 16:42:54
+	 * @param ctx
+	 * @param m_AD_Role_ID
+	 * @param m_AD_Process_ID
+	 * @param m_IsReadWrite
+	 * @return void
+	 */
+	public static void setProcessAccess(Context ctx, int m_AD_Role_ID, 
+			int m_AD_Process_ID, boolean m_IsReadWrite) {
+		setContext(ctx, S_PROCESS_ACCESS + "|" + m_AD_Role_ID + "|" + m_AD_Process_ID, m_IsReadWrite);
+	}
+	
+	
+	/**
+	 * Set Window Access
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 16:43:02
+	 * @param ctx
+	 * @param m_AD_Role_ID
+	 * @param m_SPS_Window_ID
+	 * @param m_IsReadWrite
+	 * @return void
+	 */
+	public static void setWindowsAccess(Context ctx, int m_AD_Role_ID, 
+			int m_SPS_Window_ID, boolean m_IsReadWrite) {
+		setContext(ctx, S_WINDOW_ACCESS + "|" + m_AD_Role_ID + "|" + m_SPS_Window_ID, m_IsReadWrite);
+	}
+	
+	/**
+	 * Cache Reset
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 17:33:30
+	 * @param ctx
+	 * @return
+	 * @return int
+	 */
+	public static int cacheReset(Context ctx) {
+		return cacheReset(ctx, "#", true);
+	}
+	
+	/**
+	 * Cache Reset
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 17:23:40
+	 * @param ctx
+	 * @param m_Prefix
+	 * @param m_IgnorePrefix
+	 * @return
+	 * @return int
+	 */
+	private static int cacheReset(Context ctx, String m_Prefix, boolean m_IgnorePrefix) {
+		//	Set Default Prefix
+		if(m_Prefix == null)
+			m_Prefix = "";
+		//	Get Preferences
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
+		//	Get All Entries
+		Map<String, ?> allEntries = preferences.getAll();
+		//	Delete
+		int deleted = 0;
+		for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+			String key = entry.getKey();
+			if(key == null
+					|| (key.startsWith(m_Prefix)
+							&& m_IgnorePrefix)
+					|| (!key.startsWith(m_Prefix)
+							&& !m_IgnorePrefix))
+				continue;
+			//	
+			Env.removeContext(ctx, key);
+			//	Count
+			deleted++;
+			//	Log
+			LogM.log(ctx, "ENV", Level.FINE, "Entry [" + key + "] Deleted");
+		}
+		//	Return
+		return deleted;
+	}
+	
 	/**
 	 * Get share preference editor
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:57:10
@@ -1568,6 +1757,14 @@ public final class Env {
 	/** Context Language identifier */
 	public static final String      LANGUAGE = "#AD_Language";
 	public static final String      BASE_LANGUAGE = "en_US";
+	
+	/************************************Security******************************
+	 * Security Access
+	 */
+	
+	private static final String		S_PROCESS_ACCESS = "#PROCESS_ACCESS";
+	private static final String		S_WINDOW_ACCESS = "#WINDOW_ACCESS";
+	private static final String		S_IS_ACCESS_LOADED = "#IS_ACCESS_LOADED";
 	
 	/************************************Env***************************************
 	 * Database Context

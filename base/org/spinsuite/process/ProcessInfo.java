@@ -620,7 +620,7 @@ public class ProcessInfo {
 	 * 	Get Parameter
 	 *	@return Parameter Array
 	 */
-	public ProcessInfoParameter[] getParameter(){
+	public ProcessInfoParameter[] getParameter() {
 		return m_parameter;
 	}	//	getParameter
 	
@@ -631,6 +631,20 @@ public class ProcessInfo {
 	public void setParameter (ProcessInfoParameter[] parameter)	{
 		m_parameter = parameter;
 	}	//	setParameter
+	
+	/**
+	 * Verify if has parameter
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 18:16:36
+	 * @return
+	 * @return boolean
+	 */
+	public boolean hasParameter() {
+		if(m_parameter == null
+				|| m_parameter.length == 0)
+			return false;
+		//	Default Return
+		return true;
+	}
 	
 	/**
 	 * Return Process Field Parameters for Grid

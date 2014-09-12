@@ -582,6 +582,19 @@ public class DB extends SQLiteOpenHelper {
 	}
 	
 	/**
+	 * Get Key Name Pairs without connection with a parameter
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 16:30:40
+	 * @param ctx
+	 * @param sql
+	 * @param param
+	 * @return
+	 * @return KeyNamePair[]
+	 */
+	public static KeyNamePair[] getKeyNamePairs(Context ctx, String sql, int param) {
+		return getKeyNamePairs(ctx, sql, null, new String[]{String.valueOf(param)});
+	}
+	
+	/**
 	 * Get Value from SQL as int
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 14:24:00
 	 * @param ctx

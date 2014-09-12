@@ -15,12 +15,7 @@
  *************************************************************************************/
 package org.spinsuite.process;
 
-import java.util.Map;
-
 import org.spinsuite.util.Env;
-
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 /**
  * Reset Cache
@@ -36,24 +31,8 @@ public class CacheReset extends StdProcess {
 	
 	@Override
 	protected String doIt() throws Exception {
-		//	Get Preferences
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getCtx());
-		//	Get All Entries
-		Map<String, ?> allEntries = preferences.getAll();
 		//	Delete
-		int deleted = 0;
-		for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-			String key = entry.getKey();
-			if(key == null
-					|| key.startsWith("#"))
-				continue;
-			//	
-			Env.removeContext(getCtx(), key);
-			//	Log
-			addLog("@Value@ = [" + key + "] @Deleted@");
-			//	Count
-			deleted++;
-		}
+		int deleted = Env.cacheReset(getCtx());
 		//	Default
 		return "@Deleted@ = " + deleted;
 	}
