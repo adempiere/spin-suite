@@ -167,7 +167,23 @@ public class T_Login extends Fragment implements I_Login {
     @Override
     public void onStart() {
     	super.onStart();
-        String user = et_User.getText().toString();
+    	//	Load Data
+    	loadData();
+    }
+    
+	@Override
+	public boolean aceptAction() {
+		return validUser();
+	}
+
+	@Override
+	public boolean cancelAction() {
+		return validExit();
+	}
+
+	@Override
+	public boolean loadData() {
+		String user = et_User.getText().toString();
      	String pass = et_Pass.getText().toString();
      	//boolean isSavePass = ch_SavePass.isChecked();
      	if(user == null || user.length() == 0){
@@ -197,22 +213,8 @@ public class T_Login extends Fragment implements I_Login {
  			sp_Language.setSelectedHiddenValue(language);
  		} else
  			sp_Language.setSelectedHiddenValue(Env.BASE_LANGUAGE);
- 			
-    }
-    
-	@Override
-	public boolean aceptAction() {
-		return validUser();
-	}
-
-	@Override
-	public boolean cancelAction() {
-		return validExit();
-	}
-
-	@Override
-	public boolean loadData() {
-		return false;
+ 		//	
+		return true;
 	}
     
 }

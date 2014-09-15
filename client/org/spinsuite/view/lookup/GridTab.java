@@ -506,13 +506,14 @@ public class GridTab implements Evaluatee {
 	/**
 	 * Prepare data for See
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:54:35
+	 * @param m_IsReadWrite
 	 * @return void
 	 */
-	public void dataSee() {
+	public void dataSee(boolean m_IsReadWrite) {
 		for (GridField vField: m_fields) {
-			if(vField.getColumnName().equals("DocAction")
+			if((vField.getColumnName().equals("DocAction")
 					|| (vField.getDisplayType() == DisplayType.BUTTON
-							&& !vField.isReadOnly()))
+							&& !vField.isReadOnly())) && m_IsReadWrite)
 				vField.setEnabled(true);
 			else
 				vField.setEnabled(false);

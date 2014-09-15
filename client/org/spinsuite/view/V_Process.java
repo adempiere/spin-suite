@@ -153,6 +153,8 @@ public class V_Process extends Activity {
     private Activity				v_activity				= null;
     /**	Current Print Format	*/
     private int						m_CurrentPrintFormat_ID = 0;
+    /**	Is Read Write Granted	*/
+    private 	boolean 			m_IsReadWrite 			= false;
 	
 	/**	View Weight				*/
 	private static final float 		WEIGHT_SUM 		= 2;
@@ -210,6 +212,8 @@ public class V_Process extends Activity {
 	    	//	Load Drawer
 			loadDrawerOption();
 		}
+    	//	Set Is Read Write
+    	m_IsReadWrite = Env.getProcessAccess(this, m_pInfo.getAD_Process_ID());
 		//	Load Print Formats
 		loadPrintFormat();
 	}
@@ -585,6 +589,11 @@ public class V_Process extends Activity {
 		//	
 		int itemId = item.getItemId();
 		if(itemId == R.id.action_process) {
+			//	Valid Permission
+			if(!m_IsReadWrite) {
+				Msg.toastMsg(this, "@Access@ @IsReadOnly@");
+				return false;
+			}
 			//	
 			if(isLoaded
 					&& m_pInfo.hasParameter()) {

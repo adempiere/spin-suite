@@ -465,6 +465,9 @@ public class DB extends SQLiteOpenHelper {
 			loadConnection(conn, READ_WRITE);
 			handConnection = true;
 		}
+		//	Log
+		LogM.log(ctx, "DB", Level.FINE, "SQL[" + sql + "]");
+		//	
 		Cursor rs = null;
 		rs = conn.querySQL(sql, params);
 		String retValue = null;
