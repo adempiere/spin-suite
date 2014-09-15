@@ -50,7 +50,7 @@ public final class Env {
 	 * @return
 	 * @return boolean
 	 */
-	public static boolean isEnvLoad(Context ctx){
+	public static boolean isEnvLoad(Context ctx) {
 		return getContextAsBoolean(ctx, SET_ENV);
 	}
 	
@@ -61,7 +61,7 @@ public final class Env {
 	 * @return
 	 * @return boolean
 	 */
-	public static boolean isLoadedActivity(Context ctx){
+	public static boolean isLoadedActivity(Context ctx) {
 		return getContextAsBoolean(ctx, "#IsLoadedActivity");
 	}
 	
@@ -72,7 +72,7 @@ public final class Env {
 	 * @return
 	 * @return boolean
 	 */
-	public static boolean isLogin(Context ctx){
+	public static boolean isLogin(Context ctx) {
 		return getContextAsBoolean(ctx, "#IsLogin");
 	}
 	
@@ -83,7 +83,7 @@ public final class Env {
 	 * @param value
 	 * @return void
 	 */
-	public static void setIsEnvLoad(Context ctx, boolean value){
+	public static void setIsEnvLoad(Context ctx, boolean value) {
 		setContext(ctx, SET_ENV, value);
 	}
 	
@@ -94,7 +94,7 @@ public final class Env {
 	 * @param value
 	 * @return void
 	 */
-	public static void setIsLoadedActivity(Context ctx, boolean value){
+	public static void setIsLoadedActivity(Context ctx, boolean value) {
 		setContext(ctx, "#IsLoadedActivity", value);
 	}
 	
@@ -105,7 +105,7 @@ public final class Env {
 	 * @param value
 	 * @return void
 	 */
-	public static void setIsLogin(Context ctx, boolean value){
+	public static void setIsLogin(Context ctx, boolean value) {
 		setContext(ctx, "#IsLogin", value);
 	}
 	
@@ -190,6 +190,10 @@ public final class Env {
 				"SELECT pa.AD_Process_ID, COALESCE(pa.IsReadWrite, 'N') " +
 				"FROM AD_Process_Access pa " +
 				"WHERE pa.AD_Role_ID = ?", m_AD_Role_ID);
+		//	Get Editor
+		Editor ep = getEditor(ctx);
+		//	Ok
+		boolean ok = false;
 		//	Delete if not exists
 		if(processAccess == null
 				|| processAccess.length == 0) {
@@ -198,8 +202,10 @@ public final class Env {
 			LogM.log(ctx, "Env", Level.FINE, "Process Access Deleted = " + deleted);
 		} else {
 			for(KeyNamePair pAccess : processAccess) {
-				setProcessAccess(ctx, m_AD_Role_ID, pAccess.getKey(), pAccess.getName().equals("Y"));
+				ep.putString(S_PROCESS_ACCESS + "|" + m_AD_Role_ID + "|" + pAccess.getKey(), pAccess.getName());
 			}
+			//	Set Ok
+			ok = true;
 		}
 		//	Get Windows Access
 		KeyNamePair[] windowsAccess = DB.getKeyNamePairs(ctx, 
@@ -214,9 +220,14 @@ public final class Env {
 			LogM.log(ctx, "Env", Level.FINE, "Windows Access Deleted = " + deleted);
 		} else {
 			for(KeyNamePair wAccess : windowsAccess) {
-				setWindowsAccess(ctx, m_AD_Role_ID, wAccess.getKey(), wAccess.getName().equals("Y"));
+				ep.putString(S_WINDOW_ACCESS + "|" + m_AD_Role_ID + "|" + wAccess.getKey(), wAccess.getName());
 			}
+			//	Set Ok
+			ok = true;
 		}
+		//	Commit
+		if(ok)
+			ep.commit();
 	}
 	
 	/**
@@ -233,6 +244,56 @@ public final class Env {
 		setContext(ctx, S_PROCESS_ACCESS + "|" + m_AD_Role_ID + "|" + m_AD_Process_ID, m_IsReadWrite);
 	}
 	
+	/**
+	 * Get Process Access with Role
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/09/2014, 19:12:38
+	 * @param ctx
+	 * @param m_AD_Role_ID
+	 * @param m_AD_Process_ID
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean getProcessAccess(Context ctx, int m_AD_Role_ID, int m_AD_Process_ID) {
+		return getContextAsBoolean(ctx, S_PROCESS_ACCESS + "|" + m_AD_Role_ID + "|" + m_AD_Process_ID);
+	}
+	
+	/**
+	 * Get Process Access without Role
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/09/2014, 19:13:26
+	 * @param ctx
+	 * @param m_AD_Process_ID
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean getProcessAccess(Context ctx, int m_AD_Process_ID) {
+		return getProcessAccess(ctx, getAD_Role_ID(ctx), m_AD_Process_ID);
+	}
+	
+	
+	/**
+	 * Get Windows Access with Role
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/09/2014, 19:15:37
+	 * @param ctx
+	 * @param m_AD_Role_ID
+	 * @param m_SPS_Window_ID
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean getWindowsAccess(Context ctx, int m_AD_Role_ID, int m_SPS_Window_ID) {
+		return getContextAsBoolean(ctx, S_WINDOW_ACCESS + "|" + m_AD_Role_ID + "|" + m_SPS_Window_ID);
+	}
+	
+	/**
+	 * Get Windows Access without Role
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/09/2014, 19:13:26
+	 * @param ctx
+	 * @param m_SPS_Window_ID
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean getWindowsAccess(Context ctx, int m_SPS_Window_ID) {
+		return getWindowsAccess(ctx, getAD_Role_ID(ctx), m_SPS_Window_ID);
+	}
 	
 	/**
 	 * Set Window Access
@@ -278,6 +339,8 @@ public final class Env {
 		Map<String, ?> allEntries = preferences.getAll();
 		//	Delete
 		int deleted = 0;
+		//	Get Editor
+		Editor ep = getEditor(ctx);
 		for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
 			String key = entry.getKey();
 			if(key == null
@@ -287,12 +350,15 @@ public final class Env {
 							&& !m_IgnorePrefix))
 				continue;
 			//	
-			Env.removeContext(ctx, key);
+			ep.remove(key);
 			//	Count
 			deleted++;
 			//	Log
 			LogM.log(ctx, "ENV", Level.FINE, "Entry [" + key + "] Deleted");
 		}
+		//	Commit
+		if(deleted != 0)
+			ep.commit();
 		//	Return
 		return deleted;
 	}
@@ -304,7 +370,7 @@ public final class Env {
 	 * @return
 	 * @return Editor
 	 */
-	private static Editor getEditor(Context ctx){
+	private static Editor getEditor(Context ctx) {
 		SharedPreferences pf = PreferenceManager.getDefaultSharedPreferences(ctx);
 		return pf.edit();
 	}
@@ -333,7 +399,7 @@ public final class Env {
 	 *  @param context context key
 	 *  @param value context value
 	 */
-	public static void setContext (Context ctx, String context, String value){
+	public static void setContext (Context ctx, String context, String value) {
 		if (ctx == null || context == null)
 			return;
 		//	Log
@@ -354,7 +420,7 @@ public final class Env {
 	 * @param value
 	 * @return void
 	 */
-	public static void setContextObject(Context ctx, String context, Object value){
+	public static void setContextObject(Context ctx, String context, Object value) {
 		Editor prefsEditor = getEditor(ctx);
         Gson gson = new Gson();
         String json = gson.toJson(value);
@@ -371,7 +437,7 @@ public final class Env {
 	 * @return
 	 * @return Object
 	 */
-	public static Object getContextObject(Context ctx, String context, Class<?> clazz){
+	public static Object getContextObject(Context ctx, String context, Class<?> clazz) {
 		Gson gson = new Gson();
 		SharedPreferences pf = PreferenceManager.getDefaultSharedPreferences(ctx);
 		String json = pf.getString(context, null);
@@ -409,7 +475,7 @@ public final class Env {
 	 * @param value
 	 * @return void
 	 */
-	public static void setContext (Context ctx, String context, int value){
+	public static void setContext (Context ctx, String context, int value) {
 		if (ctx == null || context == null)
 			return;
 		Editor ep = getEditor(ctx);
@@ -725,7 +791,10 @@ public final class Env {
 		
 		String s = getContext(ctx, context);
 		//	
-		return (s != null && s.equals("Y"));
+		boolean valid = (s != null && s.equals("Y"));
+		//	Log
+		LogM.log(ctx, "Env", Level.FINE, "getContextAsBoolean(" + context + ") = " + valid);
+		return valid;
 	}	//	getContext
 	
 	/**
@@ -777,41 +846,13 @@ public final class Env {
 		return s != null ? s.equals("Y") : false;
 	}	//	getContext
 	
-	
-	/**
-	 * Verifica si la actividad está cargada
-	 * @author Yamel Senih 13/05/2012, 12:56:55
-	 * @param ctx
-	 * @param context
-	 * @return
-	 * @return boolean
-	 */
-	@Deprecated
-	public static boolean isLoadActivity(Context ctx, String context){
-		return getContextAsBoolean(ctx, "|A|" + context);
-	}
-	
-	/**
-	 * Establece si se cargó o no una actividad
-	 * @author Yamel Senih 13/05/2012, 12:58:29
-	 * @param ctx
-	 * @param activity
-	 * @param load
-	 * @return void
-	 */
-	@Deprecated
-	public static void setLoadActivity(Context ctx, String activity, boolean load){
-		setContext(ctx, "|A|" + activity, load);
-	}
-	
 	/**
 	 *	Set Global Context to Y/N Value
 	 *  @param ctx context
 	 *  @param context context key
 	 *  @param value context value
 	 */
-	public static void setContext (Context ctx, String context, boolean value)
-	{
+	public static void setContext (Context ctx, String context, boolean value) {
 		setContext(ctx, context, value? "Y": "N");
 	}	//	setContext
 
@@ -822,8 +863,7 @@ public final class Env {
 	 *  @param context context key
 	 *  @param value context value
 	 */
-	public static void setContext (Context ctx, int m_ActivityNo, String context, String value)
-	{
+	public static void setContext (Context ctx, int m_ActivityNo, String context, String value) {
 		if (ctx == null || context == null)
 			return;
 		Editor ed = getEditor(ctx);
@@ -851,8 +891,7 @@ public final class Env {
 			throw new IllegalArgumentException ("Require Context");
 		SharedPreferences pf = PreferenceManager.getDefaultSharedPreferences(ctx);
 		String s = pf.getString(m_ActivityNo+"|"+context, null);
-		if (s == null)
-		{
+		if (s == null) {
 			//	Explicit Base Values
 			if (context.startsWith("#") || context.startsWith("$"))
 				return getContext(ctx, context);
@@ -863,7 +902,7 @@ public final class Env {
 		return s;
 	}	//	getContext
 	
-	/**2
+	/**
 	 *	Get Value of Context for Window.
 	 *	if not found global context if available
 	 *  @param ctx context
@@ -871,8 +910,7 @@ public final class Env {
 	 *  @param context context key
 	 *  @return value or ""
 	 */
-	public static String getContext (Context ctx, int m_ActivityNo, String context)
-	{
+	public static String getContext (Context ctx, int m_ActivityNo, String context) {
 		return getContext(ctx, m_ActivityNo, context, false);
 	}	//	getContext
 
@@ -886,8 +924,7 @@ public final class Env {
 	 * @param context context key
 	 * @return value or ""
 	 */
-	public static String getContext (Context ctx, int m_ActivityNo, int TabNo, String context)
-	{
+	public static String getContext (Context ctx, int m_ActivityNo, int TabNo, String context) {
 		if (ctx == null || context == null)
 			throw new IllegalArgumentException ("Require Context");
 		SharedPreferences pf = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -913,8 +950,7 @@ public final class Env {
 	 * @param onlyTab if true, no window value is searched
 	 * @return value or ""
 	 */
-	public static String getContext (Context ctx, int m_ActivityNo, int TabNo, String context, boolean onlyTab)
-	{
+	public static String getContext (Context ctx, int m_ActivityNo, int TabNo, String context, boolean onlyTab) {
 		final boolean onlyWindow = onlyTab ? true : false;
 		return getContext(ctx, m_ActivityNo, TabNo, context, onlyTab, onlyWindow);
 	}
@@ -931,8 +967,7 @@ public final class Env {
 	 * @param onlyWindow if true, no global context will be searched
 	 * @return value or ""
 	 */
-	public static String getContext (Context ctx, int m_ActivityNo, int TabNo, String context, boolean onlyTab, boolean onlyWindow)
-	{
+	public static String getContext (Context ctx, int m_ActivityNo, int TabNo, String context, boolean onlyTab, boolean onlyWindow) {
 		if (ctx == null || context == null)
 			throw new IllegalArgumentException ("Require Context");
 		SharedPreferences pf = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -951,8 +986,7 @@ public final class Env {
 	 *  @param context context key
 	 *  @return value
 	 */
-	public static int getContextAsInt(Context ctx, String context)
-	{
+	public static int getContextAsInt(Context ctx, String context) {
 		try{
 			if (ctx == null || context == null)
 				throw new IllegalArgumentException ("Require Context");
@@ -971,8 +1005,7 @@ public final class Env {
 	 *  @param ctx context
 	 *  @return true if SO (default)
 	 */
-	public static boolean isSOTrx (Context ctx)
-	{
+	public static boolean isSOTrx (Context ctx) {
 		return getContextAsBoolean(ctx, "IsSOTrx");
 	}	//	isSOTrx
 	
@@ -981,8 +1014,7 @@ public final class Env {
 	 *	@param ctx context
 	 *	@return login AD_Client_ID
 	 */
-	public static int getAD_Client_ID (Context ctx)
-	{
+	public static int getAD_Client_ID (Context ctx) {
 		return Env.getContextAsInt(ctx, "#AD_Client_ID");
 	}	//	getAD_Client_ID
 
@@ -991,8 +1023,7 @@ public final class Env {
 	 *	@param ctx context
 	 *	@return login AD_Org_ID
 	 */
-	public static int getAD_Org_ID (Context ctx)
-	{
+	public static int getAD_Org_ID (Context ctx) {
 		return Env.getContextAsInt(ctx, "#AD_Org_ID");
 	}	//	getAD_Client_ID
 
@@ -1001,8 +1032,7 @@ public final class Env {
 	 *	@param ctx context
 	 *	@return login AD_User_ID
 	 */
-	public static int getAD_User_ID (Context ctx)
-	{
+	public static int getAD_User_ID (Context ctx) {
 		return Env.getContextAsInt(ctx, "#AD_User_ID");
 	}	//	getAD_User_ID
 	
@@ -1011,8 +1041,7 @@ public final class Env {
 	 *	@param ctx context
 	 *	@return login AD_Role_ID
 	 */
-	public static int getAD_Role_ID (Context ctx)
-	{
+	public static int getAD_Role_ID (Context ctx) {
 		return Env.getContextAsInt(ctx, "#AD_Role_ID");
 	}	//	getAD_Role_ID
 
@@ -1023,8 +1052,7 @@ public final class Env {
 	 * @return
 	 * @return int
 	 */
-	public static int getM_Warehouse_ID (Context ctx)
-	{
+	public static int getM_Warehouse_ID (Context ctx) {
 		return Env.getContextAsInt(ctx, "#M_Warehouse_ID");
 	}	//	getAD_Role_ID
 	
@@ -1036,7 +1064,7 @@ public final class Env {
 	 * @param m_AD_User_ID
 	 * @return void
 	 */
-	public static void setAD_User_ID(Context ctx, int m_AD_User_ID){
+	public static void setAD_User_ID(Context ctx, int m_AD_User_ID) {
 		setContext(ctx, "#AD_User_ID", m_AD_User_ID);
 	}
 	
@@ -1047,7 +1075,7 @@ public final class Env {
 	 * @param m_AD_Client_ID
 	 * @return void
 	 */
-	public static void setAD_Client_ID(Context ctx, int m_AD_Client_ID){
+	public static void setAD_Client_ID(Context ctx, int m_AD_Client_ID) {
 		setContext(ctx, "#AD_Client_ID", m_AD_Client_ID);
 	}
 	
@@ -1058,7 +1086,7 @@ public final class Env {
 	 * @param m_AD_Org_ID
 	 * @return void
 	 */
-	public static void setAD_Org_ID(Context ctx, int m_AD_Org_ID){
+	public static void setAD_Org_ID(Context ctx, int m_AD_Org_ID) {
 		setContext(ctx, "#AD_Org_ID", m_AD_Org_ID);
 	}
 	
@@ -1069,7 +1097,7 @@ public final class Env {
 	 * @param m_AD_Role_ID
 	 * @return void
 	 */
-	public static void setAD_Role_ID(Context ctx, int m_AD_Role_ID){
+	public static void setAD_Role_ID(Context ctx, int m_AD_Role_ID) {
 		setContext(ctx, "#AD_Role_ID", m_AD_Role_ID);
 	}
 	
@@ -1080,7 +1108,7 @@ public final class Env {
 	 * @param m_M_Warehouse_ID
 	 * @return void
 	 */
-	public static void setM_Warehouse_ID(Context ctx, int m_M_Warehouse_ID){
+	public static void setM_Warehouse_ID(Context ctx, int m_M_Warehouse_ID) {
 		setContext(ctx, "#M_Warehouse_ID", m_M_Warehouse_ID);
 	}
 	
@@ -1091,7 +1119,7 @@ public final class Env {
 	 * @param isSavePass
 	 * @return void
 	 */
-	public static void setSavePass(Context ctx, boolean isSavePass){
+	public static void setSavePass(Context ctx, boolean isSavePass) {
 		setContext(ctx, "#SavePass", isSavePass);
 	}
 	
@@ -1102,7 +1130,7 @@ public final class Env {
 	 * @param isSavePass
 	 * @return void
 	 */
-	public static void setAutomaticVisitClosing(Context ctx, boolean isSavePass){
+	public static void setAutomaticVisitClosing(Context ctx, boolean isSavePass) {
 		setContext(ctx, "#AutomaticVisitClosing", isSavePass);
 	}
 	
@@ -1114,7 +1142,7 @@ public final class Env {
 	 * @return
 	 * @return boolean
 	 */
-	public static boolean isSavePass(Context ctx){
+	public static boolean isSavePass(Context ctx) {
 		return getContextAsBoolean(ctx, "#SavePass");
 	}
 	
@@ -1125,7 +1153,7 @@ public final class Env {
 	 * @return
 	 * @return boolean
 	 */
-	public static boolean isAutomaticVisitClosing(Context ctx){
+	public static boolean isAutomaticVisitClosing(Context ctx) {
 		return getContextAsBoolean(ctx, "#AutomaticVisitClosing");
 	}
 	
@@ -1136,7 +1164,7 @@ public final class Env {
 	 * @param value
 	 * @return void
 	 */
-	public static void setDB_PathName(Context ctx, String value){
+	public static void setDB_PathName(Context ctx, String value) {
 		setContext(ctx, DB_NAME_KEY, value);
 	}
 	
@@ -1147,7 +1175,7 @@ public final class Env {
 	 * @return
 	 * @return String
 	 */
-	public static String getDB_PathName(Context ctx){
+	public static String getDB_PathName(Context ctx) {
 		return getContext(ctx, DB_NAME_KEY);
 	}
 	
@@ -1158,7 +1186,7 @@ public final class Env {
 	 * @param value
 	 * @return void
 	 */
-	public static void setDoc_DirectoryPathName(Context ctx, String value){
+	public static void setDoc_DirectoryPathName(Context ctx, String value) {
 		setContext(ctx, DOC_DIRECTORY_KEY, value);
 	}
 	
@@ -1169,7 +1197,7 @@ public final class Env {
 	 * @return
 	 * @return String
 	 */
-	public static String getDoc_DirectoryPathName(Context ctx){
+	public static String getDoc_DirectoryPathName(Context ctx) {
 		return getContext(ctx, DOC_DIRECTORY_KEY);
 	}
 	
@@ -1180,7 +1208,7 @@ public final class Env {
 	 * @param value
 	 * @return void
 	 */
-	public static void setImg_DirectoryPathName(Context ctx, String value){
+	public static void setImg_DirectoryPathName(Context ctx, String value) {
 		setContext(ctx, IMG_DIRECTORY_KEY, value);
 	}
 	
@@ -1191,7 +1219,7 @@ public final class Env {
 	 * @return
 	 * @return String
 	 */
-	public static String getImg_DirectoryPathName(Context ctx){
+	public static String getImg_DirectoryPathName(Context ctx) {
 		return getContext(ctx, IMG_DIRECTORY_KEY);
 	}
 	
@@ -1202,7 +1230,7 @@ public final class Env {
 	 * @return
 	 * @return int
 	 */
-	public static int getDB_Version(Context ctx){
+	public static int getDB_Version(Context ctx) {
 		return Env.getContextAsInt(ctx, DB_VERSION);
 	}	//	getAD_Role_ID
 	
@@ -1215,7 +1243,7 @@ public final class Env {
 	 * @return
 	 * @return int
 	 */
-	public static int getTabRecord_ID(Context ctx, int m_ActivityNo, int TabNo){
+	public static int getTabRecord_ID(Context ctx, int m_ActivityNo, int TabNo) {
 		//Msg.toastMsg(ctx, ID_TAB + tab + " " + getContextAsInt(ctx, ID_TAB + tab));
 		return getContextAsInt(ctx, m_ActivityNo, TabNo, ID_TAB);
 	}
@@ -1229,7 +1257,7 @@ public final class Env {
 	 * @return
 	 * @return int
 	 */
-	public static int getParentTabRecord_ID(Context ctx, int m_ActivityNo, int TabNo){
+	public static int getParentTabRecord_ID(Context ctx, int m_ActivityNo, int TabNo) {
 		//Msg.toastMsg(ctx, ID_TAB + tab + " " + getContextAsInt(ctx, ID_TAB + tab));
 		return getContextAsInt(ctx, m_ActivityNo, TabNo, ID_PARENT_TAB);
 	}
@@ -1243,7 +1271,7 @@ public final class Env {
 	 * @param record_ID
 	 * @return void
 	 */
-	public static void setTabRecord_ID(Context ctx, int m_ActivityNo, int TabNo, int record_ID){
+	public static void setTabRecord_ID(Context ctx, int m_ActivityNo, int TabNo, int record_ID) {
 		//Msg.toastMsg(ctx, ID_TAB + tab + " " + record_ID);
 		setContext(ctx, m_ActivityNo, TabNo, ID_TAB, record_ID);
 	}
@@ -1257,7 +1285,7 @@ public final class Env {
 	 * @param record_ID
 	 * @return void
 	 */
-	public static void setParentTabRecord_ID(Context ctx, int m_ActivityNo, int TabNo, int record_ID){
+	public static void setParentTabRecord_ID(Context ctx, int m_ActivityNo, int TabNo, int record_ID) {
 		//Msg.toastMsg(ctx, ID_TAB + tab + " " + record_ID);
 		setContext(ctx, m_ActivityNo, TabNo, ID_PARENT_TAB, record_ID);
 	}
@@ -1270,7 +1298,7 @@ public final class Env {
 	 * @param tab
 	 * @return void
 	 */
-	public static void setCurrentTab(Context ctx, int m_ActivityNo, int tabNo){
+	public static void setCurrentTab(Context ctx, int m_ActivityNo, int tabNo) {
 		setContext(ctx, m_ActivityNo, CURRENT_TAB, tabNo);
 	}
 	
@@ -1282,7 +1310,7 @@ public final class Env {
 	 * @return
 	 * @return int
 	 */
-	public static int getCurrentTab(Context ctx, int m_ActivityNo){
+	public static int getCurrentTab(Context ctx, int m_ActivityNo) {
 		return getContextAsInt(ctx, m_ActivityNo, CURRENT_TAB);
 	}
 	
@@ -1295,7 +1323,7 @@ public final class Env {
 	 * @return
 	 * @return boolean
 	 */
-	public static boolean isCurrentTab(Context ctx, int m_ActivityNo, int tabNo){
+	public static boolean isCurrentTab(Context ctx, int m_ActivityNo, int tabNo) {
 		return tabNo == getContextAsInt(ctx, m_ActivityNo, CURRENT_TAB);
 	}
 	
@@ -1306,7 +1334,7 @@ public final class Env {
 	 * @param value
 	 * @return void
 	 */
-	public static void setDB_Version(Context ctx, int value){
+	public static void setDB_Version(Context ctx, int value) {
 		if (ctx == null)
 			return;
 		//
@@ -1495,7 +1523,7 @@ public final class Env {
 	 * @return
 	 * @return String
 	 */
-	public static String getSOLanguage(Context ctx){
+	public static String getSOLanguage(Context ctx) {
 		return ctx.getResources().getConfiguration().locale.getDisplayName();
 	}
 	
@@ -1506,7 +1534,7 @@ public final class Env {
 	 * @param language
 	 * @return void
 	 */
-	public static void setAD_Language(Context ctx, String language){
+	public static void setAD_Language(Context ctx, String language) {
 		setContext(ctx, LANGUAGE, language);
 	}
 	
@@ -1517,7 +1545,7 @@ public final class Env {
 	 * @return
 	 * @return String
 	 */
-	public static String getAD_Language(Context ctx){
+	public static String getAD_Language(Context ctx) {
 		return getContext(ctx, LANGUAGE);
 	}
 	
@@ -1543,7 +1571,7 @@ public final class Env {
 	 * @param metrics
 	 * @return void
 	 */
-	public static void changeLanguage(Context ctx, String language, DisplayMetrics metrics){
+	public static void changeLanguage(Context ctx, String language, DisplayMetrics metrics) {
 		Locale locale = new Locale(language);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
@@ -1558,7 +1586,7 @@ public final class Env {
 	 * @return
 	 * @return Locale
 	 */
-	public static Locale getLocate(Context ctx){
+	public static Locale getLocate(Context ctx) {
 		return new Locale(getAD_Language(ctx));
 	}
 	
@@ -1569,7 +1597,7 @@ public final class Env {
 	 * @param language
 	 * @return void
 	 */
-	public static void changeLanguage(Context ctx, String language){
+	public static void changeLanguage(Context ctx, String language) {
 		changeLanguage(ctx, language, null);
 	}
 	
@@ -1670,7 +1698,7 @@ public final class Env {
 	 * @return
 	 * @return int
 	 */
-	public static int getActivityNo(Context ctx){
+	public static int getActivityNo(Context ctx) {
 		//	Get Current Activity No
 		int aNo = getContextAsInt(ctx, ACTIVITY_NO);
 		//Msg.toastMsg(ctx, "ActivityNo=" + aNo);
@@ -1686,7 +1714,7 @@ public final class Env {
 	 * @param ctx
 	 * @return void
 	 */
-	public static void resetActivityNo(Context ctx){
+	public static void resetActivityNo(Context ctx) {
 		setContext(ctx, ACTIVITY_NO, 0);
 	}
 	
@@ -1697,7 +1725,7 @@ public final class Env {
 	 * @param path
 	 * @return void
 	 */
-	public static void setAppBaseDirectory(Context ctx, String path){
+	public static void setAppBaseDirectory(Context ctx, String path) {
 		setContext(ctx, APP_BASE_DIRECTORY_CTX_NAME, path);
 	}
 	
@@ -1708,7 +1736,7 @@ public final class Env {
 	 * @return
 	 * @return String
 	 */
-	public static String getAppBaseDirectory(Context ctx){
+	public static String getAppBaseDirectory(Context ctx) {
 		return getContext(ctx, APP_BASE_DIRECTORY_CTX_NAME);
 	}
 	

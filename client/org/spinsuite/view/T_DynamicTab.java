@@ -114,7 +114,8 @@ public class T_DynamicTab extends Fragment
 	private 	boolean					m_IsLoadOk			= false;
 	private 	boolean					m_IsLoadDataOk		= false;
 	private 	boolean 				m_IsModifying		= false;
-	//private 	boolean 				m_Enabled 			= false;
+	private 	boolean 				m_IsReadWrite 		= false;
+	private 	boolean 				m_IsInsertRecord 	= false;
 	/**	From Tab					*/
 	private 	I_DynamicTab			m_FromTab			= null;
 	/**	Listener					*/
@@ -170,6 +171,11 @@ public class T_DynamicTab extends Fragment
 		//	Is Not ok Load
     	if(tabParam == null)
     		return;
+    	//	Set Is Read Write
+    	m_IsReadWrite = Env.getWindowsAccess(getActivity(), tabParam.getSPS_Window_ID()) 
+    							&& !tabParam.isReadOnly();
+    	//	Is Insert Record
+    	m_IsInsertRecord = tabParam.isInsertRecord();
     	//	Set Temporal Image Name
     	TMP_ATTACH_NAME = Env.getImg_DirectoryPathName(getActivity()) 
     								+ File.separator + "TMP" + JPEG_FILE_SUFFIX;
@@ -314,6 +320,7 @@ public class T_DynamicTab extends Fragment
 			Bundle bundle = new Bundle();
 			bundle.putInt("SPS_Table_ID", tabInfo.getSPS_Table_ID());
 			bundle.putInt("SPS_Tab_ID", tabInfo.getSPS_Tab_ID());
+			bundle.putString("IsInsertRecord", (m_IsReadWrite && m_IsInsertRecord? "Y": "N"));
 			if(tabParam.getTabLevel() > 0){
 				FilterValue criteria = tabInfo.getCriteria(getActivity(), 
 						tabParam.getActivityNo(), tabParam.getParentTabNo());
@@ -362,8 +369,10 @@ public class T_DynamicTab extends Fragment
 		popupMenu.getMenu().add(Menu.NONE, O_SHARE, 
 					Menu.NONE, getString(R.string.Action_Share));
 		//	Delete Record
-		popupMenu.getMenu().add(Menu.NONE, O_DELETE, 
+		MenuItem deleteOption = popupMenu.getMenu().add(Menu.NONE, O_DELETE, 
 				Menu.NONE, getString(R.string.Action_Delete));
+		//	Enable
+		deleteOption.setCheckable(m_IsReadWrite);
 		//	Attach a File
 		popupMenu.getMenu().add(Menu.NONE, O_ATTACH, 
 				Menu.NONE, getString(R.string.Action_AttachImage));
@@ -492,7 +501,9 @@ public class T_DynamicTab extends Fragment
     	if(mode == NEW
     			|| mode == MODIFY) {
     		mi_Cancel.setVisible(true);
-    		mi_Save.setVisible(true);
+    		mi_Save.setVisible(m_IsReadWrite 
+    				&& ((m_IsInsertRecord && mode == NEW) 
+    						|| mode == MODIFY));
     		mi_More.setVisible(false);
     		mi_Add.setVisible(false);
     		mi_Edit.setVisible(false);
@@ -502,7 +513,7 @@ public class T_DynamicTab extends Fragment
     		mi_Cancel.setVisible(false);
     		mi_Save.setVisible(false);
     		mi_More.setVisible(false);
-    		mi_Add.setVisible(true);
+    		mi_Add.setVisible(m_IsReadWrite && m_IsInsertRecord);
     		mi_Edit.setVisible(false);
     		mi_Search.setVisible(true);
     		m_IsModifying = false;
@@ -511,13 +522,15 @@ public class T_DynamicTab extends Fragment
     		mi_Save.setVisible(false);
     		mi_More.setVisible(mGridTab!= null 
     				&& mGridTab.getRecord_ID() > 0);
-    		mi_Add.setVisible(true);
-    		mi_Edit.setVisible(mGridTab!= null 
-    				&& mGridTab.getRecord_ID() > 0);
+    		mi_Add.setVisible(m_IsReadWrite && m_IsInsertRecord);
+    		mi_Edit.setVisible(mGridTab != null 
+    				&& mGridTab.getRecord_ID() > 0
+    				&& m_IsReadWrite);
     		mi_Search.setVisible(true);
     		m_IsModifying = false;
     	}
-    	//	Enable
+		//	Enabled
+    	//	
     	enableView(mode);
     }
     
@@ -537,7 +550,7 @@ public class T_DynamicTab extends Fragment
 		} else if(mode == DELETED) {
 			mGridTab.dataDeleted();
 		} else if(mode == SEE) {
-			mGridTab.dataSee();
+			mGridTab.dataSee(m_IsReadWrite);
 		}
 	}
     
@@ -762,7 +775,7 @@ public class T_DynamicTab extends Fragment
 	    				refresh(record_ID, false);
 	    			else
 	    				newOption();
-
+	    			//	
 					break;
 				case DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_SearchColumn:
 					String columnName = bundle.getString("ColumnName");
@@ -817,16 +830,16 @@ public class T_DynamicTab extends Fragment
 	private class LoadViewTask extends AsyncTask<TableLayout, Integer, Integer> {
 
 		/**	Layout					*/
-		private LinearLayout		v_row	= null;
-		private LayoutParams		v_param	= null;
-		private TableLayout 		v_view 	= null;
-		private ArrayList<Lookup>	m_Lookup = null;
+		private LinearLayout		v_row			= null;
+		private LayoutParams		v_param			= null;
+		private TableLayout 		v_view 			= null;
+		private ArrayList<Lookup>	m_Lookup 		= null;
 		private int 				m_currentLookup = 0;
 		/**	Progress Bar			*/
 		private ProgressDialog 		v_PDialog;
 		/**	Constant				*/
-		private static final float 	WEIGHT_SUM 	= 2;
-		private static final float 	WEIGHT 		= 1;
+		private static final float 	WEIGHT_SUM 		= 2;
+		private static final float 	WEIGHT 			= 1;
 		/**
 		 * Init Values
 		 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/05/2014, 12:18:42

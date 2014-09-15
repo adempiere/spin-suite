@@ -243,7 +243,10 @@ public class Login extends TV_Base implements I_CancelOk {
 		protected void onPostExecute(Void result) {
 			//	
 			if(m_LoadType.equals(DATA_BASE)) {
-				
+				I_Login fr = (I_Login)getCurrentFragment();
+				if(fr != null) {
+					fr.loadData();
+				}
 			} else if(m_LoadType.equals(ROLE_ACCESS)) {
 				//	Start Activity
 				Intent intent = new Intent(v_activity, LV_Menu.class);

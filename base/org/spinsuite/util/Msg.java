@@ -274,7 +274,7 @@ public class Msg {
 		if (m_AD_Language == null 
 				|| m_AD_Language.length() == 0)
 			m_AD_Language = Env.BASE_LANGUAGE;
-		//	Get from Cahce
+		//	Get from Cache
 		String retStr = getTranslationCache(ctx, p_AD_Language, 
 				p_ColumnName + (isSOTrx? "|Y|": "|N|"));
 		//	Valid Cache
@@ -300,6 +300,9 @@ public class Msg {
 				+ "AND t.AD_Language = ?";
 			params = new String[] {p_ColumnName, m_AD_Language};
 		}
+		//	Log
+		LogM.log(ctx, "Msg", Level.FINE, "SQL getElement = [" + sql + "] " 
+					+ "ColumnName=" + p_ColumnName + ", AD_Language=" + m_AD_Language);
 		//	
 		retStr = DB.getSQLValueString(ctx, sql, params);
 		//	Log
@@ -419,6 +422,11 @@ public class Msg {
 
 		//	Check AD_Element
 		retStr = getElement(ctx, m_AD_Language, text, isSOTrx);
+		if (retStr != null
+				&& retStr.length() != 0)
+			return retStr.trim();
+		//	Re-Query
+		retStr = getElement(ctx, m_AD_Language, text, !isSOTrx);
 		if (retStr != null
 				&& retStr.length() != 0)
 			return retStr.trim();

@@ -63,36 +63,37 @@ import android.widget.ScrollView;
 public class LV_Search extends Activity {
 	
 	/**	Adapter					*/
-	private SearchAdapter 			m_SearchAdapter = null;
+	private SearchAdapter 			m_SearchAdapter 	= null;
 	/**	Main Layout				*/
-	private ScrollView				sv_Search = null;
+	private ScrollView				sv_Search 			= null;
 	/**	Table Layout			*/
-	private TableLayout 			v_tableLayout = null;
+	private TableLayout 			v_tableLayout 		= null;
 	/**	List View				*/
-	private ListView				lv_Search = null;
+	private ListView				lv_Search 			= null;
 	/**	Field					*/
-	private InfoField 				m_field = null;
+	private InfoField 				m_field 			= null;
 	/**	Table Identifier		*/
-	private int						m_SPS_Table_ID = 0;
+	private int						m_SPS_Table_ID 		= 0;
 	/**	Tab Identifier			*/
-	private int						m_SPS_Tab_ID = 0;
+	private int						m_SPS_Tab_ID 		= 0;
+	/**	Is Insert Record		*/
+	private boolean 				m_IsInsertRecord	= true;
 	/**	Criteria				*/
-	private FilterValue				m_criteria = null;
+	private FilterValue				m_criteria 			= null;
 	/**	Criteria Old			*/
-	private String					m_oldWhereClause = null;
+	private String					m_oldWhereClause 	= null;
 	/**	Lookup 					*/
-	private Lookup 					lookup = null;
+	private Lookup 					lookup 				= null;
 	/**	Info Field				*/
-	private InfoTab					tabInfo = null;
+	private InfoTab					tabInfo 			= null;
 	/**	View Index Array		*/
-	private ArrayList<GridField>	viewList = null;
+	private ArrayList<GridField>	viewList 			= null;
 	/**	Parameter				*/
-	private LayoutParams			v_param	= null;
+	private LayoutParams			v_param				= null;
 	/**	Activity				*/
-	private Activity				v_activity = null;
-	
+	private Activity				v_activity 			= null;
 	/**	View Weight				*/
-	private static final float 		WEIGHT = 1;
+	private static final float 		WEIGHT 				= 1;
 	
 	
 	public void onCreate(Bundle icicle) {
@@ -104,7 +105,11 @@ public class LV_Search extends Activity {
 			m_field = (InfoField)bundle.getParcelable("Field");
 			m_SPS_Table_ID = bundle.getInt("SPS_Table_ID");
 			m_SPS_Tab_ID = bundle.getInt("SPS_Tab_ID");
+			String m_StringInsertRecord = bundle.getString("IsInsertRecord");
 			m_criteria = bundle.getParcelable("Criteria");
+			//	Valid Is Insert Record
+			if(m_StringInsertRecord != null)
+				m_IsInsertRecord = m_StringInsertRecord.equals("Y");
 		}
 		//	Set Activity
 		v_activity = this;
@@ -260,7 +265,7 @@ public class LV_Search extends Activity {
 		MenuItem itemAdd = menu.findItem(R.id.action_add);
 		//	Visible
 		if(itemAdd != null)
-			itemAdd.setVisible(m_field == null);
+			itemAdd.setVisible(m_field == null && m_IsInsertRecord);
 		//	Close
 		MenuItem itemClose = menu.findItem(R.id.action_close);
 		//	Visible
