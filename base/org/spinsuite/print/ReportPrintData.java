@@ -364,6 +364,21 @@ public class ReportPrintData {
 		}
 		//	
 		String sql = m_reportQuery.getSQL(where);
+		//	Print Values
+		StringBuffer ts = new StringBuffer();
+		if(values != null) {
+			boolean first = true;
+			for(String value : values) {
+				if(!first)
+					ts.append(", ");
+				else 
+					first = false;
+				//	
+				ts.append("Value = ").append(value);
+			}
+		}
+		//	Show Log
+		LogM.log(ctx, getClass(), Level.FINE, "SQL Report[" + sql + "] Parameters [" + ts.toString() + "]");
 		//	Get ResultSet
 		Cursor rs = null;
 		rs = conn.querySQL(sql, values);

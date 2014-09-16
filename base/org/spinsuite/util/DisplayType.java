@@ -357,8 +357,8 @@ public final class DisplayType
 		if ( pattern != null && pattern.length() > 0) {
 			SimpleDateFormat format = (SimpleDateFormat)DateFormat.getInstance();
 			try {
-			format.applyPattern(pattern);
-			return format;
+				format.applyPattern(pattern);
+				return format;
 			} catch (IllegalArgumentException e) {
 				LogM.log(ctx, "DisplayType", Level.FINE, "Invalid date pattern: " + pattern);
 			}
@@ -368,7 +368,7 @@ public final class DisplayType
 			return Env.getDateTimeFormat(ctx);
 		else if (displayType == TIME)
 			return Env.getTimeFormat(ctx);
-	//	else if (displayType == Date)
+		//	
 		return Env.getDateFormat(ctx);		//	default
 	}	//	getDateFormat
 

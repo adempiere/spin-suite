@@ -23,6 +23,7 @@ import java.util.logging.Level;
 
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.OnFieldChangeListener;
+import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.LogM;
 
 import android.app.DatePickerDialog;
@@ -124,8 +125,8 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 		//	
 		ib_Date.setOnClickListener(this);
 		
-		formatFront = new SimpleDateFormat("dd/MM/yyyy");
-		formatBack = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		formatFront = DisplayType.getDateFormat(getContext(), DisplayType.DATE);
+		formatBack = DisplayType.getDateFormat_JDBC();
 		
         // display the current date (this method is below)
         updateDisplay();
