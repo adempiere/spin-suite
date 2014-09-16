@@ -1043,7 +1043,7 @@ public class T_DynamicTab extends Fragment
 	}
 
 	@Override
-	public void setEnabled(boolean enabled) {
+	public void setIsParentModifying(boolean enabled) {
 		//m_Enabled = enabled;
 	}
 }

@@ -212,7 +212,7 @@ public class FV_IndexRecordLine extends ListFragment
 	}
 
 	@Override
-	public void setEnabled(boolean enabled) {
+	public void setIsParentModifying(boolean enabled) {
 		//	
 	}
 }

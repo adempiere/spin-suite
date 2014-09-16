@@ -75,18 +75,18 @@ public class ReportPrintQuery {
 	private final String						MARK_WHERE = "<MARK_WHERE>";
 	
 	/**	Constant to Inner	*/
-	private final String 	INNER_JOIN 	= "INNER JOIN";
-	private final String 	LEFT_JOIN 	= "LEFT JOIN";
-	private final String	FROM		= "FROM";
-	private final String 	ON 			= "ON";
-	private final String 	AND 		= "AND";
-	private final String 	EQUAL 		= "=";
-	private final String	POINT		= ".";
-	private final String 	ORDER_BY 	= "ORDER BY";
-	private final String 	WHERE 		= "WHERE";
-	private final String 	AS 			= "AS";
-	private final String	COLUMN_ALIAS= "ca";
-	private final String	TABLE_ALIAS	= "ta";
+	private final String 	INNER_JOIN 		= "INNER JOIN";
+	private final String 	LEFT_JOIN 		= "LEFT JOIN";
+	private final String	FROM			= "FROM";
+	private final String 	ON 				= "ON";
+	private final String 	AND 			= "AND";
+	private final String 	EQUAL 			= "=";
+	private final String	POINT			= ".";
+	private final String 	ORDER_BY 		= "ORDER BY";
+	private final String 	WHERE 			= "WHERE";
+	private final String 	AS 				= "AS";
+	private final String	COLUMN_ALIAS	= "ca";
+	private final String	TABLE_ALIAS		= "ta";
 	
 	/**
 	 * Get Table Name
@@ -94,7 +94,7 @@ public class ReportPrintQuery {
 	 * @return
 	 * @return String
 	 */
-	public String getTableName(){
+	public String getTableName() {
 		return m_IR.getTableName();
 	}
 	
@@ -105,7 +105,7 @@ public class ReportPrintQuery {
 	 * @return
 	 * @return String
 	 */
-	public String getSQL(String whereClause){
+	public String getSQL(String whereClause) {
 		boolean hasWhereClause = (whereClause != null && whereClause.length() > 0);
 		loadQuery(hasWhereClause);
 		//	append Where Clause
@@ -121,7 +121,7 @@ public class ReportPrintQuery {
 	 * @return
 	 * @return InfoReport
 	 */
-	public InfoReport getInfoReport(){
+	public InfoReport getInfoReport() {
 		return m_IR;
 	}
 	
@@ -131,7 +131,7 @@ public class ReportPrintQuery {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean isWhere(){
+	public boolean isWhere() {
 		return m_IR.getWhereClause() != null 
 				&& m_IR.getWhereClause().length() > 0;
 	}
@@ -142,7 +142,7 @@ public class ReportPrintQuery {
 	 * @return
 	 * @return int
 	 */
-	public int getColumnQty(){
+	public int getColumnQty() {
 		return m_columnQty;
 	}
 	
@@ -152,7 +152,7 @@ public class ReportPrintQuery {
 	 * @return
 	 * @return InfoReportField[]
 	 */
-	public InfoReportField[] getColumns(){
+	public InfoReportField[] getColumns() {
 		InfoReportField[] columns = new InfoReportField[m_columns.size()];
 		m_columns.toArray(columns);
 		return columns;
@@ -181,7 +181,7 @@ public class ReportPrintQuery {
 		//	New Columns
 		m_columns = new ArrayList<InfoReportField>();
 		//	Iterate
-		for(InfoReportField field : m_IR.getInfoReportFields()){
+		for(InfoReportField field : m_IR.getInfoReportFields()) {
 			InfoLookup lookup = null;
 			String tableAlias = null;
 			//	Get Display
@@ -195,7 +195,7 @@ public class ReportPrintQuery {
 			String lookupField = getLookupColumn(m_tableName, field, lookup);
 			lookupField = "(" + lookupField + ")";
 			//	Add to Query
-			if(field.IsPrinted){
+			if(field.IsPrinted) {
 				String columnAlias = COLUMN_ALIAS + columnIndex++;
 				//	Add Alias
 				lookupField = lookupField + " " + AS + " " + columnAlias;
@@ -227,7 +227,7 @@ public class ReportPrintQuery {
 		//	Add Sort
 		isFirst = true;
 		StringBuffer m_OrderBy = new StringBuffer();
-		for(ReportSortColumnPair sortField : m_orderColumns){
+		for(ReportSortColumnPair sortField : m_orderColumns) {
 			//	Add Separator
 			if(!isFirst)
 				m_OrderBy.append(", ");
@@ -241,7 +241,7 @@ public class ReportPrintQuery {
 		m_SQL.append(m_from).append(" ");
 		//	Add Where Clause
 		if(m_IR.getWhereClause() != null
-				&& m_IR.getWhereClause().length() > 0){
+				&& m_IR.getWhereClause().length() > 0) {
 			m_SQL.append(WHERE).append(" ")
 				.append(m_IR.getWhereClause()).append(" ");
 			//	Criteria
@@ -266,15 +266,15 @@ public class ReportPrintQuery {
 	 * @return
 	 * @return String
 	 */
-	private String getLookupColumn(String tableName, InfoReportField field, InfoLookup lookup){
+	private String getLookupColumn(String tableName, InfoReportField field, InfoLookup lookup) {
 		String lookupField = new String();
-		if(DisplayType.isLookup(field.DisplayType)){
+		if(DisplayType.isLookup(field.DisplayType)) {
 			//	Set Column
 			if(lookup.DisplayColumn != null)
 				lookupField = lookup.DisplayColumn;
 			else
 				lookupField = tableName + "." + field.ColumnName;
-		} else if(DisplayType.isDate(field.DisplayType)){
+		} else if(DisplayType.isDate(field.DisplayType)) {
 			lookupField = "(strftime('%s', " + tableName + POINT + field.ColumnName + ")*1000)";
 		} else {
 			lookupField = tableName + POINT + field.ColumnName;
@@ -293,7 +293,7 @@ public class ReportPrintQuery {
 	 * @return
 	 * @return InfoLookup
 	 */
-	private InfoLookup getInfoLookup(String tableAlias, InfoReportField field){
+	private InfoLookup getInfoLookup(String tableAlias, InfoReportField field) {
 		//	Do it
 		InfoField lookupField = new InfoField(field);
 		Lookup m_lookup = new Lookup(ctx, lookupField, tableAlias);
@@ -308,7 +308,7 @@ public class ReportPrintQuery {
 	 * @param isMandatory
 	 * @return void
 	 */
-	private void addJoin(String tableName, InfoReportField linkColumn, InfoLookup lookup, boolean isMandatory){
+	private void addJoin(String tableName, InfoReportField linkColumn, InfoLookup lookup, boolean isMandatory) {
 		//	Is Mandatory
 		if(isMandatory)
 			m_from.append(INNER_JOIN).append(" ");
@@ -347,6 +347,11 @@ public class ReportPrintQuery {
 								.append(AND).append(" ").append(lookup.TableAlias).append(InfoLookup.TR_TABLE_SUFFIX)
 								.append(POINT).append(InfoLookup.AD_LANGUAGE_CN)
 								.append(EQUAL).append("'").append(m_AD_Language).append("'").append(")").append(" ");
+		}
+		//	Add external Join
+		if(lookup.TableJoin != null
+				&& lookup.TableJoin.length() >0) {
+			m_from.append(" ").append(lookup.TableJoin);
 		}
 	}
 }

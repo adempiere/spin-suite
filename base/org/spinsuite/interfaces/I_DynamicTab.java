@@ -82,10 +82,10 @@ public interface I_DynamicTab {
 	public boolean isModifying();
 	
 	/**
-	 * Set Enabled
+	 * Set Is Parent Modifyin
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/09/2014, 19:03:46
-	 * @param enabled
+	 * @param isParentModifying
 	 * @return void
 	 */
-	public void setEnabled(boolean enabled);
+	public void setIsParentModifying(boolean isParentModifying);
 }

@@ -183,7 +183,7 @@ public class T_DynamicTabDetail extends Fragment
 	}
 
 	@Override
-	public void setEnabled(boolean enabled) {
+	public void setIsParentModifying(boolean enabled) {
 		//	
 	}
 }

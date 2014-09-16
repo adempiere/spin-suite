@@ -81,7 +81,7 @@ public abstract class PO {
 		if (ctx == null)
 			throw new IllegalArgumentException ("No Context");
 		m_ctx = ctx;
-		if(pConn != null){
+		if(pConn != null) {
 			conn = pConn;
 			handConnection = false;
 		} else {
@@ -102,7 +102,7 @@ public abstract class PO {
 		m_currentValues = new Object[size];
 		m_oldValues = new Object[size];
 
-		if (rs != null){
+		if (rs != null) {
 			loadData(rs);
 		}else{
 			loadData(ID);
@@ -117,7 +117,7 @@ public abstract class PO {
 	 * @param ID
 	 * @param conn
 	 */
-	public PO(Context ctx, int ID, DB conn){
+	public PO(Context ctx, int ID, DB conn) {
 		this(ctx, ID, null, conn);
 	}
 	
@@ -129,7 +129,7 @@ public abstract class PO {
 	 * @param rs
 	 * @param trxName
 	 */
-	public PO(Context ctx, Cursor rs, DB conn){
+	public PO(Context ctx, Cursor rs, DB conn) {
 		this(ctx, 0, rs, conn);
 	}
 	
@@ -166,7 +166,7 @@ public abstract class PO {
 	 * @return void
 	 */
 	private void loadData(Cursor rs) {
-		if(rs != null){
+		if(rs != null) {
 			//	Load Data
 			loadDataQuery(rs, true);
 			m_IDs = new Object[] {get_ValueAsInt(m_TableInfo.getTableName() + "_ID")};
@@ -183,7 +183,7 @@ public abstract class PO {
 	public boolean loadData(int ID) {
 		boolean ok = false;
 		LogM.log(getCtx(), getClass(), Level.FINE, "loadData=" + String.valueOf(ID));
-		if(ID > 0){
+		if(ID > 0) {
 			m_IDs = new Object[] {ID};
 			m_currentId = ID;
 			m_KeyColumns = new String[] {m_TableInfo.getTableName() + "_ID"};
@@ -215,7 +215,7 @@ public abstract class PO {
 	 */
 	public void copyValues(boolean deleteOld) {
 		m_oldValues = m_currentValues;
-		if(deleteOld){
+		if(deleteOld) {
 			isNew = true;
 			m_currentValues = new Object[m_TableInfo.getColumnLength()];
 			m_oldId = m_currentId;
@@ -252,7 +252,7 @@ public abstract class PO {
 	private boolean loadDataQuery(int ID) {
 		boolean ok = false;
 		StringBuffer sql = new StringBuffer("SELECT ");
-		for(int i = 0; i < m_TableInfo.getColumnLength(); i++){
+		for(int i = 0; i < m_TableInfo.getColumnLength(); i++) {
 			POInfoColumn column = m_TableInfo.getPOInfoColumn(i);
 			if (i != 0)
 				sql.append(",");
@@ -300,7 +300,7 @@ public abstract class PO {
 		//	For Parse Date
 		SimpleDateFormat sdf = DisplayType.getTimestampFormat_Default();
 		//	Iterate
-		for(int i = 0; i < m_TableInfo.getColumnLength(); i++){
+		for(int i = 0; i < m_TableInfo.getColumnLength(); i++) {
 			//	Get Column
 			POInfoColumn column = m_TableInfo.getPOInfoColumn(i);
 			int displayType = column.DisplayType;
@@ -322,10 +322,10 @@ public abstract class PO {
 				m_currentValues[i] = DisplayType.getNumber(rs.getString(index));
 			else if (DisplayType.isLOB(displayType))
 				m_currentValues[i] = rs.getBlob(index);
-			else if(DisplayType.isBoolean(displayType)){
+			else if(DisplayType.isBoolean(displayType)) {
 				String value = rs.getString(index);
 				m_currentValues[i] = (value != null && value.equals("Y"));
-			} else if(DisplayType.isDate(displayType)){
+			} else if(DisplayType.isDate(displayType)) {
 				String date = rs.getString(i);
 				if(date != null) {
 					try {
@@ -340,7 +340,7 @@ public abstract class PO {
 				
 			}
 			//	Set Is Ok
-			if(!ok){
+			if(!ok) {
 				isNew = false;
 				ok = true;
 			}
@@ -359,7 +359,7 @@ public abstract class PO {
 		boolean ok = false;
 		try {
 			//	Iterate
-			for(int i = 0; i < m_TableInfo.getColumnLength(); i++){
+			for(int i = 0; i < m_TableInfo.getColumnLength(); i++) {
 				//	Get Column
 				POInfoColumn column = m_TableInfo.getPOInfoColumn(i);
 				m_currentValues[i] = parseValue(column, i, false, false);
@@ -368,7 +368,7 @@ public abstract class PO {
 			}
 			//	Set Ok Value
 			ok = true;
-		} catch(Exception e){
+		} catch(Exception e) {
 			LogM.log(getCtx(), getClass(), Level.SEVERE, "Error: " + e.getLocalizedMessage(), e);
 		}
 		return ok;
@@ -381,7 +381,7 @@ public abstract class PO {
 	 * @return void
 	 */
 	public void setIDUpdate(int ID) {
-		if(ID > 0){
+		if(ID > 0) {
 			m_IDs = new Object[] {ID};
 			m_currentId = ID;
 			m_oldId = m_currentId;
@@ -437,9 +437,9 @@ public abstract class PO {
 	 * @return
 	 * @return boolean
 	 */
-	public final boolean set_Value(String columnName, Object value){
+	public final boolean set_Value(String columnName, Object value) {
 		int index = m_TableInfo.getColumnIndex(columnName);
-		if(index >= 0){
+		if(index >= 0) {
 			if(value != null)
 				m_currentValues[index] = value;
 			else
@@ -471,7 +471,7 @@ public abstract class PO {
 	 */
 	public final boolean set_Value(int index, Object value) {
 		LogM.log(getCtx(), getClass(), Level.FINE, "index = " + index + ", value = " + value);
-		if(index >= 0){
+		if(index >= 0) {
 			if(value != null)
 				m_currentValues[index] = value;
 			else
@@ -488,9 +488,9 @@ public abstract class PO {
 	 * @return
 	 * @return String[]
 	 */
-	public String [] getValuesAsString(){
+	public String [] getValuesAsString() {
 		String []values = null;
-		if(m_currentValues != null){
+		if(m_currentValues != null) {
 			values = new String[m_currentValues.length];
 			for (int i = 0; i < m_currentValues.length; i++) {
 				values[i] = (String)m_currentValues[i];
@@ -520,7 +520,7 @@ public abstract class PO {
 	 * @return Object
 	 */
 	public final Object get_Value(int index) {
-		if(index >= 0){
+		if(index >= 0) {
 			LogM.log(getCtx(), getClass(), Level.FINE, "Value = " + m_currentValues[index]);
 			return m_currentValues[index];
 		}
@@ -560,10 +560,10 @@ public abstract class PO {
 	private int get_ValueAsInt(String columnName, Object [] m_arrayValues) {
 		int index = m_TableInfo.getColumnIndex(columnName);
 		int displayType = m_TableInfo.getDisplayType(index);
-		if(index >= 0){
-			if(m_arrayValues[index] != null){
+		if(index >= 0) {
+			if(m_arrayValues[index] != null) {
 				if(DisplayType.isNumeric(displayType) 
-						|| DisplayType.isID(displayType)){
+						|| DisplayType.isID(displayType)) {
 					return (Integer)m_arrayValues[index];
 				} else {
 					return 0;
@@ -582,12 +582,12 @@ public abstract class PO {
 	 */
 	public final int get_ValueAsInt(int index) {
 		int displayType = m_TableInfo.getDisplayType(index);
-		if(index >= 0){
-			if(m_currentValues[index] != null){
+		if(index >= 0) {
+			if(m_currentValues[index] != null) {
 				if(DisplayType.isNumeric(displayType) 
-						|| DisplayType.isID(displayType)){
+						|| DisplayType.isID(displayType)) {
 					Object value = m_currentValues[index];
-					if(value != null){
+					if(value != null) {
 						try{
 							return (Integer)value;
 						} catch (Exception e) {
@@ -612,9 +612,9 @@ public abstract class PO {
 	public final boolean get_ValueAsBoolean(String columnName) {
 		int index = m_TableInfo.getColumnIndex(columnName);
 		LogM.log(getCtx(), getClass(), Level.FINE, "columnName = " + columnName);
-		if(index >= 0){
+		if(index >= 0) {
 			LogM.log(getCtx(), getClass(), Level.FINE, "Value = " + m_oldValues[index]);
-			if(DisplayType.isText(m_TableInfo.getDisplayType(columnName))){
+			if(DisplayType.isText(m_TableInfo.getDisplayType(columnName))) {
 				return "Y".equals(((String)m_currentValues[index]));
 			} else {
 				return false;
@@ -729,7 +729,7 @@ public abstract class PO {
 		//	Load default Values
 		loadDefaultValues();
 		//	
-		if(deleteBackup){
+		if(deleteBackup) {
 			m_oldId = 0;
 			m_oldValues = new Object[size];
 		}
@@ -751,8 +751,8 @@ public abstract class PO {
 		try{
 			for (int i = 0; i < m_TableInfo.getColumnLength(); i++) {
 				POInfoColumn column = m_TableInfo.getPOInfoColumn(i);
-				if(!column.isColumnSQL()){
-					if(i > 0){
+				if(!column.isColumnSQL()) {
+					if(i > 0) {
 						columns.append(",");
 						sym.append(",");
 					}
@@ -824,7 +824,7 @@ public abstract class PO {
 					throw new Exception(m_ctx.getResources().getString(R.string.MustFillField) + 
 							" \"" + column.ColumnName + "\"");
 				if(!column.ColumnName.equals("Created")
-						&& !column.ColumnName.equals("CreatedBy")){
+						&& !column.ColumnName.equals("CreatedBy")) {
 					listValues.add(value);
 					LogM.log(getCtx(), getClass(), Level.FINE, 
 							column.ColumnName + "=" + value + " Mandatory=" + column.IsMandatory);
@@ -857,7 +857,7 @@ public abstract class PO {
 	private void setLogValues(boolean isNew) {
 		int m_AD_User_ID = Env.getAD_User_ID(m_ctx);
 		Date currentDate = Env.getCurrentDate();
-		if(isNew){
+		if(isNew) {
 			setCreatedBy(m_AD_User_ID);
 			setCreated(Env.getCurrentDate());
 		}
@@ -878,16 +878,16 @@ public abstract class PO {
 	 * @return Object
 	 */
 	public final Object parseValue(POInfoColumn column, int index, boolean isNew, boolean toSave) throws Exception {
-		if(index >= 0){
+		if(index >= 0) {
 			Object value = m_currentValues[index]; 
 			if(isNew
-					&& column.ColumnName.equals(m_TableInfo.getTableName() + "_ID")){
+					&& column.ColumnName.equals(m_TableInfo.getTableName() + "_ID")) {
 				m_currentId = MSequence.getNextID(m_ctx, getAD_Client_ID(), getTableName(), conn);
 				//	Set ID
 				set_Value(index, m_currentId);
 				return m_currentId;
 			} else if(isNew 
-					&& column.ColumnName.equals("DocumentNo")){
+					&& column.ColumnName.equals("DocumentNo")) {
 					//	Get Document Type
 					int m_C_DocType_ID = get_ValueAsInt("C_DocType_ID");
 					//	Target Document
@@ -898,7 +898,7 @@ public abstract class PO {
 					return documentNo;
 			} else {
 				if(value == null
-						&& column.ColumnName.equals("DocumentNo")){
+						&& column.ColumnName.equals("DocumentNo")) {
 					//	Get Document Type
 					int m_C_DocType_ID = get_ValueAsInt("C_DocType_ID");
 					//	Target Document
@@ -907,10 +907,10 @@ public abstract class PO {
 					//	Get Document No
 					String documentNo = MSequence.getDocumentNo(getCtx(), m_C_DocType_ID, m_TableInfo.getTableName(), false, conn);
 					return documentNo;
-				} else if(value != null){
+				} else if(value != null) {
 					Object returnValue = DisplayType.getJDBC_Value(column.DisplayType, value, !toSave, !toSave);
 					return returnValue;
-				} else if(column.DefaultValue != null){
+				} else if(column.DefaultValue != null) {
 					if(toSave)
 						return Env.parseContext(getCtx(), (String)column.DefaultValue, false);
 					else
@@ -991,8 +991,8 @@ public abstract class PO {
 	 * @return void
 	 */
 	public void loadConnection(int type) {
-		if(!conn.isOpen()){
-			if(handConnection){
+		if(!conn.isOpen()) {
+			if(handConnection) {
 				LogM.log(getCtx(), getClass(), Level.FINE, "handConnection");
 				conn.openDB(type);
 				if(type == DB.READ_WRITE)
@@ -1009,8 +1009,8 @@ public abstract class PO {
 	 */
 	public void closeConnection() {
 		LogM.log(getCtx(), getClass(), Level.FINE, "Close");
-		if(conn.isOpen()){
-			if(handConnection){
+		if(conn.isOpen()) {
+			if(handConnection) {
 				LogM.log(getCtx(), getClass(), Level.FINE, "handConnection");
 				if(conn.getBd().inTransaction())
 					conn.endTransaction();

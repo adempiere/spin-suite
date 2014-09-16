@@ -58,6 +58,8 @@ public class InfoLookup {
 	public String			WhereClause 			= null;
 	/**	Table Alias					*/
 	public String 			TableAlias				= null;
+	/**	Join with Tables			*/
+	public String 			TableJoin				= null;
 	
 	
 	/**	Reference (Table Name)		*/
@@ -70,12 +72,12 @@ public class InfoLookup {
 	public static final String 	AD_LANGUAGE_CN 			= "AD_Language";
 	/**	Translation Add				*/
 	public static final String 	TR_TABLE_SUFFIX 		= "_Trl";
-
+	
 	@Override
 	public String toString() {
 		return "InfoLookup [TableName=" + TableName + ", KeyColumn="
 				+ KeyColumn + ", DisplayColumn=" + DisplayColumn
 				+ ", WhereClause=" + WhereClause + ", TableAlias=" + TableAlias
-				+ "]";
+				+ ", TableJoin=" + TableJoin + "]";
 	}
 }

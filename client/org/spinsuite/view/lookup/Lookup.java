@@ -113,6 +113,53 @@ public class Lookup {
 	/**
 	 * 
 	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/09/2014, 20:12:45
+	 * @param ctx
+	 * @param m_SPS_Column_ID
+	 * @param tableAlias
+	 */
+	public Lookup(Context ctx, int m_SPS_Column_ID, String tableAlias) {
+		this(ctx, null, m_SPS_Column_ID, tableAlias);
+	}
+	
+	/**
+	 * With Column Identifier
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/09/2014, 20:10:58
+	 * @param ctx
+	 * @param tabParam
+	 * @param m_SPS_Column_ID
+	 * @param tableAlias
+	 */
+	public Lookup(Context ctx, TabParameter tabParam, int m_SPS_Column_ID, String tableAlias) {
+		this.m_field = GridField.loadInfoColumnField(ctx, m_SPS_Column_ID);
+		this.ctx = ctx;
+		m_Language = Env.getAD_Language(ctx);
+		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
+		m_TabParam = tabParam;
+		m_TableAlias = tableAlias;
+		//	Add Alias
+		if(tableAlias != null
+				&& tableAlias.length() > 0) {
+			ctx_lookup_value = CTX_VALUE_PREFIX + m_Language + "|" + tableAlias + "|" + m_field.SPS_Column_ID;
+			ctx_lookup_has_where = CTX_HAS_WHERE + m_Language + "|" + tableAlias + "|" + m_field.SPS_Column_ID;
+			ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX + m_Language + "|" + tableAlias + "|" + m_field.SPS_Column_ID;
+		} else {
+			ctx_lookup_value = CTX_VALUE_PREFIX + m_Language + "|" + m_field.SPS_Column_ID;
+			ctx_lookup_has_where = CTX_HAS_WHERE + m_Language + "|" + m_field.SPS_Column_ID;
+			ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX + m_Language + "|" + m_field.SPS_Column_ID;
+		}
+		//	Valid Null
+		if(m_TabParam == null) {
+			m_TabParam = new TabParameter();
+			m_TabParam.setActivityNo(0);
+			m_TabParam.setTabNo(0);
+		}
+	}
+	
+	/**
+	 * 
+	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/09/2014, 10:09:45
 	 * @param ctx
 	 * @param tabParam
@@ -214,6 +261,8 @@ public class Lookup {
 	private boolean 							m_IsLoaded				= false;
 	/**	SQL						*/
 	private String 								m_SQL					= null;
+	/**	SQL Join				*/
+	private StringBuffer						m_From					= null;
 	/**	Language				*/
 	private String 								m_Language 				= null;
 	/**	Is Base Language		*/
@@ -241,6 +290,14 @@ public class Lookup {
 	private final String	CTX_LOOKUP_INFO_PREFIX_TABLE	= "LKI|T|";
 	private final String	MARK_WHERE						= "<MARK_WHERE>";
 	
+	/**	Constant to Inner	*/
+	private final String 	LEFT_JOIN 					= "LEFT JOIN";
+	private final String 	ON 							= "ON";
+	private final String 	AND 						= "AND";
+	private final String 	EQUAL 						= "=";
+	private final String	POINT						= ".";
+	private final String 	AS 							= "AS";
+	private final String	ALIAS_PREFIX_IDENTIFIER		= "tda";
 	
 	/**
 	 * Get Parsed SQL
@@ -400,11 +457,12 @@ public class Lookup {
 	private String loadSQLTableDirect(){
 		//	Instance Lookup
 		m_InfoLookup = new InfoLookup();
+		//	Instance join
+		m_From = new StringBuffer();
 		//	
 		StringBuffer sql = new StringBuffer();
 		StringBuffer where = new StringBuffer();
 		String tableName = m_field.ColumnName.replaceAll("_ID", "");
-		sql.append("SELECT ").append(tableName).append(".").append(m_field.ColumnName);
 		//	Set Info Lookup
 		m_InfoLookup.TableName = tableName;
 		m_InfoLookup.KeyColumn = m_field.ColumnName;
@@ -413,37 +471,54 @@ public class Lookup {
 				|| m_TableAlias.length() == 0)
 			m_TableAlias = tableName;
 		//	
-		m_InfoLookup.TableAlias = m_TableAlias;		
+		m_InfoLookup.TableAlias = m_TableAlias;
+		//	SQL
+		sql.append("SELECT ").append(m_TableAlias).append(".").append(m_field.ColumnName);
 		//	
 		DB conn = new DB(ctx);
 		DB.loadConnection(conn, DB.READ_ONLY);
 		Cursor rs = null;
 		//	Query
-		rs = conn.querySQL("SELECT c.ColumnName, c.AD_Reference_ID " +
+		rs = conn.querySQL("SELECT c.ColumnName, c.SPS_Column_ID, c.AD_Reference_ID " +
 				"FROM SPS_Table t " +
 				"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) " +
 				"WHERE t.TableName = ? " +
 				"AND c.IsIdentifier = ? ORDER BY SeqNo", new String[]{tableName, "Y"});
 		//	First
 		boolean isFirst = true;
+		//	Alias Identifier
+		String aliasPrefix = ALIAS_PREFIX_IDENTIFIER + m_field.ColumnName;
+		int aliasCount = 1;
 		if(rs.moveToFirst()){
 			sql.append(", ");
 			StringBuffer longColumn = new StringBuffer();
 			do {
 				String columnName = rs.getString(0);
+				int m_SPS_Column_ID = rs.getInt(1);
+				int displayType = rs.getInt(2);
 				//	Is First
 				if(!isFirst)
 					longColumn.append("||'_'||");
 				//	
-				longColumn.append("COALESCE(").append(m_TableAlias).append(".").append(columnName).append(",'')");
+				if(DisplayType.isLookup(displayType)) {
+					Lookup lookup = new Lookup(ctx, m_SPS_Column_ID, aliasPrefix + aliasCount++);
+					InfoLookup infoLookup = lookup.getInfoLookup();
+					//	Add to Display Column
+					longColumn.append(infoLookup.DisplayColumn);
+					//	Add Join
+					addJoin(m_TableAlias, lookup.getField(), infoLookup);
+				} else {
+					longColumn.append("COALESCE(").append(m_TableAlias).append(".").append(columnName).append(",'')");
+				}
 				//	Set false
 				if(isFirst)
 					isFirst = false;
-			}while(rs.moveToNext());
+			} while(rs.moveToNext());
 			//	
 			sql.append(longColumn);
 			//	Set Info Lookup
 			m_InfoLookup.DisplayColumn = longColumn.toString();
+			m_InfoLookup.TableJoin = m_From.toString();
 			//	
 			//	Separator
 		} else {
@@ -452,7 +527,11 @@ public class Lookup {
 		}
 		//	Close
 		DB.closeConnection(conn);
-		sql.append(" FROM ").append(tableName);
+		sql.append(" FROM ").append(tableName)
+				.append(" AS ").append(m_TableAlias);
+		//	Add Joins
+		if(m_From.length() > 0)
+			sql.append(" ").append(m_From);
 		
 		//	Validation Rule
 		if(getValRule() != null
@@ -471,6 +550,51 @@ public class Lookup {
 		sql.append(where);
 		//	Return
 		return sql.toString();
+	}
+	
+	
+	/**
+	 * Add Join
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/09/2014, 21:06:48
+	 * @param tableName
+	 * @param linkColumn
+	 * @param lookup
+	 * @return void
+	 */
+	private void addJoin(String tableName, InfoField linkColumn, InfoLookup lookup) {
+		//	Is Mandatory
+		m_From.append(LEFT_JOIN).append(" ");
+		//	Table Name
+		m_From.append(lookup.TableName).append(" ").append(AS).append(" ").append(lookup.TableAlias).append(" ");
+		//	On
+		m_From.append(ON).append("(")
+							.append(lookup.TableAlias).append(POINT).append(lookup.KeyColumn)
+							.append(EQUAL).append(tableName).append(POINT).append(linkColumn.ColumnName);
+		if(linkColumn.DisplayType == DisplayType.LIST) {
+			m_From.append(" ").append(AND).append(" ")
+								.append(lookup.TableAlias).append(POINT)
+								.append(InfoLookup.REFERENCE_TN).append("_ID")
+								.append(EQUAL).append(linkColumn.AD_Reference_Value_ID);
+		}
+		//	Add finish
+		m_From.append(")").append(" ");
+		//	Add Translation to List
+		if(linkColumn.DisplayType == DisplayType.LIST
+				&& !m_IsBaseLanguage) {
+			m_From.append(LEFT_JOIN).append(" ");
+			//	Table Name
+			m_From.append(lookup.TableName).append(InfoLookup.TR_TABLE_SUFFIX).append(" ")
+								.append(AS).append(" ").append(lookup.TableAlias).append(InfoLookup.TR_TABLE_SUFFIX).append(" ");
+			//	On
+			m_From.append(ON).append("(")
+								.append(lookup.TableAlias).append(InfoLookup.TR_TABLE_SUFFIX)
+								.append(POINT).append(InfoLookup.REF_LIST_TN).append("_ID")
+								.append(EQUAL).append(lookup.TableAlias)
+								.append(POINT).append(InfoLookup.REF_LIST_TN).append("_ID ")
+								.append(AND).append(" ").append(lookup.TableAlias).append(InfoLookup.TR_TABLE_SUFFIX)
+								.append(POINT).append(InfoLookup.AD_LANGUAGE_CN)
+								.append(EQUAL).append("'").append(m_Language).append("'").append(")").append(" ");
+		}
 	}
 	
 	/**
@@ -516,13 +640,13 @@ public class Lookup {
 			//	
 			m_InfoLookup.TableAlias = m_TableAlias;
 			//	
-			sql.append(tableName).append(".").append(pkColumnName).append(", ");
+			sql.append(m_TableAlias).append(".").append(pkColumnName).append(", ");
 			//	Display Column
 			StringBuffer longColumn = new StringBuffer();
 			//	Display Value
 			if(isValueDisplayed != null
 					&& isValueDisplayed.equals("Y"))
-				longColumn.append("COALESCE(").append(tableName).append(".")
+				longColumn.append("COALESCE(").append(m_TableAlias).append(".")
 						.append("Value").append(", '')").append("||'_'||");
 			//	Display Column
 			longColumn.append("COALESCE(").append(m_TableAlias).append(".").append(dColumnName).append(",'')");
@@ -530,7 +654,8 @@ public class Lookup {
 			//	Set Info Lookup
 			m_InfoLookup.DisplayColumn = longColumn.toString();
 			//	Separator
-			sql.append(" FROM ").append(tableName);
+			sql.append(" FROM ").append(tableName)
+					.append(" AS ").append(m_TableAlias);
 			//	Where Clause
 			if(whereClause != null
 					&& whereClause.length() > 0)
