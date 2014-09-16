@@ -40,4 +40,11 @@
 	<attr name="ic_lt_date" format="reference"/>
 	<!-- Icon List -->
 	<attr name="ic_ls_ok" format="reference"/>
+	<!-- Icon Document Action -->
+	<attr name="ic_doc_prepare" format="reference"/>
+	<attr name="ic_doc_complete" format="reference"/>
+	<attr name="ic_doc_close" format="reference"/>
+	<attr name="ic_doc_void" format="reference"/>
+	<attr name="ic_doc_reverse_correct" format="reference"/>
+	<attr name="ic_doc_reactivate" format="reference"/>
 </resources>

@@ -17,12 +17,14 @@
 package org.spinsuite.process;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.util.LogM;
 
 import android.content.Context;
+import android.database.Cursor;
 
 /**
  *	Document Action Engine
@@ -917,5 +919,47 @@ public class DocumentEngine implements DocAction
 		
 		return error;
 	}	//	postImmediate*/
+	
+	/**
+	 * Not yet implemented
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/09/2014, 23:31:51
+	 * @param con_tx
+	 * @param ctx
+	 * @param m_C_DocType_ID
+	 * @param reloaded
+	 * @return void
+	 */
+	public void setValRuleAction(DB con_tx, Context ctx, int m_C_DocType_ID, boolean reloaded){
+		if(reloaded) {
+			boolean handConnection = false;
+			DB con = null;
+			if(con_tx == null){
+				con = new DB(ctx);
+				con.openDB(DB.READ_ONLY);
+				handConnection = true;
+			} else 
+				con = con_tx;
+			String sql = new String("SELECT DocAction " +
+					"FROM AD_Document_Action_Access " +
+					"WHERE C_DocType_ID = " + m_C_DocType_ID);
+			//	Cursor
+			Cursor rs = con.querySQL(sql, null);
+	    	
+			if(rs.moveToFirst()){
+				ArrayList<String> docActions = new ArrayList<String>();
+				do{
+					docActions.add(rs.getString(0));
+				} while(rs.moveToNext());
+				
+				if(docActions.size() != 0){
+					//actionRole = new String[docActions.size()];
+					//docActions.toArray(actionRole);
+				}
+	    	}
+			//	Close DB
+			if(handConnection)
+				con.closeDB(rs);	
+		}
+	}
 	
 }	//	DocumentEnine

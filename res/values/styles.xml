@@ -48,6 +48,13 @@
         <item name="ic_lt_date">@drawable/ic_action_event_light</item>
         <!-- Icon List -->
         <item name="ic_ls_ok">@drawable/ic_action_accept_light</item>
+        <!-- Icon Document Action -->
+		<item name="ic_doc_prepare">@drawable/doc_progress_m</item>
+		<item name="ic_doc_complete">@drawable/doc_completed_m</item>
+		<item name="ic_doc_close">@drawable/errorsync_m</item>
+		<item name="ic_doc_void">@drawable/remove_m</item>
+		<item name="ic_doc_reverse_correct">@drawable/remove_m</item>
+		<item name="ic_doc_reactivate">@drawable/doc_progress_m</item>
     </style>
     
     <!-- Color -->
