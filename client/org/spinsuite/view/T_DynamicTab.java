@@ -934,7 +934,7 @@ public class T_DynamicTab extends Fragment
 	     * @return void
 	     */
 	    private void addView(InfoField field){
-	    	
+	    	//	
 	    	boolean isSameLine = field.IsSameLine;
 	    	boolean isFirst = false;
 			GridField lookup = null;
