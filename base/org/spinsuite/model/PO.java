@@ -38,31 +38,31 @@ import android.database.Cursor;
 public abstract class PO {
 
 	/** Context                 	*/
-	private Context					m_ctx;
+	private Context					m_ctx 				= null;
 	/** Model Info              	*/
-	protected POInfo				m_TableInfo = null;
+	protected POInfo				m_TableInfo 		= null;
 	/** Original Values         	*/
-	private Object[]    			m_currentValues = null;
+	private Object[]    			m_currentValues 	= null;
 	/** New Values              	*/
-	private Object[]    			m_oldValues = null;
+	private Object[]    			m_oldValues 		= null;
 	/**	Connection					*/
-	protected DB 					conn = null;  
+	protected DB 					conn 				= null;  
 	/** Record_IDs          		*/
-	private Object[]       			m_IDs = new Object[] {0};
+	private Object[]       			m_IDs 				= new Object[] {0};
 	/** Key Columns					*/
-	private String[]         		m_KeyColumns = null;
+	private String[]         		m_KeyColumns 		= null;
 	/** Create New for Multi Key 	*/
-	private boolean					isNew = true;
+	private boolean					isNew 				= true;
 	/**	Deleted ID					*/
-	private int						m_currentId = 0;
+	private int						m_currentId 		= 0;
 	/**	Old ID						*/
-	private int						m_oldId = 0;
+	private int						m_oldId 			= 0;
 	/**	Handle Connection			*/
-	private boolean					handConnection = true;
+	private boolean					handConnection 		= true;
 	/**	Log Error					*/
-	private String					error = null;
+	private String					error 				= null;
 	/**	Deleted ID					*/
-	private int						m_idOld = 0;
+	private int						m_idOld 			= 0;
 	
 	
 	/**
@@ -256,12 +256,9 @@ public abstract class PO {
 			POInfoColumn column = m_TableInfo.getPOInfoColumn(i);
 			if (i != 0)
 				sql.append(",");
-			if(!column.isColumnSQL()){
-				//if(DisplayType.isDate(column.DisplayType))
-					//sql.append("(strftime('%s', ").append(column.ColumnName).append(")*1000)");
-				//else
-					sql.append(column.ColumnName);
-			}
+			//	
+			if(!column.isColumnSQL())
+				sql.append(column.ColumnName);
 			else
 				sql.append(Env.parseContext(m_ctx, column.ColumnSQL, false));
 		}
@@ -808,26 +805,29 @@ public abstract class PO {
 		try{
 			for (int i = 0; i < m_TableInfo.getColumnLength(); i++) {
 				POInfoColumn column = m_TableInfo.getPOInfoColumn(i);
-				if(!column.isColumnSQL()
-						&& !column.ColumnName.equals("Created")
+				//	Valid SQL or Default Columns
+				if(column.isColumnSQL()
+						|| column.ColumnName.equals("Created")
+						|| column.ColumnName.equals("CreatedBy"))
+					continue;
+				//	Do it
+				if(i > 0)
+					columns.append(",");
+				//	
+				columns.append(column.ColumnName)
+						.append("=")
+						.append("?");
+				//	
+				Object value = parseValue(column, i, false, true);
+				if(column.IsMandatory 
+						&& value == null)
+					throw new Exception(m_ctx.getResources().getString(R.string.MustFillField) + 
+							" \"" + column.ColumnName + "\"");
+				if(!column.ColumnName.equals("Created")
 						&& !column.ColumnName.equals("CreatedBy")){
-					if(i > 0)
-						columns.append(",");
-					//	
-					columns.append(column.ColumnName)
-							.append("=")
-							.append("?");
-					//	
-					Object value = parseValue(column, i, false, true);
-					if(column.IsMandatory 
-							&& value == null)
-						throw new Exception(m_ctx.getResources().getString(R.string.MustFillField) + 
-								" \"" + column.ColumnName + "\"");
-					if(!column.ColumnName.equals("Created")
-							&& !column.ColumnName.equals("CreatedBy")){
-						listValues.add(value);
-						LogM.log(getCtx(), getClass(), Level.FINE, column.ColumnName + "=" + value + " Mandatory=" + column.IsMandatory);
-					}
+					listValues.add(value);
+					LogM.log(getCtx(), getClass(), Level.FINE, 
+							column.ColumnName + "=" + value + " Mandatory=" + column.IsMandatory);
 				}
 			}
 			//	

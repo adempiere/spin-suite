@@ -64,29 +64,29 @@ public class GridTab implements Evaluatee {
 	}
 	
 	/**	Fields					*/
-	private ArrayList<GridField> 		m_fields = null;
+	private ArrayList<GridField> 		m_fields 				= null;
 	/**	Context					*/
-	private Context						m_ctx = null;
+	private Context						m_ctx 					= null;
 	/**	Activity No				*/
-	private TabParameter 				m_TabParam = null;
+	private TabParameter 				m_TabParam 				= null;
 	/**	Tab Info				*/
-	private InfoTab 					m_TabInfo = null;
+	private InfoTab 					m_TabInfo 				= null;
 	/**	Persistence Object		*/
-	private PO 							model = null;
+	private PO 							model 					= null;
 	/**	Connection				*/
-	private DB							conn = null;
+	private DB							conn 					= null;
 	/**	Active Callouts			*/
-	private List<String> 				activeCallouts = new ArrayList<String>();
+	private List<String> 				activeCallouts 			= new ArrayList<String>();
 	/**	Active Instance			*/
-	private List<Callout> 				activeCalloutInstance = new ArrayList<Callout>();
+	private List<Callout> 				activeCalloutInstance 	= new ArrayList<Callout>();
 	/**	Record Identifier		*/
-	private int 						m_Record_ID = 0;
+	private int 						m_Record_ID 			= 0;
 	/**	Parent Record Identifier*/
-	private int 						m_Parent_Record_ID = 0;
+	private int 						m_Parent_Record_ID 		= 0;
 	/**	Error Message			*/
-	private String						m_ErrorMsg = null;
+	private String						m_ErrorMsg 				= null;
 	/** Map of ColumnName of source field (key) and the dependent field (value) */
-	private MultiMap<String,GridField>	m_depOnField = new MultiMap<String,GridField>();
+	private MultiMap<String,GridField>	m_depOnField 			= new MultiMap<String,GridField>();
 	
 	
 	/**

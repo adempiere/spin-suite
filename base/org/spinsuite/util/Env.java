@@ -784,8 +784,7 @@ public final class Env {
 	 * @return
 	 * @return boolean
 	 */
-	public static boolean getContextAsBoolean (Context ctx, String context)
-	{
+	public static boolean getContextAsBoolean (Context ctx, String context) {
 		if (ctx == null || context == null)
 			throw new IllegalArgumentException ("Require Context");
 		
@@ -807,8 +806,7 @@ public final class Env {
 	 * @return
 	 * @return boolean
 	 */
-	public static boolean getContextAsBoolean (Context ctx, int m_ActivityNo, int TabNo, String context)
-	{
+	public static boolean getContextAsBoolean (Context ctx, int m_ActivityNo, int TabNo, String context) {
 		if (ctx == null || context == null)
 			throw new IllegalArgumentException ("Require Context");
 		SharedPreferences pf = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -883,8 +881,7 @@ public final class Env {
 	 *  @param  onlyWindow  if true, no defaults are used unless explicitly asked for
 	 *  @return value or ""
 	 */
-	public static String getContext (Context ctx, int m_ActivityNo, String context, boolean onlyWindow)
-	{
+	public static String getContext (Context ctx, int m_ActivityNo, String context, boolean onlyWindow) {
 		if (ctx == null)
 			throw new IllegalArgumentException ("No Ctx");
 		if (context == null)
@@ -1015,7 +1012,7 @@ public final class Env {
 	 *	@return login AD_Client_ID
 	 */
 	public static int getAD_Client_ID (Context ctx) {
-		return Env.getContextAsInt(ctx, "#AD_Client_ID");
+		return getContextAsInt(ctx, "#AD_Client_ID");
 	}	//	getAD_Client_ID
 
 	/**
@@ -1024,7 +1021,7 @@ public final class Env {
 	 *	@return login AD_Org_ID
 	 */
 	public static int getAD_Org_ID (Context ctx) {
-		return Env.getContextAsInt(ctx, "#AD_Org_ID");
+		return getContextAsInt(ctx, "#AD_Org_ID");
 	}	//	getAD_Client_ID
 
 	/**
@@ -1033,7 +1030,7 @@ public final class Env {
 	 *	@return login AD_User_ID
 	 */
 	public static int getAD_User_ID (Context ctx) {
-		return Env.getContextAsInt(ctx, "#AD_User_ID");
+		return getContextAsInt(ctx, "#AD_User_ID");
 	}	//	getAD_User_ID
 	
 	/**
@@ -1042,7 +1039,7 @@ public final class Env {
 	 *	@return login AD_Role_ID
 	 */
 	public static int getAD_Role_ID (Context ctx) {
-		return Env.getContextAsInt(ctx, "#AD_Role_ID");
+		return getContextAsInt(ctx, "#AD_Role_ID");
 	}	//	getAD_Role_ID
 
 	/**
@@ -1053,7 +1050,7 @@ public final class Env {
 	 * @return int
 	 */
 	public static int getM_Warehouse_ID (Context ctx) {
-		return Env.getContextAsInt(ctx, "#M_Warehouse_ID");
+		return getContextAsInt(ctx, "#M_Warehouse_ID");
 	}	//	getAD_Role_ID
 	
 	
