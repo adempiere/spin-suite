@@ -135,9 +135,9 @@ public class TV_DynamicActivity extends TV_Base
     			if(tabParam.getTabLevel() == 0)
     				setIsModifying(curFr.isModifying());
     			else if(tabParam.getTabLevel() > 0)
-        			curFr.setEnabled(!isModifying());
+        			curFr.setIsParentModifying(isModifying());
     		} else {
-    			curFr.setEnabled(!isModifying());
+    			curFr.setIsParentModifying(isModifying());
     		}
     		//	
     		curFr.refreshFromChange(false);
