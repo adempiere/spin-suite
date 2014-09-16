@@ -19,6 +19,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.spinsuite.base.R;
 import org.spinsuite.print.ColumnPrintData;
@@ -206,9 +207,14 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 				cDecimalFormat[i] = DisplayType.getNumberFormat(ctx, column.DisplayType, 
 					column.FormatPattern);
 			//	Only Date
-			else if(DisplayType.isDate(column.DisplayType))
-				cDateFormat[i] = DisplayType.getDateFormat(ctx, column.DisplayType, 
-						column.FormatPattern);	
+			else if(DisplayType.isDate(column.DisplayType)) {
+				SimpleDateFormat dateFormat = DisplayType.getDateFormat(ctx, 
+						column.DisplayType, column.FormatPattern);
+				//	Set TimeZone
+				dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+				//	
+				cDateFormat[i] = dateFormat;
+			}
 		}
 		
 	}
@@ -274,7 +280,7 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 						SimpleDateFormat dateFormat = cDateFormat[i];
 						if(dateFormat != null){
 							long longDate = Long.parseLong(textValue);
-							textValue = dateFormat.format(new Date(longDate));
+							textValue = dateFormat.format(longDate);
 						}	
 					}
 				}
