@@ -22,6 +22,7 @@
     android:layout_height="match_parent"
     android:drawableLeft="@drawable/contruction_h"
     android:maxLines="2"
+    android:minHeight="?android:attr/listPreferredItemHeight"
     style="@style/TextTitleList" >
 
 </TextView>

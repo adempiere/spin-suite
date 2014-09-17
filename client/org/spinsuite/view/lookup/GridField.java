@@ -249,22 +249,43 @@ public abstract class GridField extends LinearLayout {
 	 * @return String
 	 */
 	public String getValueAsString() {
+		return getValueAsString(getValue());
+	}
+	
+	/**
+	 * Get Old Value As String
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/09/2014, 22:15:45
+	 * @return
+	 * @return String
+	 */
+	public String getOldValueAsString() {
+		return getValueAsString(getOldValue());
+	}
+	
+	/**
+	 * Parse Value from Type
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/09/2014, 22:14:55
+	 * @param value
+	 * @return
+	 * @return String
+	 */
+	private String getValueAsString(Object value) {
 		//	Valid Field
 		InfoField field = getField();
 		if(field == null
-				|| getValue() == null)
+				|| value == null)
 			return null;
 		//	String Case
 		if(DisplayType.isText(field.DisplayType))
-			return (String) getValue();
+			return (String) value;
 		//	Boolean Value
 		if(DisplayType.isBoolean(field.DisplayType)) { 
-			Boolean bValue = (Boolean)getValue();
+			Boolean bValue = (Boolean)value;
 			return (bValue? "Y": "N");
 		}
 		//	Numeric
 		else
-			return String.valueOf(getValue());
+			return String.valueOf(value);
 	}
 	
 	/**
@@ -274,15 +295,36 @@ public abstract class GridField extends LinearLayout {
 	 * @return boolean
 	 */
 	public boolean getValueAsBoolean() {
+		return getValueAsBoolean(getValue());
+	}
+	
+	/**
+	 * Get Old Value As Boolean
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/09/2014, 22:18:52
+	 * @return
+	 * @return boolean
+	 */
+	public boolean getOldValueAsBoolean() {
+		return getValueAsBoolean(getOldValue());
+	}
+	
+	/**
+	 * Parse Value to Boolean
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/09/2014, 22:18:12
+	 * @param value
+	 * @return
+	 * @return boolean
+	 */
+	private boolean getValueAsBoolean(Object value) {
 		//	Valid Field
 		if(m_field == null
-				|| getValue() == null)
+				|| value == null)
 			return false;
 		//	String
 		if(DisplayType.isText(m_field.DisplayType))
-			return (String.valueOf(getValue()).equals("N")? 
-									false: 
-										true);
+			return (String.valueOf(value).equals("N")
+					? false
+					: true);
 		else
 			return false;
 	}
@@ -460,6 +502,20 @@ public abstract class GridField extends LinearLayout {
 			return false;
 		//	Default
 		return m_field.IsReadOnly;
+	}
+	
+	/**
+	 * Verify if is changed
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/09/2014, 22:19:07
+	 * @return
+	 * @return boolean
+	 */
+	public boolean isChanged() {
+		return (getValue() != null && getOldValue() == null) 
+				|| (getValue() == null && getOldValue() != null) 
+				|| !getValueAsString().equals(getOldValueAsString())
+				|| getValueAsInt() != getOldValueAsInt()
+				|| getValueAsBoolean() != getOldValueAsBoolean();
 	}
 	
 	/**

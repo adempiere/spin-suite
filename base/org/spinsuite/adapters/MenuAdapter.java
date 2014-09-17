@@ -24,9 +24,12 @@ import org.spinsuite.util.Env;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -50,6 +53,12 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 		this.ctx = ctx;
 		this.data = data;
 		this.id_View = id_View;
+		//	Get Preferred Height
+		TypedValue value = Env.getResource(ctx, android.R.attr.listPreferredItemHeight);
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		((WindowManager)(ctx.getSystemService(Context.WINDOW_SERVICE)))
+				.getDefaultDisplay().getMetrics(displayMetrics);
+		height = value.getDimension(displayMetrics);
 	}
 	
 	/**
@@ -67,6 +76,12 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 		this.data = data;
 		this.id_View = id_View;
 		this.isActivityMenu = isActivityMenu;
+		//	Get Preferred Height
+		TypedValue value = Env.getResource(ctx, android.R.attr.listPreferredItemHeight);
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		((WindowManager)(ctx.getSystemService(Context.WINDOW_SERVICE)))
+				.getDefaultDisplay().getMetrics(displayMetrics);
+		height = value.getDimension(displayMetrics);
 	}
 
 	/**	Context						*/
@@ -77,6 +92,8 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 	private int 						id_View;
 	/**	Is Activity Menu			*/
 	private boolean 					isActivityMenu = false;
+	/**	Preferred Item Height		*/
+	private float						height = 0;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -84,6 +101,8 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 		if(item == null){
 			LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			item = inflater.inflate(id_View, null);
+			if(!isActivityMenu)
+				item.setMinimumHeight((int)height);
 		}
 		
 		DisplayMenuItem mi = data.get(position);
