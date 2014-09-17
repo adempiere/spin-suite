@@ -49,13 +49,20 @@
         <!-- Icon List -->
         <item name="ic_ls_ok">@drawable/ic_action_accept_light</item>
         <!-- Icon Document Action -->
-        <item name="ic_doc_draft">@drawable/edit_m</item>
-		<item name="ic_doc_prepare">@drawable/doc_progress_m</item>
+        <item name="ic_doc_prepare">@drawable/doc_progress_m</item>
 		<item name="ic_doc_complete">@drawable/doc_completed_m</item>
 		<item name="ic_doc_close">@drawable/errorsync_m</item>
 		<item name="ic_doc_void">@drawable/remove_m</item>
 		<item name="ic_doc_reverse_correct">@drawable/remove_m</item>
 		<item name="ic_doc_reactivate">@drawable/doc_progress_m</item>
+		<!-- Icon Document Status List -->
+		<item name="ic_ls_doc_status_draft">@drawable/edit_h</item>
+		<item name="ic_ls_doc_status_in_progress">@drawable/doc_progress_h</item>
+		<item name="ic_ls_doc_status_completed">@drawable/doc_completed_h</item>
+		<item name="ic_ls_doc_status_closed">@drawable/errorsync_h</item>
+		<item name="ic_ls_doc_status_voided">@drawable/remove_h</item>
+		<item name="ic_ls_doc_status_reversed">@drawable/remove_h</item>
+		<item name="ic_ls_doc_status_invalid">@drawable/remove_h</item>
     </style>
     
     <!-- Color -->
