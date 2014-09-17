@@ -108,19 +108,19 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 					|| recordItem.getDocStatus().equals("Y")) {
 				attr_id = R.attr.ic_ls_ok;
 			} else if(recordItem.getDocStatus().equals(DocAction.STATUS_Drafted)) {
-				attr_id = R.attr.ic_doc_draft;
+				attr_id = R.attr.ic_ls_doc_status_draft;
 			} else if(recordItem.getDocStatus().equals(DocAction.STATUS_InProgress)) {
-				attr_id = R.attr.ic_doc_prepare;
+				attr_id = R.attr.ic_ls_doc_status_in_progress;
 			} else if(recordItem.getDocStatus().equals(DocAction.STATUS_Completed)) {
-				attr_id = R.attr.ic_doc_complete;
+				attr_id = R.attr.ic_ls_doc_status_completed;
 			} else if(recordItem.getDocStatus().equals(DocAction.STATUS_Closed)) {
-				attr_id = R.attr.ic_doc_close;
+				attr_id = R.attr.ic_ls_doc_status_closed;
 			} else if(recordItem.getDocStatus().equals(DocAction.STATUS_Voided)) {
-				attr_id = R.attr.ic_doc_void;
+				attr_id = R.attr.ic_ls_doc_status_voided;
 			} else if(recordItem.getDocStatus().equals(DocAction.STATUS_Reversed)) {
-				attr_id = R.attr.ic_doc_void;
+				attr_id = R.attr.ic_ls_doc_status_reversed;
 			} else if(recordItem.getDocStatus().equals(DocAction.STATUS_Invalid)) {
-				attr_id = R.attr.ic_doc_void;
+				attr_id = R.attr.ic_ls_doc_status_invalid;
 			}
 			//	
 			tv_Value.setCompoundDrawablesWithIntrinsicBounds(
