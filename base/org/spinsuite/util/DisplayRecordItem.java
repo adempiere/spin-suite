@@ -61,6 +61,21 @@ public class DisplayRecordItem implements Parcelable {
 	}
 	
 	/**
+	 * With Document Status
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/09/2014, 11:36:57
+	 * @param pRecord_ID
+	 * @param pValue
+	 * @param m_DocStatus
+	 * @param pImageURL
+	 */
+	public DisplayRecordItem(int pRecord_ID, String pValue, String m_DocStatus, String pImageURL) {
+		this(pRecord_ID, pValue);
+		this.m_ImageURL = pImageURL;
+		this.m_DocStatus = m_DocStatus;
+	}
+	
+	/**
 	 * 
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/03/2014, 12:55:11
@@ -72,11 +87,13 @@ public class DisplayRecordItem implements Parcelable {
 	}
 	
 	/**	Identifier				*/
-	private int 	m_Record_ID = 0;
+	private int 	m_Record_ID 	= 0;
 	/**	Value					*/
-	private String	m_Value = null;
+	private String	m_Value 		= null;
+	/**	Document Status			*/
+	private String 	m_DocStatus 	= null;
 	/**	Image URL				*/
-	private String 	m_ImageURL = null;
+	private String 	m_ImageURL 		= null;
 	
 	/**
 	 * Get Record Identifier
@@ -108,12 +125,14 @@ public class DisplayRecordItem implements Parcelable {
 		return m_ImageURL;
 	}
 	
-	
-	
-	@Override
-	public String toString() {
-		return "Record_ID=" + getRecord_ID() 
-				+ (getValue() == null? "": "\nValue=" + getValue());
+	/**
+	 * Get Document Status
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/09/2014, 16:11:51
+	 * @return
+	 * @return String
+	 */
+	public String getDocStatus() {
+		return m_DocStatus;
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -138,6 +157,7 @@ public class DisplayRecordItem implements Parcelable {
 		parcel.writeInt(m_Record_ID);
 		parcel.writeString(m_Value);
 		parcel.writeString(m_ImageURL);
+		parcel.writeString(m_DocStatus);
 	}
 	
 	/**
@@ -150,5 +170,13 @@ public class DisplayRecordItem implements Parcelable {
 		m_Record_ID = parcel.readInt();
 		m_Value = parcel.readString();
 		m_ImageURL = parcel.readString();
+		m_DocStatus = parcel.readString();
+	}
+
+	@Override
+	public String toString() {
+		return "DisplayRecordItem [m_Record_ID=" + m_Record_ID + ", m_Value="
+				+ m_Value + ", m_DocStatus=" + m_DocStatus + ", m_ImageURL="
+				+ m_ImageURL + "]";
 	}
 }

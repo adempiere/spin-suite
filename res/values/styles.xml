@@ -49,6 +49,7 @@
         <!-- Icon List -->
         <item name="ic_ls_ok">@drawable/ic_action_accept_light</item>
         <!-- Icon Document Action -->
+        <item name="ic_doc_draft">@drawable/edit_m</item>
 		<item name="ic_doc_prepare">@drawable/doc_progress_m</item>
 		<item name="ic_doc_complete">@drawable/doc_completed_m</item>
 		<item name="ic_doc_close">@drawable/errorsync_m</item>

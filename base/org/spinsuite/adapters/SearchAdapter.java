@@ -18,6 +18,7 @@ package org.spinsuite.adapters;
 import java.util.ArrayList;
 
 import org.spinsuite.base.R;
+import org.spinsuite.process.DocAction;
 import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.Env;
 
@@ -100,8 +101,30 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 				tv_Value.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
 			}
 		} else {
+			//	Declare Attribute
+			int attr_id = 0;
+			//	
+			if(recordItem.getDocStatus() == null
+					|| recordItem.getDocStatus().equals("Y")) {
+				attr_id = R.attr.ic_ls_ok;
+			} else if(recordItem.getDocStatus().equals(DocAction.STATUS_Drafted)) {
+				attr_id = R.attr.ic_doc_draft;
+			} else if(recordItem.getDocStatus().equals(DocAction.STATUS_InProgress)) {
+				attr_id = R.attr.ic_doc_prepare;
+			} else if(recordItem.getDocStatus().equals(DocAction.STATUS_Completed)) {
+				attr_id = R.attr.ic_doc_complete;
+			} else if(recordItem.getDocStatus().equals(DocAction.STATUS_Closed)) {
+				attr_id = R.attr.ic_doc_close;
+			} else if(recordItem.getDocStatus().equals(DocAction.STATUS_Voided)) {
+				attr_id = R.attr.ic_doc_void;
+			} else if(recordItem.getDocStatus().equals(DocAction.STATUS_Reversed)) {
+				attr_id = R.attr.ic_doc_void;
+			} else if(recordItem.getDocStatus().equals(DocAction.STATUS_Invalid)) {
+				attr_id = R.attr.ic_doc_void;
+			}
+			//	
 			tv_Value.setCompoundDrawablesWithIntrinsicBounds(
-					Env.getResourceID(getContext(), R.attr.ic_ls_ok), 0, 0, 0);
+					Env.getResourceID(getContext(), attr_id), 0, 0, 0);
 		}
 		//	Return
 		return item;
