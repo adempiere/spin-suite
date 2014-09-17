@@ -21,15 +21,20 @@ import org.spinsuite.base.R;
 import org.spinsuite.process.DocAction;
 import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.Env;
+import org.spinsuite.view.lookup.InfoLookup;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -51,6 +56,12 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 		this.ctx = ctx;
 		this.view_ID = view_ID;
 		this.data = data;
+		//	Get Preferred Height
+		TypedValue value = Env.getResource(ctx, android.R.attr.listPreferredItemHeight);
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		((WindowManager)(ctx.getSystemService(Context.WINDOW_SERVICE)))
+				.getDefaultDisplay().getMetrics(displayMetrics);
+		height = value.getDimension(displayMetrics);
 	}
 	
 	/**
@@ -75,7 +86,8 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 	private ArrayList<DisplayRecordItem> 	originalData;
 	/**	View Identifier					*/
 	private int 							view_ID;
-	
+	/**	Preferred Item Height			*/
+	private float							height = 0;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {		
@@ -84,21 +96,42 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 			LayoutInflater inflater = (LayoutInflater) ctx
 			        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			item = inflater.inflate(view_ID, null);
+			//	Set Height
+			item.setMinimumHeight((int)height);
 		}
-		
+		//	Get Current Item
 		DisplayRecordItem recordItem = data.get(position);
-		
+		//	Process Text
+		String name = "";
+		String description = "";
+		//	
+		if(recordItem.getValue() != null) {
+			int indexOf = recordItem.getValue().indexOf(InfoLookup.TABLE_SEARCH_SEPARATOR);
+			if(indexOf != -1) {
+				name = recordItem.getValue().substring(0, indexOf);
+				description = recordItem.getValue()
+						.substring(indexOf + InfoLookup.TABLE_SEARCH_SEPARATOR.length())
+						.replaceAll(InfoLookup.TABLE_SEARCH_SEPARATOR, "_");
+			} else {
+				name = recordItem.getValue();
+			}
+		}
 		//	Set Name
-		TextView tv_Value = (TextView)item.findViewById(R.id.tv_Value);
-		tv_Value.setText(recordItem.getValue());
-		
+		TextView tv_Name = (TextView)item.findViewById(R.id.tv_Name);
+		tv_Name.setTextAppearance(ctx, R.style.TextTitleList);
+		tv_Name.setText(name);
+		//	Set Description
+		TextView tv_Description = (TextView)item.findViewById(R.id.tv_Description);
+		tv_Description.setText(description);
+		//	Set Image
+		ImageView img_Item = (ImageView)item.findViewById(R.id.img_Item);
 		if(recordItem.getImageURL() != null 
 				&& recordItem.getImageURL().length() > 0){
 			Resources res = ctx.getResources();
 			int resID = res.getIdentifier(recordItem.getImageURL() , "drawable", ctx.getPackageName());
 			if(resID != 0){
 				Drawable drawable = res.getDrawable(resID);
-				tv_Value.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+				img_Item.setImageDrawable(drawable);
 			}
 		} else {
 			//	Declare Attribute
@@ -123,8 +156,8 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 				attr_id = R.attr.ic_ls_doc_status_invalid;
 			}
 			//	
-			tv_Value.setCompoundDrawablesWithIntrinsicBounds(
-					Env.getResourceID(getContext(), attr_id), 0, 0, 0);
+			img_Item.setImageResource(
+					Env.getResourceID(ctx, attr_id));
 		}
 		//	Return
 		return item;

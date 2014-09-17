@@ -37,14 +37,13 @@
         <TextView
 	        android:id="@+id/tv_Name"
 	        style="@style/TextItemMenu"
-	        android:text="@string/Name"
-	        android:maxLines="2" />
+	        android:text="@string/None"
+	        android:maxLines="1" />
 
     	<TextView
         	android:id="@+id/tv_Description"
         	style="@style/TextItemSmallMenu"
-        	android:maxLines="2"
-        	android:text="@string/Description" />
+        	android:text="@string/None" />
     </LinearLayout>
 
 </LinearLayout>

@@ -40,11 +40,10 @@
 	        android:text="@string/Name"
 	        android:maxLines="2" />
 
-    <TextView
-        android:id="@+id/tv_Description"
-        style="@style/TextItemDrawerMenu"
-        android:maxLines="2"
-        android:text="@string/Description" />
+	    <TextView
+	        android:id="@+id/tv_Description"
+	        style="@style/TextItemDrawerMenu"
+	        android:maxLines="2"
+	        android:text="@string/Description" />
     </LinearLayout>
-
 </LinearLayout>

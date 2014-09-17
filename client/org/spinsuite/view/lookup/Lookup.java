@@ -506,7 +506,8 @@ public class Lookup {
 					Lookup lookup = new Lookup(ctx, m_SPS_Column_ID, aliasPrefix + aliasCount++);
 					InfoLookup infoLookup = lookup.getInfoLookup();
 					//	Add to Display Column
-					longColumn.append(infoLookup.DisplayColumn);
+					longColumn.append(infoLookup.DisplayColumn
+							.replaceAll(InfoLookup.TABLE_SEARCH_SEPARATOR, "_"));
 					//	Add Join
 					addJoin(m_TableAlias, lookup.getField(), infoLookup);
 				} else {
@@ -552,51 +553,6 @@ public class Lookup {
 		sql.append(where);
 		//	Return
 		return sql.toString();
-	}
-	
-	
-	/**
-	 * Add Join
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/09/2014, 21:06:48
-	 * @param tableName
-	 * @param linkColumn
-	 * @param lookup
-	 * @return void
-	 */
-	private void addJoin(String tableName, InfoField linkColumn, InfoLookup lookup) {
-		//	Is Mandatory
-		m_From.append(LEFT_JOIN).append(" ");
-		//	Table Name
-		m_From.append(lookup.TableName).append(" ").append(AS).append(" ").append(lookup.TableAlias).append(" ");
-		//	On
-		m_From.append(ON).append("(")
-							.append(lookup.TableAlias).append(POINT).append(lookup.KeyColumn)
-							.append(EQUAL).append(tableName).append(POINT).append(linkColumn.ColumnName);
-		if(linkColumn.DisplayType == DisplayType.LIST) {
-			m_From.append(" ").append(AND).append(" ")
-								.append(lookup.TableAlias).append(POINT)
-								.append(InfoLookup.REFERENCE_TN).append("_ID")
-								.append(EQUAL).append(linkColumn.AD_Reference_Value_ID);
-		}
-		//	Add finish
-		m_From.append(")").append(" ");
-		//	Add Translation to List
-		if(linkColumn.DisplayType == DisplayType.LIST
-				&& !m_IsBaseLanguage) {
-			m_From.append(LEFT_JOIN).append(" ");
-			//	Table Name
-			m_From.append(lookup.TableName).append(InfoLookup.TR_TABLE_SUFFIX).append(" ")
-								.append(AS).append(" ").append(lookup.TableAlias).append(InfoLookup.TR_TABLE_SUFFIX).append(" ");
-			//	On
-			m_From.append(ON).append("(")
-								.append(lookup.TableAlias).append(InfoLookup.TR_TABLE_SUFFIX)
-								.append(POINT).append(InfoLookup.REF_LIST_TN).append("_ID")
-								.append(EQUAL).append(lookup.TableAlias)
-								.append(POINT).append(InfoLookup.REF_LIST_TN).append("_ID ")
-								.append(AND).append(" ").append(lookup.TableAlias).append(InfoLookup.TR_TABLE_SUFFIX)
-								.append(POINT).append(InfoLookup.AD_LANGUAGE_CN)
-								.append(EQUAL).append("'").append(m_Language).append("'").append(")").append(" ");
-		}
 	}
 	
 	/**
@@ -647,12 +603,28 @@ public class Lookup {
 			StringBuffer longColumn = new StringBuffer();
 			//	Display Value
 			if(isValueDisplayed != null
-					&& isValueDisplayed.equals("Y"))
+					&& isValueDisplayed.equals("Y")) {
 				longColumn.append("COALESCE(").append(m_TableAlias).append(".")
-						.append("Value").append(", '')").append("||'_'||");
+							.append("Value").append(", '')");
+				//	
+				longColumn.append("||'").append(InfoLookup.TABLE_SEARCH_SEPARATOR).append("'||");
+			}
 			//	Display Column
 			longColumn.append("COALESCE(").append(m_TableAlias).append(".").append(dColumnName).append(",'')");
 			sql.append(longColumn);
+			//	Check Document Status
+			int m_DocAction_ID = DB.getSQLValue(ctx, "SELECT c.SPS_Column_ID " +
+										"FROM SPS_Column c " +
+										"WHERE c.SPS_Table_ID = " + m_SPS_Table_ID + " " +
+										"AND c.ColumnName = ?", DOC_STATUS);
+			//	
+			String lastColumn = IS_ACTIVE;
+			//	Verify Last Column like Document status
+			if(m_DocAction_ID > 0) {
+				lastColumn = DOC_STATUS;
+			}
+			//	Add Column Last Column
+			sql.append(", ").append(tableName).append(".").append(lastColumn);
 			//	Set Info Lookup
 			m_InfoLookup.DisplayColumn = longColumn.toString();
 			//	Separator
@@ -797,7 +769,7 @@ public class Lookup {
 				int displayType = rs.getInt(3);
 				//	Is First
 				if(!isFirst)
-					longColumn.append("||'_'||");
+					longColumn.append("||'").append(InfoLookup.TABLE_SEARCH_SEPARATOR).append("'||");
 				//	
 				if(DisplayType.isLookup(displayType)) {
 					Lookup lookup = new Lookup(ctx, m_SPS_Column_ID, aliasPrefix + aliasCount++);
@@ -848,6 +820,50 @@ public class Lookup {
 	}
 	
 	/**
+	 * Add Join
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/09/2014, 21:06:48
+	 * @param tableName
+	 * @param linkColumn
+	 * @param lookup
+	 * @return void
+	 */
+	private void addJoin(String tableName, InfoField linkColumn, InfoLookup lookup) {
+		//	Is Mandatory
+		m_From.append(LEFT_JOIN).append(" ");
+		//	Table Name
+		m_From.append(lookup.TableName).append(" ").append(AS).append(" ").append(lookup.TableAlias).append(" ");
+		//	On
+		m_From.append(ON).append("(")
+							.append(lookup.TableAlias).append(POINT).append(lookup.KeyColumn)
+							.append(EQUAL).append(tableName).append(POINT).append(linkColumn.ColumnName);
+		if(linkColumn.DisplayType == DisplayType.LIST) {
+			m_From.append(" ").append(AND).append(" ")
+								.append(lookup.TableAlias).append(POINT)
+								.append(InfoLookup.REFERENCE_TN).append("_ID")
+								.append(EQUAL).append(linkColumn.AD_Reference_Value_ID);
+		}
+		//	Add finish
+		m_From.append(")").append(" ");
+		//	Add Translation to List
+		if(linkColumn.DisplayType == DisplayType.LIST
+				&& !m_IsBaseLanguage) {
+			m_From.append(LEFT_JOIN).append(" ");
+			//	Table Name
+			m_From.append(lookup.TableName).append(InfoLookup.TR_TABLE_SUFFIX).append(" ")
+								.append(AS).append(" ").append(lookup.TableAlias).append(InfoLookup.TR_TABLE_SUFFIX).append(" ");
+			//	On
+			m_From.append(ON).append("(")
+								.append(lookup.TableAlias).append(InfoLookup.TR_TABLE_SUFFIX)
+								.append(POINT).append(InfoLookup.REF_LIST_TN).append("_ID")
+								.append(EQUAL).append(lookup.TableAlias)
+								.append(POINT).append(InfoLookup.REF_LIST_TN).append("_ID ")
+								.append(AND).append(" ").append(lookup.TableAlias).append(InfoLookup.TR_TABLE_SUFFIX)
+								.append(POINT).append(InfoLookup.AD_LANGUAGE_CN)
+								.append(EQUAL).append("'").append(m_Language).append("'").append(")").append(" ");
+		}
+	}
+	
+	/**
 	 * Set Optional where clause
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/03/2014, 22:24:26
 	 * @param whereClause
@@ -892,7 +908,8 @@ public class Lookup {
 			DB.loadConnection(conn, DB.READ_ONLY);
 			Cursor rs = null;
 			//	Query
-			rs = conn.querySQL(getSQL(), null);
+			rs = conn.querySQL(getSQL()
+					.replaceAll(InfoLookup.TABLE_SEARCH_SEPARATOR, "_"), null);
 			data = new ArrayList<DisplayLookupSpinner>();
 			if(rs.moveToFirst()) {
 				if(!m_field.IsMandatory) {

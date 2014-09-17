@@ -1755,6 +1755,24 @@ public final class Env {
 		return typedValueAttr.resourceId;
 	}
 	
+	/**
+	 * Get Resource
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/09/2014, 19:23:39
+	 * @param ctx
+	 * @param att
+	 * @return
+	 * @return TypeValue
+	 */
+	public static TypedValue getResource(Context ctx, int att) {
+		if(ctx == null)
+			throw new IllegalArgumentException ("Require Context");
+		//	
+		TypedValue typedValueAttr = new TypedValue();
+		ctx.getTheme().resolveAttribute(att, typedValueAttr, true);
+		//	Return
+		return typedValueAttr;
+	}
+	
 	/**************************************************************************
 	 *  Application Context
 	 */

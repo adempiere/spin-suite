@@ -82,6 +82,8 @@ public class LV_Search extends Activity {
 	private FilterValue				m_criteria 			= null;
 	/**	Criteria Old			*/
 	private String					m_oldWhereClause 	= null;
+	/**	Is Changed				*/
+	private boolean					m_IsChanged			= false;
 	/**	Lookup 					*/
 	private Lookup 					lookup 				= null;
 	/**	Info Field				*/
@@ -173,6 +175,7 @@ public class LV_Search extends Activity {
 	private void addCriteriaQuery() {
 		m_criteria = new FilterValue();
     	//	Get Values
+		m_IsChanged = false;
 		StringBuffer sqlWhere = new StringBuffer();
     	for (GridField lookup: viewList) {
     		//	Only Filled
@@ -187,6 +190,11 @@ public class LV_Search extends Activity {
     		//	Add Value
     		m_criteria.addValue(DisplayType.getJDBC_Value(field.DisplayType, 
     				lookup.getValue()));
+    		//	Set like a change
+    		if(lookup.isChanged()
+    				&& !m_IsChanged) {
+    			m_IsChanged = true;
+    		}
 		}
     	//	Add SQL
     	m_criteria.setWhereClause(sqlWhere.toString());
@@ -313,7 +321,8 @@ public class LV_Search extends Activity {
 									? m_criteria.getWhereClause()
 											: "");
 		//	Load New
-		if(!m_oldWhereClause.equals(whereClause)) {
+		if(!m_oldWhereClause.equals(whereClause)
+				|| m_IsChanged) {
 			//	Set New Criteria
 			m_oldWhereClause = m_criteria.getWhereClause();
 			new LoadViewTask().execute();
@@ -429,8 +438,8 @@ public class LV_Search extends Activity {
 	     */
 	    protected boolean loadView() {
 	    	//	Set Adapter
-			m_SearchAdapter = new SearchAdapter(v_activity, R.layout.i_search, data);
-			m_SearchAdapter.setDropDownViewResource(R.layout.i_search);
+			m_SearchAdapter = new SearchAdapter(v_activity, R.layout.i_image_text, data);
+			m_SearchAdapter.setDropDownViewResource(R.layout.i_image_text);
 			lv_Search.setAdapter(m_SearchAdapter);
 			//	
 			return true;

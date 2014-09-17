@@ -72,6 +72,8 @@ public class InfoLookup {
 	public static final String 	AD_LANGUAGE_CN 			= "AD_Language";
 	/**	Translation Add				*/
 	public static final String 	TR_TABLE_SUFFIX 		= "_Trl";
+	/**	Table Search mark Separator	*/
+	public static final String	TABLE_SEARCH_SEPARATOR	= "<MARK_SEPARATOR>";
 	
 	@Override
 	public String toString() {
