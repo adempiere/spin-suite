@@ -42,7 +42,7 @@ public class Lookup {
 	 * @param field
 	 * @param tableAlias
 	 */
-	public Lookup(Context ctx, InfoField field, String tableAlias){
+	public Lookup(Context ctx, InfoField field, String tableAlias) {
 		this(ctx, 0, 0, field, tableAlias);
 	}
 	
@@ -53,7 +53,7 @@ public class Lookup {
 	 * @param ctx
 	 * @param field
 	 */
-	public Lookup(Context ctx, InfoField field){
+	public Lookup(Context ctx, InfoField field) {
 		this(ctx, 0, 0, field, null);
 	}
 	
@@ -67,7 +67,7 @@ public class Lookup {
 	 * @param field
 	 * @param tableAlias
 	 */
-	public Lookup(Context ctx, int m_ActivityNo, int m_TabNo, InfoField field, String tableAlias){
+	public Lookup(Context ctx, int m_ActivityNo, int m_TabNo, InfoField field, String tableAlias) {
 		this(ctx, null, field, tableAlias);
 		//	New
 		m_TabParam = new TabParameter();
@@ -232,7 +232,7 @@ public class Lookup {
 	 * @param ctx
 	 * @param m_SPS_Table_ID
 	 */
-	public Lookup(Context ctx, int m_SPS_Table_ID){
+	public Lookup(Context ctx, int m_SPS_Table_ID) {
 		this.m_SPS_Table_ID = m_SPS_Table_ID;
 		this.ctx = ctx;
 		m_Language = Env.getAD_Language(ctx);
@@ -298,6 +298,8 @@ public class Lookup {
 	private final String	POINT						= ".";
 	private final String 	AS 							= "AS";
 	private final String	ALIAS_PREFIX_IDENTIFIER		= "tda";
+	private final String	DOC_STATUS					= "DocStatus";
+	private final String	IS_ACTIVE					= "IsActive";
 	
 	/**
 	 * Get Parsed SQL
@@ -326,7 +328,7 @@ public class Lookup {
 	 * @return
 	 * @return String
 	 */
-	public String getSQL(){
+	public String getSQL() {
 		//	Cache
 		if(m_IsLoaded)
 			return Env.parseContext(ctx, m_TabParam.getActivityNo(), m_TabParam.getTabNo(), getParsedSQL(m_SQL), false, null);
@@ -356,16 +358,16 @@ public class Lookup {
 					"Reload Field=(" + m_field.ColumnName + ", " 
 							+ m_field.DisplayType + ", " + m_field.AD_Reference_Value_ID + ")");
 			//	
-			if(m_field.DisplayType == DisplayType.TABLE_DIR){
+			if(m_field.DisplayType == DisplayType.TABLE_DIR) {
 				m_SQL = loadSQLTableDirect();
 				LogM.log(ctx, getClass(), Level.FINE, "SQLTableDirect=" + m_SQL);
 			} else if((m_field.DisplayType == DisplayType.TABLE 
 					|| m_field.DisplayType == DisplayType.SEARCH)
-					&& m_field.AD_Reference_Value_ID != 0){
+					&& m_field.AD_Reference_Value_ID != 0) {
 				m_SQL = loadSQLTableSearch();
 				LogM.log(ctx, getClass(), Level.FINE, "SQLTableSearch=" + m_SQL);
 			} else if((m_field.DisplayType == DisplayType.LIST)
-					&& m_field.AD_Reference_Value_ID != 0){
+					&& m_field.AD_Reference_Value_ID != 0) {
 				m_SQL = loadSQLList();
 				LogM.log(ctx, getClass(), Level.FINE, "SQLList=" + m_SQL);
 			} else {
@@ -417,7 +419,7 @@ public class Lookup {
 	 * @return
 	 * @return InfoLookup
 	 */
-	public InfoLookup getInfoLookup(){
+	public InfoLookup getInfoLookup() {
 		//	Get SQL
 		if(m_InfoLookup == null) {
 			m_InfoLookup = (InfoLookup) Env.getContextObject(ctx, ctx_lookup_info, InfoLookup.class);
@@ -435,7 +437,7 @@ public class Lookup {
 	 * @return
 	 * @return String
 	 */
-	private String getValRule(){
+	private String getValRule() {
 		if(m_field.AD_Val_Rule_ID == 0)
 			return "";
 		//	Cache
@@ -454,7 +456,7 @@ public class Lookup {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 22:06:00
 	 * @return String
 	 */
-	private String loadSQLTableDirect(){
+	private String loadSQLTableDirect() {
 		//	Instance Lookup
 		m_InfoLookup = new InfoLookup();
 		//	Instance join
@@ -489,7 +491,7 @@ public class Lookup {
 		//	Alias Identifier
 		String aliasPrefix = ALIAS_PREFIX_IDENTIFIER + m_field.ColumnName;
 		int aliasCount = 1;
-		if(rs.moveToFirst()){
+		if(rs.moveToFirst()) {
 			sql.append(", ");
 			StringBuffer longColumn = new StringBuffer();
 			do {
@@ -535,7 +537,7 @@ public class Lookup {
 		
 		//	Validation Rule
 		if(getValRule() != null
-				&& getValRule().length() > 0){
+				&& getValRule().length() > 0) {
 			where.append(" WHERE ").append(getValRule());
 			//	Add Mark
 			m_IsHasWhere = true;
@@ -621,7 +623,7 @@ public class Lookup {
 				"INNER JOIN SPS_Column cd ON(cd.AD_Column_ID = rl.AD_Display) " +
 				"WHERE rl.AD_Reference_ID = " + m_field.AD_Reference_Value_ID, null);
 		//	
-		if(rs.moveToFirst()){
+		if(rs.moveToFirst()) {
 			String tableName = rs.getString(0);
 			String pkColumnName = rs.getString(1);
 			String dColumnName = rs.getString(2);
@@ -663,7 +665,7 @@ public class Lookup {
 			//	Set Where
 			//	Validation Rule
 			if(getValRule() != null
-					&& getValRule().length() > 0){
+					&& getValRule().length() > 0) {
 				//	Add And
 				if(where.length() > 0)
 					where.append(" AND ");
@@ -697,7 +699,7 @@ public class Lookup {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2014, 10:54:32
 	 * @return String
 	 */
-	private String loadSQLList(){
+	private String loadSQLList() {
 		//	Instance Lookup
 		m_InfoLookup = new InfoLookup();
 		//	Set Table Alias
@@ -713,7 +715,7 @@ public class Lookup {
 		//	Set SQL
 		StringBuffer sql = new StringBuffer("SELECT rl.Value, ");
 		//	Handle Language
-		if(m_IsBaseLanguage){
+		if(m_IsBaseLanguage) {
 			sql.append("rl.Name ");
 			//	From
 			sql.append("FROM AD_Ref_List rl ");
@@ -736,7 +738,7 @@ public class Lookup {
 		sql.append("WHERE rl.AD_Reference_ID = ").append(m_field.AD_Reference_Value_ID);
 		//	Validation Rule
 		if(getValRule() != null
-				&& getValRule().length() > 0){
+				&& getValRule().length() > 0) {
 			//	Add And
 			sql.append(" AND ").append(getValRule());
 			//	Set Where
@@ -760,6 +762,8 @@ public class Lookup {
 	private String loadFromTable() {
 		//	Instance Lookup
 		m_InfoLookup = new InfoLookup();
+		//	Instance join
+		m_From = new StringBuffer();
 		//	
 		StringBuffer sql = new StringBuffer();
 		String tableName = null;
@@ -767,43 +771,74 @@ public class Lookup {
 		DB.loadConnection(conn, DB.READ_ONLY);
 		Cursor rs = null;
 		//	Query
-		rs = conn.querySQL("SELECT t.TableName, c.ColumnName " +
+		rs = conn.querySQL("SELECT t.TableName, c.ColumnName, c.SPS_Column_ID, c.AD_Reference_ID " +
 				"FROM SPS_Table t " +
 				"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) " +
 				"WHERE t.SPS_Table_ID = ? " +
 				"AND c.IsIdentifier = ? " +
 				"ORDER BY SeqNo", new String[]{String.valueOf(m_SPS_Table_ID), "Y"});
-		
+
 		boolean isFirst = true;
-		if(rs.moveToFirst()){
+		if(rs.moveToFirst()) {
 			tableName = rs.getString(0);
 			//	Set Info Lookup
 			m_InfoLookup.TableName = tableName;
 			m_InfoLookup.KeyColumn = tableName + "_ID";
+			//	Alias Identifier
+			String aliasPrefix = ALIAS_PREFIX_IDENTIFIER + tableName;
+			int aliasCount = 1;
 			//	
 			sql.append("SELECT ").append(tableName).append(".").append(tableName).append("_ID").append(", ");
 			//	Display Type
 			StringBuffer longColumn = new StringBuffer();
 			do {
 				String columnName = rs.getString(1);
+				int m_SPS_Column_ID = rs.getInt(2);
+				int displayType = rs.getInt(3);
 				//	Is First
 				if(!isFirst)
 					longColumn.append("||'_'||");
 				//	
-				longColumn.append("COALESCE(").append(tableName).append(".").append(columnName).append(",'')");
+				if(DisplayType.isLookup(displayType)) {
+					Lookup lookup = new Lookup(ctx, m_SPS_Column_ID, aliasPrefix + aliasCount++);
+					InfoLookup infoLookup = lookup.getInfoLookup();
+					//	Add to Display Column
+					longColumn.append(infoLookup.DisplayColumn);
+					//	Add Join
+					addJoin(tableName, lookup.getField(), infoLookup);
+				} else {
+					longColumn.append("COALESCE(").append(tableName).append(".").append(columnName).append(",'')");
+				}
 				//	Set false
 				if(isFirst)
 					isFirst = false;
 			}while(rs.moveToNext());
 			//	
 			sql.append(longColumn);
+			//	Check Document Status
+			int m_DocAction_ID = DB.getSQLValue(ctx, "SELECT c.SPS_Column_ID " +
+										"FROM SPS_Column c " +
+										"WHERE c.SPS_Table_ID = " + m_SPS_Table_ID + " " +
+										"AND c.ColumnName = ?", DOC_STATUS);
+			//	
+			String lastColumn = IS_ACTIVE;
+			//	Verify Last Column like Document status
+			if(m_DocAction_ID > 0) {
+				lastColumn = DOC_STATUS;
+			}
+			//	Add Column Last Column
+			sql.append(", ").append(tableName).append(".").append(lastColumn);
 			//	Set Info Lookup
 			m_InfoLookup.DisplayColumn = longColumn.toString();
+			m_InfoLookup.TableJoin = m_From.toString();
 			//	Separator
 		}
 		//	Close
 		DB.closeConnection(conn);
 		sql.append(" FROM ").append(tableName);
+		//	Add Joins
+		if(m_From.length() > 0)
+			sql.append(" ").append(m_From);
 		//	Optional Where
 		m_IsHasWhere = false;
 		m_InfoLookup.WhereClause = null;
@@ -818,7 +853,7 @@ public class Lookup {
 	 * @param whereClause
 	 * @return void
 	 */
-	public void setCriteria(String whereClause){
+	public void setCriteria(String whereClause) {
 		m_OptionalWhereClause = whereClause;
 		m_IsLoaded = false;
 	}
@@ -828,7 +863,7 @@ public class Lookup {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 09:44:09
 	 * @return void
 	 */
-	public void load(){
+	public void load() {
 		load(true);
 	}
 	
@@ -838,7 +873,7 @@ public class Lookup {
 	 * @param reQuery
 	 * @return void
 	 */
-	public void load(boolean reQuery){
+	public void load(boolean reQuery) {
 		//	Is Syntax Error
 		if(isSyntaxError)
 			return;
@@ -859,7 +894,7 @@ public class Lookup {
 			//	Query
 			rs = conn.querySQL(getSQL(), null);
 			data = new ArrayList<DisplayLookupSpinner>();
-			if(rs.moveToFirst()){
+			if(rs.moveToFirst()) {
 				if(!m_field.IsMandatory) {
 					if(m_field.DisplayType == DisplayType.LIST)
 						data.add(new DisplayLookupSpinner(null, null));
@@ -876,7 +911,7 @@ public class Lookup {
 			}
 			//	Close
 			DB.closeConnection(conn);
-		} catch(Exception e){
+		} catch(Exception e) {
 			isSyntaxError = true;
 			LogM.log(ctx, getClass(), Level.SEVERE, "Error in Load", e);
 		}
@@ -888,7 +923,7 @@ public class Lookup {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean isSyntaxError(){
+	public boolean isSyntaxError() {
 		return isSyntaxError;
 	}
 	

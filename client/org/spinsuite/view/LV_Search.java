@@ -101,7 +101,7 @@ public class LV_Search extends Activity {
 		super.setContentView(R.layout.v_search);
     	//	Get Field
     	Bundle bundle = getIntent().getExtras();
-		if(bundle != null){
+		if(bundle != null) {
 			m_field = (InfoField)bundle.getParcelable("Field");
 			m_SPS_Table_ID = bundle.getInt("SPS_Table_ID");
 			m_SPS_Tab_ID = bundle.getInt("SPS_Tab_ID");
@@ -146,15 +146,15 @@ public class LV_Search extends Activity {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/03/2014, 22:07:43
 	 * @return void
 	 */
-	private void loadConfig(){
-		if(m_SPS_Tab_ID != 0){
+	private void loadConfig() {
+		if(m_SPS_Tab_ID != 0) {
 			tabInfo = new InfoTab(getApplicationContext(), m_SPS_Tab_ID, true, null);
 			viewList = new ArrayList<GridField>();
 	    	//	Set Parameter
 	    	v_param = new LayoutParams(LayoutParams.MATCH_PARENT, 
 	    			LayoutParams.MATCH_PARENT, WEIGHT);
 			//	Add Fields
-	    	for(InfoField field : tabInfo.getFields()){
+	    	for(InfoField field : tabInfo.getFields()) {
 	    		if(!field.IsDisplayed)
 	    			continue;
 	    		//	Add View to Layout
@@ -170,7 +170,7 @@ public class LV_Search extends Activity {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/03/2014, 10:28:14
 	 * @return void
 	 */
-	private void addCriteriaQuery(){
+	private void addCriteriaQuery() {
 		m_criteria = new FilterValue();
     	//	Get Values
 		StringBuffer sqlWhere = new StringBuffer();
@@ -198,14 +198,13 @@ public class LV_Search extends Activity {
 	 * @param field
 	 * @return void
 	 */
-	private void addView(InfoField field){
-    	
+	private void addView(InfoField field) {
 		field.IsMandatory = false;
 		field.IsReadOnly = false;
 		//	Get Lookup
     	GridField lookup = GridField.createLookup(this, field);
 		//	is Filled
-		if(lookup != null){
+		if(lookup != null) {
 			viewList.add(lookup);
 			v_tableLayout.addView(lookup, v_param);
 		}
@@ -233,7 +232,7 @@ public class LV_Search extends Activity {
 					new OnQueryTextListenerCompat() {
 				@Override
 				public boolean onQueryTextChange(String newText) {
-					if(m_SearchAdapter != null){
+					if(m_SearchAdapter != null) {
 						String mFilter = !TextUtils.isEmpty(newText) ? newText : null;
 						m_SearchAdapter.getFilter().filter(mFilter);
 					}
@@ -284,7 +283,7 @@ public class LV_Search extends Activity {
 			return true;
 		} else if (itemId == R.id.action_config) {
 			//	Show
-			if(sv_Search.getVisibility() == LinearLayout.GONE){
+			if(sv_Search.getVisibility() == LinearLayout.GONE) {
 				sv_Search.setVisibility(LinearLayout.VISIBLE);
 				m_oldWhereClause = (m_criteria != null
 											? m_criteria.getWhereClause()
@@ -327,11 +326,11 @@ public class LV_Search extends Activity {
 	 * @param item
 	 * @return void
 	 */
-	private void selectedRecord(DisplayRecordItem item){
+	private void selectedRecord(DisplayRecordItem item) {
 		Intent intent = getIntent();
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("Record", item);
-		if(m_field != null){
+		if(m_field != null) {
 			bundle.putInt(DisplayMenuItem.CONTEXT_ACTIVITY_TYPE, 
 					DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_SearchColumn);
 			bundle.putString("ColumnName", m_field.ColumnName);
@@ -348,7 +347,7 @@ public class LV_Search extends Activity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     	//	
     	if (resultCode == Activity.RESULT_OK) {
-	    	if(data != null){
+	    	if(data != null) {
 	    		Bundle bundle = data.getExtras();
 	    		//	Item
 	    		DisplayRecordItem item = (DisplayRecordItem) bundle.getParcelable("Record");
@@ -356,9 +355,9 @@ public class LV_Search extends Activity {
 	    			case DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_SearchColumn:
 						String columnName = bundle.getString("ColumnName");
 			    		//	if a field or just search
-			    		if(columnName != null){
+			    		if(columnName != null) {
 			    			for (GridField vField: viewList) {
-			    	    		if(vField.getColumnName().equals(columnName)){
+			    	    		if(vField.getColumnName().equals(columnName)) {
 			    	    			((VLookupSearch) vField).setItem(item);
 			    	    			break;
 			    	    		}
@@ -389,7 +388,7 @@ public class LV_Search extends Activity {
 		 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/05/2014, 12:18:42
 		 * @return void
 		 */
-		private void init(){
+		private void init() {
 	    	//	Load Table Info
 			data = new ArrayList<DisplayRecordItem>();
 			//	View
@@ -428,7 +427,7 @@ public class LV_Search extends Activity {
 	     * @return
 	     * @return boolean
 	     */
-	    protected boolean loadView(){
+	    protected boolean loadView() {
 	    	//	Set Adapter
 			m_SearchAdapter = new SearchAdapter(v_activity, R.layout.i_search, data);
 			m_SearchAdapter.setDropDownViewResource(R.layout.i_search);
@@ -459,17 +458,19 @@ public class LV_Search extends Activity {
 					lookup.setCriteria(null);
 				rs = conn.querySQL(lookup.getSQL(), values);
 				//	
-				if(rs.moveToFirst()){
+				if(rs.moveToFirst()) {
 					//	Loop
 					do{
 						data.add(new DisplayRecordItem(
 								rs.getInt(0), 
-								rs.getString(1)));
+								rs.getString(1), 
+								rs.getString(2), 
+								null));
 					}while(rs.moveToNext());
 				}
 				//	Close
 				DB.closeConnection(conn);
-			} catch(Exception e){
+			} catch(Exception e) {
 				LogM.log(v_activity, getClass(), Level.SEVERE, "Error in Load", e);
 			}
 		}
