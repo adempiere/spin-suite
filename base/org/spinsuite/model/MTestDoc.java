@@ -180,4 +180,10 @@ public class MTestDoc extends X_TestDoc implements DocAction {
 		return null;
 	}
 
+	@Override
+	public int getC_DocType_ID() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

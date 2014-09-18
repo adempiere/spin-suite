@@ -576,7 +576,7 @@ public class DocumentEngine implements DocAction
 	 */
 	public boolean isValidAction (String action) {
 		//	Verify Role Action Access
-		if(!Env.getDocumentAccess(getCtx(), 1000000, action)) {
+		if(!Env.getDocumentAccess(getCtx(), getC_DocType_ID(), action)) {
 			return false;
 		}
 		//	
@@ -727,6 +727,14 @@ public class DocumentEngine implements DocAction
 			return m_document.get_DB();
 		throw new IllegalStateException(EXCEPTION_MSG);
 	}	//	get_TrxName
+
+	
+	@Override
+	public int getC_DocType_ID() {
+		if (m_document == null)
+			return 0;
+		return m_document.getC_DocType_ID();
+	}
 
 	
 	/**
