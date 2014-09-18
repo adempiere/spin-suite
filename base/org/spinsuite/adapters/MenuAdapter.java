@@ -67,15 +67,15 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/03/2014, 09:16:14
 	 * @param ctx
 	 * @param id_View
-	 * @param isActivityMenu
+	 * @param isMenu
 	 * @param data
 	 */
-	public MenuAdapter(Context ctx, int id_View, boolean isActivityMenu, ArrayList<DisplayMenuItem> data) {
+	public MenuAdapter(Context ctx, int id_View, boolean isMenu, ArrayList<DisplayMenuItem> data) {
 		super(ctx, id_View, data);
 		this.ctx = ctx;
 		this.data = data;
 		this.id_View = id_View;
-		this.isActivityMenu = isActivityMenu;
+		this.isMenu = isMenu;
 		//	Get Preferred Height
 		TypedValue value = Env.getResource(ctx, android.R.attr.listPreferredItemHeight);
 		DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -91,7 +91,7 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 	/**	Identifier of View			*/
 	private int 						id_View;
 	/**	Is Activity Menu			*/
-	private boolean 					isActivityMenu = false;
+	private boolean 					isMenu = false;
 	/**	Preferred Item Height		*/
 	private float						height = 0;
 	
@@ -101,7 +101,7 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 		if(item == null){
 			LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			item = inflater.inflate(id_View, null);
-			if(!isActivityMenu)
+			if(isMenu)
 				item.setMinimumHeight((int)height);
 		}
 		
@@ -127,14 +127,14 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 				img_Menu.setImageDrawable(drawable);
 			}
 		} else if(mi.isSummary()){
-			if(!isActivityMenu)
+			if(!isMenu)
 				img_Menu.setImageResource(
 						Env.getResourceID(ctx, R.attr.ic_dr_folder));
 			else
 				img_Menu.setImageResource(
 						Env.getResourceID(ctx, R.attr.ic_ml_folder));
 		} else if(!mi.isSummary()) {
-			if(!isActivityMenu){
+			if(!isMenu){
 				if(mi.getAction().equals(DisplayMenuItem.ACTION_Form)
 						|| mi.getAction().equals(DisplayMenuItem.ACTION_Window)){
 					img_Menu.setImageResource(

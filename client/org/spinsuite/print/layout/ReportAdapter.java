@@ -381,9 +381,11 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 	                for(RowPrintData item : originalData) {
 	                	for(ColumnPrintData column : item.getColumns()){
 	                		if((column.getValue() != null 
-		                    		&& column.getValue().toLowerCase().contains(constraint.toString()))
+		                    		&& column.getValue().toLowerCase()
+		                    					.contains(constraint.toString().toLowerCase()))
 		                    	|| (column.getSuffix() != null 
-			                    		&& column.getSuffix().toLowerCase().contains(constraint.toString())))
+			                    		&& column.getSuffix().toLowerCase()
+			                    				.contains(constraint.toString().toLowerCase())))
 		                        filteredResult.add(item);
 	                	}
 	                }

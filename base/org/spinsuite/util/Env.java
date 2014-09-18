@@ -1793,6 +1793,9 @@ public final class Env {
 	/** Tab for Info                */
 	public static final int     TAB_INFO = 1113;
 	
+	/**	New Line 		 */
+	public static final String	NL = System.getProperty("line.separator");
+	
 	/**************************************************************************
 	 *  Language issues
 	 */

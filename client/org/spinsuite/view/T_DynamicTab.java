@@ -149,6 +149,10 @@ public class T_DynamicTab extends Fragment
 	/**	Images						*/
 	private static final int 		IMG_TARGET_W		= 640;
 	private static final int 		IMG_TARGET_H		= 480;
+	/**	Constants Type Save			*/
+	private static final String 	RECORD_SAVE			= "RS";
+	private static final String 	ATTACHMENT_SAVE		= "AS";
+	
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -350,7 +354,7 @@ public class T_DynamicTab extends Fragment
 			return true;
 		} else if (itemId == R.id.action_save) {
 			//	Save Thread
-			new SaveDataTask().execute();
+			new SaveTask().execute(RECORD_SAVE);
 			return true;
 		}
 		//	
@@ -369,10 +373,8 @@ public class T_DynamicTab extends Fragment
 		popupMenu.getMenu().add(Menu.NONE, O_SHARE, 
 					Menu.NONE, getString(R.string.Action_Share));
 		//	Delete Record
-		MenuItem deleteOption = popupMenu.getMenu().add(Menu.NONE, O_DELETE, 
+		popupMenu.getMenu().add(Menu.NONE, O_DELETE, 
 				Menu.NONE, getString(R.string.Action_Delete));
-		//	Enable
-		deleteOption.setCheckable(m_IsReadWrite);
 		//	Attach a File
 		popupMenu.getMenu().add(Menu.NONE, O_ATTACH, 
 				Menu.NONE, getString(R.string.Action_AttachImage));
@@ -654,11 +656,10 @@ public class T_DynamicTab extends Fragment
     /**
      * Process Attach
      * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2014, 15:44:20
-     * @param intent
      * @return
      * @return boolean
      */
-    private boolean processAttach(Intent intent){
+    private boolean processAttach(){
     	File tmpFile = new File(TMP_ATTACH_NAME);
         if(!tmpFile.exists())
         	return false;
@@ -725,7 +726,6 @@ public class T_DynamicTab extends Fragment
 		conn.setTransactionSuccessful();
 		//	Close Connection
 		DB.closeConnection(conn);
-		Msg.toastMsg(getActivity(), getString(R.string.msg_Ok));
 		//	Delete File
 		File tmpFile = new File(TMP_ATTACH_NAME);
     	if(tmpFile.exists())
@@ -740,7 +740,7 @@ public class T_DynamicTab extends Fragment
     		return;
     	//	
     	if(requestCode == ACTION_TAKE_PHOTO) {
-    		processAttach(data);
+    		new SaveTask().execute(ATTACHMENT_SAVE);
     	} else if (resultCode == Activity.RESULT_OK) {
 	    	if(data != null){
 	    		Bundle bundle = data.getExtras();
@@ -821,6 +821,20 @@ public class T_DynamicTab extends Fragment
 		if(!m_IsLoadOk)
 			initLoad();
 	}
+	
+	@Override
+	public boolean isModifying() {
+		return m_IsModifying;
+	}
+
+	@Override
+	public void setIsParentModifying(boolean enabled) {
+		//	
+	}
+	
+	/**********************************************************************
+	 * Threads
+	 */
 	
 	/**
 	 * Include Class
@@ -998,11 +1012,12 @@ public class T_DynamicTab extends Fragment
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
 	 *
 	 */
-	private class SaveDataTask extends AsyncTask<Void, Void, Void> {
+	private class SaveTask extends AsyncTask<String, Void, Void> {
 
 		/**	Progress Bar			*/
 		private ProgressDialog 		v_PDialog;
-		private boolean				is_OK = false;
+		private boolean				is_OK 	= false;
+		private String				m_Type 	= null;
 		
 		@Override
 		protected void onPreExecute() {
@@ -1012,9 +1027,17 @@ public class T_DynamicTab extends Fragment
 		}
 		
 		@Override
-		protected Void doInBackground(Void... params) {
-			//	Load Data
-			is_OK = save();
+		protected Void doInBackground(String... params) {
+			m_Type = params[0];
+			//	Valid Null
+			if(m_Type == null)
+				return null;
+			//	
+			if(m_Type.equals(ATTACHMENT_SAVE)) {
+				processAttach();
+			} else if(m_Type.equals(RECORD_SAVE)) {
+				is_OK = save();
+			}
 			//	
 			return null;
 		}
@@ -1026,24 +1049,18 @@ public class T_DynamicTab extends Fragment
 
 		@Override
 		protected void onPostExecute(Void result) {
-			if(is_OK) {
-				refreshIndex();
-				m_IsLoadDataOk = refresh(mGridTab.getRecord_ID(), false);
-				lockView(SEE);
-			} else {
-				Msg.alertMsg(getActivity(), mGridTab.getError());
+			//	For Record Save
+			if(m_Type.equals(RECORD_SAVE)) {
+				if(is_OK) {
+					refreshIndex();
+					m_IsLoadDataOk = refresh(mGridTab.getRecord_ID(), false);
+					lockView(SEE);
+				} else {
+					Msg.alertMsg(getActivity(), mGridTab.getError());
+				}
 			}
+			//	Hide
 			v_PDialog.dismiss();
 		}
-	}
-
-	@Override
-	public boolean isModifying() {
-		return m_IsModifying;
-	}
-
-	@Override
-	public void setIsParentModifying(boolean enabled) {
-		//m_Enabled = enabled;
 	}
 }

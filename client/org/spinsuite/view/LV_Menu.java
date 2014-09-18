@@ -114,7 +114,7 @@ public class LV_Menu extends Activity {
 		//	Load Children
 		lookupMenu.loadChildren(param.getParent_ID());
 		//	
-		MenuAdapter mi_adapter = new MenuAdapter(this, R.layout.i_image_text, lookupMenu.getData());
+		MenuAdapter mi_adapter = new MenuAdapter(this, R.layout.i_image_text, true, lookupMenu.getData());
 		mi_adapter.setDropDownViewResource(R.layout.i_image_text);
 		menu.setAdapter(mi_adapter);
 		//	

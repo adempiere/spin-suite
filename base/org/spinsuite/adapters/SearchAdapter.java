@@ -102,8 +102,8 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 		//	Get Current Item
 		DisplayRecordItem recordItem = data.get(position);
 		//	Process Text
-		String name = "";
-		String description = "";
+		String name = null;
+		String description = null;
 		//	
 		if(recordItem.getValue() != null) {
 			int indexOf = recordItem.getValue().indexOf(InfoLookup.TABLE_SEARCH_SEPARATOR);
@@ -111,7 +111,7 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 				name = recordItem.getValue().substring(0, indexOf);
 				description = recordItem.getValue()
 						.substring(indexOf + InfoLookup.TABLE_SEARCH_SEPARATOR.length())
-						.replaceAll(InfoLookup.TABLE_SEARCH_SEPARATOR, "_");
+						.replaceAll(InfoLookup.TABLE_SEARCH_SEPARATOR, Env.NL);
 			} else {
 				name = recordItem.getValue();
 			}
@@ -122,7 +122,13 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 		tv_Name.setText(name);
 		//	Set Description
 		TextView tv_Description = (TextView)item.findViewById(R.id.tv_Description);
-		tv_Description.setText(description);
+		if(description != null
+				&& description.length() > 0) {
+			tv_Description.setVisibility(View.VISIBLE);
+			tv_Description.setText(description);
+		} else {
+			tv_Description.setVisibility(View.GONE);
+		}
 		//	Set Image
 		ImageView img_Item = (ImageView)item.findViewById(R.id.img_Item);
 		if(recordItem.getImageURL() != null 
@@ -208,7 +214,8 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 	            	ArrayList<DisplayRecordItem> filteredResult = new ArrayList<DisplayRecordItem>();
 	                for(DisplayRecordItem item : originalData) {
 	                    if((item.getValue() != null 
-	                    		&& item.getValue().toLowerCase().contains(constraint.toString())))
+	                    		&& item.getValue().toLowerCase()
+	                    					.contains(constraint.toString().toLowerCase())))
 	                        filteredResult.add(item);
 	                }
 	                return filteredResult;
