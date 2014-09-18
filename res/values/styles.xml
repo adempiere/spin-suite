@@ -36,18 +36,18 @@
 		<item name="ic_dr_process">@drawable/ic_action_forward_light</item>
 		<item name="ic_dr_folder">@drawable/ic_action_collapse_light</item>
 		<!-- Menu Icon -->
-		<item name="ic_ml_construction">@drawable/ic_action_warning_light</item>
-		<item name="ic_ml_window">@drawable/ic_action_dock_light</item>
-		<item name="ic_ml_report">@drawable/ic_action_view_as_list_light</item>
-		<item name="ic_ml_process">@drawable/ic_action_forward_light</item>
-		<item name="ic_ml_folder">@drawable/ic_action_collapse_light</item>
+		<item name="ic_ml_construction">@drawable/contruction_h</item>
+		<item name="ic_ml_window">@drawable/window_h</item>
+		<item name="ic_ml_report">@drawable/report_h</item>
+		<item name="ic_ml_process">@drawable/process_h</item>
+		<item name="ic_ml_folder">@drawable/folder_h</item>
 	    <!-- Layout Icon -->
-        <item name="ic_lt_search">@drawable/ic_action_search_light</item>
-        <item name="ic_lt_search_product">@drawable/ic_action_search_light</item>
-        <item name="ic_lt_search_bpartner">@drawable/ic_action_person_light</item>
-        <item name="ic_lt_date">@drawable/ic_action_event_light</item>
+        <item name="ic_lt_search">@drawable/search_m</item>
+        <item name="ic_lt_search_product">@drawable/package_m</item>
+        <item name="ic_lt_search_bpartner">@drawable/bpartner_m</item>
+        <item name="ic_lt_date">@drawable/calendar_m</item>
         <!-- Icon List -->
-        <item name="ic_ls_ok">@drawable/ok_m</item>
+        <item name="ic_ls_ok">@drawable/ok_h</item>
         <!-- Icon Document Action -->
         <item name="ic_doc_prepare">@drawable/doc_progress_m</item>
 		<item name="ic_doc_complete">@drawable/doc_completed_m</item>
