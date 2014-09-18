@@ -102,8 +102,8 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 		//	Get Current Item
 		DisplayRecordItem recordItem = data.get(position);
 		//	Process Text
-		String name = null;
-		String description = null;
+		String name = "";
+		String description = "";
 		//	
 		if(recordItem.getValue() != null) {
 			int indexOf = recordItem.getValue().indexOf(InfoLookup.TABLE_SEARCH_SEPARATOR);
@@ -122,13 +122,7 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 		tv_Name.setText(name);
 		//	Set Description
 		TextView tv_Description = (TextView)item.findViewById(R.id.tv_Description);
-		if(description != null
-				&& description.length() > 0) {
-			tv_Description.setVisibility(View.VISIBLE);
-			tv_Description.setText(description);
-		} else {
-			tv_Description.setVisibility(View.GONE);
-		}
+		tv_Description.setText(description);
 		//	Set Image
 		ImageView img_Item = (ImageView)item.findViewById(R.id.img_Item);
 		if(recordItem.getImageURL() != null 
