@@ -225,23 +225,32 @@ public final class Env {
 			//	Set Ok
 			ok = true;
 		}
+		//	Get Document Access
+		KeyNamePair[] documentAccess = DB.getKeyNamePairs(ctx, 
+				"SELECT da.C_DocType_ID, rl.Value " +
+				"FROM AD_Document_Action_Access da " +
+				"INNER JOIN AD_Ref_List rl ON(rl.AD_Ref_List_ID = da.AD_Ref_List_ID) " +
+				"WHERE da.AD_Role_ID = ?", m_AD_Role_ID);
+		//	Delete if not exists
+		if(documentAccess == null
+				|| documentAccess.length == 0) {
+			//	Cache Reset
+			int deleted = cacheReset(ctx, S_DOCUMENT_ACCESS + "|" + m_AD_Role_ID + "|", false);
+			LogM.log(ctx, "Env", Level.FINE, "Document Access Deleted = " + deleted);
+		} else {
+			//	Delete Old
+			int deleted = cacheReset(ctx, S_DOCUMENT_ACCESS + "|" + m_AD_Role_ID + "|", false);
+			LogM.log(ctx, "Env", Level.FINE, "Document Access Deleted = " + deleted);
+			//	
+			for(KeyNamePair dAccess : documentAccess) {
+				ep.putString(S_DOCUMENT_ACCESS + "|" + m_AD_Role_ID + "|" + dAccess.getKey() + "|" + dAccess.getName(), "Y");
+			}
+			//	Set Ok
+			ok = true;
+		}
 		//	Commit
 		if(ok)
 			ep.commit();
-	}
-	
-	/**
-	 * Set Process Access
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 16:42:54
-	 * @param ctx
-	 * @param m_AD_Role_ID
-	 * @param m_AD_Process_ID
-	 * @param m_IsReadWrite
-	 * @return void
-	 */
-	public static void setProcessAccess(Context ctx, int m_AD_Role_ID, 
-			int m_AD_Process_ID, boolean m_IsReadWrite) {
-		setContext(ctx, S_PROCESS_ACCESS + "|" + m_AD_Role_ID + "|" + m_AD_Process_ID, m_IsReadWrite);
 	}
 	
 	/**
@@ -284,6 +293,33 @@ public final class Env {
 	}
 	
 	/**
+	 * Get Valid DocAction
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/09/2014, 11:46:20
+	 * @param ctx
+	 * @param m_AD_Role_ID
+	 * @param m_C_DocType_ID
+	 * @param m_DocAction
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean getDocumentAccess(Context ctx, int m_AD_Role_ID, int m_C_DocType_ID, String m_DocAction) {
+		return getContextAsBoolean(ctx, S_DOCUMENT_ACCESS + "|" + m_AD_Role_ID + "|" + m_C_DocType_ID + "|" + m_DocAction);
+	}
+	
+	/**
+	 * Get Valid DocAction without Role
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/09/2014, 11:47:34
+	 * @param ctx
+	 * @param m_C_DocType_ID
+	 * @param m_DocAction
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean getDocumentAccess(Context ctx, int m_C_DocType_ID, String m_DocAction) {
+		return getDocumentAccess(ctx, getAD_Role_ID(ctx), m_C_DocType_ID, m_DocAction);
+	}
+	
+	/**
 	 * Get Windows Access without Role
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/09/2014, 19:13:26
 	 * @param ctx
@@ -293,20 +329,6 @@ public final class Env {
 	 */
 	public static boolean getWindowsAccess(Context ctx, int m_SPS_Window_ID) {
 		return getWindowsAccess(ctx, getAD_Role_ID(ctx), m_SPS_Window_ID);
-	}
-	
-	/**
-	 * Set Window Access
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 16:43:02
-	 * @param ctx
-	 * @param m_AD_Role_ID
-	 * @param m_SPS_Window_ID
-	 * @param m_IsReadWrite
-	 * @return void
-	 */
-	public static void setWindowsAccess(Context ctx, int m_AD_Role_ID, 
-			int m_SPS_Window_ID, boolean m_IsReadWrite) {
-		setContext(ctx, S_WINDOW_ACCESS + "|" + m_AD_Role_ID + "|" + m_SPS_Window_ID, m_IsReadWrite);
 	}
 	
 	/**
@@ -1808,9 +1830,10 @@ public final class Env {
 	 * Security Access
 	 */
 	
-	private static final String		S_PROCESS_ACCESS = "#PROCESS_ACCESS";
-	private static final String		S_WINDOW_ACCESS = "#WINDOW_ACCESS";
-	private static final String		S_IS_ACCESS_LOADED = "#IS_ACCESS_LOADED";
+	private static final String		S_PROCESS_ACCESS 	= "#PROCESS_ACCESS";
+	private static final String		S_WINDOW_ACCESS 	= "#WINDOW_ACCESS";
+	private static final String		S_DOCUMENT_ACCESS 	= "#DOCUMENT_ACCESS";
+	private static final String		S_IS_ACCESS_LOADED 	= "#IS_ACCESS_LOADED";
 	
 	/************************************Env***************************************
 	 * Database Context
