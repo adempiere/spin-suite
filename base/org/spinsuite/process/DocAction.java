@@ -227,6 +227,14 @@ public interface DocAction
 	 *	@return Document Action
 	 */
 	public String getDocAction();
+	
+	/**
+	 * Get Document Type
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/09/2014, 12:20:54
+	 * @return
+	 * @return int
+	 */
+	public int getC_DocType_ID();
 
 	/**
 	 * 	Save Document
