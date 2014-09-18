@@ -189,7 +189,7 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 	            //	
 	            results.values = filteredResults;
 	            results.count = filteredResults.size();
-	            
+	            //	
 	            return results;
 	        }
 
