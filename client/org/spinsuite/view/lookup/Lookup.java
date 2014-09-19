@@ -930,6 +930,7 @@ public class Lookup {
 			DB.closeConnection(conn);
 		} catch(Exception e) {
 			isSyntaxError = true;
+			data = new ArrayList<DisplayLookupSpinner>();
 			LogM.log(ctx, getClass(), Level.SEVERE, "Error in Load", e);
 		}
 	}
