@@ -3,7 +3,8 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">   
+    <style 
+        name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">   
     </style>
 
     <!-- Application theme. -->
@@ -51,18 +52,27 @@
         <!-- Icon Document Action -->
         <item name="ic_doc_prepare">@drawable/doc_progress_m</item>
 		<item name="ic_doc_complete">@drawable/doc_completed_m</item>
-		<item name="ic_doc_close">@drawable/errorsync_m</item>
-		<item name="ic_doc_void">@drawable/remove_m</item>
-		<item name="ic_doc_reverse_correct">@drawable/remove_m</item>
+		<item name="ic_doc_close">@drawable/doc_closed_m</item>
+		<item name="ic_doc_void">@drawable/doc_voided_m</item>
+		<item name="ic_doc_reverse_correct">@drawable/doc_voided_m</item>
 		<item name="ic_doc_reactivate">@drawable/doc_progress_m</item>
+		<item name="ic_doc_draft">@drawable/doc_draft_m</item>
 		<!-- Icon Document Status List -->
-		<item name="ic_ls_doc_status_draft">@drawable/edit_h</item>
+		<item name="ic_ls_doc_status_draft">@drawable/doc_draft_h</item>
 		<item name="ic_ls_doc_status_in_progress">@drawable/doc_progress_h</item>
 		<item name="ic_ls_doc_status_completed">@drawable/doc_completed_h</item>
-		<item name="ic_ls_doc_status_closed">@drawable/errorsync_h</item>
-		<item name="ic_ls_doc_status_voided">@drawable/remove_h</item>
-		<item name="ic_ls_doc_status_reversed">@drawable/remove_h</item>
-		<item name="ic_ls_doc_status_invalid">@drawable/remove_h</item>
+		<item name="ic_ls_doc_status_closed">@drawable/doc_closed_h</item>
+		<item name="ic_ls_doc_status_voided">@drawable/doc_voided_h</item>
+		<item name="ic_ls_doc_status_reversed">@drawable/doc_voided_h</item>
+		<item name="ic_ls_doc_status_invalid">@drawable/doc_voided_h</item>
+		<!-- Payment Rule -->
+		<item name="ic_payment_rule_cash">@drawable/cash_m</item>
+		<item name="ic_payment_rule_check">@drawable/check_m</item>
+		<item name="ic_payment_rule_direct_credit">@drawable/direct_credit_m</item>
+		<item name="ic_payment_rule_direct_debit">@drawable/direct_debit_m</item>
+		<item name="ic_payment_rule_direct_deposit">@drawable/direct_deposit_m</item>
+		<item name="ic_payment_rule_mixed">@drawable/payment_mixed_m</item>
+		<item name="ic_payment_rule_on_credit">@drawable/oncredit_m</item>
     </style>
     
     <!-- Color -->

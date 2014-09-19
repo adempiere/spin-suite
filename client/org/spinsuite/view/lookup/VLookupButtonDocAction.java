@@ -101,7 +101,7 @@ public class VLookupButtonDocAction extends VLookupButton
 	protected void init() {
 		super.init();
 		v_Button.setCompoundDrawablesWithIntrinsicBounds(
-				getResources().getDrawable(R.drawable.edit_m), null, null, null);
+				Env.getResourceID(getContext(), R.attr.ic_doc_draft), 0, 0, 0);
 		//	
 		setOnClickListener(new OnClickListener() {			
 			@Override
