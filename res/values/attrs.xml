@@ -47,6 +47,7 @@
 	<attr name="ic_doc_void" format="reference"/>
 	<attr name="ic_doc_reverse_correct" format="reference"/>
 	<attr name="ic_doc_reactivate" format="reference"/>
+	<attr name="ic_doc_draft" format="reference"/>
 	<!-- Icon Document Status List -->
 	<attr name="ic_ls_doc_status_draft" format="reference"/>
 	<attr name="ic_ls_doc_status_in_progress" format="reference"/>
@@ -55,4 +56,12 @@
 	<attr name="ic_ls_doc_status_voided" format="reference"/>
 	<attr name="ic_ls_doc_status_reversed" format="reference"/>
 	<attr name="ic_ls_doc_status_invalid" format="reference"/>
+	<!-- Payment Rule -->
+	<attr name="ic_payment_rule_cash" format="reference"/>
+	<attr name="ic_payment_rule_check" format="reference"/>
+	<attr name="ic_payment_rule_direct_credit" format="reference"/>
+	<attr name="ic_payment_rule_direct_debit" format="reference"/>
+	<attr name="ic_payment_rule_direct_deposit" format="reference"/>
+	<attr name="ic_payment_rule_mixed" format="reference"/>
+	<attr name="ic_payment_rule_on_credit" format="reference"/>
 </resources>
