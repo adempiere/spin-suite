@@ -179,6 +179,7 @@
         <item name="android:choiceMode">singleChoice</item>
         <item name="android:divider">@android:color/transparent</item>
         <item name="android:dividerHeight">0dp</item>
+        <item name="android:layout_width">260dp</item>
     </style>
     
     <!-- Contribution -->
