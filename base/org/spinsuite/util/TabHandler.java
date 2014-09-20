@@ -15,6 +15,8 @@
  *************************************************************************************/
 package org.spinsuite.util;
 
+import org.spinsuite.base.R;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -121,13 +123,13 @@ public class TabHandler {
     public void loadFragment(Tab tab, FragmentTransaction ft) {
     	if (m_Fragment == null) {
             m_Fragment = Fragment.instantiate(m_Activity, m_Class.getName(), m_Args);
-            ft.replace(android.R.id.content, m_Fragment, m_Tag);
+            ft.replace(R.id.content_frame, m_Fragment, m_Tag);
         } else {
             if (m_Fragment.isDetached()) {
                 ft.attach(m_Fragment);
             }
         }
-    }
+    }//	android.R.id.content
     
     /**
      * Unload Fragment

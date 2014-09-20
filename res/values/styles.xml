@@ -159,7 +159,13 @@
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textAppearance">?android:attr/textAppearanceSmallPopupMenu</item>
     </style>
-
+	
+	<!-- Small Drawer Menu -->
+    <style name="TextItemDrawerSmallMenu" parent="TextStandard">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmallPopupMenu</item>
+    </style>
+    
     <!-- Search Text -->
     <style name="TextSearch" parent="TextStandard">
         <item name="android:textColor">@android:color/white</item>
