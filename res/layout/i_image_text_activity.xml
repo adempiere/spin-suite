@@ -12,28 +12,23 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,    		 *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                     		 *
  * For the text or an alternative of this public license, you may reach us    		 *
- * Copyright (C) 2012-2013 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com				  		 *
  ************************************************************************************/
  -->
- <android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_layout"
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <!-- The main content view -->
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager_container"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:focusable="true"
-        android:focusableInTouchMode="true" /> 
-    <FrameLayout
-        android:id="@+id/content_frame"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <TextView
+        android:id="@+id/tv_Name"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    <!-- The navigation drawer -->
-    <ListView android:id="@+id/left_drawer"
-        android:layout_width="300dp"
-        style="@style/ListDrawer"/>
-</android.support.v4.widget.DrawerLayout>
+        android:gravity="center_vertical"
+        style="@style/TextItemDrawerMenu"
+        android:drawableLeft="@drawable/contruction_m"
+        android:maxLines="1"
+        android:text="@string/None" />
+
+</LinearLayout>

@@ -95,8 +95,8 @@ public class TV_DynamicActivity extends TV_Base
 		if(loaded){
 			loadDrawer();
 			//	Populate
-			MenuAdapter mi_adapter = new MenuAdapter(this, R.layout.i_image_text, false, lookupMenu.getData());
-			mi_adapter.setDropDownViewResource(R.layout.i_image_text);
+			MenuAdapter mi_adapter = new MenuAdapter(this, R.layout.i_image_text_activity, false, lookupMenu.getData());
+			mi_adapter.setDropDownViewResource(R.layout.i_image_text_activity);
 			getDrawerList().setAdapter(mi_adapter);
 		}
     }

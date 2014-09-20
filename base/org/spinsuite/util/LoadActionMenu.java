@@ -19,7 +19,6 @@ import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
-import org.spinsuite.model.MForm;
 import org.spinsuite.view.LV_Menu;
 import org.spinsuite.view.LV_Search;
 import org.spinsuite.view.lookup.InfoField;
@@ -188,8 +187,19 @@ public class LoadActionMenu {
 		} else if(item.getAction().equals(DisplayMenuItem.ACTION_Form)
 				|| (item.getAction().equals(DisplayMenuItem.ACTION_Process)
 						&& item.getAD_Form_ID() != 0)) {
-			MForm form = new MForm(activity, item.getAD_Form_ID(), conn);
-			ok = loadDynamicClass(form.getClassname(), bundle);
+			//	Get Class Name
+			if(item.getAD_Form_ID() != 0) {
+				String className = DB.getSQLValueString(
+						activity, "SELECT f.ClassName " +
+									"FROM AD_Form f " +
+									"WHERE f.AD_Form_ID = ?", conn, 
+									new String[]{String.valueOf(item.getAD_Form_ID())});
+				//	Valid Class Name
+				if(className != null
+						&& className.length() > 0) {
+					ok = loadDynamicClass(className, bundle);
+				}
+			}
 		} else if(item.getAction().equals(DisplayMenuItem.ACTION_Window)){
 			ok = loadDynamicClass("org.spinsuite.view.TV_DynamicActivity", bundle);
 		} else if(item.getAction().equals(DisplayMenuItem.ACTION_Process)
