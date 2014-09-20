@@ -36,12 +36,14 @@
 
         <TextView
 	        android:id="@+id/tv_Name"
+	        android:gravity="center_vertical"
 	        style="@style/TextItemMenu"
 	        android:text="@string/None"
 	        android:maxLines="1" />
 
     	<TextView
         	android:id="@+id/tv_Description"
+        	android:gravity="center_vertical"
         	style="@style/TextItemSmallMenu"
         	android:text="@string/None" />
     </LinearLayout>

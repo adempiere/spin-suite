@@ -736,4 +736,24 @@ public class DB extends SQLiteOpenHelper {
 		}
 		return retValue;
 	}
+	
+	/**
+	 * Get Value from sql without Exception, with parameters and Connection
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/09/2014, 21:58:46
+	 * @param ctx
+	 * @param sql
+	 * @param conn
+	 * @param params
+	 * @return
+	 * @return String
+	 */
+	public static String getSQLValueString(Context ctx, String sql, DB conn, String... params){
+		String retValue = null;
+		try{
+			retValue = getSQLValueStringEx(ctx, sql, conn, params);
+		} catch(Exception e){
+			LogM.log(ctx, "DB", Level.SEVERE, "SQLError", e);
+		}
+		return retValue;
+	}
 }

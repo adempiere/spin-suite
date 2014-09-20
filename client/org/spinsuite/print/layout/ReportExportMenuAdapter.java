@@ -23,12 +23,10 @@ import org.spinsuite.util.Env;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -92,32 +90,23 @@ public class ReportExportMenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 		TextView tv_Name = (TextView)item.findViewById(R.id.tv_Name);
 		tv_Name.setTextAppearance(ctx, R.style.TextItemDrawerMenu);
 		tv_Name.setText(mi.getName());
-		
-		//	Set Description
-		TextView tv_Description = (TextView)item.findViewById(R.id.tv_Description);
-		tv_Description.setTextAppearance(ctx, R.style.TextItemDrawerMenu);
-		tv_Description.setText(mi.getDescription());
-		
-		//	Set Image
-		ImageView img_Menu = (ImageView)item.findViewById(R.id.img_Item);
-		
+		//	
 		if(mi.getImageURL() != null 
 				&& mi.getImageURL().length() > 0){
 			Resources res = ctx.getResources();
 			int resID = res.getIdentifier(mi.getImageURL() , "drawable", ctx.getPackageName());
-			if(resID != 0){
-				Drawable drawable = res.getDrawable(resID);
-				img_Menu.setImageDrawable(drawable);
+			if(resID != 0) {
+				tv_Name.setCompoundDrawablesWithIntrinsicBounds(resID, 0, 0, 0);
 			}
 		} else if(mi.getAttResourceID() != 0) {
-			img_Menu.setImageResource(
-					Env.getResourceID(ctx, mi.getAttResourceID()));
+			tv_Name.setCompoundDrawablesWithIntrinsicBounds(
+					Env.getResourceID(ctx, mi.getAttResourceID()), 0, 0, 0);
 		}else if(!isActivityMenu){
-			img_Menu.setImageResource(
-					Env.getResourceID(ctx, R.attr.ic_dr_construction));
+			tv_Name.setCompoundDrawablesWithIntrinsicBounds(
+					Env.getResourceID(ctx, R.attr.ic_dr_construction), 0, 0, 0);
 		} else {
-			img_Menu.setImageResource(
-					Env.getResourceID(ctx, R.attr.ic_ml_construction));
+			tv_Name.setCompoundDrawablesWithIntrinsicBounds(
+					Env.getResourceID(ctx, R.attr.ic_ml_construction), 0, 0, 0);
 		}
 		//	Return
 		return item;
