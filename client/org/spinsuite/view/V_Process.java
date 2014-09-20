@@ -307,8 +307,8 @@ public class V_Process extends Activity {
 		listMenu.add(new DisplayMenuItem(EXPORT_TO_HTML, getResources().getString(R.string.Action_Export_HTML), null, R.attr.ic_dr_html));
 		
 		//	Set Adapter
-		ReportExportMenuAdapter mi_adapter = new ReportExportMenuAdapter(this, R.layout.i_activity_menu, true, listMenu);
-		mi_adapter.setDropDownViewResource(R.layout.i_activity_menu);
+		ReportExportMenuAdapter mi_adapter = new ReportExportMenuAdapter(this, R.layout.i_image_text, true, listMenu);
+		mi_adapter.setDropDownViewResource(R.layout.i_image_text);
 		m_DList.setAdapter(mi_adapter);
     }
     

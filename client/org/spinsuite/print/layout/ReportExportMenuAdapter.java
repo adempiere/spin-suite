@@ -89,15 +89,17 @@ public class ReportExportMenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 		DisplayMenuItem mi = data.get(position);
 		
 		//	Set Name
-		TextView tV_Name = (TextView)item.findViewById(R.id.tv_Name);
-		tV_Name.setText(mi.getName());
+		TextView tv_Name = (TextView)item.findViewById(R.id.tv_Name);
+		tv_Name.setTextAppearance(ctx, R.style.TextItemDrawerMenu);
+		tv_Name.setText(mi.getName());
 		
 		//	Set Description
-		TextView tV_Description = (TextView)item.findViewById(R.id.tv_Description);
-		tV_Description.setText(mi.getDescription());
+		TextView tv_Description = (TextView)item.findViewById(R.id.tv_Description);
+		tv_Description.setTextAppearance(ctx, R.style.TextItemDrawerMenu);
+		tv_Description.setText(mi.getDescription());
 		
 		//	Set Image
-		ImageView img_Menu = (ImageView)item.findViewById(R.id.img_Menu);
+		ImageView img_Menu = (ImageView)item.findViewById(R.id.img_Item);
 		
 		if(mi.getImageURL() != null 
 				&& mi.getImageURL().length() > 0){

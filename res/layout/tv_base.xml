@@ -22,37 +22,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!-- The main content view -->
-    <!-- <TabHost 
-        android:id="@android:id/tabhost"
-    	android:layout_width="match_parent"
-    	android:layout_height="match_parent" >
-
-    	<LinearLayout
-        	android:orientation="vertical"
-        	android:layout_width="match_parent"
-        	android:layout_height="match_parent">
-
-        	<TabWidget
-            	android:id="@android:id/tabs"
-            	android:layout_width="match_parent"
-            	android:layout_height="wrap_content"
-            	android:layout_weight="0"
-            	android:orientation="horizontal" />
-
-        	<FrameLayout
-            	android:id="@android:id/tabcontent"
-            	android:layout_width="0dp"
-            	android:layout_height="0dp"
-            	android:layout_weight="0"/>
-
-        	<org.spinsuite.view.custom.Cust_ViewPager
-            	android:id="@+id/v_pager"
-            	android:layout_width="match_parent"
-            	android:layout_height="0dp"
-            	android:layout_weight="1"/>
-
-    	</LinearLayout>
-	</TabHost> -->
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager_container"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true" /> 
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
     <!-- The navigation drawer -->
     <ListView android:id="@+id/left_drawer"
         android:layout_width="240dp"

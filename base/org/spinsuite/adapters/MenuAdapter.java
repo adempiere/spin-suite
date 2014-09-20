@@ -77,7 +77,9 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 		this.id_View = id_View;
 		this.isMenu = isMenu;
 		//	Get Preferred Height
-		TypedValue value = Env.getResource(ctx, android.R.attr.listPreferredItemHeight);
+		TypedValue value = Env.getResource(ctx, (isMenu
+													? android.R.attr.listPreferredItemHeight
+													: android.R.attr.listPreferredItemHeightSmall));
 		DisplayMetrics displayMetrics = new DisplayMetrics();
 		((WindowManager)(ctx.getSystemService(Context.WINDOW_SERVICE)))
 				.getDefaultDisplay().getMetrics(displayMetrics);
@@ -108,44 +110,32 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 		DisplayMenuItem mi = data.get(position);
 		
 		//	Set Name
-		TextView tV_Name = (TextView)item.findViewById(R.id.tv_Name);
-		tV_Name.setText(mi.getName());
+		TextView tv_Name = (TextView)item.findViewById(R.id.tv_Name);
+		tv_Name.setText(mi.getName());
 		
 		//	Set Description
-		TextView tV_Description = (TextView)item.findViewById(R.id.tv_Description);
-		tV_Description.setText(mi.getDescription());
+		TextView tv_Description = (TextView)item.findViewById(R.id.tv_Description);
+		tv_Description.setText(mi.getDescription());
 		
 		//	Set Image
 		ImageView img_Menu = (ImageView)item.findViewById(R.id.img_Item);
-		
-		if(mi.getImageURL() != null 
-				&& mi.getImageURL().length() > 0){
-			Resources res = ctx.getResources();
-			int resID = res.getIdentifier(mi.getImageURL() , "drawable", ctx.getPackageName());
-			if(resID != 0){
-				Drawable drawable = res.getDrawable(resID);
-				img_Menu.setImageDrawable(drawable);
-			}
-		} else if(mi.isSummary()){
-			if(!isMenu)
-				img_Menu.setImageResource(
-						Env.getResourceID(ctx, R.attr.ic_dr_folder));
-			else
+		//	
+		if(isMenu) {	//	Main Menu
+			//	Set Text Style
+			tv_Name.setTextAppearance(ctx, R.style.TextItemMenu);
+			tv_Description.setTextAppearance(ctx, R.style.TextItemSmallMenu);
+			//	
+			if(mi.getImageURL() != null 
+					&& mi.getImageURL().length() > 0){
+				Resources res = ctx.getResources();
+				int resID = res.getIdentifier(mi.getImageURL() , "drawable", ctx.getPackageName());
+				if(resID != 0){
+					Drawable drawable = res.getDrawable(resID);
+					img_Menu.setImageDrawable(drawable);
+				}
+			} else if(mi.isSummary()){
 				img_Menu.setImageResource(
 						Env.getResourceID(ctx, R.attr.ic_ml_folder));
-		} else if(!mi.isSummary()) {
-			if(!isMenu){
-				if(mi.getAction().equals(DisplayMenuItem.ACTION_Form)
-						|| mi.getAction().equals(DisplayMenuItem.ACTION_Window)){
-					img_Menu.setImageResource(
-							Env.getResourceID(ctx, R.attr.ic_dr_window));
-				} else if(mi.getAction().equals(DisplayMenuItem.ACTION_Process)){
-					img_Menu.setImageResource(
-							Env.getResourceID(ctx, R.attr.ic_dr_process));
-				} else if(mi.getAction().equals(DisplayMenuItem.ACTION_Report)){
-					img_Menu.setImageResource(
-							Env.getResourceID(ctx, R.attr.ic_dr_report));
-				}
 			} else {
 				if(mi.getAction().equals(DisplayMenuItem.ACTION_Form)
 						|| mi.getAction().equals(DisplayMenuItem.ACTION_Window)){
@@ -159,7 +149,35 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 							Env.getResourceID(ctx, R.attr.ic_ml_report));
 				}
 			}
-			
+		} else {		//	Drawer Menu
+			//	Set Text Style
+			tv_Name.setTextAppearance(ctx, R.style.TextItemDrawerMenu);
+			tv_Description.setVisibility(View.GONE);
+			//	
+			if(mi.getImageURL() != null 
+					&& mi.getImageURL().length() > 0){
+				Resources res = ctx.getResources();
+				int resID = res.getIdentifier(mi.getImageURL() , "drawable", ctx.getPackageName());
+				if(resID != 0){
+					Drawable drawable = res.getDrawable(resID);
+					img_Menu.setImageDrawable(drawable);
+				}
+			} if(mi.isSummary()){
+				img_Menu.setImageResource(
+						Env.getResourceID(ctx, R.attr.ic_dr_folder));
+			} else {
+				if(mi.getAction().equals(DisplayMenuItem.ACTION_Form)
+						|| mi.getAction().equals(DisplayMenuItem.ACTION_Window)){
+					img_Menu.setImageResource(
+							Env.getResourceID(ctx, R.attr.ic_dr_window));
+				} else if(mi.getAction().equals(DisplayMenuItem.ACTION_Process)){
+					img_Menu.setImageResource(
+							Env.getResourceID(ctx, R.attr.ic_dr_process));
+				} else if(mi.getAction().equals(DisplayMenuItem.ACTION_Report)){
+					img_Menu.setImageResource(
+							Env.getResourceID(ctx, R.attr.ic_dr_report));
+				}
+			}
 		}
 		//	Return
 		return item;

@@ -30,14 +30,16 @@ import org.spinsuite.util.LogM;
 import org.spinsuite.util.TabParameter;
 import org.spinsuite.view.lookup.LookupMenu;
 
+import android.app.ActionBar.Tab;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.ActionBar.Tab;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 
 /**
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
@@ -93,8 +95,8 @@ public class TV_DynamicActivity extends TV_Base
 		if(loaded){
 			loadDrawer();
 			//	Populate
-			MenuAdapter mi_adapter = new MenuAdapter(this, R.layout.i_activity_menu, true, lookupMenu.getData());
-			mi_adapter.setDropDownViewResource(R.layout.i_activity_menu);
+			MenuAdapter mi_adapter = new MenuAdapter(this, R.layout.i_image_text, false, lookupMenu.getData());
+			mi_adapter.setDropDownViewResource(R.layout.i_image_text);
 			getDrawerList().setAdapter(mi_adapter);
 		}
     }
@@ -121,6 +123,20 @@ public class TV_DynamicActivity extends TV_Base
         	//	
         	loadActionMenu.loadAction(item, actParam);
     	}
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+		if (itemId == android.R.id.home
+				&& !isDrawerLoaded()) {
+			// Navigate "up" the demo structure to the launchpad activity.
+			// See http://developer.android.com/design/patterns/navigation.html for more.
+			NavUtils.navigateUpTo(this, new Intent(this, LV_Menu.class));
+			return true;
+		}
+		//	
+        return super.onOptionsItemSelected(item);
     }
     
     @Override
