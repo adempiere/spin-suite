@@ -103,8 +103,7 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 		if(item == null) {
 			LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			item = inflater.inflate(id_View, null);
-			if(isMenu)
-				item.setMinimumHeight((int)height);
+			item.setMinimumHeight((int)height);
 		}
 		
 		DisplayMenuItem mi = data.get(position);

@@ -23,9 +23,12 @@ import org.spinsuite.util.Env;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
@@ -48,23 +51,12 @@ public class ReportExportMenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 		this.ctx = ctx;
 		this.data = data;
 		this.id_View = id_View;
-	}
-	
-	/**
-	 * 
-	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/03/2014, 09:16:14
-	 * @param ctx
-	 * @param id_View
-	 * @param isActivityMenu
-	 * @param data
-	 */
-	public ReportExportMenuAdapter(Context ctx, int id_View, boolean isActivityMenu, ArrayList<DisplayMenuItem> data) {
-		super(ctx, id_View, data);
-		this.ctx = ctx;
-		this.data = data;
-		this.id_View = id_View;
-		this.isActivityMenu = isActivityMenu;
+		//	Get Preferred Height
+		TypedValue value = Env.getResource(ctx, android.R.attr.listPreferredItemHeightSmall);
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		((WindowManager)(ctx.getSystemService(Context.WINDOW_SERVICE)))
+				.getDefaultDisplay().getMetrics(displayMetrics);
+		height = value.getDimension(displayMetrics);
 	}
 
 	/**	Context						*/
@@ -73,8 +65,8 @@ public class ReportExportMenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 	private ArrayList<DisplayMenuItem> 	data;
 	/**	Identifier of View			*/
 	private int 						id_View;
-	/**	Is Activity Menu			*/
-	private boolean 					isActivityMenu = false;
+	/**	Preferred Item Height		*/
+	private float						height = 0;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -82,6 +74,7 @@ public class ReportExportMenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 		if(item == null){
 			LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			item = inflater.inflate(id_View, null);
+			item.setMinimumHeight((int)height);
 		}
 		
 		DisplayMenuItem mi = data.get(position);
@@ -101,12 +94,9 @@ public class ReportExportMenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 		} else if(mi.getAttResourceID() != 0) {
 			tv_Name.setCompoundDrawablesWithIntrinsicBounds(
 					Env.getResourceID(ctx, mi.getAttResourceID()), 0, 0, 0);
-		}else if(!isActivityMenu){
-			tv_Name.setCompoundDrawablesWithIntrinsicBounds(
-					Env.getResourceID(ctx, R.attr.ic_dr_construction), 0, 0, 0);
 		} else {
 			tv_Name.setCompoundDrawablesWithIntrinsicBounds(
-					Env.getResourceID(ctx, R.attr.ic_ml_construction), 0, 0, 0);
+					Env.getResourceID(ctx, R.attr.ic_dr_construction), 0, 0, 0);
 		}
 		//	Return
 		return item;

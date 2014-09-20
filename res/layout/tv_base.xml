@@ -34,6 +34,5 @@
         android:layout_height="match_parent" />
     <!-- The navigation drawer -->
     <ListView android:id="@+id/left_drawer"
-        android:layout_width="300dp"
         style="@style/ListDrawer"/>
 </android.support.v4.widget.DrawerLayout>
