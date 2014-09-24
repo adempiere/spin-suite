@@ -581,7 +581,7 @@ public final class Env {
 		if (ctx == null || context == null)
 			return;
 		if (m_ActivityNo != WINDOW_FIND && m_ActivityNo != WINDOW_MLOOKUP)
-			LogM.log(ctx, "Env", Level.FINE, "Context("+m_ActivityNo+","+TabNo+") " + context + "==" + value);
+			LogM.log(ctx, "Env", Level.FINE, "Context("+m_ActivityNo+","+TabNo+") " + context + "=" + value);
 		//	
 		setContext(ctx, m_ActivityNo+"|"+TabNo+"|"+context, value);
 	}	//	setContext
@@ -599,7 +599,7 @@ public final class Env {
 		if (ctx == null || context == null)
 			return;
 		if (m_ActivityNo != WINDOW_FIND && m_ActivityNo != WINDOW_MLOOKUP)
-			LogM.log(ctx, "Env", Level.FINE, "Context("+m_ActivityNo+") " + context + "==" + value);
+			LogM.log(ctx, "Env", Level.FINE, "Context("+m_ActivityNo+") " + context + "=" + value);
 		//	
 		setContext(ctx, m_ActivityNo+"|"+context, value);
 	}	//	setContext

@@ -505,7 +505,9 @@ public final class DisplayType
 				Env.setContext(ctx, m_ActivityNo, field.ColumnName, String.valueOf(value));
 			} else
 				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, null);
-		} else if (isID(field.DisplayType) || field.DisplayType == INTEGER) {    //  note that Integer is stored as BD
+		} else if (isID(field.DisplayType) 
+				|| isLookup(field.DisplayType)
+				|| field.DisplayType == INTEGER) {
 			if(value != null) {
 				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, (Integer)value);
 				Env.setContext(ctx, m_ActivityNo, field.ColumnName, (Integer)value);
