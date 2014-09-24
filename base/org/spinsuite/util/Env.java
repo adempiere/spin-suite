@@ -1849,6 +1849,7 @@ public final class Env {
 	public static final String 		DB_DIRECTORY = "data";
 	public static final String 		DOC_DIRECTORY = APP_DIRECTORY + File.separator + "Documents";
 	public static final String 		IMG_DIRECTORY = APP_DIRECTORY + File.separator + "Images";
+	public static final String 		TMP_DIRECTORY = APP_DIRECTORY + File.separator + "Tmp";
 	//	Database
 	public static final String 		DB_PATH_DIRECTORY = APP_DIRECTORY + File.separator + DB_DIRECTORY;
 	public static final String		DB_PATH_NAME = DB_PATH_DIRECTORY + File.separator + DB.DB_NAME;
