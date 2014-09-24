@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
+import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayLookupSpinner;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
@@ -197,15 +198,22 @@ public class Lookup {
 	}
 	
 	/**
+	 * Private Constructor
 	 * With Table Name and column Name for lookup manual
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/09/2014, 12:20:36
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/09/2014, 21:08:52
 	 * @param ctx
 	 * @param m_TableName
 	 * @param m_ColumnName
+	 * @param activityParam
 	 * @param tabParam
 	 */
-	public Lookup(Context ctx, String m_TableName, String m_ColumnName, TabParameter tabParam) {
+	private Lookup(Context ctx, String m_TableName, String m_ColumnName, ActivityParameter activityParam, TabParameter tabParam) {
+		
+		if(activityParam != null) {
+			m_TabParam = new TabParameter();
+			m_TabParam.setActivityNo(activityParam.getActivityNo());
+		}
 		//	Load Field
 		m_field = GridField.loadInfoColumnField(ctx, m_TableName, m_ColumnName);
 		//	Set Property
@@ -224,6 +232,31 @@ public class Lookup {
 		}
 	}
 	
+	/**
+	 * With Table Name and column Name for lookup manual
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/09/2014, 21:09:51
+	 * @param ctx
+	 * @param m_TableName
+	 * @param m_ColumnName
+	 * @param activityParam
+	 */
+	public Lookup(Context ctx, String m_TableName, String m_ColumnName, ActivityParameter activityParam) {
+		this(ctx, m_TableName, m_ColumnName, activityParam, null);
+	}
+	
+	/**
+	 * With Table Name and column Name for lookup manual
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/09/2014, 21:10:38
+	 * @param ctx
+	 * @param m_TableName
+	 * @param m_ColumnName
+	 * @param tabParam
+	 */
+	public Lookup(Context ctx, String m_TableName, String m_ColumnName, TabParameter tabParam) {
+		this(ctx, m_TableName, m_ColumnName, null, tabParam);
+	}
 	
 	/**
 	 * Get from Search

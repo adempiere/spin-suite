@@ -368,11 +368,11 @@ public class GridTab implements Evaluatee {
 							m_TabParam.getActivityNo(), m_TabParam.getParentTabNo(), vField.getField()));
 				}
 			}
-    		//	Refresh Display
-    		changeDisplayDepending(vField);
     		//	Set Current Values
     		DisplayType.setContextValue(m_ctx, m_TabParam.getActivityNo(), 
     				m_TabParam.getTabNo(), vField.getField(), vField.getValue());
+    		//	Refresh Display
+    		changeDisplayDepending(vField);
     	}
 		//	Set ID to Context
 		Env.setContext(m_ctx, m_TabParam.getActivityNo(), m_TabParam.getTabNo(), m_TabInfo.getTableKeyName(), m_Record_ID);
