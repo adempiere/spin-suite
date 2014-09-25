@@ -128,7 +128,6 @@ public class ActivityParameter implements Parcelable {
 		dest.writeInt(m_SPS_Table_ID);
 		dest.writeInt(m_SPS_Window_ID);
 		dest.writeString(m_WhereClause);
-		dest.writeInt(m_Parent_ID);
 		//	Read Write
 		dest.writeString(m_IsInsertRecord);
 		dest.writeString((m_IsSummary? "Y": "N"));
@@ -155,7 +154,6 @@ public class ActivityParameter implements Parcelable {
 		m_SPS_Table_ID = parcel.readInt();
 		m_SPS_Window_ID = parcel.readInt();
 		m_WhereClause = parcel.readString();
-		m_Parent_ID = parcel.readInt();
 		//	Read Write
 		m_IsInsertRecord = parcel.readString();
 		String summary = parcel.readString();
