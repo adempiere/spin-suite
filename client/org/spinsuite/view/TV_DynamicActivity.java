@@ -114,12 +114,15 @@ public class TV_DynamicActivity extends TV_Base
     	if(curFr != null){
     		ActivityParameter actParam = param;
     		TabParameter tabParam = curFr.getTabParameter();
-    		//	Set From Called
-    		actParam.setActivityNo(tabParam.getActivityNo());
-        	actParam.setFrom_SPS_Table_ID(tabParam.getSPS_Table_ID());
-        	actParam.setFrom_Record_ID(Env.getTabRecord_ID(
-        			getApplicationContext(), tabParam.getActivityNo(), tabParam.getTabNo()));
-        	//	Is From Activity
+    		if(tabParam != null) {
+        		//	Set From Called
+        		actParam.setActivityNo(tabParam.getActivityNo());
+        		actParam.setFrom_SPS_Table_ID(tabParam.getSPS_Table_ID());
+            	actParam.setFrom_Record_ID(Env.getTabRecord_ID(
+            			getApplicationContext(), tabParam.getActivityNo(), tabParam.getTabNo()));
+
+    		}
+    		//	Is From Activity
         	actParam.setIsFromActivity(true);
         	//	
         	loadActionMenu.loadAction(item, actParam);

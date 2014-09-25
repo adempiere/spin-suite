@@ -42,7 +42,7 @@ public class LoadActionMenu {
 	 * @param isFromActivity
 	 * @param conn
 	 */
-	public LoadActionMenu(Activity activity, boolean isFromActivity, DB conn){
+	public LoadActionMenu(Activity activity, boolean isFromActivity, DB conn) {
 		this.activity = activity;
 		this.isFromActivity = isFromActivity;
 		this.conn = conn;
@@ -55,7 +55,7 @@ public class LoadActionMenu {
 	 * @param activity
 	 * @param isFromActivity
 	 */
-	public LoadActionMenu(Activity activity, boolean isFromActivity){
+	public LoadActionMenu(Activity activity, boolean isFromActivity) {
 		this(activity, isFromActivity, null);
 	}
 	
@@ -74,7 +74,7 @@ public class LoadActionMenu {
 	 * @return
 	 * @return Bundle
 	 */
-	public Bundle loadAction(DisplayMenuItem item, ActivityParameter param){
+	public Bundle loadAction(DisplayMenuItem item, ActivityParameter param) {
 		//	Valid Action
 		if(!item.isSummary()
 				&& item.getAction() == null)
@@ -83,7 +83,7 @@ public class LoadActionMenu {
 		Bundle bundle = new Bundle();
 		//	Intent Activity
 		Intent intent = null;
-		if(item.isSummary()){
+		if(item.isSummary()) {
 			bundle.putParcelable("Param", param);
 			intent = new Intent(activity, LV_Menu.class);
 			intent.putExtras(bundle);
@@ -92,6 +92,15 @@ public class LoadActionMenu {
 		} else {
 			//	Load Parameter
 			ActivityParameter paramAct = new ActivityParameter(item);
+			//	Add from Param
+			if(param != null) {
+				paramAct.setActivityNo(param.getActivityNo());
+				paramAct.setFrom_SPS_Table_ID(param.getSPS_Table_ID());
+				paramAct.setFrom_Record_ID(param.getFrom_Record_ID());
+	        	//	Is From Activity
+				paramAct.setIsFromActivity(paramAct.isFromActivity());
+			}
+			//	
 			bundle.putParcelable("Param", paramAct);
 			//	
 			if(item.getDeploymentType() == null 
@@ -135,7 +144,7 @@ public class LoadActionMenu {
 	 * @return
 	 * @return void
 	 */
-	public void loadActionFromActivity(InfoField m_field, TabParameter tabParam){
+	public void loadActionFromActivity(InfoField m_field, TabParameter tabParam) {
 		//	
 		if(tabParam == null
 				|| m_field == null)
@@ -172,17 +181,17 @@ public class LoadActionMenu {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean loadActivityWithAction(DisplayMenuItem item, Bundle bundle){
+	public boolean loadActivityWithAction(DisplayMenuItem item, Bundle bundle) {
 		boolean ok = false;
 		boolean handleConnection = false;
 		//	
-		if(conn == null){
+		if(conn == null) {
 			conn = new DB(activity);
 			handleConnection = true;
 		}
 		//	Load Action
 		DB.loadConnection(conn, DB.READ_ONLY);
-		if(item.isSummary()){
+		if(item.isSummary()) {
 			
 		} else if(item.getAction().equals(DisplayMenuItem.ACTION_Form)
 				|| (item.getAction().equals(DisplayMenuItem.ACTION_Process)
@@ -200,10 +209,10 @@ public class LoadActionMenu {
 					ok = loadDynamicClass(className, bundle);
 				}
 			}
-		} else if(item.getAction().equals(DisplayMenuItem.ACTION_Window)){
+		} else if(item.getAction().equals(DisplayMenuItem.ACTION_Window)) {
 			ok = loadDynamicClass("org.spinsuite.view.TV_DynamicActivity", bundle);
 		} else if(item.getAction().equals(DisplayMenuItem.ACTION_Process)
-				|| item.getAction().equals(DisplayMenuItem.ACTION_Report)){
+				|| item.getAction().equals(DisplayMenuItem.ACTION_Report)) {
 			ok = loadDynamicClass("org.spinsuite.view.V_Process", bundle);
 		}
 		//	Show Message
@@ -224,7 +233,7 @@ public class LoadActionMenu {
 	 * @return
 	 * @return boolean
 	 */
-	private boolean loadDynamicClass(String className, Bundle bundle){
+	private boolean loadDynamicClass(String className, Bundle bundle) {
 		boolean ok = false;
 		Class<?> clazz;
 		try {
