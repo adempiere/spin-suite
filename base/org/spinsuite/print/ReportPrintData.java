@@ -130,7 +130,7 @@ public class ReportPrintData {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/04/2014, 10:20:01
 	 * @return void
 	 */
-	private void instanceFunctionName(){
+	private void instanceFunctionName() {
 		FUNCTION_NAME = new String[]
 				{
 				//	Sum
@@ -157,17 +157,17 @@ public class ReportPrintData {
 	 * @return
 	 * @return ArrayList<RowPrintData>
 	 */
-	public ArrayList<RowPrintData> loadData(int m_AD_PrintFormat_ID){
+	public ArrayList<RowPrintData> loadData(int m_AD_PrintFormat_ID) {
 		//	Load new Print Format
 		if(m_AD_PrintFormat_ID != 0) {
 			m_reportQuery = new ReportPrintQuery(ctx, m_AD_PrintFormat_ID, conn);
 		}
 		//	Valid Query
-		if(m_reportQuery == null){
+		if(m_reportQuery == null) {
 			//	Get Default Print Format
 			int defaultPrintFormat_ID = getDefaultPritFormat_ID();
 			//	
-			if(defaultPrintFormat_ID != -1){
+			if(defaultPrintFormat_ID != -1) {
 				m_AD_PrintFormat_ID  = defaultPrintFormat_ID;
 				m_reportQuery = new ReportPrintQuery(ctx, m_AD_PrintFormat_ID, conn);
 			} else
@@ -179,8 +179,9 @@ public class ReportPrintData {
 		//	Load Data Query
 		try {
 			loadResult();
-		} catch(Exception e){
+		} catch(Exception e) {
 			m_pi.setSummary(ctx.getResources().getString(R.string.msg_Error) + ":" + e.getLocalizedMessage(), true);
+			m_pi.setError(true);
 			LogM.log(ctx, getClass(), Level.SEVERE, "Error In Load Report:", e);
 		}
 		//	Result
@@ -192,14 +193,14 @@ public class ReportPrintData {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 11:41:41
 	 * @return void
 	 */
-	private void instanceDataFunction(){
+	private void instanceDataFunction() {
 		// 
 		m_currentSummaryFunctionRow = new PrintDataFunction[m_columns.length];
 		m_currentFunctionRow = new PrintDataFunction[m_columns.length];
 		//	Current Row
 		m_currentRow = new ColumnPrintData[m_columns.length];
 		//	
-		for(int i = 0; i < m_columns.length; i++){
+		for(int i = 0; i < m_columns.length; i++) {
 			m_currentRow[i] = new ColumnPrintData(m_columns[i].PrintName, m_columns[i].PrintNameSuffix);
 			m_currentSummaryFunctionRow[i] = new PrintDataFunction();
 			m_currentFunctionRow[i] = new PrintDataFunction();
@@ -223,8 +224,8 @@ public class ReportPrintData {
 	 * @param columns
 	 * @return void
 	 */
-	private void resetDataFunction(){
-		for(int i = 0; i < m_columns.length; i++){
+	private void resetDataFunction() {
+		for(int i = 0; i < m_columns.length; i++) {
 			m_currentFunctionRow[i].reset();
 			//	Set Aggregate Function
 			if(m_columns[i].IsSummarized
@@ -254,7 +255,7 @@ public class ReportPrintData {
 	 * @return
 	 * @return ArrayList<RowPrintData>
 	 */
-	public ArrayList<RowPrintData> getData(){
+	public ArrayList<RowPrintData> getData() {
 		return m_data;
 	}
 	
@@ -274,14 +275,14 @@ public class ReportPrintData {
 	 * @param tableName
 	 * @return void
 	 */
-	private FilterValue loadCriteria(String tableName){
+	private FilterValue loadCriteria(String tableName) {
 		ProcessInfoParameter[] param = m_pi.getParameter();
 		//	Get Parameter
-		if(param != null){
+		if(param != null) {
 			StringBuffer sqlWhere = new StringBuffer();
 			FilterValue m_criteria = new FilterValue();
 			//	Iterate
-			for(ProcessInfoParameter para : param){
+			for(ProcessInfoParameter para : param) {
 				//	Get SQL Name
 				String name = tableName + "." + para.getParameterName();
 				//	
@@ -295,7 +296,7 @@ public class ReportPrintData {
 					//	
 					//	From and To is filled
 					if(para.getParameter() != null
-							&& para.getParameter_To() != null){
+							&& para.getParameter_To() != null) {
 						//	
 						sqlWhere.append(name).append(" >= ?")
 								.append(" AND ")
@@ -309,7 +310,7 @@ public class ReportPrintData {
 								para.getDisplayType(), 
 								para.getParameter_To()));
 						//	Only From
-					} else if(para.getParameter() != null){
+					} else if(para.getParameter() != null) {
 						//	
 						sqlWhere.append(name).append(" = ?");
 			    		//	Add Value
@@ -317,7 +318,7 @@ public class ReportPrintData {
 										para.getDisplayType(), 
 										para.getParameter()));
 						//	Only To
-					} else if(para.getParameter_To() != null){
+					} else if(para.getParameter_To() != null) {
 						//	
 						sqlWhere.append(name).append(" <= ?");
 			    		//	Add Value
@@ -341,10 +342,10 @@ public class ReportPrintData {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 16:19:07
 	 * @return void
 	 */
-	private void loadResult(){
+	private void loadResult() {
 		boolean handleConnection = false;
 		//	New Connection
-		if(conn == null){
+		if(conn == null) {
 			conn = new DB(ctx);
 			handleConnection = true;
 		}
@@ -358,7 +359,7 @@ public class ReportPrintData {
 		//	Values
 		String[] values = null;
 		//	
-		if(m_criteria != null){
+		if(m_criteria != null) {
 			where = m_criteria.getWhereClause();
 			values = m_criteria.getValues();
 		}
@@ -381,11 +382,12 @@ public class ReportPrintData {
 		LogM.log(ctx, getClass(), Level.FINE, "SQL Report[" + sql + "] Parameters [" + ts.toString() + "]");
 		//	Get ResultSet
 		Cursor rs = null;
-		rs = conn.querySQL(sql, values);
 		//	New Data
 		m_data = new ArrayList<RowPrintData>();
+		//	Get Data
+		rs = conn.querySQL(sql, values);
 		//	
-		if(rs.moveToFirst()){
+		if(rs.moveToFirst()) {
 			//	Columns
 			m_columns = m_reportQuery.getColumns();
 			//	
@@ -413,7 +415,7 @@ public class ReportPrintData {
 	 * @return
 	 * @return RowPrintData
 	 */
-	private RowPrintData getRowData(Cursor rs){
+	private RowPrintData getRowData(Cursor rs) {
 		//	New Row
 		RowPrintData rPrintData = new RowPrintData();
 		//	Get Values
@@ -437,10 +439,10 @@ public class ReportPrintData {
 				m_FirstValue = value;
 			//	
 			if(m_IsAggregateFunction
-					&& !m_IsFirst){
+					&& !m_IsFirst) {
 				//	Add Function Row
 				if(column.IsGroupBy
-						&& isChanged(m_currentRow[i].getValue(), value)){
+						&& isChanged(m_currentRow[i].getValue(), value)) {
 					//	Add Function
 					addRowFunction(i);
 					//	Change
@@ -459,9 +461,9 @@ public class ReportPrintData {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/04/2014, 23:27:55
 	 * @return void
 	 */
-	private void loadFirstGroup(){
+	private void loadFirstGroup() {
 		for (int i = 0; i < m_columns.length; i++) {
-			if(m_columns[i].IsGroupBy){
+			if(m_columns[i].IsGroupBy) {
 				m_FirstGroup = i;
 				break;
 			}
@@ -474,7 +476,7 @@ public class ReportPrintData {
 	 * @param indexGroup
 	 * @return void
 	 */
-	private void addRowFunction(int indexGroup){
+	private void addRowFunction(int indexGroup) {
 		//	
 		if(!m_IsAggregateFunction
 				|| !m_IsLoaded)
@@ -482,10 +484,10 @@ public class ReportPrintData {
 		//	Get Prefix
 		String value = m_currentRow[indexGroup].getValue();
 		//	
-		if(indexGroup == m_FirstGroup){
+		if(indexGroup == m_FirstGroup) {
 			//	Load
 			//	
-			for(int index = m_columns.length - 1; index >= indexGroup; index--){
+			for(int index = m_columns.length - 1; index >= indexGroup; index--) {
 				//	
 				InfoReportField column = m_columns[index];
 				//	Get Prefix
@@ -494,7 +496,7 @@ public class ReportPrintData {
 				if(!column.IsGroupBy)
 					continue;
 				//	
-				for(int function = 0; function < PrintDataFunction.getSupportedFunctionQty(); function++){
+				for(int function = 0; function < PrintDataFunction.getSupportedFunctionQty(); function++) {
 					//	Get Row Function
 					RowPrintData functionRow = getRowFunction(value, 
 							index, function, m_currentFunctionRow);
@@ -506,7 +508,7 @@ public class ReportPrintData {
 		} else {
 			if(!isChanged(m_currentRow[m_FirstGroup].getValue(), m_FirstValue))
 				return;
-			for(int function = 0; function < PrintDataFunction.getSupportedFunctionQty(); function++){
+			for(int function = 0; function < PrintDataFunction.getSupportedFunctionQty(); function++) {
 				//	Get Row Function
 				RowPrintData functionRow = getRowFunction(value, 
 						indexGroup, function, m_currentFunctionRow);
@@ -522,7 +524,7 @@ public class ReportPrintData {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 14:41:44
 	 * @return void
 	 */
-	private void addFooterFunctionRow(){
+	private void addFooterFunctionRow() {
 		//	
 		if(!m_IsAggregateFunction
 				|| !m_IsLoaded)
@@ -530,7 +532,7 @@ public class ReportPrintData {
 		//	Last Summary
 		addRowFunction(m_FirstGroup);
 		//	
-		for(int function = 0; function < PrintDataFunction.getSupportedFunctionQty(); function++){
+		for(int function = 0; function < PrintDataFunction.getSupportedFunctionQty(); function++) {
 			//	Get Row Function
 			RowPrintData functionRow = getRowFunction(m_Value, 
 					m_FirstGroup, function, m_currentSummaryFunctionRow);
@@ -552,56 +554,56 @@ public class ReportPrintData {
 	 * @return RowPrintData
 	 */
 	private RowPrintData getRowFunction(String label, int indexGroup, 
-			int function, PrintDataFunction[] m_function){
+			int function, PrintDataFunction[] m_function) {
 		//	
 		RowPrintData rPrintFunctionData = new RowPrintData(false, true);
 		String functionSymbolLabel = "";
 		String functionNameLabel = "";
 		//	
 		boolean isFunction = false;
-		for(int i = 0; i < m_columns.length; i++){
+		for(int i = 0; i < m_columns.length; i++) {
 			ColumnPrintData column = new ColumnPrintData(null, null);
 			PrintDataFunction currentFuctionColumn = m_function[i];
 			InfoReportField printFormatItem = m_columns[i];
 			//	
 			if(function == PrintDataFunction.F_SUM
-					&& printFormatItem.IsSummarized){		//	Sum
+					&& printFormatItem.IsSummarized) {		//	Sum
 				column.setValue(currentFuctionColumn.getSum().toString());
 				functionSymbolLabel = PrintDataFunction.getFunctionSymbol(function);
 				functionNameLabel = PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
 				isFunction = true;
 			} else if(function == PrintDataFunction.F_COUNT
-					&& printFormatItem.IsCounted){			//	Count
+					&& printFormatItem.IsCounted) {			//	Count
 				column.setValue(String.valueOf(currentFuctionColumn.getCount()));
 				functionSymbolLabel = PrintDataFunction.getFunctionSymbol(function);
 				functionNameLabel = PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
 				isFunction = true;
 			} else if(function == PrintDataFunction.F_MAX
-					&& printFormatItem.IsMaxCalc){			//	Maximum
+					&& printFormatItem.IsMaxCalc) {			//	Maximum
 				column.setValue(currentFuctionColumn.getMax().toString());
 				functionSymbolLabel = PrintDataFunction.getFunctionSymbol(function);
 				functionNameLabel = PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
 				isFunction = true;
 			} else if(function == PrintDataFunction.F_MIN
-					&& printFormatItem.IsMinCalc){			//	Minimum
+					&& printFormatItem.IsMinCalc) {			//	Minimum
 				column.setValue(currentFuctionColumn.getMin().toString());
 				functionSymbolLabel = PrintDataFunction.getFunctionSymbol(function);
 				functionNameLabel = PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
 				isFunction = true;
 			} else if(function == PrintDataFunction.F_MEAN
-					&& printFormatItem.IsAveraged){			//	Average
+					&& printFormatItem.IsAveraged) {			//	Average
 				column.setValue(currentFuctionColumn.getAvgValue().toString());
 				functionSymbolLabel = PrintDataFunction.getFunctionSymbol(function);
 				functionNameLabel = PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
 				isFunction = true;
 			} else if(function == PrintDataFunction.F_VARIANCE
-					&& printFormatItem.IsVarianceCalc){		//	Variance
+					&& printFormatItem.IsVarianceCalc) {		//	Variance
 				column.setValue(currentFuctionColumn.getVariance().toString());
 				functionSymbolLabel = PrintDataFunction.getFunctionSymbol(function);
 				functionNameLabel = PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
 				isFunction = true;
 			} else if(function == PrintDataFunction.F_DEVIATION
-					&& printFormatItem.IsDeviationCalc){	//	Deviation
+					&& printFormatItem.IsDeviationCalc) {	//	Deviation
 				column.setValue(currentFuctionColumn.getDeviation().toString());
 				functionSymbolLabel = PrintDataFunction.getFunctionSymbol(function);
 				functionNameLabel = PrintDataFunction.getFunctionName(function, FUNCTION_NAME);
@@ -611,10 +613,10 @@ public class ReportPrintData {
 			rPrintFunctionData.addColumn(column);
 		}
 		//	Function
-		if(isFunction){
+		if(isFunction) {
 			//	Set Value
 			if(functionSymbolLabel != null
-					&& functionSymbolLabel.length() > 0){
+					&& functionSymbolLabel.length() > 0) {
 				//	
 				ColumnPrintData functionColumnGroup = rPrintFunctionData.get(indexGroup);
 				//	Set Value
@@ -640,7 +642,7 @@ public class ReportPrintData {
 	 * @return
 	 * @return boolean
 	 */
-	private boolean isChanged(String value1, String value2){
+	private boolean isChanged(String value1, String value2) {
 		if((value1 == null
 				&& value2 != null)
 			|| (value1 != null
@@ -658,7 +660,7 @@ public class ReportPrintData {
 	 * @return
 	 * @return int
 	 */
-	private int getDefaultPritFormat_ID(){
+	private int getDefaultPritFormat_ID() {
 		StringBuffer sql = new StringBuffer("SELECT MAX(pf.AD_PrintFormat_ID) " +
 				"FROM AD_PrintFormat pf " +
 				"WHERE ");
@@ -682,7 +684,7 @@ public class ReportPrintData {
 	 * @return
 	 * @return InfoReportField[]
 	 */
-	public InfoReportField[] getColumns(){
+	public InfoReportField[] getColumns() {
 		return m_reportQuery.getColumns();
 	}
 	
@@ -734,37 +736,37 @@ public class ReportPrintData {
 		//	
 		InfoReportField[] columns = m_reportQuery.getColumns();
 		//	Add Header
-		for(int col = 0; col < columns.length; col++){
+		for(int col = 0; col < columns.length; col++) {
 			sheet.addCell(new Label(col, 0, columns[col].PrintName));
 		}
 		//	Add Detail
-		for(int row = 0; row < m_data.size(); row++){
+		for(int row = 0; row < m_data.size(); row++) {
 			//	Get Row
 			RowPrintData rPrintData = m_data.get(row);
 			//	Iterate
-			for(int col = 0; col < columns.length; col++){
+			for(int col = 0; col < columns.length; col++) {
 				InfoReportField column = columns[col];
 				ColumnPrintData cPrintData = rPrintData.get(col);
 				WritableCell cell = null;
 				WritableCellFormat cellFormat = null;
-				if(cPrintData.getValue() != null){
+				if(cPrintData.getValue() != null) {
 					//	
-					if(DisplayType.INTEGER == column.DisplayType){				//	Is Integer
+					if(DisplayType.INTEGER == column.DisplayType) {				//	Is Integer
 						//	Integer
 						cellFormat = new WritableCellFormat(NumberFormats.INTEGER);
 						//	
 						cell = new Number(col, row+1, DisplayType
 											.getNumber(cPrintData.getValue()).doubleValue(), cellFormat);
-					} else if(DisplayType.isBigDecimal(column.DisplayType)){	//	Is Big Decimal
+					} else if(DisplayType.isBigDecimal(column.DisplayType)) {	//	Is Big Decimal
 						//	Float
 						cellFormat = new WritableCellFormat(NumberFormats.FLOAT);
 						//	
 						cell = new Number(col, row+1, DisplayType
 											.getNumber(cPrintData.getValue()).doubleValue(), cellFormat);					
 					}else if(DisplayType.isText(column.DisplayType)
-							|| DisplayType.isLookup(column.DisplayType)){		//	Is String
+							|| DisplayType.isLookup(column.DisplayType)) {		//	Is String
 						cell = new Label(col, row+1, cPrintData.getValue());
-					} else if(DisplayType.isDate(column.DisplayType)){			//	Is Date
+					} else if(DisplayType.isDate(column.DisplayType)) {			//	Is Date
 						String pattern = DisplayType.getDateFormat(ctx, column.DisplayType).toPattern();
 						DateFormat customDateFormat = new DateFormat (pattern); 
 						WritableCellFormat dateFormat = new WritableCellFormat (customDateFormat);
@@ -841,11 +843,11 @@ public class ReportPrintData {
 		//	Parameters
 		ProcessInfoParameter[] param = m_pi.getParameter();
 		//	Get Parameter
-		if(param != null){
+		if(param != null) {
 			//	
 			boolean isFirst = true;
 			//	Iterate
-			for(ProcessInfoParameter para : param){
+			for(ProcessInfoParameter para : param) {
 				//	Get SQL Name
 				String name = para.getInfo();
 				StringBuffer textParameter = new StringBuffer();
@@ -854,7 +856,7 @@ public class ReportPrintData {
 					continue;
 				else {
 					//	Add Parameters Title
-					if(isFirst){
+					if(isFirst) {
 						Paragraph titleParam = new Paragraph(ctx.getResources()
 																.getString(R.string.msg_ReportParameters));
 						//	Set Font
@@ -865,17 +867,17 @@ public class ReportPrintData {
 					}
 					//	Add Parameters Name
 					if(para.getParameter() != null
-							&& para.getParameter_To() != null){	//	From and To is filled
+							&& para.getParameter_To() != null) {	//	From and To is filled
 						//	
 						textParameter.append(name).append(" => ")
 								.append(para.getDisplayValue())
 								.append(" <= ")
 								.append(para.getDisplayValue_To());
-					} else if(para.getParameter() != null){		//	Only From
+					} else if(para.getParameter() != null) {		//	Only From
 						//	
 						textParameter.append(name).append(" = ")
 								.append(para.getDisplayValue());
-					} else if(para.getParameter_To() != null){	//	Only To
+					} else if(para.getParameter_To() != null) {	//	Only To
 						//	
 						textParameter.append(name).append(" <= ")
 								.append(para.getDisplayValue_To());
@@ -902,7 +904,7 @@ public class ReportPrintData {
 		//	Decimal and Date Format
 		DecimalFormat[]	cDecimalFormat = new DecimalFormat[columns.length];
 		SimpleDateFormat[] cDateFormat = new SimpleDateFormat[columns.length];
-		for(int i = 0; i < columns.length; i ++){
+		for(int i = 0; i < columns.length; i ++) {
 			InfoReportField column = columns[i];
 			//	Only Numeric
 			if(DisplayType.isNumeric(column.DisplayType))
@@ -927,11 +929,11 @@ public class ReportPrintData {
 			table.addCell(cell);
 		}
 		//	Add Detail
-		for(int row = 0; row < m_data.size(); row++){
+		for(int row = 0; row < m_data.size(); row++) {
 			//	Get Row
 			RowPrintData rPrintData = m_data.get(row);
 			//	Iterate
-			for(int col = 0; col < columns.length; col++){
+			for(int col = 0; col < columns.length; col++) {
 				InfoReportField column = columns[col];
 				ColumnPrintData cPrintData = rPrintData.get(col);
 				Phrase phrase = null;
@@ -939,8 +941,8 @@ public class ReportPrintData {
 				//	
 				String value = cPrintData.getValue();
 				//	Only Values
-				if(value != null){
-					if(DisplayType.isNumeric(column.DisplayType)){				//	Number
+				if(value != null) {
+					if(DisplayType.isNumeric(column.DisplayType)) {				//	Number
 						//	Format
 						DecimalFormat decimalFormat = cDecimalFormat[col];
 						//	Format
@@ -948,10 +950,10 @@ public class ReportPrintData {
 							value = decimalFormat.format(DisplayType.getNumber(value));
 						//	Set Value
 						cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
-					} else if(DisplayType.isDate(column.DisplayType)){			//	Is Date
+					} else if(DisplayType.isDate(column.DisplayType)) {			//	Is Date
 						SimpleDateFormat dateFormat = cDateFormat[col];
 						if(dateFormat != null
-								&& value.trim().length() > 0){
+								&& value.trim().length() > 0) {
 							long date = Long.parseLong(value);
 							value = dateFormat.format(new Date(date));
 						}
@@ -969,7 +971,7 @@ public class ReportPrintData {
 				else 
 					cell.setHorizontalAlignment(PdfPCell.ALIGN_UNDEFINED);
 				//	Set Font
-				if(rPrintData.isFunctionRow()){
+				if(rPrintData.isFunctionRow()) {
 					//	Set Function Value
 					if(cPrintData.getFunctionValue() != null
 							&& cPrintData.getFunctionValue().length() > 0)
@@ -1021,7 +1023,7 @@ public class ReportPrintData {
 	 * @return
 	 * @return InfoReport
 	 */
-	public InfoReport getInfoReport(){
+	public InfoReport getInfoReport() {
 		return m_reportQuery.getInfoReport();
 	}
 }

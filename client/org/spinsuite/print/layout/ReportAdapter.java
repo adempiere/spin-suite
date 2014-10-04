@@ -64,7 +64,9 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
     			LayoutParams.WRAP_CONTENT, WEIGHT);
     	//	
     	inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    	//	
+    	//	Instance Default
+    	if(data == null)
+    		data = new ArrayList<RowPrintData>();
     	loadHeader(ll_HeaderReport);
     	instanceFormat();
     	notifyDataSetChanged();

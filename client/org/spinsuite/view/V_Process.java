@@ -28,9 +28,12 @@ import jxl.write.biff.RowsExceededException;
 import org.spinsuite.adapters.SearchAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
+import org.spinsuite.interfaces.OnFieldChangeListener;
+import org.spinsuite.model.MultiMap;
 import org.spinsuite.print.ReportPrintData;
 import org.spinsuite.print.layout.ReportAdapter;
 import org.spinsuite.print.layout.ReportExportMenuAdapter;
+import org.spinsuite.process.DocAction;
 import org.spinsuite.process.InfoPara;
 import org.spinsuite.process.ProcessCtl;
 import org.spinsuite.process.ProcessInfo;
@@ -45,7 +48,13 @@ import org.spinsuite.util.KeyNamePair;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 import org.spinsuite.view.lookup.GridField;
+import org.spinsuite.view.lookup.GridTab;
 import org.spinsuite.view.lookup.InfoField;
+import org.spinsuite.view.lookup.InfoTab;
+import org.spinsuite.view.lookup.Lookup;
+import org.spinsuite.view.lookup.LookupButtonPaymentRule;
+import org.spinsuite.view.lookup.VLookupButton;
+import org.spinsuite.view.lookup.VLookupButtonDocAction;
 import org.spinsuite.view.lookup.VLookupCheckBox;
 import org.spinsuite.view.lookup.VLookupDateBox;
 import org.spinsuite.view.lookup.VLookupSearch;
@@ -154,7 +163,11 @@ public class V_Process extends Activity {
     /**	Current Print Format	*/
     private int						m_CurrentPrintFormat_ID = 0;
     /**	Is Read Write Granted	*/
-    private 	boolean 			m_IsReadWrite 			= false;
+    private boolean 				m_IsReadWrite 			= false;
+    /**	Listener				*/
+	private OnFieldChangeListener	m_Listener				= null;
+	/** Map of ColumnName of source field (key) and the dependent field (value) */
+	private MultiMap<String,GridField>	m_depOnField 			= new MultiMap<String,GridField>();
 	
 	/**	View Weight				*/
 	private static final float 		WEIGHT_SUM 		= 2;
@@ -203,6 +216,16 @@ public class V_Process extends Activity {
     	v_activity = this;
     	//	Title
     	getActionBar().setSubtitle(m_activityParam.getName());
+    	//	Instance Listener
+    	m_Listener = new OnFieldChangeListener() {
+    		@Override
+    		public void onFieldEvent(GridField mField) {
+    			LogM.log(v_activity, getClass(), 
+    					Level.FINE, "Field Event = " + mField.getColumnName());
+    			//	Reload depending fields
+    			changeDepending(mField);
+    		}
+		};
     	//	
 		loadProcessInfo();
 		//	Load Drawer Option
@@ -471,14 +494,106 @@ public class V_Process extends Activity {
 		//	is Filled
 		if(lookup != null){
 			lookup.setLayoutParams(v_rowParam);
+			//	
+			lookup.setOnFieldChangeListener(m_Listener);
+			//	Add to Grid
 			viewList.add(lookup);
 			v_row.addView(lookup);
 			//	Add Row
 			if(!isSameLine
 					|| isFirst)
 				v_tableLayout.addView(v_row);
+			//	Add Dependent On
+			addFieldDepending(lookup);
 		}
     }
+	
+	/**
+	 * Add Field Depending
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 4/10/2014, 15:26:50
+	 * @param m_Field
+	 * @return void
+	 */
+	public void addFieldDepending(GridField m_Field) {
+		//	Valid Null
+		if(m_Field == null)
+			return;
+		//	Add Dependent On
+		//  List of ColumnNames, this field is dependent on
+		ArrayList<String> list = m_Field.getDependentOn();
+		//	Valid Null
+		if(list == null)
+			return;
+		//	Iterate
+		for (int i = 0; i < list.size(); i++) {
+			String m_FieldName = list.get(i);
+			m_depOnField.put(m_FieldName, m_Field);   //  ColumnName, Field
+			LogM.log(v_activity, getClass(), Level.FINE, 
+					"Dependent Field Added [" + m_FieldName + ", " + m_Field.getColumnName() + "]");
+		}
+		//  Add fields all fields are dependent on
+		if (m_Field.getColumnName().equals("IsActive")
+			|| m_Field.getColumnName().equals("Processed")
+			|| m_Field.getColumnName().equals("Processing"))
+			m_depOnField.put(m_Field.getColumnName(), null);
+	}
+	
+	/**
+	 * Change or reload depending fields
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 4/10/2014, 14:39:16
+	 * @param m_FieldChanged
+	 * @return void
+	 */
+	public void changeDepending(GridField m_FieldChanged) {
+		//	
+		if(!hasDependants(m_FieldChanged.getColumnName()))
+			return;
+		//	
+		ArrayList<GridField> list = getDependantFields(m_FieldChanged.getColumnName());
+		for (int index = 0; index < list.size(); index++){
+			GridField m_DependentField = list.get(index);
+			//	Valid Null
+			if(m_DependentField == null)
+				continue;
+			LogM.log(this, getClass(), Level.FINE, 
+					"Callout process dependent child [" + m_FieldChanged.getColumnName() 
+							+ " --> " + m_DependentField.getColumnName() + "]");
+			//	Get Field Meta-Data
+			InfoField fieldMD = m_DependentField.getField();
+			if(fieldMD == null)
+				continue;
+			//	Load
+			if(DisplayType.isLookup(fieldMD.DisplayType)) {
+				if(fieldMD.DisplayType != DisplayType.SEARCH
+						&& m_DependentField instanceof VLookupSpinner) {
+					VLookupSpinner spinner = (VLookupSpinner) m_DependentField;
+					Object oldValue = spinner.getValue();
+					spinner.load(true);
+					//	set old value
+					spinner.setValueNoReload(oldValue);
+				}
+			}
+		}
+	}
+	
+	/**************************************************************************
+	 *  Has this field dependents ?
+	 *  @param columnName column name
+	 *  @return true if column has dependent
+	 */
+	public boolean hasDependants (String columnName) {
+	//	m_depOnField.printToLog();
+		return m_depOnField.containsKey(columnName);
+	}   //  isDependentOn
+	
+	/**
+	 *  Get dependents fields of columnName
+	 *  @param columnName column name
+	 *  @return ArrayList with GridFields dependent on columnName
+	 */
+	public ArrayList<GridField> getDependantFields (String columnName) {
+		return m_depOnField.getValues(columnName);
+	}   //  getDependentFields
 	
 	/**
 	 * Get Values from Parameters

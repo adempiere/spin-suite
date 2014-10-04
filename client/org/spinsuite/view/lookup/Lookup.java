@@ -552,6 +552,19 @@ public class Lookup {
 			} while(rs.moveToNext());
 			//	
 			sql.append(longColumn);
+			//	Check Document Status
+			int m_DocAction_ID = DB.getSQLValue(ctx, "SELECT c.SPS_Column_ID " +
+										"FROM SPS_Column c " +
+										"WHERE c.SPS_Table_ID = " + m_SPS_Table_ID + " " +
+										"AND c.ColumnName = ?", DOC_STATUS);
+			//	
+			String lastColumn = IS_ACTIVE;
+			//	Verify Last Column like Document status
+			if(m_DocAction_ID > 0) {
+				lastColumn = DOC_STATUS;
+			}
+			//	Add Column Last Column
+			sql.append(", ").append(tableName).append(".").append(lastColumn);
 			//	Set Info Lookup
 			m_InfoLookup.DisplayColumn = longColumn.toString();
 			m_InfoLookup.TableJoin = m_From.toString();

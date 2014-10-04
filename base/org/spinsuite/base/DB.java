@@ -61,7 +61,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:43:29
 	 * @param ctx
 	 */
-	public DB(Context ctx){
+	public DB(Context ctx) {
 		super(ctx, Env.getDB_PathName(ctx), null, DB_VERSION);
 		this.ctx = ctx;
 	}
@@ -110,7 +110,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean isDatabaseIntegrityOk(){
+	public boolean isDatabaseIntegrityOk() {
 		return db.isDatabaseIntegrityOk();
 	}
 	
@@ -121,10 +121,10 @@ public class DB extends SQLiteOpenHelper {
 	 * @return
 	 * @return SQLiteDatabase
 	 */
-	public SQLiteDatabase openDB(int type){
-		if(type == READ_ONLY){
+	public SQLiteDatabase openDB(int type) {
+		if(type == READ_ONLY) {
 			db = getReadableDatabase();
-		}else if(type == READ_WRITE){
+		}else if(type == READ_WRITE) {
 			db = getWritableDatabase();
 		}
 		return db;
@@ -146,7 +146,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @param rs
 	 * @return void
 	 */
-	public void closeDB(Cursor rs){
+	public void closeDB(Cursor rs) {
 		if(rs != null && !rs.isClosed())
 			rs.close();
 		db.close();
@@ -159,9 +159,9 @@ public class DB extends SQLiteOpenHelper {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean isOpen(){
+	public boolean isOpen() {
 		boolean ok = false;
-		if(db != null){
+		if(db != null) {
 			ok = db.isOpen();
 		}
 		return ok;
@@ -172,7 +172,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:44:54
 	 * @return void
 	 */
-	public void endTransaction(){
+	public void endTransaction() {
 		db.endTransaction();
 	}
 	
@@ -181,7 +181,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:45:07
 	 * @return void
 	 */
-	public void beginTransaction(){
+	public void beginTransaction() {
 		db.beginTransaction();
 	}
 	
@@ -190,7 +190,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:45:34
 	 * @return void
 	 */
-	public void setTransactionSuccessful(){
+	public void setTransactionSuccessful() {
 		db.setTransactionSuccessful();
 	}
 	
@@ -200,7 +200,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @param sql
 	 * @return void
 	 */
-	public void executeSQL(String sql){
+	public void executeSQL(String sql) {
 		LogM.log(ctx, getClass(), Level.FINE, "SQL=" + sql);
 		db.execSQL(sql);
 	}
@@ -212,7 +212,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @param params
 	 * @return void
 	 */
-	public void executeSQL(String sql, Object [] params){
+	public void executeSQL(String sql, Object [] params) {
 		LogM.log(ctx, getClass(), Level.FINE, "SQL=" + sql);
 		db.execSQL(sql, params);
 	} 
@@ -225,7 +225,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @param values
 	 * @return long
 	 */
-	public long insertSQL(String table, String columnaNull, ContentValues values){
+	public long insertSQL(String table, String columnaNull, ContentValues values) {
 		return db.insert(table, columnaNull, values);
 	}
 	
@@ -238,7 +238,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @param argmWhere
 	 * @return int
 	 */
-	public int updateSQL(String table, ContentValues values, String where, String [] argmWhere){
+	public int updateSQL(String table, ContentValues values, String where, String [] argmWhere) {
 		return db.update(table, values, where, argmWhere);
 	}
 	
@@ -250,7 +250,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @param argmWhere
 	 * @return int
 	 */
-	public int deleteSQL(String table, String where, String [] argmWhere){
+	public int deleteSQL(String table, String where, String [] argmWhere) {
 		return db.delete(table, where, argmWhere);
 	}
 	
@@ -262,7 +262,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return
 	 * @return Cursor
 	 */
-	public Cursor querySQL(String sql, String [] values){
+	public Cursor querySQL(String sql, String [] values) {
 		LogM.log(ctx, getClass(), Level.FINE, "SQL=" + sql);
 		return db.rawQuery(sql, values);
 	}
@@ -283,7 +283,7 @@ public class DB extends SQLiteOpenHelper {
 	 */
 	public Cursor querySQL(String table, String [] col, 
 			String where, String [] argsWhere, String group, 
-			String having, String orden, String limit){
+			String having, String orden, String limit) {
 		return db.query(table, col, where, argsWhere, group, having, orden, limit);
 	}
 	
@@ -294,7 +294,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return
 	 * @return SQLiteStatement
 	 */
-	public SQLiteStatement compileSQL(String sql){
+	public SQLiteStatement compileSQL(String sql) {
 		stm = db.compileStatement(sql);
 		return stm;
 	}
@@ -305,7 +305,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return
 	 * @return SQLiteStatement
 	 */
-	public SQLiteStatement getStatement(){
+	public SQLiteStatement getStatement() {
 		return stm;
 	}
 	
@@ -318,7 +318,7 @@ public class DB extends SQLiteOpenHelper {
 	 */
 	public static void loadConnection(DB conn, int type) {
 		if(conn != null
-				&& !conn.isOpen()){
+				&& !conn.isOpen()) {
 			conn.openDB(type);
 			if(type == READ_WRITE)
 				conn.beginTransaction();
@@ -331,9 +331,9 @@ public class DB extends SQLiteOpenHelper {
 	 * @param conn
 	 * @return void
 	 */
-	public static void closeConnection(DB conn){
+	public static void closeConnection(DB conn) {
 		if(conn != null 
-				&& conn.isOpen()){
+				&& conn.isOpen()) {
 			if(conn.getBd().inTransaction())
 				conn.endTransaction();
 			conn.close();
@@ -471,7 +471,7 @@ public class DB extends SQLiteOpenHelper {
 		Cursor rs = null;
 		rs = conn.querySQL(sql, params);
 		String retValue = null;
-		if(rs.moveToFirst()){
+		if(rs.moveToFirst()) {
 			retValue = rs.getString(0);
 		}
 		//	Close Connection
@@ -508,7 +508,7 @@ public class DB extends SQLiteOpenHelper {
 	public static KeyNamePair[] getKeyNamePairsEx(Context ctx, String sql, boolean optional, DB conn, String... params) {
 		ArrayList<KeyNamePair> list = new ArrayList<KeyNamePair>();
         //	If is Optional
-		if (optional){
+		if (optional) {
             list.add (new KeyNamePair(-1, ""));
         }
 		boolean handConnection = false;
@@ -522,7 +522,7 @@ public class DB extends SQLiteOpenHelper {
 		Cursor rs = null;
 		rs = conn.querySQL(sql, params);
 		//	Add to List
-		if(rs.moveToFirst()){
+		if(rs.moveToFirst()) {
 			do{
 				list.add(new KeyNamePair(rs.getInt(0), rs.getString(1)));
 			}while(rs.moveToNext());
@@ -565,7 +565,7 @@ public class DB extends SQLiteOpenHelper {
 		KeyNamePair[] retValue = null;
 		try{
 			retValue = getKeyNamePairsEx(ctx, sql, false, conn, params);
-		} catch(Exception e){
+		} catch(Exception e) {
 			LogM.log(ctx, "DB", Level.SEVERE, "SQLError", e);
 		}
 		return retValue;
@@ -607,7 +607,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return
 	 * @return int
 	 */
-	public static int getSQLValueEx(Context ctx, String sql, DB conn, String... params){
+	public static int getSQLValueEx(Context ctx, String sql, DB conn, String... params) {
 		boolean handConnection = false;
 		//	Instance Connection
 		if(conn == null) {
@@ -621,7 +621,7 @@ public class DB extends SQLiteOpenHelper {
 		Cursor rs = null;
 		rs = conn.querySQL(sql, params);
 		int retValue = -1;
-		if(rs.moveToFirst()){
+		if(rs.moveToFirst()) {
 			retValue = rs.getInt(0);
 		}
 		//	Close Connection
@@ -639,7 +639,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return
 	 * @return int
 	 */
-	public static int getSQLValueEx(Context ctx, String sql){
+	public static int getSQLValueEx(Context ctx, String sql) {
 		return getSQLValueEx(ctx, sql, null, (String[])null);
 	}
 	
@@ -651,7 +651,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return
 	 * @return int
 	 */
-	public static int getSQLValue(Context ctx, String sql){
+	public static int getSQLValue(Context ctx, String sql) {
 		return getSQLValue(ctx, sql, null, (String[])null);
 	}
 	
@@ -669,7 +669,7 @@ public class DB extends SQLiteOpenHelper {
 		int retValue = -1;
 		try{
 			retValue = getSQLValueEx(ctx, sql, conn, params);
-		} catch(Exception e){
+		} catch(Exception e) {
 			LogM.log(ctx, "DB", Level.SEVERE, "SQLError", e);
 		}
 		return retValue;
@@ -696,7 +696,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return
 	 * @return String
 	 */
-	public static String getSQLValueStringEx(Context ctx, String sql){
+	public static String getSQLValueStringEx(Context ctx, String sql) {
 		return getSQLValueStringEx(ctx, sql, (String[])null);
 	}
 	
@@ -708,11 +708,11 @@ public class DB extends SQLiteOpenHelper {
 	 * @return
 	 * @return String
 	 */
-	public static String getSQLValueString(Context ctx, String sql){
+	public static String getSQLValueString(Context ctx, String sql) {
 		String retValue = null;
 		try{
 			retValue = getSQLValueStringEx(ctx, sql, (String[])null);
-		} catch(Exception e){
+		} catch(Exception e) {
 			LogM.log(ctx, "DB", Level.SEVERE, "SQLError", e);
 		}
 		return retValue;
@@ -727,11 +727,11 @@ public class DB extends SQLiteOpenHelper {
 	 * @return
 	 * @return String
 	 */
-	public static String getSQLValueString(Context ctx, String sql, String... params){
+	public static String getSQLValueString(Context ctx, String sql, String... params) {
 		String retValue = null;
 		try{
 			retValue = getSQLValueStringEx(ctx, sql, params);
-		} catch(Exception e){
+		} catch(Exception e) {
 			LogM.log(ctx, "DB", Level.SEVERE, "SQLError", e);
 		}
 		return retValue;
@@ -747,11 +747,11 @@ public class DB extends SQLiteOpenHelper {
 	 * @return
 	 * @return String
 	 */
-	public static String getSQLValueString(Context ctx, String sql, DB conn, String... params){
+	public static String getSQLValueString(Context ctx, String sql, DB conn, String... params) {
 		String retValue = null;
 		try{
 			retValue = getSQLValueStringEx(ctx, sql, conn, params);
-		} catch(Exception e){
+		} catch(Exception e) {
 			LogM.log(ctx, "DB", Level.SEVERE, "SQLError", e);
 		}
 		return retValue;

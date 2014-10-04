@@ -90,7 +90,10 @@ public class InfoField extends POInfoColumn {
 		SPS_Table_ID 			= from.SPS_Table_ID;
 		ValueMax 				= from.ValueMax;
 		ValueMin 				= from.ValueMin;
-		VFormat 				= from.VFormat;	
+		VFormat 				= from.VFormat;
+		//	
+		if(SPS_Column_ID == 0)
+			SPS_Column_ID = from.AD_Process_Para_ID;
 	}
 	
 	

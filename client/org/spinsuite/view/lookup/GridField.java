@@ -847,6 +847,9 @@ public abstract class GridField extends LinearLayout {
 		//	Valid Null
 		if(m_field == null)
 			return null;
+		//	
+		LogM.log(getContext(), getClass(), Level.INFO, 
+				"loadDependentOn() [" + m_field.ColumnName + "]");
 		ArrayList<String> list = new ArrayList<String>();
 		//  Display
 		Evaluator.parseDepends(list, m_field.DisplayLogic);
