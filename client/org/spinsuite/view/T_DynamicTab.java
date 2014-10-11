@@ -961,12 +961,12 @@ public class T_DynamicTab extends Fragment
 			}
 			//	Add
 			if(DisplayType.isDate(field.DisplayType)){
-				lookup = new VLookupDateBox(getActivity(), field);
+				lookup = new VLookupDateBox(getActivity(), field, tabParam);
 			} else if(DisplayType.isText(field.DisplayType)){
-				VLookupString lookupString = new VLookupString(getActivity(), field);
+				VLookupString lookupString = new VLookupString(getActivity(), field, tabParam);
 				lookup = lookupString;
 			} else if(DisplayType.isBoolean(field.DisplayType)){
-				lookup = new VLookupCheckBox(getActivity(), field);
+				lookup = new VLookupCheckBox(getActivity(), field, tabParam);
 			} else if(DisplayType.isLookup(field.DisplayType)){
 				//	Table Direct
 				if(field.DisplayType == DisplayType.TABLE_DIR
@@ -982,9 +982,9 @@ public class T_DynamicTab extends Fragment
 					lookupButton = new VLookupButtonDocAction(getActivity(), field, (DocAction) mGridTab.getPO());
 				} else if(field.ColumnName.equals("PaymentRule")){
 					//	Payment Rule Button
-					lookupButton = new LookupButtonPaymentRule(getActivity(), field);
+					lookupButton = new LookupButtonPaymentRule(getActivity(), field, tabParam);
 				} else {
-					lookupButton = new VLookupButton(getActivity(), field);
+					lookupButton = new VLookupButton(getActivity(), field, tabParam);
 				}
 				//	Set Parameters
 				lookupButton.setTabParameter(tabParam);

@@ -37,25 +37,45 @@ import android.view.ViewGroup;
 public class T_DynamicTabDetail extends Fragment 
 		implements I_DynamicTab, I_FragmentSelectListener {
 	
-	/**	Parameters			*/
-	private TabParameter		tabParam 		= null;
-	/**	Index Fragment		*/
-	public static final String 	INDEX_FRAGMENT 	= "Index";
-	/**	Detail Fragment		*/
-	public static final String 	DETAIL_FRAGMENT = "Detail";
+	/**	Parameters				*/
+	private TabParameter		tabParam 			= null;
+	/**	Index Fragment			*/
+	public static final String 	INDEX_FRAGMENT 		= "Index";
+	/**	Detail Fragment			*/
+	public static final String 	DETAIL_FRAGMENT 	= "Detail";
+	/**	View 					*/
+	private View 				m_view 				= null;
+	/**	Is Load Ok				*/
+	private boolean				m_IsLoadOk			= false;
+	/**	Cache Detail Fragment	*/
+	private T_DynamicTab		m_detailFragment	= null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View v =  inflater.inflate(R.layout.t_dynamic_tab_detail, container, false);
-		return v;
+		if(m_view != null)
+			return m_view;
+		//	Inflate
+		m_view =  inflater.inflate(R.layout.t_dynamic_tab_detail, container, false);
+		return m_view;
 	}
+	
+	@Override
+    public void onDestroyView() {
+		FragmentManager mFragmentMgr = getFragmentManager();
+        FragmentTransaction mTransaction = mFragmentMgr.beginTransaction();
+        Fragment childFragment = mFragmentMgr.findFragmentByTag(INDEX_FRAGMENT);
+        if(childFragment != null) {
+        	mTransaction.remove(childFragment);
+            mTransaction.commit();
+        }
+        super.onDestroyView();
+    }
 	
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
     	//	Not Change
     	setRetainInstance(true);
-    	
     	Bundle bundle = getArguments();
     	if(bundle != null)
 			tabParam = (TabParameter)bundle.getParcelable("TabParam");
@@ -63,19 +83,21 @@ public class T_DynamicTabDetail extends Fragment
     	if(tabParam == null)
     		tabParam = new TabParameter();
     	
-    	
     	FV_IndexRecordLine firstFragment = new FV_IndexRecordLine();
         //	Set Parameters
         firstFragment.setArguments(bundle);
+        //	Get Fragment Transaction
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         //	
     	if (getActivity().findViewById(R.id.ll_List) != null) {
-    		getChildFragmentManager().beginTransaction()
-                    .add(R.id.ll_List, firstFragment, INDEX_FRAGMENT).commit();
+    		transaction.replace(R.id.ll_List, firstFragment, INDEX_FRAGMENT);
         } else if(getActivity().findViewById(R.id.ll_ListLand) != null){
-        	getChildFragmentManager().beginTransaction()
-            .add(R.id.ll_index_record_line, firstFragment, INDEX_FRAGMENT).commit();
+        	transaction.replace(R.id.ll_index_record_line, firstFragment, INDEX_FRAGMENT);
         }
-
+    	//	Commit
+    	transaction.commit();
+    	//	Set Ok
+    	m_IsLoadOk = true;
 	}
 	
     @Override
@@ -86,7 +108,10 @@ public class T_DynamicTabDetail extends Fragment
 	
 	@Override
 	public void handleMenu() {
-		//	
+		T_DynamicTab dynamicTab = (T_DynamicTab)
+                getChildFragmentManager().findFragmentByTag(DETAIL_FRAGMENT);
+    	if(dynamicTab != null)
+    		dynamicTab.handleMenu();
 	}
 
 	@Override
@@ -96,32 +121,25 @@ public class T_DynamicTabDetail extends Fragment
 
 	@Override
 	public void onItemSelected(int record_ID) {
-		//	
-		T_DynamicTab dynamicTab = (T_DynamicTab)
-                getChildFragmentManager().findFragmentByTag(DETAIL_FRAGMENT);
-		//	
-        if (dynamicTab != null) {
-        	//	Set Parameters
-        	if(dynamicTab.getTabParameter() == null)
-        		dynamicTab.setTabParameter(tabParam);
-        	//	
-            dynamicTab.onItemSelected(record_ID);
-        } else {
-        	T_DynamicTab detailFragment = new T_DynamicTab();
-        	detailFragment.setFromTab(this);
+        //	Instance if not exists
+        if(m_detailFragment == null) {
+        	m_detailFragment = new T_DynamicTab();
+        	m_detailFragment.setFromTab(this);
             Bundle args = new Bundle();
             args.putParcelable("TabParam", tabParam);
-            detailFragment.setArguments(args);
-            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            //	
-            if(getActivity().findViewById(R.id.ll_ListLand) != null)
-            	transaction.add(R.id.ll_dynamic_tab, detailFragment, DETAIL_FRAGMENT);
-            else 
-            	transaction.replace(R.id.ll_List, detailFragment, DETAIL_FRAGMENT);
-            transaction.addToBackStack(null);
-            //	
-            transaction.commit();
+            m_detailFragment.setArguments(args);
         }
+        //	Transaction
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        //	
+        if(getActivity().findViewById(R.id.ll_ListLand) != null) {
+        	transaction.replace(R.id.ll_dynamic_tab, m_detailFragment, DETAIL_FRAGMENT);
+        } else {
+        	transaction.replace(R.id.ll_List, m_detailFragment, DETAIL_FRAGMENT);
+        }
+        transaction.addToBackStack(null);
+        //	
+        transaction.commit();
     }
 	
 	@Override
@@ -136,6 +154,10 @@ public class T_DynamicTabDetail extends Fragment
 
 	@Override
 	public boolean refreshFromChange(boolean reQuery) {
+    	//	Valid is Loaded
+    	if(!m_IsLoadOk)
+    		return false;
+    	//	
 		I_DynamicTab indexRecordLine = (I_DynamicTab) 
 				getChildFragmentManager().findFragmentByTag(INDEX_FRAGMENT);
 		if(indexRecordLine != null){
@@ -145,7 +167,7 @@ public class T_DynamicTabDetail extends Fragment
 			return indexRecordLine.refreshFromChange(reQuery);
 		}
 		//	Return
-		return false;
+		return true;
 	}
 
 	@Override

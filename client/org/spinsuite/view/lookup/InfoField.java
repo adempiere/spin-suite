@@ -15,6 +15,7 @@
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
+import org.spinsuite.model.MSPSColumn;
 import org.spinsuite.model.POInfoColumn;
 import org.spinsuite.print.InfoReportField;
 import org.spinsuite.process.InfoPara;
@@ -47,6 +48,46 @@ public class InfoField extends POInfoColumn {
 	 */
 	public InfoField(){
 		
+	}
+	
+	/**
+	 * Create from Column
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/10/2014, 19:49:58
+	 * @param from
+	 */
+	public InfoField(MSPSColumn from){
+		this();
+		if(from == null)
+			return;
+		//	Set from Info Parameter
+		DisplayType 			= from.getAD_Reference_ID();
+		IsActive 				= from.isActive();
+		AD_Element_ID 			= from.getAD_Element_ID();
+		AD_Reference_Value_ID 	= from.getAD_Reference_Value_ID();
+		AD_Val_Rule_ID 			= from.getAD_Val_Rule_ID();
+		ColumnName 				= from.getColumnName();
+		DefaultValue 			= from.getDefaultValue();
+		Description 			= from.getDescription();
+		FieldLength 			= from.getFieldLength();
+		FormatPattern 			= from.getFormatPattern();
+		IsAlwaysUpdateable 		= from.isAlwaysUpdateable();
+		IsCentrallyMaintained 	= from.isCentrallyMaintained();
+		IsIdentifier 			= from.isIdentifier();
+		IsKey 					= from.isKey();
+		IsMandatory 			= from.isMandatory();
+		IsParent 				= from.isParent();
+		IsSelectionColumn 		= from.isSelectionColumn();
+		IsUpdateable 			= from.isUpdateable();
+		Name 					= from.getName();
+		SelectionSeqNo 			= from.getSelectionSeqNo();
+		SeqNo 					= from.getSeqNo();
+		SPS_Column_ID 			= from.getSPS_Column_ID();
+		SPS_Table_ID 			= from.getSPS_Table_ID();
+		ValueMax 				= from.getValueMax();
+		ValueMin 				= from.getValueMin();
+		VFormat 				= from.getVFormat();
+		//	
 	}
 	
 	/**

@@ -972,11 +972,12 @@ public class InfoTab {
 	/**
 	 * Get field from column identifier
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/03/2014, 18:11:04
+	 * @param ctx
 	 * @param SPS_Column_ID
 	 * @return
 	 * @return VOInfoField
 	 */
-	public InfoField getFieldFromColumn(int SPS_Column_ID){
+	public InfoField getFieldFromColumn(Context ctx, int SPS_Column_ID){
 		if(m_fields == null || SPS_Column_ID <= 0)
 			return null;
 		//	Get from column
@@ -984,7 +985,9 @@ public class InfoTab {
 			if(field.SPS_Column_ID == SPS_Column_ID)
 				return field;
 		}
-		return null;
+		//	Load Default
+		InfoField field = GridField.loadInfoColumnField(ctx, SPS_Column_ID);
+		return field;
 	}
 	
 	/**
@@ -1027,14 +1030,17 @@ public class InfoTab {
 		InfoField [] parentFields = null;
     	//	Is Parent by Tab
     	if(getParent_Column_ID() != 0)
-    		parentFields = new InfoField[]{getFieldFromColumn(getParent_Column_ID())};
+    		parentFields = new InfoField[]{getFieldFromColumn(ctx, getParent_Column_ID())};
     	else
     		parentFields = getParentField(false);
     	//	
     	StringBuffer sqlWhere = new StringBuffer();
     	//	
     	filterValue = new FilterValue();
-    	for(InfoField field : parentFields){
+    	for(InfoField field : parentFields) {
+    		if(field == null)
+    			continue;
+    		//	Add SQL
     		if(sqlWhere.length() > 0)
     			sqlWhere.append(" AND ");
     		//	Add Criteria Column Filter

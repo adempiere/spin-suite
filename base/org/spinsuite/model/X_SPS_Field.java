@@ -32,7 +32,7 @@ public class X_SPS_Field extends PO implements I_SPS_Field
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140422L;
+	private static final long serialVersionUID = 20141011L;
 
     /** Standard Constructor */
     public X_SPS_Field (Context ctx, int SPS_Field_ID, DB conn)

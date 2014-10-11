@@ -130,9 +130,10 @@ public class MSPSTable extends X_SPS_Table {
 			Env.setContext(ctx, "ClassName|" + tableName, name);
 			return clazz;
 		}
-
+		//	Default
+		name = "org.compiere.model.GenericPO";
 		//	Save in context
-		Env.setContext(ctx, "ClassName|" + tableName, null);
+		Env.setContext(ctx, "ClassName|" + tableName, name);
 		return null;
 	}	//	getClass*/
 	
@@ -181,9 +182,11 @@ public class MSPSTable extends X_SPS_Table {
 	{
 		//	
 		Class<?> clazz = getClass(ctx, tableName);
-		if (clazz == null)
-			;//	Not yet implemented
-		
+		if (clazz == null) {
+			GenericPO po = new GenericPO(ctx, tableName, Record_ID, conn);
+			return po;
+		}
+		//	any
 		boolean errorLogged = false;
 		try {
 			Constructor<?> constructor = null;
@@ -231,6 +234,25 @@ public class MSPSTable extends X_SPS_Table {
 				+ ", Record_ID=" + Record_ID);
 		return null;
 	}	//	getPO
+	
+	/**
+	 * Get Table ID from Table Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/10/2014, 13:04:54
+	 * @param ctx
+	 * @param tableName
+	 * @param conn
+	 * @return
+	 * @return int
+	 */
+	public static int getSPS_Table_ID(Context ctx, String tableName, DB conn)  {
+		if(tableName == null
+				|| tableName.length() == 0)
+			return -1;
+		//	Default Search
+		return DB.getSQLValue(ctx, "SELECT t.SPS_Table_ID "
+				+ "FROM SPS_Table t "
+				+ "WHERE t.TableName = ?", conn, tableName);
+	}
 	
 
 	@Override

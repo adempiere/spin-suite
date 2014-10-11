@@ -71,12 +71,13 @@ public abstract class PO {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/07/2012, 23:59:07
 	 * @param ctx
 	 * @param con_tx
+	 * @param tableName
 	 * @param ID
 	 * @param rs
 	 * @param m_AD_Table_ID
 	 * @param tableName
 	 */
-	private PO(Context ctx, int ID, Cursor rs, DB pConn) {
+	private PO(Context ctx, String tableName, int ID, Cursor rs, DB pConn) {
 		//	
 		if (ctx == null)
 			throw new IllegalArgumentException ("No Context");
@@ -90,8 +91,17 @@ public abstract class PO {
 		}
 		//	Load Connection
 		loadConnection(DB.READ_ONLY);
-		//	Load PO Meta-Data
-		m_TableInfo = initPO(ctx);
+		if(tableName != null
+				&& tableName.length() > 0) {
+			//	get Table ID
+			int m_SPS_Table_ID = MSPSTable.getSPS_Table_ID(ctx, tableName, get_Connection());
+			//	
+			if(m_SPS_Table_ID > 0)
+				m_TableInfo = POInfo.getPOInfo (ctx, m_SPS_Table_ID, get_Connection());
+		} else {
+			//	Load PO Meta-Data
+			m_TableInfo = initPO(ctx);
+		}
 		//	Close
 		closeConnection();
 		
@@ -118,7 +128,20 @@ public abstract class PO {
 	 * @param conn
 	 */
 	public PO(Context ctx, int ID, DB conn) {
-		this(ctx, ID, null, conn);
+		this(ctx, null, ID, null, conn);
+	}
+	
+	/**
+	 * Used for Generic PO
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/10/2014, 13:00:43
+	 * @param ctx
+	 * @param tableName
+	 * @param ID
+	 * @param conn
+	 */
+	public PO(Context ctx, String tableName, int ID, DB conn) {
+		this(ctx, tableName, ID, null, conn);
 	}
 	
 	/**
@@ -130,7 +153,7 @@ public abstract class PO {
 	 * @param trxName
 	 */
 	public PO(Context ctx, Cursor rs, DB conn) {
-		this(ctx, 0, rs, conn);
+		this(ctx, null, 0, rs, conn);
 	}
 	
 	/**

@@ -32,7 +32,7 @@ public class X_SPS_Tab extends PO implements I_SPS_Tab
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140422L;
+	private static final long serialVersionUID = 20141011L;
 
     /** Standard Constructor */
     public X_SPS_Tab (Context ctx, int SPS_Tab_ID, DB conn)

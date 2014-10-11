@@ -128,12 +128,12 @@ public class VLookupCheckBox extends GridField {
 	 * @return void
 	 */
 	private void event(){
-        //	Listener
-        if(m_Listener != null)
-        	m_Listener.onFieldEvent(this);
 		//	Set Context
 		DisplayType.setContextValue(getContext(), 
 				getActivityNo(), getTabNo(), m_field, getValue());
+		//	Listener
+        if(m_Listener != null)
+        	m_Listener.onFieldEvent(this);
 	}
 
 	@Override

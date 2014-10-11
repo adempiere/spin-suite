@@ -23,6 +23,7 @@ import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
 import org.spinsuite.util.KeyNamePair;
 import org.spinsuite.util.TabParameter;
+import org.spinsuite.view.lookup.InfoLookup;
 import org.spinsuite.view.lookup.InfoTab;
 import org.spinsuite.view.lookup.Lookup;
 
@@ -100,7 +101,7 @@ public class FV_IndexRecordLine extends ListFragment
     	}
     	//	Get Values
     	KeyNamePair[] values = DB.getKeyNamePairs(getActivity(), 
-    			lookup.getSQL(), criteria.getValues());
+    			lookup.getSQL().replaceAll(InfoLookup.TABLE_SEARCH_SEPARATOR, "_"), criteria.getValues());
         //	Is Loaded
     	boolean isLoaded = (values != null && values.length != 0);
     	//	Set Adapter
@@ -119,6 +120,7 @@ public class FV_IndexRecordLine extends ListFragment
     @Override
     public void onStart() {
         super.onStart();
+        loadData();
         //	Choice Mode
         if (getFragmentManager()
         		.findFragmentByTag(T_DynamicTabDetail.INDEX_FRAGMENT) != null) {

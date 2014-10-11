@@ -31,8 +31,8 @@ public interface I_SPS_Window
     /** TableName=SPS_Window */
     public static final String Table_Name = "SPS_Window";
 
-    /** SPS_Table_ID=1000837 */
-    public static final int SPS_Table_ID = 1000837;
+    /** SPS_Table_ID=50253 */
+    public static final int SPS_Table_ID = 50253;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */

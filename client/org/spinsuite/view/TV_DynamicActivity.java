@@ -204,7 +204,8 @@ public class TV_DynamicActivity extends TV_Base
 		} else {
 			sql = new String("SELECT t.SPS_Tab_ID, t.SeqNo, t.TabLevel, " +
 					"COALESCE(t.IsReadOnly, 'N') IsReadOnly, " +
-					"COALESCE(t.IsInsertRecord, 'N') IsInsertRecord, tt.Name, tt.Description, " +
+					"COALESCE(t.IsInsertRecord, 'N') IsInsertRecord, COALESCE(tt.Name, t.Name) Name, " + 
+					"COALESCE(tt.Description, t.Description) Description, " +
 					"t.OrderByClause, t.SPS_Table_ID, t.SPS_Window_ID, " +
 					"t.WhereClause, t.Classname " +
 					"FROM SPS_Tab t " +

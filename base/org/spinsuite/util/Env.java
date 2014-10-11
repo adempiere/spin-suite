@@ -917,6 +917,8 @@ public final class Env {
 			if (onlyWindow)			//	no Default values
 				return "";
 			return getContext(ctx, "#" + context);
+		} else {
+			LogM.log(ctx, "Env", Level.FINE, "getContext(" + m_ActivityNo+"|"+context + ") = " + s);
 		}
 		return s;
 	}	//	getContext

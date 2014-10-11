@@ -18,6 +18,7 @@ package org.spinsuite.view.lookup;
 import org.spinsuite.base.R;
 import org.spinsuite.util.ActionItemList;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.TabParameter;
 import org.spinsuite.util.contribution.QuickAction;
 
 import android.app.Activity;
@@ -69,6 +70,18 @@ public class LookupButtonPaymentRule extends VLookupButton {
 	 */
 	public LookupButtonPaymentRule(Activity activity, InfoField m_field) {
 		super(activity, m_field);
+	}
+	
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/10/2014, 21:11:25
+	 * @param activity
+	 * @param m_field
+	 * @param tabParam
+	 */
+	public LookupButtonPaymentRule(Activity activity, InfoField m_field, TabParameter tabParam) {
+		super(activity, m_field, tabParam);
 	}
 	
 	private QuickAction mQAct;

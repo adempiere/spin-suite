@@ -32,7 +32,7 @@ public class X_SPS_Table extends PO implements I_SPS_Table
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140422L;
+	private static final long serialVersionUID = 20141011L;
 
     /** Standard Constructor */
     public X_SPS_Table (Context ctx, int SPS_Table_ID, DB conn)
@@ -266,6 +266,14 @@ public class X_SPS_Table extends PO implements I_SPS_Table
 		return (String)get_Value(COLUMNNAME_Name);
 	}
 
+    /** Get Record ID/ColumnName
+        @return ID/ColumnName pair
+      */
+    public KeyNamePair getKeyNamePair() 
+    {
+        return new KeyNamePair(get_ID(), getName());
+    }
+
 	/** Set Mobile Table.
 		@param SPS_Table_ID Mobile Table	  */
 	public void setSPS_Table_ID (int SPS_Table_ID)
@@ -302,12 +310,4 @@ public class X_SPS_Table extends PO implements I_SPS_Table
 	{
 		return (String)get_Value(COLUMNNAME_TableName);
 	}
-
-    /** Get Record ID/ColumnName
-        @return ID/ColumnName pair
-      */
-    public KeyNamePair getKeyNamePair() 
-    {
-        return new KeyNamePair(get_ID(), getTableName());
-    }
 }

@@ -31,8 +31,8 @@ public interface I_SPS_Menu
     /** TableName=SPS_Menu */
     public static final String Table_Name = "SPS_Menu";
 
-    /** SPS_Table_ID=1000839 */
-    public static final int SPS_Table_ID = 1000839;
+    /** SPS_Table_ID=50105 */
+    public static final int SPS_Table_ID = 50105;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */

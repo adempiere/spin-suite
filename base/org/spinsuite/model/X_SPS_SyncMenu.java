@@ -32,7 +32,7 @@ public class X_SPS_SyncMenu extends PO implements I_SPS_SyncMenu
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140422L;
+	private static final long serialVersionUID = 20141011L;
 
     /** Standard Constructor */
     public X_SPS_SyncMenu (Context ctx, int SPS_SyncMenu_ID, DB conn)

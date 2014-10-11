@@ -32,7 +32,7 @@ public class X_SPS_Column extends PO implements I_SPS_Column
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140422L;
+	private static final long serialVersionUID = 20141011L;
 
     /** Standard Constructor */
     public X_SPS_Column (Context ctx, int SPS_Column_ID, DB conn)

@@ -32,7 +32,7 @@ public class X_SPS_Window extends PO implements I_SPS_Window
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20140422L;
+	private static final long serialVersionUID = 20141011L;
 
     /** Standard Constructor */
     public X_SPS_Window (Context ctx, int SPS_Window_ID, DB conn)
