@@ -53,6 +53,8 @@ public class FV_IndexRecordLine extends ListFragment
 	private ArrayAdapter<KeyNamePair> 	adapter				= null;
 	/**	Parent Tab Record ID		*/
 	private int 						m_Parent_Record_ID 	= 0;
+	/**	Is Load Ok					*/
+	private boolean						m_IsLoadOk			= false;
 	
 
 	/**
@@ -71,6 +73,17 @@ public class FV_IndexRecordLine extends ListFragment
         Bundle bundle = getArguments();
     	if(bundle != null)
 			tabParam = (TabParameter)bundle.getParcelable("TabParam");
+    	//	
+    	if(tabParam != null
+    			&& tabParam.getTabLevel() > 0){
+    		int currentParent_Record_ID = Env.getTabRecord_ID(getActivity(), 
+        			tabParam.getActivityNo(), tabParam.getParentTabNo());
+        	if(m_Parent_Record_ID != currentParent_Record_ID){
+        		m_Parent_Record_ID = currentParent_Record_ID;
+        	}
+    	}
+    	//	Load Ok
+    	m_IsLoadOk = true;
 	}
     
     @Override
@@ -149,6 +162,23 @@ public class FV_IndexRecordLine extends ListFragment
     }
     
     /**
+     * Select first record
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/10/2014, 17:56:40
+     * @return void
+     */
+    public void selectFirst() {
+    	//	Select first record
+    	if(adapter != null
+    			&& !adapter.isEmpty()) {
+            //	Set Selected
+        	KeyNamePair pair = adapter.getItem(0);
+            //	
+            Env.setTabRecord_ID(getActivity(), 
+    				tabParam.getActivityNo(), tabParam.getTabNo(), pair.getKey());
+    	}
+    }
+    
+    /**
      * Select Index
      * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/04/2014, 10:21:07
      * @param record_ID
@@ -175,16 +205,21 @@ public class FV_IndexRecordLine extends ListFragment
 
 	@Override
 	public boolean refreshFromChange(boolean reQuery) {
-		//	Load Data
+	   	//	Valid is Loaded
+    	if(!m_IsLoadOk)
+    		return false;
+ 		//	Load Data
 		boolean loaded = true;
 		if(reQuery){
 			loaded = loadData();
+			selectFirst();
 		} else if(tabParam.getTabLevel() > 0){
     		int currentParent_Record_ID = Env.getTabRecord_ID(getActivity(), 
         			tabParam.getActivityNo(), tabParam.getParentTabNo());
         	if(m_Parent_Record_ID != currentParent_Record_ID){
         		m_Parent_Record_ID = currentParent_Record_ID;
         		loaded = loadData();
+        		selectFirst();
         		//	
         		return loaded;
         	}

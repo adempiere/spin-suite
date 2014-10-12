@@ -39,6 +39,8 @@ public class T_DynamicTabDetail extends Fragment
 	
 	/**	Parameters				*/
 	private TabParameter		tabParam 			= null;
+	/**	Parent Tab Parameter	*/
+	private TabParameter 		parentTab 			= null;
 	/**	Index Fragment			*/
 	public static final String 	INDEX_FRAGMENT 		= "Index";
 	/**	Detail Fragment			*/
@@ -49,7 +51,13 @@ public class T_DynamicTabDetail extends Fragment
 	private boolean				m_IsLoadOk			= false;
 	/**	Cache Detail Fragment	*/
 	private T_DynamicTab		m_detailFragment	= null;
-	
+	/**	List Fragment Cache		*/
+	private FV_IndexRecordLine 	m_listFragment		= null;
+	/**	Is Same Table			*/
+	private boolean				m_IsSameTable		= false;
+	/**	Parent Tab Record ID	*/
+	private int 				m_Parent_Record_ID 	= 0;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if(m_view != null)
@@ -68,6 +76,12 @@ public class T_DynamicTabDetail extends Fragment
         	mTransaction.remove(childFragment);
             mTransaction.commit();
         }
+        //	
+        childFragment = mFragmentMgr.findFragmentByTag(DETAIL_FRAGMENT);
+        if(childFragment != null) {
+        	mTransaction.remove(childFragment);
+            mTransaction.commit();
+        }
         super.onDestroyView();
     }
 	
@@ -82,17 +96,50 @@ public class T_DynamicTabDetail extends Fragment
 			
     	if(tabParam == null)
     		tabParam = new TabParameter();
-    	
-    	FV_IndexRecordLine firstFragment = new FV_IndexRecordLine();
-        //	Set Parameters
-        firstFragment.setArguments(bundle);
+    	//	
+    	if(m_IsLoadOk)
+    		return;
+    	//	Verify if is same table
+    	if(parentTab == null) {
+    		parentTab = (TabParameter) Env.getContextObject(getActivity(), 
+        			tabParam.getActivityNo(), tabParam.getParentTabNo(), 
+        			"TabParameter", TabParameter.class);
+        	//	
+        	if(parentTab != null) {
+        		m_IsSameTable = tabParam.getSPS_Table_ID() == parentTab.getSPS_Table_ID();
+        	}
+    	}
+    	//	
+    	if(tabParam.getTabLevel() > 0){
+    		int currentParent_Record_ID = Env.getTabRecord_ID(getActivity(), 
+        			tabParam.getActivityNo(), tabParam.getParentTabNo());
+        	if(m_Parent_Record_ID != currentParent_Record_ID){
+        		m_Parent_Record_ID = currentParent_Record_ID;
+        	}
+    	}
+    	//	
+    	if(m_listFragment == null) {
+    		m_listFragment = new FV_IndexRecordLine();
+            //	Set Parameters
+        	m_listFragment.setArguments(bundle);
+    	}
         //	Get Fragment Transaction
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        //	
+        //	Instance if not exists
+        instanceDetailFragment();
+        //	Portrait
     	if (getActivity().findViewById(R.id.ll_List) != null) {
-    		transaction.replace(R.id.ll_List, firstFragment, INDEX_FRAGMENT);
-        } else if(getActivity().findViewById(R.id.ll_ListLand) != null){
-        	transaction.replace(R.id.ll_index_record_line, firstFragment, INDEX_FRAGMENT);
+    		if(m_IsSameTable) {
+    			transaction.replace(R.id.ll_List, m_detailFragment, INDEX_FRAGMENT);
+    			int m_Parent_Record_ID = Env.getTabRecord_ID(getActivity(), 
+    	    			tabParam.getActivityNo(), tabParam.getParentTabNo());
+    			Env.setTabRecord_ID(getActivity(), 
+    					tabParam.getActivityNo(), tabParam.getTabNo(), m_Parent_Record_ID);
+    		} else {
+    			transaction.replace(R.id.ll_List, m_listFragment, INDEX_FRAGMENT);
+    		}
+        } else if(getActivity().findViewById(R.id.ll_ListLand) != null) {
+        	transaction.replace(R.id.ll_index_record_line, m_listFragment, INDEX_FRAGMENT);
         }
     	//	Commit
     	transaction.commit();
@@ -119,8 +166,12 @@ public class T_DynamicTabDetail extends Fragment
 		return tabParam;
 	}
 
-	@Override
-	public void onItemSelected(int record_ID) {
+	/**
+	 * Instance Detail Fragment
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/10/2014, 15:36:28
+	 * @return void
+	 */
+	private void instanceDetailFragment() {
         //	Instance if not exists
         if(m_detailFragment == null) {
         	m_detailFragment = new T_DynamicTab();
@@ -129,6 +180,12 @@ public class T_DynamicTabDetail extends Fragment
             args.putParcelable("TabParam", tabParam);
             m_detailFragment.setArguments(args);
         }
+	}
+	
+	@Override
+	public void onItemSelected(int record_ID) {
+        //	Instance if not exists
+        instanceDetailFragment();
         //	Transaction
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         //	
@@ -140,6 +197,12 @@ public class T_DynamicTabDetail extends Fragment
         transaction.addToBackStack(null);
         //	
         transaction.commit();
+        //	
+        Env.setTabRecord_ID(getActivity(), 
+				tabParam.getActivityNo(), tabParam.getTabNo(), record_ID);
+        if(m_detailFragment != null) {
+        	m_detailFragment.onItemSelected(record_ID);
+        }
     }
 	
 	@Override
@@ -158,16 +221,43 @@ public class T_DynamicTabDetail extends Fragment
     	if(!m_IsLoadOk)
     		return false;
     	//	
-		I_DynamicTab indexRecordLine = (I_DynamicTab) 
+    	boolean loaded = false;
+    	I_DynamicTab indexRecordLine = (I_DynamicTab) 
 				getChildFragmentManager().findFragmentByTag(INDEX_FRAGMENT);
-		if(indexRecordLine != null){
-			if(!Env.isCurrentTab(getActivity(), 
-					tabParam.getActivityNo(), tabParam.getTabNo()))
-				backToFragment();
-			return indexRecordLine.refreshFromChange(reQuery);
+		if(indexRecordLine != null) {
+			if(reQuery) {
+				if(!Env.isCurrentTab(getActivity(), 
+						tabParam.getActivityNo(), tabParam.getTabNo())) {
+					indexRecordLine.refreshFromChange(reQuery);
+					loaded = true;
+				}
+			} else if(tabParam.getTabLevel() > 0){
+	    		int currentParent_Record_ID = Env.getTabRecord_ID(getActivity(), 
+	        			tabParam.getActivityNo(), tabParam.getParentTabNo());
+	        	if(m_Parent_Record_ID != currentParent_Record_ID){
+	        		m_Parent_Record_ID = currentParent_Record_ID;
+	        		if(!m_IsSameTable) {
+	        			indexRecordLine.refreshFromChange(reQuery);
+		                //	
+		                if(m_detailFragment != null) {
+		                	int first_ID = Env.getTabRecord_ID(getActivity(), 
+		                			tabParam.getActivityNo(), tabParam.getTabNo());
+		                	m_detailFragment.onItemSelected(first_ID);
+		                }
+		        		loaded = true;
+	        		} else {
+	        			if(m_detailFragment != null) {
+	        				int m_Parent_Record_ID = Env.getTabRecord_ID(getActivity(), 
+	            	    			tabParam.getActivityNo(), tabParam.getParentTabNo());
+	            			m_detailFragment.onItemSelected(m_Parent_Record_ID);
+		                }
+	        		}
+	        	}
+	    	}
+			//	
 		}
 		//	Return
-		return true;
+		return loaded;
 	}
 
 	@Override
@@ -181,11 +271,13 @@ public class T_DynamicTabDetail extends Fragment
 	 * @return
 	 * @return boolean
 	 */
-	private boolean backToFragment(){
-		if(getActivity().findViewById(R.id.ll_ListLand) != null)
+	private boolean backToFragment() {
+		//	
+		if(getActivity().findViewById(R.id.ll_ListLand) != null
+				|| m_IsSameTable)
 			return false;
 		FragmentManager fm = getChildFragmentManager();
-	    if (fm.getBackStackEntryCount() > 0){
+	    if (fm.getBackStackEntryCount() > 0) {
 	    	//	Get Back
 			fm.popBackStack();
 	    	return true;

@@ -242,21 +242,24 @@ public class TV_DynamicActivity extends TV_Base
 	    		Bundle bundle = new Bundle();
 	    		bundle.putParcelable("TabParam", tabParam);
 	    		//bundle.putInt("Record_ID", m_Record_ID);
+	    		//	Set Tab Parameter to Context
+	    		Env.setContextObject(this, 
+	    				tabParam.getActivityNo(), tabParam.getTabNo(), "TabParameter", tabParam);
 	    		//	Set Context
-	    		Env.setContext(getApplicationContext(), m_ActivityNo, 
+	    		Env.setContext(this, m_ActivityNo, 
 	    				tabParam.getSPS_Tab_ID(), "SPS_Tab_ID", tabParam.getSPS_Tab_ID());
 	    		//	Set record Identifier
 	    		if(tabParam.getTabNo() == 0)
-	    			Env.setTabRecord_ID(getApplicationContext(), 
+	    			Env.setTabRecord_ID(this, 
 	    					tabParam.getActivityNo(), tabParam.getTabNo(), m_Record_ID);
 	    		else
-	    			Env.setTabRecord_ID(getApplicationContext(), 
+	    			Env.setTabRecord_ID(this, 
 	    					tabParam.getActivityNo(), tabParam.getTabNo(), 0);
 	    		//	Dynamic Tab
 	    		if(tabParam.getSPS_Table_ID() != 0) {
 		    		//	Parent Tab
 		    		if(tabParam.getTabLevel() != 0) {
-		    			Env.setParentTabRecord_ID(getApplicationContext(), 
+		    			Env.setParentTabRecord_ID(this, 
 		    					tabParam.getActivityNo(), tabParam.getTabNo(), m_Record_ID);
 		    			addFagment(T_DynamicTabDetail.class, tabParam.getName(), tabParam.getName(), tabParam, bundle);
 		    		} else {	//	Add Dynamic Tab
@@ -272,10 +275,10 @@ public class TV_DynamicActivity extends TV_Base
 	    				//	Add
 	    				addFagment(clazz, tabParam.getName(), tabParam.getName(), tabParam, bundle);
 	    			} catch (ClassNotFoundException e) {
-	    				LogM.log(getApplicationContext(), getClass(), Level.SEVERE, "Error:", e);
+	    				LogM.log(this, getClass(), Level.SEVERE, "Error:", e);
 	    			}
 	    		} else 
-	    			LogM.log(getApplicationContext(), getClass(), Level.WARNING, "No Class for Tab: " + tabParam.getName());
+	    			LogM.log(this, getClass(), Level.WARNING, "No Class for Tab: " + tabParam.getName());
 				//	Reset index
 	    		index = 0;
 			}while(rs.moveToNext());

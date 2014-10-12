@@ -808,7 +808,9 @@ public class T_DynamicTab extends Fragment
 
 	@Override
 	public void onItemSelected(int record_ID) {
-		refresh(record_ID, false);	
+		//	refresh
+		if(m_IsLoadOk)
+			refresh(record_ID, false);	
 	}
 
 	@Override

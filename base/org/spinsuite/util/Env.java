@@ -451,6 +451,25 @@ public final class Env {
 	}
 	
 	/**
+	 * Set Context Object with Activity No and Tab No
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/10/2014, 14:42:48
+	 * @param ctx
+	 * @param m_ActivityNo
+	 * @param TabNo
+	 * @param context
+	 * @param value
+	 * @return void
+	 */
+	public static void setContextObject(Context ctx, int m_ActivityNo, int TabNo, String context, Object value) {
+		if (ctx == null || context == null)
+			return;
+		if (m_ActivityNo != WINDOW_FIND && m_ActivityNo != WINDOW_MLOOKUP)
+			LogM.log(ctx, "Env", Level.FINE, "Context("+m_ActivityNo+","+TabNo+") " + context + "=" + value);
+		//	
+		setContextObject(ctx, m_ActivityNo+"|"+TabNo+"|"+context, value);
+	}	//	setContext
+	
+	/**
 	 * Set Context Object
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/05/2014, 14:13:23
 	 * @param ctx
@@ -469,6 +488,26 @@ public final class Env {
 		//	
 	    return gson.fromJson(json, clazz);
 	}
+	
+	/**
+	 * Get Context Object with Activity No and Tab No
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/10/2014, 14:55:22
+	 * @param ctx
+	 * @param m_ActivityNo
+	 * @param TabNo
+	 * @param context
+	 * @param clazz
+	 * @return
+	 * @return Object
+	 */
+	public static Object getContextObject(Context ctx, int m_ActivityNo, int TabNo, String context, Class<?> clazz) {
+		if (ctx == null || context == null)
+			throw new IllegalArgumentException ("Require Context");
+		LogM.log(ctx, "Env", Level.INFO, "getContextObject=" + m_ActivityNo+"|"+TabNo+"|"+context);
+		//	
+		return getContextObject(ctx, m_ActivityNo+"|"+TabNo+"|"+context, clazz);
+	}	//	getContext
+	
 	
 	/*public static void setContextObject(Context ctx, String context, Object value, boolean isExternal) {
 		if(ctx == null
