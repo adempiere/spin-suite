@@ -41,7 +41,7 @@ public class T_Login extends Fragment implements I_Login {
 	private EditText 		et_User;
 	private EditText 		et_Pass;
 	private CheckBox 		ch_SavePass;
-	private CheckBox 		ch_AutomaticVisitClosing;
+	private CheckBox 		ch_AutoLogin;
 	private Cust_Spinner	sp_Language;
 	private View 			m_View = null;
 	private boolean			m_IsLoadOk = false;
@@ -65,7 +65,7 @@ public class T_Login extends Fragment implements I_Login {
     	et_User = (EditText) getActivity().findViewById(R.id.et_User);
     	et_Pass = (EditText) getActivity().findViewById(R.id.et_Pass);
     	ch_SavePass = (CheckBox) getActivity().findViewById(R.id.ch_SavePass);
-    	ch_AutomaticVisitClosing = (CheckBox) getActivity().findViewById(R.id.ch_AutomaticVisitClosing);
+    	ch_AutoLogin = (CheckBox) getActivity().findViewById(R.id.ch_AutoLogin);
     	sp_Language = (Cust_Spinner) getActivity().findViewById(R.id.sp_Language);
     	
     	ArrayList <DisplaySpinner> data = new ArrayList<DisplaySpinner>();
@@ -103,7 +103,7 @@ public class T_Login extends Fragment implements I_Login {
     			Env.setContext(this.getActivity(), "#SUser", user);
     			Env.setContext(this.getActivity(), "#SPass", pass);
     			Env.setSavePass(this.getActivity(), ch_SavePass.isChecked());
-    			Env.setAutomaticVisitClosing(this.getActivity(), ch_AutomaticVisitClosing.isChecked());
+    			Env.setAutoLogin(this.getActivity(), ch_AutoLogin.isChecked());
     			String language = (String)((DisplaySpinner)sp_Language.getSelectedItem()).getHiddenValue();
     			if(!language.equals(Env.getAD_Language(getActivity()))){
     				Env.setAD_Language(getActivity(), language);
@@ -195,7 +195,7 @@ public class T_Login extends Fragment implements I_Login {
      	//	Recuerda Contraseña Check
      	ch_SavePass.setChecked(Env.isSavePass(this.getActivity()));
      	//	Recuerda Cerrado Automático de Visitas
-     	ch_AutomaticVisitClosing.setChecked(Env.isAutomaticVisitClosing(this.getActivity()));
+     	ch_AutoLogin.setChecked(Env.isAutoLogin(this.getActivity()));
      	
      	//	Recuerda la Contraseña
  		if(pass == null || pass.length() == 0){

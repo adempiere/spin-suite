@@ -266,9 +266,10 @@ public class InfoTab {
 		//	if Base Language
 		if(isBaseLanguage){
 			sql.append("SELECT t.Name, t.SPS_Tab_ID, t.SPS_Table_ID,t.SPS_Window_ID, t.AD_Process_ID, tb.TableName, " +
-					"t.Classname,t.Description, t.Help, t.IsInsertRecord, t.IsReadOnly, t.OrderByClause, " +
-					"t.Parent_Column_ID,t.SPS_Column_ID, t.SeqNo, t.TabLevel, t.WhereClause, c.AD_Element_ID, " +
-					"CASE WHEN f.AD_Reference_ID IS NOT NULL THEN f.AD_Reference_ID ELSE C.AD_Reference_ID END AD_Reference_ID, " +
+					"t.Classname, t.Description, t.Help, " + 
+					"t.IsInsertRecord, t.IsReadOnly, t.OrderByClause, " +
+					"t.Parent_Column_ID, t.SPS_Column_ID, t.SeqNo, t.TabLevel, t.WhereClause, c.AD_Element_ID, " +
+					"CASE WHEN f.AD_Reference_ID IS NOT NULL THEN f.AD_Reference_ID ELSE c.AD_Reference_ID END AD_Reference_ID, " +
 					"CASE WHEN f.AD_Reference_Value_ID IS NOT NULL THEN f.AD_Reference_Value_ID ELSE c.AD_Reference_Value_ID END AD_Reference_Value_ID, " +
 					"CASE WHEN f.AD_Val_Rule_ID IS NOT NULL THEN f.AD_Val_Rule_ID ELSE c.AD_Val_Rule_ID END AD_Val_Rule_ID, " +
 					"CASE WHEN f.DefaultValue IS NOT NULL THEN f.DefaultValue ELSE c.DefaultValue END DefaultValue, " + 
@@ -278,7 +279,8 @@ public class InfoTab {
 					"c.IsParent, c.IsSelectionColumn, c.IsUpdateable, c.SelectionSeqNo, " +
 					"c.SeqNo, c.SPS_Column_ID, c.SPS_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, c.AD_Process_ID, p.AD_Form_ID, " +
 					//	Fields
-					"f.Name, f.Description, f.Help, f.AD_FieldGroup_ID, f.DisplayLogic, f.IsActive, f.IsDisplayed, " +
+					"f.Name, f.Description, f.Help, " + 
+					"f.AD_FieldGroup_ID, f.DisplayLogic, f.IsActive, f.IsDisplayed, " +
 					"f.IsReadOnly, f.IsSameLine, f.SeqNo, f.SPS_Field_ID " +
 					//	From
 					"FROM SPS_Tab t " +
@@ -288,9 +290,10 @@ public class InfoTab {
 					"LEFT JOIN AD_Process p ON(p.AD_Process_ID = c.AD_Process_ID) ");
 		} else {
 			sql.append("SELECT tt.Name, t.SPS_Tab_ID, t.SPS_Table_ID,t.SPS_Window_ID, t.AD_Process_ID, tb.TableName, " +
-					"t.Classname,tt.Description, tt.Help, t.IsInsertRecord, t.IsReadOnly, t.OrderByClause, " +
-					"t.Parent_Column_ID,t.SPS_Column_ID,t.SeqNo, t.TabLevel, t.WhereClause, c.AD_Element_ID, " +
-					"CASE WHEN f.AD_Reference_ID IS NOT NULL THEN f.AD_Reference_ID ELSE C.AD_Reference_ID END AD_Reference_ID, " +
+					"t.Classname, COALESCE(tt.Description, t.Description) Description, COALESCE(tt.Help, t.Help) Help, " + 
+					"t.IsInsertRecord, t.IsReadOnly, t.OrderByClause, " +
+					"t.Parent_Column_ID, t.SPS_Column_ID,t.SeqNo, t.TabLevel, t.WhereClause, c.AD_Element_ID, " +
+					"CASE WHEN f.AD_Reference_ID IS NOT NULL THEN f.AD_Reference_ID ELSE c.AD_Reference_ID END AD_Reference_ID, " +
 					"CASE WHEN f.AD_Reference_Value_ID IS NOT NULL THEN f.AD_Reference_Value_ID ELSE c.AD_Reference_Value_ID END AD_Reference_Value_ID, " +
 					"CASE WHEN f.AD_Val_Rule_ID IS NOT NULL THEN f.AD_Val_Rule_ID ELSE c.AD_Val_Rule_ID END AD_Val_Rule_ID, " +
 					"CASE WHEN f.DefaultValue IS NOT NULL THEN f.DefaultValue ELSE c.DefaultValue END DefaultValue, " +
@@ -300,14 +303,15 @@ public class InfoTab {
 					"c.IsParent, c.IsSelectionColumn, c.IsUpdateable, c.SelectionSeqNo, " +
 					"c.SeqNo, c.SPS_Column_ID, c.SPS_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, c.AD_Process_ID, p.AD_Form_ID, " +
 					//	Fields
-					"ft.Name, ft.Description, ft.Help, f.AD_FieldGroup_ID, f.DisplayLogic, f.IsActive, f.IsDisplayed, " +
+					"COALESCE(ft.Name, f.Name) Name, COALESCE(ft.Description, f.Description) Description, COALESCE(ft.Help, f.Help) Help, " + 
+					"f.AD_FieldGroup_ID, f.DisplayLogic, f.IsActive, f.IsDisplayed, " +
 					"f.IsReadOnly, f.IsSameLine, f.SeqNo, f.SPS_Field_ID " +
 					//	From
 					"FROM SPS_Tab t " +
 					"INNER JOIN SPS_Table tb ON(tb.SPS_Table_ID = t.SPS_Table_ID) " +
-					"INNER JOIN SPS_Tab_Trl tt ON(tt.SPS_Tab_ID = t.SPS_Tab_ID AND tt.AD_Language = '").append(language).append("') " +
+					"LEFT JOIN SPS_Tab_Trl tt ON(tt.SPS_Tab_ID = t.SPS_Tab_ID AND tt.AD_Language = '").append(language).append("') " +
 					"INNER JOIN SPS_Field f ON(f.SPS_Tab_ID = t.SPS_Tab_ID) " +
-					"INNER JOIN SPS_Field_Trl ft ON(ft.SPS_Field_ID = f.SPS_Field_ID AND ft.AD_Language = '").append(language).append("') " +
+					"LEFT JOIN SPS_Field_Trl ft ON(ft.SPS_Field_ID = f.SPS_Field_ID AND ft.AD_Language = '").append(language).append("') " +
 					"INNER JOIN SPS_Column c ON(c.SPS_Column_ID = f.SPS_Column_ID) " +
 					"LEFT JOIN AD_Process p ON(p.AD_Process_ID = c.AD_Process_ID) ");
 		}

@@ -723,29 +723,34 @@ public class Lookup {
 		//	Set Table Alias
 		if(m_TableAlias == null
 				|| m_TableAlias.length() == 0)
-			m_TableAlias = "AD_Ref_List";
+			m_TableAlias = InfoLookup.REF_LIST_TN;
 		
 		//	Set Lookup Info
 		m_InfoLookup.KeyColumn = "Value";
-		m_InfoLookup.TableName = "AD_Ref_List";
+		m_InfoLookup.TableName = InfoLookup.REF_LIST_TN;
 		m_InfoLookup.TableAlias = m_TableAlias;
 		
+		
 		//	Set SQL
-		StringBuffer sql = new StringBuffer("SELECT rl.Value, ");
+		StringBuffer sql = new StringBuffer("SELECT ").append(m_TableAlias).append(".").append("Value, ");
 		//	Handle Language
 		if(m_IsBaseLanguage) {
-			sql.append("rl.Name ");
+			sql.append(m_TableAlias).append(".").append("Name ");
 			//	From
-			sql.append("FROM AD_Ref_List rl ");
+			sql.append("FROM ").append(m_InfoLookup.TableName).append(" AS ").append(m_TableAlias).append(" ");
 			//	Set Lookup Info
 			m_InfoLookup.DisplayColumn = "COALESCE(" + m_TableAlias + ".Name,'')";
 		} else {
-			sql.append("rlt.Name ");
+			sql.append(m_TableAlias).append(InfoLookup.TR_TABLE_SUFFIX).append(".").append("Name ");
 			//	From
-			sql.append("FROM AD_Ref_List rl ");
+			sql.append("FROM ").append(InfoLookup.REF_LIST_TN).append(" AS ").append(m_TableAlias);
 			//	Join
-			sql.append("INNER JOIN AD_Ref_List_Trl rlt ON(rlt.AD_Ref_List_ID = rl.AD_Ref_List_ID " +
-					"AND rlt.AD_Language = '").append(m_Language).append("') ");
+			sql.append(" INNER JOIN ").append(InfoLookup.REF_LIST_TN).append(InfoLookup.TR_TABLE_SUFFIX)
+							.append(" AS ").append(m_TableAlias).append(InfoLookup.TR_TABLE_SUFFIX)
+							.append(" ON(").append(m_TableAlias).append(InfoLookup.TR_TABLE_SUFFIX).append(".")
+							.append("AD_Ref_List_ID = ").append(m_TableAlias).append(".").append("AD_Ref_List_ID")
+							.append(" AND ").append(m_TableAlias).append(InfoLookup.TR_TABLE_SUFFIX)
+							.append(".").append("AD_Language = '").append(m_Language).append("') ");
 			//	Set Lookup Info
 			m_InfoLookup.DisplayColumn = "COALESCE(" + 
 											m_TableAlias + 
@@ -753,7 +758,8 @@ public class Lookup {
 											".Name,'')";
 		}
 		//	Where Clause			
-		sql.append("WHERE rl.AD_Reference_ID = ").append(m_field.AD_Reference_Value_ID);
+		sql.append("WHERE ").append(m_TableAlias).append(".").append("AD_Reference_ID = ")
+				.append(m_field.AD_Reference_Value_ID);
 		//	Validation Rule
 		if(getValRule() != null
 				&& getValRule().length() > 0) {

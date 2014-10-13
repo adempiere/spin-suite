@@ -60,11 +60,11 @@
     	    android:text="@string/SavePass" />
 
     	<CheckBox
-    	    android:id="@+id/ch_AutomaticVisitClosing"
+    	    android:id="@+id/ch_AutoLogin"
     	    android:layout_width="wrap_content"
     	    android:layout_height="wrap_content"
     	    android:checked="true"
-    	    android:text="@string/msg_AutomaticVisitClosing" />
+    	    android:text="@string/msg_AutoLogin" />
     	
     	<!-- Language -->
     	<TextView

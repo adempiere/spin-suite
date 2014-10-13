@@ -183,21 +183,25 @@ public class ProcessInfo {
 		StringBuffer sql = new StringBuffer();
 		//	if Base Language
 		if(isBaseLanguage){
-			sql.append("SELECT p.Name, p.Description, p.Help, " +
+			sql.append("SELECT p.Name, " + 
+					"p.Description, p.Help, " +
 					"p.ClassName, p.ProcedureName, p.isReport, p.ShowHelp, p.AD_ReportView_ID, p.AD_PrintFormat_ID, " +
 					"pp.AD_Process_Para_ID, pp.AD_Element_ID, pp.AD_Reference_ID, " +
 					"pp.AD_Reference_Value_ID, pp.AD_Val_Rule_ID, " +
-					"pp.ColumnName, pp.Name, pp.Description, pp.Help, pp.DefaultValue, pp.DefaultValue2, pp.EntityType, " +
+					"pp.ColumnName, pp.Name, pp.Description, " + 
+					"pp.Help, pp.DefaultValue, pp.DefaultValue2, pp.EntityType, " +
 					"pp.FieldLength, pp.SeqNo, pp.IsCentrallyMaintained, pp.IsActive, " +
 					"pp.IsMandatory, pp.IsRange, pp.ValueMax, pp.ValueMin, pp.VFormat " +
 					"FROM AD_Process p " +
 					"LEFT JOIN AD_Process_Para pp ON(pp.AD_Process_ID = p.AD_Process_ID) ");
 		} else {
-			sql.append("SELECT pt.Name, pt.Description, pt.Help, " +
+			sql.append("SELECT COALESCE(pt.Name, p.Name) Name, " + 
+					"COALESCE(pt.Description, p.Description) Description, COALESCE(pt.Help, p.Help) Help, " +
 					"p.ClassName, p.ProcedureName, p.isReport, p.ShowHelp, p.AD_ReportView_ID, p.AD_PrintFormat_ID, " +
 					"pp.AD_Process_Para_ID, pp.AD_Element_ID, pp.AD_Reference_ID, " +
 					"pp.AD_Reference_Value_ID, pp.AD_Val_Rule_ID, " +
-					"pp.ColumnName, ppt.Name, ppt.Description, ppt.Help, pp.DefaultValue, pp.DefaultValue2, pp.EntityType, " +
+					"pp.ColumnName, COALESCE(ppt.Name, pp.Name) Name, COALESCE(ppt.Description, pp.Description) Description, " + 
+					"COALESCE(ppt.Help, pp.Help) Help, pp.DefaultValue, pp.DefaultValue2, pp.EntityType, " +
 					"pp.FieldLength, pp.SeqNo, pp.IsCentrallyMaintained, pp.IsActive, " +
 					"pp.IsMandatory, pp.IsRange, pp.ValueMax, pp.ValueMin, pp.VFormat " +
 					"FROM AD_Process p ");

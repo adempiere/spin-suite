@@ -80,7 +80,19 @@ public class Login extends TV_Base implements I_CancelOk {
     			languaje = Env.getSOLanguage(this);
     			Env.setAD_Language(this, languaje);
     		}
-    		
+    		//	Auto Login
+    		if(Env.isAutoLoginConfirmed(this)) {
+    			if(!Env.isAccessLoaded(this)) {
+					//	Load Access Role
+					m_LoadType = ROLE_ACCESS;
+					new LoadAccessTask().execute();
+				} else {
+					//	Start Activity
+					Intent intent = new Intent(this, LV_Menu.class);
+					startActivity(intent);
+				}
+    			finish();
+    		}
     	} else {
     		m_LoadType = DATA_BASE;
 			new LoadAccessTask().execute();
@@ -151,6 +163,9 @@ public class Login extends TV_Base implements I_CancelOk {
 			}
 		} else if(fr instanceof T_Role){
 			if(ret){
+				//	Set Confirm Login
+				Env.setAutoLoginComfirmed(this, Env.isAutoLogin(this));
+				//	
 				if(!Env.isAccessLoaded(this)) {
 					//	Load Access Role
 					m_LoadType = ROLE_ACCESS;
@@ -160,6 +175,9 @@ public class Login extends TV_Base implements I_CancelOk {
 					Intent intent = new Intent(this, LV_Menu.class);
 					startActivity(intent);
 				}
+				//	Valid Auto Login
+				if(Env.isAutoLogin(this))
+					finish();
 			}
 		}
 		return true;

@@ -293,11 +293,24 @@ public class T_DynamicTabDetail extends Fragment
 
 	@Override
 	public boolean isModifying() {
+		//	Initial Load
+		if(!m_IsLoadOk)
+			return false;
+		//	
+		if(m_detailFragment != null) {
+        	m_detailFragment.isModifying();
+        }
 		return false;
 	}
 
 	@Override
-	public void setIsParentModifying(boolean enabled) {
+	public void setIsParentModifying(boolean isParentModifying) {
+		//	Initial Load
+		if(!m_IsLoadOk)
+			return;
 		//	
+		if(m_detailFragment != null) {
+        	m_detailFragment.setIsParentModifying(isParentModifying);
+        }		
 	}
 }

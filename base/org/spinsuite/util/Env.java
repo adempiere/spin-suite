@@ -1190,10 +1190,20 @@ public final class Env {
 	 * @param isSavePass
 	 * @return void
 	 */
-	public static void setAutomaticVisitClosing(Context ctx, boolean isSavePass) {
-		setContext(ctx, "#AutomaticVisitClosing", isSavePass);
+	public static void setAutoLogin(Context ctx, boolean isAutoLogin) {
+		setContext(ctx, "#AutoLogin", isAutoLogin);
 	}
 	
+	/**
+	 * Set Auto Login Confirmed
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/10/2014, 1:11:40
+	 * @param ctx
+	 * @param isAutoLoginConfirmed
+	 * @return void
+	 */
+	public static void setAutoLoginComfirmed(Context ctx, boolean isAutoLoginConfirmed) {
+		setContext(ctx, "#IsAutoLoginConfirmed", isAutoLoginConfirmed);
+	}
 	
 	/**
 	 * Get Save Pass
@@ -1213,8 +1223,19 @@ public final class Env {
 	 * @return
 	 * @return boolean
 	 */
-	public static boolean isAutomaticVisitClosing(Context ctx) {
-		return getContextAsBoolean(ctx, "#AutomaticVisitClosing");
+	public static boolean isAutoLogin(Context ctx) {
+		return getContextAsBoolean(ctx, "#AutoLogin");
+	}
+	
+	/**
+	 * Is Auto Login Confirmed
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/10/2014, 1:10:30
+	 * @param ctx
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean isAutoLoginConfirmed(Context ctx) {
+		return getContextAsBoolean(ctx, "#IsAutoLoginConfirmed");
 	}
 	
 	/**

@@ -186,10 +186,21 @@ public class LV_Search extends Activity {
     		if(sqlWhere.length() > 0)
     			sqlWhere.append(" AND ");
     		//	Add Criteria Column Filter
-    		sqlWhere.append(field.ColumnName).append(" = ?");
-    		//	Add Value
-    		m_criteria.addValue(DisplayType.getJDBC_Value(field.DisplayType, 
-    				lookup.getValue()));
+    		//	Process Text
+    		if(DisplayType.isText(field.DisplayType)) {
+    			sqlWhere.append("UPPER(").append(field.ColumnName).append(")")
+    					.append(" LIKE UPPER(?)");
+    			//	Add Value
+    			String value = (String) DisplayType.getJDBC_Value(field.DisplayType, 
+    					lookup.getValue());
+    			m_criteria.addValue("%" + value + "%");
+
+    		} else {
+    			sqlWhere.append(" = ?");
+    			//	Add Value
+    			m_criteria.addValue(DisplayType.getJDBC_Value(field.DisplayType, 
+    					lookup.getValue()));
+    		}
     		//	Set like a change
     		if(lookup.isChanged()
     				&& !m_IsChanged) {

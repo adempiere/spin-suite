@@ -114,6 +114,7 @@ public class T_DynamicTab extends Fragment
 	private 	boolean					m_IsLoadOk			= false;
 	private 	boolean					m_IsLoadDataOk		= false;
 	private 	boolean 				m_IsModifying		= false;
+	private 	boolean 				m_IsParentModifying	= false;
 	private 	boolean 				m_IsReadWrite 		= false;
 	private 	boolean 				m_IsInsertRecord 	= false;
 	/**	From Tab					*/
@@ -296,15 +297,15 @@ public class T_DynamicTab extends Fragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-	    if(!Env.isCurrentTab(getActivity(), 
-	    		tabParam.getActivityNo(), tabParam.getTabNo()))
-	    	return;
-	    //	
-        menu.clear();
-        inflater.inflate(R.menu.dynamic_tab, menu);
+	    //if(!Env.isCurrentTab(getActivity(), 
+	    	//	tabParam.getActivityNo(), tabParam.getTabNo()))
+	    	//return;
     	//	Valid is Loaded
     	if(!m_IsLoadOk)
     		return;
+	    //	
+        menu.clear();
+        inflater.inflate(R.menu.dynamic_tab, menu);
     	//	do it
         //	Get Items
         mi_Search 	= menu.getItem(0);
@@ -336,9 +337,21 @@ public class T_DynamicTab extends Fragment
 			startActivityForResult(intent, 0);
 			return true;
 		} else if (itemId == R.id.action_edit) {
+			//	Verify Parent Changed
+			if(m_IsParentModifying) {
+    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
+    			return false;
+    		}
+			//	Do It
 			lockView(MODIFY);
 			return true;
 		} else if (itemId == R.id.action_add) {
+			//	Verify Parent Changed
+			if(m_IsParentModifying) {
+    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
+    			return false;
+    		}
+			//	Do It
 			newOption();
 			return true;
 		} else if (itemId == R.id.action_more) {
@@ -353,6 +366,12 @@ public class T_DynamicTab extends Fragment
 			lockView(SEE);
 			return true;
 		} else if (itemId == R.id.action_save) {
+			//	Verify Parent Changed
+			if(m_IsParentModifying) {
+    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
+    			return false;
+    		}
+			//	Do It
 			//	Save Thread
 			new SaveTask().execute(RECORD_SAVE);
 			return true;
@@ -399,10 +418,22 @@ public class T_DynamicTab extends Fragment
 	        		case O_SHARE:
 	        			return true;
 	        		case O_DELETE:
+	        			//	Verify Parent Changed
+	        			if(m_IsParentModifying) {
+	            			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
+	            			return false;
+	            		}
+	        			//	Do It
 	        			//	Delete
 	        			deleteRecord();
 	        			return true;
 	        		case O_ATTACH:
+	        			//	Verify Parent Changed
+	        			if(m_IsParentModifying) {
+	            			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
+	            			return false;
+	            		}
+	        			//	Do It
 	        			attachImage();
 	        			return true;
 	        		case O_VIEW_ATTACH:
@@ -826,12 +857,28 @@ public class T_DynamicTab extends Fragment
 	
 	@Override
 	public boolean isModifying() {
+		//	Initial Load
+		if(!m_IsLoadOk)
+			return false;
+		//	
+		if(tabParam.getTabLevel() > 0) {
+			return false;
+		}
+		//	Default
 		return m_IsModifying;
 	}
 
 	@Override
-	public void setIsParentModifying(boolean enabled) {
+	public void setIsParentModifying(boolean isParentModifying) {
+		//	Initial Load
+		if(!m_IsLoadOk)
+			return;
 		//	
+		if(tabParam.getTabLevel() > 0) {
+			m_IsParentModifying = isParentModifying;
+		} else {
+			m_IsParentModifying = false;
+		}
 	}
 	
 	/**********************************************************************

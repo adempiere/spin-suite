@@ -134,7 +134,7 @@ public class LoadInitData {
 		Env.setContext(ctx, "#SUser", "SuperUser");
 		Env.setContext(ctx, "#SPass", "System");
 		Env.setSavePass(ctx, true);
-		Env.setAutomaticVisitClosing(ctx, true);
+		Env.setAutoLogin(ctx, true);
 		Env.setContext(ctx, KEY_POS_TAB, 1);
 		Env.setContext(ctx, "#Timeout", 10000000);
 	}

@@ -146,7 +146,7 @@ public class POInfo {
 					"c.IsParent, " +
 					"c.IsSelectionColumn, " +
 					"c.IsUpdateable, " +
-					"ct.Name, " +
+					"COALESCE(ct.Name, c.Name) Name, " +
 					"c.SelectionSeqNo, " +
 					"c.SeqNo, " +
 					"c.SPS_Column_ID, " +
@@ -156,7 +156,7 @@ public class POInfo {
 			//	From
 			sql.append("FROM SPS_Table t " +
 					"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) " +
-					"INNER JOIN SPS_Column_Trl ct ON(ct.SPS_Column_ID = c.SPS_Column_ID AND ct.AD_Language = '").append(language).append("') ");
+					"LEFT JOIN SPS_Column_Trl ct ON(ct.SPS_Column_ID = c.SPS_Column_ID AND ct.AD_Language = '").append(language).append("') ");
 		}
 		sql.append("WHERE c.IsActive = 'Y' ");
 		if(AD_Table_ID != 0)
