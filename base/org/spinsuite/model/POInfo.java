@@ -116,7 +116,8 @@ public class POInfo {
 					"c.SPS_Column_ID, " +
 					"c.ValueMax, " +
 					"c.ValueMin, " +
-					"c.VFormat ");
+					"c.VFormat, " + 
+					"c.InfoFactoryClass ");
 			//	From
 			sql.append("FROM SPS_Table t " +
 					"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) ");
@@ -152,7 +153,8 @@ public class POInfo {
 					"c.SPS_Column_ID, " +
 					"c.ValueMax, " +
 					"c.ValueMin, " +
-					"c.VFormat ");
+					"c.VFormat, " + 
+					"c.InfoFactoryClass ");
 			//	From
 			sql.append("FROM SPS_Table t " +
 					"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) " +
@@ -214,6 +216,7 @@ public class POInfo {
 				iColumn.ValueMax = rs.getString(i++);
 				iColumn.ValueMin = rs.getString(i++);
 				iColumn.VFormat = rs.getString(i++);
+				iColumn.InfoFactoryClass = rs.getString(i++);
 				//Log.i("m_IsAlwaysUpdateable", " - " + m_ColumnName + " = " + m_IsAlwaysUpdateable);
 				
 				columns.add(iColumn);
@@ -234,8 +237,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene el nombre de la tabla
-	 * @author Yamel Senih 26/02/2012, 23:42:37
+	 * Get Table Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2012, 23:42:37
 	 * @return
 	 * @return String
 	 */
@@ -244,8 +247,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Verifica si los registros son eliminables
-	 * @author Yamel Senih 07/06/2012, 09:27:31
+	 * Verify if is deleteable record
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/06/2012, 09:27:31
 	 * @return
 	 * @return boolean
 	 */
@@ -254,8 +257,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene el id de la tabla
-	 * @author Yamel Senih 26/02/2012, 23:43:36
+	 * Get Spin-Suite Table Identifier
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2012, 23:43:36
 	 * @return
 	 * @return int
 	 */
@@ -264,8 +267,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene la longitud del arreglo
-	 * @author Yamel Senih 27/02/2012, 00:27:09
+	 * Get Array Length
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 00:27:09
 	 * @return
 	 * @return int
 	 */
@@ -277,8 +280,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene la cantidad de columnas SQL
-	 * @author Yamel Senih 26/07/2012, 11:36:52
+	 * Get SQL Columns Quantity
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/07/2012, 11:36:52
 	 * @return
 	 * @return int
 	 */
@@ -287,8 +290,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene el nombre de una Columna con el indice de la misma
-	 * @author Yamel Senih 27/02/2012, 00:34:43
+	 * Get Column Name from Index
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 00:34:43
 	 * @param index
 	 * @return
 	 * @return String
@@ -301,8 +304,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene las columnas separadas por coma ","
-	 * @author Yamel Senih 29/03/2012, 23:58:58
+	 * Get Columns to Insert
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2012, 23:58:58
 	 * @return
 	 * @return String
 	 */
@@ -320,8 +323,8 @@ public class POInfo {
 	
 	
 	/**
-	 * Obtiene el ID de la columna a traves del nombre de la misma
-	 * @author Yamel Senih 27/02/2012, 00:47:51
+	 * Get AD Column Identifier
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/10/2014, 20:33:59
 	 * @param columnName
 	 * @return
 	 * @return int
@@ -337,8 +340,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene el indice de la columna pasandole el nombre
-	 * @author Yamel Senih 27/02/2012, 00:50:45
+	 * Get Column Index from Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 00:50:45
 	 * @param columnName
 	 * @return
 	 * @return int
@@ -357,8 +360,9 @@ public class POInfo {
 	}
 	
 	/**
-	 * Verifica si la columna tiene una llamada asociada
-	 * @author Yamel Senih 08/04/2012, 18:44:09
+	 * Is Callout
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/04/2012, 18:44:09
+	 * @param index
 	 * @param index
 	 * @return
 	 * @return boolean
@@ -373,8 +377,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene la columna SQL a partir del nombre de la columna
-	 * @author Yamel Senih 27/02/2012, 00:55:03
+	 * Get SQL Column from Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 00:55:03
 	 * @param columnName
 	 * @return
 	 * @return String
@@ -388,8 +392,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene la columna SQL a partir del indice de la columna
-	 * @author Yamel Senih 25/07/2012, 17:55:45
+	 * Get SQL Column from Index
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/07/2012, 17:55:45
 	 * @param index
 	 * @return
 	 * @return String
@@ -402,8 +406,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene el tipo de Visualizacion a partir del nombre de la columna
-	 * @author Yamel Senih 27/02/2012, 01:01:40
+	 * Get Display Type from Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 01:01:40
 	 * @param columnName
 	 * @return
 	 * @return int
@@ -417,8 +421,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene el tipo de Visualizacion a partir del indice de la columna
-	 * @author Yamel Senih 30/03/2012, 22:36:55
+	 * Get Display Type from index
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/03/2012, 22:36:55
 	 * @param index
 	 * @return
 	 * @return int
@@ -431,8 +435,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene informacion sobre si la columna es obligatoria
-	 * @author Yamel Senih 27/02/2012, 01:02:45
+	 * Get Is Manadory Property from name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 01:02:45
 	 * @param columnName
 	 * @return
 	 * @return boolean
@@ -446,8 +450,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene informacion sobre si la columna es obligatoria
-	 * @author Yamel Senih 08/04/2012, 20:58:03
+	 * Get Is Mandatory Property from name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/04/2012, 20:58:03
 	 * @param index
 	 * @return
 	 * @return boolean
@@ -460,8 +464,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene la logica predeterminada de la columna
-	 * @author Yamel Senih 27/02/2012, 01:04:19
+	 * Get Default Value from Column Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 01:04:19
 	 * @param columnName
 	 * @return
 	 * @return String
@@ -475,8 +479,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene la logica predeterminada de la columna
-	 * @author Yamel Senih 30/03/2012, 23:42:02
+	 * Get Default value from index
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/03/2012, 23:42:02
 	 * @param index
 	 * @return
 	 * @return String
@@ -489,8 +493,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene informacion sobre si es actualizable
-	 * @author Yamel Senih 27/02/2012, 01:05:24
+	 * Get Is Updateable
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 01:05:24
 	 * @param columnName
 	 * @return
 	 * @return boolean
@@ -503,6 +507,13 @@ public class POInfo {
 		return false;
 	}
 	
+	/**
+	 * Get Is Updateable from Index
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/10/2014, 20:40:02
+	 * @param index
+	 * @return
+	 * @return boolean
+	 */
 	public boolean isUpdateable(int index){
 		if(index >= 0){
 			return m_columns[index].IsUpdateable;
@@ -511,8 +522,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene informacion sobre el atributo IsAlwaysUpdateable
-	 * @author Yamel Senih 28/05/2012, 09:24:10
+	 * Get Is Always Updateable from Column Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/10/2014, 20:40:26
 	 * @param columnName
 	 * @return
 	 * @return boolean
@@ -526,8 +537,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene informacion sobre el atributo IsAlwaysUpdateable
-	 * @author Yamel Senih 28/05/2012, 09:25:03
+	 * Get Is Updateable from Index
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/05/2012, 09:25:03
 	 * @param index
 	 * @return
 	 * @return boolean
@@ -540,8 +551,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene la etiqueta de la columna
-	 * @author Yamel Senih 27/02/2012, 01:06:27
+	 * Get Name from Column Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 01:06:27
 	 * @param columnName
 	 * @return
 	 * @return String
@@ -555,8 +566,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene el nombre para mostrar de la columna
-	 * @author Yamel Senih 08/04/2012, 18:22:05
+	 * Get Name from Index
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/04/2012, 18:22:05
 	 * @param index
 	 * @return
 	 * @return String
@@ -567,25 +578,10 @@ public class POInfo {
 		}
 		return null;
 	}
-
-	/**
-	 * Obtiene informacion sobre si es traducida o no
-	 * @author Yamel Senih 27/02/2012, 01:07:24
-	 * @param columnName
-	 * @return
-	 * @return boolean
-	 */
-	/*public boolean getIsTranslated(String columnName){
-		int index = getColumnIndex(columnName);
-		if(index >= 0){
-			return m_columns[index].IsTranslated;
-		}
-		return false;
-	}*/
 	
 	/**
-	 * Obtiene informacion sobre si es encriptada
-	 * @author Yamel Senih 27/02/2012, 01:08:04
+	 * Get Is Encrypted from Column Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 01:08:04
 	 * @param columnName
 	 * @return
 	 * @return boolean
@@ -599,8 +595,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene la longitud de la columna
-	 * @author Yamel Senih 27/02/2012, 01:08:52
+	 * Get Field Length
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 01:08:52
 	 * @param columnName
 	 * @return
 	 * @return int
@@ -614,8 +610,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene el valor minimo de la columna
-	 * @author Yamel Senih 27/02/2012, 01:09:37
+	 * Get Minimum Value
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 01:09:37
 	 * @param columName
 	 * @return
 	 * @return String
@@ -629,9 +625,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene si la Columna es SQL
-	 * a partir del Nombre de la Columna
-	 * @author Yamel Senih 25/07/2012, 17:47:04
+	 * Get Is Column SQL from column Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/07/2012, 17:47:53
 	 * @param columnName
 	 * @return
 	 * @return boolean
@@ -645,9 +640,8 @@ public class POInfo {
 	}
 	
 	/**
-	 * Obtiene si la Columna es SQL
-	 * a partir del indice de la Columna
-	 * @author Yamel Senih 25/07/2012, 17:47:53
+	 * Get Is Column SQL from index
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/07/2012, 17:47:53
 	 * @param index
 	 * @return
 	 * @return boolean
@@ -661,8 +655,8 @@ public class POInfo {
 	
 	
 	/**
-	 * Obtiene el valor Maximo de la columna
-	 * @author Yamel Senih 27/02/2012, 01:10:09
+	 * Get Max Value
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 01:10:09
 	 * @param columnName
 	 * @return
 	 * @return String
@@ -674,43 +668,10 @@ public class POInfo {
 		}
 		return null;
 	}
-
-	/**
-	 * Convierte los valores de un parametro value 
-	 * a su valor dependiendo del tipo de columna
-	 * @author Yamel Senih 27/03/2012, 02:29:02
-	 * @param index
-	 * @param value
-	 * @return
-	 * @return Object
-	 */
-	public Object parseType(int index, Object value){
-		if(index >= 0){
-			
-		}
-		return null;
-	}
 	
 	/**
-	 * Convierte los valores de un parametro value 
-	 * a su valor dependiendo del tipo de columna
-	 * @author Yamel Senih 27/03/2012, 02:30:41
-	 * @param columName
-	 * @param value
-	 * @return
-	 * @return Object
-	 */
-	public Object parseType(String columName, Object value){
-		int index = getColumnIndex(columName);
-		if(index >= 0){
-			return m_columns[index].ValueMax;
-		}
-		return null;
-	}
-	
-	/**
-	 * Obtiene el valor de la columna si es Virtual o no
-	 * @author Yamel Senih 10/08/2012, 11:19:00
+	 * Get Column  Name for Select
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/10/2014, 20:47:03
 	 * @param ctx
 	 * @param infoColumn
 	 * @param index
@@ -758,6 +719,4 @@ public class POInfo {
 		}
 		return null;
 	}
-	
-	
 }

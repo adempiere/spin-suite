@@ -374,4 +374,10 @@ public class VLookupSpinner extends GridField
 		//	
 		v_Spinner.setAdapter(sp_adapter);
 	}
+
+	@Override
+	public void setValueAndOldValue(Object value) {
+		setValue(value);
+		m_OldValue = getValue();
+	}
 }

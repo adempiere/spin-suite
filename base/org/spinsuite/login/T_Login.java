@@ -192,12 +192,12 @@ public class T_Login extends Fragment implements I_Login {
      			et_User.setText(user);
      	}
      	
-     	//	Recuerda Contraseña Check
+     	//	Save Pass Check
      	ch_SavePass.setChecked(Env.isSavePass(this.getActivity()));
-     	//	Recuerda Cerrado Automático de Visitas
+     	//	Auto Login Check
      	ch_AutoLogin.setChecked(Env.isAutoLogin(this.getActivity()));
      	
-     	//	Recuerda la Contraseña
+     	//	Save Pass
  		if(pass == null || pass.length() == 0){
  			if(Env.isSavePass(this.getActivity())){
  				pass = Env.getContext(this.getActivity(), "#SPass");

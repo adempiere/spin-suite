@@ -480,7 +480,10 @@ public class V_Process extends Activity {
 			//	Table Direct
 			if(field.DisplayType == DisplayType.TABLE_DIR){
 				lookup = new VLookupSpinner(this, field);
-			} else if(field.DisplayType == DisplayType.SEARCH){
+			} else if(field.DisplayType == DisplayType.SEARCH
+					|| field.DisplayType == DisplayType.LOCATION
+					|| field.DisplayType == DisplayType.LOCATOR
+					|| field.DisplayType == DisplayType.ACCOUNT){
 				lookup = new VLookupSearch(this, field);
 			}
 		}

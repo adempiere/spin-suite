@@ -250,7 +250,9 @@ public final class DisplayType
 	public static boolean isLookup(int displayType)
 	{
 		if (displayType == LIST || displayType == TABLE
-			|| displayType == TABLE_DIR || displayType == SEARCH)
+			|| displayType == TABLE_DIR || displayType == SEARCH
+			//	Added
+			|| displayType == LOCATION || displayType == LOCATOR)
 			return true;
 		return false;
 	}	//	isLookup

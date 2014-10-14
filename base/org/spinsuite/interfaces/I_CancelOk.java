@@ -15,7 +15,6 @@
  *************************************************************************************/
 package org.spinsuite.interfaces;
 
-import android.content.Intent;
 
 /**
  * @author Yamel Senih
@@ -37,14 +36,5 @@ public interface I_CancelOk {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean processActionCancel();
-	
-	/**
-	 * Get Activity Parameters
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/02/2014, 10:07:44
-	 * @return
-	 * @return Intent
-	 */
-	public Intent getParam();
-	
+	public boolean processActionCancel();	
 }

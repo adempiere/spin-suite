@@ -539,6 +539,7 @@ public final class Env {
 	public static void setContext (Context ctx, String context, int value) {
 		if (ctx == null || context == null)
 			return;
+		LogM.log(ctx, "Env", Level.INFO, "setContext(" + context+", " + value);
 		Editor ep = getEditor(ctx);
 		ep.putString(context, String.valueOf(value));
 		ep.commit();
@@ -1885,8 +1886,9 @@ public final class Env {
 	 */
 
 	/** Context Language identifier */
-	public static final String      LANGUAGE = "#AD_Language";
-	public static final String      BASE_LANGUAGE = "en_US";
+	public static final String      LANGUAGE 			= "#AD_Language";
+	public static final String      BASE_LANGUAGE 		= "en_US";
+	public static final String      BASE_COUNTRY_CODE 	= "US";
 	
 	/************************************Security******************************
 	 * Security Access
@@ -1900,32 +1902,32 @@ public final class Env {
 	/************************************Env***************************************
 	 * Database Context
 	 */
-	private static final String		DB_VERSION = "#DB_Version";
-	private static final String		DB_NAME_KEY = "#DB_Name";
-	private static final String		DOC_DIRECTORY_KEY = "#DOC_Name";
-	private static final String		IMG_DIRECTORY_KEY = "#IMG_Name";
+	private static final String		DB_VERSION 			= "#DB_Version";
+	private static final String		DB_NAME_KEY 		= "#DB_Name";
+	private static final String		DOC_DIRECTORY_KEY 	= "#DOC_Name";
+	private static final String		IMG_DIRECTORY_KEY 	= "#IMG_Name";
 	/******************************************************************************
 	 * App Context
 	 */
-	public static final String 		APP_DIRECTORY = "ERP";
-	public static final String 		DB_DIRECTORY = "data";
-	public static final String 		DOC_DIRECTORY = APP_DIRECTORY + File.separator + "Documents";
-	public static final String 		IMG_DIRECTORY = APP_DIRECTORY + File.separator + "Images";
-	public static final String 		TMP_DIRECTORY = APP_DIRECTORY + File.separator + "Tmp";
+	public static final String 		APP_DIRECTORY 		= "ERP";
+	public static final String 		DB_DIRECTORY 		= "data";
+	public static final String 		DOC_DIRECTORY 		= APP_DIRECTORY + File.separator + "Documents";
+	public static final String 		IMG_DIRECTORY 		= APP_DIRECTORY + File.separator + "Images";
+	public static final String 		TMP_DIRECTORY 		= APP_DIRECTORY + File.separator + "Tmp";
 	//	Database
-	public static final String 		DB_PATH_DIRECTORY = APP_DIRECTORY + File.separator + DB_DIRECTORY;
-	public static final String		DB_PATH_NAME = DB_PATH_DIRECTORY + File.separator + DB.DB_NAME;
+	public static final String 		DB_PATH_DIRECTORY 	= APP_DIRECTORY + File.separator + DB_DIRECTORY;
+	public static final String		DB_PATH_NAME 		= DB_PATH_DIRECTORY + File.separator + DB.DB_NAME;
 	//	Key Directory
 	public static final String 		APP_BASE_DIRECTORY_CTX_NAME = "#APP_BASE_DIRECTORY_CTX_NAME";
 	/***************************************************************************
 	 * Prefix
 	 */
-	public static final String		ACTIVITY_NO = "|AN|";
+	public static final String		ACTIVITY_NO 		= "|AN|";
 	public static final String		CURRENT_ACTIVITY_NO = "|CAN|";
-	public static final String		ID_TAB = "T_Record_ID";
-	public static final String		ID_PARENT_TAB = "T_P_Record_ID";
-	public static final String		CURRENT_TAB = "|CT|";
-	public static final String		SUMMARY_RECORD_ID = "#SummRID";
+	public static final String		ID_TAB 				= "T_Record_ID";
+	public static final String		ID_PARENT_TAB 		= "T_P_Record_ID";
+	public static final String		CURRENT_TAB 		= "|CT|";
+	public static final String		SUMMARY_RECORD_ID 	= "#SummRID";
 	
 	/**	Big Decimal 0	 */
 	public static final BigDecimal 	ZERO = new BigDecimal(0.0);

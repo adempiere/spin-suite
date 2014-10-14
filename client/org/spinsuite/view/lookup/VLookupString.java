@@ -173,4 +173,16 @@ public class VLookupString extends GridField {
 		return v_String.getText().toString();
 	}
 
+	@Override
+	public void setValueAndOldValue(Object value) {
+		//	
+		if(value == null
+				|| ((String)value).length() <= 0)
+			v_String.setText("");
+		else
+			v_String.setText((String)value);
+		//	Set Old Value
+		m_OldValue = v_String.getText().toString();
+	}
+
 }

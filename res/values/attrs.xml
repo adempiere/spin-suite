@@ -37,6 +37,7 @@
 	<attr name="ic_lt_search" format="reference"/>
 	<attr name="ic_lt_search_product" format="reference"/>
 	<attr name="ic_lt_search_bpartner" format="reference"/>
+	<attr name="ic_lt_search_location" format="reference"/>
 	<attr name="ic_lt_date" format="reference"/>
 	<!-- Icon List -->
 	<attr name="ic_ls_ok" format="reference"/>

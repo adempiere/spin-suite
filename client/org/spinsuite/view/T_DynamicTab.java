@@ -934,7 +934,10 @@ public class T_DynamicTab extends Fragment
 			for(InfoField field : tabInfo.getFields()){
 				if(field.IsDisplayed
 						&& DisplayType.isLookup(field.DisplayType)
-						&& field.DisplayType != DisplayType.SEARCH){
+						&& field.DisplayType != DisplayType.SEARCH
+						&& field.DisplayType != DisplayType.LOCATION
+						&& field.DisplayType != DisplayType.LOCATOR
+						&& field.DisplayType != DisplayType.ACCOUNT){
 					//	Add View to Layout
 					Lookup lookup = new Lookup(getActivity(), getTabParameter(), field);
 					lookup.load();
@@ -1022,7 +1025,10 @@ public class T_DynamicTab extends Fragment
 						|| field.DisplayType == DisplayType.LIST
 						|| field.DisplayType == DisplayType.TABLE){
 					lookup = new VLookupSpinner(getActivity(), field, tabParam, m_Lookup.get(m_currentLookup++));
-				} else if(field.DisplayType == DisplayType.SEARCH){
+				} else if(field.DisplayType == DisplayType.SEARCH 
+						|| field.DisplayType == DisplayType.LOCATION
+						|| field.DisplayType == DisplayType.LOCATOR
+						|| field.DisplayType == DisplayType.ACCOUNT){
 					lookup = new VLookupSearch(getActivity(), field, tabParam);
 				}
 			} else if(field.DisplayType == DisplayType.BUTTON){

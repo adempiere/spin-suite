@@ -15,9 +15,14 @@
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
+import java.util.logging.Level;
+
 import org.spinsuite.base.R;
+import org.spinsuite.interfaces.I_Search;
 import org.spinsuite.util.DisplayRecordItem;
+import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.LogM;
 import org.spinsuite.view.LV_Search;
 
 import android.app.Activity;
@@ -36,7 +41,8 @@ import android.widget.LinearLayout;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class VSearch extends LinearLayout implements OnClickListener {
+public class VSearch extends LinearLayout 
+						implements OnClickListener, I_Search {
 
 	/**
 	 * 
@@ -46,7 +52,7 @@ public class VSearch extends LinearLayout implements OnClickListener {
 	 */
 	public VSearch(Activity activity) {
 		super(activity);
-		this.activity = activity;
+		this.v_activity = activity;
 		LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutInflater.inflate(R.layout.v_lookup_search, this);
         init();
@@ -57,15 +63,28 @@ public class VSearch extends LinearLayout implements OnClickListener {
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/03/2014, 21:49:47
 	 * @param activity
+	 * @param callback
 	 * @param m_field
 	 */
-	public VSearch(Activity activity, InfoField m_field) {
+	public VSearch(Activity activity, GridField callback, InfoField m_field) {
 		super(activity);
-		this.activity = activity;
+		this.v_activity = activity;
 		this.m_field = m_field;
+		this.m_callback = callback;
 		LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutInflater.inflate(R.layout.v_lookup_search, this);
         init();
+	}
+	
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/10/2014, 22:29:00
+	 * @param activity
+	 * @param m_field
+	 */
+	public VSearch(Activity activity, InfoField m_field) {
+		this(activity, null, m_field);
 	}
 	
 	/**
@@ -77,7 +96,7 @@ public class VSearch extends LinearLayout implements OnClickListener {
 	 */
 	public VSearch(Activity activity, AttributeSet attrs) {
 		super(activity, attrs);
-		this.activity = activity;
+		this.v_activity = activity;
 		LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		layoutInflater.inflate(R.layout.v_lookup_search, this);
         init();
@@ -88,11 +107,13 @@ public class VSearch extends LinearLayout implements OnClickListener {
 	/**	Edit text display		*/
 	private EditText 			et_Search;
 	/**	Activity				*/
-    private Activity 			activity;
+    private Activity 			v_activity;
     /**	Item					*/
     private DisplayRecordItem 	item;
     /**	Field					*/
     private InfoField			m_field;
+    /**	Grid Field				*/
+    private GridField			m_callback;
 	
     /**
      * Init
@@ -110,10 +131,13 @@ public class VSearch extends LinearLayout implements OnClickListener {
 		//	Optional Business Partner and Product
 		if(m_field.ColumnName.equals("C_BPartner_ID"))
 			ib_Search.setImageResource(
-					Env.getResourceID(activity, R.attr.ic_lt_search_bpartner));
+					Env.getResourceID(v_activity, R.attr.ic_lt_search_bpartner));
 		else if(m_field.ColumnName.equals("M_Product_ID"))
 			ib_Search.setImageResource(
-					Env.getResourceID(activity, R.attr.ic_lt_search_product));
+					Env.getResourceID(v_activity, R.attr.ic_lt_search_product));
+		else if(m_field.ColumnName.equals("C_Location_ID"))
+			ib_Search.setImageResource(
+					Env.getResourceID(v_activity, R.attr.ic_lt_search_location));
 	}
 	
 	/**
@@ -152,20 +176,50 @@ public class VSearch extends LinearLayout implements OnClickListener {
 		ib_Search.setEnabled(enabled);
 	}
 	
-	/* (non-Javadoc)
-	 * @see android.view.View.OnClickListener#onClick(android.view.View)
-	 */
 	@Override
 	public void onClick(View v) {
 		if(m_field != null){
     		Bundle bundle = new Bundle();
     		bundle.putParcelable("Field", m_field);
-    		//	Intent
-    		Intent intent = new Intent(activity, LV_Search.class);
+    		Class<?> clazz = LV_Search.class;
+    		//	Intent from Info Factory Class
+    		if(m_field.InfoFactoryClass != null
+    				&& m_field.InfoFactoryClass.length() > 0) {
+    			clazz = getClassFromName(m_field.InfoFactoryClass);
+    		} else if(m_field.DisplayType == DisplayType.LOCATION) {
+    			//	
+    			V_LocationDialog v_locationDialog = new V_LocationDialog(v_activity, this, getRecord_ID());
+    			v_locationDialog.show(v_activity.getFragmentManager(), "Location");
+    			//	finish
+    			return;
+    		} else if(m_field.DisplayType == DisplayType.LOCATOR) {
+    			//	not yet implemented
+    		} else if(m_field.DisplayType == DisplayType.ACCOUNT) {
+    			//	not yet implemented
+    		}
+    		//	
+    		Intent intent = new Intent(v_activity, clazz);
     		intent.putExtras(bundle);
     		//	Start
-    		activity.startActivityForResult(intent, 0);
+    		v_activity.startActivityForResult(intent, 0);
     	}
+	}
+	
+	/**
+	 * Get Class from Class Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/10/2014, 11:28:26
+	 * @param className
+	 * @return
+	 * @return Class<?>
+	 */
+	private Class<?> getClassFromName(String className) {
+		try {
+			Class<?> clazz = Class.forName(className);
+			return clazz;
+		} catch (ClassNotFoundException e) {
+			LogM.log(v_activity, getClass(), Level.SEVERE, "Error:", e);
+		}
+		return null;
 	}
 	
 	/**
@@ -191,4 +245,13 @@ public class VSearch extends LinearLayout implements OnClickListener {
 			return item.getValue();
 		return null;
 	}
+
+	@Override
+	public void okAction(Object value) {
+		//	Valid Null
+		if(m_callback != null) {
+			m_callback.setValue(value);
+		}
+	}
+	
 }

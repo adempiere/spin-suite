@@ -277,7 +277,7 @@ public class InfoTab {
 					"c.FormatPattern, c.IsAlwaysUpdateable, c.IsCentrallyMaintained, c.IsEncrypted, c.IsIdentifier, c.IsKey, " +
 					"CASE WHEN f.IsMandatory = 'Y' THEN f.IsMandatory ELSE c.IsMandatory END IsMandatory, " +
 					"c.IsParent, c.IsSelectionColumn, c.IsUpdateable, c.SelectionSeqNo, " +
-					"c.SeqNo, c.SPS_Column_ID, c.SPS_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, c.AD_Process_ID, p.AD_Form_ID, " +
+					"c.SeqNo, c.SPS_Column_ID, c.SPS_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, c.InfoFactoryClass, c.AD_Process_ID, p.AD_Form_ID, " +
 					//	Fields
 					"f.Name, f.Description, f.Help, " + 
 					"f.AD_FieldGroup_ID, f.DisplayLogic, f.IsActive, f.IsDisplayed, " +
@@ -301,7 +301,7 @@ public class InfoTab {
 					"c.FormatPattern, c.IsAlwaysUpdateable, c.IsCentrallyMaintained, c.IsEncrypted, c.IsIdentifier, c.IsKey, " +
 					"CASE WHEN f.IsMandatory = 'Y' THEN f.IsMandatory ELSE c.IsMandatory END IsMandatory, " +
 					"c.IsParent, c.IsSelectionColumn, c.IsUpdateable, c.SelectionSeqNo, " +
-					"c.SeqNo, c.SPS_Column_ID, c.SPS_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, c.AD_Process_ID, p.AD_Form_ID, " +
+					"c.SeqNo, c.SPS_Column_ID, c.SPS_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, c.InfoFactoryClass, c.AD_Process_ID, p.AD_Form_ID, " +
 					//	Fields
 					"COALESCE(ft.Name, f.Name) Name, COALESCE(ft.Description, f.Description) Description, COALESCE(ft.Help, f.Help) Help, " + 
 					"f.AD_FieldGroup_ID, f.DisplayLogic, f.IsActive, f.IsDisplayed, " +
@@ -397,6 +397,7 @@ public class InfoTab {
 				iFieldColumn.ValueMax = rs.getString(i++);
 				iFieldColumn.ValueMin = rs.getString(i++);
 				iFieldColumn.VFormat = rs.getString(i++);
+				iFieldColumn.InfoFactoryClass = rs.getString(i++);
 				iFieldColumn.AD_Process_ID = rs.getInt(i++);
 				iFieldColumn.AD_Form_ID = rs.getInt(i++);
 				//	Fields
@@ -855,6 +856,19 @@ public class InfoTab {
 		if(m_fields == null || index <= 0)
 			return null;
 		return m_fields[index].VFormat;
+	}
+	
+	/**
+	 * Get Info Factory Class
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/10/2014, 20:28:24
+	 * @param index
+	 * @return
+	 * @return String
+	 */
+	public String getInfoFactoryClass(int index) {
+		if(m_fields == null || index <= 0)
+			return null;
+		return m_fields[index].InfoFactoryClass;
 	}
 	
 	/**

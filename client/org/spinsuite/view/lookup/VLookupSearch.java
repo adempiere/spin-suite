@@ -98,18 +98,18 @@ public class VLookupSearch extends GridField
 	}
 	
 	/**	Search 				*/
-	private VSearch 			v_Search = null;
+	private VSearch 			v_Search 	= null;
 	/**	Activity from		*/
-	private Activity 			v_Activity = null;
+	private Activity 			v_Activity 	= null;
 	/**	Set Old Value		*/
-	private Object				m_OldValue = null;
+	private Object				m_OldValue 	= null;
 	/**	Lookup				*/
-	private Lookup 	m_Lookup = null;
+	private Lookup 				m_Lookup 	= null;
 	
 	@Override
 	protected void init() {
 		//activity.ona
-		v_Search = new VSearch(v_Activity, m_field);
+		v_Search = new VSearch(v_Activity, this, m_field);
 		setEnabled(!m_field.IsReadOnly);
 		//	Add to View
 		addView(v_Search);
@@ -224,5 +224,17 @@ public class VLookupSearch extends GridField
 		return "VLookupSearch [v_Search=" + v_Search + ", v_Activity="
 				+ v_Activity + ", m_OldValue=" + m_OldValue + ", m_Lookup="
 				+ m_Lookup + "]";
+	}
+
+	@Override
+	public void setValueAndOldValue(Object value) {
+		//	
+		if(value instanceof Integer
+				&& ((Integer)value) == v_Search.getRecord_ID())
+			return;
+		//	Set Old Value
+		m_OldValue = getValue();
+		//	
+		loadValue(value);
 	}
 }

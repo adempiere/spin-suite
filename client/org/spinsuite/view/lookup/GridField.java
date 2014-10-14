@@ -185,6 +185,14 @@ public abstract class GridField extends LinearLayout {
 	public abstract void setValue(Object value);
 	
 	/**
+	 * Set value to lookup and old value
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/10/2014, 17:36:47
+	 * @param value
+	 * @return void
+	 */
+	public abstract void setValueAndOldValue(Object value);
+	
+	/**
 	 * Get Value
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/02/2014, 08:31:05
 	 * @return
@@ -514,7 +522,7 @@ public abstract class GridField extends LinearLayout {
 		return (getValue() != null && getOldValue() == null) 
 				|| (getValue() == null && getOldValue() != null) 
 				|| !getValueAsString().equals(getOldValueAsString())
-				|| getValueAsInt() != getOldValueAsInt()
+				|| (DisplayType.isNumeric(m_field.DisplayType) && getValueAsInt() != getOldValueAsInt())
 				|| getValueAsBoolean() != getOldValueAsBoolean();
 	}
 	
@@ -656,7 +664,10 @@ public abstract class GridField extends LinearLayout {
 				//	Valid Null
 				gridField = new VLookupSpinner(act, field, p_TabParameter, m_Lookup);
 					//gridField = new VLookupSpinner(act, field);
-			} else if(field.DisplayType == DisplayType.SEARCH) {
+			} else if(field.DisplayType == DisplayType.SEARCH
+					|| field.DisplayType == DisplayType.LOCATION
+					|| field.DisplayType == DisplayType.LOCATOR
+					|| field.DisplayType == DisplayType.ACCOUNT) {
 				gridField = new VLookupSearch(act, field);
 			}
 		} else if(field.DisplayType == DisplayType.BUTTON) {
@@ -740,11 +751,11 @@ public abstract class GridField extends LinearLayout {
 					"c.Callout, c.ColumnName, c.ColumnSQL, c.EntityType, c.FieldLength, c.FormatPattern, c.IsAlwaysUpdateable, " +
 					"c.IsCentrallyMaintained, c.IsEncrypted, c.IsIdentifier, c.IsKey, c.IsMandatory, c.IsParent, c.IsSelectionColumn, " +
 					"c.IsUpdateable, c.SelectionSeqNo, c.SeqNo, c.SPS_Column_ID, c.SPS_Table_ID, c.ValueMax, c.ValueMin, c.VFormat, " +
-					"c.AD_Process_ID, ct.Name, c.Description, c.IsActive " +
+					"c.AD_Process_ID, COALESCE(ct.Name, c.Name) Name, c.Description, c.IsActive " +
 					//	From
 					"FROM SPS_Table t " +
 					"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) " +
-					"INNER JOIN SPS_Column_Trl ct ON(ct.SPS_Column_ID = c.SPS_Column_ID AND ct.AD_Language = '").append(language).append("') ");
+					"LEFT JOIN SPS_Column_Trl ct ON(ct.SPS_Column_ID = c.SPS_Column_ID AND ct.AD_Language = '").append(language).append("') ");
 		}
 		//	Parameters
 		String [] values = null;

@@ -109,6 +109,8 @@ public class POInfoColumn implements Parcelable {
 	public String		ValueMin;
 	/**	View Format		*/
 	public String		VFormat;
+	/**	Info Factory	*/
+	public String 		InfoFactoryClass;
 	/**	Process ID		*/
 	public int 			AD_Process_ID;
 	/**	Form ID			*/
@@ -172,6 +174,7 @@ public class POInfoColumn implements Parcelable {
 		dest.writeString(ValueMax);
 		dest.writeString(ValueMin);
 		dest.writeString(VFormat);
+		dest.writeString(InfoFactoryClass);
 		dest.writeInt(AD_Process_ID);
 		dest.writeInt(AD_Form_ID);
 	}
@@ -224,6 +227,7 @@ public class POInfoColumn implements Parcelable {
 		ValueMax = parcel.readString();
 		ValueMin = parcel.readString();
 		VFormat = parcel.readString();
+		InfoFactoryClass = parcel.readString();
 		AD_Process_ID = parcel.readInt();
 		AD_Form_ID = parcel.readInt();
 	}
@@ -249,7 +253,8 @@ public class POInfoColumn implements Parcelable {
 				+ ", SelectionSeqNo=" + SelectionSeqNo + ", SeqNo=" + SeqNo
 				+ ", SPS_Column_ID=" + SPS_Column_ID + ", SPS_Table_ID="
 				+ SPS_Table_ID + ", ValueMax=" + ValueMax + ", ValueMin="
-				+ ValueMin + ", VFormat=" + VFormat + ", AD_Process_ID="
+				+ ValueMin + ", VFormat=" + VFormat 
+				+ ", InfoFactoryClass=" + InfoFactoryClass + ", AD_Process_ID="
 				+ AD_Process_ID + ", AD_Form_ID=" + AD_Form_ID + "]";
 	}
 

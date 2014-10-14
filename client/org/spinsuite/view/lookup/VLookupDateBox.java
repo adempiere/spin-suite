@@ -170,4 +170,16 @@ public class VLookupDateBox extends GridField {
 		v_DateBox.setOnFieldChangeListener(m_Listener);
 	}
 
+	@Override
+	public void setValueAndOldValue(Object value) {
+		//	
+		if(value != null
+				&& value instanceof Date)
+			v_DateBox.setDate((Date)value);
+		else 
+			v_DateBox.setDate(null);
+		//	Set Old Value
+		m_OldValue = v_DateBox.getDate();
+	}
+
 }

@@ -19,6 +19,7 @@ import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_CancelOk;
 import org.spinsuite.interfaces.I_Login;
+import org.spinsuite.model.MCountry;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.Msg;
 import org.spinsuite.view.LV_Menu;
@@ -165,6 +166,23 @@ public class Login extends TV_Base implements I_CancelOk {
 			if(ret){
 				//	Set Confirm Login
 				Env.setAutoLoginComfirmed(this, Env.isAutoLogin(this));
+				//	Set Country Code
+				String language = Env.getAD_Language(this);
+				//	
+				if(language == null)
+					language = Env.BASE_LANGUAGE;
+				//	
+				String countryCode = language.substring(3);
+				//	
+				if(countryCode == null)
+					countryCode = Env.BASE_COUNTRY_CODE;
+				//	Set to Context
+				int m_C_Country_ID = MCountry.getC_Country_IDFromCode(this, countryCode);
+				//	Set Country
+				if(m_C_Country_ID < 0)
+					m_C_Country_ID = 0;
+				//	
+				Env.setContext(this, "#C_Country_ID", m_C_Country_ID);
 				//	
 				if(!Env.isAccessLoaded(this)) {
 					//	Load Access Role
@@ -214,11 +232,6 @@ public class Login extends TV_Base implements I_CancelOk {
 	@Override
 	public boolean processActionCancel() {
 		return false;
-	}
-
-	@Override
-	public Intent getParam() {
-		return null;
 	}
 	
 	/**

@@ -46,6 +46,7 @@
         <item name="ic_lt_search">@drawable/search_m</item>
         <item name="ic_lt_search_product">@drawable/package_m</item>
         <item name="ic_lt_search_bpartner">@drawable/bpartner_m</item>
+        <item name="ic_lt_search_location">@drawable/location_m</item>
         <item name="ic_lt_date">@drawable/calendar_m</item>
         <!-- Icon List -->
         <item name="ic_ls_ok">@drawable/ok_h</item>

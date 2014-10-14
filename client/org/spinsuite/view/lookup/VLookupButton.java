@@ -201,4 +201,16 @@ public class VLookupButton extends GridField {
 	public Activity getActivity() {
 		return v_activity;
 	}
+
+	@Override
+	public void setValueAndOldValue(Object value) {
+		//	
+		if(value == null
+				|| ((String)value).length() <= 0)
+			m_Value = null;
+		else
+			m_Value = (String)value;
+		//	Set Old Value
+		m_OldValue = m_Value;
+	}
 }

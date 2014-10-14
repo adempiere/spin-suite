@@ -191,4 +191,20 @@ public class VLookupCheckBox extends GridField {
 		//	Default No
 		return getContext().getString(R.string.msg_No);
 	}
+
+	@Override
+	public void setValueAndOldValue(Object value) {
+		//	
+		boolean flag = false;
+		if(value != null){
+			if(value instanceof Boolean)
+				flag = (Boolean) value;
+			else if(value instanceof String)
+				flag = ((String) value).equals("Y");
+		}
+		//	Set Old Value
+		m_OldValue = v_CheckBox.isChecked();
+		//	Set Flag
+		v_CheckBox.setChecked(flag);
+	}
 }
