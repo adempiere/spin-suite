@@ -1,5 +1,5 @@
 /******************************************************************************
- * Product: Adempiere ERP & CRM Smart Business Solution                       *
+ * Product: Spin-Suite (Making your Business Spin)                            *
  * Copyright (C) 1999-2007 ComPiere, Inc. All Rights Reserved.                *
  * This program is free software, you can redistribute it and/or modify it    *
  * under the terms version 2 of the GNU General Public License as published   *
@@ -20,7 +20,6 @@ package org.spinsuite.model;
 import android.content.Context;
 import android.database.Cursor;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.Date;
 import org.spinsuite.base.DB;
 import org.spinsuite.util.Env;
@@ -29,14 +28,7 @@ import org.spinsuite.util.KeyNamePair;
 /** Generated Model for C_Currency
  *  @author Adempiere (generated) 
  *  @version Release 3.7.0LTS (1252452765) - $Id$ */
-public class X_C_Currency extends PO implements I_C_Currency
-{
-
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 20141011L;
-
+public class X_C_Currency extends PO implements I_C_Currency {
     /** Standard Constructor */
     public X_C_Currency (Context ctx, int C_Currency_ID, DB conn)
     {

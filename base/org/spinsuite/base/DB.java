@@ -632,6 +632,19 @@ public class DB extends SQLiteOpenHelper {
 	}
 	
 	/**
+	 * Get SQL Value with exception without parameters
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 10:51:39
+	 * @param ctx
+	 * @param sql
+	 * @param params
+	 * @return
+	 * @return int
+	 */
+	public static int getSQLValueEx(Context ctx, String sql, String... params) {
+		return getSQLValueEx(ctx, sql, null, params);
+	}
+	
+	/**
 	 * Get Value SQL as int
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 14:25:42
 	 * @param ctx

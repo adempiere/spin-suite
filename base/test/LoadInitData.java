@@ -27,7 +27,6 @@ import org.spinsuite.util.Env;
 import org.spinsuite.util.Msg;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Environment;
 
 /**
@@ -39,18 +38,24 @@ public class LoadInitData {
 	private Context ctx;
 	private static final String 	KEY_POS_TAB			= "posTab";
 	
-	public LoadInitData(Context ctx){
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 15:56:19
+	 * @param ctx
+	 */
+	public LoadInitData(Context ctx) {
 		this.ctx = ctx;
 	}
 	
 	/**
-	 * Load data for Demo
+	 * Load initial data
 	 * @author Yamel Senih 29/11/2012, 09:46:26
 	 * @return void
 	 */
-	public void initialLoad_copyDB(){
-		if(!Env.isEnvLoad(ctx)){
-			if(Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+	public void initialLoad_copyDB() {
+		if(!Env.isEnvLoad(ctx)) {
+			if(Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
 				String basePathName = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
 				//	Application Path
 				String dbPath = basePathName + Env.DB_PATH_DIRECTORY;
@@ -72,7 +77,7 @@ public class LoadInitData {
 				} else if(f.isDirectory()) {
 					File fDB = new File(dbPathName);
 					fDB.delete();
-				} else if(f.isFile()){
+				} else if(f.isFile()) {
 					if(!f.mkdirs())
 						Msg.toastMsg(ctx, ctx.getString(R.string.msg_ErrorCreatingDirectory) 
 								+ "\"" + dbPathName + "\"");
@@ -96,6 +101,7 @@ public class LoadInitData {
 			} else {
 				Env.setDB_PathName(ctx, DB.DB_NAME);
 			}
+			//	
 			try {
 				InputStream is = ctx.getResources().openRawResource(R.raw.spin_suite);
 				
@@ -108,7 +114,7 @@ public class LoadInitData {
 
 				int available = 0;
 				//	Copy
-				while ((available = is.read(buffer)) >= 0){
+				while ((available = is.read(buffer)) >= 0) {
 					outputStream.write(buffer, 0, available);
 				}
 				//	Close
@@ -119,7 +125,6 @@ public class LoadInitData {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			loadContext();
     	}		
 	}	//	initialLoad_copyDB
 
@@ -128,7 +133,7 @@ public class LoadInitData {
 	 * @author Yamel Senih 30/11/2012, 11:55:26
 	 * @return void
 	 */
-	public void setContextTest(){
+	public void setContextTest() {
 		//	Set Context Default Values for Demo
 		Env.setIsEnvLoad(ctx, true);
 		Env.setContext(ctx, "#SUser", "SuperUser");
@@ -137,27 +142,5 @@ public class LoadInitData {
 		Env.setAutoLogin(ctx, true);
 		Env.setContext(ctx, KEY_POS_TAB, 1);
 		Env.setContext(ctx, "#Timeout", 10000000);
-	}
-	
-	private void loadContext(){
-    	/**
-		 * Carlos Parada, Carga variables en contexto sila sincronizacion fue exitosa 
-		 */
-    	
-		if (Env.isEnvLoad(ctx))
-		{	
-			String sql = new String("SELECT sc.Name, sc.Value FROM AD_SysConfig sc");
-	    	DB con = new DB(ctx);
-	    	con.openDB(DB.READ_ONLY);
-	    	Cursor rs = con.querySQL(sql, null);
-	    	if(rs.moveToFirst()){
-				do {
-					Env.setContext(ctx, "#" + rs.getString(0), rs.getInt(1));
-				} while(rs.moveToNext());
-			}
-	    	con.closeDB(rs);
-	    		
-		}
-    }
-	
+	}	
 }

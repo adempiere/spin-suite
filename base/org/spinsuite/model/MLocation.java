@@ -47,5 +47,81 @@ public class MLocation extends X_C_Location {
 	public MLocation(Context ctx, Cursor rs, DB conn) {
 		super(ctx, rs, conn);
 	}
+	
+	/**
+	 * Get Location from ID
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 2:38:43
+	 * @param ctx
+	 * @param p_C_Location_ID
+	 * @param conn
+	 * @return
+	 * @return MLocation
+	 */
+	public static MLocation get(Context ctx, int p_C_Location_ID, DB conn) {
+		if(p_C_Location_ID <= 0)
+			return null;
+		//	
+		return new MLocation(ctx, p_C_Location_ID, conn);
+	}
+	
+	/**
+	 * 	Get (local) Region Name
+	 *	@return	region Name or ""
+	 */
+	public String getRegionName() {
+		return getRegionName(false);
+	}	//	getRegionName
 
+	/**
+	 * 	Get Region Name
+	 * 	@param getFromRegion get from region (not locally)
+	 *	@return	region Name or ""
+	 */
+	public String getRegionName (boolean getFromRegion) {
+		MCountry country = getCountry();
+		if(country == null)
+			return null;
+		//	
+		if (getFromRegion && getCountry().isHasRegion() 
+			&& getRegion() != null)
+		{
+			super.setRegionName("");	//	avoid duplicates
+			return getRegion().getName();
+		}
+		//
+		String regionName = super.getRegionName();
+		if (regionName == null)
+			regionName = "";
+		return regionName;
+	}	//	getRegionName
+	
+	/**
+	 * Get Country Object
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 16:00:14
+	 * @return
+	 * @return MCountry
+	 */
+	public MCountry getCountry() {
+		//	Valid to default
+		if(getC_Country_ID() == 0) {
+			return MCountry.getBaseCountry(getCtx(), get_Connection());
+		}
+		//	
+		return MCountry.getCountry(getCtx(), getC_Country_ID(), get_Connection());
+	}
+
+	/**
+	 * Get Country Object
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 16:00:14
+	 * @return
+	 * @return MCountry
+	 */
+	public MRegion getRegion() {
+		//	Valid to default
+		if(getC_Region_ID() == 0)
+			return null;
+		//	
+		return MRegion.getRegion(getCtx(), getC_Region_ID(), get_Connection());
+	}
+	
 }

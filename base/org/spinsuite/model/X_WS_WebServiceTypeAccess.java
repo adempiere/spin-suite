@@ -1,5 +1,5 @@
 /******************************************************************************
- * Product: Adempiere ERP & CRM Smart Business Solution                       *
+ * Product: Spin-Suite (Making your Business Spin)                            *
  * Copyright (C) 1999-2007 ComPiere, Inc. All Rights Reserved.                *
  * This program is free software, you can redistribute it and/or modify it    *
  * under the terms version 2 of the GNU General Public License as published   *
@@ -19,20 +19,12 @@ package org.spinsuite.model;
 
 import android.content.Context;
 import android.database.Cursor;
-import java.util.Date;
 import org.spinsuite.base.DB;
 
 /** Generated Model for WS_WebServiceTypeAccess
  *  @author Adempiere (generated) 
  *  @version Release 3.7.0LTS (1252452765) - $Id$ */
-public class X_WS_WebServiceTypeAccess extends PO implements I_WS_WebServiceTypeAccess
-{
-
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 20141011L;
-
+public class X_WS_WebServiceTypeAccess extends PO implements I_WS_WebServiceTypeAccess {
     /** Standard Constructor */
     public X_WS_WebServiceTypeAccess (Context ctx, int WS_WebServiceTypeAccess_ID, DB conn)
     {

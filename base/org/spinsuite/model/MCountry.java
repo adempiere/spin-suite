@@ -75,27 +75,52 @@ public class MCountry extends X_C_Country {
 	 * @return MCountry
 	 */
 	public static MCountry getCountry(Context ctx, int p_C_Country_ID) {
+		return getCountry(ctx, p_C_Country_ID, null);
+	}
+	
+	/**
+	 * Get Country
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 16:28:46
+	 * @param ctx
+	 * @param p_C_Country_ID
+	 * @param conn
+	 * @return
+	 * @return MCountry
+	 */
+	public static MCountry getCountry(Context ctx, int p_C_Country_ID, DB conn) {
 		//	
 		if(p_C_Country_ID <= 0)
 			return null;
 		//	Default
-		return new MCountry(ctx, p_C_Country_ID, null);
+		return new MCountry(ctx, p_C_Country_ID, conn);
 	}
 	
 	/**
 	 * Get Base Country
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/10/2014, 21:26:06
 	 * @param ctx
+	 * @param conn
+	 * @return
+	 * @return MCountry
+	 */
+	public static MCountry getBaseCountry(Context ctx, DB conn) {
+		int m_C_Contry_ID = getC_Country_IDFromCode(ctx, Env.BASE_COUNTRY_CODE);
+		//	Return Country
+		if(m_C_Contry_ID > 0)
+			return new MCountry(ctx, m_C_Contry_ID, conn);
+		//	Default
+		return null;
+	}
+	
+	/**
+	 * Get Base Country
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 16:27:30
+	 * @param ctx
 	 * @return
 	 * @return MCountry
 	 */
 	public static MCountry getBaseCountry(Context ctx) {
-		int m_C_Contry_ID = getC_Country_IDFromCode(ctx, Env.BASE_COUNTRY_CODE);
-		//	Return Country
-		if(m_C_Contry_ID > 0)
-			return new MCountry(ctx, m_C_Contry_ID, null);
-		//	Default
-		return null;
+		return getBaseCountry(ctx, null);
 	}
 	
 	/**

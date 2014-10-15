@@ -1,5 +1,5 @@
 /******************************************************************************
- * Product: Adempiere ERP & CRM Smart Business Solution                       *
+ * Product: Spin-Suite (Making your Business Spin)                            *
  * Copyright (C) 1999-2007 ComPiere, Inc. All Rights Reserved.                *
  * This program is free software, you can redistribute it and/or modify it    *
  * under the terms version 2 of the GNU General Public License as published   *
@@ -19,20 +19,12 @@ package org.spinsuite.model;
 
 import android.content.Context;
 import android.database.Cursor;
-import java.util.Date;
 import org.spinsuite.base.DB;
 
 /** Generated Model for AD_User_Roles
  *  @author Adempiere (generated) 
  *  @version Release 3.7.0LTS (1252452765) - $Id$ */
-public class X_AD_User_Roles extends PO implements I_AD_User_Roles
-{
-
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 20141011L;
-
+public class X_AD_User_Roles extends PO implements I_AD_User_Roles {
     /** Standard Constructor */
     public X_AD_User_Roles (Context ctx, int AD_User_Roles_ID, DB conn)
     {
