@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.logging.Level;
 
 import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
 import org.spinsuite.base.DB;
 import org.spinsuite.conn.CommunicationSoap;
 import org.spinsuite.util.LogM;
@@ -40,12 +41,13 @@ public class InitialLoad extends CommunicationSoap{
 	/** Soap Object for Params to Web Service Call */
 	private ILCall call  = null;
 	
-	/** Task*/
+	/** Task */
 	private InitialLoadTask m_Task = null;
 	
 	/** Timeout to wait response from web server*/
 	private int m_Timeout = -1;
-	
+
+	/** Context Value */
 	private Context m_Ctx = null; 
 	
 	/** Web Service Definition*/
@@ -102,6 +104,7 @@ public class InitialLoad extends CommunicationSoap{
 				int p_Timeout, Context p_Ctx) {
 		this(p_Url, p_NameSpace, p_Method_Name,
 				isNetService, p_SoapAction, p_Ctx);
+		
 		m_Task = p_Task;
 		call = new ILCall(p_NameSpace, p_User, p_PassWord);
 		m_Timeout = p_Timeout;
@@ -157,6 +160,10 @@ public class InitialLoad extends CommunicationSoap{
 		
 		try{
 			for (int i= 0;i< countrec;i++){
+				
+				if (resp.getProperty(i) instanceof SoapPrimitive)
+					continue;
+				
 				SoapObject query = (SoapObject) resp.getProperty(i);
 							
 				
