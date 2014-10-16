@@ -47,5 +47,32 @@ public class MSPSColumn extends X_SPS_Column {
 	public MSPSColumn(Context ctx, Cursor rs, DB conn) {
 		super(ctx, rs, conn);
 	}
-
+	
+	/**
+	 * Get Column Object
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 19:34:56
+	 * @param ctx
+	 * @param p_SPS_Column_ID
+	 * @param conn
+	 * @return
+	 * @return MSPSColumn
+	 */
+	public static MSPSColumn get(Context ctx, int p_SPS_Column_ID, DB conn) {
+		if(p_SPS_Column_ID <= 0)
+			return null;
+		//	Ok
+		return new MSPSColumn(ctx, p_SPS_Column_ID, conn);
+	}
+	
+	/**
+	 * Get Column Object
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 19:35:25
+	 * @param ctx
+	 * @param p_SPS_Column_ID
+	 * @return
+	 * @return MSPSColumn
+	 */
+	public static MSPSColumn get(Context ctx, int p_SPS_Column_ID) {
+		return get(ctx, p_SPS_Column_ID, null);
+	}
 }

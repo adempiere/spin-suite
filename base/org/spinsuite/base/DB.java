@@ -504,32 +504,41 @@ public class DB extends SQLiteOpenHelper {
 	 * @param params
 	 * @return
 	 * @return KeyNamePair[]
+	 * @throws Exception 
 	 */
-	public static KeyNamePair[] getKeyNamePairsEx(Context ctx, String sql, boolean optional, DB conn, String... params) {
+	public static KeyNamePair[] getKeyNamePairsEx(Context ctx, String sql, boolean optional, DB conn, String... params) throws Exception {
 		ArrayList<KeyNamePair> list = new ArrayList<KeyNamePair>();
         //	If is Optional
 		if (optional) {
             list.add (new KeyNamePair(-1, ""));
         }
 		boolean handConnection = false;
-		//	Instance Connection
-		if(conn == null) {
-			conn = new DB(ctx);
-			//	load
-			loadConnection(conn, READ_WRITE);
-			handConnection = true;
+		try {
+			//	Instance Connection
+			if(conn == null) {
+				conn = new DB(ctx);
+				//	load
+				loadConnection(conn, READ_WRITE);
+				handConnection = true;
+			}
+			Cursor rs = null;
+			rs = conn.querySQL(sql, params);
+			//	Add to List
+			if(rs.moveToFirst()) {
+				do{
+					list.add(new KeyNamePair(rs.getInt(0), rs.getString(1)));
+				}while(rs.moveToNext());
+			}
+			//	Close Connection
+			if(handConnection)
+				closeConnection(conn);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			//	Close Connection
+			if(handConnection)
+				closeConnection(conn);
 		}
-		Cursor rs = null;
-		rs = conn.querySQL(sql, params);
-		//	Add to List
-		if(rs.moveToFirst()) {
-			do{
-				list.add(new KeyNamePair(rs.getInt(0), rs.getString(1)));
-			}while(rs.moveToNext());
-		}
-		//	Close Connection
-		if(handConnection)
-			closeConnection(conn);
 		//	
 		KeyNamePair[] retValue = new KeyNamePair[list.size()];
         list.toArray(retValue);
@@ -546,8 +555,9 @@ public class DB extends SQLiteOpenHelper {
 	 * @param params
 	 * @return
 	 * @return KeyNamePair[]
+	 * @throws Exception 
 	 */
-	public static KeyNamePair[] getKeyNamePairsEx(Context ctx, String sql, boolean optional, String... params) {
+	public static KeyNamePair[] getKeyNamePairsEx(Context ctx, String sql, boolean optional, String... params) throws Exception {
 		return getKeyNamePairsEx(ctx, sql, optional, null, params);
 	}
 	
@@ -613,7 +623,6 @@ public class DB extends SQLiteOpenHelper {
 		if(conn == null) {
 			conn = new DB(ctx);
 			//	load
-			loadConnection(conn, READ_WRITE);
 			handConnection = true;
 		}
 		//	

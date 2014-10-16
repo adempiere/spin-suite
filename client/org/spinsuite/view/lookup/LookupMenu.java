@@ -115,7 +115,7 @@ public class LookupMenu {
 		//	Access Role
 		sql.append("WHERE m.MenuType = ? " +
 				"AND m.IsActive = 'Y' " +
-				"AND (" +
+				"AND ((" +
 				"		(m.AD_Process_ID IS NOT NULL " +
 				"			AND pa.AD_Process_ID IS NOT NULL " +
 				"			AND pa.IsActive = 'Y' " +
@@ -128,7 +128,8 @@ public class LookupMenu {
 				"			AND wa.SPS_Window_ID IS NOT NULL " +
 				"			AND wa.IsActive = 'Y' " +
 				"			AND wa.AD_Role_ID = " + m_AD_Role_ID + ") " +
-				"	) " +
+				"	) OR m.IsSummary = 'Y'" +
+				")" +
 				"AND tn.Parent_ID = ").append(parent_ID).append(" ");
 		//	If is context menu
 		if(!menuType.equals("M"))

@@ -203,6 +203,23 @@ public class GridTab implements Evaluatee {
 	}
 	
 	/**
+	 * Get Field from Column Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 19:29:56
+	 * @param columnName
+	 * @return
+	 * @return GridField
+	 */
+	public GridField getField(String columnName) {
+		for(GridField field : m_fields) {
+			if(field.getColumnName().equals(columnName)) {
+				return field;
+			}
+		}
+		//	Default
+		return null;
+	}
+	
+	/**
 	 * Set Value to Field
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/05/2014, 10:03:48
 	 * @param mField

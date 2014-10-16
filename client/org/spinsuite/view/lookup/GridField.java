@@ -513,6 +513,32 @@ public abstract class GridField extends LinearLayout {
 	}
 	
 	/**
+	 * Get Column ID
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 19:33:08
+	 * @return
+	 * @return int
+	 */
+	public int getSPS_Column_ID() {
+		if(m_field == null)
+			return 0;
+		//	Default
+		return m_field.SPS_Column_ID;
+	}
+	
+	/**
+	 * Set V Format
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 19:38:57
+	 * @param vFormat
+	 * @return void
+	 */
+	public void setVFormat(String vFormat) {
+		if(m_field == null)
+			return;
+		//	Default
+		m_field.VFormat = vFormat;
+	}
+	
+	/**
 	 * Verify if is changed
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/09/2014, 22:19:07
 	 * @return
