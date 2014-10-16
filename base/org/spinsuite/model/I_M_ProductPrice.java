@@ -112,15 +112,6 @@ public interface I_M_ProductPrice
 	  */
 	public int getM_Product_ID();
 
-    /** Column name M_ProductPrice_ID */
-    public static final String COLUMNNAME_M_ProductPrice_ID = "M_ProductPrice_ID";
-
-	/** Set Product Price ID	  */
-	public void setM_ProductPrice_ID (int M_ProductPrice_ID);
-
-	/** Get Product Price ID	  */
-	public int getM_ProductPrice_ID();
-
     /** Column name PriceLimit */
     public static final String COLUMNNAME_PriceLimit = "PriceLimit";
 

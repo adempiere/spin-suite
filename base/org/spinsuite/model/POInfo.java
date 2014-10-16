@@ -41,7 +41,7 @@ public class POInfo {
 	 * @return
 	 * @return POInfo
 	 */
-	public static POInfo getPOInfo(Context ctx, int p_SPS_Table_ID, DB conn){
+	public static POInfo getPOInfo(Context ctx, int p_SPS_Table_ID, DB conn) {
 		POInfo retValue = new POInfo(ctx, p_SPS_Table_ID, conn);
 		return retValue;
 	}
@@ -54,7 +54,7 @@ public class POInfo {
 	 * @param AD_Table_ID
 	 * @param conn
 	 */
-	public POInfo(Context ctx, int AD_Table_ID, DB conn){
+	public POInfo(Context ctx, int AD_Table_ID, DB conn) {
 		loadInfoColumn(ctx, AD_Table_ID, null, conn);
 	}
 	
@@ -77,14 +77,14 @@ public class POInfo {
 	 * @param tableName
 	 * @return void
 	 */
-	private void loadInfoColumn(Context ctx, int AD_Table_ID, String tableName, DB p_Conn){
+	private void loadInfoColumn(Context ctx, int AD_Table_ID, String tableName, DB p_Conn) {
 		//	
 		String language = Env.getAD_Language(ctx);
 		boolean isBaseLanguage = Env.isBaseLanguage(ctx);
 		//	
 		StringBuffer sql = new StringBuffer();
 		//	if Base Language
-		if(isBaseLanguage){
+		if(isBaseLanguage) {
 			sql.append("SELECT " +
 					"t.SPS_Table_ID, " +
 					"t.TableName, " +
@@ -180,7 +180,7 @@ public class POInfo {
 			conn.openDB(DB.READ_ONLY);
 		Cursor rs = null;
 		rs = conn.querySQL(sql.toString(), null);
-		if(rs.moveToFirst()){
+		if(rs.moveToFirst()) {
 			int i = 0;
 			m_SPS_Table_ID 	= rs.getInt(i++);
 			m_TableName 	= rs.getString(i++);
@@ -242,7 +242,7 @@ public class POInfo {
 	 * @return
 	 * @return String
 	 */
-	public String getTableName(){
+	public String getTableName() {
 		return m_TableName;
 	}
 	
@@ -252,7 +252,7 @@ public class POInfo {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean isDeleteable(){
+	public boolean isDeleteable() {
 		return m_IsDeleteable;
 	}
 	
@@ -262,7 +262,7 @@ public class POInfo {
 	 * @return
 	 * @return int
 	 */
-	public int getSPS_Table_ID(){
+	public int getSPS_Table_ID() {
 		return m_SPS_Table_ID;
 	}
 	
@@ -272,8 +272,8 @@ public class POInfo {
 	 * @return
 	 * @return int
 	 */
-	public int getColumnLength(){
-		if(m_columns != null){
+	public int getColumnLength() {
+		if(m_columns != null) {
 			return m_columns.length;
 		}
 		return 0;
@@ -285,7 +285,7 @@ public class POInfo {
 	 * @return
 	 * @return int
 	 */
-	public int getCountColumnSQL(){
+	public int getCountColumnSQL() {
 		return m_CountColumnSQL;
 	}
 	
@@ -296,8 +296,8 @@ public class POInfo {
 	 * @return
 	 * @return String
 	 */
-	public String getColumnName(int index){
-		if(m_columns != null || index < m_columns.length){
+	public String getColumnName(int index) {
+		if(m_columns != null || index < m_columns.length) {
 			return m_columns[index].ColumnName;
 		}
 		return null;
@@ -309,9 +309,9 @@ public class POInfo {
 	 * @return
 	 * @return String
 	 */
-	public String getColumnsInsert(){
+	public String getColumnsInsert() {
 		StringBuffer columns = new StringBuffer();
-		if(m_columns != null){
+		if(m_columns != null) {
 			for (int i = 0; i < m_columns.length; i++) {
 				if(i > 0)
 					columns.append(",");
@@ -329,8 +329,8 @@ public class POInfo {
 	 * @return
 	 * @return int
 	 */
-	public int getAD_Column_ID(String columnName){
-		if(m_columns != null){
+	public int getAD_Column_ID(String columnName) {
+		if(m_columns != null) {
 			for (int i = 0; i < m_columns.length; i++) {
 				if(m_columns[i].ColumnName.equals(columnName))
 					return m_columns[i].AD_Column_ID;
@@ -346,17 +346,45 @@ public class POInfo {
 	 * @return
 	 * @return int
 	 */
-	public int getColumnIndex(String columnName){
+	public int getColumnIndex(String columnName) {
 		columnName = columnName.trim();
-		if(m_columns != null){
+		if(m_columns != null) {
 			for (int i = 0; i < m_columns.length; i++) {
 				if(m_columns[i].ColumnName != null 
-						&& m_columns[i].ColumnName.equals(columnName)){
+						&& m_columns[i].ColumnName.equals(columnName)) {
 					return i;
 				}
 			}	
 		}
 		return -1;
+	}
+	
+	/**
+	 * Get Key Columns
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/10/2014, 23:53:23
+	 * @return
+	 * @return String[]
+	 */
+	public String[] getKeyColumns() {
+		if(m_columns != null) {
+			ArrayList<String> keyColumns = new ArrayList<String>();
+			for (POInfoColumn column : m_columns) {
+				if(column.ColumnName != null 
+						&& (column.IsParent
+								|| column.IsKey)) {
+					//	
+					keyColumns.add(column.ColumnName);
+				}
+			}
+			//	
+			if(keyColumns.size() != 0) {
+				String [] columns = new String[keyColumns.size()];
+				keyColumns.toArray(columns);
+				return columns;
+			}
+		}
+		//	Default ID
+		return new String [] {getTableName() + "_ID"};
 	}
 	
 	/**
@@ -367,8 +395,8 @@ public class POInfo {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean isCallout(int index){
-		if(m_columns != null && index >= 0){
+	public boolean isCallout(int index) {
+		if(m_columns != null && index >= 0) {
 			if(m_columns[index].Callout != null 
 					&& m_columns[index].Callout.length() != 0)
 				return true;
@@ -383,9 +411,9 @@ public class POInfo {
 	 * @return
 	 * @return String
 	 */
-	public String getColumnSQL(String columnName){
+	public String getColumnSQL(String columnName) {
 		int index = getColumnIndex(columnName);
-		if(index >= 0){
+		if(index >= 0) {
 			return m_columns[index].ColumnSQL;
 		}
 		return null;
@@ -398,8 +426,8 @@ public class POInfo {
 	 * @return
 	 * @return String
 	 */
-	public String getColumnSQL(int index){
-		if(index >= 0){
+	public String getColumnSQL(int index) {
+		if(index >= 0) {
 			return m_columns[index].ColumnSQL;
 		}
 		return null;
@@ -412,9 +440,9 @@ public class POInfo {
 	 * @return
 	 * @return int
 	 */
-	public int getDisplayType(String columnName){
+	public int getDisplayType(String columnName) {
 		int index = getColumnIndex(columnName);
-		if(index >= 0){
+		if(index >= 0) {
 			return m_columns[index].DisplayType;
 		}
 		return 0;
@@ -427,8 +455,8 @@ public class POInfo {
 	 * @return
 	 * @return int
 	 */
-	public int getDisplayType(int index){
-		if(index >= 0){
+	public int getDisplayType(int index) {
+		if(index >= 0) {
 			return m_columns[index].DisplayType;
 		}
 		return 0;
@@ -441,9 +469,9 @@ public class POInfo {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean isMandatory(String columnName){
+	public boolean isMandatory(String columnName) {
 		int index = getColumnIndex(columnName);
-		if(index >= 0){
+		if(index >= 0) {
 			return m_columns[index].IsMandatory;
 		}
 		return false;
@@ -456,8 +484,8 @@ public class POInfo {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean isMandatory(int index){
-		if(index >= 0){
+	public boolean isMandatory(int index) {
+		if(index >= 0) {
 			return m_columns[index].IsMandatory;
 		}
 		return false;
@@ -470,9 +498,9 @@ public class POInfo {
 	 * @return
 	 * @return String
 	 */
-	public String getDefaultValue(String columnName){
+	public String getDefaultValue(String columnName) {
 		int index = getColumnIndex(columnName);
-		if(index >= 0){
+		if(index >= 0) {
 			return m_columns[index].DefaultValue;
 		}
 		return null;
@@ -485,8 +513,8 @@ public class POInfo {
 	 * @return
 	 * @return String
 	 */
-	public String getDefaultValue(int index){
-		if(index >= 0){
+	public String getDefaultValue(int index) {
+		if(index >= 0) {
 			return m_columns[index].DefaultValue;
 		}
 		return null;
@@ -499,9 +527,9 @@ public class POInfo {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean isUpdateable(String columnName){
+	public boolean isUpdateable(String columnName) {
 		int index = getColumnIndex(columnName);
-		if(index >= 0){
+		if(index >= 0) {
 			return m_columns[index].IsUpdateable;
 		}
 		return false;
@@ -514,8 +542,8 @@ public class POInfo {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean isUpdateable(int index){
-		if(index >= 0){
+	public boolean isUpdateable(int index) {
+		if(index >= 0) {
 			return m_columns[index].IsUpdateable;
 		}
 		return false;
@@ -528,9 +556,9 @@ public class POInfo {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean isAlwaysUpdateable(String columnName){
+	public boolean isAlwaysUpdateable(String columnName) {
 		int index = getColumnIndex(columnName);
-		if(index >= 0){
+		if(index >= 0) {
 			return m_columns[index].IsAlwaysUpdateable;
 		}
 		return false;
@@ -543,8 +571,8 @@ public class POInfo {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean isAlwaysUpdateable(int index){
-		if(index >= 0){
+	public boolean isAlwaysUpdateable(int index) {
+		if(index >= 0) {
 			return m_columns[index].IsAlwaysUpdateable;
 		}
 		return false;
@@ -557,9 +585,9 @@ public class POInfo {
 	 * @return
 	 * @return String
 	 */
-	public String getName(String columnName){
+	public String getName(String columnName) {
 		int index = getColumnIndex(columnName);
-		if(index >= 0){
+		if(index >= 0) {
 			return m_columns[index].Name;
 		}
 		return null;
@@ -572,8 +600,8 @@ public class POInfo {
 	 * @return
 	 * @return String
 	 */
-	public String getName(int index){
-		if(index >= 0){
+	public String getName(int index) {
+		if(index >= 0) {
 			return m_columns[index].Name;
 		}
 		return null;
@@ -586,9 +614,9 @@ public class POInfo {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean isEncrypted(String columnName){
+	public boolean isEncrypted(String columnName) {
 		int index = getColumnIndex(columnName);
-		if(index >= 0){
+		if(index >= 0) {
 			return m_columns[index].IsEncrypted;
 		}
 		return false;
@@ -601,9 +629,9 @@ public class POInfo {
 	 * @return
 	 * @return int
 	 */
-	public int getFieldLength(String columnName){
+	public int getFieldLength(String columnName) {
 		int index = getColumnIndex(columnName);
-		if(index >= 0){
+		if(index >= 0) {
 			return m_columns[index].FieldLength;
 		}
 		return -1;
@@ -616,9 +644,9 @@ public class POInfo {
 	 * @return
 	 * @return String
 	 */
-	public String getValueMin(String columName){
+	public String getValueMin(String columName) {
 		int index = getColumnIndex(columName);
-		if(index >= 0){
+		if(index >= 0) {
 			return m_columns[index].ValueMin;
 		}
 		return null;
@@ -631,9 +659,9 @@ public class POInfo {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean isColumnSQL(String columnName){
+	public boolean isColumnSQL(String columnName) {
 		int index = getColumnIndex(columnName);
-		if(index >= 0){
+		if(index >= 0) {
 			return m_columns[index].isColumnSQL();
 		}
 		return false;
@@ -646,8 +674,8 @@ public class POInfo {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean isColumnSQL(int index){
-		if(index >= 0){
+	public boolean isColumnSQL(int index) {
+		if(index >= 0) {
 			return m_columns[index].isColumnSQL();
 		}
 		return false;
@@ -661,9 +689,9 @@ public class POInfo {
 	 * @return
 	 * @return String
 	 */
-	public String getValueMax(String columnName){
+	public String getValueMax(String columnName) {
 		int index = getColumnIndex(columnName);
-		if(index >= 0){
+		if(index >= 0) {
 			return m_columns[index].ValueMax;
 		}
 		return null;
@@ -678,9 +706,9 @@ public class POInfo {
 	 * @return
 	 * @return String
 	 */
-	public static String getColumnNameForSelect(Context ctx, POInfo infoColumn, int index){
+	public static String getColumnNameForSelect(Context ctx, POInfo infoColumn, int index) {
     	String value = "''";
-    	if(!infoColumn.isColumnSQL(index)){
+    	if(!infoColumn.isColumnSQL(index)) {
     		value = infoColumn.getTableName() + "." + infoColumn.getColumnName(index);
     	} else {
     		//	Parse SQL Column
@@ -698,9 +726,9 @@ public class POInfo {
 	 * @return
 	 * @return POInfoColumn
 	 */
-	public POInfoColumn getPOInfoColumn(String columnName){
+	public POInfoColumn getPOInfoColumn(String columnName) {
 		int index = getColumnIndex(columnName);
-		if(index >= 0){
+		if(index >= 0) {
 			return m_columns[index];
 		}
 		return null;
@@ -713,8 +741,8 @@ public class POInfo {
 	 * @return
 	 * @return POInfoColumn
 	 */
-	public POInfoColumn getPOInfoColumn(int index){
-		if(index >= 0){
+	public POInfoColumn getPOInfoColumn(int index) {
+		if(index >= 0) {
 			return m_columns[index];
 		}
 		return null;

@@ -48,6 +48,7 @@ import org.spinsuite.view.lookup.VLookupButton;
 import org.spinsuite.view.lookup.VLookupButtonDocAction;
 import org.spinsuite.view.lookup.VLookupCheckBox;
 import org.spinsuite.view.lookup.VLookupDateBox;
+import org.spinsuite.view.lookup.VLookupNumber;
 import org.spinsuite.view.lookup.VLookupSearch;
 import org.spinsuite.view.lookup.VLookupSpinner;
 import org.spinsuite.view.lookup.VLookupString;
@@ -90,7 +91,7 @@ public class T_DynamicTab extends Fragment
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/04/2014, 22:32:14
 	 */
-	public T_DynamicTab(){
+	public T_DynamicTab() {
 		//	
 	}
 	
@@ -100,7 +101,7 @@ public class T_DynamicTab extends Fragment
 	 * @param m_FromTab
 	 * @return void
 	 */
-	public void setFromTab(I_DynamicTab m_FromTab){
+	public void setFromTab(I_DynamicTab m_FromTab) {
 		this.m_FromTab = m_FromTab; 
 	}
 
@@ -263,7 +264,7 @@ public class T_DynamicTab extends Fragment
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/04/2014, 13:50:51
 	 * @return void
 	 */
-	private void initLoad(){
+	private void initLoad() {
 		//	
 		m_IsLoadOk = true;
     	//	Retain Instance
@@ -290,7 +291,7 @@ public class T_DynamicTab extends Fragment
      * @return TabParameter
      */
     @Override
-    public TabParameter getTabParameter(){
+    public TabParameter getTabParameter() {
     	return tabParam;
     }
     
@@ -326,7 +327,7 @@ public class T_DynamicTab extends Fragment
 			bundle.putInt("SPS_Table_ID", tabInfo.getSPS_Table_ID());
 			bundle.putInt("SPS_Tab_ID", tabInfo.getSPS_Tab_ID());
 			bundle.putString("IsInsertRecord", (m_IsReadWrite && m_IsInsertRecord? "Y": "N"));
-			if(tabParam.getTabLevel() > 0){
+			if(tabParam.getTabLevel() > 0) {
 				FilterValue criteria = tabInfo.getCriteria(getActivity(), 
 						tabParam.getActivityNo(), tabParam.getParentTabNo());
 				bundle.putParcelable("Criteria", criteria);
@@ -359,7 +360,7 @@ public class T_DynamicTab extends Fragment
 			showPopupMenu();
 			return true;
 		} else if (itemId == R.id.action_cancel) {
-			if(mGridTab.getRecord_ID() <= 0){
+			if(mGridTab.getRecord_ID() <= 0) {
 				mGridTab.backCopy();
 			}
 			refresh(mGridTab.getRecord_ID(), false);
@@ -385,7 +386,7 @@ public class T_DynamicTab extends Fragment
      * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2014, 12:08:11
      * @return void
      */
-    private void showPopupMenu(){
+    private void showPopupMenu() {
     	View menuItemView = getActivity().findViewById(R.id.action_more);
 		PopupMenu popupMenu = new PopupMenu(getActivity(), menuItemView);
 		//	Share Record
@@ -399,7 +400,7 @@ public class T_DynamicTab extends Fragment
 				Menu.NONE, getString(R.string.Action_AttachImage));
 		//	View Attachment
 		if(mGridTab.getPO() != null
-				&& mGridTab.getRecord_ID() > 0){
+				&& mGridTab.getRecord_ID() > 0) {
 			int count = DB.getSQLValue(getActivity(), "SELECT COUNT(att.AD_Attachment_ID) FROM AD_Attachment att " +
 					"WHERE att.AD_Table_ID = ? AND att.Record_ID = ?", 
 					new String[]{String.valueOf(tabInfo.getSPS_Table_ID()), 
@@ -452,7 +453,7 @@ public class T_DynamicTab extends Fragment
      * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 11:00:17
      * @return void
      */
-    private void viewAttachment(){
+    private void viewAttachment() {
     	Bundle bundle = new Bundle();
 		ActivityParameter param = new ActivityParameter();
 		param.setFrom_Record_ID(mGridTab.getRecord_ID());
@@ -468,7 +469,7 @@ public class T_DynamicTab extends Fragment
      * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2014, 14:04:50
      * @return void
      */
-    private void deleteRecord(){
+    private void deleteRecord() {
     	//	
     	if(mGridTab.isProcessed()) {			//	Valid Processed
     		Msg.alertMsg(getActivity(), "@CannotDeleteTrx@");
@@ -483,7 +484,7 @@ public class T_DynamicTab extends Fragment
 		ask.setPositiveButton(msg_Acept, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.cancel();
-				if(mGridTab.delete()){
+				if(mGridTab.delete()) {
 					refresh(0, false);
 					lockView(DELETED);
 		    		//	Refresh
@@ -501,7 +502,7 @@ public class T_DynamicTab extends Fragment
      * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2014, 15:29:45
      * @return void
      */
-    private void attachImage(){
+    private void attachImage() {
     	//	Delete Temp File
     	File tmpFile = new File(TMP_ATTACH_NAME);
     	if(tmpFile.exists())
@@ -517,7 +518,7 @@ public class T_DynamicTab extends Fragment
      * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/04/2014, 08:17:32
      * @return void
      */
-    private void refreshIndex(){
+    private void refreshIndex() {
     	//	Refresh
     	if(m_FromTab != null)
     		m_FromTab.refreshFromChange(true);
@@ -529,7 +530,7 @@ public class T_DynamicTab extends Fragment
      * @param mode
      * @return void
      */
-    private void lockView(int mode){
+    private void lockView(int mode) {
     	//	If New Record
     	if(mode == NEW
     			|| mode == MODIFY) {
@@ -595,7 +596,7 @@ public class T_DynamicTab extends Fragment
     private void newOption() {
     	//	Backup
     	if(mGridTab != null 
-    			&& mGridTab.getRecord_ID() > 0){
+    			&& mGridTab.getRecord_ID() > 0) {
     		mGridTab.copyValues(true);
     	}
     	//	
@@ -629,7 +630,7 @@ public class T_DynamicTab extends Fragment
      * @return void
      */
     @Override
-    public void handleMenu(){
+    public void handleMenu() {
     	//	Valid is Loaded
     	if(!m_IsLoadOk)
     		return;
@@ -642,8 +643,8 @@ public class T_DynamicTab extends Fragment
      * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/04/2014, 18:17:58
      * @return void
      */
-    private void changeMenuView(){
-    	if(mi_Search != null){
+    private void changeMenuView() {
+    	if(mi_Search != null) {
             //	Lock View
     		if(m_IsModifying) {
     			if(mGridTab != null
@@ -661,18 +662,18 @@ public class T_DynamicTab extends Fragment
      * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/03/2014, 10:53:18
      * @return boolean
      */
-    public boolean refreshFromChange(boolean reQuery){
+    public boolean refreshFromChange(boolean reQuery) {
     	//	Valid is Loaded
     	boolean ok = false;
     	if(!m_IsLoadOk)
     		return false;
     	//	do it
-    	if(reQuery){
+    	if(reQuery) {
     		refresh(mGridTab.getRecord_ID(), true);
-    	} else if(tabParam.getTabLevel() > 0){
+    	} else if(tabParam.getTabLevel() > 0) {
     		int currentParent_Record_ID = Env.getTabRecord_ID(getActivity(), 
         			tabParam.getActivityNo(), tabParam.getParentTabNo());
-        	if(mGridTab.getParent_Record_ID() != currentParent_Record_ID){
+        	if(mGridTab.getParent_Record_ID() != currentParent_Record_ID) {
         		refresh(0, true);
         	}
     	} else {
@@ -690,7 +691,7 @@ public class T_DynamicTab extends Fragment
      * @return
      * @return boolean
      */
-    private boolean processAttach(){
+    private boolean processAttach() {
     	File tmpFile = new File(TMP_ATTACH_NAME);
         if(!tmpFile.exists())
         	return false;
@@ -714,7 +715,7 @@ public class T_DynamicTab extends Fragment
 		Bitmap mImage = BitmapFactory.decodeFile(TMP_ATTACH_NAME, options);
 		
 		//	
-		if(mImage != null){
+		if(mImage != null) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			mImage.compress(Bitmap.CompressFormat.PNG, 100, bos);
 			//	Save in DB
@@ -730,7 +731,7 @@ public class T_DynamicTab extends Fragment
      * @param bMArray
      * @return void
      */
-    private void saveAttachment(byte[] bMArray){
+    private void saveAttachment(byte[] bMArray) {
 		//	Save in DataBase
 		DB conn = new DB(getActivity());
 		DB.loadConnection(conn, DB.READ_WRITE);
@@ -773,7 +774,7 @@ public class T_DynamicTab extends Fragment
     	if(requestCode == ACTION_TAKE_PHOTO) {
     		new SaveTask().execute(ATTACHMENT_SAVE);
     	} else if (resultCode == Activity.RESULT_OK) {
-	    	if(data != null){
+	    	if(data != null) {
 	    		Bundle bundle = data.getExtras();
 	    		//	Item
 	    		DisplayRecordItem item = (DisplayRecordItem) bundle.getParcelable("Record");
@@ -786,7 +787,7 @@ public class T_DynamicTab extends Fragment
 					String summary = bundle.getString("Summary");
 					boolean isError = bundle.getBoolean("IsError");
 					//	Is a Error
-					if(isError){
+					if(isError) {
 						Msg.alertMsg(getActivity(), summary);
 					} else {
 						if(summary != null
@@ -811,9 +812,9 @@ public class T_DynamicTab extends Fragment
 				case DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_SearchColumn:
 					String columnName = bundle.getString("ColumnName");
 		    		//	if a field or just search
-		    		if(columnName != null){
+		    		if(columnName != null) {
 		    			for (GridField vField: mGridTab.getFields()) {
-		    	    		if(vField.getColumnName().equals(columnName)){
+		    	    		if(vField.getColumnName().equals(columnName)) {
 		    	    			((VLookupSearch) vField).setItem(item);
 		    	    			break;
 		    	    		}
@@ -908,7 +909,7 @@ public class T_DynamicTab extends Fragment
 		 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/05/2014, 12:18:42
 		 * @return void
 		 */
-		private void init(){
+		private void init() {
 	    	//	Set Parameter
 	    	v_param = new LayoutParams(LayoutParams.MATCH_PARENT, 
 	    			LayoutParams.MATCH_PARENT, WEIGHT);   
@@ -931,13 +932,13 @@ public class T_DynamicTab extends Fragment
 		protected Integer doInBackground(TableLayout... params) {
 			v_view = params[0];
 			init();
-			for(InfoField field : tabInfo.getFields()){
+			for(InfoField field : tabInfo.getFields()) {
 				if(field.IsDisplayed
 						&& DisplayType.isLookup(field.DisplayType)
 						&& field.DisplayType != DisplayType.SEARCH
 						&& field.DisplayType != DisplayType.LOCATION
 						&& field.DisplayType != DisplayType.LOCATOR
-						&& field.DisplayType != DisplayType.ACCOUNT){
+						&& field.DisplayType != DisplayType.ACCOUNT) {
 					//	Add View to Layout
 					Lookup lookup = new Lookup(getActivity(), getTabParameter(), field);
 					lookup.load();
@@ -971,12 +972,12 @@ public class T_DynamicTab extends Fragment
 	     * @return
 	     * @return boolean
 	     */
-	    protected boolean loadView(){
+	    protected boolean loadView() {
 	    	boolean ok = false;
 	    	//	
 			try {
 				//	Add Fields
-		    	for(InfoField field : tabInfo.getFields()){
+		    	for(InfoField field : tabInfo.getFields()) {
 		    		if(!field.IsDisplayed)
 		    			continue;
 		    		//	Add View to Layout
@@ -984,7 +985,7 @@ public class T_DynamicTab extends Fragment
 		    	}
 		    	//	Ok
 		    	ok = true;
-			} catch(Exception e){
+			} catch(Exception e) {
 				LogM.log(getActivity(), getClass(), Level.SEVERE, e.getLocalizedMessage());
 				//	Message
 				Msg.alertMsg(getActivity(), 
@@ -999,7 +1000,7 @@ public class T_DynamicTab extends Fragment
 	     * @param field
 	     * @return void
 	     */
-	    private void addView(InfoField field){
+	    private void addView(InfoField field) {
 	    	//	
 	    	boolean isSameLine = field.IsSameLine;
 	    	boolean isFirst = false;
@@ -1012,30 +1013,33 @@ public class T_DynamicTab extends Fragment
 				v_row.setWeightSum(WEIGHT_SUM);
 			}
 			//	Add
-			if(DisplayType.isDate(field.DisplayType)){
+			if(DisplayType.isDate(field.DisplayType)) {
 				lookup = new VLookupDateBox(getActivity(), field, tabParam);
-			} else if(DisplayType.isText(field.DisplayType)){
+			} else if(DisplayType.isText(field.DisplayType)) {
 				VLookupString lookupString = new VLookupString(getActivity(), field, tabParam);
 				lookup = lookupString;
-			} else if(DisplayType.isBoolean(field.DisplayType)){
+			} else if(DisplayType.isNumeric(field.DisplayType)) {
+				VLookupNumber lookupNumber = new VLookupNumber(getActivity(), field, tabParam);
+				lookup = lookupNumber;
+			} else if(DisplayType.isBoolean(field.DisplayType)) {
 				lookup = new VLookupCheckBox(getActivity(), field, tabParam);
-			} else if(DisplayType.isLookup(field.DisplayType)){
+			} else if(DisplayType.isLookup(field.DisplayType)) {
 				//	Table Direct
 				if(field.DisplayType == DisplayType.TABLE_DIR
 						|| field.DisplayType == DisplayType.LIST
-						|| field.DisplayType == DisplayType.TABLE){
+						|| field.DisplayType == DisplayType.TABLE) {
 					lookup = new VLookupSpinner(getActivity(), field, tabParam, m_Lookup.get(m_currentLookup++));
 				} else if(field.DisplayType == DisplayType.SEARCH 
 						|| field.DisplayType == DisplayType.LOCATION
 						|| field.DisplayType == DisplayType.LOCATOR
-						|| field.DisplayType == DisplayType.ACCOUNT){
+						|| field.DisplayType == DisplayType.ACCOUNT) {
 					lookup = new VLookupSearch(getActivity(), field, tabParam);
 				}
-			} else if(field.DisplayType == DisplayType.BUTTON){
+			} else if(field.DisplayType == DisplayType.BUTTON) {
 				VLookupButton lookupButton = null;
-				if(field.ColumnName.equals("DocAction")){
+				if(field.ColumnName.equals("DocAction")) {
 					lookupButton = new VLookupButtonDocAction(getActivity(), field, (DocAction) mGridTab.getPO());
-				} else if(field.ColumnName.equals("PaymentRule")){
+				} else if(field.ColumnName.equals("PaymentRule")) {
 					//	Payment Rule Button
 					lookupButton = new LookupButtonPaymentRule(getActivity(), field, tabParam);
 				} else {
@@ -1046,7 +1050,7 @@ public class T_DynamicTab extends Fragment
 				lookup = lookupButton;
 			}
 			//	is Filled
-			if(lookup != null){
+			if(lookup != null) {
 				//	Set Listener
 				lookup.setOnFieldChangeListener(m_Listener);
 				lookup.setLayoutParams(v_param);

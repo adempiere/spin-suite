@@ -27,9 +27,9 @@ import android.os.Parcelable;
 public class FilterValue implements Parcelable {
 
 	/**	Where					*/
-	private String 				whereClause = null;
+	private String 				whereClause 	= null;
 	/**	Values					*/
-	private ArrayList<String> 	values = new ArrayList<String>();
+	private ArrayList<String> 	values 			= new ArrayList<String>();
 	
 	@SuppressWarnings("rawtypes")
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -41,12 +41,12 @@ public class FilterValue implements Parcelable {
 		}
 	};
 	
-	public FilterValue(Parcel parcel){
+	public FilterValue(Parcel parcel) {
 		this();
 		readToParcel(parcel);
 	}
 	
-	public FilterValue(){
+	public FilterValue() {
 		//	
 	}
 	
@@ -61,7 +61,7 @@ public class FilterValue implements Parcelable {
 		dest.writeList(values);
 	}
 	
-	public void readToParcel(Parcel parcel){
+	public void readToParcel(Parcel parcel) {
 		whereClause = parcel.readString();
 		values = new ArrayList<String>();
 	    parcel.readList(values, getClass().getClassLoader());
@@ -74,7 +74,7 @@ public class FilterValue implements Parcelable {
 	 * @param whereClause
 	 * @return void
 	 */
-	public void setWhereClause(String whereClause){
+	public void setWhereClause(String whereClause) {
 		this.whereClause = whereClause;
 	}
 	
@@ -84,10 +84,9 @@ public class FilterValue implements Parcelable {
 	 * @param value
 	 * @return void
 	 */
-	public void addValue(Object value){
-		if(value != null){
+	public void addValue(Object value) {
+		if(value != null)
 			values.add(String.valueOf(value));
-		}
 	}
 	
 	/**
@@ -96,7 +95,7 @@ public class FilterValue implements Parcelable {
 	 * @return
 	 * @return String
 	 */
-	public String getWhereClause(){
+	public String getWhereClause() {
 		return whereClause;
 	}
 	
@@ -106,7 +105,7 @@ public class FilterValue implements Parcelable {
 	 * @return
 	 * @return String[]
 	 */
-	public String[] getValues(){
+	public String[] getValues() {
 		String[] valuesToReturn = new String[values.size()];
 		values.toArray(valuesToReturn);
 		return valuesToReturn;

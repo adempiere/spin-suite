@@ -641,7 +641,7 @@ public class GridTab implements Evaluatee {
     			|| record_ID <= 0)
     		model.clear(false);
     	//	
-    	model.loadData(m_Record_ID);
+    	model.loadData(new int[]{m_Record_ID});
     	//	Refresh
     	loadData();
     	//	Set Identifier

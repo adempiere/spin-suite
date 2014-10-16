@@ -662,12 +662,12 @@ public abstract class GridField extends LinearLayout {
 	/**
 	 * 
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 15:10:34
-	 * @param act
+	 * @param activity
 	 * @param field
 	 * @return
 	 * @return GridField
 	 */
-	public static GridField createLookup(Activity act, InfoField field, 
+	public static GridField createLookup(Activity activity, InfoField field, 
 			Lookup m_Lookup, TabParameter p_TabParameter) {
 		//	Valid Null
 		if(field == null)
@@ -676,25 +676,28 @@ public abstract class GridField extends LinearLayout {
 		GridField gridField = null;
 		//	Add
 		if(DisplayType.isDate(field.DisplayType)){
-			gridField = new VLookupDateBox(act, field);
+			gridField = new VLookupDateBox(activity, field);
 		} else if(DisplayType.isText(field.DisplayType)){
-			VLookupString lookupString = new VLookupString(act, field);
+			VLookupString lookupString = new VLookupString(activity, field);
 			gridField = lookupString;
+		} else if(DisplayType.isNumeric(field.DisplayType)) {
+			VLookupNumber lookupNumber = new VLookupNumber(activity, field);
+			gridField = lookupNumber;
 		} else if(DisplayType.isBoolean(field.DisplayType)) {
-			gridField = new VLookupCheckBox(act, field);
+			gridField = new VLookupCheckBox(activity, field);
 		} else if(DisplayType.isLookup(field.DisplayType)) {
 			//	Table Direct
 			if(field.DisplayType == DisplayType.TABLE_DIR
 					|| field.DisplayType == DisplayType.LIST
 					|| field.DisplayType == DisplayType.TABLE) {
 				//	Valid Null
-				gridField = new VLookupSpinner(act, field, p_TabParameter, m_Lookup);
+				gridField = new VLookupSpinner(activity, field, p_TabParameter, m_Lookup);
 					//gridField = new VLookupSpinner(act, field);
 			} else if(field.DisplayType == DisplayType.SEARCH
 					|| field.DisplayType == DisplayType.LOCATION
 					|| field.DisplayType == DisplayType.LOCATOR
 					|| field.DisplayType == DisplayType.ACCOUNT) {
-				gridField = new VLookupSearch(act, field);
+				gridField = new VLookupSearch(activity, field);
 			}
 		} else if(field.DisplayType == DisplayType.BUTTON) {
 			VLookupButton lookupButton = null;
@@ -702,9 +705,9 @@ public abstract class GridField extends LinearLayout {
 				//lookupButton = new VLookupButtonDocAction(act, field, (DocAction) mGridTab.getPO());
 			} else if(field.ColumnName.equals("PaymentRule")) {
 				//	Payment Rule Button
-				lookupButton = new LookupButtonPaymentRule(act, field);
+				lookupButton = new LookupButtonPaymentRule(activity, field);
 			} else {
-				lookupButton = new VLookupButton(act, field);
+				lookupButton = new VLookupButton(activity, field);
 			}
 			//	Set Parameters
 			gridField = lookupButton;

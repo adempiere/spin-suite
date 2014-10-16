@@ -50,6 +50,7 @@ import org.spinsuite.view.lookup.GridField;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.VLookupCheckBox;
 import org.spinsuite.view.lookup.VLookupDateBox;
+import org.spinsuite.view.lookup.VLookupNumber;
 import org.spinsuite.view.lookup.VLookupSearch;
 import org.spinsuite.view.lookup.VLookupSpinner;
 import org.spinsuite.view.lookup.VLookupString;
@@ -474,6 +475,9 @@ public class V_Process extends Activity {
 		} else if(DisplayType.isText(field.DisplayType)){
 			VLookupString lookupString = new VLookupString(this, field);
 			lookup = lookupString;
+		} else if(DisplayType.isNumeric(field.DisplayType)) {
+			VLookupNumber lookupNumber = new VLookupNumber(this, field);
+			lookup = lookupNumber;
 		} else if(DisplayType.isBoolean(field.DisplayType)){
 			lookup = new VLookupCheckBox(this, field);
 		} else if(DisplayType.isLookup(field.DisplayType)){
