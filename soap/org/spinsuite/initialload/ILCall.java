@@ -52,4 +52,8 @@ public class ILCall extends SoapObject{
 	
 	public static String m_ServiceTypeField = "serviceType";
 	
+	public static String m_Page = "Page";
+	
+	public static String m_Pages = "Pages";
+	
 }

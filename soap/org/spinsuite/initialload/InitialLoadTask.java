@@ -26,7 +26,6 @@ import org.spinsuite.login.T_Login_ProgressSync;
 import org.spinsuite.util.BackGroundTask;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.StringNamePair;
-
 import android.database.Cursor;
 
 public class InitialLoadTask implements BackGroundProcess{
@@ -234,7 +233,8 @@ public class InitialLoadTask implements BackGroundProcess{
 		    		//Call Web Service Method Web Sevice Definition
 		    		CallWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
 		    							new StringNamePair(ILCall.m_ServiceMethodField, InitialLoad.INITIALLOAD_ServiceMethodDataSynchronization),
-		    							new StringNamePair(ILCall.m_ServiceTypeField, rs.getString(0)));
+		    							new StringNamePair(ILCall.m_ServiceTypeField, rs.getString(0)),
+		    							new StringNamePair(ILCall.m_Page, "0"));
 	    		} while(rs.moveToNext());
 	    	};
 		}catch (Exception e){
@@ -259,19 +259,36 @@ public class InitialLoadTask implements BackGroundProcess{
 	 * @return void
 	 */
 	private boolean CallWebService(StringNamePair... Params){
+		StringNamePair[] p_Params = new StringNamePair[Params.length];
+		int CurrentPage = 0;
 		InitialLoad il = new InitialLoad(m_URL, m_NameSpace, m_Method, m_IsNetService, m_SoapAction, m_User, m_PassWord, this, m_Timeout, m_Conn);
 		
-		for (int i=0;i<Params.length;i++)
+		
+		for (int i=0;i<Params.length;i++){
 			il.addPropertyToCall(Params[i].getKey(), Params[i].getName());
-
+			
+			if (Params[i].getKey().equals(ILCall.m_Page)){
+				CurrentPage = Integer.getInteger(Params[i].getName(), 0);
+				p_Params[i] = new StringNamePair(Params[i].getKey(), Integer.valueOf(CurrentPage + 1 ).toString());
+			}
+			else
+				p_Params[i] = Params[i];
+		}
 		
 		//Call Service
 		SoapObject so = il.callService();
 		
-		//Write On Database
 		if (so!= null){
+			//System.out.println(so.getProperty(ILCall.m_Pages));
+			int pages = 0;//Integer.getInteger(so.getPropertyAsString(ILCall.m_Pages), 0);
+			
 			if (!il.writeDB(so))
 				return false;
+			
+			if (CurrentPage - pages != 0)
+				CallWebService(p_Params);
+			
+			
 		}
 		else
 			return false;
