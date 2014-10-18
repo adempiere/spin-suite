@@ -97,14 +97,13 @@ public class InitialLoadTask implements BackGroundProcess{
 		m_SoapAction = p_SoapAction;
 		m_PassWord = p_PassWord;
 		m_Conn =p_Conn;
-		m_Timeout = Integer.getInteger(p_Timeout, 0);
+		m_Timeout = Integer.parseInt(p_Timeout);
 		
 	}
 	
 	@Override
 	public void publishBeforeInit() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -117,13 +116,10 @@ public class InitialLoadTask implements BackGroundProcess{
 	@Override
 	public void publishAfterEnd() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public Object run() {
-		// TODO Auto-generated method stub
- 
 		//Call List of Web Services
 		CallListWebServices();
 		
@@ -199,17 +195,17 @@ public class InitialLoadTask implements BackGroundProcess{
 	private void CallListWebServices(){
 		
 		//Call Web Service Method Create Metadata
-		m_PublicMsg = "Calling " + "Create Metadata";
-		m_Task.refreshGUINow();
+		refreshMSG("Calling " + "Create Metadata",false,-1);
 		if (!CallWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
 				new StringNamePair(ILCall.m_ServiceMethodField, InitialLoad.INITIALLOAD_ServiceMethodCreateMetaData)))
 			return;
 		
 		//Call Web Service Method Web Sevice Definition
-		m_PublicMsg = "Calling " + "Web Sevice Definition";
-		m_Task.refreshGUINow();
+		
+		refreshMSG("Calling " + "Web Sevice Definition",false,-1);
 		if (!CallWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
-				new StringNamePair(ILCall.m_ServiceMethodField, InitialLoad.INITIALLOAD_ServiceMethodWebServiceDefinition)))
+				new StringNamePair(ILCall.m_ServiceMethodField, InitialLoad.INITIALLOAD_ServiceMethodWebServiceDefinition),
+				new StringNamePair(ILCall.m_Page, "0")))
 			return;
 		
 		DB conn = new DB(m_Conn);
@@ -227,21 +223,18 @@ public class InitialLoadTask implements BackGroundProcess{
 			rs = conn.querySQL(sql, new String[]{InitialLoad.INITIALLOAD_ServiceDefinition,InitialLoad.INITIALLOAD_ServiceMethodDataSynchronization});    	
 	    	if(rs.moveToFirst()){
 	    		do{
-	    			m_PublicMsg = "Calling " + rs.getString(0);
-	    			m_Progress = -1;
-	    			m_Task.refreshGUINow();
-		    		//Call Web Service Method Web Sevice Definition
-		    		CallWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
+	    			refreshMSG("Calling " + rs.getString(0),false,-1);
+	    			//Call Web Service Method Web Sevice Definition
+		    		if (!CallWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
 		    							new StringNamePair(ILCall.m_ServiceMethodField, InitialLoad.INITIALLOAD_ServiceMethodDataSynchronization),
 		    							new StringNamePair(ILCall.m_ServiceTypeField, rs.getString(0)),
-		    							new StringNamePair(ILCall.m_Page, "0"));
+		    							new StringNamePair(ILCall.m_Page, "0")))
+		    			break;				
 	    		} while(rs.moveToNext());
 	    	};
 		}catch (Exception e){
 			LogM.log(m_Conn, InitialLoadTask.class, Level.SEVERE, e.getLocalizedMessage(), e.getCause());
-			m_PublicMsg = e.getLocalizedMessage();
-			m_Error = true;
-			m_Task.refreshGUINow();
+			refreshMSG(e.getLocalizedMessage(), true, null);
 		}
 		finally{
 			conn.closeDB(rs);
@@ -261,15 +254,17 @@ public class InitialLoadTask implements BackGroundProcess{
 	private boolean CallWebService(StringNamePair... Params){
 		StringNamePair[] p_Params = new StringNamePair[Params.length];
 		int CurrentPage = 0;
+		int pages = 0;
 		InitialLoad il = new InitialLoad(m_URL, m_NameSpace, m_Method, m_IsNetService, m_SoapAction, m_User, m_PassWord, this, m_Timeout, m_Conn);
-		
 		
 		for (int i=0;i<Params.length;i++){
 			il.addPropertyToCall(Params[i].getKey(), Params[i].getName());
 			
 			if (Params[i].getKey().equals(ILCall.m_Page)){
-				CurrentPage = Integer.getInteger(Params[i].getName(), 0);
+				CurrentPage = Integer.parseInt(Params[i].getName());
 				p_Params[i] = new StringNamePair(Params[i].getKey(), Integer.valueOf(CurrentPage + 1 ).toString());
+				
+				CurrentPage++;
 			}
 			else
 				p_Params[i] = Params[i];
@@ -279,16 +274,17 @@ public class InitialLoadTask implements BackGroundProcess{
 		SoapObject so = il.callService();
 		
 		if (so!= null){
-			//System.out.println(so.getProperty(ILCall.m_Pages));
-			int pages = 0;//Integer.getInteger(so.getPropertyAsString(ILCall.m_Pages), 0);
+			if (so.hasProperty(ILCall.m_Pages))
+				pages = Integer.parseInt(so.getPropertyAsString(ILCall.m_Pages));
 			
-			if (!il.writeDB(so))
+			if (!il.writeDB(so,pages,CurrentPage))
 				return false;
-			
-			if (CurrentPage - pages != 0)
-				CallWebService(p_Params);
-			
-			
+			so = null;
+			il = null;
+			if (CurrentPage - pages != 0){
+				refreshMSG(m_PublicMsg, false, -1);
+				return CallWebService(p_Params);
+			}
 		}
 		else
 			return false;
@@ -305,5 +301,21 @@ public class InitialLoadTask implements BackGroundProcess{
 	public int getM_Progress() {
 		return m_Progress;
 	}
+	
+	/**
+	 * Refresh Message
+	 * @author <a href="mailto:carlosapardam@gmail.com">Carlos Parada</a> 18/10/2014, 13:25:58
+	 * @param p_MSG
+	 * @param p_Error
+	 * @param p_Progress
+	 * @return void
+	 */
+	public void refreshMSG(String p_MSG, boolean p_Error, Integer p_Progress){
+		m_PublicMsg = p_MSG;
+		m_Error = p_Error;
+		if (p_Progress != null)
+			m_Progress = p_Progress;
 		
+		m_Task.refreshGUINow();
+	}
 }

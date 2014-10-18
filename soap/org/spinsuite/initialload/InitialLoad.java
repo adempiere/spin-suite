@@ -16,19 +16,14 @@
 package org.spinsuite.initialload;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.logging.Level;
-
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.spinsuite.base.DB;
 import org.spinsuite.conn.CommunicationSoap;
 import org.spinsuite.util.LogM;
 import org.xmlpull.v1.XmlPullParserException;
-
 import android.content.Context;
-
-
 
 /**
  * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a>
@@ -36,8 +31,6 @@ import android.content.Context;
  */
 public class InitialLoad extends CommunicationSoap{
 
-	
-	
 	/** Soap Object for Params to Web Service Call */
 	private ILCall call  = null;
 	
@@ -52,10 +45,15 @@ public class InitialLoad extends CommunicationSoap{
 	
 	/** Web Service Definition*/
 	public static String INITIALLOAD_ServiceDefinition = "Spin-Suite";
-	public static String INITIALLOAD_ServiceMethodCreateMetaData = "CreateMetadata";
-	public static String INITIALLOAD_ServiceMethodWebServiceDefinition = "WebServiceDefinition";
-	public static String INITIALLOAD_ServiceMethodDataSynchronization = "DataSynchronization";
 	
+	/** Web Service Method Create Metadata*/
+	public static String INITIALLOAD_ServiceMethodCreateMetaData = "CreateMetadata";
+	
+	/** Web Service Method Create Web Service Definition */
+	public static String INITIALLOAD_ServiceMethodWebServiceDefinition = "WebServiceDefinition";
+	
+	/** Web Service Method Create Data Synchronization*/
+	public static String INITIALLOAD_ServiceMethodDataSynchronization = "DataSynchronization";
 	
 	/**
 	 * *** Constructor ***
@@ -86,7 +84,7 @@ public class InitialLoad extends CommunicationSoap{
 				isNetService, p_Ctx);
 		setM_SoapAction(p_SoapAction);
 	}
-
+	
 	/**
 	 * *** Constructor ***
 	 * @author <a href="mailto:carloaparadam@gmail.com">Carlos Parada</a> 25/02/2014, 23:23:10
@@ -109,7 +107,6 @@ public class InitialLoad extends CommunicationSoap{
 		call = new ILCall(p_NameSpace, p_User, p_PassWord);
 		m_Timeout = p_Timeout;
 	}
-	
 	
 	/**
 	 * Call Service
@@ -136,9 +133,7 @@ public class InitialLoad extends CommunicationSoap{
 			LogM.log(m_Ctx, InitialLoad.class, Level.FINE, "Web Service Call");
 		} catch (Exception e) {
 			LogM.log(m_Ctx, InitialLoad.class, Level.SEVERE,e.getLocalizedMessage(),e.getCause());
-			m_Task.setM_PublicMsg(e.getLocalizedMessage());
-			m_Task.setM_Error(true);
-			m_Task.refreshGUINow();
+			m_Task.refreshMSG(e.getLocalizedMessage(), true, null);
 		}
 		
 		return result;
@@ -150,26 +145,26 @@ public class InitialLoad extends CommunicationSoap{
 	 * @param resp
 	 * @return void
 	 */
-	public boolean writeDB(SoapObject resp){
-		
+	public boolean writeDB(SoapObject p_Resp,Integer p_PageCount,Integer p_CurrentPage ){
+		//boolean result = false;
 		DB conn = new DB(m_Ctx);
 		conn.openDB(DB.READ_WRITE);
 		Object [] params = null;
-		int countrec = resp.getPropertyCount();
-		m_Task.setMaxValueProgressBar(countrec);
+		int countrec = p_Resp.getPropertyCount();
+		int hasPages = (p_Resp.hasProperty(ILCall.m_Pages) ? 1 :0);
+		m_Task.setMaxValueProgressBar(countrec - hasPages);
 		
 		try{
 			for (int i= 0;i< countrec;i++){
 				
-				if (resp.getProperty(i) instanceof SoapPrimitive)
+				if (p_Resp.getProperty(i) instanceof SoapPrimitive)
 					continue;
 				
-				SoapObject query = (SoapObject) resp.getProperty(i);
+				SoapObject query = (SoapObject) p_Resp.getProperty(i);
 							
-				
-				m_Task.setM_Progress(i+1);
-				m_Task.setM_PublicMsg(query.getPropertyAsString("Name") + " "+m_Task.getM_Progress() + " / " + countrec );
-				m_Task.refreshGUINow();
+				m_Task.refreshMSG(query.getPropertyAsString("Name") +"\n" 
+						+ "Pages:" +(p_PageCount != null && p_CurrentPage !=null ? p_CurrentPage + "/"+ p_PageCount + "\n" : "") 
+						+ "Records : " + (i + 1) + " / " + (countrec - hasPages), false, (i + 1));
 				
 		    	String sql = query.getPropertyAsString("SQL");
 		    	
@@ -184,27 +179,22 @@ public class InitialLoad extends CommunicationSoap{
 							params[j]=values.getPrimitiveProperty("Value");
 					}
 				}
-		    	System.out.println(sql);
+		    	
 		    	//Execute SQL
 				if (params==null)
 					conn.executeSQL(sql);
 		    	else
 		    		conn.executeSQL(sql, params);
-				
-				
 			}
 		}
     	catch (Exception ex){
     		ex.printStackTrace();
-    		m_Task.setM_PublicMsg(ex.getLocalizedMessage());
-    		m_Task.setM_Error(true);
-			m_Task.refreshGUINow();
-			return false;
+    		m_Task.refreshMSG(ex.getLocalizedMessage(), true, null);
+    		return  false;
     	}
     	finally{
     		DB.closeConnection(conn);
     	}
-		
 		return true;
 	}
 
@@ -218,5 +208,4 @@ public class InitialLoad extends CommunicationSoap{
 	public void addPropertyToCall(String p_Name, Object p_Value) {
 		call.addProperty(p_Name, p_Value);
 	}
-	
 }
