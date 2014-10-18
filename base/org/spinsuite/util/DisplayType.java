@@ -21,6 +21,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -159,7 +160,7 @@ public final class DisplayType
 	 * @return
 	 * @return boolean
 	 */
-	public static boolean isBoolean(int displayType){
+	public static boolean isBoolean(int displayType) {
 		if(displayType == YES_NO)
 			return true;
 		return false;
@@ -277,8 +278,12 @@ public final class DisplayType
 	 *  @param pattern Java Number Format pattern e.g. "#,##0.00"
 	 *  @return number format
 	 */
-	public static DecimalFormat getNumberFormat(Context ctx, int displayType, String pattern){
-		Locale locale = new Locale(Env.getAD_Language(ctx));
+	public static DecimalFormat getNumberFormat(Context ctx, int displayType, String pattern) {
+		String language = Env.BASE_LANGUAGE;
+		if(ctx != null)
+			language = Env.getAD_Language(ctx);
+		//	
+		Locale locale = new Locale(language);
 		DecimalFormat format = null;
 		format = (DecimalFormat)NumberFormat.getNumberInstance(locale);
 		//
@@ -522,7 +527,7 @@ public final class DisplayType
 			} else
 				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, null);
 		} else if (isDate(field.DisplayType)) {
-			if(value != null){
+			if(value != null) {
 				//	Format
 				SimpleDateFormat format;
 				//	Date and Time
@@ -557,7 +562,7 @@ public final class DisplayType
 		} else if (isID(field.DisplayType) || field.DisplayType == INTEGER) {    //  note that Integer is stored as BD
 			return Env.getContextAsInt(ctx, m_ActivityNo, TabNo, field.ColumnName);
 		} else if (isNumeric(field.DisplayType)) {
-			return getNumber(Env.getContext(ctx, m_ActivityNo, TabNo, field.ColumnName));
+			return getNumber(ctx, Env.getContext(ctx, m_ActivityNo, TabNo, field.ColumnName), field.DisplayType);
 		} else if (isDate(field.DisplayType)) {
 			String value = Env.getContext(ctx, m_ActivityNo, TabNo, field.ColumnName);
 			if(value != null)
@@ -594,9 +599,8 @@ public final class DisplayType
 				return (Integer) value;
 			else
 				return 0;
-			//Integer.parseInt(String.valueOf(value));
 		} else if (isNumeric(displayType)) {
-			return getNumber(String.valueOf(value));
+			return getNumber(String.valueOf(value), displayType);
 		} else if (isDate(displayType)) {
 			return getDate(String.valueOf(value));
 		} else if (displayType == YES_NO) {
@@ -691,9 +695,9 @@ public final class DisplayType
 	 * @return
 	 * @return int
 	 */
-	public static int getInputType(int displayType){
+	public static int getInputType(int displayType) {
 		int inputType = 0;
-		if(DisplayType.isText(displayType)){
+		if(isText(displayType)) {
 			if(displayType == TEXT
 					|| displayType == TEXT_LONG
 					|| displayType == MEMO)
@@ -703,9 +707,13 @@ public final class DisplayType
 			else
 				inputType = InputType.TYPE_CLASS_TEXT;
 		}
-    	else if(DisplayType.isNumeric(displayType))
+    	else if(displayType == INTEGER)
     		inputType = InputType.TYPE_CLASS_NUMBER;
-    	else if(DisplayType.isDate(displayType))
+    	else if(isNumeric(displayType))
+    		inputType = InputType.TYPE_CLASS_NUMBER 
+    									| InputType.TYPE_NUMBER_FLAG_DECIMAL 
+    									| InputType.TYPE_NUMBER_FLAG_SIGNED;
+    	else if(isDate(displayType))
     		inputType = InputType.TYPE_CLASS_DATETIME;
     	//	Default
 		return inputType;
@@ -715,16 +723,51 @@ public final class DisplayType
 	 * Get BigDecimal format
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:53:00
 	 * @param value
+	 * @param ctx
+	 * @return
+	 * @return BigDecimal
+	 */
+	public static BigDecimal getNumber(Context ctx, String value, int displayType) {
+		try {
+			if(value != null 
+					&& value.length() > 0) {
+				DecimalFormat dFormat = getNumberFormat(ctx, displayType);
+				//	
+				dFormat.setParseBigDecimal(true);
+				BigDecimal parsed = (BigDecimal)dFormat.parse(value, new ParsePosition(0));
+				return parsed;
+			}
+		} catch (Exception e) {
+			if(ctx != null)
+				LogM.log(ctx, DisplayType.class, Level.SEVERE, "Not Parsed Value = " + value);
+		}
+		//	
+		return Env.ZERO;
+	}
+	
+	/**
+	 * Get BigDecimal from String
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/10/2014, 16:43:08
+	 * @param value
+	 * @param displayType
+	 * @return
+	 * @return BigDecimal
+	 */
+	public static BigDecimal getNumber(String value, int displayType) {
+		return getNumber(null, value, displayType);
+	}
+	
+	/**
+	 * Get BigDecimal from String
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/10/2014, 16:43:47
+	 * @param value
 	 * @return
 	 * @return BigDecimal
 	 */
 	public static BigDecimal getNumber(String value) {
-		if(value != null 
-				&& value.length() > 0){
-			return new BigDecimal(value);
-		}
-		return Env.ZERO;
+		return getNumber(null, value, AMOUNT);
 	}
+	
 	
 	/**
 	 * Get Date

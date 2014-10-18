@@ -118,8 +118,9 @@ public class TV_DynamicActivity extends TV_Base
         		//	Set From Called
         		actParam.setActivityNo(tabParam.getActivityNo());
         		actParam.setFrom_SPS_Table_ID(tabParam.getSPS_Table_ID());
-            	actParam.setFrom_Record_ID(Env.getTabRecord_ID(
-            			getApplicationContext(), tabParam.getActivityNo(), tabParam.getTabNo()));
+        		int[] record_ID = Env.getTabRecord_ID(
+            			getApplicationContext(), tabParam.getActivityNo(), tabParam.getTabNo());
+            	actParam.setFrom_Record_ID(record_ID[0]);
 
     		}
     		//	Is From Activity
@@ -251,10 +252,10 @@ public class TV_DynamicActivity extends TV_Base
 	    		//	Set record Identifier
 	    		if(tabParam.getTabNo() == 0)
 	    			Env.setTabRecord_ID(this, 
-	    					tabParam.getActivityNo(), tabParam.getTabNo(), m_Record_ID);
+	    					tabParam.getActivityNo(), tabParam.getTabNo(), new int[]{m_Record_ID});
 	    		else
 	    			Env.setTabRecord_ID(this, 
-	    					tabParam.getActivityNo(), tabParam.getTabNo(), 0);
+	    					tabParam.getActivityNo(), tabParam.getTabNo(), new int[]{0});
 	    		//	Dynamic Tab
 	    		if(tabParam.getSPS_Table_ID() != 0) {
 		    		//	Parent Tab
@@ -294,12 +295,12 @@ public class TV_DynamicActivity extends TV_Base
     }
 
 	@Override
-	public void onItemSelected(int record_ID) {
+	public void onItemSelected(int [] record_ID, String [] keyColumns) {
 		invalidateOptionsMenu();
 		Fragment curFr = getCurrentFragment();
     	if(curFr != null
     			&& curFr instanceof I_FragmentSelectListener){
-    		((I_FragmentSelectListener) curFr).onItemSelected(record_ID);
+    		((I_FragmentSelectListener) curFr).onItemSelected(record_ID, keyColumns);
     	}
 	}
 	

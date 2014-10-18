@@ -44,25 +44,23 @@ public abstract class PO {
 	/** Original Values         	*/
 	private Object[]    			m_currentValues 	= null;
 	/** New Values              	*/
-	private Object[]    			m_oldValues 		= null;
+	private Object[]    			m_OldValues 		= null;
 	/**	Connection					*/
 	protected DB 					conn 				= null;  
 	/** Record_IDs          		*/
 	private int[]       			m_IDs 				= new int[] {0};
 	/** Key Columns					*/
 	private String[]         		m_KeyColumns 		= null;
+	/** Record_IDs Old          	*/
+	private int[]       			m_OldIDs 			= new int[] {0};
+	/** Key Columns Old				*/
+	private String[]         		m_OldKeyColumns 	= null;
 	/** Create New for Multi Key 	*/
 	private boolean					isNew 				= true;
-	/**	Deleted ID					*/
-	private int						m_currentId 		= 0;
-	/**	Old ID						*/
-	private int						m_oldId 			= 0;
 	/**	Handle Connection			*/
 	private boolean					handConnection 		= true;
 	/**	Log Error					*/
 	private String					error 				= null;
-	/**	Deleted ID					*/
-	private int						m_idOld 			= 0;
 	
 	
 	/**
@@ -110,7 +108,7 @@ public abstract class PO {
 		//
 		int size = m_TableInfo.getColumnLength();
 		m_currentValues = new Object[size];
-		m_oldValues = new Object[size];
+		m_OldValues = new Object[size];
 
 		if (rs != null) {
 			loadData(rs);
@@ -187,12 +185,15 @@ public abstract class PO {
 	}   //  getID
 
 	/**
-	 *  Return Deleted Single Key Record ID
-	 *  @return ID or 0
+	 * Get Array IDs
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:38:16
+	 * @return
+	 * @return int[]
 	 */
-	public int get_IDOld() {
-		return m_idOld;
-	}   //  getID
+	public int[] getIDs() {
+		return m_IDs;
+	}
+	
 	
 	/**
 	 * Load data from Cursor
@@ -204,9 +205,18 @@ public abstract class PO {
 		if(rs != null) {
 			//	Load Data
 			loadDataQuery(rs, true);
-			m_IDs = new int[] {get_ValueAsInt(m_TableInfo.getTableName() + "_ID")};
-			m_KeyColumns = m_TableInfo.getKeyColumns();	
+			reloadKey();
 		}
+	}
+	
+	/**
+	 * Get Key Columns
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:49:31
+	 * @return
+	 * @return String[]
+	 */
+	public String[] getKeyColumns() {
+		return m_KeyColumns;
 	}
 	
 	/**
@@ -216,12 +226,27 @@ public abstract class PO {
 	 * @return void
 	 */
 	public boolean loadData(int [] ID) {
+		return loadData(ID, null);
+	}
+	
+	/**
+	 * Load Data from ID and Key Columns
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 12:07:37
+	 * @param ID
+	 * @param KeyColumns
+	 * @return
+	 * @return boolean
+	 */
+	public boolean loadData(int [] ID, String [] KeyColumns) {
 		boolean ok = false;
 		LogM.log(getCtx(), getClass(), Level.FINE, "loadData=" + String.valueOf(ID));
-		if(ID != null) {
+		if(ID != null
+				&& ID[0] > 0) {
 			m_IDs = ID;
-			m_currentId = ID[0];
-			m_KeyColumns = m_TableInfo.getKeyColumns();
+			m_KeyColumns = KeyColumns;
+			if(m_KeyColumns == null
+					|| m_KeyColumns.length == 0)
+				m_KeyColumns = m_TableInfo.getKeyColumns();
 			ok = loadDataQuery();
 		} else {
 			isNew = true;
@@ -239,7 +264,7 @@ public abstract class PO {
 	 * @return int
 	 */
 	public int getID() {
-		return m_currentId;
+		return get_ID();
 	}
 	
 	/**
@@ -249,11 +274,12 @@ public abstract class PO {
 	 * @return void
 	 */
 	public void copyValues(boolean deleteOld) {
-		m_oldValues = m_currentValues;
+		m_OldValues = m_currentValues;
 		if(deleteOld) {
 			isNew = true;
 			m_currentValues = new Object[m_TableInfo.getColumnLength()];
-			m_oldId = m_currentId;
+			m_OldIDs = m_IDs;
+			m_OldKeyColumns = m_KeyColumns;
 		}
 	}
 	
@@ -264,8 +290,9 @@ public abstract class PO {
 	 */
 	public void backCopy() {
 		this.isNew = false;
-		m_currentValues = m_oldValues;
-		m_currentId = m_oldId;
+		m_currentValues = m_OldValues;
+		m_IDs = m_OldIDs;
+		m_KeyColumns = m_OldKeyColumns;
 	}
 	
 	/**
@@ -379,7 +406,7 @@ public abstract class PO {
 				isNew = false;
 				ok = true;
 			}
-			LogM.log(getCtx(), getClass(), Level.FINE, "Old Value=" + m_oldValues[i] + " New Value=" + m_currentValues[i]);	
+			LogM.log(getCtx(), getClass(), Level.FINE, "Old Value=" + m_OldValues[i] + " New Value=" + m_currentValues[i]);	
 		}
 		return ok;
 	}
@@ -399,7 +426,7 @@ public abstract class PO {
 				POInfoColumn column = m_TableInfo.getPOInfoColumn(i);
 				m_currentValues[i] = parseValue(column, i, false, false);
 				//	
-				LogM.log(getCtx(), getClass(), Level.FINE, "Old Value=" + m_oldValues[i]);	
+				LogM.log(getCtx(), getClass(), Level.FINE, "Old Value=" + m_OldValues[i]);	
 			}
 			//	Set Ok Value
 			ok = true;
@@ -418,20 +445,38 @@ public abstract class PO {
 	public void setIDUpdate(int ID) {
 		if(ID > 0) {
 			m_IDs = new int[] {ID};
-			m_currentId = ID;
-			m_oldId = m_currentId;
-			m_KeyColumns = new String[] {m_TableInfo.getTableName() + "_ID"};
+			m_OldIDs = m_IDs;
+			m_KeyColumns = m_TableInfo.getKeyColumns();
 			isNew = false;
+		}
+	}
+	
+	/**
+	 * Reload Key Columns
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/10/2014, 19:38:27
+	 * @return void
+	 */
+	private void reloadKey() {
+		m_KeyColumns = m_TableInfo.getKeyColumns();
+		m_IDs = new int[m_KeyColumns.length];
+		//	
+		for (int i = 0; i < m_KeyColumns.length; i++) {
+			m_IDs[i] = get_ValueAsInt(m_KeyColumns[i]);
 		}
 	}
 	
 	/**
 	 * 	Create Single/Multi Key Where Clause
 	 * 	@param withValues if true uses actual values otherwise ?
+	 *  @param reloadKey
 	 * 	@return where clause
 	 */
-	protected String get_WhereClause (boolean withValues) {
+	protected String get_WhereClause (boolean withValues, boolean reloadKey) {
 		StringBuffer sb = new StringBuffer();
+		//	Reload Key
+		if(reloadKey)
+			reloadKey();
+		//	
 		for (int i = 0; i < m_IDs.length; i++)
 		{
 			if (i != 0)
@@ -449,6 +494,17 @@ public abstract class PO {
 		}
 		return sb.toString();
 	}	//	getWhereClause
+	
+	/**
+	 * Get Where clause
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/10/2014, 19:17:14
+	 * @param withValues
+	 * @return
+	 * @return String
+	 */
+	protected String get_WhereClause (boolean withValues) {
+		return get_WhereClause(withValues, false);
+	}
 	
 	/**
 	 * Get values from where clause
@@ -581,7 +637,7 @@ public abstract class PO {
 	 * @return int
 	 */
 	public final int get_OldValueAsInt(String columnName) {
-		return get_ValueAsInt(columnName, m_oldValues);
+		return get_ValueAsInt(columnName, m_OldValues);
 	}
 	
 	/**
@@ -648,7 +704,7 @@ public abstract class PO {
 		int index = m_TableInfo.getColumnIndex(columnName);
 		LogM.log(getCtx(), getClass(), Level.FINE, "columnName = " + columnName);
 		if(index >= 0) {
-			LogM.log(getCtx(), getClass(), Level.FINE, "Value = " + m_oldValues[index]);
+			LogM.log(getCtx(), getClass(), Level.FINE, "Value = " + m_OldValues[index]);
 			if(DisplayType.isText(m_TableInfo.getDisplayType(columnName))) {
 				return "Y".equals(((String)m_currentValues[index]));
 			} else {
@@ -736,12 +792,12 @@ public abstract class PO {
 			if(!fine)
 				throw new Exception("@Error@ " + getError());
 			//	
-			conn.deleteSQL(m_TableInfo.getTableName(), get_WhereClause(false), get_WhereClauseValues());
+			conn.deleteSQL(m_TableInfo.getTableName(), get_WhereClause(false, true), get_WhereClauseValues());
 			if(handConnection)
 				conn.setTransactionSuccessful();
 			//	
 			clear(true);
-			LogM.log(getCtx(), getClass(), Level.FINE, (String)m_oldValues[0]);
+			LogM.log(getCtx(), getClass(), Level.FINE, (String)m_OldValues[0]);
 		} catch (Exception e) {
 			throw e;
 		} finally {
@@ -757,16 +813,17 @@ public abstract class PO {
 	 */
 	public void clear(boolean deleteBackup) {
 		isNew = true;
-		m_oldId = m_currentId;
-		m_currentId = 0;
+		m_OldIDs = m_IDs;
+		m_OldKeyColumns = m_KeyColumns;
+		m_IDs = new int[]{0};
 		int size = m_TableInfo.getColumnLength();
 		m_currentValues = new Object[size];
 		//	Load default Values
 		loadDefaultValues();
 		//	
 		if(deleteBackup) {
-			m_oldId = 0;
-			m_oldValues = new Object[size];
+			m_OldIDs = new int[]{0};
+			m_OldValues = new Object[size];
 		}
 	}
 	
@@ -798,7 +855,7 @@ public abstract class PO {
 					if(column.IsMandatory 
 							&& value == null)
 						throw new Exception(m_ctx.getResources().getString(R.string.MustFillField) + 
-								" \"" + column.ColumnName + "\"");
+								" \"@" + column.ColumnName + "@\"");
 					listValues.add(value);
 					LogM.log(getCtx(), getClass(), Level.FINE, column.ColumnName + "=" + value + " Mandatory=" + column.IsMandatory);
 				}
@@ -813,10 +870,8 @@ public abstract class PO {
 			conn.executeSQL(sql, listValues.toArray());
 			if(handConnection)
 				conn.setTransactionSuccessful();
-			
-			//	Load Values
-			m_IDs = new int[] {m_currentId};
-			m_KeyColumns = new String[] {m_TableInfo.getTableName() + "_ID"};
+			//	Reload Key
+			reloadKey();
 			isNew = false;
 		} catch (Exception e) {
 			throw e;
@@ -857,7 +912,7 @@ public abstract class PO {
 				if(column.IsMandatory 
 						&& value == null)
 					throw new Exception(m_ctx.getResources().getString(R.string.MustFillField) + 
-							" \"" + column.ColumnName + "\"");
+							" \"@" + column.ColumnName + "@\"");
 				if(!column.ColumnName.equals("Created")
 						&& !column.ColumnName.equals("CreatedBy")) {
 					listValues.add(value);
@@ -870,7 +925,7 @@ public abstract class PO {
 					m_TableInfo.getTableName() + 
 					" SET " + 
 					columns.toString() +
-					" WHERE "  + get_WhereClause(true);
+					" WHERE "  + get_WhereClause(true, true);
 			
 			conn.executeSQL(sql, listValues.toArray());
 			if(handConnection)
@@ -917,10 +972,10 @@ public abstract class PO {
 			Object value = m_currentValues[index]; 
 			if(isNew
 					&& column.ColumnName.equals(m_TableInfo.getTableName() + "_ID")) {
-				m_currentId = MSequence.getNextID(m_ctx, getAD_Client_ID(), getTableName(), conn);
+				m_IDs = new int[]{MSequence.getNextID(m_ctx, getAD_Client_ID(), getTableName(), conn)};
 				//	Set ID
-				set_Value(index, m_currentId);
-				return m_currentId;
+				set_Value(index, m_IDs[0]);
+				return m_IDs[0];
 			} else if(isNew 
 					&& column.ColumnName.equals("DocumentNo")) {
 					//	Get Document Type

@@ -20,24 +20,6 @@ package org.spinsuite.view.lookup;
  *
  */
 public class InfoLookup {
-
-	/**
-	 * Full
-	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/09/2014, 10:45:05
-	 * @param m_TableName
-	 * @param m_TableAlias
-	 * @param m_KeyColumn
-	 * @param m_DisplayColumn
-	 * @param m_WhereClause
-	 */
-	public InfoLookup(String m_TableName, String m_TableAlias, String m_KeyColumn, String m_DisplayColumn, String m_WhereClause) {
-		this.TableName = m_TableName;
-		this.TableAlias = m_TableAlias;
-		this.KeyColumn = m_KeyColumn;
-		this.DisplayColumn = m_DisplayColumn;
-		this.WhereClause = m_WhereClause;
-	}
 	
 	/**
 	 * 
@@ -51,7 +33,7 @@ public class InfoLookup {
 	/**	Table Name					*/
 	public String 			TableName 				= null;
 	/**	Key Column					*/
-	public String 			KeyColumn 				= null;
+	public String[] 		KeyColumn 				= null;
 	/**	Display Column				*/
 	public String 			DisplayColumn 			= null;
 	/**	Where Clause				*/
@@ -77,8 +59,8 @@ public class InfoLookup {
 	
 	@Override
 	public String toString() {
-		return "InfoLookup [TableName=" + TableName + ", KeyColumn="
-				+ KeyColumn + ", DisplayColumn=" + DisplayColumn
+		return "InfoLookup [TableName=" + TableName 
+				+ ", DisplayColumn=" + DisplayColumn
 				+ ", WhereClause=" + WhereClause + ", TableAlias=" + TableAlias
 				+ ", TableJoin=" + TableJoin + "]";
 	}

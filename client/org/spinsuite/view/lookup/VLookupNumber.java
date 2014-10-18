@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 import org.spinsuite.util.DisplayType;
+import org.spinsuite.util.Env;
 import org.spinsuite.util.TabParameter;
 
 import android.annotation.SuppressLint;
@@ -107,6 +108,8 @@ public class VLookupNumber extends GridField {
 			
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus)
+					((EditText)v).selectAll();
 				//	Listener
 				event();
 			}
@@ -132,7 +135,7 @@ public class VLookupNumber extends GridField {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/05/2014, 08:41:28
 	 * @return void
 	 */
-	private void event(){
+	private void event() {
         //	Listener
         if(m_Listener != null)
         	m_Listener.onFieldEvent(this);
@@ -146,6 +149,7 @@ public class VLookupNumber extends GridField {
 		//	
 		if(value == null) {
 			v_Number.setText("");
+			m_Value = Env.ZERO;
 		} else {
 			if(m_field.DisplayType == DisplayType.INTEGER)
 				m_Value = new BigDecimal((Integer) value);
@@ -161,7 +165,7 @@ public class VLookupNumber extends GridField {
 	public Object getValue() {
 		BigDecimal m_Value = DisplayType.getNumber(v_Number.getText().toString());
 		if(m_field.DisplayType == DisplayType.INTEGER)
-			m_Value.intValue();
+			return m_Value.intValue();
 		//	Default
 		return m_Value;
 	}

@@ -500,7 +500,7 @@ public class Lookup {
 		String tableName = m_field.ColumnName.replaceAll("_ID", "");
 		//	Set Info Lookup
 		m_InfoLookup.TableName = tableName;
-		m_InfoLookup.KeyColumn = m_field.ColumnName;
+		m_InfoLookup.KeyColumn = new String[]{m_field.ColumnName};
 		//	Set Table Alias
 		if(m_TableAlias == null
 				|| m_TableAlias.length() == 0)
@@ -636,7 +636,7 @@ public class Lookup {
 			DB.closeConnection(conn);
 			//	Set Lookup Info
 			m_InfoLookup.TableName = tableName;
-			m_InfoLookup.KeyColumn = pkColumnName;
+			m_InfoLookup.KeyColumn = new String[]{pkColumnName};
 			//	Set Table Alias
 			if(m_TableAlias == null
 					|| m_TableAlias.length() == 0)
@@ -726,7 +726,7 @@ public class Lookup {
 			m_TableAlias = InfoLookup.REF_LIST_TN;
 		
 		//	Set Lookup Info
-		m_InfoLookup.KeyColumn = "Value";
+		m_InfoLookup.KeyColumn = new String[]{"Value"};
 		m_InfoLookup.TableName = InfoLookup.REF_LIST_TN;
 		m_InfoLookup.TableAlias = m_TableAlias;
 		
@@ -818,8 +818,9 @@ public class Lookup {
 			tableName = rs.getString(0);
 			//	Set Info Lookup
 			m_InfoLookup.TableName = tableName;
+			ArrayList<String> keyColumns = new ArrayList<String>();
 			if(!isParent)
-				m_InfoLookup.KeyColumn = tableName + "_ID";
+				m_InfoLookup.KeyColumn = new String[]{tableName + "_ID"};
 			//	Alias Identifier
 			String aliasPrefix = ALIAS_PREFIX_IDENTIFIER + tableName;
 			int aliasCount = 1;
@@ -830,9 +831,14 @@ public class Lookup {
 				int m_SPS_Column_ID = rs.getInt(2);
 				int displayType = rs.getInt(3);
 				//	
-				if(isParent
-						&& isFirst)
-					m_InfoLookup.KeyColumn = columnName;
+				if(isParent) {
+					//	Add Key
+					keyColumns.add(columnName);
+					//	
+					if(isFirst) {
+						m_InfoLookup.KeyColumn = new String[]{columnName};
+					}
+				}
 				//	Is First
 				if(!isFirst)
 					longColumn.append("||'").append(InfoLookup.TABLE_SEARCH_SEPARATOR).append("'||");
@@ -852,8 +858,21 @@ public class Lookup {
 					isFirst = false;
 			}while(rs.moveToNext());
 			//	
-			sql.append("SELECT ").append(tableName).append(".")
-					.append(m_InfoLookup.KeyColumn).append(", ");
+			//	Add Select
+			sql.append("SELECT ");
+			//	
+			if(isParent) {
+				m_InfoLookup.KeyColumn = new String[keyColumns.size()];
+				keyColumns.toArray(m_InfoLookup.KeyColumn);
+				//	Iterate KeyColumns
+				for(String column : m_InfoLookup.KeyColumn) {
+					sql.append(tableName).append(".")
+						.append(column).append(", ");
+				}
+			} else {
+				sql.append(tableName).append(".")
+					.append(m_InfoLookup.KeyColumn[0]).append(", ");
+			}
 			//	Add Long Column
 			sql.append(longColumn);
 			//	Check Document Status
@@ -884,6 +903,7 @@ public class Lookup {
 		m_IsHasWhere = false;
 		m_InfoLookup.WhereClause = null;
 		sql.append(MARK_WHERE);
+		LogM.log(ctx, getClass(), Level.FINE, "SQL (loadFromTable())= " + sql.toString());
 		//	Return
 		return sql.toString();
 	}
@@ -903,7 +923,7 @@ public class Lookup {
 		m_From.append(lookup.TableName).append(" ").append(AS).append(" ").append(lookup.TableAlias).append(" ");
 		//	On
 		m_From.append(ON).append("(")
-							.append(lookup.TableAlias).append(POINT).append(lookup.KeyColumn)
+							.append(lookup.TableAlias).append(POINT).append(lookup.KeyColumn[0])
 							.append(EQUAL).append(tableName).append(POINT).append(linkColumn.ColumnName);
 		if(linkColumn.DisplayType == DisplayType.LIST) {
 			m_From.append(" ").append(AND).append(" ")

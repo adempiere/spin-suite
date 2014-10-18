@@ -21,7 +21,7 @@ import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.interfaces.I_FragmentSelectListener;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
-import org.spinsuite.util.KeyNamePair;
+import org.spinsuite.util.MultiKeyNamePair;
 import org.spinsuite.util.TabParameter;
 import org.spinsuite.view.lookup.InfoLookup;
 import org.spinsuite.view.lookup.InfoTab;
@@ -40,21 +40,21 @@ public class FV_IndexRecordLine extends ListFragment
 									implements I_DynamicTab {
     
 	/**	Fragment Listener Call Back	*/
-	private I_FragmentSelectListener 	m_Callback 			= null;
+	private I_FragmentSelectListener 		m_Callback 			= null;
 	/**	Parameters					*/
-	private TabParameter				tabParam 			= null;
+	private TabParameter					tabParam 			= null;
 	/**	Tab Info					*/
-	private InfoTab 					tabInfo				= null;
+	private InfoTab 						tabInfo				= null;
 	/**	Lookup 						*/
-	private Lookup 						lookup 				= null;
+	private Lookup 							lookup 				= null;
 	/**	Layout Type					*/
-	private int 						layout				= 0;
+	private int 							layout				= 0;
 	/**	Adapter						*/
-	private ArrayAdapter<KeyNamePair> 	adapter				= null;
+	private ArrayAdapter<MultiKeyNamePair> 	adapter				= null;
 	/**	Parent Tab Record ID		*/
-	private int 						m_Parent_Record_ID 	= 0;
+	private int 							m_Parent_Record_ID 	= 0;
 	/**	Is Load Ok					*/
-	private boolean						m_IsLoadOk			= false;
+	private boolean							m_IsLoadOk			= false;
 	
 
 	/**
@@ -76,10 +76,10 @@ public class FV_IndexRecordLine extends ListFragment
     	//	
     	if(tabParam != null
     			&& tabParam.getTabLevel() > 0){
-    		int currentParent_Record_ID = Env.getTabRecord_ID(getActivity(), 
+    		int[] currentParent_Record_ID = Env.getTabRecord_ID(getActivity(), 
         			tabParam.getActivityNo(), tabParam.getParentTabNo());
-        	if(m_Parent_Record_ID != currentParent_Record_ID){
-        		m_Parent_Record_ID = currentParent_Record_ID;
+        	if(m_Parent_Record_ID != currentParent_Record_ID[0]){
+        		m_Parent_Record_ID = currentParent_Record_ID[0];
         	}
     	}
     	//	Load Ok
@@ -113,17 +113,17 @@ public class FV_IndexRecordLine extends ListFragment
     		lookup.setCriteria(criteria.getWhereClause());
     	}
     	//	Get Values
-    	KeyNamePair[] values = DB.getKeyNamePairs(getActivity(), 
-    			lookup.getSQL().replaceAll(InfoLookup.TABLE_SEARCH_SEPARATOR, "_"), criteria.getValues());
+    	MultiKeyNamePair[] values = DB.getMultiKeyNamePairs(getActivity(), 
+    			lookup.getSQL().replaceAll(InfoLookup.TABLE_SEARCH_SEPARATOR, "_"), lookup.getInfoLookup().KeyColumn.length, criteria.getValues());
         //	Is Loaded
     	boolean isLoaded = (values != null && values.length != 0);
     	//	Set Adapter
     	if(!isLoaded){
-    		KeyNamePair voidRecord = new KeyNamePair(0, getActivity().getString(R.string.msg_NewRecord));
-    		values = new KeyNamePair[]{voidRecord};
+    		MultiKeyNamePair voidRecord = new MultiKeyNamePair(new int[]{0}, getActivity().getString(R.string.msg_NewRecord));
+    		values = new MultiKeyNamePair[]{voidRecord};
     	}
     	//	Instance Adapter
-    	adapter = new ArrayAdapter<KeyNamePair>(getActivity(), layout, values);
+    	adapter = new ArrayAdapter<MultiKeyNamePair>(getActivity(), layout, values);
     	//	Set Adapter List
     	setListAdapter(adapter);
     	//	Return
@@ -155,8 +155,8 @@ public class FV_IndexRecordLine extends ListFragment
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         //	Set Selected
-    	KeyNamePair pair = adapter.getItem(position);
-    	selectIndex(pair.getKey());
+    	MultiKeyNamePair pair = adapter.getItem(position);
+    	selectIndex(pair.getMultiKey(), lookup.getInfoLookup().KeyColumn);
     	//	Change on List View
     	getListView().setItemChecked(position, true);
     }
@@ -171,10 +171,10 @@ public class FV_IndexRecordLine extends ListFragment
     	if(adapter != null
     			&& !adapter.isEmpty()) {
             //	Set Selected
-        	KeyNamePair pair = adapter.getItem(0);
+    		MultiKeyNamePair pair = adapter.getItem(0);
             //	
             Env.setTabRecord_ID(getActivity(), 
-    				tabParam.getActivityNo(), tabParam.getTabNo(), pair.getKey());
+    				tabParam.getActivityNo(), tabParam.getTabNo(), pair.getMultiKey());
     	}
     }
     
@@ -184,12 +184,14 @@ public class FV_IndexRecordLine extends ListFragment
      * @param record_ID
      * @return void
      */
-    private void selectIndex(int record_ID){
+    private void selectIndex(int [] record_ID, String [] keyColumns){
     	//	Set Record Identifier
     	Env.setTabRecord_ID(getActivity(), 
 				tabParam.getActivityNo(), tabParam.getTabNo(), record_ID);
+    	Env.setTabKeyColumns(getActivity(), 
+				tabParam.getActivityNo(), tabParam.getTabNo(), keyColumns);
     	//	
-    	m_Callback.onItemSelected(record_ID);
+    	m_Callback.onItemSelected(record_ID, keyColumns);
 
     }
 
@@ -214,10 +216,10 @@ public class FV_IndexRecordLine extends ListFragment
 			loaded = loadData();
 			selectFirst();
 		} else if(tabParam.getTabLevel() > 0){
-    		int currentParent_Record_ID = Env.getTabRecord_ID(getActivity(), 
+    		int[] currentParent_Record_ID = Env.getTabRecord_ID(getActivity(), 
         			tabParam.getActivityNo(), tabParam.getParentTabNo());
-        	if(m_Parent_Record_ID != currentParent_Record_ID){
-        		m_Parent_Record_ID = currentParent_Record_ID;
+        	if(m_Parent_Record_ID != currentParent_Record_ID[0]){
+        		m_Parent_Record_ID = currentParent_Record_ID[0];
         		loaded = loadData();
         		selectFirst();
         		//	

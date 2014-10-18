@@ -237,7 +237,7 @@ public abstract class GridField extends LinearLayout {
 	 */
 	@Override
 	public String toString() {
-		return "VLookup [v_Label=" + v_Label + ", m_field=" + m_field + "]";
+		return "VLookup [Value = " + getValue() + ", m_field=" + m_field + "]";
 	}
 	
 	/**

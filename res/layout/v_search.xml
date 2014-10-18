@@ -21,6 +21,15 @@
    	android:layout_height="match_parent"
     android:orientation="vertical" 
   	android:id="@+id/ll_Search">
+  	<!-- Count -->
+  	<TextView  android:id="@+id/tv_RecordCount"
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:maxLines="1"
+    	android:gravity="end"
+    	style="@style/TextTitleList">
+  	    
+  	</TextView>
   	<ScrollView
   	    android:layout_width="match_parent"
    		android:layout_height="wrap_content"

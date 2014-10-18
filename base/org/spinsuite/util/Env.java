@@ -20,9 +20,12 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
@@ -570,6 +573,44 @@ public final class Env {
 		setContext(ctx, m_ActivityNo+"|"+TabNo+"|"+context, value);
 	}	//	setContext
 	
+	/**
+	 * Set Context Array Int
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:45:00
+	 * @param ctx
+	 * @param m_ActivityNo
+	 * @param TabNo
+	 * @param context
+	 * @param value
+	 * @return void
+	 */
+	public static void setContextArray (Context ctx, int m_ActivityNo, int TabNo, String context, int[] value) {
+		if (ctx == null || context == null)
+			return;
+		if (m_ActivityNo != WINDOW_FIND && m_ActivityNo != WINDOW_MLOOKUP)
+			LogM.log(ctx, "Env", Level.FINE, "Context("+m_ActivityNo+","+TabNo+") " + context + "==" + value);
+		//
+		setContext(ctx, m_ActivityNo+"|"+TabNo+"|"+context, value);
+	}	//	setContext
+	
+	/**
+	 * Set Context Array
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:42:54
+	 * @param ctx
+	 * @param m_ActivityNo
+	 * @param TabNo
+	 * @param context
+	 * @param value
+	 * @return void
+	 */
+	public static void setContextArray (Context ctx, int m_ActivityNo, int TabNo, String context, String[] value) {
+		if (ctx == null || context == null)
+			return;
+		if (m_ActivityNo != WINDOW_FIND && m_ActivityNo != WINDOW_MLOOKUP)
+			LogM.log(ctx, "Env", Level.FINE, "Context("+m_ActivityNo+","+TabNo+") " + context + "==" + value);
+		//
+		setContext(ctx, m_ActivityNo+"|"+TabNo+"|"+context, value);
+	}	//	setContext
+	
 	/**	
 	 * Set Context as boolean
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/03/2014, 10:40:04
@@ -999,6 +1040,129 @@ public final class Env {
 			return getContext(ctx, m_ActivityNo, context, false);
 		return s;
 	}	//	getContext
+	
+	/**
+	 * Get Context As Array
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:15:20
+	 * @param ctx
+	 * @param m_ActivityNo
+	 * @param TabNo
+	 * @param context
+	 * @return
+	 * @return String[]
+	 */
+	public static String[] getContextAsArray (Context ctx, String context) {
+		if (ctx == null || context == null)
+			throw new IllegalArgumentException ("Require Context");
+		//	
+		LogM.log(ctx, "Env", Level.INFO, "getContext=" + context);
+		SharedPreferences pf = PreferenceManager.getDefaultSharedPreferences(ctx);
+		Set<String> set = pf.getStringSet(context, null);
+		//	Default
+		if(set == null)
+			return null;
+		//	Default
+		String [] array = new String[set.size()];
+		set.toArray(array);
+		return array;
+	}	//	getContext
+	
+	/**
+	 * Get Context As Int Array
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:35:26
+	 * @param ctx
+	 * @param context
+	 * @return
+	 * @return int[]
+	 */
+	public static int[] getContextAsIntArray(Context ctx, String context) {
+		String [] array = getContextAsArray(ctx, context);
+		if(array == null)
+			return new int[]{0};
+		//	
+		try {
+			int[] arrayInt = new int[array.length];
+			for(int i = 0; i < array.length; i++) {
+				arrayInt[i] = Integer.parseInt(array[i]);
+			}
+			//	
+			return arrayInt;
+		} catch (Exception e) {
+			//	
+		}
+		//	Default
+		return new int[]{0};
+	}
+	
+	/**
+	 * Get Context as Array with Activity and tab
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:18:56
+	 * @param ctx
+	 * @param m_ActivityNo
+	 * @param TabNo
+	 * @param context
+	 * @return
+	 * @return String[]
+	 */
+	public static String[] getContextAsArray(Context ctx, int m_ActivityNo, int TabNo, String context) {
+		return getContextAsArray(ctx, m_ActivityNo+"|"+TabNo+"|"+context);
+	}
+	
+	/**
+	 * Get Context as Int Array with Activity and tab
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:36:03
+	 * @param ctx
+	 * @param m_ActivityNo
+	 * @param TabNo
+	 * @param context
+	 * @return
+	 * @return int[]
+	 */
+	public static int[] getContextAsIntArray(Context ctx, int m_ActivityNo, int TabNo, String context) {
+		return getContextAsIntArray(ctx, m_ActivityNo+"|"+TabNo+"|"+context);
+	}
+	
+	/**
+	 * Set Context Array
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:26:05
+	 * @param ctx
+	 * @param context
+	 * @param value
+	 * @return void
+	 */
+	public static void setContext (Context ctx, String context, String[] value) {
+		if (ctx == null || context == null)
+			return;
+		LogM.log(ctx, "Env", Level.INFO, "setContext(" + context+", " + value);
+		Editor ep = getEditor(ctx);
+		if(value == null) {
+			ep.putStringSet(context, null);
+		} else {
+			//	Set Array
+			Set<String> set = new HashSet<String>(Arrays.asList(value));
+			ep.putStringSet(context, set);
+		}
+		//	Commit
+		ep.commit();
+	}	//	setContext
+	
+	/**
+	 * Set Context As Int Array
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:40:51
+	 * @param ctx
+	 * @param context
+	 * @param value
+	 * @return void
+	 */
+	public static void setContext (Context ctx, String context, int[] value) {
+		String[] strValue = new String[value.length];
+		for(int i = 0; i < value.length; i++) {
+			strValue[i] = String.valueOf(value[i]);
+		}
+		//	
+		setContext(ctx, context, strValue);
+	}
+	
 
 	/**
 	 * Get Value of Context for Window & Tab,
@@ -1325,9 +1489,52 @@ public final class Env {
 	 * @return
 	 * @return int
 	 */
-	public static int getTabRecord_ID(Context ctx, int m_ActivityNo, int TabNo) {
+	public static int[] getTabRecord_ID(Context ctx, int m_ActivityNo, int TabNo) {
 		//Msg.toastMsg(ctx, ID_TAB + tab + " " + getContextAsInt(ctx, ID_TAB + tab));
-		return getContextAsInt(ctx, m_ActivityNo, TabNo, ID_TAB);
+		return getContextAsIntArray(ctx, m_ActivityNo, TabNo, ID_TAB);
+	}
+	
+	/**
+	 * Get Tab KeyColumns
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:49:25
+	 * @param ctx
+	 * @param m_ActivityNo
+	 * @param TabNo
+	 * @return
+	 * @return String[]
+	 */
+	public static String[] getTabKeyColumns(Context ctx, int m_ActivityNo, int TabNo) {
+		//Msg.toastMsg(ctx, ID_TAB + tab + " " + getContextAsInt(ctx, ID_TAB + tab));
+		return getContextAsArray(ctx, m_ActivityNo, TabNo, ID_TAB_KEYS);
+	}
+	
+
+	/**
+	 * Set Tab Record Identifier
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 12:10:54
+	 * @param ctx
+	 * @param m_ActivityNo
+	 * @param TabNo
+	 * @param record_ID
+	 * @return void
+	 */
+	public static void setTabRecord_ID(Context ctx, int m_ActivityNo, int TabNo, int[] record_ID) {
+		//Msg.toastMsg(ctx, ID_TAB + tab + " " + record_ID);
+		setContextArray(ctx, m_ActivityNo, TabNo, ID_TAB, record_ID);
+	}
+	
+	/**
+	 * Set Tab Key Columns
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:48:49
+	 * @param ctx
+	 * @param m_ActivityNo
+	 * @param TabNo
+	 * @param keyColumns
+	 * @return void
+	 */
+	public static void setTabKeyColumns(Context ctx, int m_ActivityNo, int TabNo, String[] keyColumns) {
+		//Msg.toastMsg(ctx, ID_TAB + tab + " " + record_ID);
+		setContextArray(ctx, m_ActivityNo, TabNo, ID_TAB_KEYS, keyColumns);
 	}
 	
 	/**
@@ -1342,20 +1549,6 @@ public final class Env {
 	public static int getParentTabRecord_ID(Context ctx, int m_ActivityNo, int TabNo) {
 		//Msg.toastMsg(ctx, ID_TAB + tab + " " + getContextAsInt(ctx, ID_TAB + tab));
 		return getContextAsInt(ctx, m_ActivityNo, TabNo, ID_PARENT_TAB);
-	}
-	
-	/**
-	 * Set Tab Record Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 12:10:54
-	 * @param ctx
-	 * @param m_ActivityNo
-	 * @param TabNo
-	 * @param record_ID
-	 * @return void
-	 */
-	public static void setTabRecord_ID(Context ctx, int m_ActivityNo, int TabNo, int record_ID) {
-		//Msg.toastMsg(ctx, ID_TAB + tab + " " + record_ID);
-		setContext(ctx, m_ActivityNo, TabNo, ID_TAB, record_ID);
 	}
 	
 	/**
@@ -1925,6 +2118,7 @@ public final class Env {
 	public static final String		ACTIVITY_NO 		= "|AN|";
 	public static final String		CURRENT_ACTIVITY_NO = "|CAN|";
 	public static final String		ID_TAB 				= "T_Record_ID";
+	public static final String		ID_TAB_KEYS 		= "T_KeyColumn";
 	public static final String		ID_PARENT_TAB 		= "T_P_Record_ID";
 	public static final String		CURRENT_TAB 		= "|CT|";
 	public static final String		SUMMARY_RECORD_ID 	= "#SummRID";

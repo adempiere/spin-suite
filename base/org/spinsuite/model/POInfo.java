@@ -68,6 +68,8 @@ public class POInfo {
 	private POInfoColumn[]		m_columns = null;
 	/**	Count Column SQL		*/
 	private int					m_CountColumnSQL = 0;
+	/**	Key Column Names		*/
+	private String[]			m_keyColumns = null;
 	
 	/**
 	 * Load Column Information
@@ -366,25 +368,33 @@ public class POInfo {
 	 * @return String[]
 	 */
 	public String[] getKeyColumns() {
+		//	Cache
+		if(m_keyColumns != null)
+			return m_keyColumns;
+		//	
+		boolean isKeyTable = false;
 		if(m_columns != null) {
 			ArrayList<String> keyColumns = new ArrayList<String>();
 			for (POInfoColumn column : m_columns) {
-				if(column.ColumnName != null 
-						&& (column.IsParent
-								|| column.IsKey)) {
-					//	
+				if(column.IsParent) {
 					keyColumns.add(column.ColumnName);
+				} else if(column.IsKey) {
+					isKeyTable = true;
+					break;
 				}
 			}
 			//	
-			if(keyColumns.size() != 0) {
+			if(keyColumns.size() != 0
+					&& !isKeyTable) {
 				String [] columns = new String[keyColumns.size()];
 				keyColumns.toArray(columns);
+				m_keyColumns = columns;
 				return columns;
 			}
 		}
 		//	Default ID
-		return new String [] {getTableName() + "_ID"};
+		m_keyColumns = new String [] {getTableName() + "_ID"};
+		return m_keyColumns;
 	}
 	
 	/**

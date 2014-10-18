@@ -17,8 +17,10 @@
 package org.spinsuite.model;
 
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.logging.Level;
 
+import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.view.lookup.GridField;
 import org.spinsuite.view.lookup.GridTab;
@@ -117,6 +119,35 @@ public class CalloutEngine implements Callout {
 		//	
 		return retValue;
 	}	//	start
+	
+	/**
+	 *	Rate - set Multiply Rate from Divide Rate and vice versa
+	 *	org.compiere.model.CalloutEngine.rate
+	 *	@param ctx context
+	 *	@param WindowNo window no
+	 *	@param mTab tab
+	 *	@param mField field
+	 *	@param value value
+	 *	@return null or error message
+	 */
+	public String rate (Context ctx, int WindowNo, GridTab mTab, GridField mField, Object value) {
+		if (isCalloutActive() || value == null)		//	assuming it is Conversion_Rate
+			return NO_ERROR;
+
+		BigDecimal rate1 = (BigDecimal)value;
+		BigDecimal rate2 = Env.ZERO;
+		BigDecimal one = new BigDecimal(1.0);
+
+		if (rate1.doubleValue() != 0.0)	//	no divide by zero
+			rate2 = one.divide(rate1, 12, BigDecimal.ROUND_HALF_UP);
+		//
+		if (mField.getColumnName().equals("MultiplyRate"))
+			mTab.setValue("DivideRate", rate2);
+		else
+			mTab.setValue("MultiplyRate", rate2);
+		LogM.log(ctx, getClass(), Level.CONFIG, mField.getColumnName() + "=" + rate1 + " => " + rate2);
+		return NO_ERROR;
+	}	//	rate
 	
 	/**
 	 *	Conversion Rules.

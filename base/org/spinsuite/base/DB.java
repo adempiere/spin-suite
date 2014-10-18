@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.KeyNamePair;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.MultiKeyNamePair;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -547,6 +548,68 @@ public class DB extends SQLiteOpenHelper {
 	}
 	
 	/**
+	 * Get Multikey Values
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:05:06
+	 * @param ctx
+	 * @param sql
+	 * @param keyCount
+	 * @param optional
+	 * @param conn
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 * @return MultiKeyNamePair[]
+	 */
+	public static MultiKeyNamePair[] getMultiKeyNamePairsEx(Context ctx, String sql, 
+			int keyCount, boolean optional, DB conn, String... params) throws Exception {
+		ArrayList<MultiKeyNamePair> list = new ArrayList<MultiKeyNamePair>();
+        //	If is Optional
+		if (optional) {
+            list.add (MultiKeyNamePair.EMPTY);
+        }
+		//	
+		boolean handConnection = false;
+		try {
+			//	Instance Connection
+			if(conn == null) {
+				conn = new DB(ctx);
+				//	load
+				loadConnection(conn, READ_WRITE);
+				handConnection = true;
+			}
+			Cursor rs = null;
+			rs = conn.querySQL(sql, params);
+			//	Add to List
+			if(rs.moveToFirst()) {
+				do{
+					//	Declare Keys
+					int[] keys = new int[keyCount];
+					//	Get Keys
+					for(int i = 0; i < keyCount; i++) {
+						keys[i] = rs.getInt(i);
+					}
+					//	
+					list.add(new MultiKeyNamePair(keys, rs.getString(keyCount)));
+				}while(rs.moveToNext());
+			}
+			//	Close Connection
+			if(handConnection)
+				closeConnection(conn);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			//	Close Connection
+			if(handConnection)
+				closeConnection(conn);
+		}
+		//	
+		MultiKeyNamePair[] retValue = new MultiKeyNamePair[list.size()];
+        list.toArray(retValue);
+		//	Return
+		return retValue;
+	}
+	
+	/**
 	 * Get Key Name Pairs without connection
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 22:30:30
 	 * @param ctx
@@ -559,6 +622,22 @@ public class DB extends SQLiteOpenHelper {
 	 */
 	public static KeyNamePair[] getKeyNamePairsEx(Context ctx, String sql, boolean optional, String... params) throws Exception {
 		return getKeyNamePairsEx(ctx, sql, optional, null, params);
+	}
+	
+	/**
+	 * Get MultiKey Name Pairs without connection
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:06:10
+	 * @param ctx
+	 * @param sql
+	 * @param keyCount
+	 * @param optional
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 * @return MultiKeyNamePair[]
+	 */
+	public static MultiKeyNamePair[] getMultiKeyNamePairsEx(Context ctx, String sql, int keyCount, boolean optional, String... params) throws Exception {
+		return getMultiKeyNamePairsEx(ctx, sql, keyCount, optional, null, params);
 	}
 	
 	/**
@@ -575,6 +654,27 @@ public class DB extends SQLiteOpenHelper {
 		KeyNamePair[] retValue = null;
 		try{
 			retValue = getKeyNamePairsEx(ctx, sql, false, conn, params);
+		} catch(Exception e) {
+			LogM.log(ctx, "DB", Level.SEVERE, "SQLError", e);
+		}
+		return retValue;
+	}
+	
+	/**
+	 * Get MultiKey Name Pair
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:07:15
+	 * @param ctx
+	 * @param sql
+	 * @param keyCount
+	 * @param conn
+	 * @param params
+	 * @return
+	 * @return MultiKeyNamePair[]
+	 */
+	public static MultiKeyNamePair[] getMultiKeyNamePairs(Context ctx, String sql, int keyCount, DB conn, String... params) {
+		MultiKeyNamePair[] retValue = null;
+		try{
+			retValue = getMultiKeyNamePairsEx(ctx, sql, keyCount, false, conn, params);
 		} catch(Exception e) {
 			LogM.log(ctx, "DB", Level.SEVERE, "SQLError", e);
 		}
@@ -605,6 +705,34 @@ public class DB extends SQLiteOpenHelper {
 	 */
 	public static KeyNamePair[] getKeyNamePairs(Context ctx, String sql, int param) {
 		return getKeyNamePairs(ctx, sql, null, new String[]{String.valueOf(param)});
+	}
+	
+	/**
+	 * Get MultiKey Name Pairs without connection with a parameter
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:11:20
+	 * @param ctx
+	 * @param sql
+	 * @param keyCount
+	 * @param param
+	 * @return
+	 * @return MultiKeyNamePair[]
+	 */
+	public static MultiKeyNamePair[] getMultiKeyNamePairs(Context ctx, String sql, int keyCount, int param) {
+		return getMultiKeyNamePairs(ctx, sql, keyCount, null, new String[]{String.valueOf(param)});
+	}
+	
+	/**
+	 * Get MultiKey Name Pairs without connection with a parameter
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:13:36
+	 * @param ctx
+	 * @param sql
+	 * @param keyColumn
+	 * @param params
+	 * @return
+	 * @return MultiKeyNamePair[]
+	 */
+	public static MultiKeyNamePair[] getMultiKeyNamePairs(Context ctx, String sql, int keyColumn, String... params) {
+		return getMultiKeyNamePairs(ctx, sql, keyColumn, null, params);
 	}
 	
 	/**

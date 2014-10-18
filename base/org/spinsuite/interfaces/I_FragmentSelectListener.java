@@ -25,7 +25,8 @@ public interface I_FragmentSelectListener {
 	 * On Item Selected
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/04/2014, 17:35:04
 	 * @param record_ID
+	 * @param keyColumns
 	 * @return void
 	 */
-	public void onItemSelected(int record_ID);
+	public void onItemSelected(int [] record_ID, String [] keyColumns);
 }

@@ -55,6 +55,7 @@ import android.widget.TableLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 /**
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
@@ -94,6 +95,8 @@ public class LV_Search extends Activity {
 	private LayoutParams			v_param				= null;
 	/**	Activity				*/
 	private Activity				v_activity 			= null;
+	/**	Record Count			*/
+	private TextView				tv_RecordCount		= null;
 	/**	View Weight				*/
 	private static final float 		WEIGHT 				= 1;
 	
@@ -115,6 +118,10 @@ public class LV_Search extends Activity {
 		}
 		//	Set Activity
 		v_activity = this;
+		//	Get Record Count
+		tv_RecordCount = (TextView) findViewById(R.id.tv_RecordCount);
+		//	
+		tv_RecordCount.setText("0");
 		//	
 		sv_Search = (ScrollView) findViewById(R.id.sv_Search);
     	//	Table Layout
@@ -452,6 +459,8 @@ public class LV_Search extends Activity {
 			m_SearchAdapter = new SearchAdapter(v_activity, R.layout.i_image_text, data);
 			m_SearchAdapter.setDropDownViewResource(R.layout.i_image_text);
 			lv_Search.setAdapter(m_SearchAdapter);
+			//	
+			tv_RecordCount.setText(String.valueOf(m_SearchAdapter.getCount()));
 			//	
 			return true;
 	    }

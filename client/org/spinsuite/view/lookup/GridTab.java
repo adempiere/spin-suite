@@ -57,9 +57,12 @@ public class GridTab implements Evaluatee {
 		//	Set Identifiers
 		m_Record_ID = Env.getTabRecord_ID(m_ctx, 
 				m_TabParam.getActivityNo(), m_TabParam.getTabNo());
+		m_KeyColums = Env.getTabKeyColumns(m_ctx, 
+				m_TabParam.getActivityNo(), m_TabParam.getTabNo());
     	//	Parent
-    	m_Parent_Record_ID = Env.getTabRecord_ID(m_ctx, 
+		int[] parent = Env.getTabRecord_ID(m_ctx, 
     			m_TabParam.getActivityNo(), m_TabParam.getParentTabNo());
+    	m_Parent_Record_ID = parent[0];
 		loadPO();
 	}
 	
@@ -80,7 +83,9 @@ public class GridTab implements Evaluatee {
 	/**	Active Instance			*/
 	private List<Callout> 				activeCalloutInstance 	= new ArrayList<Callout>();
 	/**	Record Identifier		*/
-	private int 						m_Record_ID 			= 0;
+	private int[] 						m_Record_ID 			= new int[]{0};
+	/**	Key Columns				*/
+	private String[] 					m_KeyColums 			= null;
 	/**	Parent Record Identifier*/
 	private int 						m_Parent_Record_ID 		= 0;
 	/**	Error Message			*/
@@ -129,7 +134,7 @@ public class GridTab implements Evaluatee {
 	 * @return
 	 * @return Object
 	 */
-	public Object getValue(String columnName){
+	public Object getValue(String columnName) {
 		for(GridField field : m_fields) {
 			if(field.getColumnName().equals(columnName))
 				return field.getValue();
@@ -145,7 +150,7 @@ public class GridTab implements Evaluatee {
 	 * @return
 	 * @return String
 	 */
-	public String getValueAsString(String columnName){
+	public String getValueAsString(String columnName) {
 		for(GridField field : m_fields) {
 			if(field.getColumnName().equals(columnName))
 				return field.getValueAsString();
@@ -161,7 +166,7 @@ public class GridTab implements Evaluatee {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean getValueAsBoolean(String columnName){
+	public boolean getValueAsBoolean(String columnName) {
 		for(GridField field : m_fields) {
 			if(field.getColumnName().equals(columnName))
 				return field.getValueAsBoolean();
@@ -177,7 +182,7 @@ public class GridTab implements Evaluatee {
 	 * @return
 	 * @return int
 	 */
-	public int getValueAsInt(String columnName){
+	public int getValueAsInt(String columnName) {
 		for(GridField field : m_fields) {
 			if(field.getColumnName().equals(columnName))
 				return field.getValueAsInt();
@@ -379,8 +384,9 @@ public class GridTab implements Evaluatee {
 		for (GridField vField: m_fields) {
     		vField.setValue(model.get_Value(vField.getColumnIndex()));
     		//	
-    		if(m_Record_ID <= 0){
-				if(vField.isParent()) {
+    		if(m_Record_ID <= 0) {
+				if(vField.isParent()
+						|| vField.getSPS_Column_ID() == m_TabInfo.getTabSPS_Column_ID()) {
 					vField.setValue(DisplayType.getContextValue(m_ctx, 
 							m_TabParam.getActivityNo(), m_TabParam.getParentTabNo(), vField.getField()));
 				}
@@ -410,7 +416,7 @@ public class GridTab implements Evaluatee {
 			return;
 		//	
 		ArrayList<GridField> list = getDependantFields(m_FieldChanged.getColumnName());
-		for (int index = 0; index < list.size(); index++){
+		for (int index = 0; index < list.size(); index++) {
 			GridField m_DependentField = list.get(index);
 			//	Valid Null
 			if(m_DependentField == null)
@@ -448,7 +454,7 @@ public class GridTab implements Evaluatee {
 			return;
 		//	
 		ArrayList<GridField> list = getDependantFields(m_FieldChanged.getColumnName());
-		for (int index = 0; index < list.size(); index++){
+		for (int index = 0; index < list.size(); index++) {
 			GridField m_DependentField = list.get(index);
 			//	Valid Null
 			if(m_DependentField == null)
@@ -474,8 +480,9 @@ public class GridTab implements Evaluatee {
 	public void dataNew() {
 		for (GridField vField: m_fields) {
 			if(!vField.isReadOnly()
-					&& !vField.isParent()
-					&& !vField.getColumnName().equals("DocAction")){
+					&& (!vField.isParent() || !m_TabInfo.hasPrimaryKey())
+					&& vField.getSPS_Column_ID() != m_TabInfo.getTabSPS_Column_ID()
+					&& !vField.getColumnName().equals("DocAction")) {
 				vField.setEnabled(true);
 			} else {
 				vField.setEnabled(false);
@@ -497,11 +504,12 @@ public class GridTab implements Evaluatee {
 						//	Updateable and not Processed
 						((vField.isUpdateable() && !isProcessed())
 								&& !vField.isReadOnly()
-								&& !vField.isParent())
+								&& (!vField.isParent() || !m_TabInfo.hasPrimaryKey())
+								&& vField.getSPS_Column_ID() != m_TabInfo.getTabSPS_Column_ID())
 								//	Always Updateable
 								|| vField.isAlwaysUpdateable()
 						)
-			){
+			) {
 				vField.setEnabled(true);
 			} else {
 				vField.setEnabled(false);
@@ -543,19 +551,21 @@ public class GridTab implements Evaluatee {
      * @return
      * @return boolean
      */
-    public boolean save(){
+    public boolean save() {
     	boolean ok = true;
-    	m_Record_ID = Env.getTabRecord_ID(m_ctx, 
-    			m_TabParam.getActivityNo(), m_TabParam.getTabNo());
+		m_Record_ID = Env.getTabRecord_ID(m_ctx, 
+				m_TabParam.getActivityNo(), m_TabParam.getTabNo());
+		m_KeyColums = Env.getTabKeyColumns(m_ctx, 
+				m_TabParam.getActivityNo(), m_TabParam.getTabNo());
     	//	Error
-    	if(model == null){
+    	if(model == null) {
     		m_ErrorMsg = "@NoModelClass@";
     		return false;
     	}
     	//	Get Values
     	for (GridField vField: m_fields) {
     		if((vField.isMandatory()
-    				|| vField.isParent()) && vField.isEmpty()){
+    				|| vField.isParent()) && vField.isEmpty()) {
     			m_ErrorMsg = "@MustFillField@ \"" + vField.getName() + "\"";
     			//	Set ok to false
     			ok = false;
@@ -569,7 +579,7 @@ public class GridTab implements Evaluatee {
 			//
     	}
     	//	Set Record Identifier
-    	model.set_Value(m_TabInfo.getTableKeyName(), m_Record_ID);
+    	model.set_Value(m_TabInfo.getTableKeyName(), m_Record_ID[0]);
     	//	No saved
     	if(!ok)
     		return ok;
@@ -590,13 +600,16 @@ public class GridTab implements Evaluatee {
     	m_ErrorMsg = null;
     	ok = model.save();
     	//	Set Record Identifier
-    	m_Record_ID = model.get_ID();
+    	m_Record_ID = model.getIDs();
+    	m_KeyColums = model.getKeyColumns();
     	if(ok) {
     		Env.setTabRecord_ID(m_ctx, 
     				m_TabParam.getActivityNo(), m_TabParam.getTabNo(), m_Record_ID);
+    		Env.setTabKeyColumns(m_ctx, 
+    				m_TabParam.getActivityNo(), m_TabParam.getTabNo(), m_KeyColums);
     		//	
     		Env.setContext(m_ctx, m_TabParam.getActivityNo(), 
-    				m_TabParam.getTabNo(), m_TabInfo.getTableKeyName(), m_Record_ID);
+    				m_TabParam.getTabNo(), m_TabInfo.getTableKeyName(), m_Record_ID[0]);
     	} else {
     		m_ErrorMsg = model.getError();
     	}
@@ -611,7 +624,30 @@ public class GridTab implements Evaluatee {
      * @return int
      */
     public int getRecord_ID() {
+    	return m_Record_ID[0];
+    }
+    
+    /**
+     * Get Keys ID
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:43:09
+     * @return
+     * @return int[]
+     */
+    public int[] getKeys() {
     	return m_Record_ID;
+    }
+    
+    /**
+     * Get Key Columns
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:50:44
+     * @return
+     * @return String[]
+     */
+    public String[] getKeyColumns() {
+    	if(model == null)
+    		return null;
+    	//	Default
+    	return model.getKeyColumns();
     }
     
     /**
@@ -625,33 +661,50 @@ public class GridTab implements Evaluatee {
     }
     
     /**
-     * Refresh Query
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 06/03/2014, 16:12:59
-     * @param m_Record_ID
+     * Refresh
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:36:09
+     * @param record_ID
+     * @param keyColumn
      * @param parentChanged
+     * @return
      * @return boolean
      */
-    public boolean refresh(int record_ID, boolean parentChanged){
+    public boolean refresh(int[] record_ID, String[] keyColumn, boolean parentChanged) {
     	this.m_Record_ID = record_ID;
     	//	Set record Identifier in context
     	Env.setTabRecord_ID(m_ctx, 
-    			m_TabParam.getActivityNo(), m_TabParam.getTabNo(), m_Record_ID);
+				m_TabParam.getActivityNo(), m_TabParam.getTabNo(), m_Record_ID);
+		Env.setTabKeyColumns(m_ctx, 
+				m_TabParam.getActivityNo(), m_TabParam.getTabNo(), m_KeyColums);
     	//	Parent changed
     	if(parentChanged
-    			|| record_ID <= 0)
+    			|| record_ID[0] <= 0)
     		model.clear(false);
     	//	
-    	model.loadData(new int[]{m_Record_ID});
+    	model.loadData(record_ID, keyColumn);
     	//	Refresh
     	loadData();
     	//	Set Identifier
     	Env.setContext(m_ctx, m_TabParam.getActivityNo(), 
     			m_TabParam.getTabNo(), m_TabInfo.getTableKeyName(), model.getID());
     	//	Set Parent Record Identifier
-    	m_Parent_Record_ID = Env.getTabRecord_ID(m_ctx, 
+    	int[] parent = Env.getTabRecord_ID(m_ctx, 
     			m_TabParam.getActivityNo(), m_TabParam.getParentTabNo());
+    	m_Parent_Record_ID = parent[0];
     	//	Return
     	return !isEmpty();
+    }
+    
+    /**
+     * Refresh
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:53:10
+     * @param record_ID
+     * @param parentChanged
+     * @return
+     * @return boolean
+     */
+    public boolean refresh(int[] record_ID, boolean parentChanged) {
+    	return refresh(record_ID, null, parentChanged);
     }
     
     /**
@@ -660,13 +713,24 @@ public class GridTab implements Evaluatee {
      * @return
      * @return boolean
      */
-    private boolean loadPO(){
-    	m_Record_ID = Env.getTabRecord_ID(m_ctx, 
-				m_TabParam.getActivityNo(), m_TabParam.getTabNo());
+    private boolean loadPO() {
+    	Env.setTabRecord_ID(m_ctx, 
+				m_TabParam.getActivityNo(), m_TabParam.getTabNo(), m_Record_ID);
+		Env.setTabKeyColumns(m_ctx, 
+				m_TabParam.getActivityNo(), m_TabParam.getTabNo(), m_KeyColums);
     	//	Get Model
-		if (model == null)
-    		model = MSPSTable.getPO(m_ctx, m_Record_ID, m_TabInfo.getTableName(), conn);
-		if(model == null){
+		if (model == null) {
+			int instance_ID = m_Record_ID[0];
+			if(m_Record_ID.length > 1)
+				instance_ID = 0;
+			//	
+			model = MSPSTable.getPO(m_ctx, instance_ID, m_TabInfo.getTableName(), conn);
+			//	
+			if(model != null
+					&& m_Record_ID.length > 1)
+				model.loadData(m_Record_ID, m_KeyColums);
+		}
+		if(model == null) {
     		return false;
     	}
 		//	Set identifier
@@ -693,7 +757,8 @@ public class GridTab implements Evaluatee {
      */
     public void backCopy() {
     	model.backCopy();
-    	m_Record_ID = model.getID();
+    	m_Record_ID = model.getIDs();
+    	m_KeyColums = model.getKeyColumns();
     }
     
     /**

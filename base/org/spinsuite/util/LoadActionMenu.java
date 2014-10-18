@@ -161,7 +161,8 @@ public class LoadActionMenu {
 		actParam.setActivityNo(tabParam.getActivityNo());
 		//	
 		actParam.setFrom_SPS_Table_ID(tabParam.getSPS_Table_ID());
-    	actParam.setFrom_Record_ID(Env.getTabRecord_ID(activity, tabParam.getActivityNo(), tabParam.getTabNo()));
+		int[] record_ID = Env.getTabRecord_ID(activity, tabParam.getActivityNo(), tabParam.getTabNo());
+    	actParam.setFrom_Record_ID(record_ID[0]);
     	//	Is From Activity
     	actParam.setIsFromActivity(true);
     	//	

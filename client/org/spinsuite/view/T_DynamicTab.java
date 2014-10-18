@@ -363,7 +363,7 @@ public class T_DynamicTab extends Fragment
 			if(mGridTab.getRecord_ID() <= 0) {
 				mGridTab.backCopy();
 			}
-			refresh(mGridTab.getRecord_ID(), false);
+			refresh(mGridTab.getKeys(), mGridTab.getKeyColumns(), false);
 			lockView(SEE);
 			return true;
 		} else if (itemId == R.id.action_save) {
@@ -549,7 +549,7 @@ public class T_DynamicTab extends Fragment
     		mi_More.setVisible(false);
     		mi_Add.setVisible(m_IsReadWrite && m_IsInsertRecord);
     		mi_Edit.setVisible(false);
-    		mi_Search.setVisible(true);
+    		mi_Search.setVisible(tabInfo != null && tabInfo.hasPrimaryKey());
     		m_IsModifying = false;
     	} else if(mode == SEE) {
     		mi_Cancel.setVisible(false);
@@ -560,7 +560,7 @@ public class T_DynamicTab extends Fragment
     		mi_Edit.setVisible(mGridTab != null 
     				&& mGridTab.getRecord_ID() > 0
     				&& m_IsReadWrite);
-    		mi_Search.setVisible(true);
+    		mi_Search.setVisible(tabInfo != null && tabInfo.hasPrimaryKey());
     		m_IsModifying = false;
     	}
 		//	Enabled
@@ -613,10 +613,23 @@ public class T_DynamicTab extends Fragment
      * @return boolean
      */
     private boolean refresh(int record_ID, boolean parentChanged) {
+    	return refresh(new int[]{record_ID}, null, parentChanged);
+    }
+    
+    /**
+     * Refresh
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:57:52
+     * @param record_ID
+     * @param keyColumn
+     * @param parentChanged
+     * @return
+     * @return boolean
+     */
+    private boolean refresh(int[] record_ID, String [] keyColumn, boolean parentChanged) {
     	//	Refresh Child Index
-    	if(mGridTab.getRecord_ID() != record_ID)
+    	if(mGridTab.getRecord_ID() != record_ID[0])
     		refreshIndex();
-    	boolean ok = mGridTab.refresh(record_ID, parentChanged);
+    	boolean ok = mGridTab.refresh(record_ID, keyColumn, parentChanged);
     	//	
     	if(ok)
     		changeMenuView();
@@ -669,11 +682,11 @@ public class T_DynamicTab extends Fragment
     		return false;
     	//	do it
     	if(reQuery) {
-    		refresh(mGridTab.getRecord_ID(), true);
+    		refresh(mGridTab.getKeys(), mGridTab.getKeyColumns(), true);
     	} else if(tabParam.getTabLevel() > 0) {
-    		int currentParent_Record_ID = Env.getTabRecord_ID(getActivity(), 
+    		int[] currentParent_Record_ID = Env.getTabRecord_ID(getActivity(), 
         			tabParam.getActivityNo(), tabParam.getParentTabNo());
-        	if(mGridTab.getParent_Record_ID() != currentParent_Record_ID) {
+        	if(mGridTab.getParent_Record_ID() != currentParent_Record_ID[0]) {
         		refresh(0, true);
         	}
     	} else {
@@ -839,10 +852,10 @@ public class T_DynamicTab extends Fragment
 	}
 
 	@Override
-	public void onItemSelected(int record_ID) {
+	public void onItemSelected(int [] record_ID, String [] keyColumns) {
 		//	refresh
 		if(m_IsLoadOk)
-			refresh(record_ID, false);	
+			refresh(record_ID, keyColumns, false);	
 	}
 
 	@Override
@@ -1112,7 +1125,7 @@ public class T_DynamicTab extends Fragment
 			if(m_Type.equals(RECORD_SAVE)) {
 				if(is_OK) {
 					refreshIndex();
-					m_IsLoadDataOk = refresh(mGridTab.getRecord_ID(), false);
+					m_IsLoadDataOk = refresh(mGridTab.getKeys(), mGridTab.getKeyColumns(), false);
 					lockView(SEE);
 				} else {
 					Msg.alertMsg(getActivity(), mGridTab.getError());
