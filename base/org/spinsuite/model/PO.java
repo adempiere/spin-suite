@@ -48,7 +48,7 @@ public abstract class PO {
 	/**	Connection					*/
 	protected DB 					conn 				= null;  
 	/** Record_IDs          		*/
-	private Object[]       			m_IDs 				= new Object[] {0};
+	private int[]       			m_IDs 				= new int[] {0};
 	/** Key Columns					*/
 	private String[]         		m_KeyColumns 		= null;
 	/** Create New for Multi Key 	*/
@@ -77,7 +77,7 @@ public abstract class PO {
 	 * @param m_AD_Table_ID
 	 * @param tableName
 	 */
-	private PO(Context ctx, String tableName, int ID, Cursor rs, DB pConn) {
+	private PO(Context ctx, String tableName, int [] ID, Cursor rs, DB pConn) {
 		//	
 		if (ctx == null)
 			throw new IllegalArgumentException ("No Context");
@@ -128,7 +128,7 @@ public abstract class PO {
 	 * @param conn
 	 */
 	public PO(Context ctx, int ID, DB conn) {
-		this(ctx, null, ID, null, conn);
+		this(ctx, null, new int[]{ID}, null, conn);
 	}
 	
 	/**
@@ -141,7 +141,7 @@ public abstract class PO {
 	 * @param conn
 	 */
 	public PO(Context ctx, String tableName, int ID, DB conn) {
-		this(ctx, tableName, ID, null, conn);
+		this(ctx, tableName, new int[]{ID}, null, conn);
 	}
 	
 	/**
@@ -153,7 +153,19 @@ public abstract class PO {
 	 * @param trxName
 	 */
 	public PO(Context ctx, Cursor rs, DB conn) {
-		this(ctx, null, 0, rs, conn);
+		this(ctx, null, new int[]{0}, rs, conn);
+	}
+	
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/10/2014, 23:58:11
+	 * @param ctx
+	 * @param ID
+	 * @param conn
+	 */
+	public PO(Context ctx, int []ID, DB conn) {
+		this(ctx, null, ID, null, conn);
 	}
 	
 	/**
@@ -192,8 +204,8 @@ public abstract class PO {
 		if(rs != null) {
 			//	Load Data
 			loadDataQuery(rs, true);
-			m_IDs = new Object[] {get_ValueAsInt(m_TableInfo.getTableName() + "_ID")};
-			m_KeyColumns = new String[] {m_TableInfo.getTableName() + "_ID"};	
+			m_IDs = new int[] {get_ValueAsInt(m_TableInfo.getTableName() + "_ID")};
+			m_KeyColumns = m_TableInfo.getKeyColumns();	
 		}
 	}
 	
@@ -203,14 +215,14 @@ public abstract class PO {
 	 * @param ID
 	 * @return void
 	 */
-	public boolean loadData(int ID) {
+	public boolean loadData(int [] ID) {
 		boolean ok = false;
 		LogM.log(getCtx(), getClass(), Level.FINE, "loadData=" + String.valueOf(ID));
-		if(ID > 0) {
-			m_IDs = new Object[] {ID};
-			m_currentId = ID;
-			m_KeyColumns = new String[] {m_TableInfo.getTableName() + "_ID"};
-			ok = loadDataQuery(ID);
+		if(ID != null) {
+			m_IDs = ID;
+			m_currentId = ID[0];
+			m_KeyColumns = m_TableInfo.getKeyColumns();
+			ok = loadDataQuery();
 		} else {
 			isNew = true;
 			ok = loadDefaultValues();
@@ -272,7 +284,7 @@ public abstract class PO {
 	 * @param ID
 	 * @return boolean
 	 */
-	private boolean loadDataQuery(int ID) {
+	private boolean loadDataQuery() {
 		boolean ok = false;
 		StringBuffer sql = new StringBuffer("SELECT ");
 		for(int i = 0; i < m_TableInfo.getColumnLength(); i++) {
@@ -293,7 +305,7 @@ public abstract class PO {
 		LogM.log(getCtx(), getClass(), Level.FINE, "loadDataQuery SQL=" + sql.toString());
 		
 		//	info
-		LogM.log(getCtx(), getClass(), Level.FINE, "loadDataQuery(ID).sql=" + sql.toString());
+		LogM.log(getCtx(), getClass(), Level.FINE, "loadDataQuery().sql=" + sql.toString());
 		//
 		Cursor rs = null;
 		//	Load Connection
@@ -405,7 +417,7 @@ public abstract class PO {
 	 */
 	public void setIDUpdate(int ID) {
 		if(ID > 0) {
-			m_IDs = new Object[] {ID};
+			m_IDs = new int[] {ID};
 			m_currentId = ID;
 			m_oldId = m_currentId;
 			m_KeyColumns = new String[] {m_TableInfo.getTableName() + "_ID"};
@@ -803,7 +815,7 @@ public abstract class PO {
 				conn.setTransactionSuccessful();
 			
 			//	Load Values
-			m_IDs = new Object[] {m_currentId};
+			m_IDs = new int[] {m_currentId};
 			m_KeyColumns = new String[] {m_TableInfo.getTableName() + "_ID"};
 			isNew = false;
 		} catch (Exception e) {

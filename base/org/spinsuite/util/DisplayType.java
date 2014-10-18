@@ -517,8 +517,8 @@ public final class DisplayType
 				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, -1);
 		} else if (isNumeric(field.DisplayType)) {
 			if(value != null) {
-				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, (String) value);
-				Env.setContext(ctx, m_ActivityNo, field.ColumnName, (String) value);
+				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, ((BigDecimal) value).toString());
+				Env.setContext(ctx, m_ActivityNo, field.ColumnName, ((BigDecimal) value).toString());
 			} else
 				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, null);
 		} else if (isDate(field.DisplayType)) {

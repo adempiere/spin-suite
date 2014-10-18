@@ -35,7 +35,6 @@ public class X_M_ProductPrice extends PO implements I_M_ProductPrice {
         {
 			setM_PriceList_Version_ID (0);
 			setM_Product_ID (0);
-			setM_ProductPrice_ID (0);
 			setPriceLimit (Env.ZERO);
 			setPriceList (Env.ZERO);
 			setPriceStd (Env.ZERO);
@@ -104,26 +103,6 @@ public class X_M_ProductPrice extends PO implements I_M_ProductPrice {
 	public int getM_Product_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_M_Product_ID);
-		if (ii == null)
-			 return 0;
-		return ii.intValue();
-	}
-
-	/** Set Product Price ID.
-		@param M_ProductPrice_ID Product Price ID	  */
-	public void setM_ProductPrice_ID (int M_ProductPrice_ID)
-	{
-		if (M_ProductPrice_ID < 1) 
-			set_Value (COLUMNNAME_M_ProductPrice_ID, null);
-		else 
-			set_Value (COLUMNNAME_M_ProductPrice_ID, Integer.valueOf(M_ProductPrice_ID));
-	}
-
-	/** Get Product Price ID.
-		@return Product Price ID	  */
-	public int getM_ProductPrice_ID () 
-	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_M_ProductPrice_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

@@ -42,7 +42,7 @@ public class InfoTab {
 	 * @param SPS_Tab_ID
 	 * @param conn
 	 */
-	public InfoTab(Context ctx, int SPS_Tab_ID, DB conn){
+	public InfoTab(Context ctx, int SPS_Tab_ID, DB conn) {
 		loadInfoColumnField(ctx, SPS_Tab_ID, false, conn);
 	}
 	
@@ -55,7 +55,7 @@ public class InfoTab {
 	 * @param onlySelectionColumn
 	 * @param conn
 	 */
-	public InfoTab(Context ctx, int SPS_Tab_ID, boolean onlySelectionColumn, DB conn){
+	public InfoTab(Context ctx, int SPS_Tab_ID, boolean onlySelectionColumn, DB conn) {
 		loadInfoColumnField(ctx, SPS_Tab_ID, onlySelectionColumn, conn);
 	}
 	
@@ -222,7 +222,7 @@ public class InfoTab {
 	 * @return
 	 * @return int
 	 */
-	public int getSPS_Table_ID(){
+	public int getSPS_Table_ID() {
 		return SPS_Table_ID;
 	}
 	/**
@@ -231,7 +231,7 @@ public class InfoTab {
 	 * @return
 	 * @return int
 	 */
-	public int getSPS_Tab_ID(){
+	public int getSPS_Tab_ID() {
 		return SPS_Tab_ID;
 	}
 	
@@ -241,7 +241,7 @@ public class InfoTab {
 	 * @return
 	 * @return String
 	 */
-	public String getTabName(){
+	public String getTabName() {
 		return TabName;
 	}
 	
@@ -255,7 +255,7 @@ public class InfoTab {
 	 * @param p_Conn
 	 * @return void
 	 */
-	private void loadInfoColumnField(Context ctx, int SPS_Tab_ID, boolean onlySelection,DB p_Conn){
+	private void loadInfoColumnField(Context ctx, int SPS_Tab_ID, boolean onlySelection,DB p_Conn) {
 		//	Is Mandatory
 		if(SPS_Tab_ID == 0)
 			return;
@@ -264,7 +264,7 @@ public class InfoTab {
 		boolean isBaseLanguage = Env.isBaseLanguage(ctx);
 		StringBuffer sql = new StringBuffer();
 		//	if Base Language
-		if(isBaseLanguage){
+		if(isBaseLanguage) {
 			sql.append("SELECT t.Name, t.SPS_Tab_ID, t.SPS_Table_ID,t.SPS_Window_ID, t.AD_Process_ID, tb.TableName, " +
 					"t.Classname, t.Description, t.Help, " + 
 					"t.IsInsertRecord, t.IsReadOnly, t.OrderByClause, " +
@@ -337,7 +337,7 @@ public class InfoTab {
 			conn.openDB(DB.READ_ONLY);
 		Cursor rs = null;
 		rs = conn.querySQL(sql.toString(), null);
-		if(rs.moveToFirst()){
+		if(rs.moveToFirst()) {
 			int i = 0;
 			//	
 			TabName = rs.getString(i++);
@@ -438,7 +438,7 @@ public class InfoTab {
 	 * @return
 	 * @return VOInfoField[]
 	 */
-	public InfoField[] getFields(){
+	public InfoField[] getFields() {
 		return m_fields;
 	}
 	
@@ -448,7 +448,7 @@ public class InfoTab {
 	 * @return
 	 * @return String
 	 */
-	public String getTableName(){
+	public String getTableName() {
 		return TableName;
 	}
 	
@@ -458,7 +458,7 @@ public class InfoTab {
 	 * @return
 	 * @return String
 	 */
-	public String getTableKeyName(){
+	public String getTableKeyName() {
 		return TableName + "_ID";
 	}
 	
@@ -968,7 +968,7 @@ public class InfoTab {
 	 * @return
 	 * @return int
 	 */
-	public int getLength(){
+	public int getLength() {
 		if(m_fields == null)
 			return 0;
 		return m_fields.length;
@@ -981,7 +981,7 @@ public class InfoTab {
 	 * @return
 	 * @return VOInfoField
 	 */
-	public InfoField getField(int index){
+	public InfoField getField(int index) {
 		if(m_fields == null || index <= 0)
 			return null;
 		return m_fields[index];
@@ -995,11 +995,11 @@ public class InfoTab {
 	 * @return
 	 * @return VOInfoField
 	 */
-	public InfoField getFieldFromColumn(Context ctx, int SPS_Column_ID){
+	public InfoField getFieldFromColumn(Context ctx, int SPS_Column_ID) {
 		if(m_fields == null || SPS_Column_ID <= 0)
 			return null;
 		//	Get from column
-		for(InfoField field : m_fields){
+		for(InfoField field : m_fields) {
 			if(field.SPS_Column_ID == SPS_Column_ID)
 				return field;
 		}
@@ -1015,12 +1015,12 @@ public class InfoTab {
 	 * @return
 	 * @return VOInfoField[]
 	 */
-	public InfoField [] getParentField(boolean reQuery){
+	public InfoField [] getParentField(boolean reQuery) {
 		if(reQuery 
 				|| m_parentFields == null) {
 			ArrayList<InfoField> parentFields = new ArrayList<InfoField>();
 			//	Loop
-			for(InfoField field : m_fields){
+			for(InfoField field : m_fields) {
 				if(field.IsParent)
 					parentFields.add(field);
 			}
@@ -1040,32 +1040,38 @@ public class InfoTab {
 	 * @return
 	 * @return FilterValue
 	 */
-	public FilterValue getCriteria(Context ctx, int m_WindowNo, int m_Parent_TabNo){
+	public FilterValue getCriteria(Context ctx, int m_WindowNo, int m_Parent_TabNo) {
 		//	Cache
 		if(filterValue != null)
 			return filterValue;
     	//	Load
-		InfoField [] parentFields = null;
-    	//	Is Parent by Tab
-    	if(getParent_Column_ID() != 0)
-    		parentFields = new InfoField[]{getFieldFromColumn(ctx, getParent_Column_ID())};
+		InfoField [] criteriaFields = null;
+		//	Instance Filter Value
+		filterValue = new FilterValue();
+		//	Is Parent by Tab
+    	if(getTabSPS_Column_ID() != 0)
+    		criteriaFields = new InfoField[]{getFieldFromColumn(ctx, getTabSPS_Column_ID())};
     	else
-    		parentFields = getParentField(false);
+    		criteriaFields = getParentField(false);
+    	//	
+    	InfoField parentField = GridField.loadInfoColumnField(ctx, getParent_Column_ID());
     	//	
     	StringBuffer sqlWhere = new StringBuffer();
     	//	
-    	filterValue = new FilterValue();
-    	for(InfoField field : parentFields) {
+    	for(InfoField field : criteriaFields) {
     		if(field == null)
     			continue;
     		//	Add SQL
     		if(sqlWhere.length() > 0)
     			sqlWhere.append(" AND ");
     		//	Add Criteria Column Filter
+    		sqlWhere.append(getTableName()).append(".");
+    		//	
     		sqlWhere.append(field.ColumnName).append(" = ?");
     		//	Add Value
     		filterValue.addValue(DisplayType.getContextValue(ctx, 
-    				m_WindowNo, m_Parent_TabNo, field));
+    				m_WindowNo, m_Parent_TabNo, 
+    				(parentField != null? parentField: field)));
     	}
     	//	Set Where
     	filterValue.setWhereClause(sqlWhere.toString());

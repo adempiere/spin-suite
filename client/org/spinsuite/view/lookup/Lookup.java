@@ -794,6 +794,7 @@ public class Lookup {
 		DB conn = new DB(ctx);
 		DB.loadConnection(conn, DB.READ_ONLY);
 		Cursor rs = null;
+		boolean isParent = false;
 		//	Query
 		rs = conn.querySQL("SELECT t.TableName, c.ColumnName, c.SPS_Column_ID, c.AD_Reference_ID " +
 				"FROM SPS_Table t " +
@@ -801,24 +802,37 @@ public class Lookup {
 				"WHERE t.SPS_Table_ID = ? " +
 				"AND c.IsIdentifier = ? " +
 				"ORDER BY SeqNo", new String[]{String.valueOf(m_SPS_Table_ID), "Y"});
-
+		//	Is Parent
+		if(!rs.moveToFirst()) {
+			isParent = true;
+			rs = conn.querySQL("SELECT t.TableName, c.ColumnName, c.SPS_Column_ID, c.AD_Reference_ID " +
+					"FROM SPS_Table t " +
+					"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) " +
+					"WHERE t.SPS_Table_ID = ? " +
+					"AND (c.IsKey = ? OR c.IsParent = ?) " +
+					"ORDER BY c.IsKey DESC", new String[]{String.valueOf(m_SPS_Table_ID), "Y", "Y"});
+		}
+		//	
 		boolean isFirst = true;
 		if(rs.moveToFirst()) {
 			tableName = rs.getString(0);
 			//	Set Info Lookup
 			m_InfoLookup.TableName = tableName;
-			m_InfoLookup.KeyColumn = tableName + "_ID";
+			if(!isParent)
+				m_InfoLookup.KeyColumn = tableName + "_ID";
 			//	Alias Identifier
 			String aliasPrefix = ALIAS_PREFIX_IDENTIFIER + tableName;
 			int aliasCount = 1;
-			//	
-			sql.append("SELECT ").append(tableName).append(".").append(tableName).append("_ID").append(", ");
 			//	Display Type
 			StringBuffer longColumn = new StringBuffer();
 			do {
 				String columnName = rs.getString(1);
 				int m_SPS_Column_ID = rs.getInt(2);
 				int displayType = rs.getInt(3);
+				//	
+				if(isParent
+						&& isFirst)
+					m_InfoLookup.KeyColumn = columnName;
 				//	Is First
 				if(!isFirst)
 					longColumn.append("||'").append(InfoLookup.TABLE_SEARCH_SEPARATOR).append("'||");
@@ -838,6 +852,9 @@ public class Lookup {
 					isFirst = false;
 			}while(rs.moveToNext());
 			//	
+			sql.append("SELECT ").append(tableName).append(".")
+					.append(m_InfoLookup.KeyColumn).append(", ");
+			//	Add Long Column
 			sql.append(longColumn);
 			//	Check Document Status
 			int m_DocAction_ID = DB.getSQLValue(ctx, "SELECT c.SPS_Column_ID " +
