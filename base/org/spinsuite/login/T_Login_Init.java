@@ -26,6 +26,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 
 @SuppressLint("ValidFragment")
@@ -80,4 +81,13 @@ public class T_Login_Init extends DialogFragment implements OnClickListener{
 		//Env.setContext(this.getActivity(), "#SUser", et_User.getText().toString());
 		//Env.setContext(this.getActivity(), "#SPass", et_PassWord.getText().toString());
 	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		getDialog().setTitle(R.string.tt_Conn);
+		return super.onCreateView(inflater, container, savedInstanceState);
+	}
+	
 }
