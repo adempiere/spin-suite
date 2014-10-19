@@ -271,13 +271,13 @@ public class AmtInWords_VI implements AmtInWords
 		if (amount == null)
 			return amount;
 		//
-		int numberOfCommas = 0;
+		//int numberOfCommas = 0;
 		int numberOfPeriods = 0;
 		StringBuffer sb = new StringBuffer ();
 		int period = amount.lastIndexOf ('.'); 
 		numberOfPeriods = amount.replaceAll("[^\\.]","").length();
 		int comma = amount.lastIndexOf (','); 
-		numberOfCommas = amount.replaceAll("[^,]","").length();
+		//numberOfCommas = amount.replaceAll("[^,]","").length();
 		int newpos = 0;
 		String decamt ="";
 		if (comma > period) //like 1.000.000,89 or 1,000,000 or 120,355 (a hundred and twenty 355/1000)

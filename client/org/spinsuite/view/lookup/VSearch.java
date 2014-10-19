@@ -235,6 +235,18 @@ public class VSearch extends LinearLayout
 	}
 	
 	/**
+	 * Get Keys
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/10/2014, 22:05:06
+	 * @return
+	 * @return int[]
+	 */
+	public int[] getKeys(){
+		if(item != null)
+			return item.getKeys();
+		return new int[]{-1};
+	}
+	
+	/**
 	 * Get Value
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/05/2012, 17:59:10
 	 * @return

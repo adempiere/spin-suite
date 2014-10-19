@@ -130,8 +130,8 @@ public class LV_Menu extends Activity {
 	    		DisplayRecordItem item = (DisplayRecordItem) bundle.getParcelable("Record");
 	    		//	if a record is not null
 	    		if(item != null){
-	    			int record_ID = item.getRecord_ID();
-		    		currentOptionBundle.putInt("Record_ID", record_ID);
+	    			int[] keys = item.getKeys();
+		    		currentOptionBundle.putIntArray("Record_ID", keys);
 		    		loadActionMenu.loadActivityWithAction(currentMenuItem, currentOptionBundle);
 	    		}
 	    	}

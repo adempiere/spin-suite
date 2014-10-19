@@ -549,7 +549,7 @@ public class T_DynamicTab extends Fragment
     		mi_More.setVisible(false);
     		mi_Add.setVisible(m_IsReadWrite && m_IsInsertRecord);
     		mi_Edit.setVisible(false);
-    		mi_Search.setVisible(tabInfo != null && tabInfo.hasPrimaryKey());
+    		mi_Search.setVisible(true);
     		m_IsModifying = false;
     	} else if(mode == SEE) {
     		mi_Cancel.setVisible(false);
@@ -560,7 +560,7 @@ public class T_DynamicTab extends Fragment
     		mi_Edit.setVisible(mGridTab != null 
     				&& mGridTab.getRecord_ID() > 0
     				&& m_IsReadWrite);
-    		mi_Search.setVisible(tabInfo != null && tabInfo.hasPrimaryKey());
+    		mi_Search.setVisible(true);
     		m_IsModifying = false;
     	}
 		//	Enabled
@@ -814,10 +814,10 @@ public class T_DynamicTab extends Fragment
 					break;
 				case DisplayMenuItem.CONTEXT_ACTIVITY_TYPE_SearchWindow:
 	    			//	Refresh
-	    			int record_ID = item.getRecord_ID();
+	    			int[] keys = item.getKeys();
 	    			//	Verify
-	    			if(record_ID > 0)
-	    				refresh(record_ID, false);
+	    			if(keys[0] > 0)
+	    				refresh(keys, item.getKeyColumns(), false);
 	    			else
 	    				newOption();
 	    			//	

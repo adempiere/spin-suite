@@ -1538,34 +1538,6 @@ public final class Env {
 	}
 	
 	/**
-	 * Get Parent Tab Record Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/03/2014, 23:34:30
-	 * @param ctx
-	 * @param m_ActivityNo
-	 * @param TabNo
-	 * @return
-	 * @return int
-	 */
-	public static int getParentTabRecord_ID(Context ctx, int m_ActivityNo, int TabNo) {
-		//Msg.toastMsg(ctx, ID_TAB + tab + " " + getContextAsInt(ctx, ID_TAB + tab));
-		return getContextAsInt(ctx, m_ActivityNo, TabNo, ID_PARENT_TAB);
-	}
-	
-	/**
-	 * Set Parent Tab Record Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/03/2014, 23:33:45
-	 * @param ctx
-	 * @param m_ActivityNo
-	 * @param TabNo
-	 * @param record_ID
-	 * @return void
-	 */
-	public static void setParentTabRecord_ID(Context ctx, int m_ActivityNo, int TabNo, int record_ID) {
-		//Msg.toastMsg(ctx, ID_TAB + tab + " " + record_ID);
-		setContext(ctx, m_ActivityNo, TabNo, ID_PARENT_TAB, record_ID);
-	}
-	
-	/**
 	 * Set Current Tab
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:54:11
 	 * @param ctx

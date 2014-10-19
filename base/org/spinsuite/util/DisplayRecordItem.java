@@ -15,6 +15,8 @@
  *************************************************************************************/
 package org.spinsuite.util;
 
+import java.util.Arrays;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -41,9 +43,20 @@ public class DisplayRecordItem implements Parcelable {
 	 * @param pValue
 	 * @param pDescription
 	 */
-	public DisplayRecordItem(int pRecord_ID, String pValue) {
-		this.m_Record_ID = pRecord_ID;
+	public DisplayRecordItem(int[] p_Record_ID, String pValue) {
+		this.m_Record_ID = p_Record_ID;
 		this.m_Value = pValue;
+	}
+	
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/10/2014, 22:07:23
+	 * @param p_Record_ID
+	 * @param pValue
+	 */
+	public DisplayRecordItem(int p_Record_ID, String pValue) {
+		this(new int[]{p_Record_ID}, pValue);
 	}
 	
 	/**
@@ -55,22 +68,36 @@ public class DisplayRecordItem implements Parcelable {
 	 * @param pDescription
 	 * @param pImageURL
 	 */
-	public DisplayRecordItem(int pRecord_ID, String pValue, String pImageURL) {
-		this(pRecord_ID, pValue);
+	public DisplayRecordItem(int[] p_Record_ID, String pValue, String pImageURL) {
+		this(p_Record_ID, pValue);
 		this.m_ImageURL = pImageURL;
 	}
 	
 	/**
-	 * With Document Status
+	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/09/2014, 11:36:57
-	 * @param pRecord_ID
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/10/2014, 22:07:44
+	 * @param p_Record_ID
+	 * @param pValue
+	 * @param pImageURL
+	 */
+	public DisplayRecordItem(int p_Record_ID, String pValue, String pImageURL) {
+		this(new int[]{p_Record_ID}, pValue, pImageURL);
+	}
+	
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/10/2014, 22:45:32
+	 * @param p_Record_ID
+	 * @param p_KeyColumns
 	 * @param pValue
 	 * @param m_DocStatus
 	 * @param pImageURL
 	 */
-	public DisplayRecordItem(int pRecord_ID, String pValue, String m_DocStatus, String pImageURL) {
-		this(pRecord_ID, pValue);
+	public DisplayRecordItem(int[] p_Record_ID, String[] p_KeyColumns, String pValue, String m_DocStatus, String pImageURL) {
+		this(p_Record_ID, pValue);
+		this.m_KeyColumns = p_KeyColumns;
 		this.m_ImageURL = pImageURL;
 		this.m_DocStatus = m_DocStatus;
 	}
@@ -87,13 +114,15 @@ public class DisplayRecordItem implements Parcelable {
 	}
 	
 	/**	Identifier				*/
-	private int 	m_Record_ID 	= 0;
+	private int[] 		m_Record_ID 	= new int[]{0};
+	/**	Key Column				*/
+	private String[]	m_KeyColumns	= null;
 	/**	Value					*/
-	private String	m_Value 		= null;
+	private String		m_Value 		= null;
 	/**	Document Status			*/
-	private String 	m_DocStatus 	= null;
+	private String 		m_DocStatus 	= null;
 	/**	Image URL				*/
-	private String 	m_ImageURL 		= null;
+	private String 		m_ImageURL 		= null;
 	
 	/**
 	 * Get Record Identifier
@@ -102,7 +131,27 @@ public class DisplayRecordItem implements Parcelable {
 	 * @return int
 	 */
 	public int getRecord_ID() {
+		return m_Record_ID[0];
+	}
+	
+	/**
+	 * Get Keys
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/10/2014, 21:44:24
+	 * @return
+	 * @return int[]
+	 */
+	public int[] getKeys() {
 		return m_Record_ID;
+	}
+	
+	/**
+	 * Get Key Columns
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:49:31
+	 * @return
+	 * @return String[]
+	 */
+	public String[] getKeyColumns() {
+		return m_KeyColumns;
 	}
 	
 	/**
@@ -154,7 +203,8 @@ public class DisplayRecordItem implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel parcel, int flags) {
-		parcel.writeInt(m_Record_ID);
+		parcel.writeInt(m_Record_ID.length);
+		parcel.writeIntArray(m_Record_ID);
 		parcel.writeString(m_Value);
 		parcel.writeString(m_ImageURL);
 		parcel.writeString(m_DocStatus);
@@ -167,7 +217,9 @@ public class DisplayRecordItem implements Parcelable {
 	 * @return void
 	 */
 	private void readToParcel(Parcel parcel) {
-		m_Record_ID = parcel.readInt();
+		int length = parcel.readInt();
+		m_Record_ID = new int[length];
+		parcel.readIntArray(m_Record_ID);
 		m_Value = parcel.readString();
 		m_ImageURL = parcel.readString();
 		m_DocStatus = parcel.readString();
@@ -175,8 +227,8 @@ public class DisplayRecordItem implements Parcelable {
 
 	@Override
 	public String toString() {
-		return "DisplayRecordItem [m_Record_ID=" + m_Record_ID + ", m_Value="
-				+ m_Value + ", m_DocStatus=" + m_DocStatus + ", m_ImageURL="
-				+ m_ImageURL + "]";
+		return "DisplayRecordItem [m_Record_ID=" + Arrays.toString(m_Record_ID)
+				+ ", m_Value=" + m_Value + ", m_DocStatus=" + m_DocStatus
+				+ ", m_ImageURL=" + m_ImageURL + "]";
 	}
 }

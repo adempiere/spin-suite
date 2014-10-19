@@ -348,21 +348,6 @@ public class AmtInWords_TH implements AmtInWords
                         e.printStackTrace();
                 }
         }       //      print
-        /**
-         *      Test Print
-         *      @param amt amount
-         */
-        private void print (String amt, String currency)
-        {
-                try
-                {
-                        System.out.println(amt + " = " + getAmtInWords(amt));
-                }
-                catch (Exception e)
-                {
-                        e.printStackTrace();
-                }
-        }       //      print
 
         /**
          *      Test

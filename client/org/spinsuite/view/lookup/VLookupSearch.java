@@ -203,10 +203,19 @@ public class VLookupSearch extends GridField
 			m_Lookup.setCriteria(criteria.getWhereClause());
 			//	Query
 			rs = conn.querySQL(m_Lookup.getSQL(), criteria.getValues());
-			if(rs.moveToFirst())
-				setItem(new DisplayRecordItem(rs.getInt(0), rs.getString(1)));
-			else
+			if(rs.moveToFirst()) {
+				int keyCount = m_Lookup.getInfoLookup().KeyColumn.length;
+				//	Declare Keys
+				int[] keys = new int[keyCount];
+				//	Get Keys
+				for(int i = 0; i < keyCount; i++) {
+					keys[i] = rs.getInt(i);
+				}
+				//	Add
+				setItem(new DisplayRecordItem(keys, rs.getString(keyCount++)));
+			} else {
 				setItem(new DisplayRecordItem(0, null));
+			}
 			//	Close
 			DB.closeConnection(conn);
 		} catch(Exception e){

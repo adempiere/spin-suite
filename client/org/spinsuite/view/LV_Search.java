@@ -487,13 +487,25 @@ public class LV_Search extends Activity {
 					lookup.setCriteria(null);
 				rs = conn.querySQL(lookup.getSQL(), values);
 				//	
+				String[] keyColumns = lookup.getInfoLookup().KeyColumn;
+				int keyCount = keyColumns.length;
 				if(rs.moveToFirst()) {
 					//	Loop
 					do{
+						//	Declare Keys
+						int[] keys = new int[keyCount];
+						//	Get Keys
+						for(int i = 0; i < keyCount; i++) {
+							keys[i] = rs.getInt(i);
+						}
+						//	Tmp Key count
+						int keyCountAdd = keyCount;
+						//	
 						data.add(new DisplayRecordItem(
-								rs.getInt(0), 
-								rs.getString(1), 
-								rs.getString(2), 
+								keys, 
+								keyColumns, 
+								rs.getString(keyCountAdd++), 
+								rs.getString(keyCountAdd++), 
 								null));
 					}while(rs.moveToNext());
 				}

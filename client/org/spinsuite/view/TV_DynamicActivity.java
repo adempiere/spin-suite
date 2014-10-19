@@ -51,7 +51,7 @@ public class TV_DynamicActivity extends TV_Base
 	/**	Parameters					*/
 	private ActivityParameter 	param			= null;
 	/**	Record Identifier			*/
-	private int 				m_Record_ID 	= 0;
+	private int[] 				m_Record_ID 	= new int[]{0};
 	/**	Lookup Menu					*/
 	private LookupMenu 			lookupMenu 		= null;
 	
@@ -66,7 +66,7 @@ public class TV_DynamicActivity extends TV_Base
     	Bundle bundle = getIntent().getExtras();
 		if(bundle != null){
 			param = (ActivityParameter)bundle.getParcelable("Param");
-			m_Record_ID = bundle.getInt("Record_ID");
+			m_Record_ID = bundle.getIntArray("Record_ID");
 		}
 		if(param == null)
     		param = new ActivityParameter();
@@ -252,7 +252,7 @@ public class TV_DynamicActivity extends TV_Base
 	    		//	Set record Identifier
 	    		if(tabParam.getTabNo() == 0)
 	    			Env.setTabRecord_ID(this, 
-	    					tabParam.getActivityNo(), tabParam.getTabNo(), new int[]{m_Record_ID});
+	    					tabParam.getActivityNo(), tabParam.getTabNo(), m_Record_ID);
 	    		else
 	    			Env.setTabRecord_ID(this, 
 	    					tabParam.getActivityNo(), tabParam.getTabNo(), new int[]{0});
@@ -260,8 +260,6 @@ public class TV_DynamicActivity extends TV_Base
 	    		if(tabParam.getSPS_Table_ID() != 0) {
 		    		//	Parent Tab
 		    		if(tabParam.getTabLevel() != 0) {
-		    			Env.setParentTabRecord_ID(this, 
-		    					tabParam.getActivityNo(), tabParam.getTabNo(), m_Record_ID);
 		    			addFagment(T_DynamicTabDetail.class, tabParam.getName(), tabParam.getName(), tabParam, bundle);
 		    		} else {	//	Add Dynamic Tab
 		    			addFagment(T_DynamicTab.class, tabParam.getName(), tabParam.getName(), tabParam, bundle);
