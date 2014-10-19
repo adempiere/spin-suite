@@ -41,7 +41,6 @@ public class T_Login_ProgressSync extends DialogFragment implements OnClickListe
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View view =inflater.inflate(R.layout.v_progressbar, null);
 		
@@ -87,4 +86,5 @@ public class T_Login_ProgressSync extends DialogFragment implements OnClickListe
 		pb_Progress.setIndeterminate(false);
 		pb_Progress.setMax(p_Max);
 	}
+	
 }

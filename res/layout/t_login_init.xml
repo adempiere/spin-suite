@@ -39,11 +39,11 @@
         </EditText>
         
     	<TextView
-        	android:id="@+id/tv_Pass"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:hint="@string/Pass"
-        	android:textIsSelectable="true" />
+    	    android:id="@+id/tv_Pass"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:text="@string/Pass"
+    	    android:textIsSelectable="true" />
 
     	<EditText
         	android:id="@+id/et_Pass"
