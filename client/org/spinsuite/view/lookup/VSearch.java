@@ -182,7 +182,7 @@ public class VSearch extends LinearLayout
 		if(m_field != null){
     		Bundle bundle = new Bundle();
     		bundle.putParcelable("Field", m_field);
-    		Class<?> clazz = LV_ProductSearch.class;
+    		Class<?> clazz = LV_StandardSearch.class;
     		//	Intent from Info Factory Class
     		if(m_field.InfoFactoryClass != null
     				&& m_field.InfoFactoryClass.length() > 0) {
