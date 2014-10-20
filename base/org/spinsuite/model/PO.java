@@ -26,6 +26,7 @@ import org.spinsuite.base.R;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
+import org.spinsuite.view.lookup.InfoField;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -303,6 +304,16 @@ public abstract class PO {
 	 */
 	public boolean isNew() {
 		return isNew;
+	}
+
+	/**
+	 * Has Primary Key
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/10/2014, 4:53:45
+	 * @return
+	 * @return boolean
+	 */
+	public boolean hasPrimaryKey() {
+		return m_TableInfo.hasPrimaryKey();
 	}
 	
 	/**

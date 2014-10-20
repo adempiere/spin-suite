@@ -67,6 +67,8 @@ public class TV_DynamicActivity extends TV_Base
 		if(bundle != null){
 			param = (ActivityParameter)bundle.getParcelable("Param");
 			m_Record_ID = bundle.getIntArray("Record_ID");
+			if(m_Record_ID == null)
+				m_Record_ID = new int[]{0};
 		}
 		if(param == null)
     		param = new ActivityParameter();

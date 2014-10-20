@@ -82,30 +82,15 @@ public class Msg {
 	}
 	
 	/**
-	 * Show a confirm dialog
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 14:03:08
-	 * @param ctx
-	 * @param msg
-	 * @return
-	 * @return Builder
-	 */
-	public static Builder confirmMsg(Context ctx, String msg) {
-		return confirmMsg(ctx, ctx.getResources().getString(R.string.msg_Ask), 
-				parseTranslation(ctx, msg));
-	}
-	
-	/**
 	 * Show confirm dialog with title
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 14:05:01
 	 * @param ctx
-	 * @param title
 	 * @param msg
 	 * @return
 	 * @return Builder
 	 */
-	public static Builder confirmMsg(Context ctx, String title, String msg){
+	public static Builder confirmMsg(Context ctx, String msg){
 		Builder builder = new AlertDialog.Builder(ctx);
-		builder.setTitle(title);
 		builder.setMessage(parseTranslation(ctx, msg));
 		//	
 		builder.setNegativeButton(ctx.getResources().getString(R.string.msg_Cancel), new DialogInterface.OnClickListener() {
@@ -136,7 +121,12 @@ public class Msg {
 	 *  @return translated text
 	 */
 	public static String getMsg (Context ctx, String AD_Message) {
-		return getMsg (ctx, Env.getAD_Language(ctx), AD_Message);
+		String msg = getMsg (ctx, Env.getAD_Language(ctx), AD_Message);
+		//	Base Language
+		if(msg == null
+				|| msg.length() == 0)
+			msg = getMsg (ctx, Env.BASE_LANGUAGE, AD_Message);
+		return msg;
 	}   //  getMeg
 	
 	/**
@@ -148,7 +138,12 @@ public class Msg {
 	 *  @see java.text.MessageFormat for formatting options
 	 */
 	public static String getMsg(Context ctx, String AD_Message, Object[] args) {
-		return getMsg (ctx, Env.getAD_Language(ctx), AD_Message, args);
+		String msg = getMsg (ctx, Env.getAD_Language(ctx), AD_Message, args);
+		//	Base Language
+		if(msg == null
+				|| msg.length() == 0)
+			msg = getMsg (ctx, Env.BASE_LANGUAGE, AD_Message, args);
+		return msg;
 	}	//	getMsg
 
 	/**
@@ -380,7 +375,13 @@ public class Msg {
 	 *  @return Name of the Column or "" if not found
 	 */
 	public static String getElement (Context ctx, String ColumnName) {
-		return getElement (ctx, Env.getAD_Language(ctx), ColumnName, true);
+		String language = Env.getAD_Language(ctx);
+		String msg = getElement (ctx, language, ColumnName, true);
+		if((msg == null
+				|| msg.length() == 0)
+				&& !language.equals(Env.BASE_LANGUAGE))
+			msg = getElement (ctx, Env.BASE_LANGUAGE, ColumnName, true);
+		return msg;
 	}   //  getElement
 	
 	/**
@@ -391,7 +392,13 @@ public class Msg {
 	 *  @return Name of the Column or "" if not found
 	 */
 	public static String getElement (Context ctx, String ColumnName, boolean isSOTrx) {
-		return getElement (ctx, Env.getAD_Language(ctx), ColumnName, isSOTrx);
+		String language = Env.getAD_Language(ctx);
+		String msg = getElement (ctx, Env.getAD_Language(ctx), ColumnName, isSOTrx);
+		if((msg == null
+				|| msg.length() == 0)
+				&& !language.equals(Env.BASE_LANGUAGE))
+			msg = getElement (ctx, Env.BASE_LANGUAGE, ColumnName, isSOTrx);
+		return msg;
 	}   //  getElement
 
 
@@ -451,7 +458,13 @@ public class Msg {
 	 *  @return translated text or original text if not found
 	 */
 	public static String translate(Context ctx, String ad_language, String text) {
-		return translate (ctx, ad_language, true, text);
+		String msg = translate (ctx, ad_language, true, text);
+		if((msg == null
+				|| msg.length() == 0)
+				&& !ad_language.equals(Env.BASE_LANGUAGE))
+			msg = translate (ctx, Env.BASE_LANGUAGE, true, text);
+		//	
+		return msg;
 	}	//	translate
 
 	/**

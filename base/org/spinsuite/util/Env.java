@@ -1155,6 +1155,13 @@ public final class Env {
 	 * @return void
 	 */
 	public static void setContext (Context ctx, String context, int[] value) {
+		if(value == null
+				|| value.length == 0) {
+			setContext(ctx, context, (String[])null);
+			//	Return
+			return;
+		}
+		//	Do it
 		String[] strValue = new String[value.length];
 		for(int i = 0; i < value.length; i++) {
 			strValue[i] = String.valueOf(value[i]);

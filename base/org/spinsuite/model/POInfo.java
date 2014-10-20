@@ -59,18 +59,19 @@ public class POInfo {
 	}
 	
 	/** Table_ID            	*/
-	private int					m_SPS_Table_ID = 0;
+	private int					m_SPS_Table_ID 		= 0;
 	/** Table Name          	*/
-	private String				m_TableName = null;
+	private String				m_TableName 		= null;
 	/**	Is Deleteable Record	*/
-	private boolean 			m_IsDeleteable = false;
+	private boolean 			m_IsDeleteable 		= false;
 	/** Columns             	*/
-	private POInfoColumn[]		m_columns = null;
+	private POInfoColumn[]		m_columns 			= null;
 	/**	Count Column SQL		*/
-	private int					m_CountColumnSQL = 0;
+	private int					m_CountColumnSQL 	= 0;
 	/**	Key Column Names		*/
-	private String[]			m_keyColumns = null;
-	
+	private String[]			m_keyColumns 		= null;
+	/**	Has Primary Key			*/
+	private String 				hasPrimaryKey 		= null;
 	/**
 	 * Load Column Information
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/02/2014, 21:54:17
@@ -236,6 +237,28 @@ public class POInfo {
 		m_columns = new POInfoColumn[columns.size()];
 		columns.toArray(m_columns);
 		Log.d("Size ", "- " + m_columns.length);
+	}
+	
+	/**
+	 * Has Primary Key
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/10/2014, 4:53:17
+	 * @return
+	 * @return boolean
+	 */
+	public boolean hasPrimaryKey() {
+		//	Cache
+		if(hasPrimaryKey != null)
+			return hasPrimaryKey.equals("Y");
+		//	
+		for(POInfoColumn columns : m_columns) {
+			if(columns.IsKey) {
+				hasPrimaryKey = "Y";
+				return true;
+			}
+		}
+		//	Default
+		hasPrimaryKey = "N";
+		return false;
 	}
 	
 	/**

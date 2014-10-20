@@ -198,7 +198,7 @@ public class VLookupSearch extends GridField
 			Cursor rs = null;
 			FilterValue criteria = new FilterValue();
 			InfoLookup lookupInfo = m_Lookup.getInfoLookup();
-			criteria.setWhereClause(lookupInfo.TableName + "." + lookupInfo.KeyColumn + " = ?");
+			criteria.setWhereClause(lookupInfo.TableName + "." + lookupInfo.KeyColumn[0] + " = ?");
 			criteria.addValue(value);
 			m_Lookup.setCriteria(criteria.getWhereClause());
 			//	Query

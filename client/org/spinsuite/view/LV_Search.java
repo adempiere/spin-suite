@@ -26,6 +26,7 @@ import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.FilterValue;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.Msg;
 import org.spinsuite.view.lookup.GridField;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.InfoTab;
@@ -121,7 +122,7 @@ public class LV_Search extends Activity {
 		//	Get Record Count
 		tv_RecordCount = (TextView) findViewById(R.id.tv_RecordCount);
 		//	
-		tv_RecordCount.setText("0");
+		tv_RecordCount.setText(Msg.getMsg(v_activity, "record.found") + ": 0");
 		//	
 		sv_Search = (ScrollView) findViewById(R.id.sv_Search);
     	//	Table Layout
@@ -460,7 +461,8 @@ public class LV_Search extends Activity {
 			m_SearchAdapter.setDropDownViewResource(R.layout.i_image_text);
 			lv_Search.setAdapter(m_SearchAdapter);
 			//	
-			tv_RecordCount.setText(String.valueOf(m_SearchAdapter.getCount()));
+			tv_RecordCount.setText(Msg.getMsg(v_activity, "record.found") 
+					+ ": " + String.valueOf(m_SearchAdapter.getCount()));
 			//	
 			return true;
 	    }

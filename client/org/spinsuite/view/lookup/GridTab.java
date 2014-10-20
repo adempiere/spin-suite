@@ -478,9 +478,13 @@ public class GridTab implements Evaluatee {
 	 * @return void
 	 */
 	public void dataNew() {
+		//	Has Primary Key
+		boolean hasPrimaryKey = (model != null
+				? model.hasPrimaryKey()
+						: false);
 		for (GridField vField: m_fields) {
 			if(!vField.isReadOnly()
-					&& (!vField.isParent() || !m_TabInfo.hasPrimaryKey())
+					&& (!vField.isParent() || !hasPrimaryKey)
 					&& vField.getSPS_Column_ID() != m_TabInfo.getTabSPS_Column_ID()
 					&& !vField.getColumnName().equals("DocAction")) {
 				vField.setEnabled(true);
@@ -496,6 +500,10 @@ public class GridTab implements Evaluatee {
 	 * @return void
 	 */
 	public void dataModify() {
+		//	Has Primary Key
+		boolean hasPrimaryKey = (model != null
+				? model.hasPrimaryKey()
+						: false);
 		for (GridField vField: m_fields) {
 			if(
 				//	Any Field
@@ -504,7 +512,7 @@ public class GridTab implements Evaluatee {
 						//	Updateable and not Processed
 						((vField.isUpdateable() && !isProcessed())
 								&& !vField.isReadOnly()
-								&& (!vField.isParent() || !m_TabInfo.hasPrimaryKey())
+								&& (!vField.isParent() || !hasPrimaryKey)
 								&& vField.getSPS_Column_ID() != m_TabInfo.getTabSPS_Column_ID())
 								//	Always Updateable
 								|| vField.isAlwaysUpdateable()
