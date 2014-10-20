@@ -20,7 +20,7 @@ import java.util.logging.Level;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.view.LV_Menu;
-import org.spinsuite.view.LV_Search;
+import org.spinsuite.view.LV_StandardSearch;
 import org.spinsuite.view.lookup.InfoField;
 
 import android.app.Activity;
@@ -123,7 +123,7 @@ public class LoadActionMenu {
 					boolean m_IsReadWrite = Env.getWindowsAccess(activity, paramAct.getSPS_Window_ID());
 					bundle.putString("IsInsertRecord", (m_IsReadWrite? "Y": "N"));
 					//	
-	            	intent = new Intent(activity, LV_Search.class);
+	            	intent = new Intent(activity, LV_StandardSearch.class);
 	    			intent.putExtras(bundle);
 	    			//	Start with result
 	    			activity.startActivityForResult(intent, 0);

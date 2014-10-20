@@ -23,7 +23,8 @@ import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
-import org.spinsuite.view.LV_Search;
+import org.spinsuite.view.LV_ProductSearch;
+import org.spinsuite.view.LV_StandardSearch;
 
 import android.app.Activity;
 import android.content.Context;
@@ -181,7 +182,7 @@ public class VSearch extends LinearLayout
 		if(m_field != null){
     		Bundle bundle = new Bundle();
     		bundle.putParcelable("Field", m_field);
-    		Class<?> clazz = LV_Search.class;
+    		Class<?> clazz = LV_ProductSearch.class;
     		//	Intent from Info Factory Class
     		if(m_field.InfoFactoryClass != null
     				&& m_field.InfoFactoryClass.length() > 0) {
@@ -196,6 +197,20 @@ public class VSearch extends LinearLayout
     			//	not yet implemented
     		} else if(m_field.DisplayType == DisplayType.ACCOUNT) {
     			//	not yet implemented
+    		} else if(m_field.DisplayType == DisplayType.PATTRIBUTE) {
+    			//	not yet implemented
+    		} else if(m_field.DisplayType == DisplayType.PRINTER_NAME) {
+    			//	not yet implemented
+    		} else if(m_field.DisplayType == DisplayType.FILE_NAME) {
+    			//	not yet implemented
+    		} else if(m_field.DisplayType == DisplayType.FILE_PATH) {
+    			//	not yet implemented
+    		} else if(m_field.DisplayType == DisplayType.ASSIGNMENT) {
+    			//	not yet implemented
+    		} else if(m_field.ColumnName.equals("C_BPartner_ID")) {
+    			//	not yet implemented
+    		} else if(m_field.ColumnName.equals("M_Product_ID")) {
+    			clazz = LV_ProductSearch.class;
     		}
     		//	
     		Intent intent = new Intent(v_activity, clazz);

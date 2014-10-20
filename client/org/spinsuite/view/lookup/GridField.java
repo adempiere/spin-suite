@@ -705,7 +705,7 @@ public abstract class GridField extends LinearLayout {
 				//lookupButton = new VLookupButtonDocAction(act, field, (DocAction) mGridTab.getPO());
 			} else if(field.ColumnName.equals("PaymentRule")) {
 				//	Payment Rule Button
-				lookupButton = new LookupButtonPaymentRule(activity, field);
+				lookupButton = new LookupPaymentRule(activity, field);
 			} else {
 				lookupButton = new VLookupButton(activity, field);
 			}

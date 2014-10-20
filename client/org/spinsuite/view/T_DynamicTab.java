@@ -43,7 +43,7 @@ import org.spinsuite.view.lookup.GridTab;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.InfoTab;
 import org.spinsuite.view.lookup.Lookup;
-import org.spinsuite.view.lookup.LookupButtonPaymentRule;
+import org.spinsuite.view.lookup.LookupPaymentRule;
 import org.spinsuite.view.lookup.VLookupButton;
 import org.spinsuite.view.lookup.VLookupButtonDocAction;
 import org.spinsuite.view.lookup.VLookupCheckBox;
@@ -332,7 +332,7 @@ public class T_DynamicTab extends Fragment
 						tabParam.getActivityNo(), tabParam.getParentTabNo());
 				bundle.putParcelable("Criteria", criteria);
 			}
-			Intent intent = new Intent(getActivity(), LV_Search.class);
+			Intent intent = new Intent(getActivity(), LV_StandardSearch.class);
 			intent.putExtras(bundle);
 			//	Start with result
 			startActivityForResult(intent, 0);
@@ -947,11 +947,9 @@ public class T_DynamicTab extends Fragment
 			init();
 			for(InfoField field : tabInfo.getFields()) {
 				if(field.IsDisplayed
-						&& DisplayType.isLookup(field.DisplayType)
-						&& field.DisplayType != DisplayType.SEARCH
-						&& field.DisplayType != DisplayType.LOCATION
-						&& field.DisplayType != DisplayType.LOCATOR
-						&& field.DisplayType != DisplayType.ACCOUNT) {
+						&& (field.DisplayType == DisplayType.TABLE_DIR 
+						|| field.DisplayType == DisplayType.LIST
+						|| field.DisplayType == DisplayType.TABLE)) {
 					//	Add View to Layout
 					Lookup lookup = new Lookup(getActivity(), getTabParameter(), field);
 					lookup.load();
@@ -1019,12 +1017,7 @@ public class T_DynamicTab extends Fragment
 	    	boolean isFirst = false;
 			GridField lookup = null;
 	    	//	Add New Row
-			if(isFirst = (v_row == null)
-					|| !isSameLine) {
-				v_row = new LinearLayout(getActivity());
-				v_row.setOrientation(LinearLayout.HORIZONTAL);
-				v_row.setWeightSum(WEIGHT_SUM);
-			}
+			isFirst = (v_row == null);
 			//	Add
 			if(DisplayType.isDate(field.DisplayType)) {
 				lookup = new VLookupDateBox(getActivity(), field, tabParam);
@@ -1054,7 +1047,7 @@ public class T_DynamicTab extends Fragment
 					lookupButton = new VLookupButtonDocAction(getActivity(), field, (DocAction) mGridTab.getPO());
 				} else if(field.ColumnName.equals("PaymentRule")) {
 					//	Payment Rule Button
-					lookupButton = new LookupButtonPaymentRule(getActivity(), field, tabParam);
+					lookupButton = new LookupPaymentRule(getActivity(), field, tabParam);
 				} else {
 					lookupButton = new VLookupButton(getActivity(), field, tabParam);
 				}
@@ -1064,6 +1057,13 @@ public class T_DynamicTab extends Fragment
 			}
 			//	is Filled
 			if(lookup != null) {
+				//	Add new Row
+				if(isFirst 
+						|| !isSameLine) {
+					v_row = new LinearLayout(getActivity());
+					v_row.setOrientation(LinearLayout.HORIZONTAL);
+					v_row.setWeightSum(WEIGHT_SUM);
+				}
 				//	Set Listener
 				lookup.setOnFieldChangeListener(m_Listener);
 				lookup.setLayoutParams(v_param);
@@ -1071,11 +1071,11 @@ public class T_DynamicTab extends Fragment
 				v_row.addView(lookup);
 				//	
 				mGridTab.addField(lookup);
+				//	Add Row
+				if(isFirst
+						|| !isSameLine)
+					v_view.addView(v_row);
 			}
-			//	Add Row
-			if((lookup != null && !isSameLine)
-					|| isFirst)
-				v_view.addView(v_row);
 	    }
 	}
 	

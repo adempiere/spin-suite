@@ -26,7 +26,6 @@ import org.spinsuite.base.R;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
-import org.spinsuite.view.lookup.InfoField;
 
 import android.content.Context;
 import android.database.Cursor;
