@@ -152,7 +152,8 @@ public class InitialLoad extends CommunicationSoap{
 		Object [] params = null;
 		int countrec = p_Resp.getPropertyCount();
 		int hasPages = (p_Resp.hasProperty(ILCall.m_Pages) ? 1 :0);
-		m_Task.setMaxValueProgressBar(countrec - hasPages);
+		int hasWSCount = (p_Resp.hasProperty("WSCount") ? 1 :0);
+		m_Task.setMaxValueProgressBar(countrec - hasPages - hasWSCount);
 		
 		try{
 			for (int i= 0;i< countrec;i++){
@@ -164,7 +165,7 @@ public class InitialLoad extends CommunicationSoap{
 							
 				m_Task.refreshMSG(query.getPropertyAsString("Name") +"\n" 
 						+ "Pages:" +(p_PageCount != null && p_CurrentPage !=null ? p_CurrentPage + "/"+ p_PageCount + "\n" : "") 
-						+ "Records : " + (i + 1) + " / " + (countrec - hasPages), false, (i + 1));
+						+ "Records : " + (i + 1) + " / " + (countrec - hasPages - hasWSCount), false, (i + 1));
 				
 		    	String sql = query.getPropertyAsString("SQL");
 		    	

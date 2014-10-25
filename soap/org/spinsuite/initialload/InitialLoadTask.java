@@ -15,18 +15,16 @@
  *************************************************************************************/
 package org.spinsuite.initialload;
 
-import java.util.logging.Level;
-
+import java.util.List;
 import org.ksoap2.serialization.SoapObject;
-import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.BackGroundProcess;
 import org.spinsuite.login.T_Connection;
 import org.spinsuite.login.T_Login_ProgressSync;
+import org.spinsuite.model.MSPSSyncMenu;
+import org.spinsuite.model.MWSWebServiceType;
 import org.spinsuite.util.BackGroundTask;
-import org.spinsuite.util.LogM;
 import org.spinsuite.util.StringNamePair;
-import android.database.Cursor;
 
 public class InitialLoadTask implements BackGroundProcess{
 
@@ -197,7 +195,8 @@ public class InitialLoadTask implements BackGroundProcess{
 		//Call Web Service Method Create Metadata
 		refreshMSG("Calling " + "Create Metadata",false,-1);
 		if (!CallWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
-				new StringNamePair(ILCall.m_ServiceMethodField, InitialLoad.INITIALLOAD_ServiceMethodCreateMetaData)))
+				new StringNamePair(ILCall.m_ServiceMethodField, InitialLoad.INITIALLOAD_ServiceMethodCreateMetaData),
+				new StringNamePair(ILCall.m_WSNumber, "0")))
 			return;
 		
 		//Call Web Service Method Web Sevice Definition
@@ -205,9 +204,31 @@ public class InitialLoadTask implements BackGroundProcess{
 		refreshMSG("Calling " + "Web Sevice Definition",false,-1);
 		if (!CallWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
 				new StringNamePair(ILCall.m_ServiceMethodField, InitialLoad.INITIALLOAD_ServiceMethodWebServiceDefinition),
-				new StringNamePair(ILCall.m_Page, "0")))
+				new StringNamePair(ILCall.m_Page, "0"),
+				new StringNamePair(ILCall.m_WSNumber, "0")
+				))
 			return;
 		
+		List<MSPSSyncMenu> sm = MSPSSyncMenu.getNodes(m_Conn, "0", InitialLoad.INITIALLOAD_ServiceDefinition, InitialLoad.INITIALLOAD_ServiceMethodDataSynchronization, null, null);
+		
+		try{
+			for (MSPSSyncMenu mspsSyncMenu : sm) {
+				
+				MWSWebServiceType wst = new MWSWebServiceType(m_Conn, mspsSyncMenu.getWS_WebServiceType_ID(), null);
+				refreshMSG("Calling " +  mspsSyncMenu.getName() ,false,-1);
+				//Call Web Service Method Web Sevice Definition
+	    		if (!CallWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
+	    							new StringNamePair(ILCall.m_ServiceMethodField, InitialLoad.INITIALLOAD_ServiceMethodDataSynchronization),
+	    							new StringNamePair(ILCall.m_ServiceTypeField, wst.getValue()),
+	    							new StringNamePair(ILCall.m_Page, "0"),
+	    							new StringNamePair(ILCall.m_WSNumber, "0")))
+	    			break;		
+			}
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		/*
 		DB conn = new DB(m_Conn);
 		conn.openDB(DB.READ_ONLY);
 		Cursor rs = null;
@@ -240,10 +261,8 @@ public class InitialLoadTask implements BackGroundProcess{
 			conn.closeDB(rs);
 	    	DB.closeConnection(conn);	
 		}
-	    
+	    */
 	}
-	
-	
 	
 	/**
 	 * Call to Web Service
@@ -254,7 +273,11 @@ public class InitialLoadTask implements BackGroundProcess{
 	private boolean CallWebService(StringNamePair... Params){
 		StringNamePair[] p_Params = new StringNamePair[Params.length];
 		int CurrentPage = 0;
+		int CurrentWS = 0;
 		int pages = 0;
+		int CountWS = 0;
+		int iWS = -1;
+		int iPage =-1;
 		InitialLoad il = new InitialLoad(m_URL, m_NameSpace, m_Method, m_IsNetService, m_SoapAction, m_User, m_PassWord, this, m_Timeout, m_Conn);
 		
 		for (int i=0;i<Params.length;i++){
@@ -262,9 +285,13 @@ public class InitialLoadTask implements BackGroundProcess{
 			
 			if (Params[i].getKey().equals(ILCall.m_Page)){
 				CurrentPage = Integer.parseInt(Params[i].getName());
-				p_Params[i] = new StringNamePair(Params[i].getKey(), Integer.valueOf(CurrentPage + 1 ).toString());
-				
 				CurrentPage++;
+				iPage = i ;
+			}
+			else if (Params[i].getKey().equals(ILCall.m_WSNumber)){
+				CurrentWS = Integer.parseInt(Params[i].getName());
+				CurrentWS++;
+				iWS = i;
 			}
 			else
 				p_Params[i] = Params[i];
@@ -276,14 +303,43 @@ public class InitialLoadTask implements BackGroundProcess{
 		if (so!= null){
 			if (so.hasProperty(ILCall.m_Pages))
 				pages = Integer.parseInt(so.getPropertyAsString(ILCall.m_Pages));
+			if (so.hasProperty(ILCall.m_WSCount))
+				CountWS = Integer.parseInt(so.getPropertyAsString(ILCall.m_WSCount));
 			
 			if (!il.writeDB(so,pages,CurrentPage))
 				return false;
+			
 			so = null;
 			il = null;
-			if (CurrentPage - pages != 0){
-				refreshMSG(m_PublicMsg, false, -1);
-				return CallWebService(p_Params);
+			if (CurrentWS - CountWS != 0){
+				if (CurrentPage - pages != 0){
+					
+					if (iWS != -1)
+						p_Params[iWS] = new StringNamePair(Params[iWS].getKey(), Integer.valueOf(CurrentWS -1).toString());
+					
+					p_Params[iPage] = new StringNamePair(Params[iPage].getKey(), Integer.valueOf(CurrentPage).toString());
+					
+					refreshMSG(m_PublicMsg, false, -1);
+					return CallWebService(p_Params);
+				}
+				else{
+					if (iPage != -1)
+						p_Params[iPage] = new StringNamePair(Params[iPage].getKey(), Integer.valueOf(0).toString());
+
+					p_Params[iWS] = new StringNamePair(Params[iWS].getKey(), Integer.valueOf(CurrentWS).toString());
+					
+					refreshMSG(m_PublicMsg, false, -1);
+					return CallWebService(p_Params);
+				}
+			}
+			else
+			{
+				if (CurrentPage - pages != 0 && pages > 0){
+					p_Params[iWS] = new StringNamePair(Params[iWS].getKey(), Integer.valueOf(0).toString());
+					p_Params[iPage] = new StringNamePair(Params[iPage].getKey(), Integer.valueOf(CurrentPage).toString());
+					refreshMSG(m_PublicMsg, false, -1);
+					return CallWebService(p_Params);
+				}
 			}
 		}
 		else

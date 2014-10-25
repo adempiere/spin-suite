@@ -54,6 +54,9 @@ public class ILCall extends SoapObject{
 	
 	public static String m_Page = "Page";
 	
+	public static String m_WSCount = "WSCount";
+	public static String m_WSNumber = "WSNumber";
+	
 	public static String m_Pages = "Pages";
 	
 }

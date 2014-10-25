@@ -27,6 +27,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -37,6 +38,7 @@ public class T_Login_ProgressSync extends DialogFragment implements OnClickListe
 	private TextView tv_Msg = null; 
 	private ProgressBar pb_Progress = null;
 	
+	@SuppressLint("InflateParams")
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -60,7 +62,7 @@ public class T_Login_ProgressSync extends DialogFragment implements OnClickListe
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
-		
+		this.dismiss();
 	}
 	
 	
@@ -87,4 +89,11 @@ public class T_Login_ProgressSync extends DialogFragment implements OnClickListe
 		pb_Progress.setMax(p_Max);
 	}
 	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		getDialog().setTitle(R.string.SynchronzeButtom);
+		return super.onCreateView(inflater, container, savedInstanceState);
+	}
 }
