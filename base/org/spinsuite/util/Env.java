@@ -1242,6 +1242,16 @@ public final class Env {
 	}	//	isSOTrx
 	
 	/**
+	 *	Is Sales Order Trx
+	 *  @param ctx context
+	 *  @param WindowNo window no
+	 *  @return true if SO (default)
+	 */
+	public static boolean isSOTrx (Context ctx, int WindowNo) {
+		return getContextAsBoolean(ctx, WindowNo, "IsSOTrx");
+	}	//	isSOTrx
+	
+	/**
 	 * 	Get Login AD_Client_ID
 	 *	@param ctx context
 	 *	@return login AD_Client_ID
