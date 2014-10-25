@@ -159,8 +159,7 @@ public class T_Role extends Fragment implements I_Login {
     	DisplaySpinner ds_Role = (DisplaySpinner) sp_Role.getSelectedItem();
     	DisplaySpinner ds_Client = (DisplaySpinner) sp_Client.getSelectedItem();
     	DisplaySpinner ds_Org = (DisplaySpinner) sp_Org.getSelectedItem();
-    	DisplaySpinner ds_Warehouse = (DisplaySpinner) sp_Warehouse.getSelectedItem();
-		if(ds_Role != null
+    	if(ds_Role != null
 				&& ds_Role.getID() > 0){
 			if(ds_Client != null
 					&& ds_Client.getID() > 0){
