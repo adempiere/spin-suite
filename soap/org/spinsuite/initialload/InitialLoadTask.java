@@ -24,6 +24,7 @@ import org.spinsuite.login.T_Login_ProgressSync;
 import org.spinsuite.model.MSPSSyncMenu;
 import org.spinsuite.model.MWSWebServiceType;
 import org.spinsuite.util.BackGroundTask;
+import org.spinsuite.util.Env;
 import org.spinsuite.util.StringNamePair;
 
 public class InitialLoadTask implements BackGroundProcess{
@@ -69,6 +70,8 @@ public class InitialLoadTask implements BackGroundProcess{
 	
 	
 	private int m_Timeout = 0;
+	
+	private static final String 	KEY_POS_TAB			= "posTab";
 	
 	/**
 	 * 
@@ -228,6 +231,8 @@ public class InitialLoadTask implements BackGroundProcess{
 		{
 			e.printStackTrace();
 		}
+		setContext();
+		df.dismiss();
 		/*
 		DB conn = new DB(m_Conn);
 		conn.openDB(DB.READ_ONLY);
@@ -373,5 +378,20 @@ public class InitialLoadTask implements BackGroundProcess{
 			m_Progress = p_Progress;
 		
 		m_Task.refreshGUINow();
+	}
+	
+	/**
+	 * Set Context
+	 * @author Yamel Senih 30/11/2012, 11:55:26
+	 * @return void
+	 */
+	public void setContext() {
+		Env.setIsEnvLoad(m_Conn, true);
+		Env.setContext(m_Conn, "#SUser", m_User);
+		Env.setContext(m_Conn, "#SPass", m_PassWord);
+		Env.setSavePass(m_Conn, true);
+		Env.setAutoLogin(m_Conn, true);
+		Env.setContext(m_Conn, KEY_POS_TAB, 1);
+		Env.setContext(m_Conn, "#Timeout", m_Timeout);
 	}
 }
