@@ -45,17 +45,19 @@ public class InfoLookup {
 	
 	
 	/**	Reference (Table Name)		*/
-	public static final String 	REFERENCE_TN		 	= "AD_Reference";
+	public static final String 	REFERENCE_TN		 			= "AD_Reference";
 	/**	Reference List (Table Name)	*/
-	public static final String 	REF_LIST_TN 			= "AD_Ref_List";
+	public static final String 	REF_LIST_TN 					= "AD_Ref_List";
 	/**	Reference Table (Table Name)*/
-	public static final String 	REF_TABLE_TN 			= "AD_Ref_Table";
+	public static final String 	REF_TABLE_TN 					= "AD_Ref_Table";
 	/**	Reference (Column Name)		*/
-	public static final String 	AD_LANGUAGE_CN 			= "AD_Language";
+	public static final String 	AD_LANGUAGE_CN 					= "AD_Language";
 	/**	Translation Add				*/
-	public static final String 	TR_TABLE_SUFFIX 		= "_Trl";
+	public static final String 	TR_TABLE_SUFFIX 				= "_Trl";
 	/**	Table Search mark Separator	*/
-	public static final String	TABLE_SEARCH_SEPARATOR	= "<MARK_SEPARATOR>";
+	public static final String	TABLE_SEARCH_SEPARATOR			= "<MARK_SEPARATOR>";
+	/**	Table Search Separator	*/
+	public static final String	TABLE_SEARCH_VIEW_SEPARATOR		= "_";
 	
 	@Override
 	public String toString() {

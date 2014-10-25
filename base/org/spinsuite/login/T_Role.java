@@ -166,59 +166,55 @@ public class T_Role extends Fragment implements I_Login {
 					&& ds_Client.getID() > 0){
 				if(ds_Org != null
 						&& ds_Org.getID() > 0){
-					if(ds_Warehouse != null
-							&& ds_Warehouse.getID() > 0){
 						
-						Env.setAD_Role_ID(getActivity(), role_ID);
-						Env.setContext(getActivity(), "#AD_Role_Name", ds_Role.getValue());
-						Env.setAD_Client_ID(getActivity(), client_ID);
-						Env.setContext(getActivity(), "#AD_Client_Name", ds_Client.getValue());
-						Env.setAD_Org_ID(getActivity(), org_ID);
-						Env.setContext(getActivity(), "#AD_Org_Name", ds_Org.getValue());
-						Env.setM_Warehouse_ID(getActivity(), warehouse_ID);
-						//	Date
-						Calendar currentDate = Calendar.getInstance();
-						Calendar date = Calendar.getInstance();
-						date.set(Calendar.YEAR, dp_Date.getYear());
-						date.set(Calendar.MONTH, dp_Date.getMonth());
-						date.set(Calendar.DAY_OF_MONTH, dp_Date.getDayOfMonth());
-						//Locale loc = Locale.getDefault();
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-						
-						//Msg.toastMsg(this, " -- " + date.getTime());
+					Env.setAD_Role_ID(getActivity(), role_ID);
+					Env.setContext(getActivity(), "#AD_Role_Name", ds_Role.getValue());
+					Env.setAD_Client_ID(getActivity(), client_ID);
+					Env.setContext(getActivity(), "#AD_Client_Name", ds_Client.getValue());
+					Env.setAD_Org_ID(getActivity(), org_ID);
+					Env.setContext(getActivity(), "#AD_Org_Name", ds_Org.getValue());
+					Env.setM_Warehouse_ID(getActivity(), warehouse_ID);
+					//	Date
+					Calendar currentDate = Calendar.getInstance();
+					Calendar date = Calendar.getInstance();
+					date.set(Calendar.YEAR, dp_Date.getYear());
+					date.set(Calendar.MONTH, dp_Date.getMonth());
+					date.set(Calendar.DAY_OF_MONTH, dp_Date.getDayOfMonth());
+					//Locale loc = Locale.getDefault();
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+					
+					//Msg.toastMsg(this, " -- " + date.getTime());
 
-						//	Format Date yyyy-MM-dd hh:mm:ss
-						
-						Env.setContext(getActivity(), "#Date", sdf.format(date.getTime()));
-						
-						sdf = new SimpleDateFormat("yyyy-MM-dd");
-						
-						String curDate = sdf.format(currentDate.getTime());
-						String ctxDate = sdf.format(date.getTime());
-						
-						//	Format Date yyyy-MM-dd
-						
-						Env.setContext(getActivity(), "#DateP", ctxDate);
-						
-						//Msg.toastMsg(this, " -- " + (currentDate.equals(date)));
-						//	Set Context Is Current Date
-						
-						//Msg.toastMsg(this, " - - - " + curDate + " **** " + ctxDate);
-						//currentDate.
-						
-						if(!(curDate.equals(ctxDate))){
-							Env.setContext(getActivity(), "#IsCurrentDate", "N");
-							Msg.toastMsg(ctx, getResources().getString(R.string.msg_LoginOffDate) + 
-									"\n" + getResources().getString(R.string.msg_WritePermissionsBlocked));
-							//	
-							Msg.toastMsg(ctx, getResources().getString(R.string.msg_LoginOffDate) + 
-									"\n" + getResources().getString(R.string.msg_WritePermissionsBlocked));
-						} else {
-							Env.setContext(getActivity(), "#IsCurrentDate", "Y");
-						}
-						return true;
-					} //else
-						//Msg.alertMustFillField(getActivity(), R.string.M_Warehouse_ID, sp_Warehouse);
+					//	Format Date yyyy-MM-dd hh:mm:ss
+					
+					Env.setContext(getActivity(), "#Date", sdf.format(date.getTime()));
+					
+					sdf = new SimpleDateFormat("yyyy-MM-dd");
+					
+					String curDate = sdf.format(currentDate.getTime());
+					String ctxDate = sdf.format(date.getTime());
+					
+					//	Format Date yyyy-MM-dd
+					
+					Env.setContext(getActivity(), "#DateP", ctxDate);
+					
+					//Msg.toastMsg(this, " -- " + (currentDate.equals(date)));
+					//	Set Context Is Current Date
+					
+					//Msg.toastMsg(this, " - - - " + curDate + " **** " + ctxDate);
+					//currentDate.
+					
+					if(!(curDate.equals(ctxDate))){
+						Env.setContext(getActivity(), "#IsCurrentDate", "N");
+						Msg.toastMsg(ctx, getResources().getString(R.string.msg_LoginOffDate) + 
+								"\n" + getResources().getString(R.string.msg_WritePermissionsBlocked));
+						//	
+						Msg.toastMsg(ctx, getResources().getString(R.string.msg_LoginOffDate) + 
+								"\n" + getResources().getString(R.string.msg_WritePermissionsBlocked));
+					} else {
+						Env.setContext(getActivity(), "#IsCurrentDate", "Y");
+					}
+					return true;
 				} else
 					Msg.alertMustFillField(getActivity(), R.string.AD_Org_ID, sp_Org);
 			} else

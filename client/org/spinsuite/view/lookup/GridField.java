@@ -402,6 +402,19 @@ public abstract class GridField extends LinearLayout {
 	}
 	
 	/**
+	 * Get Default Value
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 23/10/2014, 10:36:19
+	 * @return
+	 * @return String
+	 */
+	public String getDefaultValue() {
+		if(m_field == null)
+			return null;
+		//	Default
+		return m_field.DefaultValue;
+	}
+	
+	/**
 	 * Is Always Updateable
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:19:20
 	 * @return
@@ -547,8 +560,12 @@ public abstract class GridField extends LinearLayout {
 	public boolean isChanged() {
 		return (getValue() != null && getOldValue() == null) 
 				|| (getValue() == null && getOldValue() != null) 
-				|| !getValueAsString().equals(getOldValueAsString())
-				|| (DisplayType.isNumeric(m_field.DisplayType) && getValueAsInt() != getOldValueAsInt())
+				|| (
+						(getValueAsString() != null 
+								&& getOldValueAsString() != null) 
+						&& !getValueAsString().equals(getOldValueAsString()))
+				|| (DisplayType.isNumeric(m_field.DisplayType) 
+						&& getValueAsInt() != getOldValueAsInt())
 				|| getValueAsBoolean() != getOldValueAsBoolean();
 	}
 	
@@ -705,7 +722,7 @@ public abstract class GridField extends LinearLayout {
 				//lookupButton = new VLookupButtonDocAction(act, field, (DocAction) mGridTab.getPO());
 			} else if(field.ColumnName.equals("PaymentRule")) {
 				//	Payment Rule Button
-				lookupButton = new LookupPaymentRule(activity, field);
+				lookupButton = new VLookupButtonPaymentRule(activity, field);
 			} else {
 				lookupButton = new VLookupButton(activity, field);
 			}

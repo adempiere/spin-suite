@@ -106,12 +106,19 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 		String description = "";
 		//	
 		if(recordItem.getValue() != null) {
-			int indexOf = recordItem.getValue().indexOf(InfoLookup.TABLE_SEARCH_SEPARATOR);
+			String separator = InfoLookup.TABLE_SEARCH_SEPARATOR;
+			int indexOf = recordItem.getValue().indexOf(separator);
+			//	Verify other
+			if(indexOf == -1) {
+				separator = InfoLookup.TABLE_SEARCH_VIEW_SEPARATOR;
+				indexOf = recordItem.getValue().indexOf(separator);
+			}
+			//	
 			if(indexOf != -1) {
 				name = recordItem.getValue().substring(0, indexOf);
 				description = recordItem.getValue()
-						.substring(indexOf + InfoLookup.TABLE_SEARCH_SEPARATOR.length())
-						.replaceAll(InfoLookup.TABLE_SEARCH_SEPARATOR, Env.NL);
+						.substring(indexOf + separator.length())
+						.replaceAll(separator, Env.NL);
 			} else {
 				name = recordItem.getValue();
 			}

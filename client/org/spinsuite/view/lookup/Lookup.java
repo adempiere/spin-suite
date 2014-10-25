@@ -540,7 +540,8 @@ public class Lookup {
 					InfoLookup infoLookup = lookup.getInfoLookup();
 					//	Add to Display Column
 					longColumn.append(infoLookup.DisplayColumn
-							.replaceAll(InfoLookup.TABLE_SEARCH_SEPARATOR, "_"));
+							.replaceAll(InfoLookup.TABLE_SEARCH_SEPARATOR, 
+									InfoLookup.TABLE_SEARCH_VIEW_SEPARATOR));
 					//	Add Join
 					addJoin(m_TableAlias, lookup.getField(), infoLookup);
 				} else {
@@ -741,11 +742,12 @@ public class Lookup {
 			//	Set Lookup Info
 			m_InfoLookup.DisplayColumn = "COALESCE(" + m_TableAlias + ".Name,'')";
 		} else {
-			sql.append(m_TableAlias).append(InfoLookup.TR_TABLE_SUFFIX).append(".").append("Name ");
+			sql.append("COALESCE(").append(m_TableAlias).append(InfoLookup.TR_TABLE_SUFFIX).append(".").append("Name")
+						.append(", ").append(m_TableAlias).append(".").append("Name").append(") Name ");
 			//	From
 			sql.append("FROM ").append(InfoLookup.REF_LIST_TN).append(" AS ").append(m_TableAlias);
 			//	Join
-			sql.append(" INNER JOIN ").append(InfoLookup.REF_LIST_TN).append(InfoLookup.TR_TABLE_SUFFIX)
+			sql.append(" LEFT JOIN ").append(InfoLookup.REF_LIST_TN).append(InfoLookup.TR_TABLE_SUFFIX)
 							.append(" AS ").append(m_TableAlias).append(InfoLookup.TR_TABLE_SUFFIX)
 							.append(" ON(").append(m_TableAlias).append(InfoLookup.TR_TABLE_SUFFIX).append(".")
 							.append("AD_Ref_List_ID = ").append(m_TableAlias).append(".").append("AD_Ref_List_ID")
@@ -998,7 +1000,8 @@ public class Lookup {
 			Cursor rs = null;
 			//	Query
 			rs = conn.querySQL(getSQL()
-					.replaceAll(InfoLookup.TABLE_SEARCH_SEPARATOR, "_"), null);
+					.replaceAll(InfoLookup.TABLE_SEARCH_SEPARATOR, 
+							InfoLookup.TABLE_SEARCH_VIEW_SEPARATOR), null);
 			data = new ArrayList<DisplayLookupSpinner>();
 			if(rs.moveToFirst()) {
 				if(!m_field.IsMandatory) {

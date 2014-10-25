@@ -427,7 +427,7 @@ public abstract class PO {
 	 * @return
 	 * @return boolean
 	 */
-	private boolean loadDefaultValues() {
+	protected boolean loadDefaultValues() {
 		boolean ok = false;
 		try {
 			//	Iterate

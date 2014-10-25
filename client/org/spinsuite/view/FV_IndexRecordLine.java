@@ -114,7 +114,9 @@ public class FV_IndexRecordLine extends ListFragment
     	}
     	//	Get Values
     	MultiKeyNamePair[] values = DB.getMultiKeyNamePairs(getActivity(), 
-    			lookup.getSQL().replaceAll(InfoLookup.TABLE_SEARCH_SEPARATOR, "_"), lookup.getInfoLookup().KeyColumn.length, criteria.getValues());
+    			lookup.getSQL().replaceAll(InfoLookup.TABLE_SEARCH_SEPARATOR, 
+    					InfoLookup.TABLE_SEARCH_VIEW_SEPARATOR), 
+    					lookup.getInfoLookup().KeyColumn.length, criteria.getValues());
         //	Is Loaded
     	boolean isLoaded = (values != null && values.length != 0);
     	//	Set Adapter

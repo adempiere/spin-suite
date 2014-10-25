@@ -30,14 +30,14 @@ import android.view.View;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class LookupPaymentRule extends VLookupButton {
+public class VLookupButtonPaymentRule extends VLookupButton {
 
 	/**
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/05/2014, 10:43:57
 	 * @param activity
 	 */
-	public LookupPaymentRule(Activity activity) {
+	public VLookupButtonPaymentRule(Activity activity) {
 		super(activity);
 	}
 
@@ -47,7 +47,7 @@ public class LookupPaymentRule extends VLookupButton {
 	 * @param activity
 	 * @param attrs
 	 */
-	public LookupPaymentRule(Activity activity, AttributeSet attrs) {
+	public VLookupButtonPaymentRule(Activity activity, AttributeSet attrs) {
 		super(activity, attrs);
 	}
 
@@ -58,7 +58,7 @@ public class LookupPaymentRule extends VLookupButton {
 	 * @param attrs
 	 * @param defStyle
 	 */
-	public LookupPaymentRule(Activity activity, AttributeSet attrs,
+	public VLookupButtonPaymentRule(Activity activity, AttributeSet attrs,
 			int defStyle) {
 		super(activity, attrs, defStyle);
 	}
@@ -69,7 +69,7 @@ public class LookupPaymentRule extends VLookupButton {
 	 * @param activity
 	 * @param m_field
 	 */
-	public LookupPaymentRule(Activity activity, InfoField m_field) {
+	public VLookupButtonPaymentRule(Activity activity, InfoField m_field) {
 		super(activity, m_field);
 	}
 	
@@ -81,12 +81,13 @@ public class LookupPaymentRule extends VLookupButton {
 	 * @param m_field
 	 * @param tabParam
 	 */
-	public LookupPaymentRule(Activity activity, InfoField m_field, TabParameter tabParam) {
+	public VLookupButtonPaymentRule(Activity activity, InfoField m_field, TabParameter tabParam) {
 		super(activity, m_field, tabParam);
 	}
 	
 	private QuickAction mQAct;
-	private String 		paymentRule = "B";
+	private String 		paymentRule 	= "B";
+	private String 		oldPaymentRule 	= "B";
 	
 	/** Cash = B */
 	public static final String PAYMENTRULE_Cash 			= "B";
@@ -154,7 +155,6 @@ public class LookupPaymentRule extends VLookupButton {
 				updateDisplay(actionItem);
 				paymentRule = actionItem.getValue();
 				setValue(paymentRule);
-				event();
 			}
 		});
 				
@@ -171,7 +171,7 @@ public class LookupPaymentRule extends VLookupButton {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/05/2014, 08:41:28
 	 * @return void
 	 */
-	private void event(){
+	private void event() {
 		//	Set Context
 		DisplayType.setContextValue(getContext(), 
 				getActivityNo(), getTabNo(), m_field, getValue());
@@ -186,7 +186,7 @@ public class LookupPaymentRule extends VLookupButton {
 	 * @param actionItem
 	 * @return void
 	 */
-	private void updateDisplay(ActionItemList actionItem){
+	private void updateDisplay(ActionItemList actionItem) {
 		v_Button.setText(actionItem.getTitle());
 		v_Button.setCompoundDrawablesWithIntrinsicBounds(
 				actionItem.getIcon(), null, null, null);
@@ -198,39 +198,39 @@ public class LookupPaymentRule extends VLookupButton {
 	 * @param paymentRule
 	 * @return void
 	 */
-	public void setPaymentRule(String paymentRule){
-		if(paymentRule != null){
-			if(paymentRule.equals(PAYMENTRULE_Cash)){
+	public void setPaymentRule(String paymentRule) {
+		if(paymentRule != null) {
+			if(paymentRule.equals(PAYMENTRULE_Cash)) {
 				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_Cash));
 				v_Button.setCompoundDrawablesWithIntrinsicBounds(
 						Env.getResourceID(getContext(), R.attr.ic_payment_rule_cash), 0, 0, 0);
 				this.paymentRule = paymentRule;
-			} else if(paymentRule.equals(PAYMENTRULE_Check)){
+			} else if(paymentRule.equals(PAYMENTRULE_Check)) {
 				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_Check));
 				v_Button.setCompoundDrawablesWithIntrinsicBounds(
 						Env.getResourceID(getContext(), R.attr.ic_payment_rule_check), 0, 0, 0);
 				this.paymentRule = paymentRule;
-			} else if(paymentRule.equals(PAYMENTRULE_CreditCard)){
+			} else if(paymentRule.equals(PAYMENTRULE_CreditCard)) {
 				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_CreditCard));
 				v_Button.setCompoundDrawablesWithIntrinsicBounds(
 						Env.getResourceID(getContext(), R.attr.ic_payment_rule_direct_credit), 0, 0, 0);
 				this.paymentRule = paymentRule;
-			} else if(paymentRule.equals(PAYMENTRULE_DirectDebit)){
+			} else if(paymentRule.equals(PAYMENTRULE_DirectDebit)) {
 				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_DirectDebit));
 				v_Button.setCompoundDrawablesWithIntrinsicBounds(
 						Env.getResourceID(getContext(), R.attr.ic_payment_rule_direct_debit), 0, 0, 0);
 				this.paymentRule = paymentRule;
-			} else if(paymentRule.equals(PAYMENTRULE_DirectDeposit)){
+			} else if(paymentRule.equals(PAYMENTRULE_DirectDeposit)) {
 				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_DirectDeposit));
 				v_Button.setCompoundDrawablesWithIntrinsicBounds(
 						Env.getResourceID(getContext(), R.attr.ic_payment_rule_direct_deposit), 0, 0, 0);
 				this.paymentRule = paymentRule;
-			} else if(paymentRule.equals(PAYMENTRULE_Mixed)){
+			} else if(paymentRule.equals(PAYMENTRULE_Mixed)) {
 				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_Mixed));
 				v_Button.setCompoundDrawablesWithIntrinsicBounds(
 						Env.getResourceID(getContext(), R.attr.ic_payment_rule_mixed), 0, 0, 0);
 				this.paymentRule = paymentRule;
-			} else if(paymentRule.equals(PAYMENTRULE_OnCredit)){
+			} else if(paymentRule.equals(PAYMENTRULE_OnCredit)) {
 				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_OnCredit));
 				v_Button.setCompoundDrawablesWithIntrinsicBounds(
 						Env.getResourceID(getContext(), R.attr.ic_payment_rule_on_credit), 0, 0, 0);
@@ -245,8 +245,34 @@ public class LookupPaymentRule extends VLookupButton {
 	 * @return
 	 * @return String
 	 */
-	public String getPaymentRule(){
+	public String getPaymentRule() {
 		return paymentRule;
 	}
-
+	
+	@Override
+	public void setValue(Object value) {
+		if(value != null
+				&& value instanceof String) {
+			oldPaymentRule = paymentRule;
+			setPaymentRule((String) value);
+			//	Event Listener
+			event();
+		}
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return (paymentRule == null 
+					|| paymentRule.length() == 0);
+	}
+	
+	@Override
+	public Object getValue() {
+		return paymentRule;
+	}
+	
+	@Override
+	public Object getOldValue() {
+		return oldPaymentRule;
+	}
 }

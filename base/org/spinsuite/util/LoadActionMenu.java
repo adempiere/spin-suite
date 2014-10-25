@@ -92,7 +92,7 @@ public class LoadActionMenu {
 		} else {
 			//	Load Parameter
 			ActivityParameter paramAct = new ActivityParameter(item);
-			//	Add from Param
+			//	Add from Parameter
 			if(param != null) {
 				paramAct.setActivityNo(param.getActivityNo());
 				paramAct.setFrom_SPS_Table_ID(param.getSPS_Table_ID());

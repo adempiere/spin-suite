@@ -89,7 +89,7 @@ public class DisplayMenuItem implements Parcelable {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/02/2014, 17:57:14
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 23/10/2014, 19:14:13
 	 * @param m_SPS_Menu_ID
 	 * @param m_Name
 	 * @param m_Description
@@ -102,17 +102,20 @@ public class DisplayMenuItem implements Parcelable {
 	 * @param m_Parent_ID
 	 * @param m_IsSummary
 	 * @param m_DeploymentType
+	 * @param m_AD_Form_ID
+	 * @param m_SPS_Window_ID
 	 * @param m_AD_Process_ID
 	 * @param m_ActivityMenu_ID
 	 * @param m_isReadWrite
 	 * @param m_IsInsertRecord
 	 * @param m_SeqNo
+	 * @param m_IsSOTrx
 	 */
 	public DisplayMenuItem(int m_SPS_Menu_ID, String m_Name, String m_Description, String m_Action, 
 			String m_ImageURL, int m_SPS_Table_ID, String m_WhereClause, String m_GroupByClause, 
 			String m_OrderByClause, int m_Parent_ID, boolean m_IsSummary, String m_DeploymentType, 
 			int m_AD_Form_ID, int m_SPS_Window_ID, int m_AD_Process_ID, int m_ActivityMenu_ID, 
-			String m_isReadWrite, String m_IsInsertRecord, int m_SeqNo){
+			String m_isReadWrite, String m_IsInsertRecord, int m_SeqNo, boolean m_IsSOTrx){
 		this.m_SPS_Menu_ID = m_SPS_Menu_ID;
 		this.m_Name = m_Name;
 		this.m_Description = m_Description;
@@ -132,6 +135,7 @@ public class DisplayMenuItem implements Parcelable {
 		this.m_IsReadWrite = m_isReadWrite;
 		this.m_IsInsertRecord = m_IsInsertRecord;
 		this.m_SeqNo = m_SeqNo;
+		this.m_IsSOTrx = m_IsSOTrx;
 	}
 	
 	/**	Action Menu			*/
@@ -180,6 +184,8 @@ public class DisplayMenuItem implements Parcelable {
 	private int 			m_SeqNo = 0;
 	/**	Resource			*/
 	private int 			m_AttResourceID = 0;
+	/**	Is Sales Transaction*/
+	private boolean			m_IsSOTrx = false;
 
 	
 	/** Action AD_Reference_ID=53504 	*/
@@ -260,6 +266,7 @@ public class DisplayMenuItem implements Parcelable {
 		parcel.writeString(m_IsInsertRecord);
 		parcel.writeString((m_IsSummary? "Y": "N"));
 		parcel.writeInt(m_AttResourceID);
+		parcel.writeString((m_IsSOTrx? "Y": "N"));
 	}
 	
 	public void readToParcel(Parcel parcel){
@@ -285,39 +292,14 @@ public class DisplayMenuItem implements Parcelable {
 		//	Read Write
 		m_IsReadWrite = parcel.readString();
 		m_IsInsertRecord = parcel.readString();
-		String summary = parcel.readString();
-		m_IsSummary = (summary != null 
-								&& summary.equals("Y"));
+		String booleanValue = parcel.readString();
+		m_IsSummary = (booleanValue != null 
+								&& booleanValue.equals("Y"));
 		m_AttResourceID = parcel.readInt();
+		booleanValue = parcel.readString();
+		m_IsSOTrx = (booleanValue != null 
+				&& booleanValue.equals("Y"));
 	}
-
-	
-	/**
-	 * Create Menu from other
-	 * @author Yamel Senih 01/08/2012, 12:10:41
-	 * @param fromMenu
-	 * @return
-	 * @return DisplayMenuItem
-	 */
-	/*public static DisplayMenuItem createFromMenu(DisplayMenuItem fromMenu){
-		DisplayMenuItem item = new DisplayMenuItem();
-		
-		item.setSPS_Menu_ID(item.getSPS_Menu_ID());
-		item.setName(fromMenu.getName());
-		item.setAction(fromMenu.getAction());
-		item.setDescription(fromMenu.getDescription());
-		item.setImageURL(fromMenu.getImageURL());
-		item.setSPS_Table_ID(fromMenu.getSPS_Table_ID());
-		item.setWhereClause(fromMenu.getWhereClause());
-		item.setOrderByClause(fromMenu.getOrderByClause());
-		item.setParent_ID(fromMenu.getParent_ID());
-		item.setIsSummary(fromMenu.getIsSummary());
-		item.setDeploymentType(fromMenu.getDeploymentType());
-		item.setSPS_Table_ID(fromMenu.getAD_Process_ID());
-		item.setIsReadWriteM(fromMenu.isReadWriteM());
-		
-		return item;
-	}*/
 	
 	/**
 	 * Get Menu ID
@@ -741,6 +723,26 @@ public class DisplayMenuItem implements Parcelable {
 	 */
 	public int getActivityMenu_ID(){
 		return m_ActivityMenu_ID;
+	}
+	
+	/**
+	 * Get Is Sales Transaction
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 23/10/2014, 19:11:52
+	 * @return
+	 * @return boolean
+	 */
+	public boolean isSOTrx() {
+		return m_IsSOTrx;
+	}
+	
+	/**
+	 * Set Is Sales Transaction
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 23/10/2014, 19:12:31
+	 * @param m_IsSOTrx
+	 * @return void
+	 */
+	public void setIsSOTrx(boolean m_IsSOTrx) {
+		this.m_IsSOTrx = m_IsSOTrx;
 	}
 
 	@Override

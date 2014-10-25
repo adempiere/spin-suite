@@ -16,13 +16,74 @@
  * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com				  		 *
  ************************************************************************************/
 -->
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tv_Value"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:drawableLeft="@drawable/contruction_h"
-    android:maxLines="2"
-    android:minHeight="?android:attr/listPreferredItemHeight"
-    style="@style/TextTitleList" >
+   	android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:baselineAligned="false"
+    android:weightSum="3" 
+  	android:id="@+id/ll_ProductSearchItem">
+	
+	<LinearLayout 
+	    android:id="@+id/ll_ProductSearchText"
+	    android:layout_width="0dp"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="2"
+	    android:orientation="horizontal" >
+	
+	    <ImageView
+	        android:id="@+id/img_Item"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center"
+	        android:contentDescription="@string/None"
+	        android:src="@drawable/contruction_h" />
+	
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical" >
+	
+	        <TextView
+		        android:id="@+id/tv_Name"
+		        android:gravity="center_vertical"
+		        style="@style/TextItemMenu"
+		        android:text="@string/None" />
+	
+	    	<TextView
+	        	android:id="@+id/tv_Description"
+	        	android:gravity="center_vertical"
+	        	style="@style/TextItemSmallMenu"
+	        	android:text="@string/None" />
+	    </LinearLayout>
+	</LinearLayout>
 
-</TextView>
+	<LinearLayout
+	    android:id="@+id/ll_ProductSearchQty"
+		android:layout_width="0dp"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical"
+	    android:layout_weight="1"
+	    android:weightSum="2" >
+		    		
+		<TextView
+			android:id="@+id/tv_QtyLabel"
+		    style="@style/TextTitleList"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:gravity="center_vertical"
+		    android:text="@string/Qty" />
+		            
+		<EditText
+		    android:id="@+id/et_Qty"
+		    style="@style/EditTextStandard"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:gravity="end|center_vertical"
+		    android:hint="@string/Zero"
+		    android:inputType="numberDecimal"
+		    android:selectAllOnFocus="true" />
+
+	</LinearLayout>
+	
+</LinearLayout>

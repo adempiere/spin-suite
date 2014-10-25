@@ -34,6 +34,8 @@ public class X_SPS_Menu extends PO implements I_SPS_Menu {
         {
 			setEntityType (null);
 // ECA01
+			setIsSOTrx (true);
+// Y
 			setMenuType (null);
 			setName (null);
 			setSPS_Menu_ID (0);
@@ -327,6 +329,30 @@ public class X_SPS_Menu extends PO implements I_SPS_Menu {
 	public boolean isReadWrite () 
 	{
 		Object oo = get_Value(COLUMNNAME_IsReadWrite);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Sales Transaction.
+		@param IsSOTrx 
+		This is a Sales Transaction
+	  */
+	public void setIsSOTrx (boolean IsSOTrx)
+	{
+		set_Value (COLUMNNAME_IsSOTrx, Boolean.valueOf(IsSOTrx));
+	}
+
+	/** Get Sales Transaction.
+		@return This is a Sales Transaction
+	  */
+	public boolean isSOTrx () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsSOTrx);
 		if (oo != null) 
 		{
 			 if (oo instanceof Boolean) 

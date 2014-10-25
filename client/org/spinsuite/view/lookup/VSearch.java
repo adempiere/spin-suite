@@ -23,7 +23,6 @@ import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
-import org.spinsuite.view.LV_ProductSearch;
 import org.spinsuite.view.LV_StandardSearch;
 
 import android.app.Activity;
@@ -210,7 +209,7 @@ public class VSearch extends LinearLayout
     		} else if(m_field.ColumnName.equals("C_BPartner_ID")) {
     			//	not yet implemented
     		} else if(m_field.ColumnName.equals("M_Product_ID")) {
-    			clazz = LV_ProductSearch.class;
+    			//	not yet implemented
     		}
     		//	
     		Intent intent = new Intent(v_activity, clazz);

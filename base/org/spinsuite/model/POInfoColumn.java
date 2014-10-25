@@ -202,8 +202,6 @@ public class POInfoColumn implements Parcelable {
 		String bool = parcel.readString();
 		IsAlwaysUpdateable = (bool != null && bool.equals("Y"));
 		bool = parcel.readString();
-		IsAlwaysUpdateable = (bool != null && bool.equals("Y"));
-		bool = parcel.readString();
 		IsCentrallyMaintained = (bool != null && bool.equals("Y"));
 		bool = parcel.readString();
 		IsEncrypted = (bool != null && bool.equals("Y"));

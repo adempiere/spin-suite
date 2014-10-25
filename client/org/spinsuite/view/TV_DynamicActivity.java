@@ -72,6 +72,8 @@ public class TV_DynamicActivity extends TV_Base
 		}
 		if(param == null)
     		param = new ActivityParameter();
+		//	
+		Env.setContext(this, m_ActivityNo, "IsSOTrx", param.isSOTrx());
 		//	New Menu
         lookupMenu = new LookupMenu(getApplicationContext(), LookupMenu.ACTIVITY_MENU, null);
         //	Option

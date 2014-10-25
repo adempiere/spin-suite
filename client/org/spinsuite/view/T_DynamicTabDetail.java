@@ -24,6 +24,7 @@ import org.spinsuite.util.TabParameter;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -322,5 +323,12 @@ public class T_DynamicTabDetail extends Fragment
 		if(m_detailFragment != null) {
         	m_detailFragment.setIsParentModifying(isParentModifying);
         }		
+	}
+	
+	@Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		//	Call to Detail Fragment
+		if(m_detailFragment != null)
+			m_detailFragment.onActivityResult(requestCode, resultCode, data);
 	}
 }

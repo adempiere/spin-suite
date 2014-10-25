@@ -24,50 +24,53 @@ import android.os.Parcelable;
  */
 public class ActivityParameter implements Parcelable {
 
-	/**	From Record Identifier	*/
-	private int 			m_From_Record_ID = 0;
-	/**	From Table Identifier	*/
+	/**	From Record Identifier		*/
+	private int 			m_From_Record_ID 	= 0;
+	/**	From Table Identifier		*/
 	private int 			m_From_SPS_Table_ID = 0;
-	/**	Table Identifier		*/
-	private int 			m_AD_Table_ID = 0;
-	/**	Parent Identifier		*/
-	private int 			m_Parent_ID = 0;
-	/**	Action Menu				*/
-	private String  		m_Action = null;
-	/**	Form					*/
-	private int 			m_AD_Form_ID = 0;
-	/**	Process ID				*/
-	private int 			m_AD_Process_ID = 0;
-	/**	Activity Menu			*/
-	private int 			m_ActivityMenu_ID = 0;
-	/**	DEployment Type			*/
-	private String			m_DeploymentType = "D";
-	/**	Short Description		*/
-	private String 			m_Description = null;
-	/**	Order By				*/
-	private String			m_GroupByClause = null;
-	/**	Menu is Insert Record	*/
-	private String			m_IsInsertRecord = null;
-	/**	Is Summary Menu			*/
-	private boolean			m_IsSummary = false;
-	/**	Name Item				*/
-	private String  		m_Name = null;
-	/**	Order By				*/
-	private String			m_OrderByClause = null;
-	/**	Menu ID					*/
-	private int				m_SPS_Menu_ID = 0;
-	/**	Sync Menu				*/
-	private int 			m_SPS_SyncMenu_ID = 0;
-	/**	Table					*/
-	private int 			m_SPS_Table_ID = 0;
-	/**	Window					*/
-	private int				m_SPS_Window_ID = 0;
-	/**	Where					*/
-	private String			m_WhereClause = null;
-	/**	Window Number			*/
-	private int 			m_ActivityNo = 0;
-	/**	Is From Activity		*/
-	private boolean 		m_IsFromActivity = false;
+	/**	Table Identifier			*/
+	private int 			m_AD_Table_ID 		= 0;
+	/**	Parent Identifier			*/
+	private int 			m_Parent_ID 		= 0;
+	/**	Action Menu					*/
+	private String  		m_Action 			= null;
+	/**	Form						*/
+	private int 			m_AD_Form_ID 		= 0;
+	/**	Process ID					*/
+	private int 			m_AD_Process_ID 	= 0;
+	/**	Activity Menu				*/
+	private int 			m_ActivityMenu_ID 	= 0;
+	/**	DEployment Type				*/
+	private String			m_DeploymentType 	= "D";
+	/**	Short Description			*/
+	private String 			m_Description 		= null;
+	/**	Order By					*/
+	private String			m_GroupByClause 	= null;
+	/**	Menu is Insert Record		*/
+	private String			m_IsInsertRecord 	= null;
+	/**	Is Summary Menu				*/
+	private boolean			m_IsSummary 		= false;
+	/**	Name Item					*/
+	private String  		m_Name 				= null;
+	/**	Order By					*/
+	private String			m_OrderByClause 	= null;
+	/**	Menu ID						*/
+	private int				m_SPS_Menu_ID 		= 0;
+	/**	Sync Menu					*/
+	private int 			m_SPS_SyncMenu_ID 	= 0;
+	/**	Table						*/
+	private int 			m_SPS_Table_ID 		= 0;
+	/**	Window						*/
+	private int				m_SPS_Window_ID 	= 0;
+	/**	Where						*/
+	private String			m_WhereClause 		= null;
+	/**	Window Number				*/
+	private int 			m_ActivityNo 		= 0;
+	/**	Is From Activity			*/
+	private boolean 		m_IsFromActivity 	= false;
+	/**	Is Sales Order Transaction	*/
+	private boolean			m_IsSOTrx			= false;
+	
 	
 	@SuppressWarnings("rawtypes")
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -133,6 +136,7 @@ public class ActivityParameter implements Parcelable {
 		dest.writeString((m_IsSummary? "Y": "N"));
 		dest.writeInt(m_ActivityNo);
 		dest.writeString((m_IsFromActivity? "Y": "N"));
+		dest.writeString((m_IsSOTrx? "Y": "N"));
 	}
 	
 	public void readToParcel(Parcel parcel){
@@ -156,13 +160,16 @@ public class ActivityParameter implements Parcelable {
 		m_WhereClause = parcel.readString();
 		//	Read Write
 		m_IsInsertRecord = parcel.readString();
-		String summary = parcel.readString();
-		m_IsSummary = (summary != null 
-								&& summary.equals("Y"));
+		String booleanValue = parcel.readString();
+		m_IsSummary = (booleanValue != null 
+								&& booleanValue.equals("Y"));
 		m_ActivityNo = parcel.readInt();
-		String sIsFromActivity = parcel.readString();
-		m_IsFromActivity = (sIsFromActivity != null 
-								&& sIsFromActivity.equals("Y"));
+		booleanValue = parcel.readString();
+		m_IsFromActivity = (booleanValue != null 
+								&& booleanValue.equals("Y"));
+		booleanValue = parcel.readString();
+		m_IsSOTrx = (booleanValue != null 
+								&& booleanValue.equals("Y"));
 	}
 	
 	/**
@@ -194,6 +201,7 @@ public class ActivityParameter implements Parcelable {
 		//	Read Write
 		setInsertRecord(from.isInsertRecord());
 		setIsSummary(from.isSummary());
+		setIsSOTrx(from.isSOTrx());
 	}
 	
 	/**
@@ -214,6 +222,26 @@ public class ActivityParameter implements Parcelable {
 	 */
 	public int getActivityMenu_ID(){
 		return m_ActivityMenu_ID;
+	}
+	
+	/**
+	 * Get Sales Order Transaction
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 23/10/2014, 21:03:24
+	 * @return
+	 * @return boolean
+	 */
+	public boolean isSOTrx() {
+		return m_IsSOTrx;
+	}
+	
+	/**
+	 * Set Sales Order Transaction
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 23/10/2014, 21:04:08
+	 * @param m_IsSOTrx
+	 * @return void
+	 */
+	public void setIsSOTrx(boolean m_IsSOTrx) {
+		this.m_IsSOTrx = m_IsSOTrx;
 	}
 	
 	/**

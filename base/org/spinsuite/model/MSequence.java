@@ -16,11 +16,14 @@
 package org.spinsuite.model;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
+import org.spinsuite.view.lookup.GridTab;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -277,5 +280,23 @@ public class MSequence extends X_AD_Sequence {
 		//	
 		return documentNo;
 	}	//	getDocumentNo
+	
+	/**
+	 * Get preliminary document no by year
+	 * @param tab
+	 * @param AD_Sequence_ID
+	 * @param dateColumn
+	 * @return Preliminary document no
+	 */
+	public static String getPreliminaryNoByYear(GridTab tab, int AD_Sequence_ID, String dateColumn, DB conn) {
+		Date d = (Date)tab.getValue(dateColumn);
+		if (d == null)
+			d = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+		String calendarYear = sdf.format(d);
+		String sql = "select CurrentNext From AD_Sequence_No Where AD_Sequence_ID = ? and CalendarYear = ?";
+
+		return DB.getSQLValueString(tab.getCtx(), sql, conn, String.valueOf(AD_Sequence_ID), String.valueOf(calendarYear));
+	}
 
 }

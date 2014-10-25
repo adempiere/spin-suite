@@ -43,7 +43,7 @@ import org.spinsuite.view.lookup.GridTab;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.InfoTab;
 import org.spinsuite.view.lookup.Lookup;
-import org.spinsuite.view.lookup.LookupPaymentRule;
+import org.spinsuite.view.lookup.VLookupButtonPaymentRule;
 import org.spinsuite.view.lookup.VLookupButton;
 import org.spinsuite.view.lookup.VLookupButtonDocAction;
 import org.spinsuite.view.lookup.VLookupCheckBox;
@@ -131,29 +131,29 @@ public class T_DynamicTab extends Fragment
 	protected static final int 			DELETED 			= 4;
 	
 	/**	Option Menu Item			*/
-	private final int O_SHARE			= 1;
-	private final int O_DELETE			= 2;
-	private final int O_ATTACH			= 3;
-	private final int O_VIEW_ATTACH		= 4;
+	private final int O_SHARE								= 1;
+	private final int O_DELETE								= 2;
+	private final int O_ATTACH								= 3;
+	private final int O_VIEW_ATTACH							= 4;
 	
 	/**	Option Menu					*/
-	private MenuItem mi_Search 	= null;
-	private MenuItem mi_Edit 	= null;
-	private MenuItem mi_Add 	= null;
-	private MenuItem mi_More 	= null;
-	private MenuItem mi_Cancel 	= null;
-	private MenuItem mi_Save 	= null;
+	private MenuItem mi_Search 								= null;
+	private MenuItem mi_Edit 								= null;
+	private MenuItem mi_Add 								= null;
+	private MenuItem mi_More 								= null;
+	private MenuItem mi_Cancel 								= null;
+	private MenuItem mi_Save 								= null;
 	
 	/**	Results						*/
-	private static final int 		ACTION_TAKE_PHOTO	= 3;
-	private static final String 	JPEG_FILE_SUFFIX 	= ".jpg";
-	private static String 			TMP_ATTACH_NAME 	= null;
+	private static final int 		ACTION_TAKE_PHOTO		= 3;
+	private static final String 	JPEG_FILE_SUFFIX 		= ".jpg";
+	private static String 			TMP_ATTACH_NAME 		= null;
 	/**	Images						*/
-	private static final int 		IMG_TARGET_W		= 640;
-	private static final int 		IMG_TARGET_H		= 480;
+	private static final int 		IMG_TARGET_W			= 640;
+	private static final int 		IMG_TARGET_H			= 480;
 	/**	Constants Type Save			*/
-	private static final String 	RECORD_SAVE			= "RS";
-	private static final String 	ATTACHMENT_SAVE		= "AS";
+	private static final String 	RECORD_SAVE				= "RS";
+	private static final String 	ATTACHMENT_SAVE			= "AS";
 	
 	
 	@Override
@@ -191,9 +191,6 @@ public class T_DynamicTab extends Fragment
     		public void onFieldEvent(GridField mField) {
     			LogM.log(getActivity(), T_DynamicTab.class, 
     					Level.FINE, "Field Event = " + mField.getColumnName());
-    			//	Change Display Dependent
-    			if(m_IsLoadDataOk)
-    				mGridTab.changeDisplayDepending(mField);
     			//	
     			if(m_IsModifying) {
         			//	Process Callout
@@ -216,6 +213,9 @@ public class T_DynamicTab extends Fragment
     				//	
     				return;
     			}
+    			//	Change Display Dependent
+    			if(m_IsLoadDataOk)
+    				mGridTab.changeDisplayDepending(mField);
     		}
 		};
     	//	Init Load
@@ -233,6 +233,15 @@ public class T_DynamicTab extends Fragment
 		//	No Action
 		if(mField.getColumnName().equals("DocAction"))
 			return;
+		//	Process Document No
+		//if(mField.getColumnName().equals("C_Doctype_ID") 
+			//	|| mField.getColumnName().equals("C_DocTypeTarget_ID")) {
+			//processDocumentNo(mField);
+			//return;
+		//}
+		//	Verify if is changed
+		if(!mField.isChanged())
+			return;
 		//	Log
 		LogM.log(getActivity(), T_DynamicTab.class, 
 				Level.FINE, "processCallout(" + mField.getColumnName() + ")");
@@ -243,6 +252,28 @@ public class T_DynamicTab extends Fragment
 				&& retValue.length() != 0)
 			Msg.toastMsg(getActivity(), getString(R.string.msg_Error) + ": " + retValue);
 	}
+	
+	/**
+	 * Process Document No
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 23/10/2014, 10:22:37
+	 * @param mField
+	 * @return void
+	 */
+	/*private void processDocumentNo(GridField mField) {
+		//	Verify Value
+		int m_C_DocType_ID = mField.getValueAsInt();
+		if(m_C_DocType_ID <= 0)
+			return;
+		//	Verify if Exists Column
+		GridField fieldDocument = mGridTab.getField("DocumentNo");
+		if(fieldDocument == null)
+			return;
+		//	Get New Document No
+		String seqNo = MSequence.getDocumentNo(getActivity(), 
+				m_C_DocType_ID, tabInfo.getTableName(), true, null);
+		//	
+		mGridTab.setValue("DocumentNo", seqNo);
+	}*/
 	
 	/**
 	 * Reload depending field
@@ -1047,7 +1078,7 @@ public class T_DynamicTab extends Fragment
 					lookupButton = new VLookupButtonDocAction(getActivity(), field, (DocAction) mGridTab.getPO());
 				} else if(field.ColumnName.equals("PaymentRule")) {
 					//	Payment Rule Button
-					lookupButton = new LookupPaymentRule(getActivity(), field, tabParam);
+					lookupButton = new VLookupButtonPaymentRule(getActivity(), field, tabParam);
 				} else {
 					lookupButton = new VLookupButton(getActivity(), field, tabParam);
 				}

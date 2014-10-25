@@ -89,7 +89,7 @@ public class LookupMenu {
 					"m.SPS_Table_ID, m.WhereClause, m.GroupByClause, m.OrderByClause, " +
 					"tn.Parent_ID, m.IsSummary, m.DeploymentType, m.AD_Form_ID, m.SPS_Window_ID, m.AD_Process_ID, " +
 					"m.ActivityMenu_ID, COALESCE(m.IsReadWrite, pa.IsReadWrite, wa.IsReadWrite) IsReadWrite, " +
-					"m.IsInsertRecord, tn.SeqNo " +
+					"m.IsInsertRecord, tn.SeqNo, COALESCE(m.IsSOTrx, 'N') IsSOTrx " +
 					"FROM SPS_Menu m " +
 					"INNER JOIN AD_Tree t ON(t.AD_Table_ID = 53518) " +
 					"LEFT JOIN AD_TreeNode tn ON(tn.AD_Tree_ID = t.AD_Tree_ID AND tn.Node_ID = m.SPS_Menu_ID) " +
@@ -102,7 +102,7 @@ public class LookupMenu {
 					"m.SPS_Table_ID, m.WhereClause, m.GroupByClause, m.OrderByClause, " +
 					"tn.Parent_ID, m.IsSummary, m.DeploymentType, m.AD_Form_ID, m.SPS_Window_ID, m.AD_Process_ID, " +
 					"m.ActivityMenu_ID, COALESCE(m.IsReadWrite, pa.IsReadWrite, wa.IsReadWrite) IsReadWrite, " +
-					"m.IsInsertRecord, tn.SeqNo " +
+					"m.IsInsertRecord, tn.SeqNo, COALESCE(m.IsSOTrx, 'N') IsSOTrx " +
 					"FROM SPS_Menu m " +
 					"INNER JOIN AD_Tree t ON(t.AD_Table_ID = 53518) " +
 					"LEFT JOIN SPS_Menu_Trl mt ON(mt.SPS_Menu_ID = m.SPS_Menu_ID AND mt.AD_Language = '").append(language).append("') " +
@@ -162,7 +162,8 @@ public class LookupMenu {
 						rs.getInt(i++), 
 						rs.getString(i++), 
 						rs.getString(i++),
-						rs.getInt(i++)));
+						rs.getInt(i++), 
+						rs.getString(i++).equals("Y")));
 			}while(rs.moveToNext());
 			//	Is Loaded
 			loaded = true;

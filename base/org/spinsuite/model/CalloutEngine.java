@@ -48,8 +48,8 @@ public class CalloutEngine implements Callout {
 	}
 
 	/** Logger					*/
-	private GridTab m_mTab;
-	private GridField m_mField;
+	private GridTab 	m_mTab;
+	private GridField 	m_mField;
 
 	/**
 	 *	Start Callout.

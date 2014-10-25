@@ -382,14 +382,31 @@ public class GridTab implements Evaluatee {
 		int m_Record_ID = model.getID();
 		//	
 		for (GridField vField: m_fields) {
-    		vField.setValue(model.get_Value(vField.getColumnIndex()));
     		//	
     		if(m_Record_ID <= 0) {
-				if(vField.isParent()
+    			//	Set value to parent field
+				if(m_TabInfo.getTabLevel() > 0 
+						|| vField.isParent()
 						|| vField.getSPS_Column_ID() == m_TabInfo.getTabSPS_Column_ID()) {
 					vField.setValue(DisplayType.getContextValue(m_ctx, 
 							m_TabParam.getActivityNo(), m_TabParam.getParentTabNo(), vField.getField()));
+				} else {
+	    			//	Set Default Value
+	    			String defaultValue = vField.getDefaultValue();
+	    			Object value = null;
+	    			if(defaultValue != null
+	    					&& defaultValue.length() > 0) {
+	    				value = DisplayType.parseValue(
+	    						Env.parseContext(m_ctx, defaultValue, false), vField.getDisplayType());
+	    			} else {
+	    				value = model.get_Value(vField.getColumnIndex());
+	    			}
+	    			//	Set Value
+	    			vField.setValue(value);
 				}
+			} else {
+				//	Set Value from Model
+				vField.setValue(model.get_Value(vField.getColumnIndex()));
 			}
     		//	Set Current Values
     		DisplayType.setContextValue(m_ctx, m_TabParam.getActivityNo(), 
@@ -574,7 +591,7 @@ public class GridTab implements Evaluatee {
     	for (GridField vField: m_fields) {
     		if((vField.isMandatory()
     				|| vField.isParent()) && vField.isEmpty()) {
-    			m_ErrorMsg = "@MustFillField@ \"" + vField.getName() + "\"";
+    			m_ErrorMsg = "@MustFillField@ \"@" + vField.getName() + "@\"";
     			//	Set ok to false
     			ok = false;
     			break;
@@ -666,6 +683,19 @@ public class GridTab implements Evaluatee {
      */
     public int getParent_Record_ID() {
     	return m_Parent_Record_ID;
+    }
+    
+    /**
+     * Get Table Identifier
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/10/2014, 22:55:45
+     * @return
+     * @return int
+     */
+    public int getSPS_Table_ID() {
+    	if(m_TabInfo != null)
+    		return m_TabInfo.getSPS_Table_ID();
+    	//	Default
+    	return 0;
     }
     
     /**
@@ -847,6 +877,16 @@ public class GridTab implements Evaluatee {
 	@Override
 	public String get_ValueAsString(String variableName) {
 		return Env.getContext(m_ctx, m_TabParam.getActivityNo(), variableName);
+	}
+	
+	/**
+	 * Get Context
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/10/2014, 21:05:41
+	 * @return
+	 * @return Context
+	 */
+	public Context getCtx() {
+		return m_ctx;
 	}
 	
 }

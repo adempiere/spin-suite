@@ -169,7 +169,8 @@ public class Login extends TV_Base implements I_CancelOk {
 				//	Set Country Code
 				String language = Env.getAD_Language(this);
 				//	
-				if(language == null)
+				if(language == null
+						|| language.length() < 5)
 					language = Env.BASE_LANGUAGE;
 				//	
 				String countryCode = language.substring(3);
@@ -192,10 +193,10 @@ public class Login extends TV_Base implements I_CancelOk {
 					//	Start Activity
 					Intent intent = new Intent(this, LV_Menu.class);
 					startActivity(intent);
+					//	Valid Auto Login
+					if(Env.isAutoLogin(this))
+						finish();
 				}
-				//	Valid Auto Login
-				if(Env.isAutoLogin(this))
-					finish();
 			}
 		}
 		return true;
@@ -285,6 +286,9 @@ public class Login extends TV_Base implements I_CancelOk {
 			}
 			//	Hide dialog
 			v_PDialog.dismiss();
+			//	Valid Auto Login
+			if(Env.isAutoLogin(v_activity))
+				finish();
 		}
 	}
 }
