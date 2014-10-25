@@ -45,6 +45,7 @@ public class T_Login_Init extends DialogFragment implements OnClickListener{
 	public T_Login_Init(T_Connection p_Con) {
 		m_T_Connection = p_Con;
 	}
+	@SuppressLint("InflateParams")
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -78,8 +79,6 @@ public class T_Login_Init extends DialogFragment implements OnClickListener{
 			if (!m_ValidUser.equals("") && !m_ValidPass.equals(""))
 				m_T_Connection.startSynchronization(m_ValidUser, m_ValidPass);
 		}		
-		//Env.setContext(this.getActivity(), "#SUser", et_User.getText().toString());
-		//Env.setContext(this.getActivity(), "#SPass", et_PassWord.getText().toString());
 	}
 	
 	@Override
