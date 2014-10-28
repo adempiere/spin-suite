@@ -15,8 +15,12 @@
  *************************************************************************************/
 package org.spinsuite.model;
 
+import java.math.BigDecimal;
+import java.util.logging.Level;
+
 import org.spinsuite.base.DB;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.LogM;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -74,5 +78,53 @@ public class MOrderLine extends X_C_OrderLine {
 		//	
 		return ok;
 	}
+	
+	/**
+	 * 	Get Order Unreserved Qty
+	 *	@param ctx context
+	 *	@param M_Warehouse_ID wh
+	 *	@param M_Product_ID product
+	 *	@param M_AttributeSetInstance_ID asi
+	 *	@param excludeC_OrderLine_ID exclude C_OrderLine_ID
+	 *	@return Unreserved Qty
+	 */
+	public static BigDecimal getNotReserved (Context ctx, int M_Warehouse_ID, 
+		int M_Product_ID, int M_AttributeSetInstance_ID, int excludeC_OrderLine_ID) {
+		BigDecimal retValue = Env.ZERO;
+		String sql = "SELECT SUM(QtyOrdered-QtyDelivered-QtyReserved) "
+			+ "FROM C_OrderLine ol"
+			+ " INNER JOIN C_Order o ON (ol.C_Order_ID=o.C_Order_ID) "
+			+ "WHERE ol.M_Warehouse_ID=?"	//	#1
+			+ " AND M_Product_ID=?"			//	#2
+			+ " AND o.IsSOTrx='Y' AND o.DocStatus='DR'"
+			+ " AND QtyOrdered-QtyDelivered-QtyReserved<>0"
+			+ " AND ol.C_OrderLine_ID<>?";
+		if (M_AttributeSetInstance_ID != 0)
+			sql += " AND M_AttributeSetInstance_ID=?";
+		//	
+		DB conn = new DB(ctx);
+		//	Compile SQL
+		conn.compileQuery(sql);
+		//	Add Parameters
+		conn.addInt(M_Warehouse_ID);
+		conn.addInt(M_Product_ID);
+		conn.addInt(excludeC_OrderLine_ID);
+		if(M_AttributeSetInstance_ID != 0)
+			conn.addInt(M_AttributeSetInstance_ID);
+		//	
+		try {
+			DB.loadConnection(conn, DB.READ_ONLY);
+			//	
+			Cursor rs = conn.querySQL();
+			if (rs.moveToFirst())
+				retValue = new BigDecimal(rs.getDouble(0));
+		} catch (Exception e) {
+			LogM.log(ctx, MOrderLine.class, Level.SEVERE, sql, e);
+		} finally {
+			DB.closeConnection(conn);
+		}
+		//	
+		return retValue;
+	}	//	getNotReserved
 	
 }

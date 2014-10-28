@@ -14,7 +14,6 @@
  * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
  *************************************************************************************/
 package org.spinsuite.model;
-
 import org.spinsuite.base.DB;
 
 import android.content.Context;
@@ -47,5 +46,18 @@ public class MPriceList extends X_M_PriceList {
 	public MPriceList(Context ctx, Cursor rs, DB conn) {
 		super(ctx, rs, conn);
 	}
+	
+	/**
+	 * 	Get Standard Currency Precision
+	 *	@param ctx context 
+	 *	@param M_PriceList_ID price list
+	 *	@return precision
+	 */
+	public static int getStandardPrecision (Context ctx, int M_PriceList_ID) {
+		return DB.getSQLValue(ctx, "SELECT c.StdPrecision "
+				+ "FROM M_PriceList pl "
+				+ "INNER JOIN C_Currency c ON(c.C_Currency_ID = pl.C_Currency_ID) "
+				+ "WHERE pl.M_PriceList_ID = ?", String.valueOf(M_PriceList_ID));
+	}	//	getStandardPrecision
 
 }

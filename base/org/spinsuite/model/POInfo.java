@@ -297,7 +297,7 @@ public class POInfo {
 	 * @return
 	 * @return int
 	 */
-	public int getColumnLength() {
+	public int getColumnCount() {
 		if(m_columns != null) {
 			return m_columns.length;
 		}
@@ -779,5 +779,21 @@ public class POInfo {
 			return m_columns[index];
 		}
 		return null;
+	}
+	
+	/**
+	 * Build select clause
+	 * @return stringbuffer
+	 */
+	public StringBuffer buildSelect() {
+		StringBuffer sql = new StringBuffer("SELECT ");
+		int size = getColumnCount();
+		for (int i = 0; i < size; i++) {
+			if (i != 0)
+				sql.append(",");
+			sql.append(getColumnSQL(i));	//	Normal and Virtual Column
+		}
+		sql.append(" FROM ").append(getTableName());
+		return sql;
 	}
 }

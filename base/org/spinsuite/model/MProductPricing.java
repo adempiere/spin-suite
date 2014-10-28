@@ -53,7 +53,8 @@ public class MProductPricing
 			m_Qty = Qty;
 		m_isSOTrx = isSOTrx;
 		int thereAreVendorBreakRecords = DB.getSQLValue(ctx, 
-				"SELECT count(M_Product_ID) FROM M_ProductPriceVendorBreak WHERE M_Product_ID=? AND C_BPartner_ID=?", 
+				"SELECT count(M_Product_ID) FROM M_ProductPriceVendorBreak "
+				+ "WHERE M_Product_ID=? AND C_BPartner_ID=?", 
 						new String[] {String.valueOf(m_M_Product_ID), String.valueOf(m_C_BPartner_ID)});
 		m_useVendorBreak = thereAreVendorBreakRecords > 0;
 	}	//	MProductPricing
@@ -147,9 +148,9 @@ public class MProductPricing
 		if (m_M_Product_ID == 0 || m_M_PriceList_Version_ID == 0)
 			return false;
 		//
-		String sql = "SELECT bomPriceStd(p.M_Product_ID,pv.M_PriceList_Version_ID) AS PriceStd,"	//	1
-			+ " bomPriceList(p.M_Product_ID,pv.M_PriceList_Version_ID) AS PriceList,"		//	2
-			+ " bomPriceLimit(p.M_Product_ID,pv.M_PriceList_Version_ID) AS PriceLimit,"	//	3
+		String sql = "SELECT pp.PriceStd,"	//	1
+			+ " pp.PriceList,"		//	2
+			+ " pp.PriceLimit,"	//	3
 			+ " p.C_UOM_ID,"
 			+ "(strftime('%s',  pv.ValidFrom)*1000) ValidFrom, "
 			+ "pl.C_Currency_ID,p.M_Product_Category_ID,"	//	4..7
@@ -214,9 +215,9 @@ public class MProductPricing
 		}
 
 		//	Get Prices for Price List
-		String sql = "SELECT bomPriceStd(p.M_Product_ID,pv.M_PriceList_Version_ID) AS PriceStd,"	//	1
-			+ " bomPriceList(p.M_Product_ID,pv.M_PriceList_Version_ID) AS PriceList,"		//	2
-			+ " bomPriceLimit(p.M_Product_ID,pv.M_PriceList_Version_ID) AS PriceLimit,"	//	3
+		String sql = "SELECT pp.PriceStd,"	//	1
+			+ " pp.PriceList,"		//	2
+			+ " pp.PriceLimit,"	//	3
 			+ " p.C_UOM_ID,"
 			+ "(strftime('%s',  pv.ValidFrom)*1000) ValidFrom, "
 			+ "pl.C_Currency_ID,p.M_Product_Category_ID,pl.EnforcePriceLimit "	// 4..8
@@ -287,9 +288,9 @@ public class MProductPricing
 		if (m_M_Product_ID == 0 || m_M_PriceList_ID == 0)
 			return false;
 		//
-		String sql = "SELECT bomPriceStd(p.M_Product_ID,pv.M_PriceList_Version_ID) AS PriceStd,"	//	1
-			+ " bomPriceList(p.M_Product_ID,pv.M_PriceList_Version_ID) AS PriceList,"		//	2
-			+ " bomPriceLimit(p.M_Product_ID,pv.M_PriceList_Version_ID) AS PriceLimit,"	//	3
+		String sql = "SELECT pp.PriceStd,"	//	1
+			+ " pp.PriceList,"		//	2
+			+ " pp.PriceLimit,"	//	3
 			+ " p.C_UOM_ID,"
 			+ "(strftime('%s',  pv.ValidFrom)*1000) ValidFrom, "
 			+ "pl.C_Currency_ID,p.M_Product_Category_ID,"	//	4..7

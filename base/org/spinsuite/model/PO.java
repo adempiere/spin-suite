@@ -106,7 +106,7 @@ public abstract class PO {
 		if (m_TableInfo == null || m_TableInfo.getTableName() == null)
 			throw new IllegalArgumentException ("Invalid PO Info - " + m_TableInfo);
 		//
-		int size = m_TableInfo.getColumnLength();
+		int size = m_TableInfo.getColumnCount();
 		m_currentValues = new Object[size];
 		m_OldValues = new Object[size];
 
@@ -140,6 +140,19 @@ public abstract class PO {
 	 */
 	public PO(Context ctx, String tableName, int ID, DB conn) {
 		this(ctx, tableName, new int[]{ID}, null, conn);
+	}
+	
+	/**
+	 * Used for Generic PO
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/10/2014, 20:19:03
+	 * @param ctx
+	 * @param tableName
+	 * @param rs
+	 * @param conn
+	 */
+	public PO(Context ctx, String tableName, Cursor rs, DB conn) {
+		this(ctx, tableName, new int[]{0}, rs, conn);
 	}
 	
 	/**
@@ -277,7 +290,7 @@ public abstract class PO {
 		m_OldValues = m_currentValues;
 		if(deleteOld) {
 			isNew = true;
-			m_currentValues = new Object[m_TableInfo.getColumnLength()];
+			m_currentValues = new Object[m_TableInfo.getColumnCount()];
 			m_OldIDs = m_IDs;
 			m_OldKeyColumns = m_KeyColumns;
 		}
@@ -324,7 +337,7 @@ public abstract class PO {
 	private boolean loadDataQuery() {
 		boolean ok = false;
 		StringBuffer sql = new StringBuffer("SELECT ");
-		for(int i = 0; i < m_TableInfo.getColumnLength(); i++) {
+		for(int i = 0; i < m_TableInfo.getColumnCount(); i++) {
 			POInfoColumn column = m_TableInfo.getPOInfoColumn(i);
 			if (i != 0)
 				sql.append(",");
@@ -372,7 +385,7 @@ public abstract class PO {
 		//	For Parse Date
 		SimpleDateFormat sdf = DisplayType.getTimestampFormat_Default();
 		//	Iterate
-		for(int i = 0; i < m_TableInfo.getColumnLength(); i++) {
+		for(int i = 0; i < m_TableInfo.getColumnCount(); i++) {
 			//	Get Column
 			POInfoColumn column = m_TableInfo.getPOInfoColumn(i);
 			int displayType = column.DisplayType;
@@ -431,7 +444,7 @@ public abstract class PO {
 		boolean ok = false;
 		try {
 			//	Iterate
-			for(int i = 0; i < m_TableInfo.getColumnLength(); i++) {
+			for(int i = 0; i < m_TableInfo.getColumnCount(); i++) {
 				//	Get Column
 				POInfoColumn column = m_TableInfo.getPOInfoColumn(i);
 				m_currentValues[i] = parseValue(column, i, false, false);
@@ -612,6 +625,35 @@ public abstract class PO {
 		LogM.log(getCtx(), getClass(), Level.FINE, "columnName = " + columnName);
 		return get_Value(index);
 	}
+	
+	/**
+	 *  Is Value Changed
+	 *  @param index index
+	 *  @return true if changed
+	 */
+	public final boolean is_ValueChanged (int index) {
+		if (index < 0 || index >= m_TableInfo.getColumnCount()) {
+			LogM.log(getCtx(), getClass(), Level.WARNING, "Index invalid - " + index);
+			return false;
+		}
+		if (m_currentValues[index] == null)
+			return false;
+		return !m_currentValues[index].equals(m_OldValues[index]);
+	}   //  is_ValueChanged
+
+	/**
+	 *  Is Value Changed
+	 *  @param columnName column name
+	 *  @return true if changed
+	 */
+	public final boolean is_ValueChanged (String columnName) {
+		int index = getColumnIndex(columnName);
+		if (index < 0) {
+			LogM.log(getCtx(), getClass(), Level.WARNING, "Column not found - " + columnName);
+			return false;
+		}
+		return is_ValueChanged (index);
+	}   //  is_ValueChanged
 	
 	/**
 	 * Get value with index
@@ -826,7 +868,7 @@ public abstract class PO {
 		m_OldIDs = m_IDs;
 		m_OldKeyColumns = m_KeyColumns;
 		m_IDs = new int[]{0};
-		int size = m_TableInfo.getColumnLength();
+		int size = m_TableInfo.getColumnCount();
 		m_currentValues = new Object[size];
 		//	Load default Values
 		loadDefaultValues();
@@ -851,7 +893,7 @@ public abstract class PO {
 		ArrayList<Object> listValues = new ArrayList<Object>();
 		//	
 		try{
-			for (int i = 0; i < m_TableInfo.getColumnLength(); i++) {
+			for (int i = 0; i < m_TableInfo.getColumnCount(); i++) {
 				POInfoColumn column = m_TableInfo.getPOInfoColumn(i);
 				if(!column.isColumnSQL()) {
 					if(i > 0) {
@@ -903,7 +945,7 @@ public abstract class PO {
 		ArrayList<Object> listValues = new ArrayList<Object>();
 		//	
 		try{
-			for (int i = 0; i < m_TableInfo.getColumnLength(); i++) {
+			for (int i = 0; i < m_TableInfo.getColumnCount(); i++) {
 				POInfoColumn column = m_TableInfo.getPOInfoColumn(i);
 				//	Valid SQL or Default Columns
 				if(column.isColumnSQL()
@@ -1112,7 +1154,7 @@ public abstract class PO {
 		if(conn.isOpen()) {
 			if(handConnection) {
 				LogM.log(getCtx(), getClass(), Level.FINE, "handConnection");
-				if(conn.getBd().inTransaction())
+				if(conn.getDB().inTransaction())
 					conn.endTransaction();
 				conn.close();
 			}
