@@ -150,14 +150,14 @@ public class Tax {
 					String.valueOf(shipC_BPartner_Location_ID)});
 			boolean found = false;
 			if (rs.moveToFirst()) {
-				C_TaxCategory_ID = rs.getInt (1);
-				billFromC_Location_ID = rs.getInt (2);
-				billToC_Location_ID = rs.getInt (3);
-				IsSOTaxExempt = rs.getString (4);
-				IsPOTaxExempt = rs.getString (5);
+				C_TaxCategory_ID = rs.getInt (0);
+				billFromC_Location_ID = rs.getInt (1);
+				billToC_Location_ID = rs.getInt (2);
+				IsSOTaxExempt = rs.getString (3);
+				IsPOTaxExempt = rs.getString (4);
 				IsTaxExempt = IsSOTrx ? IsSOTaxExempt : IsPOTaxExempt;
-				shipFromC_Location_ID = rs.getInt (6);
-				shipToC_Location_ID = rs.getInt (7);
+				shipFromC_Location_ID = rs.getInt (5);
+				shipToC_Location_ID = rs.getInt (6);
 				found = true;
 			}
 			//
@@ -262,14 +262,14 @@ public class Tax {
 			
 			boolean found = false;
 			if (rs.moveToFirst()) {
-				C_TaxCategory_ID = rs.getInt(1);
-				billFromC_Location_ID = rs.getInt(2);
-				billToC_Location_ID = rs.getInt(3);
-				IsSOTaxExempt = rs.getString(4);
-				IsPOTaxExempt = rs.getString(5);
+				C_TaxCategory_ID = rs.getInt(0);
+				billFromC_Location_ID = rs.getInt(1);
+				billToC_Location_ID = rs.getInt(2);
+				IsSOTaxExempt = rs.getString(3);
+				IsPOTaxExempt = rs.getString(4);
 				IsTaxExempt = IsSOTrx ? IsSOTaxExempt : IsPOTaxExempt;
-				shipFromC_Location_ID = rs.getInt(6);
-				shipToC_Location_ID = rs.getInt(7);
+				shipFromC_Location_ID = rs.getInt(5);
+				shipToC_Location_ID = rs.getInt(6);
 				found = true;
 			}
 			//
@@ -310,7 +310,7 @@ public class Tax {
 			}
 			LogM.log(ctx, Tax.class, Level.FINE, "getProduct - C_TaxCategory_ID=" + C_TaxCategory_ID);
 
-		//	AD_Org_ID					->	billFromC_Location_ID
+			//	AD_Org_ID	->	billFromC_Location_ID
 			variable = "AD_Org_ID";
 			sql = "SELECT C_Location_ID FROM AD_OrgInfo WHERE AD_Org_ID=?";
 			billFromC_Location_ID = DB.getSQLValueEx(ctx, sql, conn, String.valueOf(AD_Org_ID));
@@ -320,7 +320,7 @@ public class Tax {
 				throw new TaxCriteriaNotFoundException(variable, AD_Org_ID);
 			}
 
-		//	billC_BPartner_Location_ID  ->	billToC_Location_ID
+			//	billC_BPartner_Location_ID  ->	billToC_Location_ID
 			variable = "BillTo_ID";
 			sql = "SELECT l.C_Location_ID, b.IsTaxExempt, b.IsPOTaxExempt "
 				+ " FROM C_BPartner_Location l"
@@ -329,9 +329,9 @@ public class Tax {
 			rs = conn.querySQL(sql, new String[]{String.valueOf(billC_BPartner_Location_ID)});
 			found = false;
 			if (rs.moveToFirst()) {
-				billToC_Location_ID = rs.getInt(1);
-				IsSOTaxExempt = rs.getString(2);
-				IsPOTaxExempt = rs.getString(3);
+				billToC_Location_ID = rs.getInt(0);
+				IsSOTaxExempt = rs.getString(1);
+				IsPOTaxExempt = rs.getString(2);
 				IsTaxExempt = IsSOTrx ? IsSOTaxExempt : IsPOTaxExempt;
 				found = true;
 			}

@@ -169,13 +169,16 @@ public class MProductPricing
 		try
 		{
 			DB.loadConnection(conn, DB.READ_ONLY);
-			rs = conn.querySQL(sql.toString(), new String[]{String.valueOf(m_M_Product_ID), String.valueOf(m_M_PriceList_Version_ID)});
+			conn.compileQuery(sql.toString());
+			conn.addInt(m_M_Product_ID);
+			conn.addInt(m_M_PriceList_Version_ID);
+			rs = conn.querySQL();
 			if (rs.moveToFirst())
 			{
 				//	Prices
 				double m_DoublePriceStd = rs.getDouble(rs.getColumnIndex("PriceStd"));
 				m_PriceStd = new BigDecimal(m_DoublePriceStd);
-				double m_DoublePriceList = rs.getDouble(rs.getColumnIndex(""));
+				double m_DoublePriceList = rs.getDouble(rs.getColumnIndex("PriceList"));
 				m_PriceList = new BigDecimal(m_DoublePriceList);
 				double m_DoublePriceLimit = rs.getDouble(rs.getColumnIndex("PriceLimit"));
 				m_PriceLimit = new BigDecimal(m_DoublePriceLimit);
@@ -238,7 +241,10 @@ public class MProductPricing
 		try
 		{
 			DB.loadConnection(conn, DB.READ_ONLY);
-			rs = conn.querySQL(sql.toString(), new String[]{String.valueOf(m_M_Product_ID), String.valueOf(m_M_PriceList_ID)});
+			conn.compileQuery(sql.toString());
+			conn.addInt(m_M_Product_ID);
+			conn.addInt(m_M_PriceList_ID);
+			rs = conn.querySQL();
 			while (!m_calculated && rs.moveToFirst())
 			{
 				long longDate = rs.getLong(rs.getColumnIndex("ValidFrom"));
@@ -250,7 +256,7 @@ public class MProductPricing
 					//	Prices
 					double m_DoublePriceStd = rs.getDouble(rs.getColumnIndex("PriceStd"));
 					m_PriceStd = new BigDecimal(m_DoublePriceStd);
-					double m_DoublePriceList = rs.getDouble(rs.getColumnIndex(""));
+					double m_DoublePriceList = rs.getDouble(rs.getColumnIndex("PriceList"));
 					m_PriceList = new BigDecimal(m_DoublePriceList);
 					double m_DoublePriceLimit = rs.getDouble(rs.getColumnIndex("PriceLimit"));
 					m_PriceLimit = new BigDecimal(m_DoublePriceLimit);
@@ -259,7 +265,6 @@ public class MProductPricing
 					m_C_Currency_ID = rs.getInt(rs.getColumnIndex("C_Currency_ID"));
 					m_M_Product_Category_ID = rs.getInt(rs.getColumnIndex("M_Product_Category_ID"));
 					m_enforcePriceLimit = "Y".equals(rs.getString(rs.getColumnIndex("EnforcePriceLimit")));
-					m_isTaxIncluded = "Y".equals(rs.getString(rs.getColumnIndex("IsTaxIncluded")));
 					//
 					LogM.log(m_ctx, getClass(), Level.FINE, 
 							"M_PriceList_ID=" + m_M_PriceList_ID 
@@ -313,7 +318,10 @@ public class MProductPricing
 		try
 		{
 			DB.loadConnection(conn, DB.READ_ONLY);
-			rs = conn.querySQL(sql.toString(), new String[]{String.valueOf(m_M_Product_ID), String.valueOf(m_M_PriceList_ID)});
+			conn.compileQuery(sql.toString());
+			conn.addInt(m_M_Product_ID);
+			conn.addInt(m_M_PriceList_ID);
+			rs = conn.querySQL();
 			while (!m_calculated && rs.moveToFirst())
 			{
 				long longDate = rs.getLong(rs.getColumnIndex("ValidFrom"));
@@ -325,7 +333,7 @@ public class MProductPricing
 					//	Prices
 					double m_DoublePriceStd = rs.getDouble(rs.getColumnIndex("PriceStd"));
 					m_PriceStd = new BigDecimal(m_DoublePriceStd);
-					double m_DoublePriceList = rs.getDouble(rs.getColumnIndex(""));
+					double m_DoublePriceList = rs.getDouble(rs.getColumnIndex("PriceList"));
 					m_PriceList = new BigDecimal(m_DoublePriceList);
 					double m_DoublePriceLimit = rs.getDouble(rs.getColumnIndex("PriceLimit"));
 					m_PriceLimit = new BigDecimal(m_DoublePriceLimit);
@@ -389,8 +397,11 @@ public class MProductPricing
 		try
 		{
 			DB.loadConnection(conn, DB.READ_ONLY);
-			rs = conn.querySQL(sql.toString(), 
-					new String[]{String.valueOf(m_M_Product_ID), String.valueOf(m_M_PriceList_Version_ID), String.valueOf(m_C_BPartner_ID)});
+			conn.compileQuery(sql.toString());
+			conn.addInt(m_M_Product_ID);
+			conn.addInt(m_M_PriceList_Version_ID);
+			conn.addInt(m_C_BPartner_ID);
+			rs = conn.querySQL();
 			while (!m_calculated && rs.moveToFirst())
 			{
 				long longDate = rs.getLong(rs.getColumnIndex("ValidFrom"));
@@ -402,7 +413,7 @@ public class MProductPricing
 					//	Prices
 					double m_DoublePriceStd = rs.getDouble(rs.getColumnIndex("PriceStd"));
 					m_PriceStd = new BigDecimal(m_DoublePriceStd);
-					double m_DoublePriceList = rs.getDouble(rs.getColumnIndex(""));
+					double m_DoublePriceList = rs.getDouble(rs.getColumnIndex("PriceList"));
 					m_PriceList = new BigDecimal(m_DoublePriceList);
 					double m_DoublePriceLimit = rs.getDouble(rs.getColumnIndex("PriceLimit"));
 					m_PriceLimit = new BigDecimal(m_DoublePriceLimit);
@@ -472,9 +483,12 @@ public class MProductPricing
 		try
 		{
 			DB.loadConnection(conn, DB.READ_ONLY);
-			rs = conn.querySQL(sql.toString(), 
-					new String[]{String.valueOf(m_M_Product_ID), String.valueOf(m_M_PriceList_ID), 
-										String.valueOf(m_C_BPartner_ID), String.valueOf(m_Qty.doubleValue())});
+			conn.compileQuery(sql.toString());
+			conn.addInt(m_M_Product_ID);
+			conn.addInt(m_M_PriceList_ID);
+			conn.addInt(m_C_BPartner_ID);
+			conn.addDouble(m_Qty.doubleValue());
+			rs = conn.querySQL();
 			while (!m_calculated && rs.moveToFirst())
 			{
 				long longDate = rs.getLong(rs.getColumnIndex("ValidFrom"));
@@ -486,7 +500,7 @@ public class MProductPricing
 					//	Prices
 					double m_DoublePriceStd = rs.getDouble(rs.getColumnIndex("PriceStd"));
 					m_PriceStd = new BigDecimal(m_DoublePriceStd);
-					double m_DoublePriceList = rs.getDouble(rs.getColumnIndex(""));
+					double m_DoublePriceList = rs.getDouble(rs.getColumnIndex("PriceList"));
 					m_PriceList = new BigDecimal(m_DoublePriceList);
 					double m_DoublePriceLimit = rs.getDouble(rs.getColumnIndex("PriceLimit"));
 					m_PriceLimit = new BigDecimal(m_DoublePriceLimit);
@@ -495,7 +509,6 @@ public class MProductPricing
 					m_C_Currency_ID = rs.getInt(rs.getColumnIndex("C_Currency_ID"));
 					m_M_Product_Category_ID = rs.getInt(rs.getColumnIndex("M_Product_Category_ID"));
 					m_enforcePriceLimit = "Y".equals(rs.getString(rs.getColumnIndex("EnforcePriceLimit")));
-					m_isTaxIncluded = "Y".equals(rs.getString(rs.getColumnIndex("IsTaxIncluded")));
 					//
 					LogM.log(m_ctx, getClass(), Level.FINE, 
 							"M_PriceList_ID=" + m_M_PriceList_ID 
@@ -565,7 +578,7 @@ public class MProductPricing
 					//	Prices
 					double m_DoublePriceStd = rs.getDouble(rs.getColumnIndex("PriceStd"));
 					m_PriceStd = new BigDecimal(m_DoublePriceStd);
-					double m_DoublePriceList = rs.getDouble(rs.getColumnIndex(""));
+					double m_DoublePriceList = rs.getDouble(rs.getColumnIndex("PriceList"));
 					m_PriceList = new BigDecimal(m_DoublePriceList);
 					double m_DoublePriceLimit = rs.getDouble(rs.getColumnIndex("PriceLimit"));
 					m_PriceLimit = new BigDecimal(m_DoublePriceLimit);

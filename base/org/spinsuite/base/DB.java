@@ -331,61 +331,69 @@ public class DB extends SQLiteOpenHelper {
 	 * Add Integer Value
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 19:52:02
 	 * @param value
-	 * @return void
+	 * @return DB
 	 */
-	public void addInt(int value) {
+	public DB addInt(int value) {
 		if(m_Parameters == null)
 			m_Parameters = new ArrayList<String>();
 		//	
 		m_Parameters.add(String.valueOf(value));
+		//	Return
+		return this;
 	}
 	
 	/**
 	 * Add Long Value
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 19:55:58
 	 * @param value
-	 * @return void
+	 * @return DB
 	 */
-	public void setLong(long value) {
+	public DB addLong(long value) {
 		if(m_Parameters == null)
 			m_Parameters = new ArrayList<String>();
 		//	
 		m_Parameters.add(String.valueOf(value));
+		//	Return
+		return this;
 	}
 	
 	/**
 	 * Add String Value
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 19:58:11
 	 * @param value
-	 * @return void
+	 * @return DB
 	 */
-	public void setString(String value) {
+	public DB addString(String value) {
 		if(m_Parameters == null)
 			m_Parameters = new ArrayList<String>();
 		//	
 		m_Parameters.add(value);
+		//	Return
+		return this;
 	}
 	
 	/**
 	 * Add Double Value
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 19:59:26
 	 * @param value
-	 * @return void
+	 * @return DB
 	 */
-	public void addDouble(double value) {
+	public DB addDouble(double value) {
 		if(m_Parameters == null)
 			m_Parameters = new ArrayList<String>();
 		//	
 		m_Parameters.add(String.valueOf(value));
+		//	Return
+		return this;
 	}
 	
 	/**
 	 * Add Date Value
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 20:11:20
 	 * @param value
-	 * @return void
+	 * @return DB
 	 */
-	public void addDate(Date value) {
+	public DB addDate(Date value) {
 		if(m_Parameters == null)
 			m_Parameters = new ArrayList<String>();
 		//	Get JDBC Value
@@ -393,15 +401,35 @@ public class DB extends SQLiteOpenHelper {
 				.getJDBC_Value(DisplayType.DATE, value);
 		//	
 		m_Parameters.add(date);
+		//	Return
+		return this;
+	}
+	
+	/**
+	 * Add Boolean Value
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/10/2014, 20:04:52
+	 * @param value
+	 * @return DB
+	 */
+	public DB addBoolean(boolean value) {
+		if(m_Parameters == null)
+			m_Parameters = new ArrayList<String>();
+		//	Get JDBC Value
+		String stringValue = (String) DisplayType
+				.getJDBC_Value(DisplayType.YES_NO, value);
+		//	
+		m_Parameters.add(stringValue);
+		//	Return
+		return this;
 	}
 	
 	/**
 	 * Add Date and Time Value
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 20:11:56
 	 * @param value
-	 * @return void
+	 * @return DB
 	 */
-	public void addDateTime(Date value) {
+	public DB addDateTime(Date value) {
 		if(m_Parameters == null)
 			m_Parameters = new ArrayList<String>();
 		//	Get JDBC Value
@@ -409,6 +437,34 @@ public class DB extends SQLiteOpenHelper {
 				.getJDBC_Value(DisplayType.DATE_TIME, value);
 		//	
 		m_Parameters.add(date);
+		//	Return
+		return this;
+	}
+	
+	/**
+	 * Add a Parameter
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/10/2014, 20:16:32
+	 * @param value
+	 * @return DB
+	 */
+	public DB addParameter(Object value) {
+		if(m_Parameters == null)
+			m_Parameters = new ArrayList<String>();
+		//	Validate
+		if(value == null)
+			addString(null);
+		else if(value instanceof Integer)
+			addInt((Integer)value);
+		else if(value instanceof Long)
+			addLong((Long)value);
+		else if(value instanceof Double)
+			addDouble((Double)value);
+		else if(value instanceof Boolean)
+			addBoolean((Boolean)value);
+		else if(value instanceof String)
+			addString((String)value);
+		//	Return
+		return this;
 	}
 	
 	/**
@@ -499,7 +555,28 @@ public class DB extends SQLiteOpenHelper {
 		int no = -1;
 		try {
 			no = executeUpdate (ctx, sql, param, true, conn);
-		} catch(Exception e) {}
+		} catch(Exception e) {
+			LogM.log(ctx, DB.class, Level.SEVERE, "SQL=[" + sql + "] " +  e.getLocalizedMessage());
+		}
+		return no;
+	}	//	executeUpdate
+	
+	/**
+	 * Excecute Update Ignore Error
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/10/2014, 20:32:31
+	 * @param ctx
+	 * @param sql
+	 * @param conn
+	 * @return
+	 * @return int
+	 */
+	public static int executeUpdate(Context ctx, String sql, DB conn) {
+		int no = -1;
+		try {
+			no = executeUpdate(ctx, sql, null, true, conn);
+		} catch(Exception e) {
+			LogM.log(ctx, DB.class, Level.SEVERE, "SQL=[" + sql + "] " +  e.getLocalizedMessage());
+		}
 		return no;
 	}	//	executeUpdate
 	
@@ -514,6 +591,20 @@ public class DB extends SQLiteOpenHelper {
 	 */
 	public static int executeUpdate(Context ctx, String sql, int param) {
 		return executeUpdate(ctx, sql, param, null);
+	}
+	
+	/**
+	 * Excecute Update with throw
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/10/2014, 20:29:51
+	 * @param ctx
+	 * @param sql
+	 * @param conn
+	 * @return
+	 * @throws Exception
+	 * @return int
+	 */
+	public static int executeUpdateEx(Context ctx, String sql, DB conn) throws Exception {
+		return executeUpdate(ctx, sql, null, false, conn);
 	}
 
 	/**
@@ -574,7 +665,12 @@ public class DB extends SQLiteOpenHelper {
 				handConnection = true;
 			}
 			//	
-			conn.executeSQL(sql, params);
+			if(params != null)
+				conn.executeSQL(sql, params);
+			else
+				conn.executeSQL(sql);
+			//	
+			no = 1;
 			//	End Transaction
 			if(handConnection)
 				conn.setTransactionSuccessful();

@@ -15,7 +15,12 @@
  *************************************************************************************/
 package org.spinsuite.model;
 
+import java.math.BigDecimal;
+import java.util.logging.Level;
+
 import org.spinsuite.base.DB;
+import org.spinsuite.util.Env;
+import org.spinsuite.util.LogM;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -47,5 +52,152 @@ public class MOrderTax extends X_C_OrderTax {
 	public MOrderTax(Context ctx, Cursor rs, DB conn) {
 		super(ctx, rs, conn);
 	}
+	
+	/** Tax							*/
+	private MTax 		m_tax 		= null;
+	/** Cached Precision			*/
+	private int			m_precision = 0;
+	
+	/**
+	 * 	Get Precision
+	 * 	@return Returns the precision or 2
+	 */
+	public int getPrecision() {
+		if (m_precision == 0)
+			return 2;
+		return m_precision;
+	}	//	getPrecision
+
+	/**
+	 * 	Set Precision
+	 *	@param precision The precision to set.
+	 */
+	protected void setPrecision (int precision) {
+		m_precision = precision;
+	}	//	setPrecision
+	
+	/**
+	 * 	Get Tax Line for Order Line
+	 *	@param line Order line
+	 *	@param precision currency precision
+	 *	@param oldTax get old tax
+	 *	@param conn transaction
+	 *	@return existing or new tax
+	 */
+	public static MOrderTax get (Context ctx, MOrderLine line, int precision, 
+		boolean oldTax, DB conn) {
+		MOrderTax retValue = null;
+		if (line == null || line.getC_Order_ID() == 0) {
+			LogM.log(line.getCtx(), MOrderTax.class, Level.FINE, "No Order");
+			return null;
+		}
+		int C_Tax_ID = line.getC_Tax_ID();
+		boolean isOldTax = oldTax && line.is_ValueChanged(MOrderTax.COLUMNNAME_C_Tax_ID); 
+		if (isOldTax) {
+			int old = line.get_ValueOldAsInt(MOrderTax.COLUMNNAME_C_Tax_ID);
+			if (old <= 0) {
+				LogM.log(ctx, MOrderTax.class, Level.FINE, "No Old Tax");
+				return null;
+			}
+			C_Tax_ID = ((Integer)old).intValue();
+		}
+		if (C_Tax_ID == 0) {
+			LogM.log(ctx, MOrderTax.class, Level.FINE, "No Tax");
+			return null;
+		}
+		
+		String sql = "SELECT * FROM C_OrderTax WHERE C_Order_ID=? AND C_Tax_ID=?";
+		conn.compileQuery(sql);
+		try {
+			conn.addInt(line.getC_Order_ID());
+			conn.addInt(C_Tax_ID);
+			Cursor rs = conn.querySQL();
+			if (rs.moveToFirst())
+				retValue = new MOrderTax(line.getCtx(), rs, conn);
+		} catch (Exception e) {
+			LogM.log(ctx, MOrderTax.class, Level.SEVERE, sql, e);
+		}
+		if (retValue != null) {
+			retValue.setPrecision(precision);
+			LogM.log(ctx, MOrderTax.class, Level.FINE, "(old=" + oldTax + ") " + retValue);
+			return retValue;
+		}
+		// If the old tax was required and there is no MOrderTax for that
+		// return null, and not create another MOrderTax - teo_sarca [ 1583825 ]
+		else {
+			if (isOldTax)
+				return null;
+		}
+		
+		//	Create New
+		retValue = new MOrderTax(line.getCtx(), 0, conn);
+		retValue.setClientOrg(line);
+		retValue.setC_Order_ID(line.getC_Order_ID());
+		retValue.setC_Tax_ID(line.getC_Tax_ID());
+		retValue.setPrecision(precision);
+		retValue.setIsTaxIncluded(line.isTaxIncluded(conn));
+		LogM.log(line.getCtx(), MOrderTax.class, Level.FINE, "(new) " + retValue);
+		return retValue;
+	}	//	get
+	
+	/**************************************************************************
+	 * 	Calculate/Set Tax Amt from Order Lines
+	 * 	@return true if calculated
+	 */
+	public boolean calculateTaxFromLines() {
+		BigDecimal taxBaseAmt = Env.ZERO;
+		BigDecimal taxAmt = Env.ZERO;
+		//
+		boolean documentLevel = getTax().isDocumentLevel();
+		MTax tax = getTax();
+		//
+		String sql = "SELECT LineNetAmt "
+				+ "FROM C_OrderLine "
+				+ "WHERE C_Order_ID=? AND C_Tax_ID=?";
+		DB conn = get_Connection();
+		conn.compileQuery(sql);
+		try {
+			conn.addInt(getC_Order_ID());
+			conn.addInt(getC_Tax_ID());
+			Cursor rs = conn.querySQL();
+			while (rs.moveToNext()) {
+				BigDecimal baseAmt = new BigDecimal(rs.getDouble(rs.getColumnIndex("LineNetAmt")));
+				taxBaseAmt = taxBaseAmt.add(baseAmt);
+				//
+				if (!documentLevel)		// calculate line tax
+					taxAmt = taxAmt.add(tax.calculateTax(baseAmt, isTaxIncluded(), getPrecision()));
+			}
+		} catch (Exception e) {
+			LogM.log(getCtx(), getClass(), Level.SEVERE, "Error calculateTaxFromLines()", e);
+			taxBaseAmt = null;
+		}
+		//	Set Processed
+		setProcessed(false);
+		if (taxBaseAmt == null)
+			return false;
+		
+		//	Calculate Tax
+		if (documentLevel)		//	document level
+			taxAmt = tax.calculateTax(taxBaseAmt, isTaxIncluded(), getPrecision());
+		setTaxAmt(taxAmt);
+
+		//	Set Base
+		if (isTaxIncluded())
+			setTaxBaseAmt (taxBaseAmt.subtract(taxAmt));
+		else
+			setTaxBaseAmt (taxBaseAmt);
+		LogM.log(getCtx(), getClass(), Level.FINE, toString());
+		return true;
+	}	//	calculateTaxFromLines
+	
+	/**
+	 * 	Get Tax
+	 *	@return tax
+	 */
+	protected MTax getTax() {
+		if (m_tax == null)
+			m_tax = MTax.get(getCtx(), getC_Tax_ID());
+		return m_tax;
+	}	//	getTax
 
 }

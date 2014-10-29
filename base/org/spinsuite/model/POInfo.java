@@ -460,10 +460,11 @@ public class POInfo {
 	 * @return String
 	 */
 	public String getColumnSQL(int index) {
-		if(index >= 0) {
-			return m_columns[index].ColumnSQL;
-		}
-		return null;
+		if (index < 0 || index >= m_columns.length)
+			return null;
+		if (m_columns[index].ColumnSQL != null && m_columns[index].ColumnSQL.length() > 0)
+			return m_columns[index].ColumnSQL + " AS " + m_columns[index].ColumnName;
+		return m_columns[index].ColumnName;
 	}
 	
 	/**

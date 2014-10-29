@@ -16,6 +16,7 @@
 package org.spinsuite.view.lookup;
 
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -358,6 +359,8 @@ public abstract class GridField extends LinearLayout {
 				Object value = p_Value;
 				if(value instanceof Integer)
 					return (Integer) value;
+				else if(value instanceof BigDecimal)
+					return ((BigDecimal)value).intValue();
 				else
 					return Integer.parseInt((String) value);
 			} catch (Exception e) {
@@ -560,13 +563,16 @@ public abstract class GridField extends LinearLayout {
 	public boolean isChanged() {
 		return (getValue() != null && getOldValue() == null) 
 				|| (getValue() == null && getOldValue() != null) 
-				|| (
-						(getValueAsString() != null 
-								&& getOldValueAsString() != null) 
-						&& !getValueAsString().equals(getOldValueAsString()))
-				|| (DisplayType.isNumeric(m_field.DisplayType) 
-						&& getValueAsInt() != getOldValueAsInt())
-				|| getValueAsBoolean() != getOldValueAsBoolean();
+				|| (getValue() != null && getOldValue() != null && !getValue().equals(getOldValue()));
+		//return (getValue() != null && getOldValue() == null) 
+			//	|| (getValue() == null && getOldValue() != null) 
+				//|| (
+					//	(getValueAsString() != null 
+						//		&& getOldValueAsString() != null) 
+						//&& !getValueAsString().equals(getOldValueAsString()))
+				//|| (DisplayType.isNumeric(m_field.DisplayType) 
+					//	&& getValueAsInt() != getOldValueAsInt())
+				//|| getValueAsBoolean() != getOldValueAsBoolean();*/
 	}
 	
 	/**

@@ -697,44 +697,44 @@ public class CalloutOrder extends CalloutEngine {
 		//		ADialog.warn(,WindowNo, "WarehouseChanged");
 		//	}
 
-		
-		if (Env.isSOTrx(ctx, WindowNo))
-		{
-			MProduct product = new MProduct(ctx, M_Product_ID.intValue(), null);
-			if (product.isStocked())
-			{
-				BigDecimal QtyOrdered = (BigDecimal)mTab.getValue("QtyOrdered");
-				int M_Warehouse_ID = Env.getContextAsInt(ctx, WindowNo, "M_Warehouse_ID");
-				int M_AttributeSetInstance_ID = Env.getContextAsInt(ctx, WindowNo, "M_AttributeSetInstance_ID");
-				BigDecimal available = Env.ZERO;//MStorage.getQtyAvailable
+		//	Not yet implemented
+		//if (Env.isSOTrx(ctx, WindowNo))
+		//{
+			//MProduct product = new MProduct(ctx, M_Product_ID.intValue(), null);
+			//if (product.isStocked())
+			//{
+				//BigDecimal QtyOrdered = (BigDecimal)mTab.getValue("QtyOrdered");
+				//int M_Warehouse_ID = Env.getContextAsInt(ctx, WindowNo, "M_Warehouse_ID");
+				//int M_AttributeSetInstance_ID = Env.getContextAsInt(ctx, WindowNo, "M_AttributeSetInstance_ID");
+				//BigDecimal available = Env.ZERO;//MStorage.getQtyAvailable
 					//(M_Warehouse_ID, M_Product_ID.intValue(), M_AttributeSetInstance_ID, null);
-				if (available == null)
-					available = Env.ZERO;
-				if (available.signum() == 0)
-					Msg.alertMsg(ctx, "@NoQtyAvailable@ (0)");
-				else if (available.compareTo(QtyOrdered) < 0)
-					Msg.alertMsg(ctx, "@InsufficientQtyAvailable@ (" + available.toString() + ")");
-				else
-				{
-					Integer C_OrderLine_ID = (Integer)mTab.getValue("C_OrderLine_ID");
-					if (C_OrderLine_ID == null)
-						C_OrderLine_ID = 0;
-					BigDecimal notReserved = MOrderLine.getNotReserved(ctx, 
-						M_Warehouse_ID, M_Product_ID, M_AttributeSetInstance_ID,
-						C_OrderLine_ID.intValue());
-					if (notReserved == null)
-						notReserved = Env.ZERO;
-					BigDecimal total = available.subtract(notReserved);
-					if (total.compareTo(QtyOrdered) < 0)
-					{
-						String info = Msg.parseTranslation(ctx, "@QtyAvailable@=" + available 
-							+ " - @QtyNotReserved@=" + notReserved + " = " + total);
-						Msg.alertMsg(ctx, "@InsufficientQtyAvailable@ [" + info + "]");
-						LogM.log(ctx, getClass(), Level.SEVERE, info);
-					}
-				}
-			}
-		}
+				//if (available == null)
+					//available = Env.ZERO;
+				//if (available.signum() == 0)
+					//Msg.alertMsg(ctx, "@NoQtyAvailable@ (0)");
+				//else if (available.compareTo(QtyOrdered) < 0)
+					//Msg.alertMsg(ctx, "@InsufficientQtyAvailable@ (" + available.toString() + ")");
+				//else
+				//{
+					//Integer C_OrderLine_ID = (Integer)mTab.getValue("C_OrderLine_ID");
+					//if (C_OrderLine_ID == null)
+						//C_OrderLine_ID = 0;
+					//BigDecimal notReserved = MOrderLine.getNotReserved(ctx, 
+						//M_Warehouse_ID, M_Product_ID, M_AttributeSetInstance_ID,
+						//C_OrderLine_ID.intValue());
+					//if (notReserved == null)
+						//notReserved = Env.ZERO;
+					//BigDecimal total = available.subtract(notReserved);
+					//if (total.compareTo(QtyOrdered) < 0)
+					//{
+						//String info = Msg.parseTranslation(ctx, "@QtyAvailable@=" + available 
+							//+ " - @QtyNotReserved@=" + notReserved + " = " + total);
+						//Msg.alertMsg(ctx, "@InsufficientQtyAvailable@ [" + info + "]");
+						//LogM.log(ctx, getClass(), Level.SEVERE, info);
+					//}
+				//}
+			//}
+		//}
 		//
 		return tax (ctx, WindowNo, mTab, mField, value);
 	}	//	product
@@ -1098,15 +1098,15 @@ public class CalloutOrder extends CalloutEngine {
 		}
 		
 		//	Storage
-		if (M_Product_ID != 0 
-			&& Env.isSOTrx(ctx, WindowNo)
-			&& QtyOrdered.signum() > 0)		//	no negative (returns)
-		{
-			MProduct product = MProduct.get (ctx, M_Product_ID);
-			if (product.isStocked()) {
-				int M_Warehouse_ID = Env.getContextAsInt(ctx, WindowNo, "M_Warehouse_ID");
-				int M_AttributeSetInstance_ID = Env.getContextAsInt(ctx, WindowNo, "M_AttributeSetInstance_ID");
-				BigDecimal available = QtyOrdered;
+		//if (M_Product_ID != 0 
+			//&& Env.isSOTrx(ctx, WindowNo)
+			//&& QtyOrdered.signum() > 0)		//	no negative (returns)
+		//{
+			//MProduct product = MProduct.get (ctx, M_Product_ID);
+			//if (product.isStocked()) {
+				//int M_Warehouse_ID = Env.getContextAsInt(ctx, WindowNo, "M_Warehouse_ID");
+				//int M_AttributeSetInstance_ID = Env.getContextAsInt(ctx, WindowNo, "M_AttributeSetInstance_ID");
+				//BigDecimal available = QtyOrdered;
 				//	Not yet implemented
 				//MStorage.getQtyAvailable
 					//(M_Warehouse_ID, M_Product_ID, M_AttributeSetInstance_ID, null);
@@ -1117,21 +1117,21 @@ public class CalloutOrder extends CalloutEngine {
 				//else if (available.compareTo(QtyOrdered) < 0)
 					//Msg.alertMsg(ctx, "@InsufficientQtyAvailable@ [" + available.toString() + "]");
 				//else {
-					int C_OrderLine_ID = mTab.getValueAsInt("C_OrderLine_ID");
-					BigDecimal notReserved = MOrderLine.getNotReserved(ctx, 
-						M_Warehouse_ID, M_Product_ID, M_AttributeSetInstance_ID,
-						C_OrderLine_ID);
-					if (notReserved == null)
-						notReserved = Env.ZERO;
-					BigDecimal total = available.subtract(notReserved);
-					if (total.compareTo(QtyOrdered) < 0) {
-						String info = Msg.parseTranslation(ctx, "@QtyAvailable@=" + available 
-							+ "  -  @QtyNotReserved@=" + notReserved + "  =  " + total);
-						Msg.alertMsg(ctx, "@InsufficientQtyAvailable@ [" + info + "]");
-					}
+					//int C_OrderLine_ID = mTab.getValueAsInt("C_OrderLine_ID");
+					//BigDecimal notReserved = MOrderLine.getNotReserved(ctx, 
+						//M_Warehouse_ID, M_Product_ID, M_AttributeSetInstance_ID,
+						//C_OrderLine_ID);
+					//if (notReserved == null)
+						//notReserved = Env.ZERO;
+					//BigDecimal total = available.subtract(notReserved);
+					//if (total.compareTo(QtyOrdered) < 0) {
+						//String info = Msg.parseTranslation(ctx, "@QtyAvailable@=" + available 
+							//+ "  -  @QtyNotReserved@=" + notReserved + "  =  " + total);
+						//Msg.alertMsg(ctx, "@InsufficientQtyAvailable@ [" + info + "]");
+					//}
 				//}
-			}
-		}
+			//}
+		//}
 		//
 		return "";
 	}	//	qty

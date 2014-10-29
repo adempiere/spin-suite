@@ -267,6 +267,7 @@ public class GridTab implements Evaluatee {
 	 * @return boolean
 	 */
 	public boolean isProcessed() {
+		//	Default
 		return getValueAsBoolean("Processed");
 	}
 	

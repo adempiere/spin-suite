@@ -688,7 +688,7 @@ public abstract class PO {
 	 * @return
 	 * @return int
 	 */
-	public final int get_OldValueAsInt(String columnName) {
+	public final int get_ValueOldAsInt(String columnName) {
 		return get_ValueAsInt(columnName, m_OldValues);
 	}
 	

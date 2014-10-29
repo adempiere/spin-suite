@@ -54,10 +54,27 @@ public class MProduct extends X_M_Product {
 	 * @param ctx
 	 * @param p_M_Product_ID
 	 * @return
-	 * @return MRegion
+	 * @return MProduct
 	 */
 	public static MProduct get(Context ctx, int p_M_Product_ID) {
 		return get(ctx, p_M_Product_ID, null);
+	}
+	
+	/**
+	 * Get Product
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 16:29:40
+	 * @param ctx
+	 * @param p_M_Product_ID
+	 * @param conn
+	 * @return
+	 * @return MProduct
+	 */
+	public static MProduct get(Context ctx, int p_M_Product_ID, DB conn) {
+		//	
+		if(p_M_Product_ID <= 0)
+			return null;
+		//	Default
+		return new MProduct(ctx, p_M_Product_ID, conn);
 	}
 	
 	/**
@@ -74,22 +91,4 @@ public class MProduct extends X_M_Product {
 				+ "INNER JOIN C_UOM uom ON(uom.C_UOM_ID = p.C_UOM_ID) "
 				+ "WHERE p.M_Product_ID = ?", String.valueOf(p_M_Product_ID));
 	}
-	
-	/**
-	 * Get Product
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 16:29:40
-	 * @param ctx
-	 * @param p_M_Product_ID
-	 * @param conn
-	 * @return
-	 * @return MRegion
-	 */
-	public static MProduct get(Context ctx, int p_M_Product_ID, DB conn) {
-		//	
-		if(p_M_Product_ID <= 0)
-			return null;
-		//	Default
-		return new MProduct(ctx, p_M_Product_ID, conn);
-	}
-
 }

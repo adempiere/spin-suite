@@ -68,7 +68,7 @@ public class Query
 	private String 		whereClause 						= null;
 	private String 		orderBy 							= null;
 	private DB 			conn 								= null;
-	private String[]	parameters 							= null;
+	private Object[]	parameters 							= null;
 	private boolean 	applyAccessFilter 					= false;
 	//private boolean 	applyAccessFilterRW 				= false;
 	//private boolean 	applyAccessFilterFullyQualified 	= true;
@@ -107,7 +107,7 @@ public class Query
 	 * Set query parameters
 	 * @param parameters
 	 */
-	public Query setParameters(String ...parameters) {
+	public Query setParameters(Object ...parameters) {
 		this.parameters = parameters;
 		return this;
 	}
@@ -200,7 +200,7 @@ public class Query
 		try {
 			DB.loadConnection(conn, DB.READ_ONLY);
 			rs = createResultSet(sql);
-			while (rs.moveToFirst()) {
+			while (rs.moveToNext()) {
 				T po = (T)table.getPO(rs, conn);
 				list.add(po);
 			}
@@ -542,7 +542,7 @@ public class Query
 	 */
 	private final String buildSQL(StringBuffer selectClause, boolean useOrderByClause) {
 		if (selectClause == null) {
-			POInfo info = POInfo.getPOInfo(this.ctx, table.getAD_Table_ID(), conn);
+			POInfo info = POInfo.getPOInfo(this.ctx, table.getSPS_Table_ID(), conn);
 			if (info == null) {
 				throw new IllegalStateException("No POInfo found for AD_Table_ID="+table.getAD_Table_ID());
 			}
@@ -608,32 +608,30 @@ public class Query
 	 * @return Cursor
 	 */
 	private final Cursor createResultSet (String sql) throws Exception {
-		ArrayList<String> array = new ArrayList<String>();
+		//	Compile Query
+		conn.compileQuery(sql);
+		//	Add Parameters
 		if(parameters != null) {
-			for(int i = 0; i < parameters.length; i++) {
-				array.add(parameters[i]);
+			for(Object parameter : parameters) {
+				conn.addParameter(parameter);	
 			}
 		}
 		//	
 		if (this.onlyActiveRecords) {
-			array.add("Y");
+			conn.addBoolean(true);
 			LogM.log(ctx, getClass(), Level.FINEST, "Parameter IsActive = Y");
 		}
 		if (this.onlyClient_ID) {
 			int AD_Client_ID = Env.getAD_Client_ID(ctx);
-			array.add(String.valueOf(AD_Client_ID));
+			conn.addInt(AD_Client_ID);
 			LogM.log(ctx, getClass(), Level.FINEST, "Parameter AD_Client_ID = " + AD_Client_ID);
 		}
 		if (this.onlySelection_ID > 0) {
-			array.add(String.valueOf(onlySelection_ID));
+			conn.addInt(onlySelection_ID);
 			LogM.log(ctx, getClass(), Level.FINEST, "Parameter Selection AD_PInstance_ID = " + this.onlySelection_ID);
 		}
 		//	
-		parameters = new String[array.size()];
-		//	
-		array.toArray(parameters);
-		//	
-		return conn.querySQL(sql, parameters);
+		return conn.querySQL();
 	}
 	
 	/**
@@ -656,7 +654,7 @@ public class Query
 		Cursor rs = null;
 		try {
 			rs = createResultSet(sql);
-			while (rs.moveToFirst()) {
+			while (rs.moveToNext()) {
 				list.add(rs.getInt(0));
 			}
 		} catch (Exception e) {
