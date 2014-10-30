@@ -501,8 +501,16 @@ public class T_DynamicTab extends Fragment
      * @return void
      */
     private void deleteRecord() {
+		//	Verify Processed
+		boolean m_IsProcessed = false;
+		//	
+		if(m_TabParam.getTabLevel() > 0
+				&& getActivity() != null)
+			m_IsProcessed = Env.getContextAsBoolean(getActivity(),
+				m_TabParam.getActivityNo(), m_TabParam.getParentTabNo(), "Processed");
     	//	
-    	if(mGridTab.isProcessed()) {			//	Valid Processed
+    	if(mGridTab.isProcessed()
+    			|| m_IsProcessed) {				//	Valid Processed
     		Msg.alertMsg(getActivity(), "@CannotDeleteTrx@");
     		return;
     	} else if(!mGridTab.isDeleteable()) {	//	Valid Deleteable

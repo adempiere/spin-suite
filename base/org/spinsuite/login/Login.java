@@ -273,6 +273,8 @@ public class Login extends TV_Base implements I_CancelOk {
 
 		@Override
 		protected void onPostExecute(Void result) {
+			//	Hide dialog
+			v_PDialog.dismiss();
 			//	
 			if(m_LoadType.equals(DATA_BASE)) {
 				I_Login fr = (I_Login)getCurrentFragment();
@@ -282,13 +284,11 @@ public class Login extends TV_Base implements I_CancelOk {
 			} else if(m_LoadType.equals(ROLE_ACCESS)) {
 				//	Start Activity
 				Intent intent = new Intent(v_activity, LV_Menu.class);
-				startActivity(intent);				
+				startActivity(intent);
+				//	Valid Auto Login
+				if(Env.isAutoLogin(v_activity))
+					finish();
 			}
-			//	Hide dialog
-			v_PDialog.dismiss();
-			//	Valid Auto Login
-			if(Env.isAutoLogin(v_activity))
-				finish();
 		}
 	}
 }

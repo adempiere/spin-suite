@@ -353,6 +353,9 @@ public class CalloutOrder extends CalloutEngine {
 
 				//	Defaults, if not Walkin Receipt or Walkin Invoice
 				String OrderType = Env.getContext(ctx, WindowNo, "OrderType");
+				if(OrderType == null)
+					OrderType = MOrder.DocSubTypeSO_Standard;
+				//	
 				mTab.setValue("InvoiceRule", X_C_Order.INVOICERULE_AfterDelivery);
 				mTab.setValue("DeliveryRule", X_C_Order.DELIVERYRULE_Availability);
 				mTab.setValue("PaymentRule", X_C_Order.PAYMENTRULE_OnCredit);
@@ -576,8 +579,7 @@ public class CalloutOrder extends CalloutEngine {
 	 *  @param value New Value
 	 *  @return null or error message
 	 */
-	public String priceList (Context ctx, int WindowNo, GridTab mTab, GridField mField, Object value)
-	{
+	public String priceList (Context ctx, int WindowNo, GridTab mTab, GridField mField, Object value) {
 		Integer M_PriceList_ID = (Integer) mTab.getValue("M_PriceList_ID");
 		if (M_PriceList_ID == null || M_PriceList_ID.intValue()== 0)
 			return "";
@@ -597,10 +599,16 @@ public class CalloutOrder extends CalloutEngine {
 			//	Load Connection
 			DB.loadConnection(conn, DB.READ_ONLY);
 			//	
-			String date = mTab.getValueAsString("DateOrdered");
+			Date date = (Date) mTab.getValue("DateOrdered");
+			if(date == null)
+				date = new Date(System.currentTimeMillis());
+			//	
+			conn.compileQuery(sql);
+			conn.addInt(M_PriceList_ID).addDate(date);
 			//else if (mTab.getSPS_Table_ID() == I_C_Invoice.Table_ID)
 				//date = Env.getContextAsDate(ctx, WindowNo, "DateInvoiced");
-			rs = conn.querySQL(sql.toString(), new String[]{String.valueOf(M_PriceList_ID), date});
+			rs = conn.querySQL();
+			//	
 			if (rs.moveToFirst()) {
 				//	Tax Included
 				mTab.setValue("IsTaxIncluded", "Y".equals(rs.getString(1)));

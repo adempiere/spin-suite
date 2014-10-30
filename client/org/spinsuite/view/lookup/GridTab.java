@@ -396,10 +396,11 @@ public class GridTab implements Evaluatee {
 	    			Object value = null;
 	    			if(defaultValue != null
 	    					&& defaultValue.length() > 0) {
-	    				//value = DisplayType.parseValue(
-	    						//Env.parseContext(m_ctx, defaultValue, false), vField.getDisplayType());
-	    				value = DisplayType.getContextValue(m_ctx, 
-								m_TabParam.getActivityNo(), m_TabParam.getParentTabNo(), vField.getField());
+	    				value = DisplayType.parseValue(
+	    						Env.parseContext(m_ctx, m_TabParam.getActivityNo(), 
+	    								m_TabParam.getParentTabNo(), defaultValue, false, null), vField.getDisplayType());
+	    				//value = DisplayType.getContextValue(m_ctx, 
+								//m_TabParam.getActivityNo(), m_TabParam.getParentTabNo(), vField.getField());
 	    			} else {
 	    				value = model.get_Value(vField.getColumnIndex());
 	    			}
