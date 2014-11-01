@@ -37,8 +37,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 /**
- * This demonstrates how you can implement switching between the tabs of a
- * TabHost through fragments, using FragmentTabHost.
+ * 
+ * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ *
  */
 public class Login extends TV_Base implements I_CancelOk {
     

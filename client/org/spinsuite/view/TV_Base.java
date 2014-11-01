@@ -25,12 +25,12 @@ import org.spinsuite.util.TabParameter;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
-import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -44,7 +44,7 @@ import android.widget.ListView;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class TV_Base extends Activity 
+public class TV_Base extends FragmentActivity 
 						implements ActionBar.TabListener {
 	
 	/**	Parameters						*/
@@ -65,7 +65,6 @@ public class TV_Base extends Activity
     private FragmentTabArray		m_FragmentArray = null;
     /**	Log Tabs					*/
     private boolean					m_IsModifying = false;
-    
     
     /** Called when the activity is first created. */
     @Override
@@ -367,14 +366,14 @@ public class TV_Base extends Activity
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		TabHandler tabHandler = getCurrentTabHandler();
-		tabHandler.loadFragment(tab, ft);
+		tabHandler.loadFragment(getSupportFragmentManager());
 	}
 
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 		//	Set Old Position
 		TabHandler tabHandler = getCurrentTabHandler();
-		tabHandler.unLoadFragment(tab, ft);
+		tabHandler.unLoadFragment(getSupportFragmentManager());
 	}
 	
 	/**

@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import org.spinsuite.util.TabHandler;
 import org.spinsuite.util.TabParameter;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
 /**
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
@@ -36,14 +36,14 @@ public class FragmentTabArray {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 23/08/2014, 11:41:24
 	 * @param activity
 	 */
-	public FragmentTabArray (Activity activity) {
+	public FragmentTabArray (FragmentActivity activity) {
 		this.activity = activity;
 	}
 	
 	/**	Activity						*/
-	private Activity activity;
+	private FragmentActivity 		activity;
 	/**	Array with Tab  Listener		*/
-	private ArrayList<TabHandler> m_Array = new ArrayList<TabHandler>();
+	private ArrayList<TabHandler> 	m_Array = new ArrayList<TabHandler>();
 	
 	/**
 	 * Add Tab to Array

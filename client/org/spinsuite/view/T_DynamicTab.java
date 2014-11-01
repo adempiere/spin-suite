@@ -55,7 +55,6 @@ import org.spinsuite.view.lookup.VLookupString;
 
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -66,6 +65,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;

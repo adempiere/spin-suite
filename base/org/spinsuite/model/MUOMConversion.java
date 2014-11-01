@@ -26,7 +26,6 @@ import java.util.logging.Level;
 import org.spinsuite.base.DB;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
-import org.spinsuite.util.Msg;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -588,36 +587,35 @@ public class MUOMConversion extends X_C_UOM_Conversion {
 	 */
 	protected boolean beforeSave (boolean newRecord) {
 		//	From - To is the same
-		if (getC_UOM_ID() == getC_UOM_To_ID())
-		{
-			LogM.log(getCtx(), getClass(), Level.SEVERE, Msg.parseTranslation(getCtx(), "@C_UOM_ID@ = @C_UOM_To_ID@"));
+		if (getC_UOM_ID() == getC_UOM_To_ID()) {
+			LogM.log(getCtx(), getClass(), Level.SEVERE, "C_UOM_ID = C_UOM_To_ID");
 			return false;
 		}
 		//	Nothing to convert
-		if (getMultiplyRate().compareTo(Env.ZERO) <= 0)
-		{
-			LogM.log(getCtx(), getClass(), Level.SEVERE, Msg.parseTranslation(getCtx(), "@MultiplyRate@ <= 0"));
+		if (getMultiplyRate().compareTo(Env.ZERO) <= 0) {
+			LogM.log(getCtx(), getClass(), Level.SEVERE, "MultiplyRate <= 0");
+			setError("@MultiplyRate@ <= 0");
 			return false;
 		}
 		//	Enforce Product UOM
-		if (MSysConfig.getBooleanValue(getCtx(), "ProductUOMConversionUOMValidate", true)) {
+		if (MSysConfig.getBooleanValue(getCtx(), "ProductUOMConversionUOMValidate", true, get_Connection())) {
 			if (getM_Product_ID() != 0 
-				&& (newRecord || is_ValueChanged("M_Product_ID")))
-			{
-				MProduct product = MProduct.get(getCtx(), getM_Product_ID());
-				if (product.getC_UOM_ID() != getC_UOM_ID())
-				{
-					MUOM uom = MUOM.get(getCtx(), product.getC_UOM_ID());
-					LogM.log(getCtx(), getClass(), Level.SEVERE, Msg.translate(getCtx(), "@ProductUOMConversionUOMError@: " + uom.getName()));
+				&& (newRecord || is_ValueChanged("M_Product_ID"))) {
+				MProduct product = MProduct.get(getCtx(), getM_Product_ID(), get_Connection());
+				if (product.getC_UOM_ID() != getC_UOM_ID()) {
+					MUOM uom = MUOM.get(getCtx(), product.getC_UOM_ID(), get_Connection());
+					LogM.log(getCtx(), getClass(), Level.SEVERE, "ProductUOMConversionUOMError: " + uom.getName());
+					setError("@ProductUOMConversionUOMError@");
 					return false;
 				}
 			}
 		}
 
 		//	The Product UoM needs to be the smallest UoM - Multiplier must be < 0; Divider must be > 0
-		if (MSysConfig.getBooleanValue(getCtx(), "ProductUOMConversionRateValidate", true)) {
+		if (MSysConfig.getBooleanValue(getCtx(), "ProductUOMConversionRateValidate", true, get_Connection())) {
 			if (getM_Product_ID() != 0 && getDivideRate().compareTo(Env.ONE) < 0) {
-				LogM.log(getCtx(), getClass(), Level.SEVERE, Msg.translate(getCtx(), "ProductUOMConversionRateError"));
+				LogM.log(getCtx(), getClass(), Level.SEVERE, "ProductUOMConversionRateError");
+				setError("@ProductUOMConversionRateError@");
 				return false;
 			}
 		}

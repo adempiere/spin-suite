@@ -773,11 +773,11 @@ public abstract class PO {
 	 * @return boolean
 	 */
 	public boolean save() {
-		try{
+		try {
 			saveEx();
 			error = null;
 			return true;
-		}catch (Exception e) {
+		} catch (Exception e) {
 			error = e.getLocalizedMessage();
 			LogM.log(getCtx(), getClass(), Level.SEVERE, "Error: ", e);
 		}
@@ -791,21 +791,29 @@ public abstract class PO {
 	 * @return void
 	 */
 	public void saveEx() throws Exception {
-		loadConnection(DB.READ_WRITE);
-		boolean fine = beforeSave(isNew);
-		if(!fine)
-			throw new Exception("saveEx.beforeSave");
-		//	Set Default Values
-		setLogValues(isNew);
-		if(isNew)
-			saveNew();
-		else
-			saveUpdate();
-		
-		fine = afterSave(isNew);
-		
-		if(!fine)
-			throw new Exception("saveEx.afterSave");
+		try {
+			loadConnection(DB.READ_WRITE);
+			boolean fine = beforeSave(isNew);
+			if(!fine)
+				throw new Exception("@saveEx.beforeSave@: " + getError());
+			//	Set Default Values
+			setLogValues(isNew);
+			if(isNew)
+				saveNew();
+			else
+				saveUpdate();
+			//	Close Connection
+			closeConnection();
+			//	
+			fine = afterSave(isNew);
+			
+			if(!fine)
+				throw new Exception("@saveEx.afterSave@: " + getError());
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			closeConnection();
+		}		
 	}
 	
 	/**
@@ -927,9 +935,8 @@ public abstract class PO {
 			isNew = false;
 		} catch (Exception e) {
 			throw e;
-		} finally {
-			closeConnection();
 		}
+		//	
 		return false;
 	}
 	
@@ -984,9 +991,8 @@ public abstract class PO {
 				conn.setTransactionSuccessful();
 		} catch (Exception e) {
 			throw e;
-		} finally {
-			closeConnection();
 		}
+		//	
 		return false;
 	}
 	
@@ -1179,6 +1185,16 @@ public abstract class PO {
 	 */
 	public String getError() {
 		return error;
+	}
+	
+	/**
+	 * Set Error
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 1/11/2014, 13:26:07
+	 * @param error
+	 * @return void
+	 */
+	protected void setError(String error) {
+		this.error = error;
 	}
 	
 	/**************************************************************************

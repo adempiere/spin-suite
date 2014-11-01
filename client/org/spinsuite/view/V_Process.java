@@ -67,6 +67,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -222,11 +223,12 @@ public class V_Process extends Activity {
 		};
     	//	
 		loadProcessInfo();
+		//	
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
 		//	Load Drawer Option
 		if(m_pInfo.isReport()){
-			getActionBar().setDisplayHomeAsUpEnabled(true);
-	        getActionBar().setHomeButtonEnabled(true);
-	    	//	Load Drawer
+			//	Load Drawer
 			loadDrawerOption();
 		}
     	//	Set Is Read Write
@@ -742,6 +744,8 @@ public class V_Process extends Activity {
 		} else if (itemId == R.id.action_print_format) {
 			showPrintFormat();
 			return true;
+		} else if(itemId == android.R.id.home) {
+			NavUtils.navigateUpTo(this, new Intent(this, LV_Menu.class));
 		}
 		return super.onOptionsItemSelected(item);
 	}
