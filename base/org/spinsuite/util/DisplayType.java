@@ -595,10 +595,17 @@ public final class DisplayType
 				|| displayType == BUTTON) {
 			return String.valueOf(value);
 		} else if (isID(displayType) || displayType == INTEGER) {
-			if(value instanceof Integer)
+			if(value instanceof Integer) {
 				return (Integer) value;
-			else
+			} else if(value instanceof String) {
+				try {
+					return Integer.parseInt((String)value);
+				} catch (Exception e) {
+					return 0;
+				}
+			} else {
 				return 0;
+			}
 		} else if (isNumeric(displayType)) {
 			return getNumber(String.valueOf(value), displayType);
 		} else if (isDate(displayType)) {

@@ -332,10 +332,7 @@ public class T_DynamicTab extends Fragment
 	    //if(!Env.isCurrentTab(getActivity(), 
 	    	//	tabParam.getActivityNo(), tabParam.getTabNo()))
 	    	//return;
-    	//	Valid is Loaded
-    	if(!m_IsLoadOk)
-    		return;
-	    //	
+        //	
         menu.clear();
         inflater.inflate(R.menu.dynamic_tab, menu);
     	//	do it
@@ -346,6 +343,9 @@ public class T_DynamicTab extends Fragment
         mi_More 	= menu.getItem(3);
         mi_Cancel 	= menu.getItem(4);
         mi_Save 	= menu.getItem(5);
+    	//	Valid is Loaded
+    	if(!m_IsLoadOk)
+    		return;
         //	Lock View
     	changeMenuView();
     }

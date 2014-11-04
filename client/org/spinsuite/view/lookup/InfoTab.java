@@ -270,10 +270,10 @@ public class InfoTab {
 					"t.Classname, t.Description, t.Help, " + 
 					"t.IsInsertRecord, t.IsReadOnly, t.OrderByClause, " +
 					"t.Parent_Column_ID, t.SPS_Column_ID, t.SeqNo, t.TabLevel, t.WhereClause, c.AD_Element_ID, " +
-					"CASE WHEN f.AD_Reference_ID IS NOT NULL THEN f.AD_Reference_ID ELSE c.AD_Reference_ID END AD_Reference_ID, " +
-					"CASE WHEN f.AD_Reference_Value_ID IS NOT NULL THEN f.AD_Reference_Value_ID ELSE c.AD_Reference_Value_ID END AD_Reference_Value_ID, " +
-					"CASE WHEN f.AD_Val_Rule_ID IS NOT NULL THEN f.AD_Val_Rule_ID ELSE c.AD_Val_Rule_ID END AD_Val_Rule_ID, " +
-					"CASE WHEN f.DefaultValue IS NOT NULL THEN f.DefaultValue ELSE c.DefaultValue END DefaultValue, " + 
+					"COALESCE(f.AD_Reference_ID, c.AD_Reference_ID) AD_Reference_ID, " +
+					"COALESCE(f.AD_Reference_Value_ID, c.AD_Reference_Value_ID) AD_Reference_Value_ID, " +
+					"COALESCE(f.AD_Val_Rule_ID, c.AD_Val_Rule_ID) AD_Val_Rule_ID, " +
+					"COALESCE(f.DefaultValue, c.DefaultValue) DefaultValue, " + 
 					"c.Callout, c.ColumnName, c.ColumnSQL, c.EntityType, c.FieldLength, " +
 					"c.FormatPattern, c.IsAlwaysUpdateable, c.IsCentrallyMaintained, c.IsEncrypted, c.IsIdentifier, c.IsKey, " +
 					"CASE WHEN f.IsMandatory = 'Y' THEN f.IsMandatory ELSE c.IsMandatory END IsMandatory, " +
@@ -295,10 +295,10 @@ public class InfoTab {
 					"t.Classname, COALESCE(tt.Description, t.Description) Description, COALESCE(tt.Help, t.Help) Help, " + 
 					"t.IsInsertRecord, t.IsReadOnly, t.OrderByClause, " +
 					"t.Parent_Column_ID, t.SPS_Column_ID,t.SeqNo, t.TabLevel, t.WhereClause, c.AD_Element_ID, " +
-					"CASE WHEN f.AD_Reference_ID IS NOT NULL THEN f.AD_Reference_ID ELSE c.AD_Reference_ID END AD_Reference_ID, " +
-					"CASE WHEN f.AD_Reference_Value_ID IS NOT NULL THEN f.AD_Reference_Value_ID ELSE c.AD_Reference_Value_ID END AD_Reference_Value_ID, " +
-					"CASE WHEN f.AD_Val_Rule_ID IS NOT NULL THEN f.AD_Val_Rule_ID ELSE c.AD_Val_Rule_ID END AD_Val_Rule_ID, " +
-					"CASE WHEN f.DefaultValue IS NOT NULL THEN f.DefaultValue ELSE c.DefaultValue END DefaultValue, " +
+					"COALESCE(f.AD_Reference_ID, c.AD_Reference_ID) AD_Reference_ID, " +
+					"COALESCE(f.AD_Reference_Value_ID, c.AD_Reference_Value_ID) AD_Reference_Value_ID, " +
+					"COALESCE(f.AD_Val_Rule_ID, c.AD_Val_Rule_ID) AD_Val_Rule_ID, " +
+					"COALESCE(f.DefaultValue, c.DefaultValue) DefaultValue, " + 
 					"c.Callout, c.ColumnName, c.ColumnSQL, c.EntityType, c.FieldLength, " +
 					"c.FormatPattern, c.IsAlwaysUpdateable, c.IsCentrallyMaintained, c.IsEncrypted, c.IsIdentifier, c.IsKey, " +
 					"CASE WHEN f.IsMandatory = 'Y' THEN f.IsMandatory ELSE c.IsMandatory END IsMandatory, " +
