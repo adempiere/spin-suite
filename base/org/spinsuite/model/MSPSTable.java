@@ -178,8 +178,7 @@ public class MSPSTable extends X_SPS_Table {
 	 * @return
 	 * @return PO
 	 */
-	public static PO getPO (Context ctx, int Record_ID, String tableName, DB conn)
-	{
+	public static PO getPO (Context ctx, int Record_ID, String tableName, DB conn) {
 		//	
 		Class<?> clazz = getClass(ctx, tableName);
 		if (clazz == null) {
@@ -236,6 +235,38 @@ public class MSPSTable extends X_SPS_Table {
 	}	//	getPO
 	
 	/**
+	 * 	Get PO Class Instance
+	 *	@param rs result set
+	 *	@param trxName transaction
+	 *	@return PO for Record or null
+	 */
+	public PO getPO (Cursor rs, DB conn) {
+		String tableName = getTableName();
+		Class<?> clazz = getClass(getCtx(), tableName);
+		if (clazz == null) {
+			//log.log(Level.SEVERE, "(rs) - Class not found for " + tableName);
+			//return null;
+			LogM.log(getCtx(), "MSFATable", Level.INFO, "Using GenericPO for " + tableName);
+			GenericPO po = new GenericPO(getCtx(), tableName, rs, conn);
+			return po;
+		}
+		
+		boolean errorLogged = false;
+		try {
+			Constructor<?> constructor = clazz.getDeclaredConstructor(new Class[]{Context.class, Cursor.class, DB.class});
+			PO po = (PO)constructor.newInstance(new Object[] {getCtx(), rs, conn});
+			return po;
+		} catch (Exception e) {
+			LogM.log(getCtx(), "MSFATable", Level.SEVERE, "(rs) - Table=" + tableName + ",Class=" + clazz, e);
+			errorLogged = true;
+			LogM.log(getCtx(), "MSFATable", Level.SEVERE, "Error Table=" + tableName + ",Class=" + clazz);
+		}
+		if (!errorLogged)
+			LogM.log(getCtx(), "MSFATable", Level.SEVERE, "(rs) - Not found - Table=" + tableName);
+		return null;
+	}	//	getPO
+	
+	/**
 	 * Get Table ID from Table Name
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/10/2014, 13:04:54
 	 * @param ctx
@@ -252,6 +283,24 @@ public class MSPSTable extends X_SPS_Table {
 		return DB.getSQLValue(ctx, "SELECT t.SPS_Table_ID "
 				+ "FROM SPS_Table t "
 				+ "WHERE t.TableName = ?", conn, tableName);
+	}
+	
+	/**
+	 * Get from Table Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/10/2014, 18:32:38
+	 * @param ctx
+	 * @param tableName
+	 * @param conn
+	 * @return
+	 * @return MSPSTable
+	 */
+	public static MSPSTable get (Context ctx, String tableName, DB conn) {
+		int m_SPS_Table_ID = getSPS_Table_ID(ctx, tableName, conn);
+		//	Get Table
+		if(m_SPS_Table_ID > 0)
+			return new MSPSTable(ctx, m_SPS_Table_ID, conn);
+		//	Default
+		return null;
 	}
 	
 

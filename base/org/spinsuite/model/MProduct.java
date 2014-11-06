@@ -47,5 +47,48 @@ public class MProduct extends X_M_Product {
 	public MProduct(Context ctx, Cursor rs, DB conn) {
 		super(ctx, rs, conn);
 	}
-
+	
+	/**
+	 * Get Product
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 16:14:15
+	 * @param ctx
+	 * @param p_M_Product_ID
+	 * @return
+	 * @return MProduct
+	 */
+	public static MProduct get(Context ctx, int p_M_Product_ID) {
+		return get(ctx, p_M_Product_ID, null);
+	}
+	
+	/**
+	 * Get Product
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 16:29:40
+	 * @param ctx
+	 * @param p_M_Product_ID
+	 * @param conn
+	 * @return
+	 * @return MProduct
+	 */
+	public static MProduct get(Context ctx, int p_M_Product_ID, DB conn) {
+		//	
+		if(p_M_Product_ID <= 0)
+			return null;
+		//	Default
+		return new MProduct(ctx, p_M_Product_ID, conn);
+	}
+	
+	/**
+	 * 
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 22:42:14
+	 * @param ctx
+	 * @param p_M_Product_ID
+	 * @return
+	 * @return int
+	 */
+	public static int getUOMPrecision(Context ctx, int p_M_Product_ID) {
+		return DB.getSQLValue(ctx, "SELECT uom.StdPrecision "
+				+ "FROM M_Product p "
+				+ "INNER JOIN C_UOM uom ON(uom.C_UOM_ID = p.C_UOM_ID) "
+				+ "WHERE p.M_Product_ID = ?", String.valueOf(p_M_Product_ID));
+	}
 }

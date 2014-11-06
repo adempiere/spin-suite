@@ -28,9 +28,9 @@ import org.spinsuite.view.lookup.InfoTab;
 import org.spinsuite.view.lookup.Lookup;
 
 import android.app.Activity;
-import android.app.ListFragment;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;

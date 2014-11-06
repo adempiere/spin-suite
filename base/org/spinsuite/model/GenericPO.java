@@ -25,6 +25,7 @@ package org.spinsuite.model;
 import org.spinsuite.base.DB;
 
 import android.content.Context;
+import android.database.Cursor;
 
 /**
  * Generic PO implementation, this can be use together with ModelValidator as alternative to the classic 
@@ -51,6 +52,19 @@ public class GenericPO extends PO {
 		super(ctx, tableName, ID, conn);
 	}
 
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/10/2014, 20:18:24
+	 * @param ctx
+	 * @param tableName
+	 * @param rs
+	 * @param conn
+	 */
+	public GenericPO(Context ctx, String tableName, Cursor rs, DB conn) {
+		super(ctx, tableName, rs, conn);
+	}
+	
 	/** Load Meta Data */
     protected POInfo initPO (Context ctx) {
       return null;

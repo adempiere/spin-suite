@@ -25,9 +25,9 @@ import org.spinsuite.util.Env;
 import org.spinsuite.util.LoadDataSpinner;
 import org.spinsuite.util.Msg;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,11 +72,11 @@ public class T_Role extends Fragment implements I_Login {
     	//	
     	ctx = getActivity();
     	
-    	sp_Role 		= (Spinner) getActivity().findViewById(R.id.sp_Role);
-    	sp_Client 		= (Spinner) getActivity().findViewById(R.id.sp_Client);
-    	sp_Org 			= (Spinner) getActivity().findViewById(R.id.sp_Org);
-    	sp_Warehouse 	= (Spinner) getActivity().findViewById(R.id.sp_Warehouse);
-    	dp_Date 		= (DatePicker) getActivity().findViewById(R.id.dp_Date);
+    	sp_Role 		= (Spinner) 	m_View.findViewById(R.id.sp_Role);
+    	sp_Client 		= (Spinner) 	m_View.findViewById(R.id.sp_Client);
+    	sp_Org 			= (Spinner) 	m_View.findViewById(R.id.sp_Org);
+    	sp_Warehouse 	= (Spinner) 	m_View.findViewById(R.id.sp_Warehouse);
+    	dp_Date 		= (DatePicker) 	m_View.findViewById(R.id.dp_Date);
     	
     	
     	sp_Role.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){

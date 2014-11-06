@@ -31,11 +31,10 @@ import org.spinsuite.util.TabParameter;
 import org.spinsuite.view.lookup.LookupMenu;
 
 import android.app.ActionBar.Tab;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -149,7 +148,7 @@ public class TV_DynamicActivity extends TV_Base
     }
     
     @Override
-    public void onTabSelected(Tab tab, FragmentTransaction ft) {
+    public void onTabSelected(Tab tab, android.app.FragmentTransaction ft) {
     	super.onTabSelected(tab, ft);
     	//	
     	invalidateOptionsMenu();
@@ -170,7 +169,7 @@ public class TV_DynamicActivity extends TV_Base
     }
     
     @Override
-    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+    public void onTabUnselected(Tab tab, android.app.FragmentTransaction ft) {
     	I_DynamicTab curFr = (I_DynamicTab) getCurrentFragment();
     	if(curFr != null) {
     		TabParameter tabParam = getCurrentTabParameter();

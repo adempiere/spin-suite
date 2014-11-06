@@ -181,7 +181,7 @@ public class Cust_Spinner extends Spinner {
 				}	
 			}
 			
-			for(int i = 0; i < tInfo.getColumnLength(); i++){
+			for(int i = 0; i < tInfo.getColumnCount(); i++){
 				if(i > 0)
 					sql.append(" || ");
 				sql.append("IFNULL(" + POInfo.getColumnNameForSelect(ctx, tInfo, i) + ", '')");

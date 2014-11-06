@@ -21,11 +21,11 @@ import org.spinsuite.interfaces.I_FragmentSelectListener;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.TabParameter;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +58,8 @@ public class T_DynamicTabDetail extends Fragment
 	private boolean				m_IsSameTable		= false;
 	/**	Parent Tab Record ID	*/
 	private int 				m_Parent_Record_ID 	= 0;
+	/**	Is Index Fragment		*/
+	private boolean				m_IsDetailAdded		= false;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -131,7 +133,7 @@ public class T_DynamicTabDetail extends Fragment
         //	Portrait
     	if (getActivity().findViewById(R.id.ll_List) != null) {
     		if(m_IsSameTable) {
-    			transaction.replace(R.id.ll_List, m_detailFragment, INDEX_FRAGMENT);
+    			transaction.add(R.id.ll_List, m_detailFragment, INDEX_FRAGMENT);
     			int[] m_Parent_Record_ID = Env.getTabRecord_ID(getActivity(), 
     	    			tabParam.getActivityNo(), tabParam.getParentTabNo());
     			String[] m_KeyColumn = Env.getTabKeyColumns(getActivity(), 
@@ -141,10 +143,10 @@ public class T_DynamicTabDetail extends Fragment
     			Env.setTabKeyColumns(getActivity(), 
     					tabParam.getActivityNo(), tabParam.getTabNo(), m_KeyColumn);
     		} else {
-    			transaction.replace(R.id.ll_List, m_listFragment, INDEX_FRAGMENT);
+    			transaction.add(R.id.ll_List, m_listFragment, INDEX_FRAGMENT);
     		}
         } else if(getActivity().findViewById(R.id.ll_ListLand) != null) {
-        	transaction.replace(R.id.ll_index_record_line, m_listFragment, INDEX_FRAGMENT);
+        	transaction.add(R.id.ll_index_record_line, m_listFragment, INDEX_FRAGMENT);
         }
     	//	Commit
     	transaction.commit();
@@ -195,11 +197,18 @@ public class T_DynamicTabDetail extends Fragment
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         //	
         if(getActivity().findViewById(R.id.ll_ListLand) != null) {
-        	transaction.replace(R.id.ll_dynamic_tab, m_detailFragment, DETAIL_FRAGMENT);
+        	if(!m_IsDetailAdded) {
+        		transaction.add(R.id.ll_dynamic_tab, m_detailFragment, DETAIL_FRAGMENT);
+        		m_IsDetailAdded = true;
+        	}
         } else {
-        	transaction.replace(R.id.ll_List, m_detailFragment, DETAIL_FRAGMENT);
+        	transaction.hide(m_listFragment);
+        	if(m_detailFragment.isHidden()) {
+        		transaction.show(m_detailFragment);
+        	} else {
+        		transaction.add(R.id.ll_List, m_detailFragment, DETAIL_FRAGMENT);
+        	}
         }
-        transaction.addToBackStack(null);
         //	
         transaction.commit();
         //	
@@ -285,16 +294,23 @@ public class T_DynamicTabDetail extends Fragment
 	private boolean backToFragment() {
 		//	
 		if(getActivity().findViewById(R.id.ll_ListLand) != null
-				|| m_IsSameTable)
+				|| m_IsSameTable
+				|| m_detailFragment.isHidden())
 			return false;
-		FragmentManager fm = getChildFragmentManager();
-	    if (fm.getBackStackEntryCount() > 0) {
-	    	//	Get Back
-			fm.popBackStack();
-	    	return true;
-	    }
+		//	Begin Transaction
+		FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+		//	Begin Transaction
+		transaction.hide(m_detailFragment);
+		//	
+		if(m_listFragment.isHidden()) {
+    		transaction.show(m_listFragment);
+    	} else {
+    		transaction.add(R.id.ll_List, m_listFragment, INDEX_FRAGMENT);
+    	}
+		//	Commit
+		transaction.commit();
 	    //	Return
-	    return false;
+	    return true;
 	}
 
 	@Override

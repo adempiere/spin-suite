@@ -17,8 +17,10 @@ package org.spinsuite.base;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 
+import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.KeyNamePair;
 import org.spinsuite.util.LogM;
@@ -75,8 +77,12 @@ public class DB extends SQLiteOpenHelper {
 	public static final int 	READ_WRITE = 1;
 	public static final String 	DB_NAME = "SpinSuite";
 	public static final int 	DB_VERSION = 1;
-	
+	/**	Context					*/
 	private Context 			ctx;
+	/**	SQL						*/
+	private String				m_SQL = null;
+	/**	Parameters				*/
+	private ArrayList<String>	m_Parameters = null;
 	
 	/* (non-Javadoc)
 	 * @see android.database.sqlite.SQLiteOpenHelper#onCreate(android.database.sqlite.SQLiteDatabase)
@@ -137,7 +143,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return
 	 * @return SQLiteDatabase
 	 */
-	public SQLiteDatabase getBd() {
+	public SQLiteDatabase getDB() {
 		return db;
 	}
 
@@ -301,6 +307,17 @@ public class DB extends SQLiteOpenHelper {
 	}
 	
 	/**
+	 * Add Query for next Execution
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 20:28:46
+	 * @param sql
+	 * @return void
+	 */
+	public void compileQuery(String sql) {
+		m_SQL = sql;
+		m_Parameters = new ArrayList<String>();
+	}
+	
+	/**
 	 * Get Statement
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:48:35
 	 * @return
@@ -308,6 +325,173 @@ public class DB extends SQLiteOpenHelper {
 	 */
 	public SQLiteStatement getStatement() {
 		return stm;
+	}
+	
+	/**
+	 * Add Integer Value
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 19:52:02
+	 * @param value
+	 * @return DB
+	 */
+	public DB addInt(int value) {
+		if(m_Parameters == null)
+			m_Parameters = new ArrayList<String>();
+		//	
+		m_Parameters.add(String.valueOf(value));
+		//	Return
+		return this;
+	}
+	
+	/**
+	 * Add Long Value
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 19:55:58
+	 * @param value
+	 * @return DB
+	 */
+	public DB addLong(long value) {
+		if(m_Parameters == null)
+			m_Parameters = new ArrayList<String>();
+		//	
+		m_Parameters.add(String.valueOf(value));
+		//	Return
+		return this;
+	}
+	
+	/**
+	 * Add String Value
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 19:58:11
+	 * @param value
+	 * @return DB
+	 */
+	public DB addString(String value) {
+		if(m_Parameters == null)
+			m_Parameters = new ArrayList<String>();
+		//	
+		m_Parameters.add(value);
+		//	Return
+		return this;
+	}
+	
+	/**
+	 * Add Double Value
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 19:59:26
+	 * @param value
+	 * @return DB
+	 */
+	public DB addDouble(double value) {
+		if(m_Parameters == null)
+			m_Parameters = new ArrayList<String>();
+		//	
+		m_Parameters.add(String.valueOf(value));
+		//	Return
+		return this;
+	}
+	
+	/**
+	 * Add Date Value
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 20:11:20
+	 * @param value
+	 * @return DB
+	 */
+	public DB addDate(Date value) {
+		if(m_Parameters == null)
+			m_Parameters = new ArrayList<String>();
+		//	Get JDBC Value
+		String date = (String) DisplayType
+				.getJDBC_Value(DisplayType.DATE, value);
+		//	
+		m_Parameters.add(date);
+		//	Return
+		return this;
+	}
+	
+	/**
+	 * Add Boolean Value
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/10/2014, 20:04:52
+	 * @param value
+	 * @return DB
+	 */
+	public DB addBoolean(boolean value) {
+		if(m_Parameters == null)
+			m_Parameters = new ArrayList<String>();
+		//	Get JDBC Value
+		String stringValue = (String) DisplayType
+				.getJDBC_Value(DisplayType.YES_NO, value);
+		//	
+		m_Parameters.add(stringValue);
+		//	Return
+		return this;
+	}
+	
+	/**
+	 * Add Date and Time Value
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 20:11:56
+	 * @param value
+	 * @return DB
+	 */
+	public DB addDateTime(Date value) {
+		if(m_Parameters == null)
+			m_Parameters = new ArrayList<String>();
+		//	Get JDBC Value
+		String date = (String) DisplayType
+				.getJDBC_Value(DisplayType.DATE_TIME, value);
+		//	
+		m_Parameters.add(date);
+		//	Return
+		return this;
+	}
+	
+	/**
+	 * Add a Parameter
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/10/2014, 20:16:32
+	 * @param value
+	 * @return DB
+	 */
+	public DB addParameter(Object value) {
+		if(m_Parameters == null)
+			m_Parameters = new ArrayList<String>();
+		//	Validate
+		if(value == null)
+			addString(null);
+		else if(value instanceof Integer)
+			addInt((Integer)value);
+		else if(value instanceof Long)
+			addLong((Long)value);
+		else if(value instanceof Double)
+			addDouble((Double)value);
+		else if(value instanceof Boolean)
+			addBoolean((Boolean)value);
+		else if(value instanceof String)
+			addString((String)value);
+		//	Return
+		return this;
+	}
+	
+	/**
+	 * Clear Parameters
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 20:13:05
+	 * @return void
+	 */
+	public void clearParameters() {
+		m_Parameters = new ArrayList<String>();
+	}
+	
+	/**
+	 * Excecute Precompiled Query
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 20:48:58
+	 * @return
+	 * @return Cursor
+	 */
+	public Cursor querySQL() {
+		String [] values = null;
+		//	Add Parameters
+		if(m_Parameters != null
+				&& m_Parameters.size() > 0) {
+			values = new String[m_Parameters.size()];
+			m_Parameters.toArray(values);
+		}
+		//	Excecute Query
+		return querySQL(m_SQL, values);
 	}
 	
 	/**
@@ -327,6 +511,22 @@ public class DB extends SQLiteOpenHelper {
     }
 	
 	/**
+	 * Instance and load Connection
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 20:52:00
+	 * @param ctx
+	 * @param type
+	 * @return void
+	 */
+	public static DB loadConnection(Context ctx, int type) {
+		DB conn = new DB(ctx);
+		conn.openDB(type);
+		if(type == READ_WRITE)
+			conn.beginTransaction();
+		//	Return
+		return conn;
+    }
+	
+	/**
 	 * Close a Connection
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/02/2014, 09:17:46
 	 * @param conn
@@ -335,7 +535,7 @@ public class DB extends SQLiteOpenHelper {
 	public static void closeConnection(DB conn) {
 		if(conn != null 
 				&& conn.isOpen()) {
-			if(conn.getBd().inTransaction())
+			if(conn.getDB().inTransaction())
 				conn.endTransaction();
 			conn.close();
 		}
@@ -355,7 +555,28 @@ public class DB extends SQLiteOpenHelper {
 		int no = -1;
 		try {
 			no = executeUpdate (ctx, sql, param, true, conn);
-		} catch(Exception e) {}
+		} catch(Exception e) {
+			LogM.log(ctx, DB.class, Level.SEVERE, "SQL=[" + sql + "] " +  e.getLocalizedMessage());
+		}
+		return no;
+	}	//	executeUpdate
+	
+	/**
+	 * Excecute Update Ignore Error
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/10/2014, 20:32:31
+	 * @param ctx
+	 * @param sql
+	 * @param conn
+	 * @return
+	 * @return int
+	 */
+	public static int executeUpdate(Context ctx, String sql, DB conn) {
+		int no = -1;
+		try {
+			no = executeUpdate(ctx, sql, null, true, conn);
+		} catch(Exception e) {
+			LogM.log(ctx, DB.class, Level.SEVERE, "SQL=[" + sql + "] " +  e.getLocalizedMessage());
+		}
 		return no;
 	}	//	executeUpdate
 	
@@ -370,6 +591,20 @@ public class DB extends SQLiteOpenHelper {
 	 */
 	public static int executeUpdate(Context ctx, String sql, int param) {
 		return executeUpdate(ctx, sql, param, null);
+	}
+	
+	/**
+	 * Excecute Update with throw
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/10/2014, 20:29:51
+	 * @param ctx
+	 * @param sql
+	 * @param conn
+	 * @return
+	 * @throws Exception
+	 * @return int
+	 */
+	public static int executeUpdateEx(Context ctx, String sql, DB conn) throws Exception {
+		return executeUpdate(ctx, sql, null, false, conn);
 	}
 
 	/**
@@ -430,7 +665,12 @@ public class DB extends SQLiteOpenHelper {
 				handConnection = true;
 			}
 			//	
-			conn.executeSQL(sql, params);
+			if(params != null)
+				conn.executeSQL(sql, params);
+			else
+				conn.executeSQL(sql);
+			//	
+			no = 1;
 			//	End Transaction
 			if(handConnection)
 				conn.setTransactionSuccessful();

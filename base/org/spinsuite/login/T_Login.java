@@ -27,10 +27,10 @@ import org.spinsuite.util.Env;
 import org.spinsuite.util.Msg;
 import org.spinsuite.view.custom.Cust_Spinner;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,11 +62,11 @@ public class T_Login extends Fragment implements I_Login {
     	if(m_IsLoadOk)
     		return;
     	//	
-    	et_User = (EditText) getActivity().findViewById(R.id.et_User);
-    	et_Pass = (EditText) getActivity().findViewById(R.id.et_Pass);
-    	ch_SavePass = (CheckBox) getActivity().findViewById(R.id.ch_SavePass);
-    	ch_AutoLogin = (CheckBox) getActivity().findViewById(R.id.ch_AutoLogin);
-    	sp_Language = (Cust_Spinner) getActivity().findViewById(R.id.sp_Language);
+    	et_User = (EditText) 			m_View.findViewById(R.id.et_User);
+    	et_Pass = (EditText) 			m_View.findViewById(R.id.et_Pass);
+    	ch_SavePass = (CheckBox) 		m_View.findViewById(R.id.ch_SavePass);
+    	ch_AutoLogin = (CheckBox) 		m_View.findViewById(R.id.ch_AutoLogin);
+    	sp_Language = (Cust_Spinner) 	m_View.findViewById(R.id.sp_Language);
     	
     	ArrayList <DisplaySpinner> data = new ArrayList<DisplaySpinner>();
     	for(Locale loc : Locale.getAvailableLocales()){

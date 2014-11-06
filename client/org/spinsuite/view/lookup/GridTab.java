@@ -267,6 +267,7 @@ public class GridTab implements Evaluatee {
 	 * @return boolean
 	 */
 	public boolean isProcessed() {
+		//	Default
 		return getValueAsBoolean("Processed");
 	}
 	
@@ -385,8 +386,7 @@ public class GridTab implements Evaluatee {
     		//	
     		if(m_Record_ID <= 0) {
     			//	Set value to parent field
-				if(m_TabInfo.getTabLevel() > 0 
-						|| vField.isParent()
+				if(vField.isParent()
 						|| vField.getSPS_Column_ID() == m_TabInfo.getTabSPS_Column_ID()) {
 					vField.setValue(DisplayType.getContextValue(m_ctx, 
 							m_TabParam.getActivityNo(), m_TabParam.getParentTabNo(), vField.getField()));
@@ -397,7 +397,8 @@ public class GridTab implements Evaluatee {
 	    			if(defaultValue != null
 	    					&& defaultValue.length() > 0) {
 	    				value = DisplayType.parseValue(
-	    						Env.parseContext(m_ctx, defaultValue, false), vField.getDisplayType());
+	    						Env.parseContext(m_ctx, m_TabParam.getActivityNo(), 
+	    								m_TabParam.getParentTabNo(), defaultValue, false, null), vField.getDisplayType());
 	    			} else {
 	    				value = model.get_Value(vField.getColumnIndex());
 	    			}

@@ -17,11 +17,11 @@ package org.spinsuite.util;
 
 import org.spinsuite.base.R;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.app.ActionBar.Tab;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 /**
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
@@ -39,27 +39,27 @@ public class TabHandler {
      * @param clz
      * @param args
      */
-    public TabHandler(Activity activity, String tag, Class<?> clz, TabParameter tabParameter, Bundle args) {
+    public TabHandler(FragmentActivity activity, String tag, Class<?> clz, TabParameter tabParameter, Bundle args) {
         m_Activity = activity;
         m_Tag = tag;
         m_Class = clz;
         m_Args = args;
-        m_Fragment = m_Activity.getFragmentManager().findFragmentByTag(m_Tag);
+        m_Fragment = m_Activity.getSupportFragmentManager().findFragmentByTag(m_Tag);
         m_TabParameter = tabParameter;
     }
 	
 	/**	Fragment			*/
-	private 		Fragment 		m_Fragment;
+	private 		Fragment 			m_Fragment;
 	/**	Activity			*/
-    private 		Activity 		m_Activity;
+    private 		FragmentActivity 	m_Activity;
     /**	Parameter			*/
-    private 		Bundle 			m_Args;
+    private 		Bundle 				m_Args;
     /**	Tag					*/
-    private final 	String 			m_Tag;
+    private final 	String 				m_Tag;
     /**	Class				*/
-    private final 	Class<?> 		m_Class;
+    private final 	Class<?> 			m_Class;
     /**	Tab Parameter		*/
-    private 		TabParameter	m_TabParameter;
+    private 		TabParameter		m_TabParameter;
     
     /**
      * Get Fragment
@@ -116,31 +116,40 @@ public class TabHandler {
     /**
      * Load Fragment
      * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/08/2014, 10:51:24
-     * @param tab
-     * @param ft
+     * @param m_FragmentManager
      * @return void
      */
-    public void loadFragment(Tab tab, FragmentTransaction ft) {
+    public void loadFragment(FragmentManager m_FragmentManager) {
+        //	Begin Transaction
+        FragmentTransaction transaction = m_FragmentManager.beginTransaction();
+        //	
     	if (m_Fragment == null) {
             m_Fragment = Fragment.instantiate(m_Activity, m_Class.getName(), m_Args);
-            ft.replace(R.id.content_frame, m_Fragment, m_Tag);
+            //	Replace Fragment
+            transaction.add(R.id.content_frame, m_Fragment, m_Tag);
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         } else {
-            if (m_Fragment.isDetached()) {
-                ft.attach(m_Fragment);
+            if (m_Fragment.isHidden()) {
+            	transaction.show(m_Fragment);
             }
         }
-    }//	android.R.id.content
+    	//	Commit
+        transaction.commit();
+    }//	android.R.id.content R.id.content_frame
     
     /**
      * Unload Fragment
      * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/08/2014, 10:51:09
-     * @param tab
-     * @param ft
+     * @param m_FragmentManager
      * @return void
      */
-    public void unLoadFragment(Tab tab, FragmentTransaction ft) {
+    public void unLoadFragment(FragmentManager m_FragmentManager) {
     	if (m_Fragment != null) {
-            ft.detach(m_Fragment);
+            //	Begin Transaction
+            FragmentTransaction transaction = m_FragmentManager.beginTransaction();
+            transaction.hide(m_Fragment);
+        	//	Commit
+            transaction.commit();
         }
     }
     

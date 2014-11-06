@@ -64,13 +64,40 @@ public class MSysConfig extends X_AD_SysConfig {
 	}
 	
 	/**
+	 * Get system configuration property of type string with connection
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 1/11/2014, 13:08:13
+	 * @param ctx
+	 * @param Name
+	 * @param defaultValue
+	 * @param conn
+	 * @return
+	 * @return String
+	 */
+	public static String getValue(Context ctx, String Name, String defaultValue, DB conn) {
+		return getValue(ctx, Name, defaultValue, 0, 0, conn);
+	}
+	
+	/**
 	 * Get system configuration property of type string
 	 * @param ctx
 	 * @param Name
 	 * @return String
 	 */
 	public static String getValue(Context ctx, String Name) {
-		return getValue(ctx, Name, null);
+		return getValue(ctx, Name, null, null);
+	}
+	
+	/**
+	 * Get system configuration property of type string with connection
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 1/11/2014, 13:09:44
+	 * @param ctx
+	 * @param Name
+	 * @param conn
+	 * @return
+	 * @return String
+	 */
+	public static String getValue(Context ctx, String Name, DB conn) {
+		return getValue(ctx, Name, null, conn);
 	}
 	
 	/**
@@ -123,8 +150,8 @@ public class MSysConfig extends X_AD_SysConfig {
 	 * @param defaultValue
 	 * @return boolean
 	 */
-	public static boolean getBooleanValue(Context ctx, String Name, boolean defaultValue) {
-		String s = getValue(ctx, Name);
+	public static boolean getBooleanValue(Context ctx, String Name, boolean defaultValue, DB conn) {
+		String s = getValue(ctx, Name, conn);
 		if (s == null || s.length() == 0)
 			return defaultValue;
 		
@@ -134,6 +161,19 @@ public class MSysConfig extends X_AD_SysConfig {
 			return false;
 		else
 			return Boolean.valueOf(s).booleanValue();
+	}
+	
+	/***
+	 * Get Boolean Value with connection
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 1/11/2014, 13:11:18
+	 * @param ctx
+	 * @param Name
+	 * @param defaultValue
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean getBooleanValue(Context ctx, String Name, boolean defaultValue) {
+		return getBooleanValue(ctx, Name, defaultValue, null);
 	}
 	
 	/**
