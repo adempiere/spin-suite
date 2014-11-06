@@ -20,8 +20,10 @@ import java.util.logging.Level;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.view.LV_Menu;
+import org.spinsuite.view.LV_MenuSync;
 import org.spinsuite.view.LV_StandardSearch;
 import org.spinsuite.view.lookup.InfoField;
+import org.spinsuite.view.lookup.LookupMenu;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -83,53 +85,64 @@ public class LoadActionMenu {
 		Bundle bundle = new Bundle();
 		//	Intent Activity
 		Intent intent = null;
-		if(item.isSummary()) {
-			bundle.putParcelable("Param", param);
-			intent = new Intent(activity, LV_Menu.class);
-			intent.putExtras(bundle);
-			//	Show Activity
-			activity.startActivityForResult(intent, 0);
-		} else {
-			//	Load Parameter
-			ActivityParameter paramAct = new ActivityParameter(item);
-			//	Add from Parameter
-			if(param != null) {
-				paramAct.setActivityNo(param.getActivityNo());
-				paramAct.setFrom_SPS_Table_ID(param.getSPS_Table_ID());
-				paramAct.setFrom_Record_ID(param.getFrom_Record_ID());
-	        	//	Is From Activity
-				paramAct.setIsFromActivity(paramAct.isFromActivity());
+		if (item.getM_MenuType().equals(LookupMenu.SYNCHRONIZATION_MENU)){
+			if(item.isSummary()) {
+				bundle.putParcelable("Param", param);
+				intent = new Intent(activity, LV_MenuSync.class);
+				intent.putExtras(bundle);
+				//	Show Activity
+				activity.startActivityForResult(intent, 0);
 			}
-			//	
-			bundle.putParcelable("Param", paramAct);
-			//	
-			if(item.getDeploymentType() == null 
-					|| item.getDeploymentType().equals(DisplayMenuItem.DEPLOYMENTTYPE_DirectForm)) {
-				//	Load Activity
-				loadActivityWithAction(item, bundle);
-			} else if(item.getDeploymentType().equals(DisplayMenuItem.DEPLOYMENTTYPE_List)
-					|| item.getDeploymentType().equals(DisplayMenuItem.DEPLOYMENTTYPE_ListWithQuickAction)) {
-				//	Start Search
-				int m_SPS_Table_ID = item.getSPS_Table_ID();
-				//	Valid Table
-				if(m_SPS_Table_ID == 0) {
-					Msg.toastMsg(activity, activity.getString(R.string.msg_LoadError) 
-							+ ": " + activity.getString(R.string.msg_TableNotFound));
-					loadActivityWithAction(item, bundle);
-				} else {
-					//	
-					bundle.putInt("SPS_Table_ID", m_SPS_Table_ID);
-					//	Set Read Write
-					boolean m_IsReadWrite = Env.getWindowsAccess(activity, paramAct.getSPS_Window_ID());
-					bundle.putString("IsInsertRecord", (m_IsReadWrite? "Y": "N"));
-					//	
-	            	intent = new Intent(activity, LV_StandardSearch.class);
-	    			intent.putExtras(bundle);
-	    			//	Start with result
-	    			activity.startActivityForResult(intent, 0);
+		}
+		else{
+			if(item.isSummary()) {
+				bundle.putParcelable("Param", param);
+				intent = new Intent(activity, LV_Menu.class);
+				intent.putExtras(bundle);
+				//	Show Activity
+				activity.startActivityForResult(intent, 0);
+			} else {
+				//	Load Parameter
+				ActivityParameter paramAct = new ActivityParameter(item);
+				//	Add from Parameter
+				if(param != null) {
+					paramAct.setActivityNo(param.getActivityNo());
+					paramAct.setFrom_SPS_Table_ID(param.getSPS_Table_ID());
+					paramAct.setFrom_Record_ID(param.getFrom_Record_ID());
+		        	//	Is From Activity
+					paramAct.setIsFromActivity(paramAct.isFromActivity());
 				}
-			} else if(item.getDeploymentType().equals(DisplayMenuItem.DEPLOYMENTTYPE_MenuWithQuickAction)) {
-				
+				//	
+				bundle.putParcelable("Param", paramAct);
+				//	
+				if(item.getDeploymentType() == null 
+						|| item.getDeploymentType().equals(DisplayMenuItem.DEPLOYMENTTYPE_DirectForm)) {
+					//	Load Activity
+					loadActivityWithAction(item, bundle);
+				} else if(item.getDeploymentType().equals(DisplayMenuItem.DEPLOYMENTTYPE_List)
+						|| item.getDeploymentType().equals(DisplayMenuItem.DEPLOYMENTTYPE_ListWithQuickAction)) {
+					//	Start Search
+					int m_SPS_Table_ID = item.getSPS_Table_ID();
+					//	Valid Table
+					if(m_SPS_Table_ID == 0) {
+						Msg.toastMsg(activity, activity.getString(R.string.msg_LoadError) 
+								+ ": " + activity.getString(R.string.msg_TableNotFound));
+						loadActivityWithAction(item, bundle);
+					} else {
+						//	
+						bundle.putInt("SPS_Table_ID", m_SPS_Table_ID);
+						//	Set Read Write
+						boolean m_IsReadWrite = Env.getWindowsAccess(activity, paramAct.getSPS_Window_ID());
+						bundle.putString("IsInsertRecord", (m_IsReadWrite? "Y": "N"));
+						//	
+		            	intent = new Intent(activity, LV_StandardSearch.class);
+		    			intent.putExtras(bundle);
+		    			//	Start with result
+		    			activity.startActivityForResult(intent, 0);
+					}
+				} else if(item.getDeploymentType().equals(DisplayMenuItem.DEPLOYMENTTYPE_MenuWithQuickAction)) {
+					
+				}
 			}
 		}
 		//	Return
