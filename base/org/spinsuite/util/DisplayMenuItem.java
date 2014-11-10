@@ -138,6 +138,50 @@ public class DisplayMenuItem implements Parcelable {
 		this.m_IsSOTrx = m_IsSOTrx;
 	}
 	
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 28/10/2014, 22:24:44
+	 * @param m_SPS_SyncMenu_ID
+	 * @param m_Name
+	 * @param m_Description
+	 * @param m_ImageURL
+	 * @param m_ErrImgURL
+	 * @param m_SPS_Table_ID
+	 * @param m_WhereClause
+	 * @param m_Parent_ID
+	 * @param m_IsSummary
+	 * @param m_SeqNo
+	 * @param m_WS_WebService_ID
+	 * @param m_WS_WebServiceMethod_ID
+	 * @param m_WS_WebServiceType_ID
+	 * @param m_AD_RuleAfter_ID
+	 * @param m_AD_RuleBefore_ID
+	 * @param m_MenuType
+	 */
+	public DisplayMenuItem(int m_SPS_SyncMenu_ID, String m_Name, String m_Description, String m_ImageURL, 
+			String m_ErrImgURL,int m_SPS_Table_ID, String m_WhereClause, int m_Parent_ID, boolean m_IsSummary,
+			int m_SeqNo, int m_WS_WebService_ID, int m_WS_WebServiceMethod_ID, int m_WS_WebServiceType_ID,
+			int m_AD_RuleAfter_ID, int m_AD_RuleBefore_ID,String m_MenuType){
+		this.m_SPS_SyncMenu_ID = m_SPS_SyncMenu_ID;
+		this.m_Name = m_Name;
+		this.m_Description = m_Description;
+		this.m_ImageURL = m_ImageURL;
+		this.m_ErrImgURL = m_ErrImgURL;
+		this.m_SPS_Table_ID = m_SPS_Table_ID;
+		this.m_WhereClause = m_WhereClause;
+		this.m_Parent_ID = m_Parent_ID;
+		this.m_IsSummary = m_IsSummary;
+		this.m_SeqNo = m_SeqNo; 
+		this.m_WS_WebService_ID = m_WS_WebService_ID;
+		this.m_WS_WebServiceMethod_ID = m_WS_WebServiceMethod_ID;
+		this.m_WS_WebServiceType_ID = m_WS_WebServiceType_ID;
+		this.m_AD_RuleAfter_ID = m_AD_RuleAfter_ID;
+		this.m_AD_RuleBefore_ID = m_AD_RuleBefore_ID; 
+		this.m_MenuType = m_MenuType;
+		this.m_Action = DisplayMenuItem.ACTION_WebService;
+	}
+	
 	/**	Action Menu			*/
 	private String  		m_Action = null;
 	/**	Form				*/
@@ -186,8 +230,19 @@ public class DisplayMenuItem implements Parcelable {
 	private int 			m_AttResourceID = 0;
 	/**	Is Sales Transaction*/
 	private boolean			m_IsSOTrx = false;
+	/** Web Service*/ 
+	private int m_WS_WebService_ID = 0;
+	/** Web Service Method*/
+	private int m_WS_WebServiceMethod_ID = 0;
+	/** Web Service Type*/
+	private int m_WS_WebServiceType_ID = 0;
+	/** Rule After*/
+	private int m_AD_RuleAfter_ID = 0;
+	/** Rule Before*/
+	private int m_AD_RuleBefore_ID = 0;
+	/** Menu Type*/
+	private String m_MenuType = ""; 
 
-	
 	/** Action AD_Reference_ID=53504 	*/
 	public static final int 	ACTION_AD_Reference_ID				= 53504;
 	/** Form = X 						*/
@@ -198,6 +253,8 @@ public class DisplayMenuItem implements Parcelable {
 	public static final String 	ACTION_Report 						= "R";
 	/**	Window = W 						*/
 	public static final String 	ACTION_Window 						= "W";
+	/** Web Service*/
+	public static final String 	ACTION_WebService 					= "S";
 	/** DeploymentType 					*/
 	public static final int 	DEPLOYMENTTYPE_AD_Reference_ID		= 53506;
 	/** Direct Form = D 				*/
@@ -762,5 +819,133 @@ public class DisplayMenuItem implements Parcelable {
 				+ ", m_SPS_Table_ID=" + m_SPS_Table_ID + ", m_SPS_Window_ID="
 				+ m_SPS_Window_ID + ", m_WhereClause=" + m_WhereClause
 				+ ", m_Parent_ID=" + m_Parent_ID + ", m_SeqNo=" + m_SeqNo + "]";
+	}
+
+	/**
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 28/10/2014, 21:08:45
+	 * @return
+	 * @return int
+	 */
+	public int getM_WS_WebService_ID() {
+		return m_WS_WebService_ID;
+	}
+	
+	/**
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 28/10/2014, 21:09:26
+	 * @return
+	 * @return int
+	 */
+	public int getM_WS_WebServiceMethod_ID() {
+		return m_WS_WebServiceMethod_ID;
+	}
+	
+	/**
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 28/10/2014, 21:11:05
+	 * @return
+	 * @return int
+	 */
+	public int getM_WS_WebServiceType_ID() {
+		return m_WS_WebServiceType_ID;
+	}
+	
+	/**
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 28/10/2014, 21:11:52
+	 * @return
+	 * @return int
+	 */
+	public int getM_AD_RuleAfter_ID() {
+		return m_AD_RuleAfter_ID;
+	}
+	
+	/**
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 28/10/2014, 21:12:24
+	 * @return
+	 * @return int
+	 */
+	public int getM_AD_RuleBefore_ID() {
+		return m_AD_RuleBefore_ID;
+	}
+
+	/**
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 28/10/2014, 21:17:55
+	 * @param m_WS_WebService_ID
+	 * @return void
+	 */
+	public void setM_WS_WebService_ID(int m_WS_WebService_ID) {
+		this.m_WS_WebService_ID = m_WS_WebService_ID;
+	}
+	
+	/**
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 28/10/2014, 21:18:32
+	 * @param m_WS_WebServiceMethod_ID
+	 * @return void
+	 */
+	public void setM_WS_WebServiceMethod_ID(int m_WS_WebServiceMethod_ID) {
+		this.m_WS_WebServiceMethod_ID = m_WS_WebServiceMethod_ID;
+	}
+	
+	/**
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 28/10/2014, 21:18:47
+	 * @param m_WS_WebServiceType_ID
+	 * @return void
+	 */
+	public void setM_WS_WebServiceType_ID(int m_WS_WebServiceType_ID) {
+		this.m_WS_WebServiceType_ID = m_WS_WebServiceType_ID;
+	}
+	
+	/**
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 28/10/2014, 21:19:24
+	 * @param m_AD_RuleAfter_ID
+	 * @return void
+	 */
+	public void setM_AD_RuleAfter_ID(int m_AD_RuleAfter_ID) {
+		this.m_AD_RuleAfter_ID = m_AD_RuleAfter_ID;
+	}
+	
+	/**
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 28/10/2014, 21:20:02
+	 * @param m_AD_RuleBefore_ID
+	 * @return void
+	 */
+	public void setM_AD_RuleBefore_ID(int m_AD_RuleBefore_ID) {
+		this.m_AD_RuleBefore_ID = m_AD_RuleBefore_ID;
+	}
+	
+	/**
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 28/10/2014, 22:22:14
+	 * @return
+	 * @return String
+	 */
+	public String getM_MenuType() {
+		if (m_MenuType != null)
+			return m_MenuType;
+		else 
+			return "";
+	}
+	/**
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 28/10/2014, 22:22:30
+	 * @param m_MenuType
+	 * @return void
+	 */
+	public void setM_MenuType(String m_MenuType) {
+		this.m_MenuType = m_MenuType;
+	}
+	
+	/**
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 28/10/2014, 22:30:35
+	 * @return
+	 * @return int
+	 */
+	public int getSPS_SyncMenu_ID() {
+		return m_SPS_SyncMenu_ID;
+	}
+	
+	/**
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 28/10/2014, 22:30:48
+	 * @param m_SPS_SyncMenu_ID
+	 * @return void
+	 */
+	public void setSPS_SyncMenu_ID(int m_SPS_SyncMenu_ID) {
+		this.m_SPS_SyncMenu_ID = m_SPS_SyncMenu_ID;
 	}
 }

@@ -317,7 +317,7 @@ public class InitialLoadTask implements BackGroundProcess{
 			so = null;
 			il = null;
 			if (CurrentWS - CountWS != 0){
-				if (CurrentPage - pages != 0){
+				if (CurrentPage - pages != 0 && pages > 0){
 					
 					if (iWS != -1)
 						p_Params[iWS] = new StringNamePair(Params[iWS].getKey(), Integer.valueOf(CurrentWS -1).toString());
