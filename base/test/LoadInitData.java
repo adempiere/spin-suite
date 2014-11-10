@@ -62,12 +62,14 @@ public class LoadInitData {
 				String dbPathName = basePathName + Env.DB_PATH_NAME;
 				//	Documents 
 				String docPathName = basePathName + Env.DOC_DIRECTORY;
-				String imgPathName = basePathName + Env.IMG_DIRECTORY;
+				String tmpPathName = basePathName + Env.TMP_DIRECTORY;
+				String attPathName = basePathName + Env.ATT_DIRECTORY;
 				//	
 				Env.setAppBaseDirectory(ctx, basePathName);
 				Env.setDB_PathName(ctx, dbPathName);
 				Env.setDoc_DirectoryPathName(ctx, docPathName);
-				Env.setImg_DirectoryPathName(ctx, imgPathName);
+				Env.setTmp_DirectoryPathName(ctx, tmpPathName);
+				Env.setAtt_DirectoryPathName(ctx, attPathName);
 				//	Database
 				File f = new File(dbPath);
 				if(!f.exists()) {
@@ -90,13 +92,21 @@ public class LoadInitData {
 						Msg.toastMsg(ctx, ctx.getString(R.string.msg_ErrorCreatingDirectory) 
 								+ "\"" + docPathName + "\"");
 				}
-				//	Create Image Folder
-				File img = new File(imgPathName);
-				if(!img.exists()
-						|| img.isFile()) {
-					if(!img.mkdirs())
+				//	Create Tmp Folder
+				File tmp = new File(tmpPathName);
+				if(!tmp.exists()
+						|| tmp.isFile()) {
+					if(!tmp.mkdirs())
 						Msg.toastMsg(ctx, ctx.getString(R.string.msg_ErrorCreatingDirectory) 
-								+ "\"" + imgPathName + "\"");
+								+ "\"" + tmpPathName + "\"");
+				}
+				//	Create Attachment Folder
+				File att = new File(attPathName);
+				if(!att.exists()
+						|| att.isFile()) {
+					if(!att.mkdirs())
+						Msg.toastMsg(ctx, ctx.getString(R.string.msg_ErrorCreatingDirectory) 
+								+ "\"" + attPathName + "\"");
 				}
 			} else {
 				Env.setDB_PathName(ctx, DB.DB_NAME);

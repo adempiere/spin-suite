@@ -1471,8 +1471,30 @@ public final class Env {
 	 * @param value
 	 * @return void
 	 */
-	public static void setImg_DirectoryPathName(Context ctx, String value) {
-		setContext(ctx, IMG_DIRECTORY_KEY, value);
+	public static void setTmp_DirectoryPathName(Context ctx, String value) {
+		setContext(ctx, TMP_DIRECTORY_KEY, value);
+	}
+	
+	/**
+	 * Set Attachment Directory Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/11/2014, 20:36:00
+	 * @param ctx
+	 * @param value
+	 * @return void
+	 */
+	public static void setAtt_DirectoryPathName(Context ctx, String value) {
+		setContext(ctx, ATT_DIRECTORY_KEY, value);
+	}
+	
+	/**
+	 * Get Attachment Directory Name
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/11/2014, 20:36:25
+	 * @param ctx
+	 * @return
+	 * @return String
+	 */
+	public static String getAtt_DirectoryPathName(Context ctx) {
+		return getContext(ctx, ATT_DIRECTORY_KEY);
 	}
 	
 	/**
@@ -1482,8 +1504,8 @@ public final class Env {
 	 * @return
 	 * @return String
 	 */
-	public static String getImg_DirectoryPathName(Context ctx) {
-		return getContext(ctx, IMG_DIRECTORY_KEY);
+	public static String getTmp_DirectoryPathName(Context ctx) {
+		return getContext(ctx, TMP_DIRECTORY_KEY);
 	}
 	
 	/**
@@ -2087,14 +2109,15 @@ public final class Env {
 	private static final String		DB_VERSION 			= "#DB_Version";
 	private static final String		DB_NAME_KEY 		= "#DB_Name";
 	private static final String		DOC_DIRECTORY_KEY 	= "#DOC_Name";
-	private static final String		IMG_DIRECTORY_KEY 	= "#IMG_Name";
+	private static final String		TMP_DIRECTORY_KEY 	= "#TMP_Name";
+	private static final String		ATT_DIRECTORY_KEY 	= "#ATT_Name";
 	/******************************************************************************
 	 * App Context
 	 */
 	public static final String 		APP_DIRECTORY 		= "ERP";
 	public static final String 		DB_DIRECTORY 		= "data";
 	public static final String 		DOC_DIRECTORY 		= APP_DIRECTORY + File.separator + "Documents";
-	public static final String 		IMG_DIRECTORY 		= APP_DIRECTORY + File.separator + "Images";
+	public static final String 		ATT_DIRECTORY 		= APP_DIRECTORY + File.separator + "Attachment";
 	public static final String 		TMP_DIRECTORY 		= APP_DIRECTORY + File.separator + "Tmp";
 	//	Database
 	public static final String 		DB_PATH_DIRECTORY 	= APP_DIRECTORY + File.separator + DB_DIRECTORY;

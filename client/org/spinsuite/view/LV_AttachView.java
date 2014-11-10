@@ -202,7 +202,7 @@ public class LV_AttachView extends Activity {
 				//	Get Image
 				Bitmap image = item.getImage();
 				//	Compress
-				String path = Env.getImg_DirectoryPathName(this);
+				String path = Env.getTmp_DirectoryPathName(this);
 				path = path + File.separator + item.getValue() + JPEG_FILE_SUFFIX;
 				image.compress(Bitmap.CompressFormat.PNG, 100, bos);
 				File file = new File(path);

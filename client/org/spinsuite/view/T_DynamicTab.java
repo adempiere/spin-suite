@@ -15,7 +15,6 @@
  *************************************************************************************/
 package org.spinsuite.view;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,9 +26,8 @@ import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.interfaces.I_FragmentSelectListener;
 import org.spinsuite.interfaces.OnFieldChangeListener;
-import org.spinsuite.model.MSequence;
 import org.spinsuite.process.DocAction;
-import org.spinsuite.util.ActivityParameter;
+import org.spinsuite.util.AttachmentHandler;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
@@ -43,9 +41,9 @@ import org.spinsuite.view.lookup.GridTab;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.InfoTab;
 import org.spinsuite.view.lookup.Lookup;
-import org.spinsuite.view.lookup.VLookupButtonPaymentRule;
 import org.spinsuite.view.lookup.VLookupButton;
 import org.spinsuite.view.lookup.VLookupButtonDocAction;
+import org.spinsuite.view.lookup.VLookupButtonPaymentRule;
 import org.spinsuite.view.lookup.VLookupCheckBox;
 import org.spinsuite.view.lookup.VLookupDateBox;
 import org.spinsuite.view.lookup.VLookupNumber;
@@ -56,11 +54,9 @@ import org.spinsuite.view.lookup.VLookupString;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -124,6 +120,9 @@ public class T_DynamicTab extends Fragment
 	private 	OnFieldChangeListener	m_Listener			= null;
 	/**	View 						*/
 	private 	View 					m_view 				= null;
+	/**	Attachment Handler			*/
+	private AttachmentHandler 			m_AttHandler		= null;
+	
 	/**	Current Status				*/
 	protected static final int 			NEW 				= 0;
 	protected static final int 			MODIFY 				= 1;
@@ -146,11 +145,8 @@ public class T_DynamicTab extends Fragment
 	
 	/**	Results						*/
 	private static final int 		ACTION_TAKE_PHOTO		= 3;
-	private static final String 	JPEG_FILE_SUFFIX 		= ".jpg";
-	private static String 			TMP_ATTACH_NAME 		= null;
-	/**	Images						*/
-	private static final int 		IMG_TARGET_W			= 640;
-	private static final int 		IMG_TARGET_H			= 480;
+	private static final int 		ACTION_VIEW_ATTACH		= 4;
+	
 	/**	Constants Type Save			*/
 	private static final String 	RECORD_SAVE				= "RS";
 	private static final String 	ATTACHMENT_SAVE			= "AS";
@@ -182,9 +178,6 @@ public class T_DynamicTab extends Fragment
     							&& !m_TabParam.isReadOnly();
     	//	Is Insert Record
     	m_IsInsertRecord = m_TabParam.isInsertRecord();
-    	//	Set Temporal Image Name
-    	TMP_ATTACH_NAME = Env.getImg_DirectoryPathName(getActivity()) 
-    								+ File.separator + "TMP" + JPEG_FILE_SUFFIX;
     	//	Instance Listener
     	m_Listener = new OnFieldChangeListener() {
     		@Override
@@ -432,10 +425,18 @@ public class T_DynamicTab extends Fragment
 		//	View Attachment
 		if(mGridTab.getPO() != null
 				&& mGridTab.getRecord_ID() > 0) {
-			int count = DB.getSQLValue(getActivity(), "SELECT COUNT(att.AD_Attachment_ID) FROM AD_Attachment att " +
-					"WHERE att.AD_Table_ID = ? AND att.Record_ID = ?", 
-					new String[]{String.valueOf(tabInfo.getSPS_Table_ID()), 
-											String.valueOf(mGridTab.getRecord_ID())});
+	    	//	Instance Attachment
+	    	if(m_AttHandler == null)
+	    		m_AttHandler = new AttachmentHandler(getActivity(), mGridTab.getSPS_Table_ID());
+	    	//	
+	    	m_AttHandler.setRecord_ID(mGridTab.getRecord_ID()); 
+	    		
+	    	//	Load Contents
+	    	
+			int count = 1;//DB.getSQLValue(getActivity(), "SELECT COUNT(att.AD_Attachment_ID) FROM AD_Attachment att " +
+					//"WHERE att.AD_Table_ID = ? AND att.Record_ID = ?", 
+					//new String[]{String.valueOf(tabInfo.getSPS_Table_ID()), 
+											//String.valueOf(mGridTab.getRecord_ID())});
 			//	Exist a Attachment
 			if(count != 0)
 				popupMenu.getMenu().add(Menu.NONE, O_VIEW_ATTACH, 
@@ -485,15 +486,37 @@ public class T_DynamicTab extends Fragment
      * @return void
      */
     private void viewAttachment() {
-    	Bundle bundle = new Bundle();
-		ActivityParameter param = new ActivityParameter();
-		param.setFrom_Record_ID(mGridTab.getRecord_ID());
-		param.setFrom_SPS_Table_ID(tabInfo.getSPS_Table_ID());
-    	bundle.putParcelable("Param", param);
-    	Intent intent = new Intent(getActivity(), LV_AttachView.class);
-		intent.putExtras(bundle);
-		startActivity(intent);
+    	if(m_AttHandler == null)
+    		return;
+    	//	
+    	showAttachment(m_AttHandler.getUriAttDirectory(), true);
     }
+    
+    /**
+	 * Show a Image
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/05/2014, 11:31:29
+	 * @param uriPath
+	 * @param isList
+	 * @return void
+	 */
+	private void showAttachment(Uri uriPath, boolean isList){
+		try {
+			//	Launch Application
+			Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+			intent.setDataAndType(uriPath, "*/*");
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			//	Start Activity
+			if(isList)
+				getActivity().startActivityForResult(intent, ACTION_VIEW_ATTACH);
+			else
+				startActivity(intent);
+		} catch (ActivityNotFoundException e){
+			LogM.log(getActivity(), getClass(), Level.WARNING, 
+					"Error Launch Image: " + e.getLocalizedMessage());
+		}
+	}
+    
+    
     
     /**
      * Delete Record
@@ -542,10 +565,17 @@ public class T_DynamicTab extends Fragment
      * @return void
      */
     private void attachImage() {
+    	//	Instance Attachment
+    	if(m_AttHandler == null)
+    		m_AttHandler = new AttachmentHandler(getActivity(), mGridTab.getSPS_Table_ID());
+    	//	
+    	m_AttHandler.setRecord_ID(mGridTab.getRecord_ID());
     	//	Delete Temp File
-    	File tmpFile = new File(TMP_ATTACH_NAME);
-    	if(tmpFile.exists())
-    		tmpFile.delete();
+    	File tmpFile = new File(m_AttHandler.getTMPImageName());
+    	if(tmpFile.exists()) {
+    		if(!tmpFile.delete())
+    			tmpFile.deleteOnExit();
+    	}
     	//	
     	Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     	intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tmpFile));
@@ -747,86 +777,6 @@ public class T_DynamicTab extends Fragment
     	return ok;
     }
     
-    /**
-     * Process Attach
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2014, 15:44:20
-     * @return
-     * @return boolean
-     */
-    private boolean processAttach() {
-    	File tmpFile = new File(TMP_ATTACH_NAME);
-        if(!tmpFile.exists())
-        	return false;
-		// Get the size of the image
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(TMP_ATTACH_NAME, options);
-		int photoW = options.outWidth;
-		int photoH = options.outHeight;
-		
-		//	Figure out which way needs to be reduced less
-		int scaleFactor = 1;
-		scaleFactor = Math.min(photoW/IMG_TARGET_W, photoH/IMG_TARGET_H);	
-
-		//	Set bitmap options to scale the image decode target
-		options.inJustDecodeBounds = false;
-		options.inSampleSize = scaleFactor;
-		options.inPurgeable = true;
-
-		//	Decode the JPEG file into a Bitmap
-		Bitmap mImage = BitmapFactory.decodeFile(TMP_ATTACH_NAME, options);
-		
-		//	
-		if(mImage != null) {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			mImage.compress(Bitmap.CompressFormat.PNG, 100, bos);
-			//	Save in DB
-			saveAttachment(bos.toByteArray());
-			return true;
-		}
-		return false;
-    }
-    
-    /**
-     * Save Attachment
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2014, 20:31:38
-     * @param bMArray
-     * @return void
-     */
-    private void saveAttachment(byte[] bMArray) {
-		//	Save in DataBase
-		DB conn = new DB(getActivity());
-		DB.loadConnection(conn, DB.READ_WRITE);
-		ContentValues values = new ContentValues();         
-		//	
-		SimpleDateFormat format = DisplayType.getDateFormat_JDBC();
-		//	Set Values
-		values.put("AD_Attachment_ID", MSequence.getNextID(getActivity(), 
-				Env.getAD_Client_ID(getActivity()), tabInfo.getTableName(), conn));
-		values.put("AD_Client_ID", Env.getAD_Client_ID(getActivity()));
-		values.put("AD_Org_ID", Env.getAD_Org_ID(getActivity()));
-		values.put("IsActive", "Y");
-		values.put("AD_Table_ID", tabInfo.getSPS_Table_ID());
-		values.put("Record_ID", mGridTab.getRecord_ID());
-		values.put("Title", new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()));
-		values.put("Created", format.format(new Date()));
-		values.put("CreatedBy", Env.getAD_User_ID(getActivity()));
-		values.put("Updated", format.format(new Date()));
-		values.put("UpdatedBy", Env.getAD_User_ID(getActivity()));
-		values.put("BinaryData", bMArray);
-		//	
-		conn.insertSQL("AD_Attachment", null, values);
-		//	Commit
-		conn.setTransactionSuccessful();
-		//	Close Connection
-		DB.closeConnection(conn);
-		//	Delete File
-		File tmpFile = new File(TMP_ATTACH_NAME);
-    	if(tmpFile.exists())
-    		tmpFile.delete();
-    	//	
-    }
-    
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     	//	Valid is Loaded
@@ -835,6 +785,12 @@ public class T_DynamicTab extends Fragment
     	//	
     	if(requestCode == ACTION_TAKE_PHOTO) {
     		new SaveTask().execute(ATTACHMENT_SAVE);
+    	} else if(requestCode == ACTION_VIEW_ATTACH) {
+    		//	Valid Null
+    		if(data == null)
+    			return;
+    		//	Show
+    		showAttachment(data.getData(), false);
     	} else if (resultCode == Activity.RESULT_OK) {
 	    	if(data != null) {
 	    		Bundle bundle = data.getExtras();
@@ -1155,7 +1111,8 @@ public class T_DynamicTab extends Fragment
 				return null;
 			//	
 			if(m_Type.equals(ATTACHMENT_SAVE)) {
-				processAttach();
+				String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+				m_AttHandler.processImgAttach(fileName);
 			} else if(m_Type.equals(RECORD_SAVE)) {
 				is_OK = save();
 			}
