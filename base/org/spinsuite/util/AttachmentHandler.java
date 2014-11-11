@@ -118,15 +118,27 @@ public class AttachmentHandler {
 	}
 	
 	/**
-	 * Get Uri Attachment Directory
+	 * Get Uri Attachment Directory for Record
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/11/2014, 22:17:52
 	 * @return
 	 * @return Uri
 	 */
-	public Uri getUriAttDirectory() {
+	public Uri getUriAttDirectoryRecord() {
 		return Uri.fromFile(new File(getAttDirectory() 
 				+ File.separator 
 				+ getAttachmentPathSnippet()));
+	}
+	
+	/**
+	 * Get Attachment Directory for Record
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/11/2014, 10:55:23
+	 * @return
+	 * @return String
+	 */
+	public String getAttDirectoryRecord() {
+		return getAttDirectory() 
+				+ File.separator 
+				+ getAttachmentPathSnippet();
 	}
 	
 	/**
@@ -171,25 +183,8 @@ public class AttachmentHandler {
     	File tmpFile = new File(getTMPImageName());
         if(!tmpFile.exists())
         	return false;
-		// Get the size of the image
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(getTMPImageName(), options);
-		int photoW = options.outWidth;
-		int photoH = options.outHeight;
-		
-		//	Figure out which way needs to be reduced less
-		int scaleFactor = 1;
-		scaleFactor = Math.min(photoW/IMG_TARGET_W, photoH/IMG_TARGET_H);	
-
-		//	Set bitmap options to scale the image decode target
-		options.inJustDecodeBounds = false;
-		options.inSampleSize = scaleFactor;
-		options.inPurgeable = true;
-
-		//	Decode the JPEG file into a Bitmap
-		Bitmap mImage = BitmapFactory.decodeFile(getTMPImageName(), options);
-		
+        //	
+		Bitmap mImage = getBitmapFromFile(getTMPImageName(), IMG_TARGET_W, IMG_TARGET_H);
 		//	
 		if(mImage != null) {
 			final File destFolder = new File(getAttDirectory() + File.separator + getAttachmentPathSnippet());
@@ -227,11 +222,62 @@ public class AttachmentHandler {
     }
 	
 	/**
-	 * Load Attachment from Record ID
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/11/2014, 21:36:18
-	 * @return void
+	 * Get Bitmap from File
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/11/2014, 14:24:16
+	 * @param fileName
+	 * @param weight
+	 * @param height
+	 * @return
+	 * @return Bitmap
 	 */
-	public void loadAttachments() {
+	public static Bitmap getBitmapFromFile(String fileName, int weight, int height) {
+		//	Valid Size
+		if(weight <= 0)
+			weight = 1;
+		//	
+		if(height <= 0)
+			height = 1;
+		// Get the size of the image
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(fileName, options);
+		int photoW = options.outWidth;
+		int photoH = options.outHeight;
 		
+		//	Figure out which way needs to be reduced less
+		int scaleFactor = 1;
+		scaleFactor = Math.min(photoW/weight, photoH/height);	
+
+		//	Set bitmap options to scale the image decode target
+		options.inJustDecodeBounds = false;
+		options.inSampleSize = scaleFactor;
+		options.inPurgeable = true;
+
+		//	Decode the JPEG file into a Bitmap
+		return BitmapFactory.decodeFile(fileName, options);
+	}
+	
+	/**
+	 * Get BitMap from File without size
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/11/2014, 14:25:21
+	 * @param fileName
+	 * @return
+	 * @return Bitmap
+	 */
+	public static Bitmap getBitmapFromFile(String fileName) {
+		return getBitmapFromFile(fileName, 0, 0);
+	}
+	
+	/**
+	 * Verify if has Attachment
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/11/2014, 8:51:48
+	 * @return
+	 * @return boolean
+	 */
+	public boolean hasAttachment() {
+		File directory = new File(getAttDirectoryRecord());
+		String [] m_FileName = directory.list();
+		//	Verify if has files
+		return m_FileName != null && m_FileName.length > 0;
 	}
 }

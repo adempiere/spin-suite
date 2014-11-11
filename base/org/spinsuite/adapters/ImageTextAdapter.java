@@ -78,9 +78,11 @@ public class ImageTextAdapter extends ArrayAdapter<DisplayImageTextItem> {
 		tv_Description.setText(diti.getDescription());
 		
 		//	Set Image
-		ImageView img_Item = (ImageView)item.findViewById(R.id.img_Item);
-		img_Item.setImageBitmap(diti.getImage());
-		img_Item.setLayoutParams(new LayoutParams(MAX_SIZE, MAX_SIZE));
+		if(diti.getImage() != null) {
+			ImageView img_Item = (ImageView)item.findViewById(R.id.img_Item);
+			img_Item.setImageBitmap(diti.getImage());
+			img_Item.setLayoutParams(new LayoutParams(MAX_SIZE, MAX_SIZE));
+		}
 		//	Return
 		return item;
 	}

@@ -54,7 +54,6 @@ import org.spinsuite.view.lookup.VLookupString;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -145,7 +144,6 @@ public class T_DynamicTab extends Fragment
 	
 	/**	Results						*/
 	private static final int 		ACTION_TAKE_PHOTO		= 3;
-	private static final int 		ACTION_VIEW_ATTACH		= 4;
 	
 	/**	Constants Type Save			*/
 	private static final String 	RECORD_SAVE				= "RS";
@@ -430,15 +428,8 @@ public class T_DynamicTab extends Fragment
 	    		m_AttHandler = new AttachmentHandler(getActivity(), mGridTab.getSPS_Table_ID());
 	    	//	
 	    	m_AttHandler.setRecord_ID(mGridTab.getRecord_ID()); 
-	    		
-	    	//	Load Contents
-	    	
-			int count = 1;//DB.getSQLValue(getActivity(), "SELECT COUNT(att.AD_Attachment_ID) FROM AD_Attachment att " +
-					//"WHERE att.AD_Table_ID = ? AND att.Record_ID = ?", 
-					//new String[]{String.valueOf(tabInfo.getSPS_Table_ID()), 
-											//String.valueOf(mGridTab.getRecord_ID())});
-			//	Exist a Attachment
-			if(count != 0)
+	    	//	Exist a Attachment
+			if(m_AttHandler.hasAttachment())
 				popupMenu.getMenu().add(Menu.NONE, O_VIEW_ATTACH, 
 						Menu.NONE, getString(R.string.Action_ViewAttachment));
 		}
@@ -486,37 +477,14 @@ public class T_DynamicTab extends Fragment
      * @return void
      */
     private void viewAttachment() {
+    	//	
     	if(m_AttHandler == null)
     		return;
     	//	
-    	showAttachment(m_AttHandler.getUriAttDirectory(), true);
-    }
-    
-    /**
-	 * Show a Image
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/05/2014, 11:31:29
-	 * @param uriPath
-	 * @param isList
-	 * @return void
-	 */
-	private void showAttachment(Uri uriPath, boolean isList){
-		try {
-			//	Launch Application
-			Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-			intent.setDataAndType(uriPath, "*/*");
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			//	Start Activity
-			if(isList)
-				getActivity().startActivityForResult(intent, ACTION_VIEW_ATTACH);
-			else
-				startActivity(intent);
-		} catch (ActivityNotFoundException e){
-			LogM.log(getActivity(), getClass(), Level.WARNING, 
-					"Error Launch Image: " + e.getLocalizedMessage());
-		}
-	}
-    
-    
+    	Intent intent = new Intent(getActivity(), LV_AttachView.class);
+    	intent.putExtra("FilePath", m_AttHandler.getAttDirectoryRecord());
+    	startActivity(intent);
+    }    
     
     /**
      * Delete Record
@@ -785,12 +753,6 @@ public class T_DynamicTab extends Fragment
     	//	
     	if(requestCode == ACTION_TAKE_PHOTO) {
     		new SaveTask().execute(ATTACHMENT_SAVE);
-    	} else if(requestCode == ACTION_VIEW_ATTACH) {
-    		//	Valid Null
-    		if(data == null)
-    			return;
-    		//	Show
-    		showAttachment(data.getData(), false);
     	} else if (resultCode == Activity.RESULT_OK) {
 	    	if(data != null) {
 	    		Bundle bundle = data.getExtras();

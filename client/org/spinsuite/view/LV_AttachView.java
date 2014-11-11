@@ -15,33 +15,29 @@
  *************************************************************************************/
 package org.spinsuite.view;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.spinsuite.adapters.ImageTextAdapter;
-import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
-import org.spinsuite.util.ActivityParameter;
+import org.spinsuite.util.AttachmentHandler;
 import org.spinsuite.util.DisplayImageTextItem;
-import org.spinsuite.util.Env;
+import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore.Images;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,28 +52,27 @@ import android.widget.ListView;
  */
 public class LV_AttachView extends Activity {
 	
-	/**	Parameter				*/
-	private ActivityParameter		m_activityParam 	= null;
 	/**	List View				*/
-	private ListView 				lv_AttachmentList 	= null;
+	private ListView 							lv_AttachmentList 	= null;
+	/**	File Path				*/
+	private String								m_FilePath			= null;
+	/**	Activity				*/
+	private Activity							v_activity			= null;
+	/**	Data					*/
+	private ArrayList<DisplayImageTextItem> 	data				= null;
+	/**	Number Format			*/
+	private DecimalFormat						m_numberFormat		= null;
 	/**	Option Menu				*/
 	private static final int 		O_SHARE 			= 1;
-	private static final int 		O_DOWNLOAD 			= 2;
-	private static final int 		O_DELETE 			= 3;
-	private static final String 	JPEG_FILE_SUFFIX 	= ".jpg";
+	private static final int 		O_DELETE 			= 2;
 	
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		super.setContentView(R.layout.v_attach_list_view);
-    	//	Get Field
-    	Bundle bundle = getIntent().getExtras();
-		if(bundle != null)
-			m_activityParam = (ActivityParameter) bundle.getParcelable("Param");
-		//	
-		if(m_activityParam == null)
-			m_activityParam = new ActivityParameter();
-		//	Get Elements
+		//	Get File Path
+		m_FilePath = getIntent().getStringExtra("FilePath");
+    	//	Get Elements
 		lv_AttachmentList = (ListView) findViewById(R.id.lv_AttachmentList);
 		//	
 		lv_AttachmentList.setOnItemClickListener(new ListView.OnItemClickListener() {
@@ -87,20 +82,36 @@ public class LV_AttachView extends Activity {
 					long arg3) {
 				DisplayImageTextItem item = (DisplayImageTextItem) lv_AttachmentList.getAdapter().getItem(position);
 				//	Show Image
-				if(item.getImage() != null){
-					String path = Images.Media.insertImage(getApplicationContext().getContentResolver(), 
-							item.getImage(), item.getValue(), null);
+				if(item.getValue() != null){
+					String fileName = item.getValue();
+					File file = new File(m_FilePath + File.separator + fileName);
 					//	Show
-					showImage(Uri.parse(path));
+					showAttachment(Uri.fromFile(file));
 				}
 			}
         });
+		//	
+		v_activity = this;
 		//	Event
 		registerForContextMenu(lv_AttachmentList);
+		//	Enable Return
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
 		//	Title
     	getActionBar().setSubtitle(getString(R.string.Action_ViewAttachment));
-    	//	
-    	loadAttachment();
+    	//	Get Default Number Format
+    	m_numberFormat = DisplayType.getNumberFormat(v_activity, DisplayType.AMOUNT, "###,###,###.##");
+    	//	Load Files
+    	new LoadTask().execute();
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int itemId = item.getItemId();
+		if(itemId == android.R.id.home) {
+			finish();
+		}
+		return super.onOptionsItemSelected(item);
 	}
 	
 	@Override
@@ -109,9 +120,6 @@ public class LV_AttachView extends Activity {
 			//	Export
 		    menu.add(Menu.NONE, O_SHARE, 
 					Menu.NONE, getString(R.string.Action_Share));
-			//	Export
-		    menu.add(Menu.NONE, O_DOWNLOAD, 
-					Menu.NONE, getString(R.string.Action_DownloadAttachment));
 		    //	Delete
 		    menu.add(Menu.NONE, O_DELETE, 
 					Menu.NONE, getString(R.string.Action_Delete));
@@ -127,14 +135,6 @@ public class LV_AttachView extends Activity {
 	    	case O_SHARE:
 	    		actionShare(info.position);
 	    		return true;
-		    case O_DOWNLOAD:
-		    	String path = null;
-		    	path = actionDownload(info.position);
-		    	//	Show Path
-				if(path != null)
-					showImage(Uri.fromFile(new File(path)));
-		    	//	
-		        return true;
 		    case O_DELETE:
 		    	actionDelete(info.position);
 		        return true;
@@ -149,11 +149,17 @@ public class LV_AttachView extends Activity {
 	 * @param uriPath
 	 * @return void
 	 */
-	private void showImage(Uri uriPath){
+	private void showAttachment(Uri uriPath){
 		try {
 			//	Launch Application
 			Intent intent = new Intent(Intent.ACTION_VIEW);
-			intent.setDataAndType(uriPath, "image/*");
+			//	Set Data Type
+			if(isGraphic(uriPath.toString()))
+				intent.setDataAndType(uriPath, "image/*");
+			else if(isPDF(uriPath.toString()))
+				intent.setDataAndType(uriPath, "application/pdf");
+			else 
+				intent.setDataAndType(uriPath, "*/*");
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			//	Start Activity
 			startActivity(intent);
@@ -169,62 +175,40 @@ public class LV_AttachView extends Activity {
 	 * @param position
 	 * @return void
 	 */
-	private void actionDelete(int position){
-		final DisplayImageTextItem item = (DisplayImageTextItem) lv_AttachmentList.getAdapter().getItem(position);
+	private void actionDelete(final int position){
+		final DisplayImageTextItem item = data.get(position);
 		String msg_Acept = this.getResources().getString(R.string.msg_Acept);
 		Builder ask = Msg.confirmMsg(this, getResources().getString(R.string.msg_AskDelete));
 		ask.setPositiveButton(msg_Acept, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.cancel();
 				//	Delete
-				DB.executeUpdate(getApplicationContext(), "DELETE FROM AD_Attachment " +
-						"WHERE AD_Attachment_ID = ?", item.getRecord_ID());
-				//	Re-Query
-				loadAttachment();
+				String fileName = item.getValue();
+				File file = new File(m_FilePath + File.separator + fileName);
+				if(file.exists()) {
+					if(!file.delete()) {
+						file.deleteOnExit();
+					}
+					//	Delete Item
+					data.remove(position);
+					//	Reload
+					showView();
+				}
 			}
 		});
 		ask.show();
 	}
 	
 	/**
-	 * Download Attachment
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 11:31:01
-	 * @param position
+	 * Show View in List
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/11/2014, 13:26:33
 	 * @return void
-	 * @throws IOException 
 	 */
-	private String actionDownload(int position) {
-		String msg = null;
-		try {
-			DisplayImageTextItem item = (DisplayImageTextItem) lv_AttachmentList.getAdapter().getItem(position);
-			if(item.getImage() != null){
-				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				//	Get Image
-				Bitmap image = item.getImage();
-				//	Compress
-				String path = Env.getTmp_DirectoryPathName(this);
-				path = path + File.separator + item.getValue() + JPEG_FILE_SUFFIX;
-				image.compress(Bitmap.CompressFormat.PNG, 100, bos);
-				File file = new File(path);
-				file.createNewFile();
-				//	Write the bytes in file
-				FileOutputStream fOut = new FileOutputStream(file);
-				fOut.write(bos.toByteArray());
-				//	Close Output
-				fOut.close();
-				return path;
-			}
-		} catch (IOException e) {
-			LogM.log(getApplicationContext(), getClass(), 
-					Level.SEVERE, "Error Download Image:", e);
-			msg = getResources().getString(R.string.msg_IOException) 
-						+ " " + e.getLocalizedMessage();
-		}
-		//	Show Message
-		if(msg != null)
-			Msg.alertMsg(this, msg);
-		//	Return
-		return null;
+	private void showView() {
+		ImageTextAdapter mi_adapter = new ImageTextAdapter(v_activity, R.layout.i_image_text, data);
+		mi_adapter.setDropDownViewResource(R.layout.i_image_text);
+		//	
+		lv_AttachmentList.setAdapter(mi_adapter);
 	}
 	
 	/**
@@ -234,11 +218,11 @@ public class LV_AttachView extends Activity {
 	 * @return void
 	 */
 	private void actionShare(int position){
-		//	Path
-		String localPath = actionDownload(position);
 		//	
 		DisplayImageTextItem item = (DisplayImageTextItem) lv_AttachmentList.getAdapter().getItem(position);
-    	//	
+		//	Path
+		String localPath = m_FilePath + File.separator + item.getValue();
+		//	
 		if(localPath != null) {
 			//	Share
 			Uri sourceUri = Uri.fromFile(new File(localPath));
@@ -250,7 +234,12 @@ public class LV_AttachView extends Activity {
 					+ " \"" + item.getValue() + "\"");
 			shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_SharedFromSFAndroid));
 			//	
-			shareIntent.setType("image/*");
+			if(isGraphic(localPath))
+				shareIntent.setType("image/*");
+			else if(isPDF(localPath))
+				shareIntent.setType("application/pdf");
+			else 
+				shareIntent.setType("*/*");
 			//	
 			startActivity(Intent.createChooser(shareIntent, 
 					getResources().getText(R.string.Action_Share)));
@@ -258,38 +247,117 @@ public class LV_AttachView extends Activity {
 	}
 	
 	/**
-	 * Load List view with attachment
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 09:36:49
-	 * @return void
+	 * Load Files
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+	 *
 	 */
-	private void loadAttachment(){
-		//	Data
-		ArrayList<DisplayImageTextItem> data = new ArrayList<DisplayImageTextItem>();
-		//	Load Connection
-		DB conn = new DB(this);
-		DB.loadConnection(conn, DB.READ_ONLY);
-		Cursor rs = null;
-		rs = conn.querySQL("SELECT att.AD_Attachment_ID, att.Title, att.TextMsg, att.BinaryData " +
-				"FROM AD_Attachment att " +
-				"WHERE att.AD_Table_ID = ? AND att.Record_ID = ?", 
-				new String[]{String.valueOf(m_activityParam.getFrom_SPS_Table_ID()), 
-										String.valueOf(m_activityParam.getFrom_Record_ID())});
-		if(rs.moveToFirst()){
-			do{
-				byte[] attach = rs.getBlob(3);
-				Bitmap bmimage = null;
-				if(attach != null) {
-					bmimage = BitmapFactory.decodeByteArray(attach, 0,
-							attach.length);
-					data.add(new DisplayImageTextItem(rs.getInt(0), rs.getString(1), rs.getString(2), bmimage));
-				}
-			}while(rs.moveToNext());
+	private class LoadTask extends AsyncTask<Void, Void, Void> {
+
+		/**	Progress Bar			*/
+		private ProgressDialog 						v_PDialog;
+		
+		@Override
+		protected void onPreExecute() {
+			v_PDialog = ProgressDialog.show(v_activity, null, 
+					getString(R.string.msg_Loading), false, false);
+			//	Set Max
 		}
-		DB.closeConnection(conn);
-		//	Set Adapter
-		ImageTextAdapter mi_adapter = new ImageTextAdapter(this, R.layout.i_image_text, data);
-		mi_adapter.setDropDownViewResource(R.layout.i_image_text);
-		//	
-		lv_AttachmentList.setAdapter(mi_adapter);
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			loadData();
+			//	Return
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Void... progress) {
+			
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			//	Set Adapter
+			showView();
+			//	Hide
+			v_PDialog.dismiss();
+		}
+		
+		/**
+		 * Load List view with attachment
+		 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 09:36:49
+		 * @return void
+		 */
+		private void loadData(){
+			//	Data
+			data = new ArrayList<DisplayImageTextItem>();
+			//	
+			File directory = new File(m_FilePath);
+			File [] m_Files = directory.listFiles();
+			//	Verify if has files
+			if(m_Files != null 
+					&& m_Files.length > 0){
+				for(File m_File : m_Files) {
+					String fileName = m_File.getAbsolutePath();
+					if(fileName != null
+							&& 
+							(fileName.contains(".jpg")
+									|| fileName.contains(".jpeg")
+									|| fileName.contains(".png"))) {
+						//	Get Bytes
+						//	Decode
+						Bitmap bmimage = AttachmentHandler.getBitmapFromFile(fileName, 200, 200);
+						//	Add to Array
+						data.add(new DisplayImageTextItem(0, m_File.getName(), getPrettySize(m_File), bmimage));
+					} else {
+						data.add(new DisplayImageTextItem(0, m_File.getName(), getPrettySize(m_File), null));
+					}
+				}
+			}
+		}
+		
+		/**
+		 * Get Pretty Size
+		 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/11/2014, 13:39:39
+		 * @param file
+		 * @return
+		 * @return String
+		 */
+		private String getPrettySize(File file) {
+			float size = file.length();
+			if (size <= 1024) {
+				return m_numberFormat.format(size) + " B";
+			} else {
+				size /= 1024;
+				if (size > 1024) {
+					size /= 1024;
+					return m_numberFormat.format(size) + " MB";
+				} else {
+					return m_numberFormat.format(size) + " kB";
+				}
+			}
+		}
 	}
+	
+	/**
+	 * 	Is attachment entry a PDF
+	 *  @param fileName
+	 *	@return true if PDF
+	 */
+	public boolean isPDF(String fileName) {
+		return fileName.toLowerCase().endsWith(".pdf");
+	}	//	isPDF
+	
+	/**
+	 * 	Is attachment entry a Graphic
+	 *  @param fileName
+	 *	@return true if *.gif, *.jpg, *.png
+	 */
+	public boolean isGraphic(String fileName) {
+		String m_lowname = fileName.toLowerCase();
+		return m_lowname.endsWith(".gif") 
+				|| m_lowname.endsWith(".jpg")
+				|| m_lowname.endsWith(".jpeg")
+				|| m_lowname.endsWith(".png");
+	}	//	isGraphic
 }
