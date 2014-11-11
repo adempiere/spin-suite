@@ -106,6 +106,7 @@ public class T_DynamicTab extends Fragment
 	private 	GridTab 				mGridTab			= null;
 	private 	InfoTab 				tabInfo				= null;
 	private 	ScrollView 				v_scroll			= null;
+	private 	Activity				v_activity			= null;
 	private 	TableLayout 			v_tableLayout		= null;
 	private 	boolean					m_IsLoadOk			= false;
 	private 	boolean					m_IsLoadDataOk		= false;
@@ -209,6 +210,8 @@ public class T_DynamicTab extends Fragment
     				mGridTab.changeDisplayDepending(mField);
     		}
 		};
+		//	Get Activity
+		v_activity = getActivity();
     	//	Init Load
 		if(!m_IsLoadOk)
 			initLoad();
@@ -1060,7 +1063,7 @@ public class T_DynamicTab extends Fragment
 		
 		@Override
 		protected void onPreExecute() {
-			v_PDialog = ProgressDialog.show(getActivity(), null, 
+			v_PDialog = ProgressDialog.show(v_activity, null, 
 					getString(R.string.msg_Saving), false, false);
 			//	Set Max
 		}
