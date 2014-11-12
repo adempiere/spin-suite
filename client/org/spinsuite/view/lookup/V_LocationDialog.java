@@ -115,7 +115,7 @@ public class V_LocationDialog extends DialogFragment {
     	//	Parameters
     	builder.setView(view);
 		//	
-		builder.setPositiveButton(R.string.Action_Ok, new DialogInterface.OnClickListener() {
+		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				boolean saved = saveData();
 				//	Refresh Parent

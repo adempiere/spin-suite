@@ -41,6 +41,9 @@
 	<attr name="ic_lt_date" format="reference"/>
 	<!-- Icon List -->
 	<attr name="ic_ls_ok" format="reference"/>
+	<attr name="ic_ls_pdf" format="reference"/>
+	<attr name="ic_ls_xls" format="reference"/>
+	<attr name="ic_ls_file" format="reference"/>
 	<!-- Icon Document Action -->
 	<attr name="ic_doc_prepare" format="reference"/>
 	<attr name="ic_doc_complete" format="reference"/>

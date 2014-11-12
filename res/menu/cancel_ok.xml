@@ -30,7 +30,7 @@
         android:showAsAction="always" />
     
     <item android:id="@+id/action_ok"
-        android:title="@string/Action_Ok"
+        android:title="@android:string/ok"
         android:icon="?attr/ic_ab_ok"
         android:showAsAction="always" />
 

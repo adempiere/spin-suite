@@ -23,6 +23,7 @@ import org.spinsuite.print.ReportPrintData;
 import org.spinsuite.process.ClientProcess;
 import org.spinsuite.process.ProcessInfo;
 import org.spinsuite.process.StdProcess;
+import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
 import android.content.Context;
@@ -124,7 +125,8 @@ public class ProcessCtl {
 		m_pi.clearInfoLog();
 		boolean started = false;
 		boolean clientOnly = false;
-		boolean isScriptProcess = m_pi.getClassName().toLowerCase().startsWith(SCRIPT_PREFIX);
+		boolean isScriptProcess = m_pi.getClassName().toLowerCase(
+				Env.getLocate(m_pi.getCtx())).startsWith(SCRIPT_PREFIX);
 		if (!isScriptProcess) {
 			try {
 				Class<?> processClass = Class.forName(m_pi.getClassName());

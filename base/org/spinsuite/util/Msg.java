@@ -16,6 +16,7 @@
 package org.spinsuite.util;
 
 import java.text.MessageFormat;
+import java.util.Locale;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
@@ -179,7 +180,7 @@ public class Msg {
 		//	Try to find Class
 		String className = "org.spinsuite.util.AmtInWords_";
 		try {
-			className += language.substring(0, 2).toUpperCase();
+			className += language.substring(0, 2).toUpperCase(new Locale(language));
 			Class<?> clazz = Class.forName(className);
 			AmtInWords aiw = (AmtInWords)clazz.newInstance();
 			return aiw.getAmtInWords(amount);
