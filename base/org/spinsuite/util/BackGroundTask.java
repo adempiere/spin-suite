@@ -36,6 +36,8 @@ public class BackGroundTask {
 	
 	BackGroundProcess m_Process;
 	Context m_ctx ;
+	BackGroundCall call;
+	FutureTask<Object> task ;
 	
 	/**
 	 * *** Constructor ***
@@ -56,8 +58,8 @@ public class BackGroundTask {
 	 * @return void
 	 */
 	public void runTask(){
-		BackGroundCall call = new BackGroundCall(m_Process, hdl);
-		FutureTask<Object> task = new FutureTask<Object>(call);
+		call = new BackGroundCall(m_Process, hdl);
+		task = new FutureTask<Object>(call);
 		ExecutorService executor = Executors.newScheduledThreadPool(1);		
 		executor.execute(task);	
 	}
@@ -102,5 +104,16 @@ public class BackGroundTask {
 			};
 		}
 	};
+	
+	/**
+	 * Cancel Task And Interruptep Process 
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 11/11/2014, 22:57:12
+	 * @param mayInterruptIfRunning
+	 * @return void
+	 */
+	public void cancelTask(boolean mayInterruptIfRunning){
+		if (task != null)
+			task.cancel(mayInterruptIfRunning);
+	}
 	
 }

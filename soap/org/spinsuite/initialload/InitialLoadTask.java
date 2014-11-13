@@ -133,10 +133,9 @@ public class InitialLoadTask implements BackGroundProcess{
 	 * @return void
 	 */
 	public void runTask(){
-
-		df = new T_Login_ProgressSync();
-    	df.show(m_Conn.getFragmentManager(), m_Conn.getResources().getString(R.string.InitSync));
 		m_Task = new BackGroundTask(this, m_Conn);
+		df = new T_Login_ProgressSync(m_Task,m_Conn);
+    	df.show(m_Conn.getFragmentManager(), m_Conn.getResources().getString(R.string.InitSync));
 		m_Task.runTask();
 	}
 	
