@@ -16,7 +16,12 @@
 package org.spinsuite.util;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.logging.Level;
 
 import android.content.Context;
@@ -157,7 +162,7 @@ public class AttachmentHandler {
 	 * Returns a path snippet, containing client, table and record id.
 	 * @return String
 	 */
-	private String getAttachmentPathSnippet(){
+	private String getAttachmentPathSnippet() {
 		return m_AD_Client_ID + File.separator + 
 				m_Table_ID + File.separator + m_Record_ID;
 	}
@@ -170,6 +175,59 @@ public class AttachmentHandler {
 	 */
 	public boolean processImgAttach() {
 		return processImgAttach(null);
+	}
+	
+	/**
+	 * Process File Attachment
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/11/2014, 20:43:37
+	 * @param origFileName
+	 * @param fileName
+	 * @return
+	 * @return boolean
+	 */
+	public boolean processFileAttach(String origFileName) {
+		File origFile = new File(origFileName);
+        if(!origFile.exists())
+        	return false;
+        //	
+        final File destFolder = new File(getAttDirectory() + File.separator + getAttachmentPathSnippet());
+		if(!destFolder.exists()) {
+			if(!destFolder.mkdirs()) {
+				LogM.log(m_ctx, getClass(), Level.SEVERE, "unable to create folder: " + destFolder.getPath());
+			}
+		}
+		//	
+		final File destFile = new File(getAttDirectory() + File.separator
+				+ getAttachmentPathSnippet() + File.separator + origFile.getName());
+		if(destFile.exists()) {
+			if(!destFile.delete()) {
+				destFile.deleteOnExit();
+			}
+		}
+		//	Copy
+		try {
+			InputStream in = new FileInputStream(origFile);
+			OutputStream out = new FileOutputStream(destFile);
+			byte[] buf = new byte[1024];
+	        int len;
+	        //	Copy
+	        while ((len = in.read(buf)) > 0) {
+	            out.write(buf, 0, len);
+	        }
+	        //	Close
+	        in.close();
+	        out.close();
+	        //	
+	        return true;
+		} catch (FileNotFoundException e) {
+			LogM.log(m_ctx, getClass(), Level.SEVERE, 
+					"unable to copy file: " + origFile.getPath() + " -> " + destFile.getPath(), e);
+		} catch (IOException e) {
+			LogM.log(m_ctx, getClass(), Level.SEVERE, 
+					"unable to copy file: " + origFile.getPath() + " -> " + destFile.getPath(), e);
+		}
+        //	Finish
+        return false;
 	}
 	
 	/**
@@ -188,8 +246,8 @@ public class AttachmentHandler {
 		//	
 		if(mImage != null) {
 			final File destFolder = new File(getAttDirectory() + File.separator + getAttachmentPathSnippet());
-			if(!destFolder.exists()){
-				if(!destFolder.mkdirs()){
+			if(!destFolder.exists()) {
+				if(!destFolder.mkdirs()) {
 					LogM.log(m_ctx, getClass(), Level.SEVERE, "unable to create folder: " + destFolder.getPath());
 				}
 			}
@@ -201,8 +259,8 @@ public class AttachmentHandler {
 			//	
 			final File destFile = new File(getAttDirectory() + File.separator
 					+ getAttachmentPathSnippet() + File.separator + fileName);
-			if(destFile.exists()){
-				if(!destFile.delete()){
+			if(destFile.exists()) {
+				if(!destFile.delete()) {
 					destFile.deleteOnExit();
 				}
 			}

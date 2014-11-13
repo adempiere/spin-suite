@@ -25,6 +25,7 @@ import org.spinsuite.base.R;
 import org.spinsuite.util.AttachmentHandler;
 import org.spinsuite.util.DisplayImageTextItem;
 import org.spinsuite.util.DisplayType;
+import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 
@@ -82,7 +83,7 @@ public class LV_AttachView extends Activity {
 					long arg3) {
 				DisplayImageTextItem item = (DisplayImageTextItem) lv_AttachmentList.getAdapter().getItem(position);
 				//	Show Image
-				if(item.getValue() != null){
+				if(item.getValue() != null) {
 					String fileName = item.getValue();
 					File file = new File(m_FilePath + File.separator + fileName);
 					//	Show
@@ -149,7 +150,8 @@ public class LV_AttachView extends Activity {
 	 * @param uriPath
 	 * @return void
 	 */
-	private void showAttachment(Uri uriPath){
+	private void showAttachment(Uri uriPath) {
+		boolean ok = false;
 		try {
 			//	Launch Application
 			Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -163,10 +165,16 @@ public class LV_AttachView extends Activity {
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			//	Start Activity
 			startActivity(intent);
-		} catch (ActivityNotFoundException e){
+			//	
+			ok = true;
+		} catch (ActivityNotFoundException e) {
 			LogM.log(this, getClass(), Level.WARNING, 
 					"Error Launch Image: " + e.getLocalizedMessage());
 		}
+		//	Show Toast
+		if(!ok)
+			Msg.toastMsg(v_activity, getString(R.string.msg_AppIsNotAssociated));
+
 	}
 	
 	/**
@@ -175,7 +183,7 @@ public class LV_AttachView extends Activity {
 	 * @param position
 	 * @return void
 	 */
-	private void actionDelete(final int position){
+	private void actionDelete(final int position) {
 		final DisplayImageTextItem item = data.get(position);
 		String msg_Acept = this.getResources().getString(R.string.msg_Acept);
 		Builder ask = Msg.confirmMsg(this, getResources().getString(R.string.msg_AskDelete));
@@ -217,7 +225,7 @@ public class LV_AttachView extends Activity {
 	 * @param position
 	 * @return void
 	 */
-	private void actionShare(int position){
+	private void actionShare(int position) {
 		//	
 		DisplayImageTextItem item = (DisplayImageTextItem) lv_AttachmentList.getAdapter().getItem(position);
 		//	Path
@@ -288,7 +296,7 @@ public class LV_AttachView extends Activity {
 		 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 09:36:49
 		 * @return void
 		 */
-		private void loadData(){
+		private void loadData() {
 			//	Data
 			data = new ArrayList<DisplayImageTextItem>();
 			//	
@@ -296,7 +304,7 @@ public class LV_AttachView extends Activity {
 			File [] m_Files = directory.listFiles();
 			//	Verify if has files
 			if(m_Files != null 
-					&& m_Files.length > 0){
+					&& m_Files.length > 0) {
 				for(File m_File : m_Files) {
 					String fileName = m_File.getAbsolutePath();
 					if(fileName != null
@@ -345,7 +353,7 @@ public class LV_AttachView extends Activity {
 	 *	@return true if PDF
 	 */
 	public boolean isPDF(String fileName) {
-		return fileName.toLowerCase().endsWith(".pdf");
+		return fileName.toLowerCase(Env.getLocate(v_activity)).endsWith(".pdf");
 	}	//	isPDF
 	
 	/**
@@ -354,7 +362,7 @@ public class LV_AttachView extends Activity {
 	 *	@return true if *.gif, *.jpg, *.png
 	 */
 	public boolean isGraphic(String fileName) {
-		String m_lowname = fileName.toLowerCase();
+		String m_lowname = fileName.toLowerCase(Env.getLocate(v_activity));
 		return m_lowname.endsWith(".gif") 
 				|| m_lowname.endsWith(".jpg")
 				|| m_lowname.endsWith(".jpeg")

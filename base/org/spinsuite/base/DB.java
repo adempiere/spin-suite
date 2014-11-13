@@ -94,12 +94,12 @@ public class DB extends SQLiteOpenHelper {
 			bd.execSQL(sqlCreate);
 	}
 	
-	@Override
-	public void onConfigure(SQLiteDatabase db) {
-		super.onConfigure(db);
+	//@Override
+	//public void onConfigure(SQLiteDatabase db) {
+		//super.onConfigure(db);
 		//	Enable Constraints
-		db.setForeignKeyConstraintsEnabled(true);
-	}
+		//db.setForeignKeyConstraintsEnabled(true);
+	//}
 
 	/* (non-Javadoc)
 	 * @see android.database.sqlite.SQLiteOpenHelper#onUpgrade(android.database.sqlite.SQLiteDatabase, int, int)

@@ -50,6 +50,9 @@
         <item name="ic_lt_date">@drawable/calendar_m</item>
         <!-- Icon List -->
         <item name="ic_ls_ok">@drawable/ok_h</item>
+        <item name="ic_ls_pdf">@drawable/pdf_h</item>
+        <item name="ic_ls_xls">@drawable/report_h</item>
+        <item name="ic_ls_file">@drawable/file_h</item>
         <!-- Icon Document Action -->
         <item name="ic_doc_prepare">@drawable/doc_progress_m</item>
 		<item name="ic_doc_complete">@drawable/doc_completed_m</item>

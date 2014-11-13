@@ -810,44 +810,52 @@ public final class Env {
 	 * @return
 	 * @return String
 	 */
-	public static String getDateFormatString(String dateS, String fromFormat, String toFormat)
-	{
+	public static String getDateFormatString(String dateS, String fromFormat, String toFormat) {
 		
 		/*Date date=new Date(dateS);
 	    SimpleDateFormat fmt=new SimpleDateFormat(format);
 	    return fmt.format(date);
 		*/
-	    SimpleDateFormat fmtFront=new SimpleDateFormat(fromFormat);
-        SimpleDateFormat fmtBack=new SimpleDateFormat(toFormat);
-        
         
         Date date;
 		try {
+			SimpleDateFormat fmtFront=new SimpleDateFormat(fromFormat);
+	        SimpleDateFormat fmtBack=new SimpleDateFormat(toFormat);
 			date = fmtFront.parse(dateS);
 			return fmtBack.format(date);
 		} catch (ParseException e) {
+			//	
 		}       
         return null;
 	    
 	}	//	getContext
 	
-	
-	public static Date getDateFormat(String dateS, String fromFormat, String toFormat)
-	{
+	/**
+	 * Get Date Format
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/11/2014, 9:55:11
+	 * @param dateS
+	 * @param fromFormat
+	 * @param toFormat
+	 * @return
+	 * @return Date
+	 */
+	public static Date getDateFormat(String dateS, String fromFormat, String toFormat) {
 		
 		/*Date date=new Date(dateS);
 	    SimpleDateFormat fmt=new SimpleDateFormat(format);
 	    return fmt.format(date);
 		*/
-	    SimpleDateFormat fmtFront=new SimpleDateFormat(fromFormat);
+	    
         //SimpleDateFormat fmtBack=new SimpleDateFormat(toFormat);
         
         
         Date date;
 		try {
+			SimpleDateFormat fmtFront = new SimpleDateFormat(fromFormat);
 			date = fmtFront.parse(dateS);
 			return date;
 		} catch (ParseException e) {
+		//	
 		}       
         return null;
 	    

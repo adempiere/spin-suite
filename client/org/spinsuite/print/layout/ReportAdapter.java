@@ -26,6 +26,7 @@ import org.spinsuite.print.ColumnPrintData;
 import org.spinsuite.print.InfoReportField;
 import org.spinsuite.print.RowPrintData;
 import org.spinsuite.util.DisplayType;
+import org.spinsuite.util.Env;
 import org.spinsuite.util.TextViewArrayHolder;
 
 import android.content.Context;
@@ -153,12 +154,12 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 			//	Set Style
 			if(column.FieldAlignmentType
 					.equals(InfoReportField.FIELD_ALIGNMENT_TYPE_TRAILING_RIGHT))
-				tv_column.setGravity(Gravity.RIGHT);
+				tv_column.setGravity(Gravity.END);
 			else if(column.FieldAlignmentType
 					.equals(InfoReportField.FIELD_ALIGNMENT_TYPE_CENTER))
 				tv_column.setGravity(Gravity.CENTER_HORIZONTAL);
 			else 
-				tv_column.setGravity(Gravity.LEFT);
+				tv_column.setGravity(Gravity.START);
 			//	
 		}
 	}
@@ -383,11 +384,11 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 	                for(RowPrintData item : originalData) {
 	                	for(ColumnPrintData column : item.getColumns()){
 	                		if((column.getValue() != null 
-		                    		&& column.getValue().toLowerCase()
-		                    					.contains(constraint.toString().toLowerCase()))
+		                    		&& column.getValue().toLowerCase(Env.getLocate(ctx))
+		                    					.contains(constraint.toString().toLowerCase(Env.getLocate(ctx))))
 		                    	|| (column.getSuffix() != null 
-			                    		&& column.getSuffix().toLowerCase()
-			                    				.contains(constraint.toString().toLowerCase())))
+			                    		&& column.getSuffix().toLowerCase(Env.getLocate(ctx))
+			                    				.contains(constraint.toString().toLowerCase(Env.getLocate(ctx)))))
 		                        filteredResult.add(item);
 	                	}
 	                }

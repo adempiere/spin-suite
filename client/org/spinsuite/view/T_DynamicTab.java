@@ -132,8 +132,9 @@ public class T_DynamicTab extends Fragment
 	/**	Option Menu Item			*/
 	private final int O_SHARE								= 1;
 	private final int O_DELETE								= 2;
-	private final int O_ATTACH								= 3;
-	private final int O_VIEW_ATTACH							= 4;
+	private final int O_ATTACH_PHOTO						= 3;
+	private final int O_ATTACH_FILE							= 4;
+	private final int O_VIEW_ATTACH							= 5;
 	
 	/**	Option Menu					*/
 	private MenuItem mi_Search 								= null;
@@ -144,11 +145,13 @@ public class T_DynamicTab extends Fragment
 	private MenuItem mi_Save 								= null;
 	
 	/**	Results						*/
-	private static final int 		ACTION_TAKE_PHOTO		= 3;
+	private static final int 		ACTION_TAKE_FILE		= 3;
+	private static final int 		ACTION_TAKE_PHOTO		= 4;
 	
 	/**	Constants Type Save			*/
 	private static final String 	RECORD_SAVE				= "RS";
-	private static final String 	ATTACHMENT_SAVE			= "AS";
+	private static final String 	PHOTO_ATTACHMENT_SAVE	= "PS";
+	private static final String 	FILE_ATTACHMENT_SAVE	= "FS";
 	
 	
 	@Override
@@ -420,9 +423,12 @@ public class T_DynamicTab extends Fragment
 		//	Delete Record
 		popupMenu.getMenu().add(Menu.NONE, O_DELETE, 
 				Menu.NONE, getString(R.string.Action_Delete));
+		//	Attach a Photo
+		popupMenu.getMenu().add(Menu.NONE, O_ATTACH_PHOTO, 
+				Menu.NONE, getString(R.string.Action_AttachPhoto));
 		//	Attach a File
-		popupMenu.getMenu().add(Menu.NONE, O_ATTACH, 
-				Menu.NONE, getString(R.string.Action_AttachImage));
+		popupMenu.getMenu().add(Menu.NONE, O_ATTACH_FILE, 
+				Menu.NONE, getString(R.string.Action_AttachFile));
 		//	View Attachment
 		if(mGridTab.getPO() != null
 				&& mGridTab.getRecord_ID() > 0) {
@@ -454,14 +460,23 @@ public class T_DynamicTab extends Fragment
 	        			//	Delete
 	        			deleteRecord();
 	        			return true;
-	        		case O_ATTACH:
+	        		case O_ATTACH_PHOTO:
 	        			//	Verify Parent Changed
 	        			if(m_IsParentModifying) {
 	            			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
 	            			return false;
 	            		}
 	        			//	Do It
-	        			attachImage();
+	        			attachPhoto();
+	        			return true;
+	        		case O_ATTACH_FILE:
+	        			//	Verify Parent Changed
+	        			if(m_IsParentModifying) {
+	            			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
+	            			return false;
+	            		}
+	        			//	Do It
+	        			attachFile();
 	        			return true;
 	        		case O_VIEW_ATTACH:
 	        			viewAttachment();
@@ -531,11 +546,11 @@ public class T_DynamicTab extends Fragment
     }
     
     /**
-     * Action Attach
+     * Action Attach a Photo
      * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2014, 15:29:45
      * @return void
      */
-    private void attachImage() {
+    private void attachPhoto() {
     	//	Instance Attachment
     	if(m_AttHandler == null)
     		m_AttHandler = new AttachmentHandler(getActivity(), mGridTab.getSPS_Table_ID());
@@ -553,6 +568,20 @@ public class T_DynamicTab extends Fragment
 	    getActivity().startActivityForResult(intent, ACTION_TAKE_PHOTO);
 	}
 
+    /**
+     * Action Attach a File
+     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2014, 15:29:45
+     * @return void
+     */
+    private void attachFile() {
+    	Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		//	Set Data Type
+		intent.setType("*/*");
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		//	Start Activity
+		v_activity.startActivityForResult(intent, ACTION_TAKE_FILE);
+    }
+    
     /**
      * Refresh Header Index
      * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/04/2014, 08:17:32
@@ -755,7 +784,13 @@ public class T_DynamicTab extends Fragment
     		return;
     	//	
     	if(requestCode == ACTION_TAKE_PHOTO) {
-    		new SaveTask().execute(ATTACHMENT_SAVE);
+    		new SaveTask().execute(PHOTO_ATTACHMENT_SAVE);
+    	} else if(requestCode == ACTION_TAKE_FILE) {
+    		//	Valid
+    		if(data == null)
+    			return;
+    		//	
+    		new SaveTask().execute(FILE_ATTACHMENT_SAVE, data.getData().getPath());
     	} else if (resultCode == Activity.RESULT_OK) {
 	    	if(data != null) {
 	    		Bundle bundle = data.getExtras();
@@ -1075,9 +1110,12 @@ public class T_DynamicTab extends Fragment
 			if(m_Type == null)
 				return null;
 			//	
-			if(m_Type.equals(ATTACHMENT_SAVE)) {
+			if(m_Type.equals(PHOTO_ATTACHMENT_SAVE)) {
 				String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 				m_AttHandler.processImgAttach(fileName);
+			} else if(m_Type.equals(FILE_ATTACHMENT_SAVE)) { 
+				String origFile = params[1];
+				m_AttHandler.processFileAttach(origFile);
 			} else if(m_Type.equals(RECORD_SAVE)) {
 				is_OK = save();
 			}

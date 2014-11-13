@@ -62,7 +62,7 @@ public class T_Login_Init extends DialogFragment implements OnClickListener{
 		builder.setView(view);
 		
 		builder.setNegativeButton(R.string.Action_Cancel, this);
-		builder.setPositiveButton(R.string.Action_Ok, this);
+		builder.setPositiveButton(android.R.string.ok, this);
 		
 		return builder.create();
 		

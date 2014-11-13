@@ -18,7 +18,6 @@
  -->
 <resources>
     <string name="Action_Cancel">Cancel</string>
-	<string name="Action_Ok">Ok</string>
 	<string name="Action_Config">Configuration</string>
 	<string name="Action_Search">Search</string>
 	<string name="Action_Edit">Edit</string>
@@ -29,6 +28,8 @@
 	<string name="Action_Process">Process Now</string>
 	<string name="Action_PrintFormat">Change Print Format</string>
 	<string name="Action_AttachImage">Attach Image</string>
+	<string name="Action_AttachPhoto">Attach Photo</string>
+	<string name="Action_AttachFile">Attach File</string>
 	<string name="Action_ViewAttachment">View Attachment</string>
 	<string name="Action_DownloadAttachment">Download</string>
 	

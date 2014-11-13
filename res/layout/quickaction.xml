@@ -32,7 +32,8 @@
         android:layout_height="wrap_content"
         android:fadingEdgeLength="0dip"
         android:layout_below="@id/header2"
-        android:paddingLeft="1dip"
+        android:paddingStart="1dip"
+        android:paddingEnd="1dip"
         android:background="@drawable/quickaction_slider_background"
         android:scrollbars="none">
 

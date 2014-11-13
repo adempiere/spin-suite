@@ -133,7 +133,7 @@ public class Query
 	 */
 	public Query setOrderBy(String orderBy) {
 		this.orderBy = orderBy != null ? orderBy.trim() : null;
-		if (this.orderBy != null && this.orderBy.toUpperCase().startsWith("ORDER BY")) {
+		if (this.orderBy != null && this.orderBy.toUpperCase(Env.getLocate(ctx)).startsWith("ORDER BY")) {
 			this.orderBy = this.orderBy.substring(8);
 		}
 		return this;

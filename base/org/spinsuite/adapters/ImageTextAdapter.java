@@ -16,9 +16,11 @@
 package org.spinsuite.adapters;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.spinsuite.base.R;
 import org.spinsuite.util.DisplayImageTextItem;
+import org.spinsuite.util.Env;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -77,11 +79,22 @@ public class ImageTextAdapter extends ArrayAdapter<DisplayImageTextItem> {
 		TextView tv_Description = (TextView)item.findViewById(R.id.tv_Description);
 		tv_Description.setText(diti.getDescription());
 		
+		ImageView img_Item = (ImageView)item.findViewById(R.id.img_Item);
+		img_Item.setLayoutParams(new LayoutParams(MAX_SIZE, MAX_SIZE));
 		//	Set Image
 		if(diti.getImage() != null) {
-			ImageView img_Item = (ImageView)item.findViewById(R.id.img_Item);
 			img_Item.setImageBitmap(diti.getImage());
-			img_Item.setLayoutParams(new LayoutParams(MAX_SIZE, MAX_SIZE));
+		} else if(diti.getValue() != null
+				&& diti.getValue().length() > 0) {
+			if(diti.getValue().toLowerCase(
+					Env.getLocate(getContext())).endsWith(".pdf")) {
+				img_Item.setImageResource(Env.getResourceID(getContext(), R.attr.ic_ls_pdf));
+			} else if(diti.getValue().toLowerCase(
+					Env.getLocate(getContext())).endsWith(".xls")) {
+				img_Item.setImageResource(Env.getResourceID(getContext(), R.attr.ic_ls_xls));
+			} else {
+				img_Item.setImageResource(Env.getResourceID(getContext(), R.attr.ic_ls_file));
+			}
 		}
 		//	Return
 		return item;
