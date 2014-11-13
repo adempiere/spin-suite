@@ -17,23 +17,14 @@ package org.spinsuite.login;
 
 
 import org.spinsuite.base.R;
-import org.spinsuite.util.BackGroundTask;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.Builder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,24 +34,9 @@ import android.widget.TextView;
 @SuppressLint("ValidFragment")
 public class T_Login_ProgressSync extends DialogFragment implements OnClickListener{
 	
-	/** Text View Message*/
-	private TextView tv_Msg = null;
 	
-	/** Progress bar */
+	private TextView tv_Msg = null; 
 	private ProgressBar pb_Progress = null;
-	
-	/** Background Task */
-	private BackGroundTask task ; 
-	
-	private Context test ;
-	/**
-	 * *** Constructor ***
-	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 11/11/2014, 23:15:01
-	 * @param task
-	 */
-	public T_Login_ProgressSync(BackGroundTask task,Context test) {
-		this.task = task;
-	}
 	
 	@SuppressLint("InflateParams")
 	@Override
@@ -78,9 +54,7 @@ public class T_Login_ProgressSync extends DialogFragment implements OnClickListe
 		
 		builder.setView(view);
 		
-		builder.setNegativeButton(R.string.Stop, this);
-		builder.setPositiveButton(R.string.Hide, this);
-		builder.setCancelable(false);
+		builder.setNegativeButton(R.string.Action_Cancel, this);
 		
 		return builder.create();
 		
@@ -88,55 +62,16 @@ public class T_Login_ProgressSync extends DialogFragment implements OnClickListe
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
-		
-		switch (which) {
-			/** Cancel task And Dismiss Dialog */
-			case -2:
-				task.cancelTask(true);
-				this.dismiss();
-				break;
-			case -1:
-				
-				NotificationManager notificationManager=(NotificationManager)test.getSystemService(getActivity().NOTIFICATION_SERVICE);
-				  /*Intent startActivityIntent=new Intent(ImportService.this,ImportService.class);
-				  PendingIntent pendingIntent=PendingIntent.getActivity(test.getApplicationContext(),0,startActivityIntent,0);
-				  notification.setLatestEventInfo(this,"Andlytics import",message,pendingIntent);
-				  notificationManager.notify(NOTIFICATION_ID_PROGRESS,notification);
-				*/
-				/*
-				m_notificationMgr = (NotificationManager) getActivity().getSystemService(getActivity().NOTIFICATION_SERVICE);
-				int icon=R.drawable.bpartner_m;
-				  
-				Notification notification=new Notification(icon,"",System.currentTimeMillis());
-				  //Intent notificationIntent=new Intent(getActivity(),T_Login_ProgressSync.class);
-				  PendingIntent contentIntent=PendingIntent.getActivity(getActivity(),0,getView().ge,0);
-				  notification.setLatestEventInfo(getActivity(),"","",contentIntent);
-				  m_notificationMgr.notify(1,notification);
-				  */
-				break;
-			default:
-				break;
-		}
+		this.dismiss();
 	}
 	
-	/**
-	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 11/11/2014, 23:15:09
-	 * @param msg
-	 * @param error
-	 * @return void
-	 */
+	
 	public void setMsg(String msg,boolean error) {
 		tv_Msg.setText(msg);
 		if (error)
 			tv_Msg.setTextColor(Color.RED);
 	}
 	
-	/**
-	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 11/11/2014, 23:15:14
-	 * @param progress
-	 * @param error
-	 * @return void
-	 */
 	public void setProgress(int progress, boolean error){
 		
 		if (progress <= 0 )
@@ -146,13 +81,9 @@ public class T_Login_ProgressSync extends DialogFragment implements OnClickListe
 		
 		if (error)
 			pb_Progress.setVisibility(ProgressBar.GONE);
+		
 	}
 	
-	/**
-	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 11/11/2014, 23:15:17
-	 * @param p_Max
-	 * @return void
-	 */
 	public void setMaxValueProgressBar(int p_Max){
 		pb_Progress.setIndeterminate(false);
 		pb_Progress.setMax(p_Max);
@@ -162,10 +93,7 @@ public class T_Login_ProgressSync extends DialogFragment implements OnClickListe
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		getDialog().setTitle(R.string.Synchronzing);
-		getDialog().setCanceledOnTouchOutside(false);
-		getDialog().setCancelable(false);
-		
+		getDialog().setTitle(R.string.SynchronzeButtom);
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 }
