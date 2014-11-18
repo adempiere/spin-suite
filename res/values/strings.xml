@@ -57,6 +57,9 @@
 	<string name="M_Product_Category_ID">Product Category</string>
 	<string name="InitSyncManual">Manual Synchronization</string>
 	<string name="SynchronzeButtom">Synchronize</string>
+	<string name="Synchronzing">Synchronzing</string>
+	<string name="Stop">Stop</string>
+	<string name="Hide">Hide</string>
 	<string name="Upload">Upload</string>
 	<string name="Download">Download</string>
 	<string name="Changes">Changes</string>
