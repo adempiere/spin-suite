@@ -16,7 +16,6 @@
 package org.spinsuite.adapters;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import org.spinsuite.base.R;
 import org.spinsuite.util.DisplayImageTextItem;
