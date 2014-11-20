@@ -120,6 +120,7 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 		isInEditMode();
 		//	Load Edit Text
 		et_Date = (EditText) findViewById(R.id.et_Date);
+		et_Date.setTextAppearance(getContext(), R.style.TextDynamicTabEditText);
 		//	Load Button Date
 		ib_Date = (ImageButton) findViewById(R.id.ib_Date);
 		//	

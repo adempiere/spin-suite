@@ -28,7 +28,6 @@ import org.spinsuite.view.lookup.InfoTab;
 import org.spinsuite.view.lookup.Lookup;
 
 import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.KeyEvent;
@@ -90,9 +89,9 @@ public class FV_IndexRecordLine extends ListFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //	Get Layout
-        layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB 
-        		? android.R.layout.simple_list_item_activated_1 
-        				: android.R.layout.simple_list_item_1;
+        layout = R.layout.v_lookup_spinner;//Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB 
+        		//? android.R.layout.simple_list_item_activated_1 
+        			//	: android.R.layout.simple_list_item_1;
     }
     
     /**

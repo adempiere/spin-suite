@@ -16,6 +16,7 @@
 package org.spinsuite.view.lookup;
 
 
+import org.spinsuite.base.R;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.TabParameter;
 
@@ -96,6 +97,7 @@ public class VLookupString extends GridField {
 	@Override
 	protected void init() {
 		v_String = new EditText(getContext());
+		v_String.setTextAppearance(getContext(), R.style.TextDynamicTabEditText);
 		v_String.setOnFocusChangeListener(new OnFocusChangeListener() {
 			
 			@Override

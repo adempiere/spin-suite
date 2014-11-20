@@ -1,0 +1,6 @@
+<resources>
+    <dimen name="fontSizeMicro">12sp</dimen>
+    <dimen name="fontSizeSmall">14sp</dimen>
+    <dimen name="fontSizeMedium">18sp</dimen>
+    <dimen name="fontSizeLarge">22sp</dimen>
+</resources>

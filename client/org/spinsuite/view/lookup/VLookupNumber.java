@@ -19,6 +19,7 @@ package org.spinsuite.view.lookup;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
+import org.spinsuite.base.R;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.TabParameter;
@@ -104,6 +105,8 @@ public class VLookupNumber extends GridField {
 	@Override
 	protected void init() {
 		v_Number = new EditText(getContext());
+		v_Number.setTextAppearance(getContext(), R.style.TextDynamicTabEditText);
+		//	
 		v_Number.setOnFocusChangeListener(new OnFocusChangeListener() {
 			
 			@Override

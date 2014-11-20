@@ -23,7 +23,6 @@ import org.spinsuite.util.TabParameter;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -100,7 +99,7 @@ public class VLookupCheckBox extends GridField {
 	@Override
 	protected void init() {
 		v_CheckBox = new CheckBox(getContext());
-		v_CheckBox.setGravity(Gravity.CENTER_VERTICAL);
+		v_CheckBox.setTextAppearance(getContext(), R.style.TextDynamicTabCheckBox);
 		v_CheckBox.setText(m_field.Name);
 		v_CheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener(){
 

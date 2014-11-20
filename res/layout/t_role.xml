@@ -28,7 +28,8 @@
         	android:id="@+id/tV_Role"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:text="@string/AD_Role_ID" />
+        	android:text="@string/AD_Role_ID"
+        	style="@style/TextDynamicTabLabel" />
 
     	<Spinner
     	    android:id="@+id/sp_Role"
@@ -39,7 +40,8 @@
         	android:id="@+id/tV_Client"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:text="@string/AD_Client_ID" />
+        	android:text="@string/AD_Client_ID"
+        	style="@style/TextDynamicTabLabel" />
 
     	<Spinner
     	    android:id="@+id/sp_Client"
@@ -50,7 +52,8 @@
         	android:id="@+id/tV_Org"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:text="@string/AD_Org_ID" />
+        	android:text="@string/AD_Org_ID"
+        	style="@style/TextDynamicTabLabel" />
     	
     	<Spinner
     	    android:id="@+id/sp_Org"
@@ -61,7 +64,8 @@
         	android:id="@+id/tV_Warehouse"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:text="@string/M_Warehouse_ID" />
+        	android:text="@string/M_Warehouse_ID"
+        	style="@style/TextDynamicTabLabel" />
     	
     	<Spinner
     	    android:id="@+id/sp_Warehouse"
@@ -72,7 +76,8 @@
         	android:id="@+id/tV_Date"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:text="@string/Date" />
+        	android:text="@string/Date"
+        	style="@style/TextDynamicTabLabel" />
 
     	<DatePicker
     	    android:id="@+id/dp_Date"

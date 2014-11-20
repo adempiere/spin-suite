@@ -18,6 +18,7 @@ package org.spinsuite.view.custom;
 import java.util.ArrayList;
 
 import org.spinsuite.base.DB;
+import org.spinsuite.base.R;
 import org.spinsuite.model.POInfo;
 import org.spinsuite.util.DisplaySpinner;
 import org.spinsuite.util.LoadDataSpinner;
@@ -200,8 +201,8 @@ public class Cust_Spinner extends Spinner {
 	 * @return void
 	 */
 	public void load(ArrayList <DisplaySpinner> data){
-		ArrayAdapter<DisplaySpinner> sp_adapter = new ArrayAdapter<DisplaySpinner>(ctx, android.R.layout.simple_spinner_item, data);
-		sp_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		ArrayAdapter<DisplaySpinner> sp_adapter = new ArrayAdapter<DisplaySpinner>(ctx, R.layout.v_lookup_spinner, data);//R.layout.simple_spinner_item
+		sp_adapter.setDropDownViewResource(R.layout.v_lookup_spinner);
 		setAdapter(sp_adapter);
 	}
 	

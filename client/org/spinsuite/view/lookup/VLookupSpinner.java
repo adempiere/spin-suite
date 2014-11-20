@@ -17,6 +17,7 @@ package org.spinsuite.view.lookup;
 
 import java.util.logging.Level;
 
+import org.spinsuite.base.R;
 import org.spinsuite.base.DB;
 import org.spinsuite.interfaces.I_Lookup;
 import org.spinsuite.util.DisplayLookupSpinner;
@@ -368,9 +369,9 @@ public class VLookupSpinner extends GridField
 	private void populate(){
 		//	Set Adapter
 		ArrayAdapter<DisplayLookupSpinner> sp_adapter = 
-    			new ArrayAdapter<DisplayLookupSpinner>(getContext(), android.R.layout.simple_spinner_item, m_Lookup.getData());
+    			new ArrayAdapter<DisplayLookupSpinner>(getContext(), R.layout.v_lookup_spinner, m_Lookup.getData());
 		//	
-		sp_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		sp_adapter.setDropDownViewResource(R.layout.v_lookup_spinner);
 		//	
 		v_Spinner.setAdapter(sp_adapter);
 	}

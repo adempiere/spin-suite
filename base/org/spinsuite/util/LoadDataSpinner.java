@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import org.spinsuite.base.DB;
 
+import org.spinsuite.base.R;
 import android.content.Context;
 import android.database.Cursor;
 import android.widget.ArrayAdapter;
@@ -76,8 +77,8 @@ public class LoadDataSpinner {
 					data.add(new DisplaySpinner(rs.getInt(0), rs.getString(1)));
 			} while(rs.moveToNext());
 			ArrayAdapter<DisplaySpinner> sp_adapter = 
-	    			new ArrayAdapter<DisplaySpinner>(ctx, android.R.layout.simple_spinner_item, data);
-			sp_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    			new ArrayAdapter<DisplaySpinner>(ctx, R.layout.v_lookup_spinner, data);
+			sp_adapter.setDropDownViewResource(R.layout.v_lookup_spinner);
 			sp.setAdapter(sp_adapter);
 			//	Position
 			sp.setSelection(0);
@@ -85,8 +86,8 @@ public class LoadDataSpinner {
 		} else {
 			data.add(new DisplaySpinner(0, ""));
 			ArrayAdapter<DisplaySpinner> sp_adapter = 
-	    			new ArrayAdapter<DisplaySpinner>(ctx, android.R.layout.simple_spinner_item, data);
-			sp_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    			new ArrayAdapter<DisplaySpinner>(ctx, R.layout.v_lookup_spinner, data);
+			sp_adapter.setDropDownViewResource(R.layout.v_lookup_spinner);
 			sp.setAdapter(sp_adapter);
 		}
 		rs.close();

@@ -32,7 +32,8 @@
 		android:focusable="false"
 		android:focusableInTouchMode="false"
 		android:clickable="false"	    
-		android:gravity="right" >
+		android:gravity="end"
+		style="@style/TextDynamicTabEditText" >
 	</EditText>
 	
 	<ImageButton

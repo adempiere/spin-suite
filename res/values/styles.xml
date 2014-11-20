@@ -110,18 +110,46 @@
     
     <!-- Text Summary -->
     <style name="TextSummary" parent="TextStandard">
-        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textSize">@dimen/fontSizeMedium</item>
     </style>
    	
     <!-- Text Menu -->
     <style name="TextItemMenu" parent="TextStandard">
-        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textSize">@dimen/fontSizeMedium</item>
+    </style>
+    
+    <!-- Small Text Menu -->
+    <style name="TextItemSmallMenu" parent="TextStandard">
+        <item name="android:textSize">@dimen/fontSizeSmall</item>
     </style>
     
     <!-- Text Report  -->    
     <style name="TextItemReport" parent="TextStandard">
-        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textSize">@dimen/fontSizeMedium</item>
     </style>
+    
+    <!-- Text Dynamic Tab Label -->
+    <style name="TextDynamicTabLabel" parent="TextStandard">
+        <item name="android:textSize">@dimen/fontSizeSmall</item>
+    </style>
+
+    <!-- Text Dynamic Tab Values -->
+    <style name="TextDynamicTabEditText" parent="TextStandard">
+        <item name="android:textSize">@dimen/fontSizeMedium</item>
+    </style>
+
+    <!-- Spinner Dynamic Tab Values -->
+    <style name="TextDynamicTabSpinner">
+        <item name="android:textSize">@dimen/fontSizeMedium</item>
+        <item name="android:padding">5dp</item>
+    </style>
+
+    <!-- CheckBox Dynamic Tab Values -->
+    <style name="TextDynamicTabCheckBox">
+        <item name="android:textSize">@dimen/fontSizeMedium</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+    
     
     <!-- Text Report Header -->
     <style name="TextHeaderReport" parent="TextStandard">
@@ -153,21 +181,16 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
     
-    <!-- Small Text Menu -->
-    <style name="TextItemSmallMenu" parent="TextStandard">
-        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
-    </style>
-    
     <!-- Drawer Menu -->
     <style name="TextItemDrawerMenu" parent="TextStandard">
         <item name="android:textColor">@android:color/black</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceSmallPopupMenu</item>
+        <item name="android:textSize">@dimen/fontSizeSmall</item>
     </style>
 	
 	<!-- Small Drawer Menu -->
     <style name="TextItemDrawerSmallMenu" parent="TextStandard">
         <item name="android:textColor">@android:color/black</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceSmallPopupMenu</item>
+        <item name="android:textSize">@dimen/fontSizeSmall</item>
     </style>
     
     <!-- Search Text -->

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
+import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Lookup;
 import org.spinsuite.interfaces.OnFieldChangeListener;
 import org.spinsuite.util.DisplayType;
@@ -118,6 +119,7 @@ public abstract class GridField extends LinearLayout {
 		setOrientation(VERTICAL);
 		//	Set Label
 		v_Label = new TextView(getContext());
+		v_Label.setTextAppearance(getContext(), R.style.TextDynamicTabLabel);
 		//	
 		if(m_field != null)
 			v_Label.setText(m_field.Name);
