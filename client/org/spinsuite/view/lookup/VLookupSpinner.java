@@ -371,7 +371,7 @@ public class VLookupSpinner extends GridField
 		ArrayAdapter<DisplayLookupSpinner> sp_adapter = 
     			new ArrayAdapter<DisplayLookupSpinner>(getContext(), R.layout.v_lookup_spinner, m_Lookup.getData());
 		//	
-		sp_adapter.setDropDownViewResource(R.layout.v_lookup_spinner);
+		sp_adapter.setDropDownViewResource(R.layout.v_lookup_spinner_drop_down);
 		//	
 		v_Spinner.setAdapter(sp_adapter);
 	}

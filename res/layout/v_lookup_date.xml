@@ -24,23 +24,16 @@
     	    
 	<EditText
 		android:id="@+id/et_Date"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
 		android:layout_weight="10"
 		android:ems="10"
 		android:inputType="date"
-		android:focusable="false"
-		android:focusableInTouchMode="false"
-		android:clickable="false"	    
-		android:gravity="end"
-		style="@style/TextDynamicTabEditText" >
+		style="@style/TextDynamicTabEditTextSearch" >
 	</EditText>
 	
 	<ImageButton
 		android:id="@+id/ib_Date"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
 		android:layout_weight="1"
-		android:src="?attr/ic_lt_date" 
+		android:src="?attr/ic_lt_date"
+		style="@style/TextDynamicTabButtonSeach"
 		android:contentDescription="@string/Date"/>
 </LinearLayout>

@@ -1,6 +1,17 @@
 <resources>
+    <!-- Font Size -->
     <dimen name="fontSizeMicro">12sp</dimen>
     <dimen name="fontSizeSmall">14sp</dimen>
     <dimen name="fontSizeMedium">18sp</dimen>
     <dimen name="fontSizeLarge">22sp</dimen>
+    <!-- Dynamic Tab Size -->
+    <dimen name="row_layout_height">72dp</dimen>
+    <dimen name="textView_layout_height">10dp</dimen>
+    <dimen name="editText_layout_height">48dp</dimen>
+    <dimen name="spinner_layout_height">48dp</dimen>
+    <dimen name="spinner_drop_down_layout_height">44dp</dimen>
+    <dimen name="list_layout_height">44dp</dimen>
+    <dimen name="button_layout_width">48dp</dimen>
+    <dimen name="button_layout_height">48dp</dimen>
+    <dimen name="checkBox_layout_height">48dp</dimen>
 </resources>

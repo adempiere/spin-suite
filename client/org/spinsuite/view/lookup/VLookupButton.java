@@ -16,6 +16,7 @@
 package org.spinsuite.view.lookup;
 
 
+import org.spinsuite.base.R;
 import org.spinsuite.util.LoadActionMenu;
 import org.spinsuite.util.TabParameter;
 
@@ -110,6 +111,10 @@ public class VLookupButton extends GridField {
 		loadActionMenu = new LoadActionMenu(v_activity, true);
 		v_Button = new Button(getContext());
 		v_Button.setGravity(Gravity.CENTER_VERTICAL);
+		v_Button.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 
+				(int)getResources().getDimension(R.dimen.row_layout_height)));
+		
+		
 		v_Button.setText(m_field.Name);
 		setEnabled(!m_field.IsReadOnly);
 		//	Add to view

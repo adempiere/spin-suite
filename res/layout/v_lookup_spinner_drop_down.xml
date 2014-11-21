@@ -16,23 +16,8 @@
  * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com				  		 *
  ************************************************************************************/
  -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-   	android:layout_height="wrap_content"
-    android:orientation="horizontal" 
-  	android:id="@+id/ll_Search">
-    	    
-	<EditText
-		android:id="@+id/et_Search"
-		android:layout_weight="10"
-		android:ems="10"    
-		style="@style/TextDynamicTabEditTextSearch" >
-	</EditText>
-	
-	<ImageButton
-		android:id="@+id/ib_Search"
-		android:layout_weight="1"
-		android:src="?attr/ic_lt_search" 
-		android:contentDescription="@string/None"
-		style="@style/TextDynamicTabButtonSeach" />
-</LinearLayout>
+ <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tv_SpinnerDropDown"
+        style="@style/TextDynamicTabSpinnerDropDown"
+        android:text="@string/None">
+</TextView>

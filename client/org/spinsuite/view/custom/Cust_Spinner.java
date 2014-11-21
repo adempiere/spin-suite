@@ -202,7 +202,7 @@ public class Cust_Spinner extends Spinner {
 	 */
 	public void load(ArrayList <DisplaySpinner> data){
 		ArrayAdapter<DisplaySpinner> sp_adapter = new ArrayAdapter<DisplaySpinner>(ctx, R.layout.v_lookup_spinner, data);//R.layout.simple_spinner_item
-		sp_adapter.setDropDownViewResource(R.layout.v_lookup_spinner);
+		sp_adapter.setDropDownViewResource(R.layout.v_lookup_spinner_drop_down);
 		setAdapter(sp_adapter);
 	}
 	

@@ -128,26 +128,60 @@
         <item name="android:textSize">@dimen/fontSizeMedium</item>
     </style>
     
-    <!-- Text Dynamic Tab Label -->
+    <!-- Dynamic Tab Label -->
     <style name="TextDynamicTabLabel" parent="TextStandard">
         <item name="android:textSize">@dimen/fontSizeSmall</item>
     </style>
 
-    <!-- Text Dynamic Tab Values -->
+    <!-- Dynamic Tab Values for Edit Text -->
     <style name="TextDynamicTabEditText" parent="TextStandard">
         <item name="android:textSize">@dimen/fontSizeMedium</item>
+        <item name="android:layout_height">@dimen/editText_layout_height</item>
     </style>
-
-    <!-- Spinner Dynamic Tab Values -->
+    
+    <!-- Dynamic Tab Values for Spinner -->
     <style name="TextDynamicTabSpinner">
         <item name="android:textSize">@dimen/fontSizeMedium</item>
-        <item name="android:padding">5dp</item>
+        <item name="android:layout_height">@dimen/spinner_layout_height</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
-    <!-- CheckBox Dynamic Tab Values -->
+    <!-- Dynamic Tab Values for Spinner  -->
+    <style name="TextDynamicTabSpinnerDropDown" parent="TextDynamicTabSpinner">
+        <item name="android:padding">2dp</item>
+    </style>
+    
+    <!-- Dynamic Tab Values for List -->
+    <style name="TextDynamicTabList">
+        <item name="android:textSize">@dimen/fontSizeMedium</item>
+        <item name="android:layout_height">@dimen/editText_layout_height</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">2dp</item>
+    </style>
+
+    <!-- CheckBox Dynamic Tab Values For CheckBox -->
     <style name="TextDynamicTabCheckBox">
         <item name="android:textSize">@dimen/fontSizeMedium</item>
         <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_height">@dimen/checkBox_layout_height</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+    
+    <!-- Dynamic Tab Values for Search -->
+    <style name="TextDynamicTabEditTextSearch" parent="TextDynamicTabEditText">
+        <item name="android:gravity">end|center_vertical</item>
+        <item name="android:focusable">false</item>
+		<item name="android:focusableInTouchMode">false</item>
+		<item name="android:clickable">false</item>
+		<item name="android:layout_height">@dimen/editText_layout_height</item>
+    </style>
+    
+    <!-- Text Dynamic Tab Values for Button Search -->
+    <style name="TextDynamicTabButtonSeach">
+        <item name="android:layout_width">@dimen/button_layout_width</item>
+        <item name="android:layout_height">@dimen/button_layout_height</item>
     </style>
     
     

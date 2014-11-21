@@ -46,8 +46,6 @@ public class FV_IndexRecordLine extends ListFragment
 	private InfoTab 						tabInfo				= null;
 	/**	Lookup 						*/
 	private Lookup 							lookup 				= null;
-	/**	Layout Type					*/
-	private int 							layout				= 0;
 	/**	Adapter						*/
 	private ArrayAdapter<MultiKeyNamePair> 	adapter				= null;
 	/**	Parent Tab Record ID		*/
@@ -88,10 +86,6 @@ public class FV_IndexRecordLine extends ListFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //	Get Layout
-        layout = R.layout.v_lookup_spinner;//Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB 
-        		//? android.R.layout.simple_list_item_activated_1 
-        			//	: android.R.layout.simple_list_item_1;
     }
     
     /**
@@ -124,7 +118,7 @@ public class FV_IndexRecordLine extends ListFragment
     		values = new MultiKeyNamePair[]{voidRecord};
     	}
     	//	Instance Adapter
-    	adapter = new ArrayAdapter<MultiKeyNamePair>(getActivity(), layout, values);
+    	adapter = new ArrayAdapter<MultiKeyNamePair>(getActivity(), R.layout.v_lookup_list, values);
     	//	Set Adapter List
     	setListAdapter(adapter);
     	//	Return

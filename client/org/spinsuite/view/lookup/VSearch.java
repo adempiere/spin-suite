@@ -124,7 +124,6 @@ public class VSearch extends LinearLayout
 		isInEditMode();
 		//	Load Edit Text
 		et_Search = (EditText) findViewById(R.id.et_Search);
-		et_Search.setTextAppearance(getContext(), R.style.TextDynamicTabEditText);
 		//	Load Button Search
 		ib_Search = (ImageButton) findViewById(R.id.ib_Search);
 		//	

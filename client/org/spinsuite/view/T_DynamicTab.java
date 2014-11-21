@@ -914,6 +914,7 @@ public class T_DynamicTab extends Fragment
 		/**	Layout					*/
 		private LinearLayout		v_row			= null;
 		private LayoutParams		v_param			= null;
+		private LayoutParams		v_rowParam		= null;
 		private TableLayout 		v_view 			= null;
 		private ArrayList<Lookup>	m_Lookup 		= null;
 		private int 				m_currentLookup = 0;
@@ -930,7 +931,10 @@ public class T_DynamicTab extends Fragment
 		private void init() {
 	    	//	Set Parameter
 	    	v_param = new LayoutParams(LayoutParams.MATCH_PARENT, 
-	    			LayoutParams.MATCH_PARENT, WEIGHT);   
+	    			LayoutParams.MATCH_PARENT, WEIGHT);
+	    	//	Set Parameter to Row
+	    	v_rowParam = new LayoutParams(LayoutParams.MATCH_PARENT, 
+	    			(int)getResources().getDimension(R.dimen.row_layout_height));
 	    	//	Load Table Info
 	    	tabInfo = new InfoTab(getActivity(), m_TabParam.getSPS_Tab_ID(), conn);
 	    	//	View
@@ -1068,6 +1072,7 @@ public class T_DynamicTab extends Fragment
 					v_row = new LinearLayout(getActivity());
 					v_row.setOrientation(LinearLayout.HORIZONTAL);
 					v_row.setWeightSum(WEIGHT_SUM);
+					v_row.setLayoutParams(v_rowParam);
 				}
 				//	Set Listener
 				lookup.setOnFieldChangeListener(m_Listener);
