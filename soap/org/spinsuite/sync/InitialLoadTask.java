@@ -13,21 +13,29 @@
  * Copyright (C) 2012-2013 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Carlos Parada www.erpcya.com             				 		 *
  *************************************************************************************/
-package org.spinsuite.initialload;
+package org.spinsuite.sync;
 
 import java.util.List;
+
 import org.ksoap2.serialization.SoapObject;
-import org.spinsuite.base.R;
 import org.spinsuite.interfaces.BackGroundProcess;
-import org.spinsuite.login.T_Connection;
-import org.spinsuite.login.T_Login_ProgressSync;
 import org.spinsuite.model.MSPSSyncMenu;
 import org.spinsuite.model.MWSWebServiceType;
 import org.spinsuite.util.BackGroundTask;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.StringNamePair;
 
-public class InitialLoadTask implements BackGroundProcess{
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
+
+public class InitialLoadTask extends Service implements BackGroundProcess{
+
 
 	/** Public Msg*/
 	private String m_PublicMsg = "";
@@ -42,10 +50,10 @@ public class InitialLoadTask implements BackGroundProcess{
 	private BackGroundTask m_Task = null;
 	
 	/** Connection Windows*/
-	private T_Connection m_Conn = null;
+	//private T_Connection m_Conn = null;
 	
 	/** Dialog Message Process*/ 
-	private T_Login_ProgressSync df = null;
+	//private T_Login_ProgressSync df = null;
 	
 	/** Url */
 	private String m_URL = ""; 
@@ -68,10 +76,23 @@ public class InitialLoadTask implements BackGroundProcess{
 	/** Soap Action */
 	private String m_SoapAction = "";
 	
-	
+	/** Timeout */
 	private int m_Timeout = 0;
 	
+	/** Notification Manager*/
+	private NotificationManager m_NFManager = null;
+	
+	/** Max Value Progress Bar*/
+	private int m_MaxPB = 0;
+	
+	/** Builder*/
+	private Builder m_Builder = null;
+	
+	/** Pending Intent T_Connection Fragment Activity*/ 
+	private PendingIntent m_PendingIntent = null; 
 	private static final String 	KEY_POS_TAB			= "posTab";
+	
+	
 	
 	/**
 	 * 
@@ -87,7 +108,7 @@ public class InitialLoadTask implements BackGroundProcess{
 	 * @param p_Conn
 	 * @param p_Timeout
 	 */
-	public InitialLoadTask(String p_URL, String p_NameSpace, String p_Method,boolean p_IsNetService, String p_User,String p_PassWord,String p_SoapAction,T_Connection p_Conn,String p_Timeout) {
+	/*public InitialLoadTask(String p_URL, String p_NameSpace, String p_Method,boolean p_IsNetService, String p_User,String p_PassWord,String p_SoapAction,T_Connection p_Conn,String p_Timeout) {
 		// TODO Auto-generated constructor stub
 		
 		m_URL = p_URL;
@@ -100,7 +121,20 @@ public class InitialLoadTask implements BackGroundProcess{
 		m_Conn =p_Conn;
 		m_Timeout = Integer.parseInt(p_Timeout);
 		
-	}
+		//Set Notification Panel
+		m_NFManager = (NotificationManager) m_Conn.getSystemService(Context.NOTIFICATION_SERVICE);
+		m_Builder = new NotificationCompat.Builder(m_Conn);
+		
+		//
+		Intent intent = new Intent(m_Conn, T_Connection.class); 
+		TaskStackBuilder stackBuilder = TaskStackBuilder.create(m_Conn);
+		stackBuilder.addParentStack(T_Connection.class);
+		// Adds the Intent to the top of the stack
+		stackBuilder.addNextIntent(intent);
+		m_PendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+		m_Builder.setContentIntent(m_PendingIntent);
+		
+	}*/
 	
 	@Override
 	public void publishBeforeInit() {
@@ -110,8 +144,14 @@ public class InitialLoadTask implements BackGroundProcess{
 	@Override
 	public void publishOnRunning() {
 		// TODO Auto-generated method stub
-		df.setMsg(m_PublicMsg,m_Error);
-		df.setProgress(m_Progress, m_Error);
+		//df.setMsg(m_PublicMsg,m_Error);
+		//df.setProgress(m_Progress, m_Error);
+		m_Builder.setContentTitle("Titulo")
+								.setContentText(m_PublicMsg)
+								.setProgress(m_MaxPB, m_Progress, m_Progress == -1)
+								.setSmallIcon(android.R.drawable.stat_sys_download)
+								;
+		m_NFManager.notify(0, m_Builder.build());
 	}
 
 	@Override
@@ -133,9 +173,9 @@ public class InitialLoadTask implements BackGroundProcess{
 	 * @return void
 	 */
 	public void runTask(){
-		m_Task = new BackGroundTask(this, m_Conn);
-		df = new T_Login_ProgressSync(m_Task,m_Conn);
-    	df.show(m_Conn.getFragmentManager(), m_Conn.getResources().getString(R.string.InitSync));
+		m_Task = new BackGroundTask(this, this);
+		//df = new T_Login_ProgressSync(m_Task,m_Conn);
+    	//df.show(m_Conn.getFragmentManager(), m_Conn.getResources().getString(R.string.InitSync));
 		m_Task.runTask();
 	}
 	
@@ -184,7 +224,8 @@ public class InitialLoadTask implements BackGroundProcess{
 	 * @return void
 	 */
 	public void setMaxValueProgressBar(int p_Max){
-		df.setMaxValueProgressBar(p_Max);
+		//df.setMaxValueProgressBar(p_Max);
+		m_MaxPB = p_Max;
 	}
 	
 	/**
@@ -211,12 +252,12 @@ public class InitialLoadTask implements BackGroundProcess{
 				))
 			return;
 		
-		List<MSPSSyncMenu> sm = MSPSSyncMenu.getNodes(m_Conn, "0", InitialLoad.INITIALLOAD_ServiceDefinition, InitialLoad.INITIALLOAD_ServiceMethodDataSynchronization, null, null);
+		List<MSPSSyncMenu> sm = MSPSSyncMenu.getNodes(this, "0", InitialLoad.INITIALLOAD_ServiceDefinition, InitialLoad.INITIALLOAD_ServiceMethodDataSynchronization, null, null);
 		
 		try{
 			for (MSPSSyncMenu mspsSyncMenu : sm) {
 				
-				MWSWebServiceType wst = new MWSWebServiceType(m_Conn, mspsSyncMenu.getWS_WebServiceType_ID(), null);
+				MWSWebServiceType wst = new MWSWebServiceType(this, mspsSyncMenu.getWS_WebServiceType_ID(), null);
 				refreshMSG("Calling " +  mspsSyncMenu.getName() ,false,-1);
 				//Call Web Service Method Web Sevice Definition
 	    		if (!CallWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
@@ -231,41 +272,7 @@ public class InitialLoadTask implements BackGroundProcess{
 			e.printStackTrace();
 		}
 		setContext();
-		df.dismiss();
-		/*
-		DB conn = new DB(m_Conn);
-		conn.openDB(DB.READ_ONLY);
-		Cursor rs = null;
-		try{
-			//Call Web Service Method Data Synchronization
-			String sql = new String("SELECT wst.Value " +
-									"FROM SPS_SyncMenu sm " +
-									"INNER JOIN WS_WebServiceType wst ON sm.WS_WebServiceType_ID = wst.WS_WebServiceType_ID " +
-									"INNER JOIN WS_WebServiceMethod wsm ON wsm.WS_WebServiceMethod_ID = wst.WS_WebServiceMethod_ID " +
-									"INNER JOIN WS_WebService ws ON ws.WS_WebService_ID = wst.WS_WebService_ID " +
-									"WHERE ws.Value = ? AND wsm.Value = ? ");
-			
-			rs = conn.querySQL(sql, new String[]{InitialLoad.INITIALLOAD_ServiceDefinition,InitialLoad.INITIALLOAD_ServiceMethodDataSynchronization});    	
-	    	if(rs.moveToFirst()){
-	    		do{
-	    			refreshMSG("Calling " + rs.getString(0),false,-1);
-	    			//Call Web Service Method Web Sevice Definition
-		    		if (!CallWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
-		    							new StringNamePair(ILCall.m_ServiceMethodField, InitialLoad.INITIALLOAD_ServiceMethodDataSynchronization),
-		    							new StringNamePair(ILCall.m_ServiceTypeField, rs.getString(0)),
-		    							new StringNamePair(ILCall.m_Page, "0")))
-		    			break;				
-	    		} while(rs.moveToNext());
-	    	};
-		}catch (Exception e){
-			LogM.log(m_Conn, InitialLoadTask.class, Level.SEVERE, e.getLocalizedMessage(), e.getCause());
-			refreshMSG(e.getLocalizedMessage(), true, null);
-		}
-		finally{
-			conn.closeDB(rs);
-	    	DB.closeConnection(conn);	
-		}
-	    */
+		//df.dismiss();
 	}
 	
 	/**
@@ -282,7 +289,7 @@ public class InitialLoadTask implements BackGroundProcess{
 		int CountWS = 0;
 		int iWS = -1;
 		int iPage =-1;
-		InitialLoad il = new InitialLoad(m_URL, m_NameSpace, m_Method, m_IsNetService, m_SoapAction, m_User, m_PassWord, this, m_Timeout, m_Conn);
+		InitialLoad il = new InitialLoad(m_URL, m_NameSpace, m_Method, m_IsNetService, m_SoapAction, m_User, m_PassWord, this, m_Timeout, this);
 		
 		for (int i=0;i<Params.length;i++){
 			il.addPropertyToCall(Params[i].getKey(), Params[i].getName());
@@ -385,12 +392,51 @@ public class InitialLoadTask implements BackGroundProcess{
 	 * @return void
 	 */
 	public void setContext() {
-		Env.setIsEnvLoad(m_Conn, true);
-		Env.setContext(m_Conn, "#SUser", m_User);
-		Env.setContext(m_Conn, "#SPass", m_PassWord);
-		Env.setSavePass(m_Conn, true);
-		Env.setAutoLogin(m_Conn, true);
-		Env.setContext(m_Conn, KEY_POS_TAB, 1);
-		Env.setContext(m_Conn, "#Timeout", m_Timeout);
+		Env.setIsEnvLoad(this, true);
+		Env.setContext(this, "#SUser", m_User);
+		Env.setContext(this, "#SPass", m_PassWord);
+		Env.setSavePass(this, true);
+		Env.setAutoLogin(this, true);
+		Env.setContext(this, KEY_POS_TAB, 1);
+		Env.setContext(this, "#Timeout", m_Timeout);
 	}
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		// TODO Auto-generated method stub
+		//intent.get
+		
+		//m_Conn = (T_Connection)getBaseContext();
+		m_URL = intent.getCharSequenceExtra("URL").toString();
+		m_NameSpace = intent.getCharSequenceExtra("NameSpace").toString();
+		m_Method = intent.getCharSequenceExtra("Method").toString();
+		m_IsNetService = intent.getBooleanExtra("IsNetService",false);
+		m_User = intent.getCharSequenceExtra("User").toString(); 
+		m_SoapAction = intent.getCharSequenceExtra("SoapAction").toString();
+		m_PassWord = intent.getCharSequenceExtra("PassWord").toString();
+		//m_Conn =p_Conn;
+		m_Timeout = intent.getIntExtra("Timeout",0);
+		
+		//Set Notification Panel
+		m_NFManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+		m_Builder = new NotificationCompat.Builder(this);
+		this.runTask();
+		//
+		//Intent intent = new Intent(m_Conn, T_Connection.class); 
+		//TaskStackBuilder stackBuilder = TaskStackBuilder.create(m_Conn);
+		//stackBuilder.addParentStack(T_Connection.class);
+		// Adds the Intent to the top of the stack
+		//stackBuilder.addNextIntent(intent);
+		//m_PendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+		//m_Builder.setContentIntent(m_PendingIntent);
+		
+		return super.onStartCommand(intent, flags, startId);
+	}
+
 }

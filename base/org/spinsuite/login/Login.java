@@ -97,7 +97,7 @@ public class Login extends TV_Base implements I_CancelOk {
     		}
     	} else {
     		m_LoadType = DATA_BASE;
-			new LoadAccessTask().execute();
+			//new LoadAccessTask().execute();
     	}
     	//	
     }  

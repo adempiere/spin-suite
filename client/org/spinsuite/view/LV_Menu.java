@@ -103,6 +103,8 @@ public class LV_Menu extends Activity {
 				currentMenuItem = item;
 			}
         });
+        
+       
 	}
 	
 	/**

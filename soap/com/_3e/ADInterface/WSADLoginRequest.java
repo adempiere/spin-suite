@@ -27,12 +27,12 @@ import android.content.Context;
 public class WSADLoginRequest extends SoapObject{
 
 	public final static String NameSpace =  "ADLoginRequest";
-	public final static String User =  "ADLoginRequest";
-	public final static String Pass =  "ADLoginRequest";
-	public final static String ClientID =  "ADLoginRequest";
-	public final static String RoleID =  "ADLoginRequest";
-	public final static String OrgID =  "ADLoginRequest";
-	public final static String WarehouseID =  "ADLoginRequest";
+	public final static String User =  "user";
+	public final static String Pass =  "pass";
+	public final static String ClientID =  "ClientID";
+	public final static String RoleID =  "RoleID";
+	public final static String OrgID =  "OrgID";
+	public final static String WarehouseID =  "WarehouseID";
 	
 	/**
 	 * *** Constructor ***

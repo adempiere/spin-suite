@@ -179,7 +179,7 @@ public class DisplayMenuItem implements Parcelable {
 		this.m_AD_RuleAfter_ID = m_AD_RuleAfter_ID;
 		this.m_AD_RuleBefore_ID = m_AD_RuleBefore_ID; 
 		this.m_MenuType = m_MenuType;
-		this.m_Action = DisplayMenuItem.ACTION_WebService;
+		this.m_Action = DisplayMenuItem.ACTION_WSDownload;
 	}
 	
 	/**	Action Menu			*/
@@ -255,6 +255,11 @@ public class DisplayMenuItem implements Parcelable {
 	public static final String 	ACTION_Window 						= "W";
 	/** Web Service*/
 	public static final String 	ACTION_WebService 					= "S";
+	/** Web Service Download*/
+	public static final String 	ACTION_WSDownload 					= "D";
+	/** Web Service Upload*/
+	public static final String 	ACTION_WSUpload 					= "U";
+	
 	/** DeploymentType 					*/
 	public static final int 	DEPLOYMENTTYPE_AD_Reference_ID		= 53506;
 	/** Direct Form = D 				*/

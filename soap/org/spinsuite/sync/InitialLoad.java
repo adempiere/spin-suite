@@ -13,7 +13,7 @@
  * Copyright (C) 2012-2013 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Carlos Parada www.erpcya.com             				 		 *
  *************************************************************************************/
-package org.spinsuite.initialload;
+package org.spinsuite.sync;
 
 import java.io.IOException;
 import java.util.logging.Level;

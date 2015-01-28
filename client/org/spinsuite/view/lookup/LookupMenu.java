@@ -40,6 +40,8 @@ public class LookupMenu {
 	public static final String QUICK_ACTION_MENU= "Q";
 	/**	Quick Action Menu		*/
 	public static final String SYNCHRONIZATION_MENU = "S";
+	/** Spin-Suite Service**/
+	public static final int WS_ID = 50006;
 	
 	/**	Menu Type				*/
 	private String 						menuType 	= MAIN_MENU;
@@ -104,7 +106,8 @@ public class LookupMenu {
 							"m.WS_WebServiceType_ID, " +
 							"m.AD_RuleAfter_ID, " +
 							"m.AD_RuleBefore_ID " +
-							"FROM SPS_SyncMenu m " + 
+							"FROM SPS_SyncMenu m " +
+							"INNER JOIN WS_WebService ws ON(ws.WS_WebService_ID = m.WS_WebService_ID) " +
 							"INNER JOIN AD_Tree t ON(t.AD_Table_ID = 53501) " + 
 							"LEFT  JOIN AD_TreeNode tn ON(tn.AD_Tree_ID = t.AD_Tree_ID AND tn.Node_ID = m.SPS_SyncMenu_ID) "); 
 			} else {
@@ -125,6 +128,7 @@ public class LookupMenu {
 							"m.AD_RuleBefore_ID " +
 							"FROM SPS_SyncMenu m " + 
 							"INNER JOIN SPS_SyncMenu_Trl mt ON (m.SPS_SyncMenu_ID = mt.SPS_SyncMenu_ID) " +
+							"INNER JOIN WS_WebService ws ON(ws.WS_WebService_ID = m.WS_WebService_ID) " +
 							"INNER JOIN AD_Tree t ON(t.AD_Table_ID = 53501) " + 
 							"LEFT  JOIN AD_TreeNode tn ON(tn.AD_Tree_ID = t.AD_Tree_ID AND tn.Node_ID = m.SPS_SyncMenu_ID)  ");
 			}
@@ -135,17 +139,18 @@ public class LookupMenu {
 					"WHERE m.IsActive = 'Y' " +
 					"AND (" +
 					"		m.WS_WebServiceType_ID IS NOT NULL  " +
+					
 					"		OR m.AD_RuleAfter_ID IS NOT NULL  " +
 					"		OR m.AD_RuleBefore_ID IS NOT NULL  " +
 					"	 	OR m.IsSummary = 'Y'" +
 					")" +
-					"AND tn.Parent_ID = ").append(parent_ID).append(" ");
+					"AND tn.Parent_ID = ").append(parent_ID).append(" " +
+					"AND ws.WS_WebService_ID <> ").append(LookupMenu.WS_ID ).append(" ");
 			//	Order By
 			sql.append("ORDER BY tn.SeqNo");
 			LogM.log(ctx, getClass(), Level.FINE, "SQL=" + sql);
 			LogM.log(ctx, getClass(), Level.FINE, "MenuType=" + menuType);
 			
-			System.out.println(sql.toString());
 			Cursor rs = conn.querySQL(sql.toString(), null);//new String[]{menuType}
 			
 			data = new ArrayList<DisplayMenuItem>();

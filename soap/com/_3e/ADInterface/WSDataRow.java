@@ -60,12 +60,12 @@ public class WSDataRow extends SoapObject{
 	 * @return void
 	 */
 	private void setFields(){
-		Cursor rs = m_con.querySQL("select AC.ColumnName,SynchronizeType " +
-									" from " + 	
+		Cursor rs = m_con.querySQL("SELECT AC.ColumnName " +
+									" FROM " + 	
 									"WS_WebServiceType WST " + 
-									"Inner Join WS_WebServiceFieldInput WSI On WST.WS_WebServiceType_ID = WSI.WS_WebServiceType_ID " +
-									"Inner Join AD_Column AC On AC.AD_Column_ID = WSI.AD_Column_ID " +
-									"Where WST.WS_WebServiceType_ID=?", new String[]{m_WS_WebServiceType_ID.toString()});
+									"INNER JOIN WS_WebServiceFieldInput WSI ON (WST.WS_WebServiceType_ID = WSI.WS_WebServiceType_ID) " +
+									"INNER JOIN AD_Column AC ON (AC.AD_Column_ID = WSI.AD_Column_ID) " +
+									"WHERE WST.WS_WebServiceType_ID=?", new String[]{m_WS_WebServiceType_ID.toString()});
 		int i;
 		WSField l_field;
 		String l_NameColumn;

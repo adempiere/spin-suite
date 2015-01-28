@@ -21,6 +21,7 @@ import org.spinsuite.adapters.MenuAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.login.Login;
+import org.spinsuite.sync.SyncDataTask;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
@@ -68,7 +69,7 @@ public class LV_MenuSync extends Activity {
 		
 		Bundle bundle = getIntent().getExtras();		
     	if(bundle != null){
-    		param = (ActivityParameter)bundle.getParcelable("Param");
+    		param = (ActivityParameter)bundle.getParcelable("ParamSync");
 		}
     	if(param == null)
     		param = new ActivityParameter();
@@ -102,7 +103,24 @@ public class LV_MenuSync extends Activity {
 				currentOptionBundle = loadActionMenu.loadAction(item, param);
 				currentMenuItem = item;
 			}
+			
         });
+        
+        
+        menu.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        	public boolean onItemLongClick(AdapterView<?> arg0, View v,
+                    int index, long arg3) {
+        		DisplayMenuItem item = null;
+        		if (arg0.getItemAtPosition(index) instanceof DisplayMenuItem)
+        			item = (DisplayMenuItem) arg0.getItemAtPosition(index); 
+        		
+        		SyncDataTask sdt = new SyncDataTask(item.getSPS_SyncMenu_ID(),v.getContext());
+        		//sdt.run();
+        		//System.out.println(arg0.getItemAtPosition(index));
+        		
+        		return true;
+        	}
+		});
 	}
 	
 	/**

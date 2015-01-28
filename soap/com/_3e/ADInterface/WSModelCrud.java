@@ -30,19 +30,33 @@ public class WSModelCrud extends SoapObject{
 
 	/** Record ID */
 	private Integer m_Record_ID;
+	
 	/** Connection DB */
 	private DB m_con;
+	
 	/** Web Service Type ID */ 
 	private Integer m_WS_WebServiceType_ID;
+	
 	/** Cursor */ 
 	private Cursor m_rs;
+	
 	/** Record ID Static Value*/ 
-	public static String PARAMETER_RecordID="RecordID";
+	public static final String PARAMETER_RecordID="RecordID";
+	
 	/** Filter Static Value*/
-	public static String PARAMETER_Filter="Filter";
+	public static final String PARAMETER_Filter="Filter";
+	
+	/** Page Number Static Value*/
+	public static final String PARAMETER_PageNo = "PageNo";
+	
+	/** Soap Object Name*/
+	public static final String ModelCRUD = "ModelCRUD";
+	
 	/** Filter */
 	private String m_Filter;
 	
+	/** Page Number*/
+	private int m_PageNo = 0 ; 
 	
 	/**
 	 * 
@@ -56,14 +70,15 @@ public class WSModelCrud extends SoapObject{
 	 * @param rs
 	 * @param Filter
 	 */
-	public WSModelCrud(Context ctx, String NameSpace, Integer p_WS_WebServiceType_ID,DB con,Integer RecordID,Cursor rs,String Filter) {
-		super(NameSpace,"ModelCRUD");
+	public WSModelCrud(Context ctx, String NameSpace, Integer p_WS_WebServiceType_ID,DB con,Integer RecordID,Cursor rs,String Filter,int PageNo) {
+		super(NameSpace,WSModelCrud.ModelCRUD);
 		// TODO Auto-generated constructor stub
 		m_Filter=Filter;
 		m_WS_WebServiceType_ID = p_WS_WebServiceType_ID;
 		m_con = con;
 		m_Record_ID = RecordID;
 		m_rs = rs;
+		m_PageNo = PageNo;
 		
 		//Load Parameters
 		loadWS_Service_Para();
@@ -83,6 +98,7 @@ public class WSModelCrud extends SoapObject{
 		Cursor rs = m_con.querySQL("Select WST.Value as serviceType,WSP.ParameterName,WSP.ConstantValue,WSP.ParameterType from WS_WebService_Para WSP Inner Join WS_WebServiceType WST On WSP.WS_WebServiceType_ID=WST.WS_WebServiceType_ID Where WSP.WS_WebServiceType_ID =?", new String[]{m_WS_WebServiceType_ID.toString()});
 		if (rs.moveToFirst()){
 			addProperty(rs.getColumnName(0), rs.getString(0));
+			addProperty(PARAMETER_PageNo, m_PageNo);
 			do {
 				addProperty(rs.getString(1), (rs.getString(1).equals(PARAMETER_RecordID)?
 												(m_Record_ID==null?0:m_Record_ID):

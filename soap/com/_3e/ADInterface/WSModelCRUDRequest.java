@@ -45,9 +45,9 @@ public class WSModelCRUDRequest extends SoapObject{
 	 * @param rs
 	 * @param Filter
 	 */
-	public WSModelCRUDRequest(Context ctx, String NameSpace,Integer p_WS_WebServiceType_ID,DB con,Integer RecordID,Cursor rs,String Filter) {
+	public WSModelCRUDRequest(Context ctx, String NameSpace,Integer p_WS_WebServiceType_ID,DB con,Integer RecordID,Cursor rs,String Filter,int PageNo) {
 		super(NameSpace, WSModelCRUDRequest.NameSpace);
-		m_mc = new WSModelCrud(ctx, NameSpace, p_WS_WebServiceType_ID, con, RecordID, rs,Filter);
+		m_mc = new WSModelCrud(ctx, NameSpace, p_WS_WebServiceType_ID, con, RecordID, rs,Filter,PageNo);
 		m_al = new WSADLoginRequest(ctx, NameSpace);
 		addProperty(m_mc.getName(), m_mc);
 		addProperty(m_al.getName(), m_al);

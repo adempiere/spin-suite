@@ -87,7 +87,7 @@ public class LoadActionMenu {
 		Intent intent = null;
 		if (item.getM_MenuType().equals(LookupMenu.SYNCHRONIZATION_MENU)){
 			if(item.isSummary()) {
-				bundle.putParcelable("Param", param);
+				bundle.putParcelable("ParamSync", param);
 				intent = new Intent(activity, LV_MenuSync.class);
 				intent.putExtras(bundle);
 				//	Show Activity

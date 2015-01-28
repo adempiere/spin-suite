@@ -20,8 +20,8 @@ import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
-import org.spinsuite.initialload.InitialLoadTask;
 import org.spinsuite.interfaces.I_Login;
+import org.spinsuite.sync.InitialLoadTask;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
@@ -442,7 +442,22 @@ public class T_Connection extends Activity implements I_Login {
 	 */
 	public void startSynchronization(String p_User,String p_PassWord){
 		if (!p_User.equals("") && !p_PassWord.equals("")){
-    		InitialLoadTask ilt = new InitialLoadTask(et_UrlSoap.getText().toString(), 
+			
+			Intent intent = new Intent(this, InitialLoadTask.class);
+			//intent.putExtra("act", new TestSerializable(this));
+			intent.putExtra("URL", et_UrlSoap.getText().toString());
+			intent.putExtra("NameSpace", et_NameSpace.getText().toString());
+			intent.putExtra("Method", et_Method.getText().toString());
+			intent.putExtra("IsNetService", true);
+			intent.putExtra("User", p_User);
+			intent.putExtra("SoapAction", et_NameSpace.getText().toString() + et_Method.getText().toString());
+			intent.putExtra("PassWord",p_PassWord);
+			intent.putExtra("Timeout", 0);
+			
+			//m_Conn =p_Conn;
+			//m_Timeout = intent.getIntExtra("Timeout",0);
+			startService(intent);
+    		/*InitialLoadTask ilt = new InitialLoadTask(et_UrlSoap.getText().toString(), 
     													et_NameSpace.getText().toString(), 
     														et_Method.getText().toString(), 
     															true, 
@@ -454,10 +469,10 @@ public class T_Connection extends Activity implements I_Login {
     		
     		
     		ilt.runTask();
-    		
+    		*/
     		/*
     		 * 
-InitialLoad il = new InitialLoad(et_UrlSoap.getText().toString(), 
+			InitialLoad il = new InitialLoad(et_UrlSoap.getText().toString(), 
     											et_NameSpace.getText().toString(), 
     												et_Method.getText().toString(), 
     													true, 

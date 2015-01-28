@@ -42,6 +42,8 @@
 		<item name="ic_ml_report">@drawable/report_h</item>
 		<item name="ic_ml_process">@drawable/process_h</item>
 		<item name="ic_ml_folder">@drawable/folder_h</item>
+		<item name="ic_ml_upload">@drawable/upload_h</item>
+		<item name="ic_ml_download">@drawable/download_h</item>
 	    <!-- Layout Icon -->
         <item name="ic_lt_search">@drawable/search_m</item>
         <item name="ic_lt_search_product">@drawable/package_m</item>

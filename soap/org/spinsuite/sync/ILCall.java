@@ -15,7 +15,7 @@
  * Contributor(s): Carlos Parada www.erpconsultoresyasociados.com             *
  *****************************************************************************/
 
-package org.spinsuite.initialload;
+package org.spinsuite.sync;
 
 import org.ksoap2.serialization.SoapObject;
 

@@ -144,6 +144,14 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 					img_Menu.setImageResource(
 							Env.getResourceID(ctx, R.attr.ic_ml_report));
 				}
+				else if(mi.getAction().equals(DisplayMenuItem.ACTION_WSDownload)) {
+					img_Menu.setImageResource(
+							Env.getResourceID(ctx, R.attr.ic_ml_download));
+				}
+				else if(mi.getAction().equals(DisplayMenuItem.ACTION_WSUpload)) {
+					img_Menu.setImageResource(
+							Env.getResourceID(ctx, R.attr.ic_ml_upload));
+				}
 			}
 		} else {		//	Drawer Menu
 			//	Set Text Style

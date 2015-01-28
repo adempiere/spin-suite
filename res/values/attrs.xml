@@ -33,6 +33,8 @@
 	<attr name="ic_ml_report" format="reference"/>
 	<attr name="ic_ml_process" format="reference"/>
 	<attr name="ic_ml_folder" format="reference"/>
+	<attr name="ic_ml_upload" format="reference"/>
+	<attr name="ic_ml_download" format="reference"/>
 	<!-- Icon for Layout -->
 	<attr name="ic_lt_search" format="reference"/>
 	<attr name="ic_lt_search_product" format="reference"/>
