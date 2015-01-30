@@ -38,7 +38,7 @@ public class MSPSSyncMenu extends X_SPS_SyncMenu{
 		} else if(!conn.isOpen()){
 			handleConnection = true;
 		}
-		conn.openDB(DB.READ_ONLY);
+		conn.openDB(DB.READ_WRITE);
 		String sql = new String();
 		/*DB conn = new DB(ctx);
 		conn.openDB(DB.READ_ONLY);*/

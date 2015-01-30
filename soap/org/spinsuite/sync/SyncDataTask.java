@@ -150,6 +150,7 @@ public class SyncDataTask implements BackGroundProcess  {
 	public Object run() {
 		try{
 		syncData(m_SPS_SyncMenu_ID,0);
+		conn.close();
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -171,11 +172,11 @@ public class SyncDataTask implements BackGroundProcess  {
 		SoapObject param  = null;
 		int qtyPages = 1;
 		int currentPage = PageNo + 1;
-		
-		//Run Script After Call Web Service 
-		if (syncm.getAD_RuleAfter_ID()!=0){
-			X_AD_Rule rule  = new X_AD_Rule(ctx, syncm.getAD_RuleAfter_ID(), conn);
-			conn.executeSQL(rule.getScript());
+		//Run Script Before Call Web Service 
+		if (syncm.getAD_RuleBefore_ID()!=0){
+			X_AD_Rule rule  = new X_AD_Rule(ctx, syncm.getAD_RuleBefore_ID(), conn);
+			runQuery(rule.getScript(),null);
+			//conn.executeSQL(rule.getScript());
 		}
 		
 		//Call Web Services
@@ -204,9 +205,9 @@ public class SyncDataTask implements BackGroundProcess  {
 		}
 		
 		//Run Script After Call Web Service 
-		if (syncm.getAD_RuleBefore_ID()!=0){
-			X_AD_Rule rule  = new X_AD_Rule(ctx, syncm.getAD_RuleBefore_ID(), conn);
-			conn.executeSQL(rule.getScript());
+		if (syncm.getAD_RuleAfter_ID()!=0){
+			X_AD_Rule rule  = new X_AD_Rule(ctx, syncm.getAD_RuleAfter_ID(), conn);
+			runQuery(rule.getScript(),null);
 		}
 		
 		//Get Child's Web Services
@@ -368,6 +369,11 @@ public class SyncDataTask implements BackGroundProcess  {
 		for (int i=0; i< countDataSet;i++){
 			m_Progress = i+1;
 			//Creating SQL Query
+			//Soap Data Row
+			soapDataRow=(SoapObject)  soapDataSet.getProperty(i);
+			sql = new StringBuffer();
+			fields = new StringBuffer();
+			values = new StringBuffer();
 			sql.append("INSERT OR REPLACE INTO " + tableName);
 
 			//Loading Fields And Values 
@@ -386,19 +392,28 @@ public class SyncDataTask implements BackGroundProcess  {
 			
 			//Generating SQL
 			sql.append("("+fields.toString()+") VALUES ("+values+"); ");
-			try{
-				conn.executeSQL(sql.toString(),data);
-			}catch (SQLiteException e){
-				e.printStackTrace();
-				m_PublicMsg = e.getLocalizedMessage();
-			}catch (Exception e) {
-				e.printStackTrace();
-				m_PublicMsg = e.getLocalizedMessage();
-		 	}
-			finally{
-				publishOnRunning();
-			}
+			
+			runQuery(sql.toString(),data);
 		}
 		soapResponse = null;
+	}
+	
+	private void runQuery(String sql,Object[] data){
+		try{
+			if (data != null)
+				conn.executeSQL(sql,data);
+			else
+				conn.executeSQL(sql);
+			
+		}catch (SQLiteException e){
+			e.printStackTrace();
+			m_PublicMsg = e.getLocalizedMessage();
+		}catch (Exception e) {
+			e.printStackTrace();
+			m_PublicMsg = e.getLocalizedMessage();
+	 	}
+		finally{
+			publishOnRunning();
+		}
 	}
 }
