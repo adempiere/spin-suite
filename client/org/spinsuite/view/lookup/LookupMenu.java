@@ -113,7 +113,7 @@ public class LookupMenu {
 			} else {
 				sql.append("SELECT m.SPS_SyncMenu_ID, " +
 							"COALESCE(mt.Name, m.Name) Name,  " + 
-							"m.Description, " + 
+							"COALESCE(COALESCE(mt.Description, ''), m.Description) Description, " + 
 							"m.ImageURL, " + 
 							"m.ErrImgURL, " +
 							"m.SPS_Table_ID, " + 
@@ -194,7 +194,7 @@ public class LookupMenu {
 						"LEFT JOIN SPS_Window_Access wa ON(wa.SPS_Window_ID = m.SPS_Window_ID) ");
 			} else {
 				sql.append("SELECT m.SPS_Menu_ID, COALESCE(mt.Name, m.Name) Name, " +
-						"COALESCE(mt.Description, m.Description) Description, m.Action, m.ImageURL, " +
+						"COALESCE(COALESCE(mt.Description,''), m.Description) Description, m.Action, m.ImageURL, " +
 						"m.SPS_Table_ID, m.WhereClause, m.GroupByClause, m.OrderByClause, " +
 						"tn.Parent_ID, m.IsSummary, m.DeploymentType, m.AD_Form_ID, m.SPS_Window_ID, m.AD_Process_ID, " +
 						"m.ActivityMenu_ID, COALESCE(m.IsReadWrite, pa.IsReadWrite, wa.IsReadWrite) IsReadWrite, " +
