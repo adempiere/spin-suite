@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	
+	<string name="DateFrom">Date From</string>
+    <string name="DateTo">Date To</string>
+    <string name="DayFrom">Day From</string>
+    <string name="DayTo">Day To</string>
+    <string name="Suggested">Suggested</string>
+    <string name="Uom">UOM</string>
+    <string name="ToApply">To Apply</string>
+    <string name="Dosage">Dosage</string>
+    <string name="DosageByEffArea">Dosage/Eff.Area</string>
+    <string name="ToOrdered">To Ordered</string>
+	<string name="M_Product_ID">Product</string>
+	<string name="FTA_Farm_ID">Farm</string>
+	<string name="FTA_FarmDivision_ID">Farm Division</string>
+	<string name="FTA_Farming_ID">Farming</string>
+	<string name="FTA_FarmingStage_ID">Farming Stage</string>
+	<string name="FTA_ObservationType_ID">Observation Type</string>
+	<string name="Comments">Comments</string>
+	<string name="Action_Suggest_Product">Suggest Product</string>
+	<string name="Action_Applied_Product">Apply Product</string>
+	<string name="Applied_Product">Applied Product</string>
+	<string name="FarmerInfo">Farmer Information</string>
+	<string name="Farmer">Farmer</string>
+	<string name="Applied">Applied</string>
+</resources>

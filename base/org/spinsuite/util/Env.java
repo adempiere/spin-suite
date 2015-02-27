@@ -1542,6 +1542,19 @@ public final class Env {
 	}
 	
 	/**
+	 * Get Integer from Tab Record ID
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param m_ActivityNo
+	 * @param TabNo
+	 * @return
+	 * @return int
+	 */
+	public static int get_TabRecord_ID(Context ctx, int m_ActivityNo, int TabNo) {
+		return getTabRecord_ID(ctx, m_ActivityNo, TabNo)[0];
+	}
+	
+	/**
 	 * Get Tab KeyColumns
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:49:25
 	 * @param ctx

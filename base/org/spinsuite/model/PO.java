@@ -243,6 +243,17 @@ public abstract class PO {
 	}
 	
 	/**
+	 * Load data from ID
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ID
+	 * @return
+	 * @return boolean
+	 */
+	public boolean loadData(int ID) {
+		return loadData(new int[]{ID}, null);
+	}
+	
+	/**
 	 * Load Data from ID and Key Columns
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 12:07:37
 	 * @param ID
