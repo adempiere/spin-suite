@@ -16,7 +16,6 @@
 package org.spinsuite.model;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.logging.Level;
 
@@ -896,7 +895,7 @@ public class CalloutOrder extends CalloutEngine {
 			pp.setM_PriceList_ID(M_PriceList_ID);
 			int M_PriceList_Version_ID = Env.getContextAsInt(ctx, WindowNo, "M_PriceList_Version_ID");
 			pp.setM_PriceList_Version_ID(M_PriceList_Version_ID);
-			Timestamp date = (Timestamp)mTab.getValue("DateOrdered");
+			Date date = (Date)mTab.getValue("DateOrdered");
 			pp.setPriceDate(date);
 			//
 			PriceEntered = MUOMConversion.convertProductFrom (ctx, M_Product_ID, 
