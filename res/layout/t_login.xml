@@ -45,7 +45,6 @@
     	<EditText
         	android:id="@+id/et_Pass"
         	android:inputType="textPassword"
-    	    android:text="@string/Pass"
     	    style="@style/TextDynamicTabEditText" />
 
     	<CheckBox

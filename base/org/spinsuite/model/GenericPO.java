@@ -13,7 +13,7 @@
  * 
  * Copyright (C) 2004 Marco LOMBARDO. lombardo@mayking.com 
  * Contributor(s): Low Heng Sin hengsin@avantz.com
- * Contributor(s): Yamel Senih yamelsenih@gmail.com
+ * Contributor(s): Yamel Senih ysenih@erpcya.com
  * __________________________________________
  ******************************************************************************/
 

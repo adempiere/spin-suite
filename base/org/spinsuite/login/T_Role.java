@@ -35,6 +35,13 @@ import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 
+/**
+ * 
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+ * 	<li> Login Correct
+ * 	@see https://adempiere.atlassian.net/browse/SPIN-2
+ *
+ */
 public class T_Role extends Fragment implements I_Login {
 	/**	Spinners			*/
 	private Spinner sp_Role;
@@ -85,10 +92,8 @@ public class T_Role extends Fragment implements I_Login {
 			public void onItemSelected(AdapterView<?> a, View v,
 					int position, long i) {
 				role_ID = ((DisplaySpinner) sp_Role.getItemAtPosition(position)).getID();
-				//if(role_ID != 0){
-					client_ID = loadClient(role_ID);
-					Env.setAD_Role_ID(ctx, role_ID);
-				//}
+				client_ID = loadClient(role_ID);
+				Env.setAD_Role_ID(ctx, role_ID);
 			}
 
 			@Override
@@ -104,10 +109,8 @@ public class T_Role extends Fragment implements I_Login {
 			public void onItemSelected(AdapterView<?> a, View v,
 					int position, long i) {
 				client_ID = ((DisplaySpinner) sp_Client.getItemAtPosition(position)).getID();
-				//if(client_ID != 0){
-					org_ID = loadOrg(client_ID);
-					Env.setAD_Client_ID(ctx, client_ID);
-				//}
+				org_ID = loadOrg(client_ID);
+				Env.setAD_Client_ID(ctx, client_ID);
 			}
 
 			@Override
@@ -123,10 +126,8 @@ public class T_Role extends Fragment implements I_Login {
 			public void onItemSelected(AdapterView<?> a, View v,
 					int position, long i) {
 				org_ID = ((DisplaySpinner) sp_Org.getItemAtPosition(position)).getID();
-				//if(org_ID != 0){
-					warehouse_ID = loadWarehouse(org_ID);
-					Env.setAD_Org_ID(ctx, org_ID);
-				//}
+				warehouse_ID = loadWarehouse(org_ID);
+				Env.setAD_Org_ID(ctx, org_ID);
 			}
 
 			@Override
@@ -160,11 +161,11 @@ public class T_Role extends Fragment implements I_Login {
     	DisplaySpinner ds_Client = (DisplaySpinner) sp_Client.getSelectedItem();
     	DisplaySpinner ds_Org = (DisplaySpinner) sp_Org.getSelectedItem();
     	if(ds_Role != null
-				&& ds_Role.getID() > 0){
+    			&& ds_Role.getValue() != null) {
 			if(ds_Client != null
-					&& ds_Client.getID() > 0){
+					&& ds_Client.getValue() != null) {
 				if(ds_Org != null
-						&& ds_Org.getID() > 0){
+						&& ds_Org.getValue() != null) {
 						
 					Env.setAD_Role_ID(getActivity(), role_ID);
 					Env.setContext(getActivity(), "#AD_Role_Name", ds_Role.getValue());
@@ -197,12 +198,6 @@ public class T_Role extends Fragment implements I_Login {
 					
 					Env.setContext(getActivity(), "#DateP", ctxDate);
 					
-					//Msg.toastMsg(this, " -- " + (currentDate.equals(date)));
-					//	Set Context Is Current Date
-					
-					//Msg.toastMsg(this, " - - - " + curDate + " **** " + ctxDate);
-					//currentDate.
-					
 					if(!(curDate.equals(ctxDate))){
 						Env.setContext(getActivity(), "#IsCurrentDate", "N");
 						Msg.toastMsg(ctx, getResources().getString(R.string.msg_LoginOffDate) + 
@@ -225,7 +220,7 @@ public class T_Role extends Fragment implements I_Login {
 
     /**
      * Load Role
-     * @author Yamel Senih 04/02/2013, 19:47:38
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @return
      * @return int
      */
@@ -246,8 +241,8 @@ public class T_Role extends Fragment implements I_Login {
 	}
     
     /**
-     * Load Client (Tenant)
-     * @author Yamel Senih 04/02/2013, 19:48:05
+     * Load Client
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @param role_ID
      * @return
      * @return int
@@ -267,8 +262,8 @@ public class T_Role extends Fragment implements I_Login {
 	}
     
     /**
-     * Load Organization
-     * @author Yamel Senih 04/02/2013, 19:50:28
+     * Load Org
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @param client_ID
      * @return
      * @return int
@@ -289,17 +284,6 @@ public class T_Role extends Fragment implements I_Login {
 		
 		sql.append("AND o.AD_Client_ID = " + client_ID);
 		
-		/*
-		"SELECT o.AD_Org_ID, o.Name " +
-		"FROM AD_Org o " +
-		
-		"INNER JOIN AD_User_OrgAccess uo ON(uo.AD_Org_ID = o.AD_Org_ID) " + 
-		
-		"INNER JOIN AD_Role_OrgAccess orga ON(orga.AD_Org_ID = o.AD_Org_ID) INNER JOIN AD_User_Roles ur ON(ur.AD_Role_ID = orga.AD_Role_ID) " +
-		
-		"WHERE ur.AD_Role_ID = " + role_ID + " " + 
-		"AND o.AD_Client_ID = " + client_ID
-		*/
 		int org_ID = LoadDataSpinner.load(getActivity(), sp_Org, sql.toString(), false, false);
 		
 		int id_ctx = Env.getAD_Org_ID(ctx);
@@ -312,7 +296,7 @@ public class T_Role extends Fragment implements I_Login {
     
     /**
      * Load Warehouse
-     * @author Yamel Senih 04/02/2013, 19:51:10
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @param org_ID
      * @return
      * @return int
@@ -332,7 +316,7 @@ public class T_Role extends Fragment implements I_Login {
     
     /**
      * Load Spinner
-     * @author Yamel Senih 04/02/2013, 19:51:40
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @param sp
      * @param id_ctx
      * @return

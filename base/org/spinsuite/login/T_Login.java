@@ -37,6 +37,12 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+/**
+ * 
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Feb 26, 2015, 11:51:10 PM
+ *	<li> Login Correct
+ * 	@see https://adempiere.atlassian.net/browse/SPIN-2
+ */
 public class T_Login extends Fragment implements I_Login {
 	private EditText 		et_User;
 	private EditText 		et_Pass;
@@ -78,7 +84,7 @@ public class T_Login extends Fragment implements I_Login {
     
     /**
      * Reload Activity
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/02/2013, 18:56:16
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @param language
      * @return void
      */
@@ -91,7 +97,7 @@ public class T_Login extends Fragment implements I_Login {
     
     /**
      * Valid User and Password
-     * @author Yamel Senih 04/02/2013, 19:36:24
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @return
      * @return boolean
      */
@@ -128,7 +134,7 @@ public class T_Login extends Fragment implements I_Login {
     
     /**
      * Find User on database
-     * @author Yamel Senih 04/02/2013, 19:38:06
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @param user
      * @param pass
      * @return
@@ -156,7 +162,7 @@ public class T_Login extends Fragment implements I_Login {
     
     /**
      * Valid Exit
-     * @author Yamel Senih 04/02/2013, 19:39:16
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @return
      * @return boolean
      */
@@ -198,14 +204,11 @@ public class T_Login extends Fragment implements I_Login {
      	ch_AutoLogin.setChecked(Env.isAutoLogin(this.getActivity()));
      	
      	//	Save Pass
- 		if(pass == null || pass.length() == 0){
- 			if(Env.isSavePass(this.getActivity())){
- 				pass = Env.getContext(this.getActivity(), "#SPass");
- 				if(pass != null)
- 					et_Pass.setText(pass);
- 			}
- 			
- 		}
+     	if(Env.isSavePass(this.getActivity())){
+     		pass = Env.getContext(this.getActivity(), "#SPass");
+     		if(pass != null)
+     			et_Pass.setText(pass);
+		}
  		//	Select Language
  		String language = Env.getAD_Language(getActivity());
  		if(language != null

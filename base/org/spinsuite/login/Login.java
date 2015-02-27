@@ -38,7 +38,9 @@ import android.view.MenuItem;
 
 /**
  * 
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Feb 26, 2015, 11:49:41 PM
+ * 	<li> Login Correct
+ * 	@see https://adempiere.atlassian.net/browse/SPIN-2
  *
  */
 public class Login extends TV_Base implements I_CancelOk {
@@ -237,8 +239,8 @@ public class Login extends TV_Base implements I_CancelOk {
 	}
 	
 	/**
-	 * Load Access
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+	 * Load Task for access
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Feb 26, 2015, 11:50:13 PM
 	 *
 	 */
 	private class LoadAccessTask extends AsyncTask<Void, Void, Void> {

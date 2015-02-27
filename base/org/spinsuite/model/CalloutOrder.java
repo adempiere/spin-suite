@@ -62,7 +62,11 @@ public class CalloutOrder extends CalloutEngine {
 		//	Re-Create new DocNo, if there is a doc number already
 		//	and the existing source used a different Sequence number
 		String oldDocNo = (String)mTab.getValue("DocumentNo");
-		boolean newDocNo = (oldDocNo == null);
+		boolean newDocNo = false;
+		if(oldDocNo == null) {
+			oldDocNo = "";
+			newDocNo = true;
+		}
 		if (!newDocNo && oldDocNo.startsWith("<") && oldDocNo.endsWith(">"))
 			newDocNo = true;
 		Integer oldC_DocType_ID = (Integer)mTab.getValue("C_DocType_ID");
