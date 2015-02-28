@@ -32,14 +32,17 @@ import android.view.View;
 import android.widget.EditText;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
- *
+ * 
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Feb 27, 2015, 11:45:32 PM
+ *	<li> Selected All on focus
+ * 	@see https://adempiere.atlassian.net/browse/SPIN-2
  */
 public class VLookupNumber extends GridField {
 
 	/**
+	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 20:25:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param context
 	 */
 	public VLookupNumber(Context context) {
@@ -48,8 +51,9 @@ public class VLookupNumber extends GridField {
 	}
 
 	/**
+	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 20:25:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param context
 	 * @param attrs
 	 */
@@ -59,8 +63,9 @@ public class VLookupNumber extends GridField {
 	}
 
 	/**
+	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 20:25:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param context
 	 * @param attrs
 	 * @param defStyle
@@ -73,7 +78,7 @@ public class VLookupNumber extends GridField {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 20:40:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param context
 	 * @param m_field
 	 */
@@ -84,7 +89,7 @@ public class VLookupNumber extends GridField {
 	/**
 	 * With Tab Parameter
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/05/2014, 14:00:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param context
 	 * @param m_field
 	 * @param tabParam
@@ -124,8 +129,9 @@ public class VLookupNumber extends GridField {
 		setEnabled(!m_field.IsReadOnly);
 		//	Set Display Type
 		v_Number.setInputType(DisplayType.getInputType(m_field.DisplayType));
+		//	Selected All on Focus
+		v_Number.setSelectAllOnFocus(true);
 		//	
-		
 		//	Set Format
 		m_DecimalFormat = DisplayType.getNumberFormat(getContext(), m_field.DisplayType, 
 				m_field.FormatPattern);
@@ -135,7 +141,7 @@ public class VLookupNumber extends GridField {
 	
 	/**
 	 * Listener
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/05/2014, 08:41:28
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return void
 	 */
 	private void event() {
