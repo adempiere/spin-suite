@@ -11,12 +11,12 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.util;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class DisplayLookupSpinner {
@@ -24,7 +24,7 @@ public class DisplayLookupSpinner {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2014, 10:27:04
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/02/2014, 10:27:04
 	 * @param m_ID
 	 * @param m_Value
 	 */
@@ -40,7 +40,7 @@ public class DisplayLookupSpinner {
 	
 	/**
 	 * Get Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2014, 10:27:44
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/02/2014, 10:27:44
 	 * @return
 	 * @return Object
 	 */
@@ -50,7 +50,7 @@ public class DisplayLookupSpinner {
 	
 	/**
 	 * Get Identifier as String
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2014, 10:29:44
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/02/2014, 10:29:44
 	 * @return
 	 * @return String
 	 */
@@ -63,7 +63,7 @@ public class DisplayLookupSpinner {
 	
 	/**
 	 * Get Identifier as Integer
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2014, 10:31:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/02/2014, 10:31:03
 	 * @return
 	 * @return int
 	 */
@@ -77,7 +77,7 @@ public class DisplayLookupSpinner {
 	
 	/**
 	 * Get Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2014, 10:31:41
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/02/2014, 10:31:41
 	 * @return
 	 * @return Object
 	 */
@@ -89,7 +89,7 @@ public class DisplayLookupSpinner {
 	
 	/**
 	 * Get Value as String
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2014, 10:32:25
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/02/2014, 10:32:25
 	 * @return
 	 * @return String
 	 */

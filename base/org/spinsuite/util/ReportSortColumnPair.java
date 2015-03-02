@@ -11,14 +11,14 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.util;
 
 import java.util.Comparator;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class ReportSortColumnPair extends NamePair implements Comparator<Object>{
@@ -26,7 +26,7 @@ public class ReportSortColumnPair extends NamePair implements Comparator<Object>
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 09:28:22
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 09:28:22
 	 * @param sortNo
 	 * @param name
 	 */
@@ -47,7 +47,7 @@ public class ReportSortColumnPair extends NamePair implements Comparator<Object>
 	
 	/**
 	 * Get Sort No
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 09:33:38
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 09:33:38
 	 * @return
 	 * @return int
 	 */
@@ -57,7 +57,7 @@ public class ReportSortColumnPair extends NamePair implements Comparator<Object>
 	
 	/**
 	 * Compare
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 09:33:09
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 09:33:09
 	 * @param o1
 	 * @param o2
 	 * @return

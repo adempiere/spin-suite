@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.print;
 
@@ -27,14 +27,14 @@ import android.database.Cursor;
 import android.util.Log;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class InfoReport {
 	
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 13:07:07
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 13:07:07
 	 * @param ctx
 	 * @param AD_PrintFormat_ID
 	 * @param conn
@@ -91,7 +91,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Print Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 15:33:01
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 15:33:01
 	 * @return
 	 * @return String
 	 */
@@ -101,7 +101,7 @@ public class InfoReport {
 	
 	/**
 	 * Is Table Based
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 15:32:31
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 15:32:31
 	 * @return
 	 * @return boolean
 	 */
@@ -111,7 +111,7 @@ public class InfoReport {
 	
 	/**
 	 * Is Standard Header Footer
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 15:32:04
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 15:32:04
 	 * @return
 	 * @return boolean
 	 */
@@ -121,7 +121,7 @@ public class InfoReport {
 	
 	/**
 	 * Is Form
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 15:31:44
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 15:31:44
 	 * @return
 	 * @return boolean
 	 */
@@ -131,7 +131,7 @@ public class InfoReport {
 	
 	/**
 	 * Is Default Format
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 15:30:14
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 15:30:14
 	 * @return
 	 * @return boolean
 	 */
@@ -141,7 +141,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Header Margin
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 15:29:30
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 15:29:30
 	 * @return
 	 * @return int
 	 */
@@ -151,7 +151,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Footer Margin
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 15:28:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 15:28:03
 	 * @return
 	 * @return int
 	 */
@@ -161,7 +161,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Print Table Format
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 15:26:52
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 15:26:52
 	 * @return
 	 * @return int
 	 */
@@ -171,7 +171,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Print Paper
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 15:25:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 15:25:03
 	 * @return
 	 * @return int
 	 */
@@ -181,7 +181,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Print Color
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 15:24:20
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 15:24:20
 	 * @return
 	 * @return int
 	 */
@@ -191,7 +191,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Print Color
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 15:22:43
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 15:22:43
 	 * @return
 	 * @return int
 	 */
@@ -201,7 +201,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Where Clause
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/02/2014, 18:16:35
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/02/2014, 18:16:35
 	 * @return
 	 * @return String
 	 */
@@ -211,7 +211,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Parent Column Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/02/2014, 18:14:19
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/02/2014, 18:14:19
 	 * @return
 	 * @return int
 	 */
@@ -221,7 +221,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Order By Clause
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/02/2014, 18:13:50
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/02/2014, 18:13:50
 	 * @return
 	 * @return String
 	 */
@@ -231,7 +231,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Tab Description
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/02/2014, 18:10:04
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/02/2014, 18:10:04
 	 * @return
 	 * @return String
 	 */
@@ -241,7 +241,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Table Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/02/2014, 18:07:41
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/02/2014, 18:07:41
 	 * @return
 	 * @return int
 	 */
@@ -251,7 +251,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Tab Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/02/2014, 18:06:30
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/02/2014, 18:06:30
 	 * @return
 	 * @return String
 	 */
@@ -261,7 +261,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Print Format
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 15:21:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 15:21:26
 	 * @return
 	 * @return int
 	 */
@@ -271,7 +271,7 @@ public class InfoReport {
 	
 	/**
 	 * Set Print Format
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 15:21:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 15:21:56
 	 * @param AD_PrintFormat_ID
 	 * @return void
 	 */
@@ -282,7 +282,7 @@ public class InfoReport {
 	
 	/**
 	 * Load Info Print Fields
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/03/2014, 23:27:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/03/2014, 23:27:15
 	 * @param ctx
 	 * @param AD_PrintFormat_ID
 	 * @param onlySelection
@@ -497,7 +497,7 @@ public class InfoReport {
 	
 	/**
 	 * Return Field Array
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/02/2014, 16:25:29
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/02/2014, 16:25:29
 	 * @return
 	 * @return InfoReportField[]
 	 */
@@ -507,7 +507,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Table Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/02/2014, 20:47:27
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/02/2014, 20:47:27
 	 * @return
 	 * @return String
 	 */
@@ -517,7 +517,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Key Column Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/03/2014, 12:04:31
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 16/03/2014, 12:04:31
 	 * @return
 	 * @return String
 	 */
@@ -527,7 +527,7 @@ public class InfoReport {
 	
 	/**
 	 * Get AD_Element
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:36:22
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:36:22
 	 * @param index
 	 * @return
 	 * @return int
@@ -540,7 +540,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Display Type
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:37:35
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:37:35
 	 * @param index
 	 * @return
 	 * @return int
@@ -553,7 +553,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Reference Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:39:00
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:39:00
 	 * @param index
 	 * @return
 	 * @return int
@@ -566,7 +566,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Validation
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:39:11
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:39:11
 	 * @param index
 	 * @return
 	 * @return int
@@ -579,7 +579,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Call Out
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:39:21
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:39:21
 	 * @param index
 	 * @return
 	 * @return String
@@ -592,7 +592,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Column Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:41:37
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:41:37
 	 * @param index
 	 * @return
 	 * @return String
@@ -605,7 +605,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Column SQL
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:41:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:41:56
 	 * @param index
 	 * @return
 	 * @return String
@@ -624,7 +624,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Entity Type
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:42:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:42:05
 	 * @param index
 	 * @return
 	 * @return String
@@ -637,7 +637,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Field Lenght
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:42:12
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:42:12
 	 * @param index
 	 * @return
 	 * @return int
@@ -650,7 +650,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Formatt Pattern
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:45:52
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:45:52
 	 * @param index
 	 * @return
 	 * @return String
@@ -663,7 +663,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Always Updateable
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:46:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:46:03
 	 * @param index
 	 * @return
 	 * @return boolean
@@ -676,7 +676,7 @@ public class InfoReport {
 	
 	/**
 	 * Is Centrally Maintained
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:46:18
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:46:18
 	 * @param index
 	 * @return
 	 * @return boolean
@@ -689,7 +689,7 @@ public class InfoReport {
 	
 	/**
 	 * Is Encrypted
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:46:33
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:46:33
 	 * @param index
 	 * @return
 	 * @return boolean
@@ -702,7 +702,7 @@ public class InfoReport {
 	
 	/**
 	 * Is Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:46:40
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:46:40
 	 * @param index
 	 * @return
 	 * @return boolean
@@ -715,7 +715,7 @@ public class InfoReport {
 	
 	/**
 	 * Is Selection Column
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:52:58
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:52:58
 	 * @param index
 	 * @return
 	 * @return boolean
@@ -728,7 +728,7 @@ public class InfoReport {
 	
 	/**
 	 * Is Key
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:53:08
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:53:08
 	 * @param index
 	 * @return
 	 * @return boolean
@@ -741,7 +741,7 @@ public class InfoReport {
 	
 	/**
 	 * Is Mandatory
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:53:14
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:53:14
 	 * @param index
 	 * @return
 	 * @return boolean
@@ -754,7 +754,7 @@ public class InfoReport {
 	
 	/**
 	 * Is Parent Link Column
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:53:20
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:53:20
 	 * @param index
 	 * @return
 	 * @return boolean
@@ -767,7 +767,7 @@ public class InfoReport {
 	
 	/**
 	 * Is Updateable
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:53:34
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:53:34
 	 * @param index
 	 * @return
 	 * @return boolean
@@ -780,7 +780,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Selection Column Sequence
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:54:20
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:54:20
 	 * @param index
 	 * @return
 	 * @return int
@@ -793,7 +793,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Sequence
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:54:30
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:54:30
 	 * @param index
 	 * @return
 	 * @return int
@@ -806,7 +806,7 @@ public class InfoReport {
 	
 	/**
 	 * Get SFA Column Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:54:36
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:54:36
 	 * @param index
 	 * @return
 	 * @return int
@@ -819,7 +819,7 @@ public class InfoReport {
 	
 	/**
 	 * Get SFA Table Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:54:57
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:54:57
 	 * @param index
 	 * @return
 	 * @return int
@@ -832,7 +832,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Max Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:55:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:55:15
 	 * @param index
 	 * @return
 	 * @return String
@@ -845,7 +845,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Min Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:55:30
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:55:30
 	 * @param index
 	 * @return
 	 * @return String
@@ -858,7 +858,7 @@ public class InfoReport {
 	
 	/**
 	 * Get View Formatt
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:55:48
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:55:48
 	 * @param index
 	 * @return
 	 * @return String
@@ -871,7 +871,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:55:57
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:55:57
 	 * @param index
 	 * @return
 	 * @return String
@@ -884,7 +884,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Description
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 12:59:31
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 12:59:31
 	 * @param index
 	 * @return
 	 * @return String
@@ -897,7 +897,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Field Sequence
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 13:00:19
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 13:00:19
 	 * @param index
 	 * @return
 	 * @return int
@@ -910,7 +910,7 @@ public class InfoReport {
 	
 	/**
 	 * Get Lenght
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/02/2014, 13:18:38
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/02/2014, 13:18:38
 	 * @return
 	 * @return int
 	 */

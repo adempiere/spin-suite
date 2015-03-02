@@ -10,15 +10,15 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.print;
 
 import java.util.ArrayList;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class RowPrintData {
@@ -26,7 +26,7 @@ public class RowPrintData {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/03/2014, 11:41:07
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/03/2014, 11:41:07
 	 * @param isHeaderRow
 	 * @param isFunctionRow
 	 */
@@ -39,7 +39,7 @@ public class RowPrintData {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/03/2014, 11:43:53
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/03/2014, 11:43:53
 	 */
 	public RowPrintData() {
 		this(false, false);
@@ -54,7 +54,7 @@ public class RowPrintData {
 	
 	/**
 	 * Get at Index
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2014, 16:32:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2014, 16:32:26
 	 * @param index
 	 * @return
 	 * @return ColumnPrintData
@@ -65,7 +65,7 @@ public class RowPrintData {
 	
 	/**
 	 * Add Column
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/03/2014, 11:41:25
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/03/2014, 11:41:25
 	 * @param m_Value
 	 * @param m_Suffix
 	 * @return void
@@ -76,7 +76,7 @@ public class RowPrintData {
 	
 	/**
 	 * Add Column
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2014, 16:14:10
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2014, 16:14:10
 	 * @param column
 	 * @return void
 	 */
@@ -86,7 +86,7 @@ public class RowPrintData {
 	
 	/**
 	 * Get Prefix at index
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 18:19:53
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 18:19:53
 	 * @param index
 	 * @return
 	 * @return String
@@ -97,7 +97,7 @@ public class RowPrintData {
 	
 	/**
 	 * Get Suffix at index
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 18:20:20
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 18:20:20
 	 * @param index
 	 * @return
 	 * @return String
@@ -108,7 +108,7 @@ public class RowPrintData {
 	
 	/**
 	 * Get Columns
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 16:12:46
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 16:12:46
 	 * @return
 	 * @return ColumnPrintData[]
 	 */
@@ -120,7 +120,7 @@ public class RowPrintData {
 	
 	/**
 	 * Get Columns Quantity
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 20:35:35
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 20:35:35
 	 * @return
 	 * @return int
 	 */
@@ -130,7 +130,7 @@ public class RowPrintData {
 	
 	/**
 	 * Is Function Row Flag
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/03/2014, 11:38:28
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/03/2014, 11:38:28
 	 * @return
 	 * @return boolean
 	 */
@@ -140,7 +140,7 @@ public class RowPrintData {
 	
 	/**
 	 * Is Header Row Flag
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/03/2014, 11:38:57
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/03/2014, 11:38:57
 	 * @return
 	 * @return boolean
 	 */

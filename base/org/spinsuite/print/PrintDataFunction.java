@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.print;
 
@@ -22,14 +22,14 @@ import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class PrintDataFunction {
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2014, 10:11:06
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2014, 10:11:06
 	 */
 	public PrintDataFunction() {
 		reset();
@@ -85,7 +85,7 @@ public class PrintDataFunction {
 	
 	/**
 	 * Reset Values
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2014, 15:53:14
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2014, 15:53:14
 	 * @return void
 	 */
 	public void reset(){
@@ -98,7 +98,7 @@ public class PrintDataFunction {
 	
 	/**
 	 * Add Row Values
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2014, 15:52:30
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2014, 15:52:30
 	 * @param value
 	 * @param fieldConfig
 	 * @return void
@@ -126,7 +126,7 @@ public class PrintDataFunction {
 	
 	/**
 	 * Add value to Max
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2014, 12:00:30
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2014, 12:00:30
 	 * @param m_Value
 	 * @return void
 	 */
@@ -140,7 +140,7 @@ public class PrintDataFunction {
 	
 	/**
 	 * Add Value to Min
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2014, 12:02:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2014, 12:02:03
 	 * @param m_Value
 	 * @return void
 	 */
@@ -154,7 +154,7 @@ public class PrintDataFunction {
 	
 	/**
 	 * Add to Sum
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2014, 10:44:47
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2014, 10:44:47
 	 * @param m_Value
 	 * @return void
 	 */
@@ -168,7 +168,7 @@ public class PrintDataFunction {
 	
 	/**
 	 * Add to Sum Square
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 10:29:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/03/2014, 10:29:23
 	 * @param m_Value
 	 * @return void
 	 */
@@ -182,7 +182,7 @@ public class PrintDataFunction {
 	
 	/**
 	 * Add String to Sum Square
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 10:30:24
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/03/2014, 10:30:24
 	 * @param m_Value
 	 * @return void
 	 */
@@ -192,7 +192,7 @@ public class PrintDataFunction {
 	
 	/**
 	 * Add String to Sum
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2014, 10:46:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2014, 10:46:15
 	 * @param m_Value
 	 * @return void
 	 */
@@ -202,7 +202,7 @@ public class PrintDataFunction {
 	
 	/**
 	 * Add String to Max
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2014, 12:06:27
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2014, 12:06:27
 	 * @param m_Value
 	 * @return void
 	 */
@@ -212,7 +212,7 @@ public class PrintDataFunction {
 	
 	/**
 	 * Add String to Min
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2014, 12:06:36
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2014, 12:06:36
 	 * @param m_Value
 	 * @return void
 	 */
@@ -222,7 +222,7 @@ public class PrintDataFunction {
 	
 	/**
 	 * Get Min Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2014, 10:36:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2014, 10:36:23
 	 * @return
 	 * @return BigDecimal
 	 */
@@ -232,7 +232,7 @@ public class PrintDataFunction {
 	
 	/**
 	 * Get Max Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2014, 10:35:28
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2014, 10:35:28
 	 * @return
 	 * @return BigDecimal
 	 */
@@ -242,7 +242,7 @@ public class PrintDataFunction {
 
 	/**
 	 * Get Sum Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2014, 10:34:59
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2014, 10:34:59
 	 * @return
 	 * @return BigDecimal
 	 */
@@ -252,7 +252,7 @@ public class PrintDataFunction {
 	
 	/**
 	 * Get Variance
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 10:26:45
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/03/2014, 10:26:45
 	 * @return
 	 * @return BigDecimal
 	 */
@@ -274,7 +274,7 @@ public class PrintDataFunction {
 	
 	/**
 	 * Get Standard Deviation
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 10:39:40
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/03/2014, 10:39:40
 	 * @return
 	 * @return BigDecimal
 	 */
@@ -290,7 +290,7 @@ public class PrintDataFunction {
 	
 	/**
 	 * Get Quantity Count
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2014, 10:34:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2014, 10:34:23
 	 * @return
 	 * @return int
 	 */
@@ -300,7 +300,7 @@ public class PrintDataFunction {
 	
 	/**
 	 * Get AVG Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2014, 11:24:30
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2014, 11:24:30
 	 * @return
 	 * @return BigDecimal
 	 */
@@ -318,7 +318,7 @@ public class PrintDataFunction {
 	
 	/**
 	 * Get Function Symbol
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 11:09:21
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/03/2014, 11:09:21
 	 * @param function
 	 * @return
 	 * @return String
@@ -333,7 +333,7 @@ public class PrintDataFunction {
 	
 	/**
 	 * Get Function Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/04/2014, 10:35:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 04/04/2014, 10:35:26
 	 * @param function
 	 * @param names
 	 * @return
@@ -351,7 +351,7 @@ public class PrintDataFunction {
 	
 	/**
 	 * Get Supported Function Quantity
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 11:19:22
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/03/2014, 11:19:22
 	 * @return
 	 * @return int
 	 */

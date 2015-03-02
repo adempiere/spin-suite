@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
@@ -27,14 +27,16 @@ import android.util.AttributeSet;
 import android.view.View;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * 
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Mar 2, 2015, 2:52:21 AM
  *
  */
 public class VLookupDateBox extends GridField {
 
 	/**
+	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 20:36:43
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param context
 	 */
 	public VLookupDateBox(Context context) {
@@ -43,8 +45,9 @@ public class VLookupDateBox extends GridField {
 	}
 
 	/**
+	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 20:36:43
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param context
 	 * @param attrs
 	 */
@@ -54,8 +57,9 @@ public class VLookupDateBox extends GridField {
 	}
 
 	/**
+	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 20:36:43
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param context
 	 * @param attrs
 	 * @param defStyle
@@ -66,8 +70,9 @@ public class VLookupDateBox extends GridField {
 	}
 
 	/**
+	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 20:36:43
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param context
 	 * @param m_field
 	 */
@@ -78,7 +83,7 @@ public class VLookupDateBox extends GridField {
 	/**
 	 * With Tab Parameter
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/05/2014, 14:00:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param context
 	 * @param m_field
 	 * @param tabParam
@@ -109,8 +114,8 @@ public class VLookupDateBox extends GridField {
 	}
 	
 	/**
-	 * Init Field if is null
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 11:11:58
+	 * Init Field
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return void
 	 */
 	private void initField() {

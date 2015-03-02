@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.util;
 
@@ -21,7 +21,7 @@ import android.content.Context;
 import android.util.Log;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class LogM {
@@ -30,7 +30,7 @@ public class LogM {
 	
 	/**
 	 * Log
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2014, 20:34:20
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/02/2014, 20:34:20
 	 * @param ctx
 	 * @param className
 	 * @param level
@@ -58,7 +58,7 @@ public class LogM {
 	
 	/**
 	 * Log
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2014, 20:35:37
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/02/2014, 20:35:37
 	 * @param ctx
 	 * @param className
 	 * @param level
@@ -87,7 +87,7 @@ public class LogM {
 	
 	/**
 	 * Log
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2014, 20:36:42
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/02/2014, 20:36:42
 	 * @param ctx
 	 * @param clazz
 	 * @param level
@@ -101,7 +101,7 @@ public class LogM {
 	
 	/**
 	 * Log
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2014, 20:38:27
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/02/2014, 20:38:27
 	 * @param ctx
 	 * @param clazz
 	 * @param level
@@ -113,7 +113,7 @@ public class LogM {
 	}
 	/**
 	 * Get current trace level
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2014, 15:54:04
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/02/2014, 15:54:04
 	 * @return
 	 * @return int
 	 */
@@ -123,7 +123,7 @@ public class LogM {
 	
 	/**
 	 * Set Trace level
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2014, 15:57:12
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/02/2014, 15:57:12
 	 * @param traceLevel
 	 * @return void
 	 */

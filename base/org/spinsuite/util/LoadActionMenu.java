@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.util;
 
@@ -30,7 +30,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class LoadActionMenu {
@@ -39,7 +39,7 @@ public class LoadActionMenu {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/03/2014, 15:39:22
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/03/2014, 15:39:22
 	 * @param activity
 	 * @param isFromActivity
 	 * @param conn
@@ -53,7 +53,7 @@ public class LoadActionMenu {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/03/2014, 15:39:27
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/03/2014, 15:39:27
 	 * @param activity
 	 * @param isFromActivity
 	 */
@@ -70,7 +70,7 @@ public class LoadActionMenu {
 	
 	/**
 	 * 
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/03/2014, 11:16:13
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 15/03/2014, 11:16:13
 	 * @param item
 	 * @param param
 	 * @return
@@ -151,7 +151,7 @@ public class LoadActionMenu {
 	
 	/**
 	 * Load Menu from Activity
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/04/2014, 20:47:52
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 07/04/2014, 20:47:52
 	 * @param m_field
 	 * @param tabParam
 	 * @return
@@ -181,15 +181,14 @@ public class LoadActionMenu {
     	//	
     	bundle.putParcelable("Param", actParam);
 		//	Add Tab Parameter
-		if(tabParam != null)
-			bundle.putParcelable("TabParam", tabParam);
+		bundle.putParcelable("TabParam", tabParam);
 		//	Load Activity
 		loadActivityWithAction(item, bundle);
 	}
 	
 	/**
 	 * Load Activity with action
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/02/2014, 22:52:55
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 04/02/2014, 22:52:55
 	 * @param item
 	 * @param bundle
 	 * @return
@@ -241,7 +240,7 @@ public class LoadActionMenu {
 	
 	/**
 	 * Load Dynamic Class Activity
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/02/2014, 23:28:53
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/02/2014, 23:28:53
 	 * @param className
 	 * @param bundle
 	 * @return

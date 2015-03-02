@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.process;
 
@@ -30,7 +30,7 @@ import android.content.Context;
 
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class ProcessCtl {
@@ -38,7 +38,7 @@ public class ProcessCtl {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 21:35:17
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 21:35:17
 	 * @param m_pi
 	 */
 	public ProcessCtl(ProcessInfo m_pi){
@@ -55,7 +55,7 @@ public class ProcessCtl {
 	
 	/**
 	 * Run Process from Meta-data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/03/2014, 16:15:44
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/03/2014, 16:15:44
 	 * @return void
 	 */
 	public void runProcess(){
@@ -82,7 +82,7 @@ public class ProcessCtl {
 	
 	/**
 	 * Get Print Data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 17:25:33
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 17:25:33
 	 * @return
 	 * @return ReportPrintData
 	 */
@@ -92,7 +92,7 @@ public class ProcessCtl {
 	
 	/**
 	 * Get Print Data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/03/2014, 12:14:16
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 31/03/2014, 12:14:16
 	 * @param m_AD_PrintFormat_ID
 	 * @return
 	 * @return ReportPrintData
@@ -107,7 +107,7 @@ public class ProcessCtl {
 	
 	/**
 	 * Set Print Data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/03/2014, 12:13:02
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 31/03/2014, 12:13:02
 	 * @param m_rpd
 	 * @return void
 	 */
@@ -116,7 +116,7 @@ public class ProcessCtl {
 	}
 	/**
 	 * Start Java Process Class
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/03/2014, 14:51:51
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/03/2014, 14:51:51
 	 * @return
 	 * @return boolean
 	 */
@@ -155,7 +155,7 @@ public class ProcessCtl {
 	
 	/**
 	 * Start Java Process
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/03/2014, 16:13:51
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/03/2014, 16:13:51
 	 * @param ctx
 	 * @param pi
 	 * @param conn
@@ -209,7 +209,7 @@ public class ProcessCtl {
 		
 	/**
 	 * Load Class
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/03/2014, 15:30:32
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/03/2014, 15:30:32
 	 * @param className
 	 * @return
 	 * @return Class<?>

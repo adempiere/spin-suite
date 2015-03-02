@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.process;
 
@@ -26,7 +26,7 @@ import org.spinsuite.util.Msg;
 import android.content.Context;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public abstract class StdProcess {
@@ -34,7 +34,7 @@ public abstract class StdProcess {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/03/2014, 15:36:10
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/03/2014, 15:36:10
 	 */
 	public StdProcess() {
 	
@@ -73,7 +73,7 @@ public abstract class StdProcess {
 	
 	/**
 	 * Process
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/03/2014, 17:04:35
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/03/2014, 17:04:35
 	 * @return
 	 * @return boolean
 	 */
@@ -106,7 +106,7 @@ public abstract class StdProcess {
 	
 	/**
 	 * Start Process
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/03/2014, 22:27:54
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/03/2014, 22:27:54
 	 * @param pi
 	 * @return
 	 * @return boolean
@@ -153,7 +153,7 @@ public abstract class StdProcess {
 	
 	/**
 	 * Get Context
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/03/2014, 15:38:32
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/03/2014, 15:38:32
 	 * @return
 	 * @return Context
 	 */
@@ -163,7 +163,7 @@ public abstract class StdProcess {
 	
 	/**
 	 * Get Current Connection
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/03/2014, 15:39:02
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/03/2014, 15:39:02
 	 * @return
 	 * @return DB
 	 */
@@ -173,7 +173,7 @@ public abstract class StdProcess {
 	
 	/**
 	 * Get Window No
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/03/2014, 15:39:35
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/03/2014, 15:39:35
 	 * @return
 	 * @return int
 	 */
@@ -183,7 +183,7 @@ public abstract class StdProcess {
 	
 	/**
 	 * Get Table ID
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/04/2014, 22:41:28
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 07/04/2014, 22:41:28
 	 * @return
 	 * @return int
 	 */
@@ -193,7 +193,7 @@ public abstract class StdProcess {
 	
 	/**
 	 * Get Record ID
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/04/2014, 22:41:52
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 07/04/2014, 22:41:52
 	 * @return
 	 * @return int
 	 */
@@ -203,7 +203,7 @@ public abstract class StdProcess {
 	
 	/**
 	 * Get Parameters
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/03/2014, 17:12:43
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/03/2014, 17:12:43
 	 * @return
 	 * @return ProcessInfoParameter[]
 	 */

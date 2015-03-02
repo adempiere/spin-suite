@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.process;
 
@@ -30,7 +30,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class ProcessInfo {
@@ -114,7 +114,7 @@ public class ProcessInfo {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/03/2014, 23:25:19
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/03/2014, 23:25:19
 	 * @param ctx
 	 * @param m_AD_Process_ID
 	 * @param m_AD_Table_ID
@@ -136,7 +136,7 @@ public class ProcessInfo {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 15:16:13
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 15:16:13
 	 * @param ctx
 	 * @param m_AD_Process_ID
 	 * @param conn
@@ -148,7 +148,7 @@ public class ProcessInfo {
 	/**
 	 * With Activity Parameter
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 21:37:11
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 21:37:11
 	 * @param ctx
 	 * @param activityParam
 	 * @param conn
@@ -161,7 +161,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Load Process Meta-data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 15:34:33
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 15:34:33
 	 * @return
 	 * @return boolean
 	 */
@@ -333,7 +333,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Get Report View
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 14:44:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 14:44:05
 	 * @return
 	 * @return int
 	 */
@@ -343,7 +343,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Get Report View
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 14:44:24
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 14:44:24
 	 * @param AD_ReportView_ID
 	 * @return void
 	 */
@@ -353,7 +353,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Get AD  Print Format
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 09:54:14
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 09:54:14
 	 * @return
 	 * @return int
 	 */
@@ -363,7 +363,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Set Print Format
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 09:53:46
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 09:53:46
 	 * @param AD_PrintFormat_ID
 	 * @return void
 	 */
@@ -482,7 +482,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Get Procedure Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 14:45:09
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 14:45:09
 	 * @return
 	 * @return String
 	 */
@@ -492,7 +492,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Set Procedure Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 14:45:57
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 14:45:57
 	 * @param ProcedureName
 	 * @return void
 	 */
@@ -502,7 +502,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Get Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 14:46:22
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 14:46:22
 	 * @return
 	 * @return String
 	 */
@@ -512,7 +512,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Set Process Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 14:46:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 14:46:56
 	 * @param Value
 	 * @return void
 	 */
@@ -522,7 +522,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Get Description
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 14:47:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 14:47:26
 	 * @return
 	 * @return String
 	 */
@@ -532,7 +532,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Set Description
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 14:48:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 14:48:15
 	 * @param Description
 	 * @return void
 	 */
@@ -542,7 +542,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Is Report
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 14:48:55
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 14:48:55
 	 * @return
 	 * @return boolean
 	 */
@@ -552,7 +552,7 @@ public class ProcessInfo {
 
 	/**
 	 * Set Is Report
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 15:06:18
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 15:06:18
 	 * @param isReport
 	 * @return void
 	 */
@@ -562,7 +562,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Get Show Help
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 17:53:09
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 17:53:09
 	 * @return
 	 * @return String
 	 */
@@ -572,7 +572,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Set Help
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 17:56:19
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 17:56:19
 	 * @param help
 	 * @return void
 	 */
@@ -582,7 +582,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Get Help
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 17:56:39
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 17:56:39
 	 * @return
 	 * @return String
 	 */
@@ -592,7 +592,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Set Show Help
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 17:53:53
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 17:53:53
 	 * @param showHelp
 	 * @return void
 	 */
@@ -602,7 +602,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Set Is Server Process
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/03/2014, 14:48:28
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/03/2014, 14:48:28
 	 * @param m_IsServerProcess
 	 * @return void
 	 */
@@ -612,7 +612,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Is Server Process
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/03/2014, 14:48:54
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/03/2014, 14:48:54
 	 * @return
 	 * @return boolean
 	 */
@@ -638,7 +638,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Verify if has parameter
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 18:16:36
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/09/2014, 18:16:36
 	 * @return
 	 * @return boolean
 	 */
@@ -652,7 +652,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Return Process Field Parameters for Grid
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 21:32:40
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 21:32:40
 	 * @return
 	 * @return VOInfoPara[]
 	 */
@@ -662,7 +662,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Set Window No
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 21:20:22
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 21:20:22
 	 * @param m_ActivityNo
 	 * @return void
 	 */
@@ -672,7 +672,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Get Window No
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 21:21:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 21:21:15
 	 * @return
 	 * @return int
 	 */
@@ -682,7 +682,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Get Context
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 21:33:51
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 21:33:51
 	 * @return
 	 * @return Context
 	 */
@@ -692,7 +692,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Get Connection and Current Transaction
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 21:34:11
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 21:34:11
 	 * @return
 	 * @return DB
 	 */
@@ -702,7 +702,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Set Is HandleConnection
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/03/2014, 15:56:43
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/03/2014, 15:56:43
 	 * @param m_IsHandleConnection
 	 * @return void
 	 */
@@ -712,7 +712,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Is Handle Connection
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/03/2014, 15:57:14
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/03/2014, 15:57:14
 	 * @return
 	 * @return boolean
 	 */
@@ -770,7 +770,7 @@ public class ProcessInfo {
 	
 	/**
 	 * Clear Log Msg and Summary
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/09/2014, 17:48:49
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/09/2014, 17:48:49
 	 * @return void
 	 */
 	public void clearInfoLog() {

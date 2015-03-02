@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
@@ -32,7 +32,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class VLookupButtonDocAction extends VLookupButton 
@@ -40,7 +40,7 @@ public class VLookupButtonDocAction extends VLookupButton
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/05/2014, 10:43:57
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/05/2014, 10:43:57
 	 * @param activity
 	 */
 	public VLookupButtonDocAction(Activity activity) {
@@ -49,7 +49,7 @@ public class VLookupButtonDocAction extends VLookupButton
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/05/2014, 10:43:57
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/05/2014, 10:43:57
 	 * @param activity
 	 * @param attrs
 	 */
@@ -59,7 +59,7 @@ public class VLookupButtonDocAction extends VLookupButton
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/05/2014, 10:43:57
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/05/2014, 10:43:57
 	 * @param activity
 	 * @param attrs
 	 * @param defStyle
@@ -71,7 +71,7 @@ public class VLookupButtonDocAction extends VLookupButton
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/05/2014, 10:43:57
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/05/2014, 10:43:57
 	 * @param activity
 	 * @param m_field
 	 * @param po
@@ -122,7 +122,7 @@ public class VLookupButtonDocAction extends VLookupButton
 	
 	/**
 	 * Load available view
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/05/2012, 17:19:48
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/05/2012, 17:19:48
 	 * @param v
 	 * @return void
 	 */
@@ -160,7 +160,7 @@ public class VLookupButtonDocAction extends VLookupButton
 	
 	/**
 	 * Set Document Action
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/05/2012, 00:35:12
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/05/2012, 00:35:12
 	 * @param action
 	 * @return boolean
 	 */
@@ -177,7 +177,7 @@ public class VLookupButtonDocAction extends VLookupButton
 	
 	/**
 	 * Update Display
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 06/05/2014, 15:26:38
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 06/05/2014, 15:26:38
 	 * @param action
 	 * @return void
 	 */
@@ -216,7 +216,7 @@ public class VLookupButtonDocAction extends VLookupButton
 	
 	/**
 	 * Get Document Status
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/05/2012, 00:43:16
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/05/2012, 00:43:16
 	 * @return
 	 * @return String
 	 */
@@ -226,7 +226,7 @@ public class VLookupButtonDocAction extends VLookupButton
 	
 	/**
 	 * Set Document Action
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 06/05/2014, 15:17:31
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 06/05/2014, 15:17:31
 	 * @param status
 	 * @return void
 	 */
@@ -236,7 +236,7 @@ public class VLookupButtonDocAction extends VLookupButton
 	
 	/**
 	 * Get el QuickAction
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/06/2012, 00:05:24
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 04/06/2012, 00:05:24
 	 * @return
 	 * @return QuickAction
 	 */
@@ -283,7 +283,7 @@ public class VLookupButtonDocAction extends VLookupButton
 	
 	/**
 	 * Is Processed
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/08/2014, 17:33:28
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/08/2014, 17:33:28
 	 * @return
 	 * @return boolean
 	 */
@@ -293,7 +293,7 @@ public class VLookupButtonDocAction extends VLookupButton
 	
 	/**
 	 * Get Process Message
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 18:29:54
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/09/2014, 18:29:54
 	 * @return
 	 * @return String
 	 */
@@ -303,7 +303,7 @@ public class VLookupButtonDocAction extends VLookupButton
 	
 	/**
 	 * Process Document Action in Thread
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 *
 	 */
 	private class ProcessDocActionTask extends AsyncTask<String, Void, Void> {

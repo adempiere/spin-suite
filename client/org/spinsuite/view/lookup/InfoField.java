@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
@@ -25,7 +25,7 @@ import android.os.Parcelable;
 
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class InfoField extends POInfoColumn {
@@ -33,7 +33,7 @@ public class InfoField extends POInfoColumn {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/03/2014, 14:06:11
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/03/2014, 14:06:11
 	 * @param parcel
 	 */
 	public InfoField(Parcel parcel){
@@ -44,7 +44,7 @@ public class InfoField extends POInfoColumn {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/03/2014, 14:06:07
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/03/2014, 14:06:07
 	 */
 	public InfoField(){
 		
@@ -53,7 +53,7 @@ public class InfoField extends POInfoColumn {
 	/**
 	 * Create from Column
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/10/2014, 19:49:58
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 11/10/2014, 19:49:58
 	 * @param from
 	 */
 	public InfoField(MSPSColumn from){
@@ -93,7 +93,7 @@ public class InfoField extends POInfoColumn {
 	/**
 	 * Create From Info Parameter
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 21:50:53
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 21:50:53
 	 * @param from
 	 */
 	public InfoField(InfoPara from){
@@ -141,7 +141,7 @@ public class InfoField extends POInfoColumn {
 	/**
 	 * Create from Info Report Field
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 21:02:48
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 21:02:48
 	 * @param from
 	 */
 	public InfoField(InfoReportField from){

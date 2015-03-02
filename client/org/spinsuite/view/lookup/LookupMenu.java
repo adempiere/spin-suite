@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
@@ -27,7 +27,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class LookupMenu {
@@ -55,7 +55,7 @@ public class LookupMenu {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/03/2014, 17:00:37
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 14/03/2014, 17:00:37
 	 * @param m_MenuType
 	 */
 	public LookupMenu(Context ctx, String m_MenuType, DB conn) {
@@ -66,7 +66,7 @@ public class LookupMenu {
 	
 	/**
 	 * Load Children of parent
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/03/2014, 17:02:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 14/03/2014, 17:02:15
 	 * @param parent_ID
 	 * @return boolean
 	 */
@@ -273,7 +273,7 @@ public class LookupMenu {
 	
 	/**
 	 * Get Data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/03/2014, 17:33:02
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 14/03/2014, 17:33:02
 	 * @return
 	 * @return ArrayList<DisplayMenuItem>
 	 */

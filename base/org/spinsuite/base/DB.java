@@ -1,17 +1,17 @@
 /*************************************************************************************
  * Product: Spin-Suite (Making your Business Spin)                                   *
- * This program is free software; you can redistribute it and/or modify it    		 *
- * under the terms version 2 of the GNU General Public License as published   		 *
- * by the Free Software Foundation. This program is distributed in the hope   		 *
- * that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 		 *
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.           		 *
- * See the GNU General Public License for more details.                       		 *
- * You should have received a copy of the GNU General Public License along    		 *
- * with this program; if not, write to the Free Software Foundation, Inc.,    		 *
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                     		 *
- * For the text or an alternative of this public license, you may reach us    		 *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com				  		 *
+ * This program is free software; you can redistribute it and/or modify it           *
+ * under the terms version 2 of the GNU General Public License as published          *
+ * by the Free Software Foundation. This program is distributed in the hope          *
+ * that it will be useful, but WITHOUT ANY WARRANTY; without even the implied        *
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                  *
+ * See the GNU General Public License for more details.                              *
+ * You should have received a copy of the GNU General Public License along           *
+ * with this program; if not, write to the Free Software Foundation, Inc.,           *
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
+ * For the text or an alternative of this public license, you may reach us           *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.base;
 
@@ -44,7 +44,7 @@ public class DB extends SQLiteOpenHelper {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:43:37
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:43:37
 	 * @param ctx
 	 * @param name
 	 * @param factory
@@ -61,7 +61,7 @@ public class DB extends SQLiteOpenHelper {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:43:29
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:43:29
 	 * @param ctx
 	 */
 	public DB(Context ctx) {
@@ -113,7 +113,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Is Datablase Integrity Ok
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/05/2014, 14:37:17
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/05/2014, 14:37:17
 	 * @return
 	 * @return boolean
 	 */
@@ -123,7 +123,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Open database in mode read or read write
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:43:49
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:43:49
 	 * @param type
 	 * @return
 	 * @return SQLiteDatabase
@@ -139,7 +139,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get database
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:44:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:44:15
 	 * @return
 	 * @return SQLiteDatabase
 	 */
@@ -162,7 +162,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Verifi if is open database
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:44:37
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:44:37
 	 * @return
 	 * @return boolean
 	 */
@@ -176,7 +176,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * End transaction
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:44:54
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:44:54
 	 * @return void
 	 */
 	public void endTransaction() {
@@ -185,7 +185,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Begin transaction
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:45:07
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:45:07
 	 * @return void
 	 */
 	public void beginTransaction() {
@@ -194,7 +194,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Set Successful transaction
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:45:34
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:45:34
 	 * @return void
 	 */
 	public void setTransactionSuccessful() {
@@ -203,7 +203,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Execute SQL
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:46:02
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:46:02
 	 * @param sql
 	 * @return void
 	 */
@@ -214,7 +214,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Execute SQL with parameters
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:46:22
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:46:22
 	 * @param sql
 	 * @param params
 	 * @return void
@@ -226,7 +226,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Insert on table
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:46:44
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:46:44
 	 * @param table
 	 * @param columnaNull
 	 * @param values
@@ -238,7 +238,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Update table
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:47:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:47:03
 	 * @param table
 	 * @param values
 	 * @param where
@@ -251,7 +251,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Delete over table
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:47:14
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:47:14
 	 * @param table
 	 * @param where
 	 * @param argmWhere
@@ -263,7 +263,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get SQL with parameters
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:47:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:47:26
 	 * @param sql
 	 * @param values
 	 * @return
@@ -276,7 +276,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get SQL wit all values
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:48:10
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:48:10
 	 * @param table
 	 * @param col
 	 * @param where
@@ -296,7 +296,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Compile statement
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:48:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:48:23
 	 * @param sql
 	 * @return
 	 * @return SQLiteStatement
@@ -308,7 +308,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Add Query for next Execution
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 20:28:46
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/10/2014, 20:28:46
 	 * @param sql
 	 * @return void
 	 */
@@ -319,7 +319,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get Statement
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:48:35
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:48:35
 	 * @return
 	 * @return SQLiteStatement
 	 */
@@ -329,7 +329,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Add Integer Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 19:52:02
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/10/2014, 19:52:02
 	 * @param value
 	 * @return DB
 	 */
@@ -344,7 +344,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Add Long Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 19:55:58
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/10/2014, 19:55:58
 	 * @param value
 	 * @return DB
 	 */
@@ -359,7 +359,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Add String Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 19:58:11
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/10/2014, 19:58:11
 	 * @param value
 	 * @return DB
 	 */
@@ -374,7 +374,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Add Double Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 19:59:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/10/2014, 19:59:26
 	 * @param value
 	 * @return DB
 	 */
@@ -389,7 +389,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Add Date Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 20:11:20
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/10/2014, 20:11:20
 	 * @param value
 	 * @return DB
 	 */
@@ -407,7 +407,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Add Boolean Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/10/2014, 20:04:52
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/10/2014, 20:04:52
 	 * @param value
 	 * @return DB
 	 */
@@ -425,7 +425,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Add Date and Time Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 20:11:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/10/2014, 20:11:56
 	 * @param value
 	 * @return DB
 	 */
@@ -443,7 +443,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Add a Parameter
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/10/2014, 20:16:32
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/10/2014, 20:16:32
 	 * @param value
 	 * @return DB
 	 */
@@ -469,7 +469,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Clear Parameters
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 20:13:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/10/2014, 20:13:05
 	 * @return void
 	 */
 	public void clearParameters() {
@@ -478,7 +478,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Excecute Precompiled Query
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 20:48:58
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/10/2014, 20:48:58
 	 * @return
 	 * @return Cursor
 	 */
@@ -496,7 +496,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Load a Connection
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/02/2014, 09:15:36
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/02/2014, 09:15:36
 	 * @param conn
 	 * @param type
 	 * @return
@@ -512,7 +512,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Instance and load Connection
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/10/2014, 20:52:00
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/10/2014, 20:52:00
 	 * @param ctx
 	 * @param type
 	 * @return void
@@ -528,7 +528,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Close a Connection
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/02/2014, 09:17:46
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/02/2014, 09:17:46
 	 * @param conn
 	 * @return void
 	 */
@@ -543,7 +543,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Execute Update.
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 11:58:14
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 11:58:14
 	 * @param ctx
 	 * @param sql
 	 * @param param
@@ -563,7 +563,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Excecute Update Ignore Error
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/10/2014, 20:32:31
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/10/2014, 20:32:31
 	 * @param ctx
 	 * @param sql
 	 * @param conn
@@ -582,7 +582,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Execute Update
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 22:22:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/09/2014, 22:22:56
 	 * @param ctx
 	 * @param sql
 	 * @param param
@@ -595,7 +595,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Excecute Update with throw
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/10/2014, 20:29:51
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/10/2014, 20:29:51
 	 * @param ctx
 	 * @param sql
 	 * @param conn
@@ -609,7 +609,7 @@ public class DB extends SQLiteOpenHelper {
 
 	/**
 	 * Execute Update.
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 11:56:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 11:56:05
 	 * @param ctx
 	 * @param sql
 	 * @param param
@@ -624,7 +624,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Execute Update
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 22:21:36
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/09/2014, 22:21:36
 	 * @param ctx
 	 * @param sql
 	 * @param param
@@ -640,7 +640,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Execute a Update
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 11:52:58
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 11:52:58
 	 * @param ctx
 	 * @param sql
 	 * @param params
@@ -689,7 +689,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get Value from SQL
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/02/2014, 09:21:49
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/02/2014, 09:21:49
 	 * @param ctx
 	 * @param sql
 	 * @param conn
@@ -724,7 +724,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Without connection
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 22:28:54
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/09/2014, 22:28:54
 	 * @param ctx
 	 * @param sql
 	 * @param params
@@ -737,7 +737,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get Key Name Pairs
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/03/2014, 11:14:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 31/03/2014, 11:14:56
 	 * @param ctx
 	 * @param sql
 	 * @param optional
@@ -789,7 +789,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get Multikey Values
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:05:06
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 13:05:06
 	 * @param ctx
 	 * @param sql
 	 * @param keyCount
@@ -851,7 +851,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get Key Name Pairs without connection
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 22:30:30
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/09/2014, 22:30:30
 	 * @param ctx
 	 * @param sql
 	 * @param optional
@@ -866,7 +866,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get MultiKey Name Pairs without connection
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:06:10
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 13:06:10
 	 * @param ctx
 	 * @param sql
 	 * @param keyCount
@@ -882,7 +882,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get Key Name Pairs
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/03/2014, 11:15:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 31/03/2014, 11:15:56
 	 * @param ctx
 	 * @param sql
 	 * @param conn
@@ -902,7 +902,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get MultiKey Name Pair
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:07:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 13:07:15
 	 * @param ctx
 	 * @param sql
 	 * @param keyCount
@@ -923,7 +923,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get Key Name Pairs without connection
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 22:31:49
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/09/2014, 22:31:49
 	 * @param ctx
 	 * @param sql
 	 * @param params
@@ -936,7 +936,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get Key Name Pairs without connection with a parameter
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 16:30:40
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/09/2014, 16:30:40
 	 * @param ctx
 	 * @param sql
 	 * @param param
@@ -949,7 +949,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get MultiKey Name Pairs without connection with a parameter
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:11:20
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 13:11:20
 	 * @param ctx
 	 * @param sql
 	 * @param keyCount
@@ -963,7 +963,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get MultiKey Name Pairs without connection with a parameter
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:13:36
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 13:13:36
 	 * @param ctx
 	 * @param sql
 	 * @param keyColumn
@@ -977,7 +977,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get Value from SQL as int
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 14:24:00
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 14:24:00
 	 * @param ctx
 	 * @param sql
 	 * @param conn
@@ -1010,7 +1010,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get SQL Value with exception without parameters
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 10:51:39
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 15/10/2014, 10:51:39
 	 * @param ctx
 	 * @param sql
 	 * @param params
@@ -1023,7 +1023,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get Value SQL as int
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 14:25:42
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 14:25:42
 	 * @param ctx
 	 * @param sql
 	 * @return
@@ -1035,7 +1035,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get Value without Exception
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 14:41:53
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 14:41:53
 	 * @param ctx
 	 * @param sql
 	 * @return
@@ -1047,7 +1047,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * With parameters
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 10:55:44
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 10:55:44
 	 * @param ctx
 	 * @param sql
 	 * @param conn
@@ -1067,7 +1067,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * get SQL Value without connection
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 22:34:51
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/09/2014, 22:34:51
 	 * @param ctx
 	 * @param sql
 	 * @param params
@@ -1080,7 +1080,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get Value from SQL without parameter
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/02/2014, 09:25:04
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/02/2014, 09:25:04
 	 * @param ctx
 	 * @param sql
 	 * @return
@@ -1092,7 +1092,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get Value from sql without Exception
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/02/2014, 09:43:18
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/02/2014, 09:43:18
 	 * @param ctx
 	 * @param sql
 	 * @return
@@ -1110,7 +1110,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get Value from sql without Exception, with parameters
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/02/2014, 09:44:22
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/02/2014, 09:44:22
 	 * @param ctx
 	 * @param sql
 	 * @param params
@@ -1129,7 +1129,7 @@ public class DB extends SQLiteOpenHelper {
 	
 	/**
 	 * Get Value from sql without Exception, with parameters and Connection
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/09/2014, 21:58:46
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/09/2014, 21:58:46
 	 * @param ctx
 	 * @param sql
 	 * @param conn

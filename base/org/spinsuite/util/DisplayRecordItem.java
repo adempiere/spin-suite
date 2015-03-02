@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.util;
 
@@ -21,7 +21,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class DisplayRecordItem implements Parcelable {
@@ -29,7 +29,7 @@ public class DisplayRecordItem implements Parcelable {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/03/2014, 12:53:53
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/03/2014, 12:53:53
 	 */
 	public DisplayRecordItem(){
 		
@@ -38,7 +38,7 @@ public class DisplayRecordItem implements Parcelable {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/03/2014, 12:44:25
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/03/2014, 12:44:25
 	 * @param pRecord_ID
 	 * @param pValue
 	 * @param pDescription
@@ -51,7 +51,7 @@ public class DisplayRecordItem implements Parcelable {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/10/2014, 22:07:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/10/2014, 22:07:23
 	 * @param p_Record_ID
 	 * @param pValue
 	 */
@@ -62,7 +62,7 @@ public class DisplayRecordItem implements Parcelable {
 	/**
 	 * With Image URL
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/03/2014, 13:19:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/03/2014, 13:19:26
 	 * @param pRecord_ID
 	 * @param pValue
 	 * @param pDescription
@@ -76,7 +76,7 @@ public class DisplayRecordItem implements Parcelable {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/10/2014, 22:07:44
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/10/2014, 22:07:44
 	 * @param p_Record_ID
 	 * @param pValue
 	 * @param pImageURL
@@ -88,7 +88,7 @@ public class DisplayRecordItem implements Parcelable {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/10/2014, 22:45:32
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/10/2014, 22:45:32
 	 * @param p_Record_ID
 	 * @param p_KeyColumns
 	 * @param pValue
@@ -105,7 +105,7 @@ public class DisplayRecordItem implements Parcelable {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/03/2014, 12:55:11
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/03/2014, 12:55:11
 	 * @param parcel
 	 */
 	public DisplayRecordItem(Parcel parcel){
@@ -126,7 +126,7 @@ public class DisplayRecordItem implements Parcelable {
 	
 	/**
 	 * Get Record Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/03/2014, 12:44:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/03/2014, 12:44:56
 	 * @return
 	 * @return int
 	 */
@@ -136,7 +136,7 @@ public class DisplayRecordItem implements Parcelable {
 	
 	/**
 	 * Get Keys
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/10/2014, 21:44:24
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/10/2014, 21:44:24
 	 * @return
 	 * @return int[]
 	 */
@@ -146,7 +146,7 @@ public class DisplayRecordItem implements Parcelable {
 	
 	/**
 	 * Get Key Columns
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:49:31
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 13:49:31
 	 * @return
 	 * @return String[]
 	 */
@@ -156,7 +156,7 @@ public class DisplayRecordItem implements Parcelable {
 	
 	/**
 	 * Get Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/03/2014, 12:45:55
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/03/2014, 12:45:55
 	 * @return
 	 * @return String
 	 */
@@ -166,7 +166,7 @@ public class DisplayRecordItem implements Parcelable {
 	
 	/**
 	 * Get Image URL
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/03/2014, 13:19:59
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/03/2014, 13:19:59
 	 * @return
 	 * @return String
 	 */
@@ -176,7 +176,7 @@ public class DisplayRecordItem implements Parcelable {
 	
 	/**
 	 * Get Document Status
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/09/2014, 16:11:51
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/09/2014, 16:11:51
 	 * @return
 	 * @return String
 	 */
@@ -212,7 +212,7 @@ public class DisplayRecordItem implements Parcelable {
 	
 	/**
 	 * Read
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/03/2014, 12:54:52
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/03/2014, 12:54:52
 	 * @param parcel
 	 * @return void
 	 */

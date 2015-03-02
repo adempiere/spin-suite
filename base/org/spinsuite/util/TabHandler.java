@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.util;
 
@@ -24,7 +24,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class TabHandler {
@@ -33,7 +33,7 @@ public class TabHandler {
 	/**
      * 
      * *** Constructor ***
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 23/08/2014, 14:56:24
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 23/08/2014, 14:56:24
      * @param activity
      * @param tag
      * @param clz
@@ -63,7 +63,7 @@ public class TabHandler {
     
     /**
      * Get Fragment
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 23/08/2014, 11:50:44
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 23/08/2014, 11:50:44
      * @return
      * @return Fragment
      */
@@ -73,7 +73,7 @@ public class TabHandler {
     
     /**
      * Get Arguments
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/08/2014, 10:28:41
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/08/2014, 10:28:41
      * @return
      * @return Bundle
      */
@@ -83,7 +83,7 @@ public class TabHandler {
     
     /**
      * Get Tag
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/08/2014, 10:24:50
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/08/2014, 10:24:50
      * @return
      * @return String
      */
@@ -93,7 +93,7 @@ public class TabHandler {
     
     /**
      * Get Class for Fragment
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/08/2014, 10:24:14
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/08/2014, 10:24:14
      * @return
      * @return Class<?>
      */
@@ -103,7 +103,7 @@ public class TabHandler {
     
     /**
      * Get Class Name
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/08/2014, 10:23:47
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/08/2014, 10:23:47
      * @return
      * @return String
      */
@@ -115,7 +115,7 @@ public class TabHandler {
     
     /**
      * Load Fragment
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/08/2014, 10:51:24
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/08/2014, 10:51:24
      * @param m_FragmentManager
      * @return void
      */
@@ -139,7 +139,7 @@ public class TabHandler {
     
     /**
      * Unload Fragment
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/08/2014, 10:51:09
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/08/2014, 10:51:09
      * @param m_FragmentManager
      * @return void
      */
@@ -155,7 +155,7 @@ public class TabHandler {
     
     /**
      * Get Tab Parameter
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/09/2014, 21:45:19
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/09/2014, 21:45:19
      * @return
      * @return TabParameter
      */

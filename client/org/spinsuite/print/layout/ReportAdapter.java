@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.print.layout;
 
@@ -42,7 +42,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class ReportAdapter extends BaseAdapter implements Filterable {
@@ -50,7 +50,7 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 15:35:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/03/2014, 15:35:03
 	 * @param ctx
 	 * @param data
 	 * @param columns
@@ -76,7 +76,7 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 15:35:28
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/03/2014, 15:35:28
 	 * @param ctx
 	 * @param data
 	 * @param columns
@@ -106,7 +106,7 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 	
 	/**
 	 * Add Item
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 22:03:50
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 22:03:50
 	 * @param row
 	 * @return void
 	 */
@@ -132,7 +132,7 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 	
 	/**
 	 * Get Items
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 22:04:21
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 22:04:21
 	 * @return
 	 * @return ArrayList<RowPrintData>
 	 */
@@ -142,7 +142,7 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 	
 	/**
 	 * Format Text Field
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/03/2014, 14:44:53
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/03/2014, 14:44:53
 	 * @param tv_column
 	 * @param index
 	 * @return void
@@ -166,7 +166,7 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 	
 	/**
 	 * Load Labels Header
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 15:42:00
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/03/2014, 15:42:00
 	 * @param ll_HeaderReport
 	 * @return void
 	 */
@@ -195,7 +195,7 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 	
 	/**
 	 * Instance Decimal Format Column
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/04/2014, 11:43:54
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 04/04/2014, 11:43:54
 	 * @return void
 	 */
 	private void instanceFormat(){
@@ -224,7 +224,7 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 	
 	/**
 	 * Load a dynamic TextView
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/03/2014, 11:47:32
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/03/2014, 11:47:32
 	 * @param text
 	 * @param index
 	 * @param isFunctionRow
@@ -370,7 +370,7 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 
 	        /**
 	         * Search
-	         * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/03/2014, 03:19:33
+	         * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/03/2014, 03:19:33
 	         * @param constraint
 	         * @return
 	         * @return ArrayList<RowPrintData>

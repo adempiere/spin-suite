@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
@@ -30,7 +30,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class Lookup {
@@ -38,7 +38,7 @@ public class Lookup {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/09/2014, 10:07:25
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 11/09/2014, 10:07:25
 	 * @param ctx
 	 * @param field
 	 * @param tableAlias
@@ -50,7 +50,7 @@ public class Lookup {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/09/2014, 10:08:19
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 11/09/2014, 10:08:19
 	 * @param ctx
 	 * @param field
 	 */
@@ -61,7 +61,7 @@ public class Lookup {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 14:58:02
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/08/2014, 14:58:02
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param m_TabNo
@@ -79,7 +79,7 @@ public class Lookup {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/09/2014, 11:43:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/09/2014, 11:43:05
 	 * @param ctx
 	 * @param tabParam
 	 * @param field
@@ -114,7 +114,7 @@ public class Lookup {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/09/2014, 20:12:45
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 16/09/2014, 20:12:45
 	 * @param ctx
 	 * @param m_SPS_Column_ID
 	 * @param tableAlias
@@ -126,7 +126,7 @@ public class Lookup {
 	/**
 	 * With Column Identifier
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/09/2014, 20:10:58
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 16/09/2014, 20:10:58
 	 * @param ctx
 	 * @param tabParam
 	 * @param m_SPS_Column_ID
@@ -161,7 +161,7 @@ public class Lookup {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/09/2014, 10:09:45
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 11/09/2014, 10:09:45
 	 * @param ctx
 	 * @param tabParam
 	 * @param field
@@ -173,7 +173,7 @@ public class Lookup {
 	/**
 	 * With Column
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/09/2014, 12:19:50
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/09/2014, 12:19:50
 	 * @param ctx
 	 * @param m_SPS_Column_ID
 	 * @param tabParam
@@ -201,7 +201,7 @@ public class Lookup {
 	 * Private Constructor
 	 * With Table Name and column Name for lookup manual
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/09/2014, 21:08:52
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/09/2014, 21:08:52
 	 * @param ctx
 	 * @param m_TableName
 	 * @param m_ColumnName
@@ -235,7 +235,7 @@ public class Lookup {
 	/**
 	 * With Table Name and column Name for lookup manual
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/09/2014, 21:09:51
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/09/2014, 21:09:51
 	 * @param ctx
 	 * @param m_TableName
 	 * @param m_ColumnName
@@ -248,7 +248,7 @@ public class Lookup {
 	/**
 	 * With Table Name and column Name for lookup manual
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/09/2014, 21:10:38
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/09/2014, 21:10:38
 	 * @param ctx
 	 * @param m_TableName
 	 * @param m_ColumnName
@@ -261,7 +261,7 @@ public class Lookup {
 	/**
 	 * Get from Search
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/03/2014, 16:20:14
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/03/2014, 16:20:14
 	 * @param ctx
 	 * @param m_SPS_Table_ID
 	 */
@@ -336,7 +336,7 @@ public class Lookup {
 	
 	/**
 	 * Get Parsed SQL
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 23/05/2014, 15:08:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 23/05/2014, 15:08:05
 	 * @param sql
 	 * @return
 	 * @return String
@@ -357,7 +357,7 @@ public class Lookup {
 	
 	/**
 	 * Get SQL
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/03/2014, 15:31:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/03/2014, 15:31:15
 	 * @return
 	 * @return String
 	 */
@@ -448,7 +448,7 @@ public class Lookup {
 	
 	/**
 	 * Get Info Lookup
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 21:00:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 21:00:23
 	 * @return
 	 * @return InfoLookup
 	 */
@@ -466,7 +466,7 @@ public class Lookup {
 	
 	/**
 	 * Get Validation Rule
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2014, 14:45:20
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/02/2014, 14:45:20
 	 * @return
 	 * @return String
 	 */
@@ -486,7 +486,7 @@ public class Lookup {
 	
 	/**
 	 * Get SQL from Table Direct
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 22:06:00
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/02/2014, 22:06:00
 	 * @return String
 	 */
 	private String loadSQLTableDirect() {
@@ -604,7 +604,7 @@ public class Lookup {
 	
 	/**
 	 * Get SQL from Reference Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 22:32:49
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/02/2014, 22:32:49
 	 * @return String
 	 */
 	private String loadSQLTableSearch() {
@@ -715,7 +715,7 @@ public class Lookup {
 	
 	/**
 	 * Load SQL for Reference List
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2014, 10:54:32
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/02/2014, 10:54:32
 	 * @return String
 	 */
 	private String loadSQLList() {
@@ -781,7 +781,7 @@ public class Lookup {
 	
 	/**
 	 * Load Sql from Table
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/03/2014, 16:22:06
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/03/2014, 16:22:06
 	 * @return
 	 * @return String
 	 */
@@ -912,7 +912,7 @@ public class Lookup {
 	
 	/**
 	 * Add Join
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/09/2014, 21:06:48
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 16/09/2014, 21:06:48
 	 * @param tableName
 	 * @param linkColumn
 	 * @param lookup
@@ -956,7 +956,7 @@ public class Lookup {
 	
 	/**
 	 * Set Optional where clause
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/03/2014, 22:24:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/03/2014, 22:24:26
 	 * @param whereClause
 	 * @return void
 	 */
@@ -967,7 +967,7 @@ public class Lookup {
 
 	/**
 	 * Load Data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 09:44:09
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 09:44:09
 	 * @return void
 	 */
 	public void load() {
@@ -976,7 +976,7 @@ public class Lookup {
 	
 	/**
 	 * 
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 08:40:36
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 08:40:36
 	 * @param reQuery
 	 * @return void
 	 */
@@ -1029,7 +1029,7 @@ public class Lookup {
 	
 	/**
 	 * Is Syntax Error
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/03/2014, 11:36:25
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 16/03/2014, 11:36:25
 	 * @return
 	 * @return boolean
 	 */
@@ -1039,7 +1039,7 @@ public class Lookup {
 	
 	/**
 	 * Return Data Loaded
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/09/2014, 11:29:41
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/09/2014, 11:29:41
 	 * @return
 	 * @return ArrayList<DisplayLookupSpinner>
 	 */
@@ -1049,7 +1049,7 @@ public class Lookup {
 	
 	/**
 	 * Get Field
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/09/2014, 11:39:13
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/09/2014, 11:39:13
 	 * @return
 	 * @return InfoField
 	 */
@@ -1059,7 +1059,7 @@ public class Lookup {
 	
 	/**
 	 * Get Tab Parameter
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/09/2014, 11:54:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/09/2014, 11:54:05
 	 * @return
 	 * @return TabParameter
 	 */
@@ -1069,7 +1069,7 @@ public class Lookup {
 	
 	/**
 	 * Get Validation
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/09/2014, 11:59:07
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/09/2014, 11:59:07
 	 * @return
 	 * @return String
 	 */

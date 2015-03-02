@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
@@ -28,14 +28,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class VLookupButton extends GridField {
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/02/2014, 08:31:59
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/02/2014, 08:31:59
 	 * @param activity
 	 */
 	public VLookupButton(Activity activity) {
@@ -46,7 +46,7 @@ public class VLookupButton extends GridField {
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/02/2014, 08:31:59
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/02/2014, 08:31:59
 	 * @param activity
 	 * @param attrs
 	 */
@@ -58,7 +58,7 @@ public class VLookupButton extends GridField {
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/02/2014, 08:31:59
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/02/2014, 08:31:59
 	 * @param activity
 	 * @param attrs
 	 * @param defStyle
@@ -71,7 +71,7 @@ public class VLookupButton extends GridField {
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/02/2014, 08:31:59
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/02/2014, 08:31:59
 	 * @param activity
 	 * @param m_field
 	 */
@@ -82,7 +82,7 @@ public class VLookupButton extends GridField {
 	/**
 	 * With Tab Parameter
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/05/2014, 14:00:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 14/05/2014, 14:00:56
 	 * @param context
 	 * @param m_field
 	 * @param tabParam
@@ -133,7 +133,7 @@ public class VLookupButton extends GridField {
 	
 	/**
 	 * Set Tab Parameter
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/04/2014, 21:21:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 07/04/2014, 21:21:23
 	 * @param tabParam
 	 * @return void
 	 */
@@ -199,7 +199,7 @@ public class VLookupButton extends GridField {
 	
 	/**
 	 * Get Own Activity
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 18:06:40
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/09/2014, 18:06:40
 	 * @return
 	 * @return Activity
 	 */

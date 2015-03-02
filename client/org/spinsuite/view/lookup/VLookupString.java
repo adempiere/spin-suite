@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
@@ -117,7 +117,7 @@ public class VLookupString extends GridField {
 		v_String.setInputType(DisplayType.getInputType(m_field.DisplayType));
 		//	Selected All on Focus
 		v_String.setSelectAllOnFocus(true);
-		//	Set Multiline
+		//	Set Multi-line
 		if(m_field.DisplayType == DisplayType.TEXT
 				|| m_field.DisplayType == DisplayType.TEXT_LONG
 				|| m_field.DisplayType == DisplayType.MEMO)
@@ -174,6 +174,13 @@ public class VLookupString extends GridField {
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
 		v_String.setEnabled(enabled);
+		if(enabled) {
+			v_String.setTextColor(
+					getResources().getColor(R.color.lookup_text_read_write));
+		} else {
+			v_String.setTextColor(
+					getResources().getColor(R.color.lookup_text_read_only));
+		}
 	}
 
 	@Override

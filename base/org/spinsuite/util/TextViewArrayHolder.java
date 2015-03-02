@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.util;
 
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import android.widget.TextView;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class TextViewArrayHolder {
@@ -28,7 +28,7 @@ public class TextViewArrayHolder {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/03/2014, 10:04:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/03/2014, 10:04:23
 	 */
 	public TextViewArrayHolder() {
 		tv_array = new ArrayList<TextView>();
@@ -39,7 +39,7 @@ public class TextViewArrayHolder {
 	
 	/**
 	 * Add Text View to Array
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/03/2014, 10:06:45
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/03/2014, 10:06:45
 	 * @param tv_holder
 	 * @return void
 	 */
@@ -49,7 +49,7 @@ public class TextViewArrayHolder {
 	
 	/**
 	 * Get Text View to Index
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/03/2014, 10:09:12
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/03/2014, 10:09:12
 	 * @param index
 	 * @return
 	 * @return TextView
@@ -60,7 +60,7 @@ public class TextViewArrayHolder {
 	
 	/**
 	 * Get String
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 22:19:01
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 22:19:01
 	 * @return
 	 * @return String
 	 */
@@ -70,7 +70,7 @@ public class TextViewArrayHolder {
 	
 	/**
 	 * Set Text to Index
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/03/2014, 10:11:22
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/03/2014, 10:11:22
 	 * @param text
 	 * @param index
 	 * @return void

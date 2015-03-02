@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.util;
 
@@ -21,7 +21,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class TabParameter implements Parcelable {
@@ -77,7 +77,7 @@ public class TabParameter implements Parcelable {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/02/2014, 21:54:47
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 04/02/2014, 21:54:47
 	 */
 	public TabParameter(){
 		//	
@@ -86,7 +86,7 @@ public class TabParameter implements Parcelable {
 	/**
 	 * Create from MSFATab
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/02/2014, 13:40:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 15/02/2014, 13:40:26
 	 * @param from
 	 */
 	public TabParameter(MSPSTab from){
@@ -168,7 +168,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Set Activity No
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 00:08:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/02/2014, 00:08:15
 	 * @param m_ActivityNo
 	 * @return void
 	 */
@@ -178,7 +178,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Get Activity No
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 00:07:25
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/02/2014, 00:07:25
 	 * @return
 	 * @return int
 	 */
@@ -188,7 +188,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Get Parent Tab number
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/02/2014, 23:51:32
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/02/2014, 23:51:32
 	 * @return
 	 * @return int
 	 */
@@ -198,7 +198,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Set Tab Number
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/02/2014, 23:50:53
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/02/2014, 23:50:53
 	 * @param m_TabNo
 	 * @return void
 	 */
@@ -208,7 +208,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Get Tab Number
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/02/2014, 23:50:21
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/02/2014, 23:50:21
 	 * @return
 	 * @return int
 	 */
@@ -218,7 +218,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Set Tab Level
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/02/2014, 23:48:28
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/02/2014, 23:48:28
 	 * @param m_TabLevel
 	 * @return void
 	 */
@@ -228,7 +228,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Get TabLevel
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/02/2014, 23:46:21
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/02/2014, 23:46:21
 	 * @return
 	 * @return int
 	 */
@@ -238,7 +238,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Set Sequence
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/02/2014, 23:45:07
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/02/2014, 23:45:07
 	 * @param m_SeqNo
 	 * @return void
 	 */
@@ -248,7 +248,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Get Sequence
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/02/2014, 23:44:33
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/02/2014, 23:44:33
 	 * @return
 	 * @return int
 	 */
@@ -258,7 +258,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Set Class Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/02/2014, 23:43:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/02/2014, 23:43:05
 	 * @param m_Classname
 	 * @return void
 	 */
@@ -268,7 +268,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Get Class Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/02/2014, 23:42:07
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/02/2014, 23:42:07
 	 * @return
 	 * @return String
 	 */
@@ -278,7 +278,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Get Tab Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/02/2014, 23:40:00
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/02/2014, 23:40:00
 	 * @return
 	 * @return int
 	 */
@@ -288,7 +288,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Set Tab Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/02/2014, 23:41:00
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/02/2014, 23:41:00
 	 * @param m_SPS_Tab_ID
 	 * @return void
 	 */
@@ -298,7 +298,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Get Process Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/02/2014, 11:28:58
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/02/2014, 11:28:58
 	 * @return
 	 * @return int
 	 */
@@ -308,7 +308,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Set PRocess Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/02/2014, 11:29:46
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/02/2014, 11:29:46
 	 * @param m_AD_Process_ID
 	 * @return void
 	 */
@@ -378,7 +378,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Is Read Only
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/02/2014, 01:00:31
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 04/02/2014, 01:00:31
 	 * @return
 	 * @return boolean
 	 */
@@ -388,7 +388,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Set Read Only
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/02/2014, 01:00:43
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 04/02/2014, 01:00:43
 	 * @param m_IsReadOnly
 	 * @return void
 	 */
@@ -438,7 +438,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Is Insert Record
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/02/2014, 01:02:28
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 04/02/2014, 01:02:28
 	 * @return
 	 * @return boolean
 	 */
@@ -448,7 +448,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Set is Insert Record
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/02/2014, 09:40:45
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 04/02/2014, 09:40:45
 	 * @param m_IsInsertRecord
 	 * @return void
 	 */
@@ -458,7 +458,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Set Window Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/02/2014, 09:32:39
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/02/2014, 09:32:39
 	 * @param m_SPS_Window_ID
 	 * @return void
 	 */
@@ -468,7 +468,7 @@ public class TabParameter implements Parcelable {
 	
 	/**
 	 * Get Window Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/02/2014, 09:32:48
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/02/2014, 09:32:48
 	 * @return
 	 * @return int
 	 */
