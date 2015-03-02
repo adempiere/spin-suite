@@ -1,17 +1,17 @@
 /*************************************************************************************
  * Product: Spin-Suite (Making your Business Spin)                                   *
- * This program is free software; you can redistribute it and/or modify it    		 *
- * under the terms version 2 of the GNU General Public License as published   		 *
- * by the Free Software Foundation. This program is distributed in the hope   		 *
- * that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 		 *
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.           		 *
- * See the GNU General Public License for more details.                       		 *
- * You should have received a copy of the GNU General Public License along    		 *
- * with this program; if not, write to the Free Software Foundation, Inc.,    		 *
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                     		 *
- * For the text or an alternative of this public license, you may reach us    		 *
+ * This program is free software; you can redistribute it and/or modify it           *
+ * under the terms version 2 of the GNU General Public License as published          *
+ * by the Free Software Foundation. This program is distributed in the hope          *
+ * that it will be useful, but WITHOUT ANY WARRANTY; without even the implied        *
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                  *
+ * See the GNU General Public License for more details.                              *
+ * You should have received a copy of the GNU General Public License along           *
+ * with this program; if not, write to the Free Software Foundation, Inc.,           *
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
+ * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com				  		 *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.util;
 
@@ -48,7 +48,7 @@ public final class Env {
 
 	/**
 	 * Verify if is loaded environment
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:58:55
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:58:55
 	 * @param ctx
 	 * @return
 	 * @return boolean
@@ -59,7 +59,7 @@ public final class Env {
 	
 	/**
 	 * Get is load activity
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:58:42
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:58:42
 	 * @param ctx
 	 * @return
 	 * @return boolean
@@ -70,7 +70,7 @@ public final class Env {
 	
 	/**
 	 * Get if is login user
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:58:25
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:58:25
 	 * @param ctx
 	 * @return
 	 * @return boolean
@@ -81,7 +81,7 @@ public final class Env {
 	
 	/**
 	 * Set is initial load
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:58:13
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:58:13
 	 * @param ctx
 	 * @param value
 	 * @return void
@@ -92,7 +92,7 @@ public final class Env {
 	
 	/**
 	 * Set if loaded activity
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:57:53
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:57:53
 	 * @param ctx
 	 * @param value
 	 * @return void
@@ -103,7 +103,7 @@ public final class Env {
 	
 	/**
 	 * Set is login
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:57:36
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:57:36
 	 * @param ctx
 	 * @param value
 	 * @return void
@@ -114,7 +114,7 @@ public final class Env {
 	
 	/**
 	 * Load Role Access from Current Role
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 18:55:17
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/09/2014, 18:55:17
 	 * @param ctx
 	 * @return void
 	 */
@@ -131,7 +131,7 @@ public final class Env {
 	
 	/**
 	 * Set access loaded
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 19:01:04
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/09/2014, 19:01:04
 	 * @param ctx
 	 * @param loaded
 	 * @return void
@@ -145,7 +145,7 @@ public final class Env {
 	
 	/**
 	 * Set Access Loaded for current role
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 19:08:00
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/09/2014, 19:08:00
 	 * @param ctx
 	 * @param loaded
 	 * @return void
@@ -156,7 +156,7 @@ public final class Env {
 	
 	/**
 	 * Is Access Loaded
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 19:02:12
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/09/2014, 19:02:12
 	 * @param ctx
 	 * @param m_AD_Role_ID
 	 * @return
@@ -171,7 +171,7 @@ public final class Env {
 	
 	/**
 	 * Is Access Loaded with current role
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 19:09:17
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/09/2014, 19:09:17
 	 * @param ctx
 	 * @return
 	 * @return boolean
@@ -182,7 +182,7 @@ public final class Env {
 	
 	/**
 	 * Load Role Access
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 16:31:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/09/2014, 16:31:03
 	 * @param ctx
 	 * @param m_AD_Role_ID
 	 * @return void
@@ -258,7 +258,7 @@ public final class Env {
 	
 	/**
 	 * Get Process Access with Role
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/09/2014, 19:12:38
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 15/09/2014, 19:12:38
 	 * @param ctx
 	 * @param m_AD_Role_ID
 	 * @param m_AD_Process_ID
@@ -271,7 +271,7 @@ public final class Env {
 	
 	/**
 	 * Get Process Access without Role
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/09/2014, 19:13:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 15/09/2014, 19:13:26
 	 * @param ctx
 	 * @param m_AD_Process_ID
 	 * @return
@@ -284,7 +284,7 @@ public final class Env {
 	
 	/**
 	 * Get Windows Access with Role
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/09/2014, 19:15:37
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 15/09/2014, 19:15:37
 	 * @param ctx
 	 * @param m_AD_Role_ID
 	 * @param m_SPS_Window_ID
@@ -297,7 +297,7 @@ public final class Env {
 	
 	/**
 	 * Get Valid DocAction
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/09/2014, 11:46:20
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/09/2014, 11:46:20
 	 * @param ctx
 	 * @param m_AD_Role_ID
 	 * @param m_C_DocType_ID
@@ -311,7 +311,7 @@ public final class Env {
 	
 	/**
 	 * Get Valid DocAction without Role
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/09/2014, 11:47:34
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/09/2014, 11:47:34
 	 * @param ctx
 	 * @param m_C_DocType_ID
 	 * @param m_DocAction
@@ -324,7 +324,7 @@ public final class Env {
 	
 	/**
 	 * Get Windows Access without Role
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/09/2014, 19:13:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 15/09/2014, 19:13:26
 	 * @param ctx
 	 * @param m_SPS_Window_ID
 	 * @return
@@ -336,7 +336,7 @@ public final class Env {
 	
 	/**
 	 * Cache Reset
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 17:33:30
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/09/2014, 17:33:30
 	 * @param ctx
 	 * @return
 	 * @return int
@@ -347,7 +347,7 @@ public final class Env {
 	
 	/**
 	 * Cache Reset
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/09/2014, 17:23:40
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/09/2014, 17:23:40
 	 * @param ctx
 	 * @param m_Prefix
 	 * @param m_IgnorePrefix
@@ -390,7 +390,7 @@ public final class Env {
 	
 	/**
 	 * Get share preference editor
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:57:10
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:57:10
 	 * @param ctx
 	 * @return
 	 * @return Editor
@@ -402,7 +402,7 @@ public final class Env {
 	
 	/**
 	 * Remove a context value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/09/2014, 16:13:50
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/09/2014, 16:13:50
 	 * @param ctx
 	 * @param context
 	 * @return void
@@ -439,7 +439,7 @@ public final class Env {
 	
 	/**
 	 * Set Context Object
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/05/2014, 14:41:53
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 15/05/2014, 14:41:53
 	 * @param ctx
 	 * @param context
 	 * @param value
@@ -455,7 +455,7 @@ public final class Env {
 	
 	/**
 	 * Set Context Object with Activity No and Tab No
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/10/2014, 14:42:48
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/10/2014, 14:42:48
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param TabNo
@@ -474,7 +474,7 @@ public final class Env {
 	
 	/**
 	 * Set Context Object
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/05/2014, 14:13:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/05/2014, 14:13:23
 	 * @param ctx
 	 * @param context
 	 * @param clazz
@@ -494,7 +494,7 @@ public final class Env {
 	
 	/**
 	 * Get Context Object with Activity No and Tab No
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/10/2014, 14:55:22
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/10/2014, 14:55:22
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param TabNo
@@ -533,7 +533,7 @@ public final class Env {
 	
 	/**
 	 * Set Context
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:56:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:56:56
 	 * @param ctx
 	 * @param context
 	 * @param value
@@ -575,7 +575,7 @@ public final class Env {
 	
 	/**
 	 * Set Context Array Int
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:45:00
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 15:45:00
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param TabNo
@@ -594,7 +594,7 @@ public final class Env {
 	
 	/**
 	 * Set Context Array
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:42:54
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 15:42:54
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param TabNo
@@ -613,7 +613,7 @@ public final class Env {
 	
 	/**	
 	 * Set Context as boolean
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/03/2014, 10:40:04
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/03/2014, 10:40:04
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param TabNo
@@ -632,7 +632,7 @@ public final class Env {
 	
 	/**
 	 * Set Context as Boolean
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/05/2014, 17:01:51
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/05/2014, 17:01:51
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param context
@@ -649,7 +649,7 @@ public final class Env {
 	}	//	Set Context
 	/**
 	 * Set Context with Activity No and Tab No
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/02/2014, 13:16:11
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 15/02/2014, 13:16:11
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param TabNo
@@ -669,7 +669,7 @@ public final class Env {
 	
 	/**
 	 * Set Context with Activity No
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/02/2014, 13:18:28
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 15/02/2014, 13:18:28
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param context
@@ -786,7 +786,7 @@ public final class Env {
 	
 	/**
 	 * Get Date with format to
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:56:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:56:26
 	 * @param ctx
 	 * @param context
 	 * @param fromFormat
@@ -803,7 +803,7 @@ public final class Env {
 	
 	/**
 	 * Get Date with format
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:56:08
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:56:08
 	 * @param dateS
 	 * @param fromFormat
 	 * @param toFormat
@@ -832,7 +832,7 @@ public final class Env {
 	
 	/**
 	 * Get Date Format
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/11/2014, 9:55:11
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/11/2014, 9:55:11
 	 * @param dateS
 	 * @param fromFormat
 	 * @param toFormat
@@ -863,7 +863,7 @@ public final class Env {
 	
 	/**
 	 * Get Current date formated
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:55:48
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:55:48
 	 * @param format
 	 * @return
 	 * @return String
@@ -878,7 +878,7 @@ public final class Env {
 	
 	/**
 	 * Get Current Date
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/02/2014, 23:00:43
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/02/2014, 23:00:43
 	 * @return
 	 * @return Date
 	 */
@@ -909,7 +909,7 @@ public final class Env {
 	
 	/**
 	 * Get Context as boolean
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/03/2014, 11:11:31
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/03/2014, 11:11:31
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param TabNo
@@ -934,7 +934,7 @@ public final class Env {
 	
 	/**
 	 * Get Context as Boolean with Activity No
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/05/2014, 12:02:34
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/05/2014, 12:02:34
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param context
@@ -1051,7 +1051,7 @@ public final class Env {
 	
 	/**
 	 * Get Context As Array
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:15:20
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 15:15:20
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param TabNo
@@ -1077,7 +1077,7 @@ public final class Env {
 	
 	/**
 	 * Get Context As Int Array
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:35:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 15:35:26
 	 * @param ctx
 	 * @param context
 	 * @return
@@ -1104,7 +1104,7 @@ public final class Env {
 	
 	/**
 	 * Get Context as Array with Activity and tab
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:18:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 15:18:56
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param TabNo
@@ -1118,7 +1118,7 @@ public final class Env {
 	
 	/**
 	 * Get Context as Int Array with Activity and tab
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:36:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 15:36:03
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param TabNo
@@ -1132,7 +1132,7 @@ public final class Env {
 	
 	/**
 	 * Set Context Array
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:26:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 15:26:05
 	 * @param ctx
 	 * @param context
 	 * @param value
@@ -1156,7 +1156,7 @@ public final class Env {
 	
 	/**
 	 * Set Context As Int Array
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:40:51
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 15:40:51
 	 * @param ctx
 	 * @param context
 	 * @param value
@@ -1386,7 +1386,7 @@ public final class Env {
 	
 	/**
 	 * Set Auto Login Confirmed
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/10/2014, 1:11:40
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/10/2014, 1:11:40
 	 * @param ctx
 	 * @param isAutoLoginConfirmed
 	 * @return void
@@ -1419,7 +1419,7 @@ public final class Env {
 	
 	/**
 	 * Is Auto Login Confirmed
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/10/2014, 1:10:30
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/10/2014, 1:10:30
 	 * @param ctx
 	 * @return
 	 * @return boolean
@@ -1430,7 +1430,7 @@ public final class Env {
 	
 	/**
 	 * Set database name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:55:13
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:55:13
 	 * @param ctx
 	 * @param value
 	 * @return void
@@ -1441,7 +1441,7 @@ public final class Env {
 	
 	/**
 	 * Get database Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:55:02
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:55:02
 	 * @param ctx
 	 * @return
 	 * @return String
@@ -1452,7 +1452,7 @@ public final class Env {
 	
 	/**
 	 * Set Document Path Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/05/2014, 11:02:17
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 09/05/2014, 11:02:17
 	 * @param ctx
 	 * @param value
 	 * @return void
@@ -1463,7 +1463,7 @@ public final class Env {
 	
 	/**
 	 * Get Document Path Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/05/2014, 11:02:27
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 09/05/2014, 11:02:27
 	 * @param ctx
 	 * @return
 	 * @return String
@@ -1474,7 +1474,7 @@ public final class Env {
 	
 	/**
 	 * Set Image Path Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/05/2014, 11:03:10
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 09/05/2014, 11:03:10
 	 * @param ctx
 	 * @param value
 	 * @return void
@@ -1485,7 +1485,7 @@ public final class Env {
 	
 	/**
 	 * Set Attachment Directory Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/11/2014, 20:36:00
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/11/2014, 20:36:00
 	 * @param ctx
 	 * @param value
 	 * @return void
@@ -1496,7 +1496,7 @@ public final class Env {
 	
 	/**
 	 * Get Attachment Directory Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/11/2014, 20:36:25
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/11/2014, 20:36:25
 	 * @param ctx
 	 * @return
 	 * @return String
@@ -1507,7 +1507,7 @@ public final class Env {
 	
 	/**
 	 * Get Image Path Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/05/2014, 11:03:22
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 09/05/2014, 11:03:22
 	 * @param ctx
 	 * @return
 	 * @return String
@@ -1518,7 +1518,7 @@ public final class Env {
 	
 	/**
 	 * Get database version
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:54:48
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:54:48
 	 * @param ctx
 	 * @return
 	 * @return int
@@ -1529,7 +1529,7 @@ public final class Env {
 	
 	/**
 	 * Get Tab Record Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 12:11:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/02/2014, 12:11:05
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param TabNo
@@ -1556,7 +1556,7 @@ public final class Env {
 	
 	/**
 	 * Get Tab KeyColumns
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:49:25
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 15:49:25
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param TabNo
@@ -1571,7 +1571,7 @@ public final class Env {
 
 	/**
 	 * Set Tab Record Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 12:10:54
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/02/2014, 12:10:54
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param TabNo
@@ -1585,7 +1585,7 @@ public final class Env {
 	
 	/**
 	 * Set Tab Key Columns
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 15:48:49
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 15:48:49
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param TabNo
@@ -1599,7 +1599,7 @@ public final class Env {
 	
 	/**
 	 * Set Current Tab
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:54:11
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:54:11
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param tab
@@ -1611,7 +1611,7 @@ public final class Env {
 	
 	/**
 	 * Get Current Tab
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:53:45
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:53:45
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @return
@@ -1623,7 +1623,7 @@ public final class Env {
 	
 	/**
 	 * Is Current Tab No
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/04/2014, 10:22:47
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/04/2014, 10:22:47
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param tabNo
@@ -1636,7 +1636,7 @@ public final class Env {
 	
 	/**
 	 * Set Database version
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:53:21
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:53:21
 	 * @param ctx
 	 * @param value
 	 * @return void
@@ -1650,7 +1650,7 @@ public final class Env {
 	
 	/**
 	 * Parse Context
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/02/2014, 12:43:28
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 15/02/2014, 12:43:28
 	 * @param ctx
 	 * @param whereClause
 	 * @param ignoreUnparsable
@@ -1847,7 +1847,7 @@ public final class Env {
 	
 	/**
 	 * Get System AD_Language
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/02/2013, 19:53:16
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 07/02/2013, 19:53:16
 	 * @param ctx
 	 * @return
 	 * @return String
@@ -1858,7 +1858,7 @@ public final class Env {
 	
 	/**
 	 * Get is base language
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/02/2014, 10:51:20
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/02/2014, 10:51:20
 	 * @param ctx
 	 * @return
 	 * @return boolean
@@ -1888,7 +1888,7 @@ public final class Env {
 	
 	/**
 	 * Get Locale from language
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 20:04:22
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/02/2014, 20:04:22
 	 * @param ctx
 	 * @return
 	 * @return Locale
@@ -2000,7 +2000,7 @@ public final class Env {
 	
 	/**
 	 * Get Current Activity No
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/03/2014, 09:15:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 16/03/2014, 09:15:03
 	 * @param ctx
 	 * @return
 	 * @return int
@@ -2017,7 +2017,7 @@ public final class Env {
 	
 	/**
 	 * Reset Activity No
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/03/2014, 09:16:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 16/03/2014, 09:16:05
 	 * @param ctx
 	 * @return void
 	 */
@@ -2027,7 +2027,7 @@ public final class Env {
 	
 	/**
 	 * Set App Base Directory
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/05/2014, 10:09:32
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 09/05/2014, 10:09:32
 	 * @param ctx
 	 * @param path
 	 * @return void
@@ -2038,7 +2038,7 @@ public final class Env {
 	
 	/**
 	 * Get App Base Directory
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/05/2014, 10:10:18
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 09/05/2014, 10:10:18
 	 * @param ctx
 	 * @return
 	 * @return String
@@ -2049,7 +2049,7 @@ public final class Env {
 	
 	/**
 	 * Get Resource Identifier from Attribute
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/09/2014, 16:30:25
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/09/2014, 16:30:25
 	 * @param ctx
 	 * @param att
 	 * @return
@@ -2067,7 +2067,7 @@ public final class Env {
 	
 	/**
 	 * Get Resource
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/09/2014, 19:23:39
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/09/2014, 19:23:39
 	 * @param ctx
 	 * @param att
 	 * @return

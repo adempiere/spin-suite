@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
@@ -40,14 +40,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 16:46:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/02/2014, 16:46:15
 	 * @param context
 	 */
 	public GridField(Context context) {
@@ -57,7 +57,7 @@ public abstract class GridField extends LinearLayout {
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 16:46:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/02/2014, 16:46:15
 	 * @param context
 	 * @param attrs
 	 */
@@ -68,7 +68,7 @@ public abstract class GridField extends LinearLayout {
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 16:46:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/02/2014, 16:46:15
 	 * @param context
 	 * @param attrs
 	 * @param defStyle
@@ -81,7 +81,7 @@ public abstract class GridField extends LinearLayout {
 	/**
 	 * With Field
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 20:28:25
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/02/2014, 20:28:25
 	 * @param context
 	 * @param m_field
 	 * @param m_TabParam
@@ -108,7 +108,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Main Init
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 20:31:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/02/2014, 20:31:56
 	 * @return void
 	 */
 	private void mainInit(){
@@ -121,15 +121,18 @@ public abstract class GridField extends LinearLayout {
 		v_Label = new TextView(getContext());
 		v_Label.setTextAppearance(getContext(), R.style.TextDynamicTabLabel);
 		//	
-		if(m_field != null)
+		if(m_field != null) {
 			v_Label.setText(m_field.Name);
+			if(m_field.IsMandatory)
+				v_Label.setTextColor(getResources().getColor(R.color.lookup_label_mandatory));
+		}
 		//	Add to View
 		addView(v_Label);
 	}
 	
 	/**
 	 * Get Tab No
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/05/2014, 14:04:53
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 14/05/2014, 14:04:53
 	 * @return
 	 * @return int
 	 */
@@ -141,7 +144,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Activity No
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/05/2014, 14:04:10
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 14/05/2014, 14:04:10
 	 * @return
 	 * @return int
 	 */
@@ -153,7 +156,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Field
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 22:22:21
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/02/2014, 22:22:21
 	 * @return
 	 * @return VOInfoField
 	 */
@@ -163,7 +166,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Is Mandatory
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 10:11:43
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/02/2014, 10:11:43
 	 * @return
 	 * @return boolean
 	 */
@@ -173,7 +176,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Init View
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 20:27:04
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/02/2014, 20:27:04
 	 * @return
 	 * @return void
 	 */
@@ -181,7 +184,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Set Value to Lookup
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/02/2014, 08:31:00
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/02/2014, 08:31:00
 	 * @param value
 	 * @return void
 	 */
@@ -189,7 +192,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Set value to lookup and old value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/10/2014, 17:36:47
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 14/10/2014, 17:36:47
 	 * @param value
 	 * @return void
 	 */
@@ -197,7 +200,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/02/2014, 08:31:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/02/2014, 08:31:05
 	 * @return
 	 * @return Object
 	 */
@@ -205,7 +208,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Old Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 15:05:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 15:05:03
 	 * @return
 	 * @return Object
 	 */
@@ -213,7 +216,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Display Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/04/2014, 10:34:36
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/04/2014, 10:34:36
 	 * @return
 	 * @return String
 	 */
@@ -221,7 +224,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Is Empty
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 10:15:24
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/02/2014, 10:15:24
 	 * @return
 	 * @return boolean
 	 */
@@ -229,7 +232,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get child view
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 14:14:04
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/02/2014, 14:14:04
 	 * @return
 	 * @return View
 	 */
@@ -245,7 +248,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Set On Field Change Listener
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/05/2014, 20:57:22
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 15/05/2014, 20:57:22
 	 * @param m_Listener
 	 * @return void
 	 */
@@ -255,7 +258,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Value As String
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 12:14:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 12:14:23
 	 * @return
 	 * @return String
 	 */
@@ -265,7 +268,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Old Value As String
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/09/2014, 22:15:45
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/09/2014, 22:15:45
 	 * @return
 	 * @return String
 	 */
@@ -275,7 +278,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Parse Value from Type
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/09/2014, 22:14:55
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/09/2014, 22:14:55
 	 * @param value
 	 * @return
 	 * @return String
@@ -301,7 +304,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Value As Boolean
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 12:19:46
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 12:19:46
 	 * @return
 	 * @return boolean
 	 */
@@ -311,7 +314,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Old Value As Boolean
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/09/2014, 22:18:52
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/09/2014, 22:18:52
 	 * @return
 	 * @return boolean
 	 */
@@ -321,7 +324,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Parse Value to Boolean
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/09/2014, 22:18:12
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/09/2014, 22:18:12
 	 * @param value
 	 * @return
 	 * @return boolean
@@ -342,7 +345,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Value As Integer
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 12:27:14
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 12:27:14
 	 * @param p_Value
 	 * @return
 	 * @return int
@@ -375,7 +378,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Value as Int
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/08/2014, 02:56:04
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 31/08/2014, 02:56:04
 	 * @return
 	 * @return int
 	 */
@@ -385,7 +388,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Old Value as Int
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/08/2014, 02:56:25
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 31/08/2014, 02:56:25
 	 * @return
 	 * @return int
 	 */
@@ -395,7 +398,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Callout
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:16:50
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 17:16:50
 	 * @return
 	 * @return String
 	 */
@@ -408,7 +411,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Default Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 23/10/2014, 10:36:19
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 23/10/2014, 10:36:19
 	 * @return
 	 * @return String
 	 */
@@ -421,7 +424,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Is Always Updateable
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:19:20
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 17:19:20
 	 * @return
 	 * @return boolean
 	 */
@@ -434,7 +437,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Column Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:20:44
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 17:20:44
 	 * @return
 	 * @return String
 	 */
@@ -447,7 +450,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 21:37:21
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 21:37:21
 	 * @return
 	 * @return String
 	 */
@@ -460,7 +463,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Display Type
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:54:16
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 17:54:16
 	 * @return
 	 * @return int
 	 */
@@ -473,7 +476,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Set Column Index
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:23:17
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 17:23:17
 	 * @param m_ColumnIndex
 	 * @return void
 	 */
@@ -483,7 +486,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Column Index
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:23:38
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 17:23:38
 	 * @return
 	 * @return int
 	 */
@@ -493,7 +496,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Is Parent
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:25:33
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 17:25:33
 	 * @return
 	 * @return boolean
 	 */
@@ -506,7 +509,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Is Updateable
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:47:34
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 17:47:34
 	 * @return
 	 * @return boolean
 	 */
@@ -519,7 +522,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Is Read Only
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:44:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 17:44:15
 	 * @return
 	 * @return boolean
 	 */
@@ -532,7 +535,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Column ID
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 19:33:08
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 15/10/2014, 19:33:08
 	 * @return
 	 * @return int
 	 */
@@ -545,7 +548,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Set V Format
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 19:38:57
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 15/10/2014, 19:38:57
 	 * @param vFormat
 	 * @return void
 	 */
@@ -558,7 +561,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Verify if is changed
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/09/2014, 22:19:07
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/09/2014, 22:19:07
 	 * @return
 	 * @return boolean
 	 */
@@ -579,7 +582,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Create Lookup Optional Spinner from Lookup
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 22/05/2014, 11:56:31
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/05/2014, 11:56:31
 	 * @param act
 	 * @param m_SPS_Column_ID
 	 * @param m_Lookup
@@ -595,7 +598,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Create Lookup from Column
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/05/2014, 17:40:35
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/05/2014, 17:40:35
 	 * @param act
 	 * @param m_SPS_Column_ID
 	 * @return
@@ -609,7 +612,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Create Lookup from Column Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 18:07:18
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/08/2014, 18:07:18
 	 * @param act
 	 * @param p_TableName
 	 * @param p_ColumnName
@@ -624,7 +627,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Lookup with Tab Parameter
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 18:53:28
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/08/2014, 18:53:28
 	 * @param act
 	 * @param p_TableName
 	 * @param p_ColumnName
@@ -641,7 +644,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Create Lookup from Field Info
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 15:17:07
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/08/2014, 15:17:07
 	 * @param act
 	 * @param field
 	 * @return
@@ -653,7 +656,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Create Lookup
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/08/2014, 02:32:50
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 31/08/2014, 02:32:50
 	 * @param act
 	 * @param m_Lookup
 	 * @return
@@ -669,7 +672,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Create a Lookup
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/08/2014, 02:31:48
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 31/08/2014, 02:31:48
 	 * @param act
 	 * @param m_Lookup
 	 * @param p_TabParameter
@@ -686,7 +689,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * 
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 15:10:34
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/08/2014, 15:10:34
 	 * @param activity
 	 * @param field
 	 * @return
@@ -742,7 +745,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Info Field from Table Name and Column Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 18:03:32
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/08/2014, 18:03:32
 	 * @param ctx
 	 * @param p_TableName
 	 * @param p_ColumnName
@@ -761,7 +764,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Get Info Field from Column Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 18:05:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/08/2014, 18:05:05
 	 * @param ctx
 	 * @param p_SPS_Column_ID
 	 * @return
@@ -776,7 +779,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Load Column
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/05/2014, 17:58:13
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/05/2014, 17:58:13
 	 * @param ctx
 	 * @param p_TableName
 	 * @param p_ColumnName
@@ -904,7 +907,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Load Dependent On from Evaluation
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/09/2014, 15:33:34
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/09/2014, 15:33:34
 	 * @return
 	 * @return ArrayList<String>
 	 */
@@ -931,7 +934,7 @@ public abstract class GridField extends LinearLayout {
 	
 	/**
 	 * Set Visible from validation
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 06/09/2014, 14:12:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 06/09/2014, 14:12:05
 	 * @param tab
 	 * @return void
 	 */

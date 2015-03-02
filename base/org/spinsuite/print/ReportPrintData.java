@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.print;
 
@@ -65,7 +65,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class ReportPrintData {
@@ -73,7 +73,7 @@ public class ReportPrintData {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 15:00:00
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 15:00:00
 	 * @param ctx
 	 * @param m_pi
 	 * @param m_AD_PrintFormat_ID
@@ -127,7 +127,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Instance Function Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/04/2014, 10:20:01
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 04/04/2014, 10:20:01
 	 * @return void
 	 */
 	private void instanceFunctionName() {
@@ -152,7 +152,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Load Data from Print Format
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 15:00:04
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 15:00:04
 	 * @param m_AD_PrintFormat_ID
 	 * @return
 	 * @return ArrayList<RowPrintData>
@@ -190,7 +190,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Instance Data Function
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 11:41:41
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/03/2014, 11:41:41
 	 * @return void
 	 */
 	private void instanceDataFunction() {
@@ -220,7 +220,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Reset Current Data Function
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 12:22:40
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/03/2014, 12:22:40
 	 * @param columns
 	 * @return void
 	 */
@@ -241,7 +241,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Load Data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 15:58:47
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 15:58:47
 	 * @return
 	 * @return ArrayList<RowPrintData>
 	 */
@@ -251,7 +251,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Get Data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 20:55:42
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 20:55:42
 	 * @return
 	 * @return ArrayList<RowPrintData>
 	 */
@@ -261,7 +261,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Set Data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/09/2014, 21:29:49
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 09/09/2014, 21:29:49
 	 * @param m_data
 	 * @return void
 	 */
@@ -271,7 +271,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Load Criteria filter from Parameters
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/03/2014, 16:42:11
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/03/2014, 16:42:11
 	 * @param tableName
 	 * @return void
 	 */
@@ -339,7 +339,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Load Result from Data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 16:19:07
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 16:19:07
 	 * @return void
 	 */
 	private void loadResult() {
@@ -410,7 +410,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Get Row Data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 21:35:57
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 21:35:57
 	 * @param rs
 	 * @return
 	 * @return RowPrintData
@@ -458,7 +458,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Search First Column Group
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/04/2014, 23:27:55
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/04/2014, 23:27:55
 	 * @return void
 	 */
 	private void loadFirstGroup() {
@@ -472,7 +472,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Add Row Function
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 14:31:59
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/03/2014, 14:31:59
 	 * @param indexGroup
 	 * @return void
 	 */
@@ -521,7 +521,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Add Function to Report
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 14:41:44
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/03/2014, 14:41:44
 	 * @return void
 	 */
 	private void addFooterFunctionRow() {
@@ -544,7 +544,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Get Data Function Row
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2014, 11:15:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/03/2014, 11:15:23
 	 * @param columns
 	 * @param label
 	 * @param indexGroup
@@ -636,7 +636,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Verify if exists changes
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2014, 16:48:36
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2014, 16:48:36
 	 * @param value1
 	 * @param value2
 	 * @return
@@ -656,7 +656,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Get a default print format or any if exists
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 14:20:21
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 14:20:21
 	 * @return
 	 * @return int
 	 */
@@ -680,7 +680,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Get Columns
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/03/2014, 10:32:04
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/03/2014, 10:32:04
 	 * @return
 	 * @return InfoReportField[]
 	 */
@@ -690,7 +690,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Create a XLS from Data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/03/2014, 23:05:54
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 31/03/2014, 23:05:54
 	 * @return
 	 * @throws IOException
 	 * @throws RowsExceededException
@@ -714,7 +714,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Create a XLS File
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/03/2014, 15:09:51
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 31/03/2014, 15:09:51
 	 * @param outFile
 	 * @return void
 	 * @throws IOException 
@@ -791,7 +791,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Create a PDF File from Data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/04/2014, 22:54:14
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/04/2014, 22:54:14
 	 * @return
 	 * @throws FileNotFoundException
 	 * @throws DocumentException
@@ -814,7 +814,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Create a PDF File
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/04/2014, 22:52:09
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/04/2014, 22:52:09
 	 * @param outFile
 	 * @throws FileNotFoundException
 	 * @throws DocumentException
@@ -1019,7 +1019,7 @@ public class ReportPrintData {
 	
 	/**
 	 * Get Report Information
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/04/2014, 21:44:32
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/04/2014, 21:44:32
 	 * @return
 	 * @return InfoReport
 	 */

@@ -11,14 +11,14 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
 import android.widget.EditText;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class EditTextHolder {
@@ -26,7 +26,7 @@ public class EditTextHolder {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 01:15:35
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/08/2014, 01:15:35
 	 */
 	public EditTextHolder() {
 		
@@ -35,7 +35,7 @@ public class EditTextHolder {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 23/10/2014, 9:43:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 23/10/2014, 9:43:56
 	 * @param v_EditText
 	 */
 	public EditTextHolder(EditText v_EditText) {
@@ -47,7 +47,7 @@ public class EditTextHolder {
 	
 	/**
 	 * Set Edit Text
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 01:15:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/08/2014, 01:15:26
 	 * @param p_EditText
 	 * @return void
 	 */
@@ -57,7 +57,7 @@ public class EditTextHolder {
 	
 	/**
 	 * Set Text
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 01:16:36
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/08/2014, 01:16:36
 	 * @param text
 	 * @return void
 	 */
@@ -70,7 +70,7 @@ public class EditTextHolder {
 	
 	/**
 	 * Get Edit Text
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 01:09:41
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/08/2014, 01:09:41
 	 * @return
 	 * @return EditText
 	 */
@@ -80,7 +80,7 @@ public class EditTextHolder {
 	
 	/**
 	 * Get Text from Edit Text
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 02:10:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/08/2014, 02:10:05
 	 * @return
 	 * @return String
 	 */

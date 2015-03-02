@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.util;
 
@@ -22,7 +22,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class GPSHandler implements LocationListener {
@@ -30,7 +30,7 @@ public class GPSHandler implements LocationListener {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/04/2014, 20:57:28
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 14/04/2014, 20:57:28
 	 * @param ctx
 	 */
 	public GPSHandler(Context ctx) {
@@ -49,7 +49,7 @@ public class GPSHandler implements LocationListener {
 	
 	/**
 	 * Init Location
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/04/2014, 21:06:35
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 14/04/2014, 21:06:35
 	 * @return void
 	 */
 	public void startLocation() {
@@ -64,7 +64,7 @@ public class GPSHandler implements LocationListener {
 
 	/** 
 	 * Is Provider Enabled
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/04/2014, 21:16:16
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 14/04/2014, 21:16:16
 	 * @return
 	 * @return boolean
 	 */
@@ -74,7 +74,7 @@ public class GPSHandler implements LocationListener {
 	
 	/**
 	 * Stop Location Manager
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/04/2014, 21:09:30
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 14/04/2014, 21:09:30
 	 * @return void
 	 */
 	public void stopLocation() {
@@ -88,7 +88,7 @@ public class GPSHandler implements LocationListener {
 
 	/**
 	 * Get Latitude
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/04/2014, 21:13:06
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 14/04/2014, 21:13:06
 	 * @return
 	 * @return double
 	 */
@@ -100,7 +100,7 @@ public class GPSHandler implements LocationListener {
 	
 	/**
 	 * Get Longitude
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/04/2014, 21:13:34
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 14/04/2014, 21:13:34
 	 * @return
 	 * @return double
 	 */
@@ -112,7 +112,7 @@ public class GPSHandler implements LocationListener {
 	
 	/**
 	 * Get Precision
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/04/2014, 21:14:08
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 14/04/2014, 21:14:08
 	 * @return
 	 * @return float
 	 */

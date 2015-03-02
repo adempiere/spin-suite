@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view;
 
@@ -84,7 +84,7 @@ public class T_DynamicTab extends Fragment
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/04/2014, 22:32:14
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/04/2014, 22:32:14
 	 */
 	public T_DynamicTab() {
 		//	
@@ -92,7 +92,7 @@ public class T_DynamicTab extends Fragment
 	
 	/**
 	 * Set Tab From
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/04/2014, 22:09:38
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/04/2014, 22:09:38
 	 * @param m_FromTab
 	 * @return void
 	 */
@@ -222,7 +222,7 @@ public class T_DynamicTab extends Fragment
 	
 	/**
 	 * Process Callout
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/05/2014, 10:27:16
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/05/2014, 10:27:16
 	 * @param mField
 	 * @return void
 	 */
@@ -252,7 +252,7 @@ public class T_DynamicTab extends Fragment
 	
 	/**
 	 * Process Document No
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 23/10/2014, 10:22:37
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 23/10/2014, 10:22:37
 	 * @param mField
 	 * @return void
 	 */
@@ -274,7 +274,7 @@ public class T_DynamicTab extends Fragment
 	
 	/**
 	 * Reload depending field
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/08/2014, 20:25:24
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 30/08/2014, 20:25:24
 	 * @param mField
 	 * @return void
 	 */
@@ -289,7 +289,7 @@ public class T_DynamicTab extends Fragment
 	
 	/**
 	 * Init Fragment
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/04/2014, 13:50:51
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/04/2014, 13:50:51
 	 * @return void
 	 */
 	private void initLoad() {
@@ -314,7 +314,7 @@ public class T_DynamicTab extends Fragment
     
     /**
      * Get Tab Parameter
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/03/2014, 15:49:28
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/03/2014, 15:49:28
      * @return
      * @return TabParameter
      */
@@ -411,7 +411,7 @@ public class T_DynamicTab extends Fragment
     
     /**
      * Show Popup Menu
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2014, 12:08:11
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 07/05/2014, 12:08:11
      * @return void
      */
     private void showPopupMenu() {
@@ -491,7 +491,7 @@ public class T_DynamicTab extends Fragment
     
     /**
      * View Attachment
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 11:00:17
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 11:00:17
      * @return void
      */
     private void viewAttachment() {
@@ -506,7 +506,7 @@ public class T_DynamicTab extends Fragment
     
     /**
      * Delete Record
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2014, 14:04:50
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 07/05/2014, 14:04:50
      * @return void
      */
     private void deleteRecord() {
@@ -547,7 +547,7 @@ public class T_DynamicTab extends Fragment
     
     /**
      * Action Attach a Photo
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2014, 15:29:45
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 07/05/2014, 15:29:45
      * @return void
      */
     private void attachPhoto() {
@@ -570,7 +570,7 @@ public class T_DynamicTab extends Fragment
 
     /**
      * Action Attach a File
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2014, 15:29:45
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 07/05/2014, 15:29:45
      * @return void
      */
     private void attachFile() {
@@ -584,7 +584,7 @@ public class T_DynamicTab extends Fragment
     
     /**
      * Refresh Header Index
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/04/2014, 08:17:32
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 04/04/2014, 08:17:32
      * @return void
      */
     private void refreshIndex() {
@@ -595,7 +595,7 @@ public class T_DynamicTab extends Fragment
     
     /**
      * Handle lock view
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 06/03/2014, 16:14:12
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 06/03/2014, 16:14:12
      * @param mode
      * @return void
      */
@@ -649,7 +649,7 @@ public class T_DynamicTab extends Fragment
     
     /**
      * Enable Elements
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 06/03/2014, 17:38:53
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 06/03/2014, 17:38:53
      * @param mode
      * @return void
      */
@@ -669,7 +669,7 @@ public class T_DynamicTab extends Fragment
     
     /**
      * New Option
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/03/2014, 00:22:33
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/03/2014, 00:22:33
      * @return void
      */
     private void newOption() {
@@ -686,7 +686,7 @@ public class T_DynamicTab extends Fragment
     
     /**
      * Refresh Grid Tab
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 21:48:52
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 21:48:52
      * @param record_ID
      * @param parentChanged
      * @return boolean
@@ -697,7 +697,7 @@ public class T_DynamicTab extends Fragment
     
     /**
      * Refresh
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:57:52
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 13:57:52
      * @param record_ID
      * @param keyColumn
      * @param parentChanged
@@ -718,7 +718,7 @@ public class T_DynamicTab extends Fragment
     
     /**
      * Handle menu items
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/03/2014, 23:57:35
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/03/2014, 23:57:35
      * @return void
      */
     @Override
@@ -732,7 +732,7 @@ public class T_DynamicTab extends Fragment
     
     /**
      * Change Menu View
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/04/2014, 18:17:58
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/04/2014, 18:17:58
      * @return void
      */
     private void changeMenuView() {
@@ -751,7 +751,7 @@ public class T_DynamicTab extends Fragment
     
     /**
      * Refresh from parent activity
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/03/2014, 10:53:18
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 16/03/2014, 10:53:18
      * @return boolean
      */
     public boolean refreshFromChange(boolean reQuery) {
@@ -906,7 +906,7 @@ public class T_DynamicTab extends Fragment
 	
 	/**
 	 * Include Class
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 *
 	 */
 	private class LoadViewTask extends AsyncTask<TableLayout, Integer, Integer> {
@@ -925,7 +925,7 @@ public class T_DynamicTab extends Fragment
 		private static final float 	WEIGHT 			= 1;
 		/**
 		 * Init Values
-		 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/05/2014, 12:18:42
+		 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/05/2014, 12:18:42
 		 * @return void
 		 */
 		private void init() {
@@ -988,7 +988,7 @@ public class T_DynamicTab extends Fragment
 		
 	    /**
 	     * Load View Objects
-	     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 16:37:56
+	     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/02/2014, 16:37:56
 	     * @return
 	     * @return boolean
 	     */
@@ -1016,7 +1016,7 @@ public class T_DynamicTab extends Fragment
 	 
 	    /**
 	     * Add to view
-	     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 20:45:54
+	     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/02/2014, 20:45:54
 	     * @param field
 	     * @return void
 	     */
@@ -1091,7 +1091,7 @@ public class T_DynamicTab extends Fragment
 	
 	/**
 	 * Save data in thread
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 *
 	 */
 	private class SaveTask extends AsyncTask<String, Void, Void> {

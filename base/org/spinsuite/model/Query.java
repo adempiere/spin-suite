@@ -289,7 +289,7 @@ public class Query
 	
 	/**
 	 * Get First ID
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/10/2014, 19:55:04
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/10/2014, 19:55:04
 	 * @param assumeOnlyOneResult
 	 * @return
 	 * @throws Exception
@@ -601,7 +601,7 @@ public class Query
 	
 	/**
 	 * Create Cursor
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/10/2014, 19:37:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/10/2014, 19:37:03
 	 * @param sql
 	 * @return
 	 * @throws Exception

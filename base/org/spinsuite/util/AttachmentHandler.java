@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.util;
 
@@ -30,7 +30,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class AttachmentHandler {
@@ -39,7 +39,7 @@ public class AttachmentHandler {
 	/**
 	 * Default
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/11/2014, 17:43:48
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/11/2014, 17:43:48
 	 * @param ctx
 	 * @param m_Table_ID
 	 * @param m_Record_ID
@@ -56,7 +56,7 @@ public class AttachmentHandler {
 	/**
 	 * Just Table
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/11/2014, 17:53:00
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/11/2014, 17:53:00
 	 * @param ctx
 	 * @param m_Table_ID
 	 */
@@ -67,7 +67,7 @@ public class AttachmentHandler {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/11/2014, 17:44:17
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/11/2014, 17:44:17
 	 * @param ctx
 	 */
 	public AttachmentHandler(Context ctx) {
@@ -94,7 +94,7 @@ public class AttachmentHandler {
 	
 	/**
 	 * Set Record Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/11/2014, 17:58:33
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/11/2014, 17:58:33
 	 * @param m_Record_ID
 	 * @return void
 	 */
@@ -104,7 +104,7 @@ public class AttachmentHandler {
 	
 	/**
 	 * Get Tmp Directory for Files
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/11/2014, 18:01:44
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/11/2014, 18:01:44
 	 * @return
 	 * @return String
 	 */
@@ -114,7 +114,7 @@ public class AttachmentHandler {
 	
 	/**
 	 * Get Attachment Directory
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/11/2014, 20:41:49
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/11/2014, 20:41:49
 	 * @return
 	 * @return String
 	 */
@@ -124,7 +124,7 @@ public class AttachmentHandler {
 	
 	/**
 	 * Get Uri Attachment Directory for Record
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/11/2014, 22:17:52
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/11/2014, 22:17:52
 	 * @return
 	 * @return Uri
 	 */
@@ -136,7 +136,7 @@ public class AttachmentHandler {
 	
 	/**
 	 * Get Attachment Directory for Record
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/11/2014, 10:55:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 11/11/2014, 10:55:23
 	 * @return
 	 * @return String
 	 */
@@ -148,7 +148,7 @@ public class AttachmentHandler {
 	
 	/**
 	 * Get Tmp Image Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/11/2014, 20:11:07
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/11/2014, 20:11:07
 	 * @return
 	 * @return String
 	 */
@@ -169,7 +169,7 @@ public class AttachmentHandler {
 	
 	/**
 	 * Process Image Attachment from Camera
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/11/2014, 21:05:47
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/11/2014, 21:05:47
 	 * @return
 	 * @return boolean
 	 */
@@ -179,7 +179,7 @@ public class AttachmentHandler {
 	
 	/**
 	 * Process File Attachment
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/11/2014, 20:43:37
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 11/11/2014, 20:43:37
 	 * @param origFileName
 	 * @param fileName
 	 * @return
@@ -232,7 +232,7 @@ public class AttachmentHandler {
 	
 	/**
 	 * Save Image to Attachment
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/11/2014, 20:50:39
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/11/2014, 20:50:39
 	 * @param fileName
 	 * @return
 	 * @return boolean
@@ -281,7 +281,7 @@ public class AttachmentHandler {
 	
 	/**
 	 * Get Bitmap from File
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/11/2014, 14:24:16
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 11/11/2014, 14:24:16
 	 * @param fileName
 	 * @param weight
 	 * @param height
@@ -317,7 +317,7 @@ public class AttachmentHandler {
 	
 	/**
 	 * Get BitMap from File without size
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/11/2014, 14:25:21
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 11/11/2014, 14:25:21
 	 * @param fileName
 	 * @return
 	 * @return Bitmap
@@ -328,7 +328,7 @@ public class AttachmentHandler {
 	
 	/**
 	 * Verify if has Attachment
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/11/2014, 8:51:48
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 11/11/2014, 8:51:48
 	 * @return
 	 * @return boolean
 	 */

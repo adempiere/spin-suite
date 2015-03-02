@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.print.layout;
 
@@ -24,14 +24,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public abstract class VReportLookup extends LinearLayout {
 	
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 16:46:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/02/2014, 16:46:15
 	 * @param context
 	 */
 	public VReportLookup(Context context) {
@@ -41,7 +41,7 @@ public abstract class VReportLookup extends LinearLayout {
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 16:46:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/02/2014, 16:46:15
 	 * @param context
 	 * @param attrs
 	 */
@@ -52,7 +52,7 @@ public abstract class VReportLookup extends LinearLayout {
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 16:46:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/02/2014, 16:46:15
 	 * @param context
 	 * @param attrs
 	 * @param defStyle
@@ -65,7 +65,7 @@ public abstract class VReportLookup extends LinearLayout {
 	/**
 	 * With Field
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 20:28:25
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/02/2014, 20:28:25
 	 * @param context
 	 * @param m_field
 	 */
@@ -82,7 +82,7 @@ public abstract class VReportLookup extends LinearLayout {
 	
 	/**
 	 * Main Init
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 20:31:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/02/2014, 20:31:56
 	 * @return void
 	 */
 	private void mainInit(){
@@ -102,7 +102,7 @@ public abstract class VReportLookup extends LinearLayout {
 	
 	/**
 	 * Get Field
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 22:22:21
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/02/2014, 22:22:21
 	 * @return
 	 * @return VOInfoField
 	 */
@@ -112,7 +112,7 @@ public abstract class VReportLookup extends LinearLayout {
 	
 	/**
 	 * Set Only Text Field
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 11:05:08
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 11:05:08
 	 * @return void
 	 */
 	public void setOnlyField(){
@@ -121,7 +121,7 @@ public abstract class VReportLookup extends LinearLayout {
 	
 	/**
 	 * Init View
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 20:27:04
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/02/2014, 20:27:04
 	 * @return
 	 * @return void
 	 */
@@ -129,7 +129,7 @@ public abstract class VReportLookup extends LinearLayout {
 	
 	/**
 	 * Set Value to Lookup
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/02/2014, 08:31:00
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/02/2014, 08:31:00
 	 * @param value
 	 * @return void
 	 */
@@ -137,7 +137,7 @@ public abstract class VReportLookup extends LinearLayout {
 	
 	/**
 	 * Get Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/02/2014, 08:31:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/02/2014, 08:31:05
 	 * @return
 	 * @return Object
 	 */
@@ -145,7 +145,7 @@ public abstract class VReportLookup extends LinearLayout {
 	
 	/**
 	 * Is Empty
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 10:15:24
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/02/2014, 10:15:24
 	 * @return
 	 * @return boolean
 	 */

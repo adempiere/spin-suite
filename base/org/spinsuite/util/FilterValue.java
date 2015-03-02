@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.util;
 
@@ -21,7 +21,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class FilterValue implements Parcelable {
@@ -70,7 +70,7 @@ public class FilterValue implements Parcelable {
 	
 	/**
 	 * Set Where Clause
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/03/2014, 21:20:48
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/03/2014, 21:20:48
 	 * @param whereClause
 	 * @return void
 	 */
@@ -80,7 +80,7 @@ public class FilterValue implements Parcelable {
 	
 	/**
 	 * Add value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/03/2014, 21:21:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/03/2014, 21:21:26
 	 * @param value
 	 * @return void
 	 */
@@ -91,7 +91,7 @@ public class FilterValue implements Parcelable {
 	
 	/**
 	 * Get Where Clause
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/03/2014, 21:22:18
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/03/2014, 21:22:18
 	 * @return
 	 * @return String
 	 */
@@ -101,7 +101,7 @@ public class FilterValue implements Parcelable {
 	
 	/**
 	 * Get Values
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/03/2014, 21:23:20
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/03/2014, 21:23:20
 	 * @return
 	 * @return String[]
 	 */

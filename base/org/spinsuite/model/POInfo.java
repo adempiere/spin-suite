@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.model;
 
@@ -34,7 +34,7 @@ public class POInfo {
 	
 	/**
 	 * Get PO Information
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/02/2014, 22:00:49
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/02/2014, 22:00:49
 	 * @param ctx
 	 * @param p_SPS_Table_ID
 	 * @param conn
@@ -49,7 +49,7 @@ public class POInfo {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/02/2014, 22:00:32
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/02/2014, 22:00:32
 	 * @param ctx
 	 * @param AD_Table_ID
 	 * @param conn
@@ -74,7 +74,7 @@ public class POInfo {
 	private String 				hasPrimaryKey 		= null;
 	/**
 	 * Load Column Information
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/02/2014, 21:54:17
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/02/2014, 21:54:17
 	 * @param ctx
 	 * @param AD_Table_ID
 	 * @param tableName
@@ -241,7 +241,7 @@ public class POInfo {
 	
 	/**
 	 * Has Primary Key
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/10/2014, 4:53:17
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/10/2014, 4:53:17
 	 * @return
 	 * @return boolean
 	 */
@@ -263,7 +263,7 @@ public class POInfo {
 	
 	/**
 	 * Get Table Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2012, 23:42:37
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/02/2012, 23:42:37
 	 * @return
 	 * @return String
 	 */
@@ -273,7 +273,7 @@ public class POInfo {
 	
 	/**
 	 * Verify if is deleteable record
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/06/2012, 09:27:31
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 07/06/2012, 09:27:31
 	 * @return
 	 * @return boolean
 	 */
@@ -283,7 +283,7 @@ public class POInfo {
 	
 	/**
 	 * Get Spin-Suite Table Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2012, 23:43:36
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/02/2012, 23:43:36
 	 * @return
 	 * @return int
 	 */
@@ -293,7 +293,7 @@ public class POInfo {
 	
 	/**
 	 * Get Array Length
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 00:27:09
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/02/2012, 00:27:09
 	 * @return
 	 * @return int
 	 */
@@ -306,7 +306,7 @@ public class POInfo {
 	
 	/**
 	 * Get SQL Columns Quantity
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/07/2012, 11:36:52
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/07/2012, 11:36:52
 	 * @return
 	 * @return int
 	 */
@@ -316,7 +316,7 @@ public class POInfo {
 	
 	/**
 	 * Get Column Name from Index
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 00:34:43
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/02/2012, 00:34:43
 	 * @param index
 	 * @return
 	 * @return String
@@ -330,7 +330,7 @@ public class POInfo {
 	
 	/**
 	 * Get Columns to Insert
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2012, 23:58:58
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/03/2012, 23:58:58
 	 * @return
 	 * @return String
 	 */
@@ -349,7 +349,7 @@ public class POInfo {
 	
 	/**
 	 * Get AD Column Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/10/2014, 20:33:59
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/10/2014, 20:33:59
 	 * @param columnName
 	 * @return
 	 * @return int
@@ -366,7 +366,7 @@ public class POInfo {
 	
 	/**
 	 * Get Column Index from Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 00:50:45
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/02/2012, 00:50:45
 	 * @param columnName
 	 * @return
 	 * @return int
@@ -386,7 +386,7 @@ public class POInfo {
 	
 	/**
 	 * Get Key Columns
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/10/2014, 23:53:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 16/10/2014, 23:53:23
 	 * @return
 	 * @return String[]
 	 */
@@ -422,7 +422,7 @@ public class POInfo {
 	
 	/**
 	 * Is Callout
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/04/2012, 18:44:09
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/04/2012, 18:44:09
 	 * @param index
 	 * @param index
 	 * @return
@@ -439,7 +439,7 @@ public class POInfo {
 	
 	/**
 	 * Get SQL Column from Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 00:55:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/02/2012, 00:55:03
 	 * @param columnName
 	 * @return
 	 * @return String
@@ -454,7 +454,7 @@ public class POInfo {
 	
 	/**
 	 * Get SQL Column from Index
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/07/2012, 17:55:45
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/07/2012, 17:55:45
 	 * @param index
 	 * @return
 	 * @return String
@@ -469,7 +469,7 @@ public class POInfo {
 	
 	/**
 	 * Get Display Type from Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 01:01:40
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/02/2012, 01:01:40
 	 * @param columnName
 	 * @return
 	 * @return int
@@ -484,7 +484,7 @@ public class POInfo {
 	
 	/**
 	 * Get Display Type from index
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/03/2012, 22:36:55
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 30/03/2012, 22:36:55
 	 * @param index
 	 * @return
 	 * @return int
@@ -498,7 +498,7 @@ public class POInfo {
 	
 	/**
 	 * Get Is Manadory Property from name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 01:02:45
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/02/2012, 01:02:45
 	 * @param columnName
 	 * @return
 	 * @return boolean
@@ -513,7 +513,7 @@ public class POInfo {
 	
 	/**
 	 * Get Is Mandatory Property from name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/04/2012, 20:58:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/04/2012, 20:58:03
 	 * @param index
 	 * @return
 	 * @return boolean
@@ -527,7 +527,7 @@ public class POInfo {
 	
 	/**
 	 * Get Default Value from Column Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 01:04:19
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/02/2012, 01:04:19
 	 * @param columnName
 	 * @return
 	 * @return String
@@ -542,7 +542,7 @@ public class POInfo {
 	
 	/**
 	 * Get Default value from index
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/03/2012, 23:42:02
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 30/03/2012, 23:42:02
 	 * @param index
 	 * @return
 	 * @return String
@@ -556,7 +556,7 @@ public class POInfo {
 	
 	/**
 	 * Get Is Updateable
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 01:05:24
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/02/2012, 01:05:24
 	 * @param columnName
 	 * @return
 	 * @return boolean
@@ -571,7 +571,7 @@ public class POInfo {
 	
 	/**
 	 * Get Is Updateable from Index
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/10/2014, 20:40:02
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/10/2014, 20:40:02
 	 * @param index
 	 * @return
 	 * @return boolean
@@ -585,7 +585,7 @@ public class POInfo {
 	
 	/**
 	 * Get Is Always Updateable from Column Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/10/2014, 20:40:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/10/2014, 20:40:26
 	 * @param columnName
 	 * @return
 	 * @return boolean
@@ -600,7 +600,7 @@ public class POInfo {
 	
 	/**
 	 * Get Is Updateable from Index
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/05/2012, 09:25:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/05/2012, 09:25:03
 	 * @param index
 	 * @return
 	 * @return boolean
@@ -614,7 +614,7 @@ public class POInfo {
 	
 	/**
 	 * Get Name from Column Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 01:06:27
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/02/2012, 01:06:27
 	 * @param columnName
 	 * @return
 	 * @return String
@@ -629,7 +629,7 @@ public class POInfo {
 	
 	/**
 	 * Get Name from Index
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/04/2012, 18:22:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/04/2012, 18:22:05
 	 * @param index
 	 * @return
 	 * @return String
@@ -643,7 +643,7 @@ public class POInfo {
 	
 	/**
 	 * Get Is Encrypted from Column Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 01:08:04
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/02/2012, 01:08:04
 	 * @param columnName
 	 * @return
 	 * @return boolean
@@ -658,7 +658,7 @@ public class POInfo {
 	
 	/**
 	 * Get Field Length
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 01:08:52
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/02/2012, 01:08:52
 	 * @param columnName
 	 * @return
 	 * @return int
@@ -673,7 +673,7 @@ public class POInfo {
 	
 	/**
 	 * Get Minimum Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 01:09:37
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/02/2012, 01:09:37
 	 * @param columName
 	 * @return
 	 * @return String
@@ -688,7 +688,7 @@ public class POInfo {
 	
 	/**
 	 * Get Is Column SQL from column Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/07/2012, 17:47:53
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/07/2012, 17:47:53
 	 * @param columnName
 	 * @return
 	 * @return boolean
@@ -703,7 +703,7 @@ public class POInfo {
 	
 	/**
 	 * Get Is Column SQL from index
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/07/2012, 17:47:53
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/07/2012, 17:47:53
 	 * @param index
 	 * @return
 	 * @return boolean
@@ -718,7 +718,7 @@ public class POInfo {
 	
 	/**
 	 * Get Max Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2012, 01:10:09
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/02/2012, 01:10:09
 	 * @param columnName
 	 * @return
 	 * @return String
@@ -733,7 +733,7 @@ public class POInfo {
 	
 	/**
 	 * Get Column  Name for Select
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/10/2014, 20:47:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/10/2014, 20:47:03
 	 * @param ctx
 	 * @param infoColumn
 	 * @param index
@@ -755,7 +755,7 @@ public class POInfo {
 	
 	/**
 	 * Get PO Info Column
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2014, 19:35:36
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/02/2014, 19:35:36
 	 * @param columnName
 	 * @return
 	 * @return POInfoColumn
@@ -770,7 +770,7 @@ public class POInfo {
 	
 	/**
 	 * Get PO Info Column
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/02/2014, 19:36:41
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/02/2014, 19:36:41
 	 * @param index
 	 * @return
 	 * @return POInfoColumn

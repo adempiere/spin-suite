@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2013 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.util;
 
@@ -19,7 +19,7 @@ import android.os.Bundle;
 
 /**
  * 
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class TabInfo {
@@ -35,7 +35,7 @@ public class TabInfo {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/06/2013, 14:57:54
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/06/2013, 14:57:54
 	 * @param clazz
 	 * @param icon_ID
 	 * @param title
@@ -49,7 +49,7 @@ public class TabInfo {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/06/2013, 14:58:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/06/2013, 14:58:56
 	 * @param clazz
 	 * @param title
 	 * @param args
@@ -63,7 +63,7 @@ public class TabInfo {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/06/2013, 14:59:33
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/06/2013, 14:59:33
 	 * @param clazz
 	 * @param icon_ID
 	 * @param args
@@ -76,7 +76,7 @@ public class TabInfo {
 	
 	/**
 	 * 
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/06/2013, 15:00:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/06/2013, 15:00:03
 	 * @return
 	 * @return Class
 	 */

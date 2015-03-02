@@ -31,14 +31,16 @@ import android.content.Context;
 import android.database.Cursor;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * 
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Feb 28, 2015, 12:24:31 AM
  *
  */
 public class MOrder extends X_C_Order implements DocAction {
 
 	/**
+	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/10/2014, 21:31:20
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
 	 * @param C_Order_ID
 	 * @param conn
@@ -49,7 +51,7 @@ public class MOrder extends X_C_Order implements DocAction {
 
 	/**
 	 * Load Default Values
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/10/2014, 14:38:06
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return void
 	 */
 	public void loadDefault() {
@@ -650,6 +652,9 @@ public class MOrder extends X_C_Order implements DocAction {
 	
 	@Override
 	public String getError() {
+		if(m_ProcessMsg == null)
+			m_ProcessMsg = super.getError();
+		//	Return
 		return m_ProcessMsg;
 	}
 

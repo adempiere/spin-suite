@@ -48,7 +48,8 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * 
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Feb 28, 2015, 12:47:08 AM
  *
  */
 public class LV_AttachView extends Activity {
@@ -145,8 +146,8 @@ public class LV_AttachView extends Activity {
 	}
 	
 	/**
-	 * Show a Image
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/05/2014, 11:31:29
+	 * Show a image
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param uriPath
 	 * @return void
 	 */
@@ -179,7 +180,7 @@ public class LV_AttachView extends Activity {
 	
 	/**
 	 * Delete Attachment
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 11:30:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param position
 	 * @return void
 	 */
@@ -221,7 +222,7 @@ public class LV_AttachView extends Activity {
 	
 	/**
 	 * Share Image
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/05/2014, 16:38:08
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param position
 	 * @return void
 	 */
@@ -231,32 +232,30 @@ public class LV_AttachView extends Activity {
 		//	Path
 		String localPath = m_FilePath + File.separator + item.getValue();
 		//	
-		if(localPath != null) {
-			//	Share
-			Uri sourceUri = Uri.fromFile(new File(localPath));
-			//	
-			Intent shareIntent = new Intent();
-			shareIntent.setAction(Intent.ACTION_SEND);
-			shareIntent.putExtra(Intent.EXTRA_STREAM, sourceUri);
-			shareIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getText(R.string.msg_Image) 
-					+ " \"" + item.getValue() + "\"");
-			shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_SharedFromSFAndroid));
-			//	
-			if(isGraphic(localPath))
-				shareIntent.setType("image/*");
-			else if(isPDF(localPath))
-				shareIntent.setType("application/pdf");
-			else 
-				shareIntent.setType("*/*");
-			//	
-			startActivity(Intent.createChooser(shareIntent, 
-					getResources().getText(R.string.Action_Share)));
-		}
+		//	Share
+		Uri sourceUri = Uri.fromFile(new File(localPath));
+		//	
+		Intent shareIntent = new Intent();
+		shareIntent.setAction(Intent.ACTION_SEND);
+		shareIntent.putExtra(Intent.EXTRA_STREAM, sourceUri);
+		shareIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getText(R.string.msg_Image) 
+				+ " \"" + item.getValue() + "\"");
+		shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_SharedFromSFAndroid));
+		//	
+		if(isGraphic(localPath))
+			shareIntent.setType("image/*");
+		else if(isPDF(localPath))
+			shareIntent.setType("application/pdf");
+		else 
+			shareIntent.setType("*/*");
+		//	
+		startActivity(Intent.createChooser(shareIntent, 
+				getResources().getText(R.string.Action_Share)));
 	}
 	
 	/**
 	 * Load Files
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Feb 28, 2015, 12:47:42 AM
 	 *
 	 */
 	private class LoadTask extends AsyncTask<Void, Void, Void> {
@@ -292,8 +291,8 @@ public class LV_AttachView extends Activity {
 		}
 		
 		/**
-		 * Load List view with attachment
-		 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 09:36:49
+		 * Load List View Attachment
+		 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 		 * @return void
 		 */
 		private void loadData() {

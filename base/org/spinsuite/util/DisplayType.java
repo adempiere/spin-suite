@@ -1,19 +1,18 @@
-/******************************************************************************
- * Product: Compiere ERP & CRM Smart Business Solution                        *
- * Copyright (C) 1999-2006 ComPiere, Inc. All Rights Reserved.                *
- * This program is free software; you can redistribute it and/or modify it    *
- * under the terms version 2 of the GNU General Public License as published   *
- * by the Free Software Foundation. This program is distributed in the hope   *
- * that it will be useful, but WITHOUT ANY WARRANTY; without even the implied *
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.           *
- * See the GNU General Public License for more details.                       *
- * You should have received a copy of the GNU General Public License along    *
- * with this program; if not, write to the Free Software Foundation, Inc.,    *
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                     *
- * For the text or an alternative of this public license, you may reach us    *
- * ComPiere, Inc., 2620 Augustine Dr. #245, Santa Clara, CA 95054, USA        *
- * or via info@compiere.org or http://www.compiere.org/license.html           *
- *****************************************************************************/
+/*************************************************************************************
+ * Product: Spin-Suite (Making your Business Spin)                                   *
+ * This program is free software; you can redistribute it and/or modify it           *
+ * under the terms version 2 of the GNU General Public License as published          *
+ * by the Free Software Foundation. This program is distributed in the hope          *
+ * that it will be useful, but WITHOUT ANY WARRANTY; without even the implied        *
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                  *
+ * See the GNU General Public License for more details.                              *
+ * You should have received a copy of the GNU General Public License along           *
+ * with this program; if not, write to the Free Software Foundation, Inc.,           *
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
+ * For the text or an alternative of this public license, you may reach us           *
+ * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
+ *************************************************************************************/
 package org.spinsuite.util;
 
 import java.math.BigDecimal;
@@ -155,7 +154,7 @@ public final class DisplayType
 	
 	/**
 	 * Verify if is a Boolean
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/04/2014, 15:46:00
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 07/04/2014, 15:46:00
 	 * @param displayType
 	 * @return
 	 * @return boolean
@@ -182,7 +181,7 @@ public final class DisplayType
 	
 	/**
 	 * Is a BigDecimal
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/02/2014, 13:03:25
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 16/02/2014, 13:03:25
 	 * @param displayType
 	 * @return
 	 * @return boolean
@@ -423,7 +422,7 @@ public final class DisplayType
 
 	/**
 	 * Get value from Display Type
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 17:16:43
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/02/2014, 17:16:43
 	 * @param displayType
 	 * @param value
 	 * @param yesNoAsBoolean
@@ -482,7 +481,7 @@ public final class DisplayType
 	
 	/**
 	 * Get value from Display Type
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/03/2014, 17:28:36
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/03/2014, 17:28:36
 	 * @param displayType
 	 * @param value
 	 * @return
@@ -494,7 +493,7 @@ public final class DisplayType
 	
 	/**
 	 * Set Context Value from activity
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/03/2014, 10:41:11
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/03/2014, 10:41:11
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param TabNo
@@ -546,7 +545,7 @@ public final class DisplayType
 	
 	/**
 	 * Get Context value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/03/2014, 11:55:33
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/03/2014, 11:55:33
 	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param TabNo
@@ -579,7 +578,7 @@ public final class DisplayType
 	
 	/**
 	 * Parse Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/05/2014, 15:47:33
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/05/2014, 15:47:33
 	 * @param value
 	 * @param displayType
 	 * @return
@@ -697,7 +696,7 @@ public final class DisplayType
 	
 	/**
 	 * Get input Type
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/05/2012, 04:05:28
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/05/2012, 04:05:28
 	 * @param displayType
 	 * @return
 	 * @return int
@@ -728,7 +727,7 @@ public final class DisplayType
 	
 	/**
 	 * Get BigDecimal format
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/02/2014, 21:53:00
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:53:00
 	 * @param value
 	 * @param ctx
 	 * @return
@@ -754,7 +753,7 @@ public final class DisplayType
 	
 	/**
 	 * Get BigDecimal from String
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/10/2014, 16:43:08
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/10/2014, 16:43:08
 	 * @param value
 	 * @param displayType
 	 * @return
@@ -766,7 +765,7 @@ public final class DisplayType
 	
 	/**
 	 * Get BigDecimal from String
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/10/2014, 16:43:47
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/10/2014, 16:43:47
 	 * @param value
 	 * @return
 	 * @return BigDecimal
@@ -778,7 +777,7 @@ public final class DisplayType
 	
 	/**
 	 * Get Date
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/03/2014, 11:54:18
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/03/2014, 11:54:18
 	 * @param date
 	 * @return
 	 * @return Date

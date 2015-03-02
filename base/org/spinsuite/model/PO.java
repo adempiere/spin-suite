@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.model;
 
@@ -32,7 +32,7 @@ import android.database.Cursor;
 
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public abstract class PO {
@@ -66,7 +66,7 @@ public abstract class PO {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/07/2012, 23:59:07
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 07/07/2012, 23:59:07
 	 * @param ctx
 	 * @param con_tx
 	 * @param tableName
@@ -120,7 +120,7 @@ public abstract class PO {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/02/2014, 21:48:07
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/02/2014, 21:48:07
 	 * @param ctx
 	 * @param ID
 	 * @param conn
@@ -132,7 +132,7 @@ public abstract class PO {
 	/**
 	 * Used for Generic PO
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/10/2014, 13:00:43
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 11/10/2014, 13:00:43
 	 * @param ctx
 	 * @param tableName
 	 * @param ID
@@ -145,7 +145,7 @@ public abstract class PO {
 	/**
 	 * Used for Generic PO
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/10/2014, 20:19:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/10/2014, 20:19:03
 	 * @param ctx
 	 * @param tableName
 	 * @param rs
@@ -158,7 +158,7 @@ public abstract class PO {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/02/2014, 21:36:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/02/2014, 21:36:15
 	 * @param ctx
 	 * @param rs
 	 * @param trxName
@@ -170,7 +170,7 @@ public abstract class PO {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/10/2014, 23:58:11
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 16/10/2014, 23:58:11
 	 * @param ctx
 	 * @param ID
 	 * @param conn
@@ -199,7 +199,7 @@ public abstract class PO {
 
 	/**
 	 * Get Array IDs
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:38:16
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 13:38:16
 	 * @return
 	 * @return int[]
 	 */
@@ -210,7 +210,7 @@ public abstract class PO {
 	
 	/**
 	 * Load data from Cursor
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 06/02/2014, 11:12:35
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 06/02/2014, 11:12:35
 	 * @param rs
 	 * @return void
 	 */
@@ -224,7 +224,7 @@ public abstract class PO {
 	
 	/**
 	 * Get Key Columns
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:49:31
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 13:49:31
 	 * @return
 	 * @return String[]
 	 */
@@ -234,7 +234,7 @@ public abstract class PO {
 	
 	/**
 	 * Load data from ID
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/03/2012, 01:32:45
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/03/2012, 01:32:45
 	 * @param ID
 	 * @return void
 	 */
@@ -255,7 +255,7 @@ public abstract class PO {
 	
 	/**
 	 * Load Data from ID and Key Columns
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 12:07:37
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 12:07:37
 	 * @param ID
 	 * @param KeyColumns
 	 * @return
@@ -283,7 +283,7 @@ public abstract class PO {
 	
 	/**
 	 * Get Current ID
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 06/02/2014, 11:51:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 06/02/2014, 11:51:23
 	 * @return
 	 * @return int
 	 */
@@ -293,7 +293,7 @@ public abstract class PO {
 	
 	/**
 	 * Copy values from temporal array, optional delete old values 
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/05/2012, 04:50:51
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/05/2012, 04:50:51
 	 * @param deleteOld
 	 * @return void
 	 */
@@ -309,7 +309,7 @@ public abstract class PO {
 	
 	/**
 	 * back to previous copy
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/05/2012, 04:46:14
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/05/2012, 04:46:14
 	 * @return void
 	 */
 	public void backCopy() {
@@ -321,7 +321,7 @@ public abstract class PO {
 	
 	/**
 	 * Get is New
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/05/2012, 05:00:52
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/05/2012, 05:00:52
 	 * @return
 	 * @return boolean
 	 */
@@ -331,7 +331,7 @@ public abstract class PO {
 
 	/**
 	 * Has Primary Key
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/10/2014, 4:53:45
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/10/2014, 4:53:45
 	 * @return
 	 * @return boolean
 	 */
@@ -341,7 +341,7 @@ public abstract class PO {
 	
 	/**
 	 * Load data from meta-data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/03/2012, 01:34:39
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/03/2012, 01:34:39
 	 * @param ID
 	 * @return boolean
 	 */
@@ -382,7 +382,7 @@ public abstract class PO {
 	
 	/**
 	 * Load from Cursor
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/02/2014, 12:12:01
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 15/02/2014, 12:12:01
 	 * @param rs
 	 * @param isCursor
 	 * @return
@@ -447,7 +447,7 @@ public abstract class PO {
 	
 	/**
 	 * Load Default Values
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/05/2014, 09:13:13
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 07/05/2014, 09:13:13
 	 * @return
 	 * @return boolean
 	 */
@@ -472,7 +472,7 @@ public abstract class PO {
 	
 	/**
 	 * Set ID and mark this like update
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 23/05/2012, 03:38:12
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 23/05/2012, 03:38:12
 	 * @param ID
 	 * @return void
 	 */
@@ -487,7 +487,7 @@ public abstract class PO {
 	
 	/**
 	 * Reload Key Columns
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/10/2014, 19:38:27
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/10/2014, 19:38:27
 	 * @return void
 	 */
 	private void reloadKey() {
@@ -531,7 +531,7 @@ public abstract class PO {
 	
 	/**
 	 * Get Where clause
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/10/2014, 19:17:14
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/10/2014, 19:17:14
 	 * @param withValues
 	 * @return
 	 * @return String
@@ -542,7 +542,7 @@ public abstract class PO {
 	
 	/**
 	 * Get values from where clause
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/05/2012, 02:44:17
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/05/2012, 02:44:17
 	 * @return
 	 * @return String
 	 */
@@ -556,7 +556,7 @@ public abstract class PO {
 	
 	/**
 	 * Set Value with columnName
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2012, 00:22:52
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2012, 00:22:52
 	 * @param columnName
 	 * @param value
 	 * @return
@@ -577,7 +577,7 @@ public abstract class PO {
 	
 	/**
 	 * Get Column Index
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/02/2014, 22:09:48
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/02/2014, 22:09:48
 	 * @param columnName
 	 * @return
 	 * @return int
@@ -588,7 +588,7 @@ public abstract class PO {
 	
 	/**
 	 * Set value with index
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/04/2012, 21:05:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/04/2012, 21:05:26
 	 * @param index
 	 * @param value
 	 * @return
@@ -609,7 +609,7 @@ public abstract class PO {
 	
 	/**
 	 * Get value as String
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/03/2012, 19:03:40
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 30/03/2012, 19:03:40
 	 * @return
 	 * @return String[]
 	 */
@@ -626,7 +626,7 @@ public abstract class PO {
 	
 	/**
 	 * Get value with columnName
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2012, 00:22:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2012, 00:22:56
 	 * @param columnName
 	 * @return
 	 * @return Object
@@ -668,7 +668,7 @@ public abstract class PO {
 	
 	/**
 	 * Get value with index
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/05/2012, 18:32:38
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/05/2012, 18:32:38
 	 * @param index
 	 * @return
 	 * @return Object
@@ -683,7 +683,7 @@ public abstract class PO {
 	
 	/**
 	 * Get value as integer
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/03/2012, 00:26:31
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 30/03/2012, 00:26:31
 	 * @param columnName
 	 * @return
 	 * @return int
@@ -694,7 +694,7 @@ public abstract class PO {
 	
 	/**
 	 * Get previous value as integer
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/08/2012, 23:23:17
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/08/2012, 23:23:17
 	 * @param columnName
 	 * @return
 	 * @return int
@@ -705,7 +705,7 @@ public abstract class PO {
 	
 	/**
 	 * Get value as integer with columnName
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/08/2012, 23:22:35
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/08/2012, 23:22:35
 	 * @param columnName
 	 * @param m_arrayValues
 	 * @return
@@ -729,7 +729,7 @@ public abstract class PO {
 	
 	/**
 	 * Get value with index as integer
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/05/2012, 02:13:50
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/05/2012, 02:13:50
 	 * @param index
 	 * @return
 	 * @return int
@@ -758,7 +758,7 @@ public abstract class PO {
 	
 	/**
 	 * Get value as boolean with columnName
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/03/2012, 00:28:37
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 30/03/2012, 00:28:37
 	 * @param columnName
 	 * @return
 	 * @return boolean
@@ -779,7 +779,7 @@ public abstract class PO {
 	
 	/**
 	 * Save data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2012, 23:45:04
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/03/2012, 23:45:04
 	 * @return
 	 * @return boolean
 	 */
@@ -797,7 +797,7 @@ public abstract class PO {
 	
 	/**
 	 * Save data with Exception
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/04/2012, 20:22:37
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/04/2012, 20:22:37
 	 * @throws Exception
 	 * @return void
 	 */
@@ -829,7 +829,7 @@ public abstract class PO {
 	
 	/**
 	 * Delete record
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/05/2012, 02:06:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/05/2012, 02:06:03
 	 * @return
 	 * @return boolean
 	 */
@@ -847,7 +847,7 @@ public abstract class PO {
 	
 	/**
 	 * Delete record with exception
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/05/2012, 02:04:13
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/05/2012, 02:04:13
 	 * @throws Exception
 	 * @return void
 	 */
@@ -878,7 +878,7 @@ public abstract class PO {
 	
 	/**
 	 * Clean array
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/05/2012, 03:26:13
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/05/2012, 03:26:13
 	 * @param deleteBackup
 	 * @return void
 	 */
@@ -901,7 +901,7 @@ public abstract class PO {
 	
 	/**
 	 * Save a new record.... use INSERT SQL
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/03/2012, 22:10:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 30/03/2012, 22:10:05
 	 * @return
 	 * @return boolean
 	 * @throws Exception 
@@ -953,7 +953,7 @@ public abstract class PO {
 	
 	/**
 	 * Update a record.... use UPDATE SQL
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/05/2012, 21:11:58
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 04/05/2012, 21:11:58
 	 * @return
 	 * @throws Exception
 	 * @return boolean
@@ -1009,7 +1009,7 @@ public abstract class PO {
 	
 	/**
 	 * Set Column Values default
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/02/2014, 23:03:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/02/2014, 23:03:03
 	 * @param isNew
 	 * @return void
 	 */
@@ -1027,7 +1027,7 @@ public abstract class PO {
 	
 	/**
 	 * Get value for insert record
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/05/2012, 21:13:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 04/05/2012, 21:13:26
 	 * @param column
 	 * @param index
 	 * @param isNew
@@ -1085,7 +1085,7 @@ public abstract class PO {
 	
 	/**
 	 * Trigger before save
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/03/2012, 23:10:35
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/03/2012, 23:10:35
 	 * @param isNew
 	 * @return
 	 * @return boolean
@@ -1096,7 +1096,7 @@ public abstract class PO {
 	
 	/**
 	 * Trigger after save
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2012, 23:40:55
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/03/2012, 23:40:55
 	 * @param isNew
 	 * @return
 	 * @return boolean
@@ -1107,7 +1107,7 @@ public abstract class PO {
 	
 	/**
 	 * Trigger before delete
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/03/2012, 23:10:40
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/03/2012, 23:10:40
 	 * @return
 	 * @return boolean
 	 */
@@ -1117,7 +1117,7 @@ public abstract class PO {
 	
 	/**
 	 * Trigger after delete
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/03/2012, 23:42:51
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/03/2012, 23:42:51
 	 * @return
 	 * @return boolean
 	 */
@@ -1136,7 +1136,7 @@ public abstract class PO {
 	
 	/**
 	 * Get table name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/06/2012, 18:01:39
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 15/06/2012, 18:01:39
 	 * @return
 	 * @return String
 	 */
@@ -1146,7 +1146,7 @@ public abstract class PO {
 	
 	/**
 	 * Create a new connection to DB
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/05/2012, 17:57:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 11/05/2012, 17:57:15
 	 * @return void
 	 */
 	public void loadConnection(int type) {
@@ -1163,7 +1163,7 @@ public abstract class PO {
 	/**
 	 * Close Connection to DB
 	 * maneja conexion esta en true
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/07/2012, 18:13:44
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/07/2012, 18:13:44
 	 * @return void
 	 */
 	public void closeConnection() {
@@ -1180,7 +1180,7 @@ public abstract class PO {
 	
 	/**
 	 * Get Current Connection
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/02/2014, 22:10:28
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/02/2014, 22:10:28
 	 * @return
 	 * @return DB
 	 */
@@ -1190,7 +1190,7 @@ public abstract class PO {
 	
 	/**
 	 * Get Error Message
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/07/2012, 20:35:15
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 16/07/2012, 20:35:15
 	 * @return
 	 * @return String
 	 */
@@ -1200,7 +1200,7 @@ public abstract class PO {
 	
 	/**
 	 * Set Error
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 1/11/2014, 13:26:07
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 1/11/2014, 13:26:07
 	 * @param error
 	 * @return void
 	 */
@@ -1358,7 +1358,7 @@ public abstract class PO {
 	
 	/**
 	 * Get Context from PO
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/02/2014, 14:05:30
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 15/02/2014, 14:05:30
 	 * @return
 	 * @return Context
 	 */
@@ -1373,7 +1373,7 @@ public abstract class PO {
 	
 	/**
 	 * Get Is Deleteable Record
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 19:48:49
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/09/2014, 19:48:49
 	 * @return
 	 * @return boolean
 	 */

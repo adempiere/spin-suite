@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view;
 
@@ -41,7 +41,7 @@ import android.widget.ListView;
 
 /**
  * 
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class TV_Base extends FragmentActivity 
@@ -93,7 +93,7 @@ public class TV_Base extends FragmentActivity
     
     /**
      * Load Drawer
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/03/2014, 09:23:22
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 14/03/2014, 09:23:22
      * @return void
      */
     protected void loadDrawer(){
@@ -134,7 +134,7 @@ public class TV_Base extends FragmentActivity
     
     /**
      * To implemented by user
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/03/2014, 11:37:09
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 15/03/2014, 11:37:09
      * @param item
      * @return void
      */
@@ -144,7 +144,7 @@ public class TV_Base extends FragmentActivity
     
     /**
      * Is Drawer Loader
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/03/2014, 10:29:47
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 16/03/2014, 10:29:47
      * @return
      * @return boolean
      */
@@ -154,7 +154,7 @@ public class TV_Base extends FragmentActivity
     
     /**
      * Is Drawer Layout Open
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/03/2014, 10:32:25
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 16/03/2014, 10:32:25
      * @return
      * @return boolean
      */
@@ -166,7 +166,7 @@ public class TV_Base extends FragmentActivity
     
     /**
      * Get Drawer List
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/03/2014, 17:43:59
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 14/03/2014, 17:43:59
      * @return
      * @return ListView
      */
@@ -223,7 +223,7 @@ public class TV_Base extends FragmentActivity
     
     /**
      * Add Fragment Tab in FragmentActivity
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/09/2014, 21:47:41
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/09/2014, 21:47:41
      * @param clazz
      * @param tag
      * @param title
@@ -258,7 +258,7 @@ public class TV_Base extends FragmentActivity
     
     /**
      * Add Fragment without Tab Parameter
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/09/2014, 21:51:47
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/09/2014, 21:51:47
      * @param clazz
      * @param tag
      * @param title
@@ -270,7 +270,7 @@ public class TV_Base extends FragmentActivity
     
     /**
      * Add Fragment Tab in FragmentActivity with String title
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/02/2014, 13:23:35
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 16/02/2014, 13:23:35
      * @param clazz
      * @param tag
      * @param title
@@ -287,7 +287,7 @@ public class TV_Base extends FragmentActivity
     
     /**
      * Add Fragment Tab
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/02/2014, 09:05:17
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/02/2014, 09:05:17
      * @param clazz
      * @param tag
      * @param title
@@ -327,7 +327,7 @@ public class TV_Base extends FragmentActivity
     
     /**
      * Get Tab Handler
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/08/2014, 10:21:40
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/08/2014, 10:21:40
      * @param index
      * @return
      * @return TabListener
@@ -339,7 +339,7 @@ public class TV_Base extends FragmentActivity
     
     /**
      * Get Current Tab Handler
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/08/2014, 10:52:35
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/08/2014, 10:52:35
      * @return
      * @return TabHandler
      */
@@ -350,7 +350,7 @@ public class TV_Base extends FragmentActivity
     
     /**
      * Set Current Fragment Tab
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/03/2014, 10:45:26
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 16/03/2014, 10:45:26
      * @param index
      * @return void
      */
@@ -378,7 +378,7 @@ public class TV_Base extends FragmentActivity
 	
 	/**
 	 * Set Lock Tabs
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/09/2014, 18:28:19
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/09/2014, 18:28:19
 	 * @param m_IsModifying
 	 * @return void
 	 */
@@ -388,7 +388,7 @@ public class TV_Base extends FragmentActivity
 	
 	/**
 	 * Is Modifying
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/09/2014, 18:31:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/09/2014, 18:31:05
 	 * @return
 	 * @return boolean
 	 */
@@ -398,7 +398,7 @@ public class TV_Base extends FragmentActivity
 	
 	/**
 	 * Get Current Tab Parameter
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/09/2014, 21:49:34
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/09/2014, 21:49:34
 	 * @return
 	 * @return TabParameter
 	 */

@@ -10,13 +10,13 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.print;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class ColumnPrintData {
@@ -24,7 +24,7 @@ public class ColumnPrintData {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 26/03/2014, 11:42:07
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 26/03/2014, 11:42:07
 	 * @param m_Value
 	 * @param m_Suffix
 	 */
@@ -42,7 +42,7 @@ public class ColumnPrintData {
 	
 	/**
 	 * Get Prefix
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 18:02:38
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 18:02:38
 	 * @return
 	 * @return String
 	 */
@@ -52,7 +52,7 @@ public class ColumnPrintData {
 	
 	/**
 	 * Get Suffix
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 18:02:50
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 18:02:50
 	 * @return
 	 * @return String
 	 */
@@ -62,7 +62,7 @@ public class ColumnPrintData {
 	
 	/**
 	 * Get Function Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/04/2014, 10:05:30
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 04/04/2014, 10:05:30
 	 * @return
 	 * @return String
 	 */
@@ -72,7 +72,7 @@ public class ColumnPrintData {
 	
 	/**
 	 * Set Function Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 04/04/2014, 10:07:11
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 04/04/2014, 10:07:11
 	 * @param m_FunctionName
 	 * @return void
 	 */
@@ -81,7 +81,7 @@ public class ColumnPrintData {
 	}
 	/**
 	 * Set Prefix
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2014, 18:00:53
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2014, 18:00:53
 	 * @param m_Value
 	 * @return void
 	 */
@@ -91,7 +91,7 @@ public class ColumnPrintData {
 	
 	/**
 	 * Set Suffix
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/03/2014, 18:01:02
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2014, 18:01:02
 	 * @param m_Suffix
 	 * @return void
 	 */

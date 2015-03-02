@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
@@ -40,7 +40,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 /**
- * @author Yamel Senih
+ * 
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Mar 2, 2015, 2:49:00 AM
  *
  */
 public class VDateBox extends LinearLayout implements OnClickListener, OnDateSetListener {
@@ -48,7 +49,7 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/02/2014, 10:56:21
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param context
 	 */
 	public VDateBox(Context context) {
@@ -62,7 +63,7 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 21:12:47
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param context
 	 * @param format
 	 * @param m_Field
@@ -80,7 +81,7 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/02/2014, 10:56:28
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param context
 	 * @param attrs
 	 */
@@ -102,8 +103,8 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
     private GridField				m_Field = null;
     
     /**
-     * Set Field Listener
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/05/2014, 21:39:08
+     * Set Field listener
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @param m_Listener
      * @return void
      */
@@ -112,8 +113,8 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
     }
     
     /**
-     * Init
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/02/2014, 12:07:35
+     * Init Date
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @return void
      */
 	private void init(){
@@ -135,8 +136,8 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	}
 	
 	/**
-	 * Update the display
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/02/2014, 10:57:05
+	 * Refresh Display
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return void
 	 */
 	private void updateDisplay() {
@@ -168,8 +169,8 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
     };
     
     /**
-     * Create Dialog for set Date
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/02/2014, 10:59:06
+     * Create Dialog
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @return
      * @return Dialog
      */
@@ -189,7 +190,7 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	
 	/**
 	 * Get Date As String
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/02/2014, 10:34:57
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return
 	 * @return String
 	 */
@@ -203,7 +204,7 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	
 	/**
 	 * Get Display Date
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/04/2014, 10:41:10
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return
 	 * @return String
 	 */
@@ -213,7 +214,7 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	
 	/**
 	 * Get Date
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/02/2014, 10:40:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return
 	 * @return Date
 	 */
@@ -233,11 +234,11 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	}
 	
 	/**
-	 * Get date with formatt
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/02/2014, 11:04:45
+	 * Get Date with format
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param format
 	 * @return
-	 * @return String
+	 * @return Date
 	 */
 	public Date getDate(String format){
         String date = et_Date.getText().toString();
@@ -251,8 +252,8 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
     }
 	
 	/**
-	 * Set format to date
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/02/2014, 11:07:00
+	 * Format Date
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param date
 	 * @return
 	 * @return String
@@ -262,8 +263,8 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	}
 	
 	/**
-	 * Set Date
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/02/2014, 12:09:20
+	 * Set Date value
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param date
 	 * @return void
 	 */
@@ -284,8 +285,8 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	}
 	
 	/**
-	 * Set View Format
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/02/2014, 12:10:23
+	 * Set View format
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param format
 	 * @return void
 	 */
@@ -295,8 +296,8 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	}
 	
 	/**
-	 * Set View Format
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 21:01:16
+	 * Set Format
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param format
 	 * @return void
 	 */
@@ -309,7 +310,7 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	
 	/**
 	 * Get View Format
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/02/2014, 12:10:34
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return
 	 * @return SimpleDateFormat
 	 */
@@ -321,6 +322,13 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	public void setEnabled(boolean enabled){
 		et_Date.setEnabled(enabled);
 		ib_Date.setEnabled(enabled);
+		if(enabled) {
+			et_Date.setTextColor(
+					getResources().getColor(R.color.lookup_text_read_write));
+		} else {
+			et_Date.setTextColor(
+					getResources().getColor(R.color.lookup_text_read_only));
+		}
 	}
 	
 	@Override
@@ -341,8 +349,8 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	}
 	
 	/**
-	 * Set Date Listener
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/02/2014, 12:11:01
+	 * Set Listener
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param mDateSetListener
 	 * @return void
 	 */

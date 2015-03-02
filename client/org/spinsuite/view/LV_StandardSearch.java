@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view;
 
@@ -59,7 +59,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class LV_StandardSearch extends Activity {
@@ -153,7 +153,7 @@ public class LV_StandardSearch extends Activity {
 	
 	/**
 	 * Load Config
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/03/2014, 22:07:43
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/03/2014, 22:07:43
 	 * @return void
 	 */
 	private void loadConfig() {
@@ -177,7 +177,7 @@ public class LV_StandardSearch extends Activity {
 	
 	/**
 	 * Add Criteria Query
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/03/2014, 10:28:14
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/03/2014, 10:28:14
 	 * @return void
 	 */
 	private void addCriteriaQuery() {
@@ -221,7 +221,7 @@ public class LV_StandardSearch extends Activity {
 	
 	/**
 	 * Add View to Config Panel
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/03/2014, 22:10:08
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/03/2014, 22:10:08
 	 * @param field
 	 * @return void
 	 */
@@ -330,7 +330,7 @@ public class LV_StandardSearch extends Activity {
 	
 	/**
 	 * Search Records
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/08/2014, 15:39:31
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/08/2014, 15:39:31
 	 * @return void
 	 */
 	private void search() {
@@ -350,7 +350,7 @@ public class LV_StandardSearch extends Activity {
 	
 	/**
 	 * On Selected Record
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/03/2014, 13:23:17
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/03/2014, 13:23:17
 	 * @param item
 	 * @return void
 	 */
@@ -401,7 +401,7 @@ public class LV_StandardSearch extends Activity {
 	
 	/**
 	 * Include Class Thread
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 *
 	 */
 	private class LoadViewTask extends AsyncTask<Void, Integer, Integer> {
@@ -413,7 +413,7 @@ public class LV_StandardSearch extends Activity {
 		
 		/**
 		 * Init Values
-		 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/05/2014, 12:18:42
+		 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/05/2014, 12:18:42
 		 * @return void
 		 */
 		private void init() {
@@ -451,7 +451,7 @@ public class LV_StandardSearch extends Activity {
 		
 	    /**
 	     * Load View Objects
-	     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/02/2014, 16:37:56
+	     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/02/2014, 16:37:56
 	     * @return
 	     * @return boolean
 	     */
@@ -469,7 +469,7 @@ public class LV_StandardSearch extends Activity {
 	    
 	    /**
 		 * Load Data
-		 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/03/2014, 13:32:16
+		 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/03/2014, 13:32:16
 		 * @return void
 		 */
 		private void loadData() {
