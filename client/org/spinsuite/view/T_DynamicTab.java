@@ -1103,6 +1103,7 @@ public class T_DynamicTab extends Fragment
 		
 		@Override
 		protected void onPreExecute() {
+			v_tableLayout.requestFocus();
 			v_PDialog = ProgressDialog.show(v_activity, null, 
 					getString(R.string.msg_Saving), false, false);
 			//	Set Max

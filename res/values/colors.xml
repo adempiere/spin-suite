@@ -31,6 +31,7 @@
     <item name="gray" type="color">0xFF888888</item>
     <!-- Custom Colors -->
     <item name="lookup_label_mandatory" type="color">@color/red</item>
+    <item name="lookup_label_read_only" type="color">@android:color/black</item>
     <item name="lookup_text_read_only" type="color">@android:color/darker_gray</item>
 	<item name="lookup_text_read_write" type="color">@android:color/black</item>
     

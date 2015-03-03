@@ -569,15 +569,6 @@ public abstract class GridField extends LinearLayout {
 		return (getValue() != null && getOldValue() == null) 
 				|| (getValue() == null && getOldValue() != null) 
 				|| (getValue() != null && getOldValue() != null && !getValue().equals(getOldValue()));
-		//return (getValue() != null && getOldValue() == null) 
-			//	|| (getValue() == null && getOldValue() != null) 
-				//|| (
-					//	(getValueAsString() != null 
-						//		&& getOldValueAsString() != null) 
-						//&& !getValueAsString().equals(getOldValueAsString()))
-				//|| (DisplayType.isNumeric(m_field.DisplayType) 
-					//	&& getValueAsInt() != getOldValueAsInt())
-				//|| getValueAsBoolean() != getOldValueAsBoolean();*/
 	}
 	
 	/**
@@ -951,6 +942,21 @@ public abstract class GridField extends LinearLayout {
 			LogM.log(getContext(), getClass(), Level.INFO, 
 					"Display Logic = " + logic + " - Displayed = " + display);
 			setVisibility(display ? VISIBLE: GONE);
+		}
+	}
+	
+	@Override
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		//	Set Color
+		if(enabled) {
+			if(m_field.IsMandatory) {
+				v_Label.setTextColor(
+						getResources().getColor(R.color.lookup_label_mandatory));
+			}
+		} else {
+			v_Label.setTextColor(
+					getResources().getColor(R.color.lookup_label_read_only));
 		}
 	}
 }

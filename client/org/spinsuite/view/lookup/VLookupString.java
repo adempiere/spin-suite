@@ -107,7 +107,9 @@ public class VLookupString extends GridField {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 		        //	Listener
-				event();
+				if(!hasFocus) {
+					event();
+				}
 			}
 		});
 		//	Set Hint
