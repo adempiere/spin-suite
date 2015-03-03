@@ -35,6 +35,11 @@ import android.database.Cursor;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
+/**
+* @contributor Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com
+*  	<li>Add Support to Log for Mobile
+*  	@see https://adempiere.atlassian.net/browse/SPIN-6
+**/
 public abstract class PO {
 
 	/** Context                 	*/
@@ -61,7 +66,10 @@ public abstract class PO {
 	private boolean					handConnection 		= true;
 	/**	Log Error					*/
 	private String					error 				= null;
-	
+	/** NULL Value				*/
+	public static String		NULL = "NULL";
+	/** Zero Integer				*/
+	protected static final Integer I_ZERO = Integer.valueOf(0);
 	
 	/**
 	 * 
@@ -424,6 +432,10 @@ public abstract class PO {
 				}
 				
 			}
+			//Carlos Parada Add Support to Log for Mobile
+			m_OldValues[i] = DisplayType.getJDBC_Value(column.DisplayType, m_currentValues[i], false, false);
+			//End Carlos Parada
+			
 			//	Set Is Ok
 			if(!ok) {
 				isNew = false;
@@ -448,7 +460,9 @@ public abstract class PO {
 				//	Get Column
 				POInfoColumn column = m_TableInfo.getPOInfoColumn(i);
 				m_currentValues[i] = parseValue(column, i, false, false);
-				//	
+				//Carlos Parada Add Support to Log for Mobile 
+				m_OldValues[i] = m_currentValues[i]; 
+				//End Carlos Parada
 				LogM.log(getCtx(), getClass(), Level.FINE, "Old Value=" + m_OldValues[i]);	
 			}
 			//	Set Ok Value
@@ -853,6 +867,46 @@ public abstract class PO {
 				throw new Exception("@Error@ " + getError());
 			//	
 			conn.deleteSQL(m_TableInfo.getTableName(), get_WhereClause(false, true), get_WhereClauseValues());
+			
+			MSession session = MSession.get (getCtx(), false);
+			if (session == null)
+				LogM.log(getCtx(), PO.class, Level.FINE, "No Session found");
+			
+			if( m_TableInfo.IsChangeLog())
+			{
+				//	Change Log
+				if (session != null && m_IDs.length == 1)
+				{
+					int SPS_ChangeLog_ID = 0;
+					int size = m_TableInfo.getColumnCount();
+					for (int i = 0; i < size; i++)
+					{
+						POInfoColumn column = m_TableInfo.getPOInfoColumn(i);
+						Object value = m_OldValues[i];
+						if (value != null
+							&& column.IsAllowLogging		//	logging allowed
+							&& !column.IsEncrypted		//	not encrypted
+							&& !"Password".equals(column.ColumnName)
+							)
+						{
+							// change log on delete
+							MSPSChangeLog cLog = session.changeLog (
+								conn, SPS_ChangeLog_ID,
+								m_TableInfo.getSPS_Table_ID(), column.SPS_Column_ID,
+								m_IDs[0], getAD_Client_ID(), getAD_Org_ID(), value, null, MSPSChangeLog.EVENTCHANGELOG_Delete);
+							if (cLog != null)
+								SPS_ChangeLog_ID = cLog.getSPS_ChangeLog_ID();
+						}
+					}	//   for all fields
+				}
+
+				//	Housekeeping
+				m_IDs[0] = PO.I_ZERO;
+				if (conn == null)
+					LogM.log(getCtx(), PO.class, Level.FINE, "complete");
+				else
+					LogM.log(getCtx(), PO.class, Level.FINE, "[" + conn.toString() + "] - complete");
+			}
 			if(handConnection)
 				conn.setTransactionSuccessful();
 			//	
@@ -899,6 +953,11 @@ public abstract class PO {
 		StringBuffer columns = new StringBuffer();
 		StringBuffer sym = new StringBuffer();
 		ArrayList<Object> listValues = new ArrayList<Object>();
+		Object value = null;
+		MSession session = MSession.get (getCtx(), false);
+		int SPS_ChangeLog_ID = 0;
+		if (session == null)
+			LogM.log(getCtx(), PO.class, Level.FINE, "No Session found");
 		//	
 		try{
 			for (int i = 0; i < m_TableInfo.getColumnCount(); i++) {
@@ -911,7 +970,7 @@ public abstract class PO {
 					columns.append(column.ColumnName);
 					sym.append("?");
 					//	
-					Object value = parseValue(column, i, true, true);
+					value = parseValue(column, i, true, true);
 					if(column.IsMandatory 
 							&& value == null)
 						throw new Exception(m_ctx.getResources().getString(R.string.MustFillField) + 
@@ -919,6 +978,24 @@ public abstract class PO {
 					listValues.add(value);
 					LogM.log(getCtx(), getClass(), Level.FINE, column.ColumnName + "=" + value + " Mandatory=" + column.IsMandatory);
 				}
+				//Carlos Parada Add Support to Log for Mobile
+				if (   session != null
+						&& m_IDs.length == 1
+						&& m_TableInfo.isAllowLogging(i)		//	logging allowed
+						&& !column.IsEncrypted		//	not encrypted
+						&& !"Password".equals(column.ColumnName)
+						&& MSession.logMigration(this, m_TableInfo)
+						)
+				{
+					// change log on new
+					MSPSChangeLog cLog = session.changeLog (
+							conn, SPS_ChangeLog_ID,
+							m_TableInfo.getSPS_Table_ID(), column.SPS_Column_ID,
+							get_ID(), getAD_Client_ID(), getAD_Org_ID(), null, value, MSPSChangeLog.EVENTCHANGELOG_Insert);
+					if (cLog != null)
+						SPS_ChangeLog_ID = cLog.getSPS_ChangeLog_ID();
+				}
+				//End Carlos Parada
 			}
 			String sql = "INSERT INTO " + 
 					m_TableInfo.getTableName() + 
@@ -950,6 +1027,13 @@ public abstract class PO {
 	private boolean saveUpdate() throws Exception {
 		StringBuffer columns = new StringBuffer();
 		ArrayList<Object> listValues = new ArrayList<Object>();
+		//Carlos Parada Add Support to Log for Mobile
+		MSession session = MSession.get (getCtx(), false);
+		if (session == null)
+			LogM.log(getCtx(), PO.class, Level.FINE, "No Session found");
+		
+		int SPS_ChangeLog_ID = 0;
+		//End Carlos Parada
 		//	
 		try{
 			for (int i = 0; i < m_TableInfo.getColumnCount(); i++) {
@@ -978,16 +1062,42 @@ public abstract class PO {
 					LogM.log(getCtx(), getClass(), Level.FINE, 
 							column.ColumnName + "=" + value + " Mandatory=" + column.IsMandatory);
 				}
+				
+				String sql = "UPDATE " + 
+						m_TableInfo.getTableName() + 
+						" SET " + 
+						columns.toString() +
+						" WHERE "  + get_WhereClause(true, true);
+				
+				conn.executeSQL(sql, listValues.toArray());
+				
+				//Carlos Parada Add Support to Log for Mobile
+				if (session != null
+						&& m_IDs.length == 1
+						&& column.IsAllowLogging		//	logging allowed
+						&& !column.IsEncrypted		//	not encrypted
+						&& !"Password".equals(column.ColumnName)
+						)
+					{
+						Object oldV = m_OldValues[i];
+						Object newV = value;
+						if (oldV != null && oldV == NULL )
+							oldV = null;
+						if (newV != null && newV == NULL)
+							newV = null;
+						// change log on update
+						MSPSChangeLog cLog = session.changeLog (
+							conn, SPS_ChangeLog_ID,
+							m_TableInfo.getSPS_Table_ID(), column.SPS_Column_ID,
+							get_ID(), getAD_Client_ID(), getAD_Org_ID(), oldV, newV, MSPSChangeLog.EVENTCHANGELOG_Update);
+						if (cLog != null)
+							SPS_ChangeLog_ID = cLog.getSPS_ChangeLog_ID();
+					}
+				//End Carlos Parada
 			}
 			//	
-			String sql = "UPDATE " + 
-					m_TableInfo.getTableName() + 
-					" SET " + 
-					columns.toString() +
-					" WHERE "  + get_WhereClause(true, true);
 			
-			conn.executeSQL(sql, listValues.toArray());
-			if(handConnection)
+			if(handConnection && conn.inTransaction())
 				conn.setTransactionSuccessful();
 		} catch (Exception e) {
 			throw e;

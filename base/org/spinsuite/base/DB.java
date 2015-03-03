@@ -535,7 +535,7 @@ public class DB extends SQLiteOpenHelper {
 	public static void closeConnection(DB conn) {
 		if(conn != null 
 				&& conn.isOpen()) {
-			if(conn.getDB().inTransaction())
+			if(conn.inTransaction())
 				conn.endTransaction();
 			conn.close();
 		}
@@ -1145,5 +1145,15 @@ public class DB extends SQLiteOpenHelper {
 			LogM.log(ctx, "DB", Level.SEVERE, "SQLError", e);
 		}
 		return retValue;
+	}
+	
+	/**
+	 * In Transaction
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 28/2/2015, 0:25:35
+	 * @return
+	 * @return boolean
+	 */
+	public boolean inTransaction(){
+		return getDB().inTransaction();
 	}
 }
