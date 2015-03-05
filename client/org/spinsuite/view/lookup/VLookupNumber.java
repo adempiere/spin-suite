@@ -116,10 +116,9 @@ public class VLookupNumber extends GridField {
 			
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				if (hasFocus)
-					((EditText)v).selectAll();
-				//	Listener
-				event();
+				if(!hasFocus) {
+					event();
+				}
 			}
 		});
 		//	Set Hint

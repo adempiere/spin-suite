@@ -205,7 +205,9 @@ public class VLookupButtonDocAction extends VLookupButton
 				label = getResources().getString(R.string.ACTION_ReActivate);
 				img = getResources().getDrawable(Env.getResourceID(getContext(), R.attr.ic_doc_reactivate));
 			}
-		} else {																//	Default
+		}
+		//	For All
+		if(label == null) {														//	Default
 			label = getResources().getString(R.string.ACTION_Prepare);
 			img = getResources().getDrawable(R.drawable.doc_progress_m);
 		}

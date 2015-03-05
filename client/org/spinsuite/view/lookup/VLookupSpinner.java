@@ -130,7 +130,7 @@ public class VLookupSpinner extends GridField
 				Object value = getValueAtPosition(position);
 				//	Set Context
 				DisplayType.setContextValue(getContext(), getActivityNo(), getTabNo(), m_field, value);
-                //	Listener
+				//	Listener
 				event();
 			}
 
@@ -203,6 +203,13 @@ public class VLookupSpinner extends GridField
 	 * @return void
 	 */
 	public void setValueNoReload(Object value) {
+		//	Valid 
+		Object m_CurrentValue = getValue();
+		if(value != null 
+					&& m_CurrentValue != null
+					&& value.equals(m_CurrentValue)) {
+			return;
+		}
 		//	Set Old Value
 		m_OldValue = getValue();
 		//	
@@ -224,6 +231,13 @@ public class VLookupSpinner extends GridField
 	@Override
 	public void setValue(Object value) {
 		//	Set Old Value
+		Object m_CurrentValue = getValue();
+		if(value != null 
+					&& m_CurrentValue != null
+					&& value.equals(m_CurrentValue)) {
+			return;
+		}
+		//	Save Old Value
 		m_OldValue = getValue();
 		//	
 		if(value == null) {

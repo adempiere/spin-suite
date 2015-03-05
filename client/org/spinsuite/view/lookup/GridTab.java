@@ -574,6 +574,7 @@ public class GridTab implements Evaluatee {
     /**
      * valid and save data
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/02/2014, 14:07:20
+     * @see https://adempiere.atlassian.net/browse/SPIN-5
      * @return
      * @return boolean
      */
@@ -597,6 +598,10 @@ public class GridTab implements Evaluatee {
     			ok = false;
     			break;
     		}
+    		//	Changed
+    		if(!vField.isChanged()
+    				&& !(vField instanceof VLookupSpinner))
+    			continue;
     		//	Set to model
     		model.set_Value(vField.getColumnName(), vField.getValue());
 			//	Set on Context
@@ -769,6 +774,7 @@ public class GridTab implements Evaluatee {
 					&& m_Record_ID.length > 1)
 				model.loadData(m_Record_ID, m_KeyColums);
 		}
+		//	For null
 		if(model == null) {
     		return false;
     	}
