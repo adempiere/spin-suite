@@ -115,7 +115,8 @@ public class POInfoColumn implements Parcelable {
 	public int 			AD_Process_ID;
 	/**	Form ID			*/
 	public int 			AD_Form_ID;
-	
+	/**	Allow Logging		*/
+	public boolean		IsAllowLogging;
 	
 	/**
 	 * Is Column SQL
@@ -177,6 +178,7 @@ public class POInfoColumn implements Parcelable {
 		dest.writeString(InfoFactoryClass);
 		dest.writeInt(AD_Process_ID);
 		dest.writeInt(AD_Form_ID);
+		dest.writeString(IsAllowLogging? "Y": "N");
 	}
 	
 	/**
@@ -228,6 +230,8 @@ public class POInfoColumn implements Parcelable {
 		InfoFactoryClass = parcel.readString();
 		AD_Process_ID = parcel.readInt();
 		AD_Form_ID = parcel.readInt();
+		bool = parcel.readString();
+		IsAllowLogging = (bool != null && bool.equals("Y"));
 	}
 	
 	@Override
@@ -253,7 +257,8 @@ public class POInfoColumn implements Parcelable {
 				+ SPS_Table_ID + ", ValueMax=" + ValueMax + ", ValueMin="
 				+ ValueMin + ", VFormat=" + VFormat 
 				+ ", InfoFactoryClass=" + InfoFactoryClass + ", AD_Process_ID="
-				+ AD_Process_ID + ", AD_Form_ID=" + AD_Form_ID + "]";
+				+ AD_Process_ID + ", AD_Form_ID=" + AD_Form_ID 
+				+ ", IsAllowLogging=" + IsAllowLogging +"]";
 	}
 
 }	//	POInfoColumn

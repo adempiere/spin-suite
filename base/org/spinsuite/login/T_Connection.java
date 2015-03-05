@@ -85,7 +85,7 @@ public class T_Connection extends Activity implements I_Login {
     	ch_SaveSD = (CheckBox) findViewById(R.id.ch_SaveSD);
     	
     	// Carlos Parada Setting Parameters for Spin-Suite Service Call 
-    	et_UrlSoap.setText("http://192.168.20.71:8081/ADInterface/services/SpinSuiteService");
+    	et_UrlSoap.setText("http://192.168.254.5:8081/ADInterface/services/SpinSuiteService");
     	et_NameSpace.setText("http://www.erpcya.com/");
     	et_Method.setText("InitialLoad");
     	//End Carlos Parada
@@ -443,21 +443,21 @@ public class T_Connection extends Activity implements I_Login {
 	public void startSynchronization(String p_User,String p_PassWord){
 		if (!p_User.equals("") && !p_PassWord.equals("")){
 			
-			Intent intent = new Intent(this, InitialLoadTask.class);
+			//Intent intent = new Intent(this, InitialLoadTask.class);
 			//intent.putExtra("act", new TestSerializable(this));
-			intent.putExtra("URL", et_UrlSoap.getText().toString());
-			intent.putExtra("NameSpace", et_NameSpace.getText().toString());
-			intent.putExtra("Method", et_Method.getText().toString());
-			intent.putExtra("IsNetService", true);
-			intent.putExtra("User", p_User);
-			intent.putExtra("SoapAction", et_NameSpace.getText().toString() + et_Method.getText().toString());
-			intent.putExtra("PassWord",p_PassWord);
-			intent.putExtra("Timeout", 0);
+			//intent.putExtra("URL", et_UrlSoap.getText().toString());
+			//intent.putExtra("NameSpace", et_NameSpace.getText().toString());
+			//intent.putExtra("Method", et_Method.getText().toString());
+			//intent.putExtra("IsNetService", true);
+			//intent.putExtra("User", p_User);
+			//intent.putExtra("SoapAction", et_NameSpace.getText().toString() + et_Method.getText().toString());
+			//intent.putExtra("PassWord",p_PassWord);
+			//intent.putExtra("Timeout", 0);
 			
 			//m_Conn =p_Conn;
 			//m_Timeout = intent.getIntExtra("Timeout",0);
-			startService(intent);
-    		/*InitialLoadTask ilt = new InitialLoadTask(et_UrlSoap.getText().toString(), 
+			//startService(intent);
+    		InitialLoadTask ilt = new InitialLoadTask(et_UrlSoap.getText().toString(), 
     													et_NameSpace.getText().toString(), 
     														et_Method.getText().toString(), 
     															true, 
@@ -469,7 +469,6 @@ public class T_Connection extends Activity implements I_Login {
     		
     		
     		ilt.runTask();
-    		*/
     		/*
     		 * 
 			InitialLoad il = new InitialLoad(et_UrlSoap.getText().toString(), 

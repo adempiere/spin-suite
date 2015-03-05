@@ -30,6 +30,11 @@ import android.util.Log;
  * @author Yamel Senih
  *
  */
+/**
+* @contributor Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com
+*  	<li>Add Support to Log for Mobile
+*  	@see https://adempiere.atlassian.net/browse/SPIN-6
+**/
 public class POInfo {
 	
 	/**
@@ -72,6 +77,8 @@ public class POInfo {
 	private String[]			m_keyColumns 		= null;
 	/**	Has Primary Key			*/
 	private String 				hasPrimaryKey 		= null;
+	/** Change Log*/
+	private boolean 			m_IsChangeLog		= false;
 	/**
 	 * Load Column Information
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/02/2014, 21:54:17
@@ -92,6 +99,7 @@ public class POInfo {
 					"t.SPS_Table_ID, " +
 					"t.TableName, " +
 					"t.IsDeleteable, " +
+					"t.IsChangeLog, " +
 					"c.AD_Element_ID, " +
 					"c.AD_Reference_ID, " +
 					"c.AD_Reference_Value_ID, " +
@@ -120,7 +128,9 @@ public class POInfo {
 					"c.ValueMax, " +
 					"c.ValueMin, " +
 					"c.VFormat, " + 
-					"c.InfoFactoryClass ");
+					"c.InfoFactoryClass, " +
+					"c.IsAllowLogging "
+					);
 			//	From
 			sql.append("FROM SPS_Table t " +
 					"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) ");
@@ -129,6 +139,7 @@ public class POInfo {
 					"t.SPS_Table_ID, " +
 					"t.TableName, " +
 					"t.IsDeleteable, " +
+					"t.IsChangeLog, " +
 					"c.AD_Element_ID, " +
 					"c.AD_Reference_ID, " +
 					"c.AD_Reference_Value_ID, " +
@@ -157,7 +168,8 @@ public class POInfo {
 					"c.ValueMax, " +
 					"c.ValueMin, " +
 					"c.VFormat, " + 
-					"c.InfoFactoryClass ");
+					"c.InfoFactoryClass, "+
+					"c.IsAllowLogging ");
 			//	From
 			sql.append("FROM SPS_Table t " +
 					"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) " +
@@ -187,7 +199,8 @@ public class POInfo {
 			int i = 0;
 			m_SPS_Table_ID 	= rs.getInt(i++);
 			m_TableName 	= rs.getString(i++);
-			m_IsDeleteable	= "Y".equals(rs.getString(i++));
+			m_IsDeleteable	= Env.booleanValue(rs.getString(i++));
+			m_IsChangeLog = Env.booleanValue(rs.getString(i++));
 			do{
 				POInfoColumn iColumn = new POInfoColumn();
 				iColumn.SPS_Table_ID = m_SPS_Table_ID;
@@ -203,15 +216,15 @@ public class POInfo {
 				iColumn.EntityType = rs.getString(i++);
 				iColumn.FieldLength = rs.getInt(i++);
 				iColumn.FormatPattern = rs.getString(i++);
-				iColumn.IsAlwaysUpdateable = rs.getString(i++).equals("Y");
-				iColumn.IsCentrallyMaintained = rs.getString(i++).equals("Y");
-				iColumn.IsEncrypted= rs.getString(i++).equals("Y");
-				iColumn.IsIdentifier= rs.getString(i++).equals("Y");
-				iColumn.IsKey= rs.getString(i++).equals("Y");
-				iColumn.IsMandatory= rs.getString(i++).equals("Y");
-				iColumn.IsParent= rs.getString(i++).equals("Y");
-				iColumn.IsSelectionColumn= rs.getString(i++).equals("Y");
-				iColumn.IsUpdateable= rs.getString(i++).equals("Y");
+				iColumn.IsAlwaysUpdateable = Env.booleanValue(rs.getString(i++));
+				iColumn.IsCentrallyMaintained = Env.booleanValue(rs.getString(i++));
+				iColumn.IsEncrypted= Env.booleanValue(rs.getString(i++));
+				iColumn.IsIdentifier= Env.booleanValue(rs.getString(i++));
+				iColumn.IsKey= Env.booleanValue(rs.getString(i++));
+				iColumn.IsMandatory= Env.booleanValue(rs.getString(i++));
+				iColumn.IsParent= Env.booleanValue(rs.getString(i++));
+				iColumn.IsSelectionColumn= Env.booleanValue(rs.getString(i++));
+				iColumn.IsUpdateable= Env.booleanValue(rs.getString(i++));
 				iColumn.Name = rs.getString(i++);
 				iColumn.SelectionSeqNo = rs.getInt(i++);
 				iColumn.SeqNo = rs.getInt(i++);
@@ -220,10 +233,10 @@ public class POInfo {
 				iColumn.ValueMin = rs.getString(i++);
 				iColumn.VFormat = rs.getString(i++);
 				iColumn.InfoFactoryClass = rs.getString(i++);
+				iColumn.IsAllowLogging = Env.booleanValue(rs.getString(i++));
 				//Log.i("m_IsAlwaysUpdateable", " - " + m_ColumnName + " = " + m_IsAlwaysUpdateable);
-				
 				columns.add(iColumn);
-				i = 3;
+				i = 4;
 				//	Seek in Column SQL
 				if(iColumn.isColumnSQL())
 					m_CountColumnSQL ++;
@@ -796,5 +809,27 @@ public class POInfo {
 		}
 		sql.append(" FROM ").append(getTableName());
 		return sql;
+	}
+	
+	/**
+	 * Add Support to Log for Mobile 
+	 * @param index
+	 *            index
+	 * @return true if column is allowed to be logged
+	 */
+	public boolean isAllowLogging(int index) {
+		if (index < 0 || index >= m_columns.length)
+			return false;
+		return m_columns[index].IsAllowLogging;
+	} // isAllowLogging
+	
+	/**
+	 * Add Support to Log for Mobile
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 2/3/2015, 18:43:31
+	 * @return
+	 * @return boolean
+	 */
+	public boolean IsChangeLog(){
+		return m_IsChangeLog;
 	}
 }

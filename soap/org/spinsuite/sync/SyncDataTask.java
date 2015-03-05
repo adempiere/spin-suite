@@ -37,6 +37,9 @@ public class SyncDataTask implements BackGroundProcess  {
 	
 	/** Web Service Method Query Data*/
 	public static final String WSMQueryData = "queryData"; 
+	
+	/** Web Service Method Create Data*/
+	public static final String WSMCreateData = "createData"; 
 
 	/** IS Net Web Service*/
 	public static final boolean IsNetService = true;
@@ -103,8 +106,6 @@ public class SyncDataTask implements BackGroundProcess  {
 		// TODO Auto-generated constructor stub
 		m_SPS_SyncMenu_ID = p_SPS_SyncMenu_ID;
 		ctx = p_ctx;
-		conn = new DB(ctx);
-		conn.openDB(DB.READ_WRITE);
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build(); 
         StrictMode.setThreadPolicy(policy);
         
@@ -149,11 +150,16 @@ public class SyncDataTask implements BackGroundProcess  {
 	@Override
 	public Object run() {
 		try{
-		syncData(m_SPS_SyncMenu_ID,0);
-		conn.close();
+			conn = new DB(ctx);
+			conn.openDB(DB.READ_WRITE);
+			syncData(m_SPS_SyncMenu_ID,0);
 		}
 		catch(Exception e){
 			e.printStackTrace();
+		}
+		finally{
+			conn.close();
+			conn = null;
 		}
 		return null;
 	}
@@ -187,21 +193,22 @@ public class SyncDataTask implements BackGroundProcess  {
 			if (soapResponse != null && soapResponse.hasAttribute(SyncDataTask.WSQtyPages))
 				qtyPages = Integer.parseInt(soapResponse.getAttributeAsString(SyncDataTask.WSQtyPages));
 			
+			//Run Query Data Web Service
 			if (m_MethodValue.equals(SyncDataTask.WSMQueryData)){
 				while (currentPage <= qtyPages){
-
 					writeDB(syncm);
-					
 					if (currentPage != qtyPages){
 						param= getSoapParam(syncm,currentPage);
 						callWebService(param,syncm);
 					}
-					
 					currentPage++;
-						
-					
 				}
 			}
+			//Run Create Data Web Service
+			else if (m_MethodValue.equals(SyncDataTask.WSMCreateData)){
+				
+			}
+			
 		}
 		
 		//Run Script After Call Web Service 
@@ -239,10 +246,15 @@ public class SyncDataTask implements BackGroundProcess  {
 		if (wst.getWS_WebServiceMethod_ID()!=0){
 			X_WS_WebServiceMethod wsm =	new X_WS_WebServiceMethod(ctx, wst.getWS_WebServiceMethod_ID(), conn);
 			//Web Service Query Data
-			if (wsm.getValue() != null)
+			if (wsm.getValue() != null){
+				
 				m_MethodValue = wsm.getValue();
-				if(m_MethodValue.equals(SyncDataTask.WSMQueryData)){
+				
+				if(m_MethodValue.equals(SyncDataTask.WSMQueryData))
 					param = getSoapParamQueryData(sm, wst, PageNo);
+				else if (m_MethodValue.equals(SyncDataTask.WSMCreateData)){
+					param = getSoapParamCreateData(sm, wst);
+				}
 			}
 		}
 		 
@@ -263,6 +275,31 @@ public class SyncDataTask implements BackGroundProcess  {
 		
 		whereClause = "";//sm.getWhereClause();
 		param = new WSModelCRUDRequest(ctx, m_NameSpace, wst.getWS_WebServiceType_ID(), conn, null, null, whereClause,PageNo);
+		
+		return param;
+	}
+	
+	/**
+	 * 
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 3/3/2015, 1:33:02
+	 * @param sm
+	 * @param wst
+	 * @param PageNo
+	 * @return
+	 * @return SoapObject
+	 */
+	private SoapObject getSoapParamCreateData(MSPSSyncMenu sm,MWSWebServiceType wst) {
+		SoapObject param = null;
+		StringBuffer sql = new StringBuffer();
+		
+		
+		if (sm.getSPS_Table_ID()!=0){
+			/*sql.append("SELECT * FROM "
+					+ "" + )
+			sm.getSPS_Table_ID()*/
+		}
+			
+		param = new WSModelCRUDRequest(ctx, m_NameSpace, wst.getWS_WebServiceType_ID(), conn, null, null, null,0);
 		
 		return param;
 	}

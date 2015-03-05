@@ -2070,6 +2070,19 @@ public final class Env {
 		return typedValueAttr;
 	}
 	
+	/**
+	 * Return boolean Value for Yes/No Field
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 27/2/2015, 0:02:31
+	 * @param value
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean booleanValue(String value){
+		if (value == null)
+			return false;
+		return value.equals("Y");
+	}
+	
 	/**************************************************************************
 	 *  Application Context
 	 */
