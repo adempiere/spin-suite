@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.interfaces;
 
@@ -20,20 +20,20 @@ import org.spinsuite.util.TabParameter;
 import android.view.KeyEvent;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public interface I_DynamicTab {
 	/**
 	 * Handle Tab Menu
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/04/2014, 08:45:42
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/04/2014, 08:45:42
 	 * @return void
 	 */
 	public void handleMenu();
 	
 	/**
 	 * Get Tab Parameter
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/04/2014, 08:48:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/04/2014, 08:48:26
 	 * @return
 	 * @return TabParameter
 	 */
@@ -41,7 +41,7 @@ public interface I_DynamicTab {
 	
 	/**
 	 * Set Tab Parameters
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/04/2014, 13:49:58
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/04/2014, 13:49:58
 	 * @param tabParam
 	 * @return void
 	 */
@@ -49,7 +49,7 @@ public interface I_DynamicTab {
 	
 	/**
 	 * Refresh when parent yet changed
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/04/2014, 14:22:52
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/04/2014, 14:22:52
 	 * @param reQuery
 	 * @return boolean
 	 */
@@ -57,7 +57,7 @@ public interface I_DynamicTab {
 	
 	/**
 	 * Save Data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 06/05/2014, 23:01:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 06/05/2014, 23:01:26
 	 * @return
 	 * @return boolean
 	 */
@@ -65,7 +65,7 @@ public interface I_DynamicTab {
 	
 	/**
 	 * On Key Down
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/04/2014, 15:47:28
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/04/2014, 15:47:28
 	 * @param keyCode
 	 * @param event
 	 * @return
@@ -75,7 +75,7 @@ public interface I_DynamicTab {
 	
 	/**
 	 * Verify if is Modifying
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/09/2014, 11:34:45
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/09/2014, 11:34:45
 	 * @return
 	 * @return boolean
 	 */
@@ -83,7 +83,7 @@ public interface I_DynamicTab {
 	
 	/**
 	 * Set Is Parent Modifyin
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/09/2014, 19:03:46
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/09/2014, 19:03:46
 	 * @param isParentModifying
 	 * @return void
 	 */

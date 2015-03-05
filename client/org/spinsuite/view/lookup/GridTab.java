@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
@@ -35,7 +35,7 @@ import android.content.Context;
 
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class GridTab implements Evaluatee {
@@ -46,7 +46,7 @@ public class GridTab implements Evaluatee {
 	 * @param m_ctx
 	 * @param m_TabParam
 	 * @param m_TabInfo
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 11:47:36
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 11:47:36
 	 */
 	public GridTab(Context m_ctx, TabParameter m_TabParam, InfoTab m_TabInfo, DB conn) {
 		this.m_ctx = m_ctx;
@@ -96,7 +96,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Add Field to Grid Tab
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 11:48:33
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 11:48:33
 	 * @param v_lookup
 	 * @return void
 	 */
@@ -129,7 +129,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Get Value from key
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 11:55:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 11:55:03
 	 * @param columnName
 	 * @return
 	 * @return Object
@@ -145,7 +145,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Get Value As String
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 13:42:05
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 13:42:05
 	 * @param columnName
 	 * @return
 	 * @return String
@@ -161,7 +161,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Get Value As Boolean
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 13:42:58
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 13:42:58
 	 * @param columnName
 	 * @return
 	 * @return boolean
@@ -177,7 +177,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Get Value As Integer
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 13:43:27
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 13:43:27
 	 * @param columnName
 	 * @return
 	 * @return int
@@ -193,7 +193,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Set Value to Field
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/05/2014, 10:02:12
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/05/2014, 10:02:12
 	 * @param columnName
 	 * @param value
 	 * @return void
@@ -209,7 +209,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Get Field from Column Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 15/10/2014, 19:29:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 15/10/2014, 19:29:56
 	 * @param columnName
 	 * @return
 	 * @return GridField
@@ -226,7 +226,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Set Value to Field
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/05/2014, 10:03:48
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/05/2014, 10:03:48
 	 * @param mField
 	 * @param value
 	 * @return void
@@ -242,7 +242,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Get Fields
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 13:45:47
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 13:45:47
 	 * @return
 	 * @return ArrayList<GridField>
 	 */
@@ -252,7 +252,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Is Empty
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 13:48:18
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 13:48:18
 	 * @return
 	 * @return boolean
 	 */
@@ -262,7 +262,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Is Processed
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 15:04:07
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 15:04:07
 	 * @return
 	 * @return boolean
 	 */
@@ -371,7 +371,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Load Data from Model
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 13:55:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 13:55:23
 	 * @param model
 	 * @return boolean
 	 */
@@ -424,7 +424,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Reload depending fields
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/08/2014, 20:39:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 30/08/2014, 20:39:26
 	 * @param m_FieldChanged
 	 * @return void
 	 */
@@ -462,7 +462,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Change Display Logic
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 06/09/2014, 14:27:59
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 06/09/2014, 14:27:59
 	 * @param m_FieldChanged
 	 * @return void
 	 */
@@ -492,7 +492,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Prepare data for New
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:44:34
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 17:44:34
 	 * @return void
 	 */
 	public void dataNew() {
@@ -514,7 +514,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Prepare Data for Modify
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:49:00
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 17:49:00
 	 * @return void
 	 */
 	public void dataModify() {
@@ -545,7 +545,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Prepare data for Deleted
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:50:27
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 17:50:27
 	 * @return void
 	 */
 	public void dataDeleted() {
@@ -556,7 +556,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Prepare data for See
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 17:54:35
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 17:54:35
 	 * @param m_IsReadWrite
 	 * @return void
 	 */
@@ -573,7 +573,8 @@ public class GridTab implements Evaluatee {
 	
     /**
      * valid and save data
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/02/2014, 14:07:20
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/02/2014, 14:07:20
+     * @see https://adempiere.atlassian.net/browse/SPIN-5
      * @return
      * @return boolean
      */
@@ -597,6 +598,10 @@ public class GridTab implements Evaluatee {
     			ok = false;
     			break;
     		}
+    		//	Changed
+    		if(!vField.isChanged()
+    				&& !(vField instanceof VLookupSpinner))
+    			continue;
     		//	Set to model
     		model.set_Value(vField.getColumnName(), vField.getValue());
 			//	Set on Context
@@ -617,7 +622,7 @@ public class GridTab implements Evaluatee {
     
     /**
      * Save only model
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/08/2014, 16:51:48
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 29/08/2014, 16:51:48
      * @return
      * @return boolean
      */
@@ -645,7 +650,7 @@ public class GridTab implements Evaluatee {
     
     /**
      * Get Record Identifier
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 21:42:37
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 21:42:37
      * @return
      * @return int
      */
@@ -655,7 +660,7 @@ public class GridTab implements Evaluatee {
     
     /**
      * Get Keys ID
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:43:09
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 13:43:09
      * @return
      * @return int[]
      */
@@ -665,7 +670,7 @@ public class GridTab implements Evaluatee {
     
     /**
      * Get Key Columns
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:50:44
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 13:50:44
      * @return
      * @return String[]
      */
@@ -678,7 +683,7 @@ public class GridTab implements Evaluatee {
     
     /**
      * Get Parent Record Identifier
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 21:58:49
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 21:58:49
      * @return
      * @return int
      */
@@ -688,7 +693,7 @@ public class GridTab implements Evaluatee {
     
     /**
      * Get Table Identifier
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/10/2014, 22:55:45
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/10/2014, 22:55:45
      * @return
      * @return int
      */
@@ -701,7 +706,7 @@ public class GridTab implements Evaluatee {
     
     /**
      * Refresh
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:36:09
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 13:36:09
      * @param record_ID
      * @param keyColumn
      * @param parentChanged
@@ -736,7 +741,7 @@ public class GridTab implements Evaluatee {
     
     /**
      * Refresh
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/10/2014, 13:53:10
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/10/2014, 13:53:10
      * @param record_ID
      * @param parentChanged
      * @return
@@ -748,7 +753,7 @@ public class GridTab implements Evaluatee {
     
     /**
      * Load Persistence Object
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 17/05/2014, 11:03:25
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 17/05/2014, 11:03:25
      * @return
      * @return boolean
      */
@@ -769,6 +774,7 @@ public class GridTab implements Evaluatee {
 					&& m_Record_ID.length > 1)
 				model.loadData(m_Record_ID, m_KeyColums);
 		}
+		//	For null
 		if(model == null) {
     		return false;
     	}
@@ -781,7 +787,7 @@ public class GridTab implements Evaluatee {
     
     /**
      * Get PO
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 21:53:39
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 21:53:39
      * @return
      * @return PO
      */
@@ -791,7 +797,7 @@ public class GridTab implements Evaluatee {
     
     /**
      * Back to Copy
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 22:03:26
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 22:03:26
      * @return void
      */
     public void backCopy() {
@@ -802,7 +808,7 @@ public class GridTab implements Evaluatee {
     
     /**
      * Delete Record
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 22:06:15
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 22:06:15
      * @return boolean
      */
     public boolean delete() {
@@ -817,7 +823,7 @@ public class GridTab implements Evaluatee {
     
     /**
      * Get Error
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 22:07:12
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 22:07:12
      * @return
      * @return String
      */
@@ -827,7 +833,7 @@ public class GridTab implements Evaluatee {
     
     /**
      * Copy Values
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 22:08:57
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/05/2014, 22:08:57
      * @param deleteOld
      * @return void
      */
@@ -837,7 +843,7 @@ public class GridTab implements Evaluatee {
     
     /**
      * Get Is Deleteable
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/09/2014, 19:52:21
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/09/2014, 19:52:21
      * @return
      * @return boolean
      */
@@ -866,7 +872,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Add Dependent
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/09/2014, 16:05:38
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/09/2014, 16:05:38
 	 * @param key
 	 * @param m_Field
 	 * @return void
@@ -882,7 +888,7 @@ public class GridTab implements Evaluatee {
 	
 	/**
 	 * Get Context
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/10/2014, 21:05:41
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/10/2014, 21:05:41
 	 * @return
 	 * @return Context
 	 */

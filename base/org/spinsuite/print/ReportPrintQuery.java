@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.print;
 
@@ -31,7 +31,7 @@ import org.spinsuite.view.lookup.Lookup;
 import android.content.Context;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class ReportPrintQuery {
@@ -39,7 +39,7 @@ public class ReportPrintQuery {
 	/**
 	 * With Criteria
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/03/2014, 16:40:47
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/03/2014, 16:40:47
 	 * @param ctx
 	 * @param m_AD_PrintFormat_ID
 	 * @param conn
@@ -90,7 +90,7 @@ public class ReportPrintQuery {
 	
 	/**
 	 * Get Table Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/03/2014, 17:45:06
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/03/2014, 17:45:06
 	 * @return
 	 * @return String
 	 */
@@ -100,7 +100,7 @@ public class ReportPrintQuery {
 	
 	/**
 	 * Get Report SQL
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 12:09:46
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 12:09:46
 	 * @param whereClause
 	 * @return
 	 * @return String
@@ -117,7 +117,7 @@ public class ReportPrintQuery {
 	
 	/**
 	 * Get Report Information
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 12:10:32
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 12:10:32
 	 * @return
 	 * @return InfoReport
 	 */
@@ -127,7 +127,7 @@ public class ReportPrintQuery {
 	
 	/**
 	 * Contain a where
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 12:11:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 12:11:23
 	 * @return
 	 * @return boolean
 	 */
@@ -138,7 +138,7 @@ public class ReportPrintQuery {
 	
 	/**
 	 * Get Column Quantity
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 15:34:24
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 15:34:24
 	 * @return
 	 * @return int
 	 */
@@ -148,7 +148,7 @@ public class ReportPrintQuery {
 	
 	/**
 	 * Get Columns
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 15:44:47
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 15:44:47
 	 * @return
 	 * @return InfoReportField[]
 	 */
@@ -160,7 +160,7 @@ public class ReportPrintQuery {
 	
 	/**
 	 * Load Query for report
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 21:41:02
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 21:41:02
 	 * @param hasWhereClause
 	 * @return void
 	 */
@@ -259,7 +259,7 @@ public class ReportPrintQuery {
 	
 	/**
 	 * Get Lookup Column from Field
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 25/03/2014, 00:01:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 25/03/2014, 00:01:26
 	 * @param tableName
 	 * @param field
 	 * @param lookup
@@ -287,7 +287,7 @@ public class ReportPrintQuery {
 	
 	/**
 	 * Get Lookup Column Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 20:33:33
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 20:33:33
 	 * @param tableAlias
 	 * @param field
 	 * @return
@@ -302,7 +302,7 @@ public class ReportPrintQuery {
 	
 	/**
 	 * Add Jo to from
-	 * @authoinr <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 24/03/2014, 21:11:45
+	 * @authoinr Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/03/2014, 21:11:45
 	 * @param linkColumn
 	 * @param lookup
 	 * @param isMandatory

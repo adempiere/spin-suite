@@ -24,7 +24,7 @@ import java.util.Date;
  *
  *  @author Jorg Janke
  *  @version $Id: ProcessInfoLog.java,v 1.3 2006/07/30 00:54:44 jjanke Exp $
- *  @contributor <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/03/2014, 21:35:17
+ *  @contributor Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/03/2014, 21:35:17
  *  	* Add support to mobile
  */
 public class ProcessInfoLog {

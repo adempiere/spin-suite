@@ -16,7 +16,6 @@
 package org.spinsuite.model;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.logging.Level;
 
@@ -62,7 +61,11 @@ public class CalloutOrder extends CalloutEngine {
 		//	Re-Create new DocNo, if there is a doc number already
 		//	and the existing source used a different Sequence number
 		String oldDocNo = (String)mTab.getValue("DocumentNo");
-		boolean newDocNo = (oldDocNo == null);
+		boolean newDocNo = false;
+		if(oldDocNo == null) {
+			oldDocNo = "";
+			newDocNo = true;
+		}
 		if (!newDocNo && oldDocNo.startsWith("<") && oldDocNo.endsWith(">"))
 			newDocNo = true;
 		Integer oldC_DocType_ID = (Integer)mTab.getValue("C_DocType_ID");
@@ -892,7 +895,7 @@ public class CalloutOrder extends CalloutEngine {
 			pp.setM_PriceList_ID(M_PriceList_ID);
 			int M_PriceList_Version_ID = Env.getContextAsInt(ctx, WindowNo, "M_PriceList_Version_ID");
 			pp.setM_PriceList_Version_ID(M_PriceList_Version_ID);
-			Timestamp date = (Timestamp)mTab.getValue("DateOrdered");
+			Date date = (Date)mTab.getValue("DateOrdered");
 			pp.setPriceDate(date);
 			//
 			PriceEntered = MUOMConversion.convertProductFrom (ctx, M_Product_ID, 

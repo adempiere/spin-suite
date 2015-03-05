@@ -27,7 +27,7 @@ import android.content.Context;
  *	
  *  @author Jorg Janke
  *  @version $Id: DocAction.java,v 1.3 2006/07/30 00:54:44 jjanke Exp $
- *  @contributor <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 2014-05-03, 11:14:56
+ *  @contributor Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 2014-05-03, 11:14:56
  *  	Add Support to Mobile System
  */
 public interface DocAction
@@ -230,7 +230,7 @@ public interface DocAction
 	
 	/**
 	 * Get Document Type
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/09/2014, 12:20:54
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/09/2014, 12:20:54
 	 * @return
 	 * @return int
 	 */

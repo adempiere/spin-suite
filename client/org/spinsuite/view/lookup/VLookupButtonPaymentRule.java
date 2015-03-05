@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
@@ -27,14 +27,14 @@ import android.util.AttributeSet;
 import android.view.View;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class VLookupButtonPaymentRule extends VLookupButton {
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/05/2014, 10:43:57
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/05/2014, 10:43:57
 	 * @param activity
 	 */
 	public VLookupButtonPaymentRule(Activity activity) {
@@ -43,7 +43,7 @@ public class VLookupButtonPaymentRule extends VLookupButton {
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/05/2014, 10:43:57
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/05/2014, 10:43:57
 	 * @param activity
 	 * @param attrs
 	 */
@@ -53,7 +53,7 @@ public class VLookupButtonPaymentRule extends VLookupButton {
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/05/2014, 10:43:57
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/05/2014, 10:43:57
 	 * @param activity
 	 * @param attrs
 	 * @param defStyle
@@ -65,7 +65,7 @@ public class VLookupButtonPaymentRule extends VLookupButton {
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/05/2014, 10:43:57
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/05/2014, 10:43:57
 	 * @param activity
 	 * @param m_field
 	 */
@@ -76,7 +76,7 @@ public class VLookupButtonPaymentRule extends VLookupButton {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/10/2014, 21:11:25
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 11/10/2014, 21:11:25
 	 * @param activity
 	 * @param m_field
 	 * @param tabParam
@@ -168,7 +168,7 @@ public class VLookupButtonPaymentRule extends VLookupButton {
 	
 	/**
 	 * Listener
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/05/2014, 08:41:28
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 20/05/2014, 08:41:28
 	 * @return void
 	 */
 	private void event() {
@@ -182,7 +182,7 @@ public class VLookupButtonPaymentRule extends VLookupButton {
 	
 	/**
 	 * Update Display
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/05/2012, 13:51:54
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 11/05/2012, 13:51:54
 	 * @param actionItem
 	 * @return void
 	 */
@@ -194,7 +194,7 @@ public class VLookupButtonPaymentRule extends VLookupButton {
 	
 	/**
 	 * Set Payment Rule
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/05/2012, 00:35:12
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/05/2012, 00:35:12
 	 * @param paymentRule
 	 * @return void
 	 */
@@ -241,7 +241,7 @@ public class VLookupButtonPaymentRule extends VLookupButton {
 	
 	/**
 	 * Get Payment Rule
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/05/2012, 00:43:16
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/05/2012, 00:43:16
 	 * @return
 	 * @return String
 	 */

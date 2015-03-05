@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2012 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view.custom;
 
@@ -196,7 +196,7 @@ public class Cust_Spinner extends Spinner {
 		
 	/**
 	 * Load data from ArrayList
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/02/2013, 17:34:13
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 07/02/2013, 17:34:13
 	 * @param data
 	 * @return void
 	 */
@@ -348,7 +348,7 @@ public class Cust_Spinner extends Spinner {
 	
 	/**
 	 * get Position from value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/02/2013, 17:15:43
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 07/02/2013, 17:15:43
 	 * @param value
 	 * @return
 	 * @return int
@@ -367,7 +367,7 @@ public class Cust_Spinner extends Spinner {
 	
 	/**
 	 * Get position from hidden value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/02/2013, 17:15:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 07/02/2013, 17:15:56
 	 * @param hiddenValue
 	 * @return
 	 * @return int
@@ -386,7 +386,7 @@ public class Cust_Spinner extends Spinner {
 	
 	/**
 	 * Select a Item from Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/02/2013, 17:22:54
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 07/02/2013, 17:22:54
 	 * @param value
 	 * @return void
 	 */
@@ -397,7 +397,7 @@ public class Cust_Spinner extends Spinner {
 	
 	/**
 	 * Selected a Item from Hidden Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/02/2013, 17:24:07
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 07/02/2013, 17:24:07
 	 * @param hiddenValue
 	 * @return void
 	 */

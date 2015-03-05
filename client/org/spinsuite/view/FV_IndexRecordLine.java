@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view;
 
@@ -57,7 +57,7 @@ public class FV_IndexRecordLine extends ListFragment
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/04/2014, 17:42:27
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/04/2014, 17:42:27
 	 */
     public FV_IndexRecordLine(){
     	
@@ -90,7 +90,7 @@ public class FV_IndexRecordLine extends ListFragment
     
     /**
      * Load List
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 01/04/2014, 21:11:36
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/04/2014, 21:11:36
      * @return
      * @return boolean
      */
@@ -158,7 +158,7 @@ public class FV_IndexRecordLine extends ListFragment
     
     /**
      * Select first record
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/10/2014, 17:56:40
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/10/2014, 17:56:40
      * @return void
      */
     public void selectFirst() {
@@ -175,7 +175,7 @@ public class FV_IndexRecordLine extends ListFragment
     
     /**
      * Select Index
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 02/04/2014, 10:21:07
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/04/2014, 10:21:07
      * @param record_ID
      * @return void
      */

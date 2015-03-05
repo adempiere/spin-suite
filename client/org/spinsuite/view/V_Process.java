@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view;
 
@@ -92,7 +92,7 @@ import android.widget.TextView;
 import com.itextpdf.text.DocumentException;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class V_Process extends Activity {
@@ -239,7 +239,7 @@ public class V_Process extends Activity {
 	
 	/**
      * Load Drawer
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/03/2014, 09:23:22
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 14/03/2014, 09:23:22
      * @return void
      */
     protected void loadDrawer(){
@@ -280,7 +280,7 @@ public class V_Process extends Activity {
     
     /**
      * On Selected Item
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/03/2014, 22:13:32
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 31/03/2014, 22:13:32
      * @param item
      * @return void
      */
@@ -312,7 +312,7 @@ public class V_Process extends Activity {
     
     /**
      * Load Drawer Option
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/03/2014, 17:45:08
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 14/03/2014, 17:45:08
      * @return void
      */
     private void loadDrawerOption(){
@@ -358,7 +358,7 @@ public class V_Process extends Activity {
     
     /**
      * Is Drawer Layout Open
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/03/2014, 10:32:25
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 16/03/2014, 10:32:25
      * @return
      * @return boolean
      */
@@ -370,7 +370,7 @@ public class V_Process extends Activity {
     
     /**
      * Get Drawer List
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/03/2014, 17:43:59
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 14/03/2014, 17:43:59
      * @return
      * @return ListView
      */
@@ -396,7 +396,7 @@ public class V_Process extends Activity {
 	
 	/**
 	 * Load Process Information
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/03/2014, 22:07:43
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/03/2014, 22:07:43
 	 * @return void
 	 */
 	private void loadProcessInfo(){
@@ -455,7 +455,7 @@ public class V_Process extends Activity {
 	
 	/**
 	 * Add View to Process Panel
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 18/03/2014, 22:10:08
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 18/03/2014, 22:10:08
 	 * @param field
 	 * @return void
 	 */
@@ -512,7 +512,7 @@ public class V_Process extends Activity {
 	
 	/**
 	 * Add Field Depending
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 4/10/2014, 15:26:50
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 4/10/2014, 15:26:50
 	 * @param m_Field
 	 * @return void
 	 */
@@ -542,7 +542,7 @@ public class V_Process extends Activity {
 	
 	/**
 	 * Change or reload depending fields
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 4/10/2014, 14:39:16
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 4/10/2014, 14:39:16
 	 * @param m_FieldChanged
 	 * @return void
 	 */
@@ -599,7 +599,7 @@ public class V_Process extends Activity {
 	
 	/**
 	 * Get Values from Parameters
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/03/2014, 17:05:03
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/03/2014, 17:05:03
 	 * @return
 	 * @return boolean
 	 */
@@ -752,7 +752,7 @@ public class V_Process extends Activity {
 	
 	/**
 	 * Load Print Format
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/03/2014, 11:29:18
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 31/03/2014, 11:29:18
 	 * @return
 	 */
 	private void loadPrintFormat(){
@@ -772,7 +772,7 @@ public class V_Process extends Activity {
 	
 	/**
 	 * Show Print Formats
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/03/2014, 11:57:26
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 31/03/2014, 11:57:26
 	 * @return void
 	 */
 	private void showPrintFormat(){
@@ -800,7 +800,7 @@ public class V_Process extends Activity {
 	
 	/**
 	 * Show Process Log
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 21/03/2014, 18:28:06
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 21/03/2014, 18:28:06
 	 * @return void
 	 */
 	private void showLog(){
@@ -829,7 +829,7 @@ public class V_Process extends Activity {
 	
 	/**
 	 * Search in Adapters
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/03/2014, 16:35:46
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 27/03/2014, 16:35:46
 	 * @param filter
 	 * @return void
 	 */
@@ -867,7 +867,7 @@ public class V_Process extends Activity {
 	
 	/**
 	 * Set Result to Activity
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/04/2014, 14:54:22
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/04/2014, 14:54:22
 	 * @return void
 	 */
 	private void setActivityResult(){
@@ -885,7 +885,7 @@ public class V_Process extends Activity {
 	
 	/**
 	 * Load Report
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 *
 	 */
 	private class LoadReportProcessTask extends AsyncTask<MenuItem, Void, Void> {
@@ -980,7 +980,7 @@ public class V_Process extends Activity {
 	
 	/**
 	 * Export Report Thread
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 *
 	 */
 	private class ExportReportTask extends AsyncTask<Integer, Void, Void> {
@@ -1036,7 +1036,7 @@ public class V_Process extends Activity {
 		
 		/**
 		 * Export Data
-		 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 09/09/2014, 20:32:19
+		 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 09/09/2014, 20:32:19
 		 * @param params
 		 * @return void
 		 */
@@ -1092,7 +1092,7 @@ public class V_Process extends Activity {
 		
 		/**
 	     * Share Report
-	     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 03/04/2014, 14:42:18
+	     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/04/2014, 14:42:18
 	     * @param position
 	     * @param printData
 	     * @return void

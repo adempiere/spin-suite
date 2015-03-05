@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
@@ -38,7 +38,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * 
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Mar 2, 2015, 2:54:43 AM
  *
  */
 public class VSearch extends LinearLayout 
@@ -47,7 +48,7 @@ public class VSearch extends LinearLayout
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/08/2012, 19:44:23
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param activity
 	 */
 	public VSearch(Activity activity) {
@@ -61,7 +62,7 @@ public class VSearch extends LinearLayout
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/03/2014, 21:49:47
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param activity
 	 * @param callback
 	 * @param m_field
@@ -79,7 +80,7 @@ public class VSearch extends LinearLayout
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/10/2014, 22:29:00
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param activity
 	 * @param m_field
 	 */
@@ -90,7 +91,7 @@ public class VSearch extends LinearLayout
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/08/2012, 19:44:18
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param activity
 	 * @param attrs
 	 */
@@ -117,7 +118,7 @@ public class VSearch extends LinearLayout
 	
     /**
      * Init
-     * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/03/2014, 21:07:21
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @return void
      */
     protected void init() {
@@ -141,8 +142,8 @@ public class VSearch extends LinearLayout
 	}
 	
 	/**
-	 * Set Criteria
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 07/08/2012, 20:07:26
+	 * Set Search Criteria
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param item
 	 * @return void
 	 */
@@ -152,8 +153,8 @@ public class VSearch extends LinearLayout
 	}
 	
 	/**
-	 * Update display
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/03/2014, 22:41:40
+	 * Update Display
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return void
 	 */
 	private void updateDisplay(){
@@ -161,10 +162,10 @@ public class VSearch extends LinearLayout
 	}
 	
 	/**
-	 * Get Display Record Iten
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/08/2012, 19:31:14
+	 * Get Display Record Item
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return
-	 * @return DisplayMenuItem
+	 * @return DisplayRecordItem
 	 */
 	public DisplayRecordItem getItem(){
 		return item;
@@ -174,6 +175,13 @@ public class VSearch extends LinearLayout
 	public void setEnabled(boolean enabled){
 		et_Search.setEnabled(enabled);
 		ib_Search.setEnabled(enabled);
+		if(enabled) {
+			et_Search.setTextColor(
+					getResources().getColor(R.color.lookup_text_read_write));
+		} else {
+			et_Search.setTextColor(
+					getResources().getColor(R.color.lookup_text_read_only));
+		}
 	}
 	
 	@Override
@@ -220,8 +228,8 @@ public class VSearch extends LinearLayout
 	}
 	
 	/**
-	 * Get Class from Class Name
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/10/2014, 11:28:26
+	 * Get Class from path
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param className
 	 * @return
 	 * @return Class<?>
@@ -238,7 +246,7 @@ public class VSearch extends LinearLayout
 	
 	/**
 	 * Get Record Identifier
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/05/2012, 17:57:52
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return
 	 * @return int
 	 */
@@ -250,7 +258,7 @@ public class VSearch extends LinearLayout
 	
 	/**
 	 * Get Keys
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/10/2014, 22:05:06
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return
 	 * @return int[]
 	 */
@@ -261,8 +269,8 @@ public class VSearch extends LinearLayout
 	}
 	
 	/**
-	 * Get Value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 10/05/2012, 17:59:10
+	 * Get Current Value
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return
 	 * @return String
 	 */

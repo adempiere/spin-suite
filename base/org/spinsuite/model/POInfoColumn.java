@@ -32,7 +32,7 @@ public class POInfoColumn implements Parcelable {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/03/2014, 08:45:49
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/03/2014, 08:45:49
 	 */
 	public POInfoColumn(){
 		
@@ -41,7 +41,7 @@ public class POInfoColumn implements Parcelable {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/03/2014, 08:45:55
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/03/2014, 08:45:55
 	 * @param parcel
 	 */
 	public POInfoColumn(Parcel parcel){
@@ -119,7 +119,7 @@ public class POInfoColumn implements Parcelable {
 	
 	/**
 	 * Is Column SQL
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/02/2014, 23:06:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/02/2014, 23:06:56
 	 * @return
 	 * @return boolean
 	 */
@@ -181,7 +181,7 @@ public class POInfoColumn implements Parcelable {
 	
 	/**
 	 * Read to Parcel
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 05/03/2014, 14:06:38
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/03/2014, 14:06:38
 	 * @param parcel
 	 * @return void
 	 */

@@ -10,8 +10,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
@@ -33,15 +33,17 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * 
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Mar 2, 2015, 2:46:58 AM
  *
  */
 public class VLookupSpinner extends GridField 
 								implements I_Lookup {
 
 	/**
+	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/02/2014, 08:27:59
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
 	 * @param m_field
 	 */
@@ -53,7 +55,7 @@ public class VLookupSpinner extends GridField
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 13/05/2014, 21:12:18
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
 	 * @param m_field
 	 * @param conn
@@ -66,10 +68,11 @@ public class VLookupSpinner extends GridField
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 09:48:47
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
 	 * @param m_field
 	 * @param tabParam
+	 * @param m_Lookup
 	 */
 	public VLookupSpinner(Context ctx, InfoField m_field, TabParameter tabParam, Lookup m_Lookup) {
 		super(ctx, m_field, tabParam);
@@ -83,7 +86,7 @@ public class VLookupSpinner extends GridField
 	/**
 	 * With Tab Parameter
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/05/2014, 14:00:56
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
 	 * @param m_field
 	 * @param tabParam
@@ -127,7 +130,7 @@ public class VLookupSpinner extends GridField
 				Object value = getValueAtPosition(position);
 				//	Set Context
 				DisplayType.setContextValue(getContext(), getActivityNo(), getTabNo(), m_field, value);
-                //	Listener
+				//	Listener
 				event();
 			}
 
@@ -151,8 +154,8 @@ public class VLookupSpinner extends GridField
 	}
 	
 	/**
-	 * Listener
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 20/05/2014, 08:41:28
+	 * Listener for event
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return void
 	 */
 	private void event(){
@@ -162,8 +165,8 @@ public class VLookupSpinner extends GridField
 	}
 	
 	/**
-	 * Get Position from value
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 16/03/2014, 11:32:32
+	 * Get position from value
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param value
 	 * @return
 	 * @return int
@@ -194,12 +197,19 @@ public class VLookupSpinner extends GridField
 	}
 
 	/**
-	 * Set Value and no reload
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/08/2014, 22:59:45
+	 * Set Value and not reload
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param value
 	 * @return void
 	 */
 	public void setValueNoReload(Object value) {
+		//	Valid 
+		Object m_CurrentValue = getValue();
+		if(value != null 
+					&& m_CurrentValue != null
+					&& value.equals(m_CurrentValue)) {
+			return;
+		}
 		//	Set Old Value
 		m_OldValue = getValue();
 		//	
@@ -221,6 +231,13 @@ public class VLookupSpinner extends GridField
 	@Override
 	public void setValue(Object value) {
 		//	Set Old Value
+		Object m_CurrentValue = getValue();
+		if(value != null 
+					&& m_CurrentValue != null
+					&& value.equals(m_CurrentValue)) {
+			return;
+		}
+		//	Save Old Value
 		m_OldValue = getValue();
 		//	
 		if(value == null) {
@@ -273,8 +290,8 @@ public class VLookupSpinner extends GridField
 	
 	
 	/**
-	 * Get Value at Position
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 14/05/2014, 14:21:55
+	 * Get value at position
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param position
 	 * @return
 	 * @return Object
@@ -333,8 +350,8 @@ public class VLookupSpinner extends GridField
 	}
 	
 	/**
-	 * 
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 19/05/2014, 08:44:34
+	 * Set Lookup
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param m_lookup
 	 * @return void
 	 */
@@ -343,8 +360,8 @@ public class VLookupSpinner extends GridField
 	}
 	
 	/**
-	 * Load data
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 30/08/2014, 21:08:47
+	 * Load Data
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param reQuery
 	 * @return void
 	 */

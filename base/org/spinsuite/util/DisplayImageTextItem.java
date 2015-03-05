@@ -11,7 +11,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.util;
 
@@ -19,14 +19,14 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 
 /**
- * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class DisplayImageTextItem extends DisplayRecordItem {
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 09:42:02
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 09:42:02
 	 */
 	public DisplayImageTextItem() {
 		super();
@@ -34,7 +34,7 @@ public class DisplayImageTextItem extends DisplayRecordItem {
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 09:42:02
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 09:42:02
 	 * @param pRecord_ID
 	 * @param pValue
 	 */
@@ -44,7 +44,7 @@ public class DisplayImageTextItem extends DisplayRecordItem {
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 09:42:02
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 09:42:02
 	 * @param pRecord_ID
 	 * @param pValue
 	 * @param pImageURL
@@ -56,7 +56,7 @@ public class DisplayImageTextItem extends DisplayRecordItem {
 	/**
 	 * With Image
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 09:57:36
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 09:57:36
 	 * @param pRecord_ID
 	 * @param pValue
 	 * @param m_Description
@@ -70,7 +70,7 @@ public class DisplayImageTextItem extends DisplayRecordItem {
 
 	/**
 	 * *** Constructor ***
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 09:42:02
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 09:42:02
 	 * @param parcel
 	 */
 	public DisplayImageTextItem(Parcel parcel) {
@@ -84,7 +84,7 @@ public class DisplayImageTextItem extends DisplayRecordItem {
 	
 	/**
 	 * Set Image
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 09:56:51
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 09:56:51
 	 * @param m_Image
 	 * @return void
 	 */
@@ -94,7 +94,7 @@ public class DisplayImageTextItem extends DisplayRecordItem {
 	
 	/**
 	 * Get Image
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 08/05/2014, 09:57:16
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 09:57:16
 	 * @return
 	 * @return ImageView
 	 */
