@@ -21,6 +21,7 @@ import org.spinsuite.adapters.MenuAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.login.Login;
+import org.spinsuite.model.MSession;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
@@ -43,6 +44,11 @@ import android.widget.ListView;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
+/**
+* @contributor Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com
+*  	<li>Add Support to Log for Mobile
+*  	@see https://adempiere.atlassian.net/browse/SPIN-6
+**/
 public class LV_Menu extends Activity {
 	
 	/**	List				*/
@@ -104,6 +110,9 @@ public class LV_Menu extends Activity {
 			}
         });
         
+        //Carlos Parada Add Support to Log for Mobile
+        MSession.get (this, true);
+        //End Carlos Parada
        
 	}
 	

@@ -89,6 +89,7 @@ public class MSPSSyncMenu extends X_SPS_SyncMenu{
 	    		} while(rs.moveToNext());
 			}
 		}catch (Exception e){
+			e.printStackTrace();
 			LogM.log(ctx, MSPSSyncMenu.class, Level.SEVERE, e.getLocalizedMessage(), e.getCause());
 		}
 		finally{
