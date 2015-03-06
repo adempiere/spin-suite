@@ -15,30 +15,24 @@
  *************************************************************************************/
 package org.spinsuite.login;
 
-import java.io.File;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
-import org.spinsuite.sync.InitialLoadTask;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
-import org.spinsuite.util.Msg;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -60,8 +54,6 @@ public class T_Connection extends Activity implements I_Login {
 	private EditText 	et_NameSpace;
 	/** Soap Object InitialLoad	*/
 	//private InitialLoad m_load ;
-	/**	Sync					*/
-	private Button 		butt_InitSync;
 	/**	Save data SD			*/
 	private CheckBox 	ch_SaveSD;
 	
@@ -83,15 +75,7 @@ public class T_Connection extends Activity implements I_Login {
     	sp_LogLevel = (Spinner) findViewById(R.id.sp_LogLevel);
     	et_NameSpace = (EditText) findViewById(R.id.et_NameSpace);
     	ch_SaveSD = (CheckBox) findViewById(R.id.ch_SaveSD);
-    	
-    	// Carlos Parada Setting Parameters for Spin-Suite Service Call 
-    	et_UrlSoap.setText("http://192.168.254.5:8081/ADInterface/services/SpinSuiteService");
-    	et_NameSpace.setText("http://www.erpcya.com/");
-    	et_Method.setText("InitialLoad");
-    	//End Carlos Parada
-
-    	butt_InitSync = (Button) findViewById(R.id.butt_InitSync);
-    	
+    	//	
     	sp_LogLevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
 
 			@Override
@@ -123,17 +107,6 @@ public class T_Connection extends Activity implements I_Login {
 				//	
 			}
     	});
-    	//	Init Sync
-    	butt_InitSync.setOnClickListener(new OnClickListener(){
-			
-			@Override
-			public void onClick(View v) {
-				if(valid()){
-					synchronize();
-					lockFront();
-				}
-			}
-		});
     }
     
     @Override
@@ -185,34 +158,6 @@ public class T_Connection extends Activity implements I_Login {
 		et_Timeout.setText(timeout);
     }
     
-    
-    /**
-     * Action Initial Synchronization
-     * @author Yamel Senih 24/04/2012, 00:14:42
-     * 		   Carlos Parada 17/05/2012 Se Coloco la carga inicial automatica desde adempiere
-     * @return void
-     */
-    private void synchronize(){
-    	
-    	/*m_load = new InitialLoad(){
-    		
-    		@Override
-    		protected void onPostExecute(Object result) {
-    			super.onPostExecute(result);
-    			//	Load Context
-    			loadContext();
-    		}
-    	};
-    	m_load.LoadSoapFromContext(this);*/
-    	
-    	//TestProcess tp = new TestProcess(this);
-    	//InitialLoad il = new InitialLoad(m_Url, m_NameSpace, m_Method, true, m_NameSpace + m_Method, et_User.getText().toString(), et_PassWord.getText().toString(), "SFAndroidService");
-		
-    	T_Login_Init df = new T_Login_Init(this);
-    	df.show(getFragmentManager(), this.getResources().getString(R.string.InitSync));
-    	
-    }
-    
     /**
      * Load Context Data
      * @author Yamel Senih 17/10/2012, 16:46:40
@@ -238,113 +183,7 @@ public class T_Connection extends Activity implements I_Login {
 	    		
 		}
     }
-    
-    /**
-     * Valid fields on Activity
-     * @author Yamel Senih 24/04/2012, 12:33:57
-     * @return
-     * @return boolean
-     */
-    private boolean valid(){
-    	if(et_UrlSoap.getText() != null 
-    			&& et_UrlSoap.getText().toString().length() > 0){
-    		if(et_Method.getText() != null 
-    				&& et_Method.getText().toString().length() > 0){
-    			if(et_NameSpace.getText() != null 
-        				&& et_NameSpace.getText().toString().length() > 0){
-    				Env.setContext(this, "#SUrlSoap", et_UrlSoap.getText().toString());
-    				Env.setContext(this, "#SMethod", et_Method.getText().toString());
-    				Env.setContext(this, "#SNameSpace", et_NameSpace.getText().toString());
-    				Env.setContext(this, "#SaveSD", ch_SaveSD.isChecked());
-    				createDBDirectory();
-    				
-    				if(et_Timeout.getText() != null 
-    	    				&& et_Timeout.getText().toString().length() > 0){
-    					String limit = et_Timeout.getText().toString();
-    					Env.setContext(this, "#Timeout", Integer.parseInt(limit));
-    				}
-    				
-    	    		return true;
-    			} else {
-            		Msg.alertMustFillField(this, R.string.NameSpace, et_NameSpace);
-            	}
-        	} else {
-        		Msg.alertMustFillField(this, R.string.MethodSync, et_Method);
-        	}
-    	} else {
-    		Msg.alertMustFillField(this, R.string.Url_Soap, et_UrlSoap);
-    	}
-    	return false;
-    }
-    
-    /**
-	 * Create a folder /ERP/data with Database
-	 * @author Yamel Senih 19/08/2012, 05:45:05
-	 * @return void
-	 */
-	private void createDBDirectory(){
-		if(!Env.isEnvLoad(this)){
-			if(Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)
-					&& ch_SaveSD.isChecked()){
-				String basePathName = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
-				//	Application Path
-				String dbPath = basePathName + Env.DB_PATH_DIRECTORY;
-				String dbPathName = basePathName + Env.DB_PATH_NAME;
-				//	Documents 
-				String docPathName = basePathName + Env.DOC_DIRECTORY;
-				String tmpPathName = basePathName + Env.TMP_DIRECTORY;
-				String attPathName = basePathName + Env.ATT_DIRECTORY;
-				
-				//	
-				Env.setAppBaseDirectory(this, basePathName);
-				Env.setDB_PathName(this, dbPathName);
-				Env.setDoc_DirectoryPathName(this, docPathName);
-				Env.setTmp_DirectoryPathName(this, tmpPathName);
-				Env.setAtt_DirectoryPathName(this, attPathName);
-				//	Database
-				File f = new File(dbPath);
-				if(!f.exists()) {
-					if(!f.mkdirs())
-						Msg.toastMsg(this, getString(R.string.msg_ErrorCreatingDirectory) 
-								+ "\"" + dbPathName + "\"");
-				} else if(f.isDirectory()) {
-					File fDB = new File(dbPathName);
-					fDB.delete();
-				} else if(f.isFile()){
-					if(!f.mkdirs())
-						Msg.toastMsg(this, getString(R.string.msg_ErrorCreatingDirectory) 
-								+ "\"" + dbPathName + "\"");
-				}
-				//	Create Document Folder
-				File doc = new File(docPathName);
-				if(!doc.exists()
-						|| doc.isFile()) {
-					if(!doc.mkdirs())
-						Msg.toastMsg(this, getString(R.string.msg_ErrorCreatingDirectory) 
-								+ "\"" + docPathName + "\"");
-				}
-				//	Create Tmp Folder
-				File tmp = new File(tmpPathName);
-				if(!tmp.exists()
-						|| tmp.isFile()) {
-					if(!tmp.mkdirs())
-						Msg.toastMsg(this, getString(R.string.msg_ErrorCreatingDirectory) 
-								+ "\"" + tmpPathName + "\"");
-				}
-				//	Create Attachment Folder
-				File att = new File(attPathName);
-				if(!att.exists()
-						|| att.isFile()) {
-					if(!att.mkdirs())
-						Msg.toastMsg(this, getString(R.string.msg_ErrorCreatingDirectory) 
-								+ "\"" + attPathName + "\"");
-				}
-			} else {
-				Env.setDB_PathName(this, DB.DB_NAME);
-			}	
-    	}
-	}
-	
+    	
     @Override
     public void onStart() {
         super.onStart();
@@ -418,9 +257,7 @@ public class T_Connection extends Activity implements I_Login {
 	
     @Override
 	public boolean aceptAction() {
-		if(valid())
-			return true;
-		return false;
+		return true;
 	}
 
 	@Override
@@ -431,77 +268,5 @@ public class T_Connection extends Activity implements I_Login {
 	@Override
 	public boolean loadData() {
 		return false;
-	}
-
-	/**
-	 * Start Synchronization for Initial Load
-	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> Jul 8, 2014, 11:25:21 AM
-	 * @param p_User
-	 * @param p_Pass
-	 * @return void
-	 */
-	public void startSynchronization(String p_User,String p_PassWord){
-		if (!p_User.equals("") && !p_PassWord.equals("")){
-			
-			//Intent intent = new Intent(this, InitialLoadTask.class);
-			//intent.putExtra("act", new TestSerializable(this));
-			//intent.putExtra("URL", et_UrlSoap.getText().toString());
-			//intent.putExtra("NameSpace", et_NameSpace.getText().toString());
-			//intent.putExtra("Method", et_Method.getText().toString());
-			//intent.putExtra("IsNetService", true);
-			//intent.putExtra("User", p_User);
-			//intent.putExtra("SoapAction", et_NameSpace.getText().toString() + et_Method.getText().toString());
-			//intent.putExtra("PassWord",p_PassWord);
-			//intent.putExtra("Timeout", 0);
-			
-			//m_Conn =p_Conn;
-			//m_Timeout = intent.getIntExtra("Timeout",0);
-			//startService(intent);
-    		InitialLoadTask ilt = new InitialLoadTask(et_UrlSoap.getText().toString(), 
-    													et_NameSpace.getText().toString(), 
-    														et_Method.getText().toString(), 
-    															true, 
-    																p_User,
-    																	p_PassWord , 
-    																		et_NameSpace.getText().toString() + et_Method.getText().toString(),
-    																			this,
-    																				et_Timeout.getText().toString());
-    		
-    		
-    		ilt.runTask();
-    		/*
-    		 * 
-			InitialLoad il = new InitialLoad(et_UrlSoap.getText().toString(), 
-    											et_NameSpace.getText().toString(), 
-    												et_Method.getText().toString(), 
-    													true, 
-    													et_NameSpace.getText().toString() + et_Method.getText().toString(), 
-    														p_User, 
-    															p_Pass, 
-    																"initLoad",
-    																	this);
-    		 * 
-    		 */
-    		
-    	}
-    		
-    	
-		if(!Env.isEnvLoad(this)){
-			
-			/*RemoteViews contentView = new RemoteViews(this.getPackageName(), R.layout.v_progressdialog);
-	        contentView.setImageViewResource(R.id.iV_Synchronizing, R.drawable.syncserver_m);
-	        contentView.setTextViewText(R.id.tV_CurrentSinchronizing, this.getResources().getString(R.string.msg_CallingWebService));
-	        contentView.setTextViewText(R.id.tV_Percentaje, "0%");
-	        
-	        NotificationManager notify = Msg.notificationMsg(this, R.drawable.syncserver_h, "",0, this.getParent().getIntent(), contentView);
-	        m_load.setContentView(contentView);
-	        m_load.setM_NotificationManager(notify);
-			m_load.execute();*/
-			
-		} else {
-			loadContext();
-		}
-    
-
 	}
 }

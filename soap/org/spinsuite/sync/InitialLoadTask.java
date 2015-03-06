@@ -19,19 +19,16 @@ import java.util.List;
 
 import org.ksoap2.serialization.SoapObject;
 import org.spinsuite.interfaces.BackGroundProcess;
-import org.spinsuite.login.T_Connection;
 import org.spinsuite.model.MSPSSyncMenu;
 import org.spinsuite.model.MWSWebServiceType;
 import org.spinsuite.util.BackGroundTask;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.StringNamePair;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
-import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 
@@ -51,7 +48,7 @@ public class InitialLoadTask implements BackGroundProcess{
 	private BackGroundTask m_Task = null;
 	
 	/** Connection Windows*/
-	private T_Connection m_Conn = null;
+	private Activity m_Callback = null;
 	
 	/** Dialog Message Process*/ 
 	//private T_Login_ProgressSync df = null;
@@ -106,12 +103,11 @@ public class InitialLoadTask implements BackGroundProcess{
 	 * @param p_User
 	 * @param p_PassWord
 	 * @param p_SoapAction
-	 * @param p_Conn
+	 * @param p_Callback
 	 * @param p_Timeout
 	 */
-	public InitialLoadTask(String p_URL, String p_NameSpace, String p_Method,boolean p_IsNetService, String p_User,String p_PassWord,String p_SoapAction,T_Connection p_Conn,String p_Timeout) {
-		// TODO Auto-generated constructor stub
-		
+	public InitialLoadTask(String p_URL, String p_NameSpace, String p_Method, boolean p_IsNetService, 
+			String p_User, String p_PassWord, String p_SoapAction, Activity p_Callback, int p_Timeout) {
 		m_URL = p_URL;
 		m_NameSpace = p_NameSpace;
 		m_Method = p_Method;
@@ -119,13 +115,13 @@ public class InitialLoadTask implements BackGroundProcess{
 		m_User = p_User; 
 		m_SoapAction = p_SoapAction;
 		m_PassWord = p_PassWord;
-		m_Conn =p_Conn;
-		m_Timeout = Integer.parseInt(p_Timeout);
+		m_Callback = p_Callback;
+		m_Timeout = p_Timeout;
 		
 		//Set Notification Panel
-		m_NFManager = (NotificationManager) m_Conn.getSystemService(Context.NOTIFICATION_SERVICE);
-		m_Builder = new NotificationCompat.Builder(m_Conn);
-		
+		m_NFManager = (NotificationManager) m_Callback.getSystemService(Context.NOTIFICATION_SERVICE);
+		m_Builder = new NotificationCompat.Builder(m_Callback);
+		m_Builder.setStyle(new NotificationCompat.BigTextStyle());		
 		//
 		//Intent intent = new Intent(m_Conn, T_Connection.class); 
 		//TaskStackBuilder stackBuilder = TaskStackBuilder.create(m_Conn);
@@ -144,26 +140,26 @@ public class InitialLoadTask implements BackGroundProcess{
 
 	@Override
 	public void publishOnRunning() {
-		// TODO Auto-generated method stub
 		//df.setMsg(m_PublicMsg,m_Error);
 		//df.setProgress(m_Progress, m_Error);
+		// Moves events into the expanded layout
 		m_Builder.setContentTitle("Titulo")
 								.setContentText(m_PublicMsg)
 								.setProgress(m_MaxPB, m_Progress, m_Progress == -1)
-								.setSmallIcon(android.R.drawable.stat_sys_download)
-								;
+								.setSmallIcon(android.R.drawable.stat_sys_download);
+		//	
 		m_NFManager.notify(0, m_Builder.build());
 	}
 
 	@Override
 	public void publishAfterEnd() {
-		// TODO Auto-generated method stub
+		m_Callback.finish();
 	}
 
 	@Override
 	public Object run() {
 		//Call List of Web Services
-		CallListWebServices();
+		callListWebServices();
 		
 		return null;
 	}
@@ -174,11 +170,11 @@ public class InitialLoadTask implements BackGroundProcess{
 	 * @return void
 	 */
 	public void runTask(){
-		m_Task = new BackGroundTask(this, m_Conn);
+		m_Task = new BackGroundTask(this, m_Callback);
 		//df = new T_Login_ProgressSync(m_Task,m_Conn);
     	//df.show(m_Conn.getFragmentManager(), m_Conn.getResources().getString(R.string.InitSync));
-		m_NFManager = (NotificationManager) m_Conn.getSystemService(Context.NOTIFICATION_SERVICE);
-		m_Builder = new NotificationCompat.Builder(m_Conn);
+		m_NFManager = (NotificationManager) m_Callback.getSystemService(Context.NOTIFICATION_SERVICE);
+		m_Builder = new NotificationCompat.Builder(m_Callback);
 		m_Task.runTask();
 	}
 	
@@ -236,7 +232,7 @@ public class InitialLoadTask implements BackGroundProcess{
 	 * @author <a href="mailto:carlosapardam@gmail.com">Carlos Parada</a> 03/09/2014, 23:51:06
 	 * @return void
 	 */
-	private void CallListWebServices(){
+	private void callListWebServices(){
 		
 		//Call Web Service Method Create Metadata
 		refreshMSG("Calling " + "Create Metadata",false,-1);
@@ -255,12 +251,12 @@ public class InitialLoadTask implements BackGroundProcess{
 				))
 			return;
 		
-		List<MSPSSyncMenu> sm = MSPSSyncMenu.getNodes(m_Conn, "0", InitialLoad.INITIALLOAD_ServiceDefinition, InitialLoad.INITIALLOAD_ServiceMethodDataSynchronization, null, null);
+		List<MSPSSyncMenu> sm = MSPSSyncMenu.getNodes(m_Callback, "0", InitialLoad.INITIALLOAD_ServiceDefinition, InitialLoad.INITIALLOAD_ServiceMethodDataSynchronization, null, null);
 		
 		try{
 			for (MSPSSyncMenu mspsSyncMenu : sm) {
 				
-				MWSWebServiceType wst = new MWSWebServiceType(m_Conn, mspsSyncMenu.getWS_WebServiceType_ID(), null);
+				MWSWebServiceType wst = new MWSWebServiceType(m_Callback, mspsSyncMenu.getWS_WebServiceType_ID(), null);
 				refreshMSG("Calling " +  mspsSyncMenu.getName() ,false,-1);
 				//Call Web Service Method Web Sevice Definition
 	    		if (!CallWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
@@ -292,7 +288,7 @@ public class InitialLoadTask implements BackGroundProcess{
 		int CountWS = 0;
 		int iWS = -1;
 		int iPage =-1;
-		InitialLoad il = new InitialLoad(m_URL, m_NameSpace, m_Method, m_IsNetService, m_SoapAction, m_User, m_PassWord, this, m_Timeout, m_Conn);
+		InitialLoad il = new InitialLoad(m_URL, m_NameSpace, m_Method, m_IsNetService, m_SoapAction, m_User, m_PassWord, this, m_Timeout, m_Callback);
 		
 		for (int i=0;i<Params.length;i++){
 			il.addPropertyToCall(Params[i].getKey(), Params[i].getName());
@@ -395,13 +391,13 @@ public class InitialLoadTask implements BackGroundProcess{
 	 * @return void
 	 */
 	public void setContext() {
-		Env.setIsEnvLoad(m_Conn, true);
-		Env.setContext(m_Conn, "#SUser", m_User);
-		Env.setContext(m_Conn, "#SPass", m_PassWord);
-		Env.setSavePass(m_Conn, true);
-		Env.setAutoLogin(m_Conn, true);
-		Env.setContext(m_Conn, KEY_POS_TAB, 1);
-		Env.setContext(m_Conn, "#Timeout", m_Timeout);
+		Env.setIsEnvLoad(m_Callback, true);
+		Env.setContext(m_Callback, "#SUser", m_User);
+		Env.setContext(m_Callback, "#SPass", m_PassWord);
+		Env.setSavePass(m_Callback, true);
+		Env.setAutoLogin(m_Callback, true);
+		Env.setContext(m_Callback, KEY_POS_TAB, 1);
+		Env.setContext(m_Callback, "#Timeout", m_Timeout);
 	}
 
 

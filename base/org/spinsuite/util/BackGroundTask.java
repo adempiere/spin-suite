@@ -45,7 +45,7 @@ public class BackGroundTask {
 	 * @param process
 	 * @param ctx
 	 */
-	public BackGroundTask(BackGroundProcess process,Context ctx) {
+	public BackGroundTask(BackGroundProcess process, Context ctx) {
 		// TODO Auto-generated constructor stub
 		m_Process = process; 
 		m_ctx = ctx;

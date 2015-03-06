@@ -98,8 +98,11 @@ public class Login extends TV_Base implements I_CancelOk {
     			finish();
     		}
     	} else {
-    		m_LoadType = DATA_BASE;
-			new LoadAccessTask().execute();
+    		T_Login_Init df = new T_Login_Init(this);
+        	df.show(getFragmentManager(), this.getResources().getString(R.string.InitSync));
+    		//	For Demo
+    		//m_LoadType = DATA_BASE;
+			//new LoadAccessTask().execute();
     	}
     	//	
     }  
