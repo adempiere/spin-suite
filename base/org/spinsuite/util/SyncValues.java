@@ -81,4 +81,22 @@ public class SyncValues {
 	public static String getInitialUrl(String url) {
 		return getValidURL(url, DEFAULT_IL_VALUE);
 	}
+	
+	/**
+	 * Get Duration from milliseconds
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param duration
+	 * @return
+	 * @return String
+	 */
+	public static String getDifferenceValue(long duration) {
+		//	Get Times
+		int hours = (int) ((duration / 1000) / 3600);
+		int minutes = (int) (((duration / 1000) / 60) % 60);
+		int seconds = (int) ((duration / 1000) % 60);
+		//	Show Time
+		String time = "H:" + hours + " M:" + minutes + " S:" + seconds; 
+		//	Set Last Message
+		return time;
+	}
 }

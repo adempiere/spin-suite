@@ -35,6 +35,8 @@
 	<string name="SavePass">Save Pass</string>
 	<string name="SaveSD">Save data SD(Slow)</string>
 	<string name="LogLevel">Log Level</string>
+	<string name="DropDB">Delete Database</string>
+	
 	
 	<string name="tt_TestConn">Test Connection</string>
 	<string name="tt_Conn">Connection</string>

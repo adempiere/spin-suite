@@ -21,9 +21,12 @@ import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.Msg;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -31,9 +34,11 @@ import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.view.View.OnClickListener;
 
 /**
  * 
@@ -42,12 +47,13 @@ import android.widget.Spinner;
  */
 public class T_Connection extends Activity implements I_Login {
 
-	/**	URL SOAP Comunication	*/
+	/**	URL SOAP Communication	*/
 	public EditText 	et_UrlServer;
 	private EditText 	et_Timeout;
 	private Spinner 	sp_LogLevel;
 	/**	Save data SD			*/
 	private CheckBox 	ch_SaveSD;
+	private Button		butt_DropDB;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +71,7 @@ public class T_Connection extends Activity implements I_Login {
     	et_Timeout 		= (EditText) findViewById(R.id.et_Timeout);
     	sp_LogLevel 	= (Spinner) findViewById(R.id.sp_LogLevel);
     	ch_SaveSD 		= (CheckBox) findViewById(R.id.ch_SaveSD);
+    	butt_DropDB 	= (Button) findViewById(R.id.butt_DropDB);
     	//	
     	sp_LogLevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
 
@@ -97,7 +104,37 @@ public class T_Connection extends Activity implements I_Login {
 				//	
 			}
     	});
+    	//	Listener for Button
+    	butt_DropDB.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				deleteDB();
+			}
+		});
     }
+    
+    /**
+     * DElete Database
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return void
+     */
+    private void deleteDB() {
+    	Builder ask = Msg.confirmMsg(this, getResources().getString(R.string.msg_AskDelete));
+		ask.setPositiveButton(getResources().getString(R.string.msg_Acept), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+				//	Delete
+				//	Delete DataBase
+				Msg.confirmMsg(getApplicationContext(), "");
+				deleteDatabase(Env.getDB_PathName(getApplicationContext()));
+				Env.cacheReset(getApplicationContext());
+				Env.setIsEnvLoad(getApplicationContext(), false);
+				Env.setIsLogin(getApplicationContext(), false);
+			}
+		});
+		ask.show();
+    }
+    
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

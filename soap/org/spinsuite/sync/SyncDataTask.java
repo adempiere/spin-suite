@@ -22,6 +22,7 @@ import java.util.logging.Level;
 
 import org.ksoap2.serialization.SoapObject;
 import org.spinsuite.base.DB;
+import org.spinsuite.base.R;
 import org.spinsuite.conn.CommunicationSoap;
 import org.spinsuite.interfaces.BackGroundProcess;
 import org.spinsuite.model.MSPSSyncMenu;
@@ -138,18 +139,32 @@ public class SyncDataTask implements BackGroundProcess  {
 
 	@Override
 	public Object run() {
+		//	Get Previous Milliseconds
+		long previousMillis = System.currentTimeMillis();
+		boolean m_Error = false;
 		try{
 			conn = new DB(m_ctx);
 			conn.openDB(DB.READ_WRITE);
 			syncData(m_SPS_SyncMenu_ID, 0);
 		} catch(Exception e) {
+			m_Error = true;
 			LogM.log(m_ctx, getClass(), Level.SEVERE, e.getLocalizedMessage());
 			e.printStackTrace();
 		}
+		//	
 		finally{
 			conn.close();
 			conn = null;
+			//	Last Message
+			if(!m_Error) {
+				long afterMillis = System.currentTimeMillis();
+				long duration = afterMillis - previousMillis;
+				m_PublicMsg = m_ctx.getString(R.string.DownloadEnding) + " " 
+						+ m_ctx.getString(R.string.Sync_Duration) 
+						+ ": " + SyncValues.getDifferenceValue(duration);
+			}
 		}
+		//	
 		return null;
 	}
 	

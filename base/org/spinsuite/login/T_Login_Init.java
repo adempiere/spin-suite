@@ -114,6 +114,17 @@ public class T_Login_Init extends DialogFragment
 	 * @return void
 	 */
 	public void startSynchronization() {
+		Env.setContext(getActivity(), "#SUrlSoap", et_UrlServer.getText().toString());
+		Env.setContext(getActivity(), "#SMethod", SyncValues.DEFAULT_METHOD);
+		Env.setContext(getActivity(), "#SNameSpace", SyncValues.DEFAULT_NAME_SPACE);
+		//	Create Directory
+		createDBDirectory();
+		//	Valid Timeout
+		if(et_Timeout.getText() != null 
+				&& et_Timeout.getText().toString().length() > 0){
+			String limit = et_Timeout.getText().toString();
+			Env.setContext(getActivity(), "#Timeout", Integer.parseInt(limit));
+		}
 		((I_Login)m_Callback).setEnabled(false);
 		//	Add Value to Web
 		String url = et_UrlServer.getText().toString();
@@ -158,16 +169,6 @@ public class T_Login_Init extends DialogFragment
     private boolean isValid(){
     	if(et_UrlServer.getText() != null 
     			&& et_UrlServer.getText().toString().length() > 0){
-    		Env.setContext(getActivity(), "#SUrlSoap", et_UrlServer.getText().toString());
-			Env.setContext(getActivity(), "#SMethod", SyncValues.DEFAULT_METHOD);
-			Env.setContext(getActivity(), "#SNameSpace", SyncValues.DEFAULT_NAME_SPACE);
-			createDBDirectory();
-			
-			if(et_Timeout.getText() != null 
-    				&& et_Timeout.getText().toString().length() > 0){
-				String limit = et_Timeout.getText().toString();
-				Env.setContext(getActivity(), "#Timeout", Integer.parseInt(limit));
-			}
     		return true;
     	} else {
     		Msg.alertMustFillField(getActivity(), R.string.Url_Server, et_UrlServer);
@@ -182,9 +183,7 @@ public class T_Login_Init extends DialogFragment
 	 */
 	private void createDBDirectory(){
 		if(!Env.isEnvLoad(getActivity())){
-			if(Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)
-					//&& ch_SaveSD.isChecked()
-					){
+			if(Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
 				String basePathName = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
 				//	Application Path
 				String dbPath = basePathName + Env.DB_PATH_DIRECTORY;

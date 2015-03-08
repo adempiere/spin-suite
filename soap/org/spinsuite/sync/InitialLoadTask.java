@@ -16,7 +16,6 @@
 package org.spinsuite.sync;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import org.ksoap2.serialization.SoapObject;
@@ -30,6 +29,7 @@ import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.StringNamePair;
+import org.spinsuite.util.SyncValues;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -258,7 +258,7 @@ public class InitialLoadTask implements BackGroundProcess {
 	 * @return void
 	 */
 	private void callListWebServices() {
-		//	Get Previous Millis
+		//	Get Previous Milliseconds
 		long previousMillis = System.currentTimeMillis();
 		//Call Web Service Method Create Metadata
 		refreshMSG(m_Callback.getString(R.string.Calling) 
@@ -268,7 +268,7 @@ public class InitialLoadTask implements BackGroundProcess {
 				new StringNamePair(ILCall.m_WSNumber, "0")))
 			return;
 		
-		//Call Web Service Method Web Sevice Definition
+		//Call Web Service Method Web Service Definition
 		
 		refreshMSG(m_Callback.getString(R.string.Calling) 
 				+ " " + m_Callback.getString(R.string.Sync_WebService), false, -1);
@@ -298,26 +298,23 @@ public class InitialLoadTask implements BackGroundProcess {
 	    							new StringNamePair(ILCall.m_WSNumber, "0")))
 	    			break;		
 			}
-			//	Get After Millis
-			long afterMillis = System.currentTimeMillis();
-			long duration = afterMillis - previousMillis;
-			//	Get Times
-			long hours = TimeUnit.MICROSECONDS.toHours(duration);
-			long minutes = TimeUnit.MICROSECONDS.toMinutes(duration);
-			long seconds = TimeUnit.MICROSECONDS.toSeconds(duration);
-			String time = hours + ":" + minutes + ":" + seconds; 
-			//	SEt Last Message
-			m_LastMsg = m_Callback.getString(R.string.DownloadEnding) + " " 
-					+ m_Callback.getString(R.string.Sync_Duration) + ": " + time;
-			//	Refresh Notification
-			setMaxValueProgressBar(0);
-			refreshMSG(m_LastMsg , false, 0);
 		} catch(Exception e) {
 			m_Error = true;
 			LogM.log(m_Callback, getClass(), Level.SEVERE, "Error", e);
+		} finally {
+			//	Get After Milliseconds
+			long afterMillis = System.currentTimeMillis();
+			long duration = afterMillis - previousMillis;
+			//	Set Last Message
+			m_LastMsg = m_Callback.getString(R.string.DownloadEnding) + " " 
+					+ m_Callback.getString(R.string.Sync_Duration) 
+					+ ": " + SyncValues.getDifferenceValue(duration);
+			//	Refresh Notification
+			setMaxValueProgressBar(0);
+			refreshMSG(m_LastMsg , false, 0);
+			//	Set Context
+			setContext();
 		}
-		//	Set Context
-		setContext();
 		//df.dismiss();
 	}
 	

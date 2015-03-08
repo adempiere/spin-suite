@@ -35,6 +35,7 @@
 	<string name="SavePass">Guardar Contraseña</string>
 	<string name="SaveSD">Guardar datos en SD(Lento)</string>
 	<string name="LogLevel">Nivel de Seguimiento</string>
+	<string name="DropDB">Borrar Base de Datos</string>
 	
 	<string name="tt_TestConn">Prueba de Conexión</string>
 	<string name="tt_Conn">Conexión</string>
