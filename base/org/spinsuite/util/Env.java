@@ -34,6 +34,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -128,6 +129,30 @@ public final class Env {
 		//	Set Loaded
 		setAccessLoaded(ctx, m_AD_Role_ID, true);
 	}
+	
+    /**
+     * Load Context Data
+     * @author Yamel Senih 17/10/2012, 16:46:40
+     * @return void
+     */
+	public static void loadContext(Context ctx){
+    	//	Carlos Parada, Load var in comntext
+		if (isEnvLoad(ctx)) {	
+			String sql = new String("SELECT sc.Name, sc.Value FROM AD_SysConfig sc");
+	    	DB con = new DB(ctx);
+	    	con.openDB(DB.READ_ONLY);
+	    	Cursor rs = con.querySQL(sql, null);
+	    	if(rs.moveToFirst()) {
+	    		Editor ep = getEditor(ctx);
+				do {
+					ep.putString("#" + rs.getString(0), rs.getString(1));
+				} while(rs.moveToNext());
+				//	Commit
+				ep.commit();
+			}
+	    	con.closeDB(rs);
+		}
+    }
 	
 	/**
 	 * Set access loaded

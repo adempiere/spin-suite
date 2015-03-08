@@ -1,15 +1,15 @@
 /*************************************************************************************
  * Product: Spin-Suite (Making your Business Spin)                                   *
- * getActivity() program is free software; you can redistribute it and/or modify it           *
+ * getActivity() program is free software; you can redistribute it and/or modify it  *
  * under the terms version 2 of the GNU General Public License as published          *
- * by the Free Software Foundation. getActivity() program is distributed in the hope          *
+ * by the Free Software Foundation. getActivity() program is distributed in the hope *
  * that it will be useful, but WITHOUT ANY WARRANTY; without even the implied        *
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                  *
  * See the GNU General Public License for more details.                              *
  * You should have received a copy of the GNU General Public License along           *
- * with getActivity() program; if not, write to the Free Software Foundation, Inc.,           *
+ * with getActivity() program; if not, write to the Free Software Foundation, Inc.,  *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
- * For the text or an alternative of getActivity() public license, you may reach us           *
+ * For the text or an alternative of getActivity() public license, you may reach us  *
  * Copyright (C) 2012-2013 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Carlos Parada www.erpcya.com                      				 *
  *************************************************************************************/
@@ -20,9 +20,11 @@ import java.io.File;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
+import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.sync.InitialLoadTask;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.Msg;
+import org.spinsuite.util.SyncValues;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -54,21 +56,11 @@ public class T_Login_Init extends DialogFragment
 	/** Text Password			*/
 	private EditText 	et_PassWord;
 	/**	URL SOAP Communication	*/
-	public EditText 	et_UrlSoap;
-	/**	Synchronization Method	*/
-	private EditText 	et_Method;
+	public EditText 	et_UrlServer;
+	/**	Time Out				*/
 	private EditText 	et_Timeout;
-	/** NameSpace*/
-	private EditText 	et_NameSpace;
 	/**	Context					*/
 	private Activity 	m_Callback = null;
-	
-	/**	Default Values			*/
-	private final String DEFAULT_SOAP_URL 	= "http://200.71.185.123:9080/ADInterface/services/SpinSuiteService";
-	private final String DEFAULT_NAME_SPACE = "http://www.erpcya.com/";
-	private final String DEFAULT_METHOD 	= "InitialLoad";
-	private final String DEFAULT_USER 		= "SuperUser";
-	private final String DEFAULT_PASS 		= "System";
 	
 	/**
 	 * 
@@ -89,17 +81,13 @@ public class T_Login_Init extends DialogFragment
 		
 		et_User		 	= (EditText) view.findViewById(R.id.et_User);
 		et_PassWord 	= (EditText) view.findViewById(R.id.et_Pass);
-		et_UrlSoap 		= (EditText) view.findViewById(R.id.et_UrlSoap);
-    	et_Method 		= (EditText) view.findViewById(R.id.et_Method);
+		et_UrlServer 	= (EditText) view.findViewById(R.id.et_UrlServer);
     	et_Timeout 		= (EditText) view.findViewById(R.id.et_Timeout);
-    	et_NameSpace 	= (EditText) view.findViewById(R.id.et_NameSpace);
 		//	Set Authentication for test
-		et_User.setText(DEFAULT_USER);
-		et_PassWord.setText(DEFAULT_PASS);
+		et_User.setText(SyncValues.DEFAULT_USER);
+		et_PassWord.setText(SyncValues.DEFAULT_PASS);
     	// Carlos Parada Setting Parameters for Spin-Suite Service Call 
-    	et_UrlSoap.setText(DEFAULT_SOAP_URL);
-    	et_NameSpace.setText(DEFAULT_NAME_SPACE);
-    	et_Method.setText(DEFAULT_METHOD);
+    	et_UrlServer.setText(SyncValues.DEFAULT_SOAP_URL);
     	//End Carlos Parada
 		
 		builder.setView(view);
@@ -115,7 +103,7 @@ public class T_Login_Init extends DialogFragment
 	public void onClick(DialogInterface dialog, int which) {
 		//	Valid for Initial Sync
 		if (which == -1
-				&& isValid()){
+				&& isValid()) {
 			startSynchronization();
 		}		
 	}
@@ -125,12 +113,17 @@ public class T_Login_Init extends DialogFragment
 	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> Jul 8, 2014, 11:25:21 AM
 	 * @return void
 	 */
-	public void startSynchronization(){
-		InitialLoadTask ilt = new InitialLoadTask(et_UrlSoap.getText().toString(), et_NameSpace.getText().toString(), 
-				et_Method.getText().toString(), true, 
+	public void startSynchronization() {
+		((I_Login)m_Callback).setEnabled(false);
+		//	Add Value to Web
+		String url = et_UrlServer.getText().toString();
+		//	
+		InitialLoadTask ilt = new InitialLoadTask(SyncValues.getInitialUrl(url), 
+				SyncValues.DEFAULT_NAME_SPACE, 
+				SyncValues.DEFAULT_METHOD, true, 
 				et_User.getText().toString(), 
 				et_PassWord.getText().toString(), 
-				et_NameSpace.getText().toString() + et_Method.getText().toString(), 
+				SyncValues.DEFAULT_NAME_SPACE + SyncValues.DEFAULT_METHOD, 
 				m_Callback, Env.getContextAsInt(m_Callback, "#Timeout"));
 		//	
 		ilt.runTask();
@@ -163,32 +156,21 @@ public class T_Login_Init extends DialogFragment
      * @return boolean
      */
     private boolean isValid(){
-    	if(et_UrlSoap.getText() != null 
-    			&& et_UrlSoap.getText().toString().length() > 0){
-    		if(et_Method.getText() != null 
-    				&& et_Method.getText().toString().length() > 0){
-    			if(et_NameSpace.getText() != null 
-        				&& et_NameSpace.getText().toString().length() > 0){
-    				Env.setContext(getActivity(), "#SUrlSoap", et_UrlSoap.getText().toString());
-    				Env.setContext(getActivity(), "#SMethod", et_Method.getText().toString());
-    				Env.setContext(getActivity(), "#SNameSpace", et_NameSpace.getText().toString());
-    				createDBDirectory();
-    				
-    				if(et_Timeout.getText() != null 
-    	    				&& et_Timeout.getText().toString().length() > 0){
-    					String limit = et_Timeout.getText().toString();
-    					Env.setContext(getActivity(), "#Timeout", Integer.parseInt(limit));
-    				}
-    				
-    	    		return true;
-    			} else {
-            		Msg.alertMustFillField(getActivity(), R.string.NameSpace, et_NameSpace);
-            	}
-        	} else {
-        		Msg.alertMustFillField(getActivity(), R.string.MethodSync, et_Method);
-        	}
+    	if(et_UrlServer.getText() != null 
+    			&& et_UrlServer.getText().toString().length() > 0){
+    		Env.setContext(getActivity(), "#SUrlSoap", et_UrlServer.getText().toString());
+			Env.setContext(getActivity(), "#SMethod", SyncValues.DEFAULT_METHOD);
+			Env.setContext(getActivity(), "#SNameSpace", SyncValues.DEFAULT_NAME_SPACE);
+			createDBDirectory();
+			
+			if(et_Timeout.getText() != null 
+    				&& et_Timeout.getText().toString().length() > 0){
+				String limit = et_Timeout.getText().toString();
+				Env.setContext(getActivity(), "#Timeout", Integer.parseInt(limit));
+			}
+    		return true;
     	} else {
-    		Msg.alertMustFillField(getActivity(), R.string.Url_Soap, et_UrlSoap);
+    		Msg.alertMustFillField(getActivity(), R.string.Url_Server, et_UrlServer);
     	}
     	return false;
     }

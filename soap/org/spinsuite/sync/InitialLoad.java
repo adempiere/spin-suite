@@ -17,12 +17,15 @@ package org.spinsuite.sync;
 
 import java.io.IOException;
 import java.util.logging.Level;
+
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.spinsuite.base.DB;
+import org.spinsuite.base.R;
 import org.spinsuite.conn.CommunicationSoap;
 import org.spinsuite.util.LogM;
 import org.xmlpull.v1.XmlPullParserException;
+
 import android.content.Context;
 
 /**
@@ -98,8 +101,10 @@ public class InitialLoad extends CommunicationSoap{
 	 * @param p_ServiceType
 	 */
 	public InitialLoad(String p_Url, String p_NameSpace, String p_Method_Name,
-			boolean isNetService, String p_SoapAction, String p_User, String p_PassWord,InitialLoadTask p_Task, 
-				int p_Timeout, Context p_Ctx) {
+			boolean isNetService, String p_SoapAction, String p_User, 
+			String p_PassWord, InitialLoadTask p_Task, 
+			int p_Timeout, Context p_Ctx) {
+		
 		this(p_Url, p_NameSpace, p_Method_Name,
 				isNetService, p_SoapAction, p_Ctx);
 		
@@ -164,8 +169,11 @@ public class InitialLoad extends CommunicationSoap{
 				SoapObject query = (SoapObject) p_Resp.getProperty(i);
 							
 				m_Task.refreshMSG(query.getPropertyAsString("Name") +"\n" 
-						+ "Pages:" +(p_PageCount != null && p_CurrentPage !=null ? p_CurrentPage + "/"+ p_PageCount + "\n" : "") 
-						+ "Records : " + (i + 1) + " / " + (countrec - hasPages - hasWSCount), false, (i + 1));
+						+ m_Ctx.getString(R.string.Sync_Pages) + ": " + (p_PageCount != null && p_CurrentPage !=null 
+																			? p_CurrentPage + "/" + p_PageCount + "\n" 
+																					: "") 
+						+ m_Ctx.getString(R.string.Sync_Records) + ": " + (i + 1) + "/" 
+													+ (countrec - hasPages - hasWSCount), false, (i + 1));
 				
 		    	String sql = query.getPropertyAsString("SQL");
 		    	

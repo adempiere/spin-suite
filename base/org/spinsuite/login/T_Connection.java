@@ -11,13 +11,12 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
  * Copyright (C) 2012-2013 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
- * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
+ * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.login;
 
 import java.util.logging.Level;
 
-import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.util.Env;
@@ -26,7 +25,6 @@ import org.spinsuite.util.LogM;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.NavUtils;
@@ -39,21 +37,15 @@ import android.widget.Spinner;
 
 /**
  * 
- * @author Yamel Senih
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class T_Connection extends Activity implements I_Login {
 
 	/**	URL SOAP Comunication	*/
-	public EditText 	et_UrlSoap;
-	/**	Synchronization Method	*/
-	private EditText 	et_Method;
+	public EditText 	et_UrlServer;
 	private EditText 	et_Timeout;
 	private Spinner 	sp_LogLevel;
-	/** NameSpace*/
-	private EditText 	et_NameSpace;
-	/** Soap Object InitialLoad	*/
-	//private InitialLoad m_load ;
 	/**	Save data SD			*/
 	private CheckBox 	ch_SaveSD;
 	
@@ -69,12 +61,10 @@ public class T_Connection extends Activity implements I_Login {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         
-        et_UrlSoap = (EditText) findViewById(R.id.et_UrlSoap);
-    	et_Method = (EditText) findViewById(R.id.et_Method);
-    	et_Timeout = (EditText) findViewById(R.id.et_Timeout);
-    	sp_LogLevel = (Spinner) findViewById(R.id.sp_LogLevel);
-    	et_NameSpace = (EditText) findViewById(R.id.et_NameSpace);
-    	ch_SaveSD = (CheckBox) findViewById(R.id.ch_SaveSD);
+        et_UrlServer 	= (EditText) findViewById(R.id.et_UrlServer);
+    	et_Timeout 		= (EditText) findViewById(R.id.et_Timeout);
+    	sp_LogLevel 	= (Spinner) findViewById(R.id.sp_LogLevel);
+    	ch_SaveSD 		= (CheckBox) findViewById(R.id.ch_SaveSD);
     	//	
     	sp_LogLevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
 
@@ -127,16 +117,9 @@ public class T_Connection extends Activity implements I_Login {
      */
     public void lockFront(){
     	if(!Env.isEnvLoad(this)){
-    		et_UrlSoap.setEnabled(true);
-    		et_Method.setEnabled(true);
-    		et_NameSpace.setEnabled(true);
-    		ch_SaveSD.setEnabled(true);
-    		ch_SaveSD.setChecked(true);
+    		setEnabled(true);
     	} else {
-    		et_UrlSoap.setEnabled(false);
-    		et_Method.setEnabled(false);
-    		et_NameSpace.setEnabled(false);
-    		ch_SaveSD.setEnabled(false);
+    		setEnabled(false);
     		//Establece el Timeout en la Ventana
     		//Carlos Parada 04/11/2012
     		setTimeOut();
@@ -157,57 +140,17 @@ public class T_Connection extends Activity implements I_Login {
 		String timeout = String.valueOf(timeoutInt);
 		et_Timeout.setText(timeout);
     }
-    
-    /**
-     * Load Context Data
-     * @author Yamel Senih 17/10/2012, 16:46:40
-     * @return void
-     */
-    private void loadContext(){
-    	/**
-		 * Carlos Parada, Load var in comntext
-		 */
-    	
-		if (Env.isEnvLoad(this))
-		{	
-			String sql = new String("SELECT sc.Name, sc.Value FROM AD_SysConfig sc");
-	    	DB con = new DB(this);
-	    	con.openDB(DB.READ_ONLY);
-	    	Cursor rs = con.querySQL(sql, null);
-	    	if(rs.moveToFirst()){
-				do {
-					Env.setContext(this, "#" + rs.getString(0), rs.getInt(1));
-				} while(rs.moveToNext());
-			}
-	    	con.closeDB(rs);
-	    		
-		}
-    }
     	
     @Override
     public void onStart() {
         super.onStart();
-        String url = et_UrlSoap.getText().toString();
-    	String method = et_Method.getText().toString();
+        String url = et_UrlServer.getText().toString();
     	String timeout = et_Timeout.getText().toString();
-    	String nameSpace = et_NameSpace.getText().toString();
     	//	Load URL SOAP or SOPA JAJAJAJAJAJAJAJ
     	if(url == null || url.length() == 0){
     		url = Env.getContext(this, "#SUrlSoap");
     		if(url != null)
-    			et_UrlSoap.setText(url);
-    	}
-    	//	Load Method
-    	if(method == null || method.length() == 0){
-    		method = Env.getContext(this, "#SMethod");
-    		if(method != null)
-    			et_Method.setText(method);
-    	}
-    	//	Name Space
-    	if(nameSpace == null || nameSpace.length() == 0){
-    		nameSpace = Env.getContext(this, "#SNameSpace");
-    		if(nameSpace != null)
-    			et_NameSpace.setText(nameSpace);
+    			et_UrlServer.setText(url);
     	}
     	//	Timeout
     	if(timeout == null || timeout.length() == 0){
@@ -268,5 +211,12 @@ public class T_Connection extends Activity implements I_Login {
 	@Override
 	public boolean loadData() {
 		return false;
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		et_UrlServer.setEnabled(enabled);
+		ch_SaveSD.setEnabled(enabled);
+		ch_SaveSD.setChecked(enabled);
 	}
 }

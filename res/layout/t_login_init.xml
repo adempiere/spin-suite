@@ -53,45 +53,19 @@
     	    android:hint="@string/Pass" />
     	
     	<TextView
-        	android:id="@+id/tv_UrlSoap"
+        	android:id="@+id/tv_UrlServer"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:text="@string/Url_Soap" />	
+        	android:text="@string/Url_Server" />	
 
     	<EditText
-    	    android:id="@+id/et_UrlSoap"
+    	    android:id="@+id/et_UrlServer"
     	    android:layout_width="wrap_content"
     	    android:layout_height="wrap_content"
     	    android:inputType="textUri"
     	    android:maxLength="600" >
         </EditText>
-        <!-- Carlos Parada 11/05/2012 Name of Space of Soap Method -->
-        <TextView
-        	android:id="@+id/tv_NameSpace"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:text="@string/NameSpace" />	
-
-    	<EditText
-    	    android:id="@+id/et_NameSpace"
-    	    android:layout_width="wrap_content"
-    	    android:layout_height="wrap_content"
-    	    android:inputType="textUri"
-    	    android:maxLength="600" >
-        </EditText>
-        <!-- Fin Carlos Parada -->
-    	<TextView
-        	android:id="@+id/tv_Method"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:text="@string/MethodSync" />
-
-    	<EditText
-        	android:id="@+id/et_Method"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:inputType="text" />
-
+        
     	<TextView
         	android:id="@+id/tv_Timeout"
         	android:layout_width="wrap_content"

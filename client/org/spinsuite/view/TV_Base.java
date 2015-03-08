@@ -406,4 +406,14 @@ public class TV_Base extends FragmentActivity
 		TabHandler tabHandler = getCurrentTabHandler();
 		return tabHandler.getTabParameter();
 	}
+	
+	/**
+	 * Get Size
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return int
+	 */
+	public int getSize() {
+		return m_FragmentArray.size();
+	}
 }

@@ -19,7 +19,6 @@
 <resources>
     <string name="User">User</string>
     <string name="Pass">Password</string>
-    <string name="Url_Soap">URL SOAP</string>
     <string name="ConfigConn">Config Connection</string>
     <string name="NameSpace">Name Space</string>
     <string name="AD_Client_ID">Client</string>
