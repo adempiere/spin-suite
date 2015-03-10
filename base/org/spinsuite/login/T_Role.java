@@ -152,7 +152,6 @@ public class T_Role extends Fragment implements I_Login {
 			}
     		
     	});
-    	
     }
     
     @Override
@@ -349,8 +348,20 @@ public class T_Role extends Fragment implements I_Login {
 		if(Env.isEnvLoad(ctx)
 				&& !m_IsLoadOk) {
 			role_ID = loadRole();
+	    	//	Set Load
+	    	m_IsLoadOk = true;
 		}
 		return false;
 	}
-    
+	
+	@Override
+	public void setEnabled(boolean enabled) {
+		if(!m_IsLoadOk)
+			return;
+		sp_Role.setEnabled(enabled);
+    	sp_Client.setEnabled(enabled);
+    	sp_Org.setEnabled(enabled);
+    	sp_Warehouse.setEnabled(enabled);
+    	dp_Date.setEnabled(enabled);
+	}    
 }

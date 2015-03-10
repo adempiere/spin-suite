@@ -40,7 +40,6 @@ public class Transport extends HttpTransportSE{
 	 */
 	public Transport(Proxy proxy, String url, int timeout) {
 		super(proxy, url, timeout);
-		// TODO Auto-generated constructor stub
 	}
 	
 	/**
@@ -52,7 +51,6 @@ public class Transport extends HttpTransportSE{
 	 */
 	public Transport(Proxy proxy, String url) {
 		super(proxy, url);
-		// TODO Auto-generated constructor stub
 	}
 	
 	/**
@@ -62,7 +60,6 @@ public class Transport extends HttpTransportSE{
 	 */
 	public Transport( String url) {
 		super(url);
-		// TODO Auto-generated constructor stub
 	}
 	
 	/**
@@ -73,26 +70,18 @@ public class Transport extends HttpTransportSE{
 	 */
 	public Transport( String url,int timeout) {
 		super(url,timeout);
-		// TODO Auto-generated constructor stub
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.ksoap2.transport.HttpTransportSE#call(java.lang.String, org.ksoap2.SoapEnvelope, java.util.List)
-	 */
 	@SuppressWarnings("rawtypes")
 	@Override
 	public List call(String arg0, SoapEnvelope arg1, List arg2)
 			throws IOException, XmlPullParserException {
-		// TODO Auto-generated method stub
 		return super.call(arg0, arg1, arg2);
 	}
-	/* (non-Javadoc)
-	 * @see org.ksoap2.transport.HttpTransportSE#call(java.lang.String, org.ksoap2.SoapEnvelope)
-	 */
+	
 	@Override
 	public void call(String soapAction, SoapEnvelope envelope)
 			throws IOException, XmlPullParserException {
-		// TODO Auto-generated method stub
 		super.call(soapAction, envelope);
 	}
 }

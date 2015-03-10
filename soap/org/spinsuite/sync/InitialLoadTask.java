@@ -10,88 +10,88 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2013 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Carlos Parada www.erpcya.com             				 		 *
  *************************************************************************************/
 package org.spinsuite.sync;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import org.ksoap2.serialization.SoapObject;
+import org.spinsuite.base.R;
 import org.spinsuite.interfaces.BackGroundProcess;
-import org.spinsuite.login.T_Connection;
+import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.model.MSPSSyncMenu;
 import org.spinsuite.model.MWSWebServiceType;
 import org.spinsuite.util.BackGroundTask;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.LogM;
+import org.spinsuite.util.Msg;
 import org.spinsuite.util.StringNamePair;
+import org.spinsuite.util.SyncValues;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 
-public class InitialLoadTask implements BackGroundProcess{
+/**
+ * 
+ * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com Mar 7, 2015, 3:53:08 AM
+ *
+ */
+public class InitialLoadTask implements BackGroundProcess {
 
 
-	/** Public Msg*/
-	private String m_PublicMsg = "";
-
-	/** Error Indicator*/
-	private boolean m_Error = false;
-	
-	/** Progress Indicator*/
-	private int m_Progress = -1 ;
-	
-	/** Background Task */ 
-	private BackGroundTask m_Task = null;
-	
-	/** Connection Windows*/
-	private T_Connection m_Conn = null;
-	
-	/** Dialog Message Process*/ 
+	/** Public Msg				*/
+	private String 				m_PublicMsg = "";
+	/** Error Indicator			*/
+	private boolean 			m_Error = false;
+	/** Progress Indicator		*/
+	private int 				m_Progress = -1 ;
+	/** Background Task 		*/ 
+	private BackGroundTask 		m_Task = null;
+	/** Connection Windows		*/
+	private Activity 			m_Callback = null;
+	/** Dialog Message Process	*/ 
 	//private T_Login_ProgressSync df = null;
-	
-	/** Url */
-	private String m_URL = ""; 
-	
-	/** Name Space */ 
-	private String m_NameSpace = "";
-	
-	/** Method */
-	private String m_Method = "";
-	
-	/** Is .Net Service*/
-	private boolean m_IsNetService = false;
-	
-	/** User*/
-	private String m_User =  "";
-	
-	/** Password*/
-	private String m_PassWord = "" ;
-	
-	/** Soap Action */
-	private String m_SoapAction = "";
-	
-	/** Timeout */
-	private int m_Timeout = 0;
-	
-	/** Notification Manager*/
+	/** Url 					*/
+	private String 				m_URL = ""; 
+	/** Name Space 				*/ 
+	private String 				m_NameSpace = "";
+	/** Method 					*/
+	private String 				m_Method = "";
+	/** Is .Net Service			*/
+	private boolean 			m_IsNetService = false;
+	/** User					*/
+	private String 				m_User =  "";
+	/** Password				*/
+	private String 				m_PassWord = "" ;	
+	/** Soap Action 			*/
+	private String 				m_SoapAction = "";
+	/** Timeout 				*/
+	private int 				m_Timeout = 0;
+	/** Notification Manager	*/
 	private NotificationManager m_NFManager = null;
-	
-	/** Max Value Progress Bar*/
-	private int m_MaxPB = 0;
-	
-	/** Builder*/
-	private Builder m_Builder = null;
-	
-	/** Pending Intent T_Connection Fragment Activity*/ 
-	private PendingIntent m_PendingIntent = null; 
-	private static final String 	KEY_POS_TAB			= "posTab";
+	/** Max Value Progress Bar	*/
+	private int 				m_MaxPB = 0;
+	/** Builder					*/
+	private Builder 			m_Builder = null;
+	/** Pending Intent Fragment */ 
+	private PendingIntent 		m_PendingIntent = null; 
+	/**	Title					*/
+	private String				m_Title = null;
+	/**	Last Message			*/
+	private String 				m_LastMsg = null;
+	private static final String KEY_POS_TAB	= "posTab";
+	/**	Notification ID			*/
+	private static final int	NOTIFICATION_ID = 1;
 	
 	
 	
@@ -106,12 +106,11 @@ public class InitialLoadTask implements BackGroundProcess{
 	 * @param p_User
 	 * @param p_PassWord
 	 * @param p_SoapAction
-	 * @param p_Conn
+	 * @param p_Callback
 	 * @param p_Timeout
 	 */
-	public InitialLoadTask(String p_URL, String p_NameSpace, String p_Method,boolean p_IsNetService, String p_User,String p_PassWord,String p_SoapAction,T_Connection p_Conn,String p_Timeout) {
-		// TODO Auto-generated constructor stub
-		
+	public InitialLoadTask(String p_URL, String p_NameSpace, String p_Method, boolean p_IsNetService, 
+			String p_User, String p_PassWord, String p_SoapAction, Activity p_Callback, int p_Timeout) {
 		m_URL = p_URL;
 		m_NameSpace = p_NameSpace;
 		m_Method = p_Method;
@@ -119,15 +118,17 @@ public class InitialLoadTask implements BackGroundProcess{
 		m_User = p_User; 
 		m_SoapAction = p_SoapAction;
 		m_PassWord = p_PassWord;
-		m_Conn =p_Conn;
-		m_Timeout = Integer.parseInt(p_Timeout);
-		
+		m_Callback = p_Callback;
+		m_Timeout = p_Timeout;
+		m_Title = m_Callback.getString(R.string.Sync_Synchronzing);
 		//Set Notification Panel
-		m_NFManager = (NotificationManager) m_Conn.getSystemService(Context.NOTIFICATION_SERVICE);
-		m_Builder = new NotificationCompat.Builder(m_Conn);
+		m_NFManager = (NotificationManager) m_Callback.getSystemService(Context.NOTIFICATION_SERVICE);
+		m_Builder = new NotificationCompat.Builder(m_Callback);
+		//	
+		setPendingIntent();
 		
 		//
-		//Intent intent = new Intent(m_Conn, T_Connection.class); 
+		
 		//TaskStackBuilder stackBuilder = TaskStackBuilder.create(m_Conn);
 		//stackBuilder.addParentStack(T_Connection.class);
 		// Adds the Intent to the top of the stack
@@ -137,34 +138,54 @@ public class InitialLoadTask implements BackGroundProcess{
 		
 	}
 	
+	/**
+	 * Set Pending Item
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void setPendingIntent() {
+		ActivityManager m_ActivityManager = (ActivityManager) m_Callback.getSystemService(Context.ACTIVITY_SERVICE);
+		List<ActivityManager.RunningTaskInfo> tasks = m_ActivityManager.getRunningTasks(1);
+		ActivityManager.RunningTaskInfo task = tasks.get(0);
+		ComponentName mainActivity = task.baseActivity;
+		Intent intent = new Intent();
+		intent.setComponent(mainActivity);
+		intent.setAction(Intent.ACTION_MAIN);
+		intent.addCategory(Intent.CATEGORY_LAUNCHER);
+		//	Set Main Activity
+		m_PendingIntent = PendingIntent.getActivity(m_Callback, 0, intent, 0);
+	}
+	
 	@Override
 	public void publishBeforeInit() {
-		// TODO Auto-generated method stub
+		Msg.toastMsg(m_Callback, m_Callback.getString(R.string.Sync_StartingDownload));
 	}
 
 	@Override
 	public void publishOnRunning() {
-		// TODO Auto-generated method stub
 		//df.setMsg(m_PublicMsg,m_Error);
 		//df.setProgress(m_Progress, m_Error);
-		m_Builder.setContentTitle("Titulo")
+		m_Builder.setContentIntent(m_PendingIntent);
+		m_Builder.setContentTitle(m_Title)
 								.setContentText(m_PublicMsg)
 								.setProgress(m_MaxPB, m_Progress, m_Progress == -1)
 								.setSmallIcon(android.R.drawable.stat_sys_download)
 								;
-		m_NFManager.notify(0, m_Builder.build());
+		//m_Builder.setStyle(inboxStyle);
+		m_NFManager.notify(NOTIFICATION_ID, m_Builder.build());
 	}
 
 	@Override
 	public void publishAfterEnd() {
-		// TODO Auto-generated method stub
+		Msg.alertMsg(m_Callback, (m_Error
+									? m_PublicMsg
+											: m_LastMsg));
 	}
 
 	@Override
 	public Object run() {
 		//Call List of Web Services
-		CallListWebServices();
-		
+		callListWebServices();
 		return null;
 	}
 	
@@ -174,11 +195,11 @@ public class InitialLoadTask implements BackGroundProcess{
 	 * @return void
 	 */
 	public void runTask(){
-		m_Task = new BackGroundTask(this, m_Conn);
+		m_Task = new BackGroundTask(this, m_Callback);
 		//df = new T_Login_ProgressSync(m_Task,m_Conn);
     	//df.show(m_Conn.getFragmentManager(), m_Conn.getResources().getString(R.string.InitSync));
-		m_NFManager = (NotificationManager) m_Conn.getSystemService(Context.NOTIFICATION_SERVICE);
-		m_Builder = new NotificationCompat.Builder(m_Conn);
+		m_NFManager = (NotificationManager) m_Callback.getSystemService(Context.NOTIFICATION_SERVICE);
+		m_Builder = new NotificationCompat.Builder(m_Callback);
 		m_Task.runTask();
 	}
 	
@@ -236,45 +257,64 @@ public class InitialLoadTask implements BackGroundProcess{
 	 * @author <a href="mailto:carlosapardam@gmail.com">Carlos Parada</a> 03/09/2014, 23:51:06
 	 * @return void
 	 */
-	private void CallListWebServices(){
-		
+	private void callListWebServices() {
+		//	Get Previous Milliseconds
+		long previousMillis = System.currentTimeMillis();
 		//Call Web Service Method Create Metadata
-		refreshMSG("Calling " + "Create Metadata",false,-1);
-		if (!CallWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
+		refreshMSG(m_Callback.getString(R.string.Calling) 
+				+ " " + m_Callback.getString(R.string.Sync_WebServiceDefinition), false, -1);
+		if (!callWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
 				new StringNamePair(ILCall.m_ServiceMethodField, InitialLoad.INITIALLOAD_ServiceMethodCreateMetaData),
 				new StringNamePair(ILCall.m_WSNumber, "0")))
 			return;
 		
-		//Call Web Service Method Web Sevice Definition
+		//Call Web Service Method Web Service Definition
 		
-		refreshMSG("Calling " + "Web Sevice Definition",false,-1);
-		if (!CallWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
+		refreshMSG(m_Callback.getString(R.string.Calling) 
+				+ " " + m_Callback.getString(R.string.Sync_WebService), false, -1);
+		if (!callWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
 				new StringNamePair(ILCall.m_ServiceMethodField, InitialLoad.INITIALLOAD_ServiceMethodWebServiceDefinition),
 				new StringNamePair(ILCall.m_Page, "0"),
 				new StringNamePair(ILCall.m_WSNumber, "0")
 				))
 			return;
 		
-		List<MSPSSyncMenu> sm = MSPSSyncMenu.getNodes(m_Conn, "0", InitialLoad.INITIALLOAD_ServiceDefinition, InitialLoad.INITIALLOAD_ServiceMethodDataSynchronization, null, null);
+		List<MSPSSyncMenu> sm = MSPSSyncMenu.getNodes(m_Callback, "0", InitialLoad.INITIALLOAD_ServiceDefinition, 
+				InitialLoad.INITIALLOAD_ServiceMethodDataSynchronization, null, null);
 		
-		try{
+		try {
+			MWSWebServiceType wst = new MWSWebServiceType(m_Callback, 0, null);
 			for (MSPSSyncMenu mspsSyncMenu : sm) {
-				
-				MWSWebServiceType wst = new MWSWebServiceType(m_Conn, mspsSyncMenu.getWS_WebServiceType_ID(), null);
-				refreshMSG("Calling " +  mspsSyncMenu.getName() ,false,-1);
+				//	Load Data from DB
+				wst.loadData(mspsSyncMenu.getWS_WebServiceType_ID());
+				//	
+				refreshMSG(m_Callback.getString(R.string.Calling) 
+						+ " " +  mspsSyncMenu.getName() , false, -1);
 				//Call Web Service Method Web Sevice Definition
-	    		if (!CallWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
+	    		if (!callWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
 	    							new StringNamePair(ILCall.m_ServiceMethodField, InitialLoad.INITIALLOAD_ServiceMethodDataSynchronization),
 	    							new StringNamePair(ILCall.m_ServiceTypeField, wst.getValue()),
 	    							new StringNamePair(ILCall.m_Page, "0"),
 	    							new StringNamePair(ILCall.m_WSNumber, "0")))
 	    			break;		
 			}
-		}catch(Exception e)
-		{
-			e.printStackTrace();
+		} catch(Exception e) {
+			m_Error = true;
+			LogM.log(m_Callback, getClass(), Level.SEVERE, "Error", e);
+		} finally {
+			//	Get After Milliseconds
+			long afterMillis = System.currentTimeMillis();
+			long duration = afterMillis - previousMillis;
+			//	Set Last Message
+			m_LastMsg = m_Callback.getString(R.string.DownloadEnding) + " " 
+					+ m_Callback.getString(R.string.Sync_Duration) 
+					+ ": " + SyncValues.getDifferenceValue(duration);
+			//	Refresh Notification
+			setMaxValueProgressBar(0);
+			refreshMSG(m_LastMsg , false, 0);
+			//	Set Context
+			setContext();
 		}
-		setContext();
 		//df.dismiss();
 	}
 	
@@ -284,7 +324,7 @@ public class InitialLoadTask implements BackGroundProcess{
 	 * @param Params
 	 * @return void
 	 */
-	private boolean CallWebService(StringNamePair... Params){
+	private boolean callWebService(StringNamePair... Params){
 		StringNamePair[] p_Params = new StringNamePair[Params.length];
 		int CurrentPage = 0;
 		int CurrentWS = 0;
@@ -292,7 +332,8 @@ public class InitialLoadTask implements BackGroundProcess{
 		int CountWS = 0;
 		int iWS = -1;
 		int iPage =-1;
-		InitialLoad il = new InitialLoad(m_URL, m_NameSpace, m_Method, m_IsNetService, m_SoapAction, m_User, m_PassWord, this, m_Timeout, m_Conn);
+		InitialLoad il = new InitialLoad(m_URL, m_NameSpace, m_Method, 
+				m_IsNetService, m_SoapAction, m_User, m_PassWord, this, m_Timeout, m_Callback);
 		
 		for (int i=0;i<Params.length;i++){
 			il.addPropertyToCall(Params[i].getKey(), Params[i].getName());
@@ -334,7 +375,7 @@ public class InitialLoadTask implements BackGroundProcess{
 					p_Params[iPage] = new StringNamePair(Params[iPage].getKey(), Integer.valueOf(CurrentPage).toString());
 					
 					refreshMSG(m_PublicMsg, false, -1);
-					return CallWebService(p_Params);
+					return callWebService(p_Params);
 				}
 				else{
 					if (iPage != -1)
@@ -343,7 +384,7 @@ public class InitialLoadTask implements BackGroundProcess{
 					p_Params[iWS] = new StringNamePair(Params[iWS].getKey(), Integer.valueOf(CurrentWS).toString());
 					
 					refreshMSG(m_PublicMsg, false, -1);
-					return CallWebService(p_Params);
+					return callWebService(p_Params);
 				}
 			}
 			else
@@ -352,7 +393,7 @@ public class InitialLoadTask implements BackGroundProcess{
 					p_Params[iWS] = new StringNamePair(Params[iWS].getKey(), Integer.valueOf(0).toString());
 					p_Params[iPage] = new StringNamePair(Params[iPage].getKey(), Integer.valueOf(CurrentPage).toString());
 					refreshMSG(m_PublicMsg, false, -1);
-					return CallWebService(p_Params);
+					return callWebService(p_Params);
 				}
 			}
 		}
@@ -375,6 +416,8 @@ public class InitialLoadTask implements BackGroundProcess{
 	/**
 	 * Refresh Message
 	 * @author <a href="mailto:carlosapardam@gmail.com">Carlos Parada</a> 18/10/2014, 13:25:58
+	 * @contributor Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * <li>Add Translation
 	 * @param p_MSG
 	 * @param p_Error
 	 * @param p_Progress
@@ -395,14 +438,20 @@ public class InitialLoadTask implements BackGroundProcess{
 	 * @return void
 	 */
 	public void setContext() {
-		Env.setIsEnvLoad(m_Conn, true);
-		Env.setContext(m_Conn, "#SUser", m_User);
-		Env.setContext(m_Conn, "#SPass", m_PassWord);
-		Env.setSavePass(m_Conn, true);
-		Env.setAutoLogin(m_Conn, true);
-		Env.setContext(m_Conn, KEY_POS_TAB, 1);
-		Env.setContext(m_Conn, "#Timeout", m_Timeout);
+		Env.setIsEnvLoad(m_Callback, true);
+		Env.setContext(m_Callback, "#SUser", m_User);
+		Env.setContext(m_Callback, "#SPass", m_PassWord);
+		Env.setSavePass(m_Callback, true);
+		Env.setAutoLogin(m_Callback, true);
+		Env.setContext(m_Callback, KEY_POS_TAB, 1);
+		Env.setContext(m_Callback, "#Timeout", m_Timeout);
+		//	Refresh Callback
+		I_Login fr = ((I_Login)m_Callback);
+		if(!m_Error) {
+			fr.loadData();
+			fr.setEnabled(true);
+		} else {
+			fr.setEnabled(false);
+		}
 	}
-
-
 }

@@ -23,7 +23,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -47,7 +46,7 @@ public class T_Login_ProgressSync extends DialogFragment implements OnClickListe
 	/** Background Task */
 	private BackGroundTask task ; 
 	
-	private Context test ;
+	//private Context test ;
 	/**
 	 * *** Constructor ***
 	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 11/11/2014, 23:15:01
@@ -92,22 +91,20 @@ public class T_Login_ProgressSync extends DialogFragment implements OnClickListe
 				break;
 			case -1:
 				
-				NotificationManager notificationManager=(NotificationManager)test.getSystemService(getActivity().NOTIFICATION_SERVICE);
-				  /*Intent startActivityIntent=new Intent(ImportService.this,ImportService.class);
-				  PendingIntent pendingIntent=PendingIntent.getActivity(test.getApplicationContext(),0,startActivityIntent,0);
-				  notification.setLatestEventInfo(this,"Andlytics import",message,pendingIntent);
-				  notificationManager.notify(NOTIFICATION_ID_PROGRESS,notification);
-				*/
-				/*
-				m_notificationMgr = (NotificationManager) getActivity().getSystemService(getActivity().NOTIFICATION_SERVICE);
-				int icon=R.drawable.bpartner_m;
-				  
-				Notification notification=new Notification(icon,"",System.currentTimeMillis());
-				  //Intent notificationIntent=new Intent(getActivity(),T_Login_ProgressSync.class);
-				  PendingIntent contentIntent=PendingIntent.getActivity(getActivity(),0,getView().ge,0);
-				  notification.setLatestEventInfo(getActivity(),"","",contentIntent);
-				  m_notificationMgr.notify(1,notification);
-				  */
+//				NotificationManager notificationManager=(NotificationManager)test.getSystemService(getActivity().NOTIFICATION_SERVICE);
+//				  Intent startActivityIntent=new Intent(ImportService.this,ImportService.class);
+//				  PendingIntent pendingIntent=PendingIntent.getActivity(test.getApplicationContext(),0,startActivityIntent,0);
+//				  notification.setLatestEventInfo(this,"Andlytics import",message,pendingIntent);
+//				  notificationManager.notify(NOTIFICATION_ID_PROGRESS,notification);
+//				m_notificationMgr = (NotificationManager) getActivity().getSystemService(getActivity().NOTIFICATION_SERVICE);
+//				int icon=R.drawable.bpartner_m;
+//				  
+//				Notification notification=new Notification(icon,"",System.currentTimeMillis());
+//				  //Intent notificationIntent=new Intent(getActivity(),T_Login_ProgressSync.class);
+//				  PendingIntent contentIntent=PendingIntent.getActivity(getActivity(),0,getView().ge,0);
+//				  notification.setLatestEventInfo(getActivity(),"","",contentIntent);
+//				  m_notificationMgr.notify(1,notification);
+//				  
 				break;
 			default:
 				break;
@@ -157,7 +154,7 @@ public class T_Login_ProgressSync extends DialogFragment implements OnClickListe
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		getDialog().setTitle(R.string.Synchronzing);
+		getDialog().setTitle(R.string.Sync_Synchronzing);
 		getDialog().setCanceledOnTouchOutside(false);
 		getDialog().setCancelable(false);
 		

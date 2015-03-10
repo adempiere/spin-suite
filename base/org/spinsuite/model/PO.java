@@ -246,7 +246,7 @@ public abstract class PO {
 	 * @param ID
 	 * @return void
 	 */
-	public boolean loadData(int [] ID) {
+	public boolean loadData(int... ID) {
 		return loadData(ID, null);
 	}
 	

@@ -45,8 +45,7 @@ public class BackGroundTask {
 	 * @param process
 	 * @param ctx
 	 */
-	public BackGroundTask(BackGroundProcess process,Context ctx) {
-		// TODO Auto-generated constructor stub
+	public BackGroundTask(BackGroundProcess process, Context ctx) {
 		m_Process = process; 
 		m_ctx = ctx;
 	}
@@ -83,7 +82,6 @@ public class BackGroundTask {
 	Handler hdl = new Handler(){
 		@Override
 		public void dispatchMessage(Message msg) {
-			// TODO Auto-generated method stub
 			
 			m_Process = (BackGroundProcess) msg.obj;
 			

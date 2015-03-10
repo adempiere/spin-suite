@@ -19,7 +19,6 @@
 <resources>
     <string name="User">Usuario</string>
     <string name="Pass">Contraseña</string>
-    <string name="Url_Soap">URL SOAP</string>
     <string name="ConfigConn">Config Connection</string>
     <string name="NameSpace">Nombre del Espacio</string>
     <string name="AD_Client_ID">Compañía</string>
@@ -36,6 +35,7 @@
 	<string name="SavePass">Guardar Contraseña</string>
 	<string name="SaveSD">Guardar datos en SD(Lento)</string>
 	<string name="LogLevel">Nivel de Seguimiento</string>
+	<string name="DropDB">Borrar Base de Datos</string>
 	
 	<string name="tt_TestConn">Prueba de Conexión</string>
 	<string name="tt_Conn">Conexión</string>

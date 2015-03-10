@@ -10,14 +10,13 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, C.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.login;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
-import org.spinsuite.interfaces.I_CancelOk;
 import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.model.MCountry;
 import org.spinsuite.util.Env;
@@ -32,7 +31,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -43,7 +41,7 @@ import android.view.MenuItem;
  * 	@see https://adempiere.atlassian.net/browse/SPIN-2
  *
  */
-public class Login extends TV_Base implements I_CancelOk {
+public class Login extends TV_Base implements I_Login {
     
 	/**	Data Base			*/
 	private final String 	DATA_BASE 		= "D";
@@ -53,6 +51,10 @@ public class Login extends TV_Base implements I_CancelOk {
 	private String			m_LoadType 		= ROLE_ACCESS;
 	/**	Activity			*/
 	private Activity		v_activity		= null;
+	/**	Sync				*/
+	private T_Login_Init	m_LoginInit;
+	/**	Enable				*/
+	private boolean			m_Enabled		= true;
 	
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,10 +67,10 @@ public class Login extends TV_Base implements I_CancelOk {
         addFagment(T_Role.class, "LoginRole", R.string.tt_LoginRole);
         //	Set Activity
         v_activity = this;
-    	//*/
-    	//CreatePDFTest.GenerarPDF(this);
     	// Validate SD
     	if(Env.isEnvLoad(this)){
+    		setEnabled(true);
+    		//	
     		if(!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
     			if(!Env.getDB_PathName(this).equals(DB.DB_NAME)){
     				Msg.alertMsg(this, getResources().getString(R.string.msg_SDNotFoundDetail));
@@ -98,12 +100,31 @@ public class Login extends TV_Base implements I_CancelOk {
     			finish();
     		}
     	} else {
-    		m_LoadType = DATA_BASE;
-			new LoadAccessTask().execute();
+    		setEnabled(false);
+    		//	
+    		if(m_LoginInit == null)
+    			loadInitSync();
+    		//	For Demo
+    		//m_LoadType = DATA_BASE;
+			//new LoadAccessTask().execute();
     	}
+    	//	
     	//	
     }  
     
+    /**
+     * Load Initial Synchronization
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return void
+     */
+    private void loadInitSync() {
+    	//	
+    	if(m_LoginInit == null)
+    		m_LoginInit = new T_Login_Init(this);
+    	//	
+    	m_LoginInit.show(getFragmentManager(), 
+				this.getResources().getString(R.string.InitSync));
+    }
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -117,25 +138,26 @@ public class Login extends TV_Base implements I_CancelOk {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-		if (itemId == android.R.id.home) {
-			// Navigate "up" the demo structure to the launchpad activity.
-			// See http://developer.android.com/design/patterns/navigation.html for more.
-			NavUtils.navigateUpTo(this, new Intent(this, Login.class));
+		if (itemId == R.id.action_cancel) {
+			cancelAction();
 			return true;
-		} else if (itemId == R.id.action_ok) {
-			// Go to the previous step in the wizard. If there is no previous step,
-			// setCurrentItem will do nothing.
-			processActionOk();
-			return true;
-		} else if (itemId == R.id.action_cancel) {
-			// Advance to the next step in the wizard. If there is no next step, setCurrentItem
-			// will do nothing.
-			processActionCancel();
-			return true;
-		} else if (itemId == R.id.action_config) {
-			Intent intent = new Intent(this, T_Connection.class);
-			startActivity(intent);
-			return true;
+		} else {
+			//	Valid Enable
+			if(!m_Enabled) {
+				return true;
+			} else if(!Env.isEnvLoad(this)) {
+				loadInitSync();
+				return true;
+			}
+			//	
+			if (itemId == R.id.action_ok) {
+				aceptAction();
+				return true;
+			} else if (itemId == R.id.action_config) {
+				Intent intent = new Intent(this, T_Connection.class);
+				startActivity(intent);
+				return true;
+			}
 		}
 		//	
         return super.onOptionsItemSelected(item);
@@ -147,7 +169,7 @@ public class Login extends TV_Base implements I_CancelOk {
      * @return void
      */
     @Override
-    public boolean processActionOk(){
+    public boolean aceptAction(){
     	I_Login fr = (I_Login)getCurrentFragment();
     	boolean ret = fr.aceptAction();
 		if(fr instanceof T_Login){
@@ -206,6 +228,18 @@ public class Login extends TV_Base implements I_CancelOk {
     }
     
     @Override
+	public void setEnabled(boolean enabled) {
+    	m_Enabled = enabled;
+    	int size = getSize();
+    	for(int i = 0; i < size; i++) {
+    		I_Login fr = (I_Login)getFragment(i);
+    		if(fr != null){
+    			fr.setEnabled(enabled);
+    		}
+    	}
+	}
+    
+    @Override
     protected void onStart() {
         super.onStart();
     }
@@ -219,8 +253,6 @@ public class Login extends TV_Base implements I_CancelOk {
     @Override
     protected void onPause() {
         super.onPause();
-        /*int currentTab = mTabHost.getCurrentTab();
-        Env.setContext(this, KEY_POS_TAB, currentTab);*/
     }
     @Override
     protected void onStop() {
@@ -234,8 +266,22 @@ public class Login extends TV_Base implements I_CancelOk {
     }
     
 	@Override
-	public boolean processActionCancel() {
+	public boolean cancelAction() {
 		return false;
+	}
+	
+	/**
+	 * Re-Load Data when is synchronized
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	public boolean loadData() {
+		I_Login fr = (I_Login)getCurrentFragment();
+    	if(fr != null){
+			return fr.loadData();
+		}
+    	//	Default
+    	return false;
 	}
 	
 	/**
@@ -264,6 +310,8 @@ public class Login extends TV_Base implements I_CancelOk {
 			} else if(m_LoadType.equals(ROLE_ACCESS)) {
 				//	Load Role Access
 				Env.loadRoleAccess(v_activity);
+				//	Load Context
+				Env.loadContext(v_activity);
 			}
 			//	
 			return null;

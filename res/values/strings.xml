@@ -55,9 +55,8 @@
 	<string name="C_Order_ID">Sales Order</string>
 	<string name="C_OrderLine_ID">Sales Order Line</string>
 	<string name="M_Product_Category_ID">Product Category</string>
-	<string name="InitSyncManual">Manual Synchronization</string>
-	<string name="SynchronzeButtom">Synchronize</string>
-	<string name="Synchronzing">Synchronzing</string>
+	<string name="Calling">Calling</string>
+	<string name="DownloadEnding">Download Ending</string>
 	<string name="Stop">Stop</string>
 	<string name="Hide">Hide</string>
 	<string name="Upload">Upload</string>
@@ -162,7 +161,7 @@
 	<string name="app_version_name" >Version Name</string>
 	<string name="app_version_code" >Version Code</string>
 	<string name="app_permissions" >Permission</string>
-	<string name="app_web_erp" >http://www.erpconsultoresyasociados.com</string>
+	<string name="app_web_erp" >http://www.erpcya.com</string>
 	<string name="app_web_lubo" >http://www.lubosistemas.com.ve</string>
 	
 	<string name="app_phone1_lubo" >+58(212)9523824</string>
@@ -172,9 +171,21 @@
 	<string name="app_phone5_lubo" >+50763756018</string>
 	
 	<string name="app_phone1_erp" >+58(255)7114349</string>
-	<string name="app_phone2_erp" >+58(412)0598465</string>
+	<string name="app_phone2_erp" >+58(412)5236174</string>
 	<string name="app_phone3_erp" >+58(412)1741773</string>
 	<string name="app_phone4_erp" >+58(424)5484908</string>
 	<string name="app_phone5_erp" >+50768437413</string>
+	
+	<!-- Synchronization -->
+	<string name="Sync_InitSyncManual">Manual Synchronization</string>
+	<string name="Sync_SynchronzeButtom">Synchronize</string>
+	<string name="Sync_Synchronzing">Synchronzing</string>
+	<string name="Sync_StartingDownload">Starting Download</string>
+	<string name="Sync_WebServiceDefinition">Web Service Definition</string>
+	<string name="Sync_WebService">Web Service</string>
+	<string name="Sync_Pages">Pages</string>
+	<string name="Sync_Records">Records</string>
+	<string name="Sync_Duration">Duration</string>
+	<string name="Url_Server">URL (Server)</string>
 	
 </resources>

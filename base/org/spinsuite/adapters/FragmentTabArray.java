@@ -69,4 +69,14 @@ public class FragmentTabArray {
 		return m_Array.get(index);
 	}
 	
+	/**
+	 * Get Size
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return int
+	 */
+	public int size() {
+		return m_Array.size();
+	}
+	
 }
