@@ -294,6 +294,9 @@ public class SyncDataTask implements BackGroundProcess  {
 		
 		
 		if (sm.getSPS_Table_ID()!=0){
+			
+			
+			
 			/*sql.append("SELECT * FROM "
 					+ "" + )
 			sm.getSPS_Table_ID()*/
