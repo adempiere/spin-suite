@@ -17,6 +17,7 @@ package org.spinsuite.sync;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -28,6 +29,8 @@ import org.spinsuite.interfaces.BackGroundProcess;
 import org.spinsuite.model.MSPSSyncMenu;
 import org.spinsuite.model.MSPSTable;
 import org.spinsuite.model.MWSWebServiceType;
+import org.spinsuite.model.PO;
+import org.spinsuite.model.Query;
 import org.spinsuite.model.X_AD_Rule;
 import org.spinsuite.model.X_AD_Table;
 import org.spinsuite.model.X_WS_WebService;
@@ -170,7 +173,7 @@ public class SyncDataTask implements BackGroundProcess  {
 	
 	/**
 	 * Synchronize data method
-	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 22/1/2015, 1:45:30
+	 * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_SPS_SyncMenu_ID
 	 * @return void
 	 * @throws XmlPullParserException 
@@ -185,19 +188,20 @@ public class SyncDataTask implements BackGroundProcess  {
 		if (syncm.getAD_RuleBefore_ID()!=0){
 			X_AD_Rule rule  = new X_AD_Rule(m_ctx, syncm.getAD_RuleBefore_ID(), conn);
 			runQuery(rule.getScript(),null);
-			//conn.executeSQL(rule.getScript());
 		}
 		
 		//Call Web Services
 		if (syncm.getWS_WebServiceType_ID()!=0){
-			param = getSoapParam(syncm,PageNo);
-			callWebService(param,syncm);
-			
-			if (soapResponse != null && soapResponse.hasAttribute(SyncValues.WSQtyPages))
-				qtyPages = Integer.parseInt(soapResponse.getAttributeAsString(SyncValues.WSQtyPages));
+			setSyncValues(syncm);
 			
 			//Run Query Data Web Service
 			if (m_MethodValue.equals(SyncValues.WSMQueryData)) {
+				param = getSoapParam(syncm,PageNo);
+				callWebService(param,syncm);
+				
+				if (soapResponse != null && soapResponse.hasAttribute(SyncValues.WSQtyPages))
+					qtyPages = Integer.parseInt(soapResponse.getAttributeAsString(SyncValues.WSQtyPages));
+				
 				while (currentPage <= qtyPages){
 					writeDB(syncm);
 					if (currentPage != qtyPages){
@@ -206,11 +210,24 @@ public class SyncDataTask implements BackGroundProcess  {
 					}
 					currentPage++;
 				}
-			}
+				if (syncm.getSPS_Table_ID()!=0){
+					MSPSTable table = new MSPSTable(m_ctx, syncm.getSPS_Table_ID(), conn);
+					Env.setContext(m_ctx, "#" + table.getTableName() + "_LastSyncDate", new Timestamp(System.currentTimeMillis()).toString());
+				}
+			}//End Query Data Web Service
+			
 			//Run Create Data Web Service
 			else if (m_MethodValue.equals(SyncValues.WSMCreateData)) {
-				//	Not yet implemented
-			}
+				if (syncm.getSPS_Table_ID()!=0){
+					MSPSTable table= new MSPSTable(m_ctx, syncm.getSPS_Table_ID(), conn);
+					String whereClause = "";
+					List<PO> rows = new Query(m_ctx, table.getTableName(), whereClause, conn).list();
+					for (PO row : rows) {
+						param= getSoapParam(syncm,PageNo,row);
+						callWebService(param,syncm);
+					}
+				}
+			}//End Create Data Web Service
 		}
 		
 		//Run Script After Call Web Service 
@@ -234,8 +251,39 @@ public class SyncDataTask implements BackGroundProcess  {
 	 * @return
 	 * @return SoapObject
 	 */
-	private SoapObject getSoapParam(MSPSSyncMenu sm, int PageNo) {
+	private SoapObject getSoapParam(MSPSSyncMenu sm, int PageNo,PO data) {
 		SoapObject param = null;
+		MWSWebServiceType wst = new MWSWebServiceType(m_ctx, sm.getWS_WebServiceType_ID(), conn);
+		
+		if(m_MethodValue.equals(SyncValues.WSMQueryData)){
+			String whereClause;
+			whereClause = Env.parseContext(m_ctx, sm.getWhereClause(), true);
+			param = new WSModelCRUDRequest(m_ctx, m_NameSpace, wst.getWS_WebServiceType_ID(), conn, 0, null, whereClause, PageNo);
+		}
+		else if (m_MethodValue.equals(SyncValues.WSMCreateData))
+			param = new WSModelCRUDRequest(m_ctx, m_NameSpace, wst.getWS_WebServiceType_ID(), conn, 0, data);
+		//	
+		return param;
+	}
+	/**
+	 * 
+	 * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param sm
+	 * @param PageNo
+	 * @return
+	 * @return SoapObject
+	 */
+	private SoapObject getSoapParam(MSPSSyncMenu sm, int PageNo) {
+		return getSoapParam(sm, PageNo,null);
+	}
+	
+	/**
+	 * Set Synchronize Values
+	 * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param sm
+	 * @return void
+	 */
+	private void setSyncValues(MSPSSyncMenu sm){
 		MWSWebServiceType wst = new MWSWebServiceType(m_ctx, sm.getWS_WebServiceType_ID(), conn);
 		
 		if (wst.getWS_WebService_ID() != 0){
@@ -247,71 +295,14 @@ public class SyncDataTask implements BackGroundProcess  {
 		
 		if (wst.getWS_WebServiceMethod_ID() != 0){
 			X_WS_WebServiceMethod wsm =	new X_WS_WebServiceMethod(m_ctx, wst.getWS_WebServiceMethod_ID(), conn);
-			//Web Service Query Data
-			if (wsm.getValue() != null){
-				
+			if (wsm.getValue() != null)
 				m_MethodValue = wsm.getValue();
-				
-				if(m_MethodValue.equals(SyncValues.WSMQueryData))
-					param = getSoapParamQueryData(sm, wst, PageNo);
-				else if (m_MethodValue.equals(SyncValues.WSMCreateData)){
-					param = getSoapParamCreateData(sm, wst);
-				}
-			}
 		}
-		//	
-		return param;
-	}
-	
-	/**
-	 * 
-	 * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param sm
-	 * @param wst
-	 * @return
-	 * @return SoapObject
-	 */
-	private SoapObject getSoapParamQueryData(MSPSSyncMenu sm,MWSWebServiceType wst,int PageNo) {
-		SoapObject param = null;
-		String whereClause;
-		
-		whereClause = "";//sm.getWhereClause();
-		param = new WSModelCRUDRequest(m_ctx, m_NameSpace, wst.getWS_WebServiceType_ID(), conn, null, null, whereClause,PageNo);
-		
-		return param;
-	}
-	
-	/**
-	 * 
-	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 3/3/2015, 1:33:02
-	 * @param sm
-	 * @param wst
-	 * @param PageNo
-	 * @return
-	 * @return SoapObject
-	 */
-	private SoapObject getSoapParamCreateData(MSPSSyncMenu sm,MWSWebServiceType wst) {
-		SoapObject param = null;
-		//StringBuffer sql = new StringBuffer();
-		
-		
-		if (sm.getSPS_Table_ID()!=0){
-			
-			
-			
-			/*sql.append("SELECT * FROM "
-					+ "" + )
-			sm.getSPS_Table_ID()*/
-		}
-			
-		param = new WSModelCRUDRequest(m_ctx, m_NameSpace, wst.getWS_WebServiceType_ID(), conn, null, null, null,0);
-		
-		return param;
 	}
 	
 	/**
 	 * Call Web Service And get Response
-	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 24/1/2015, 18:46:08
+	 * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_SO_Param
 	 * @throws IOException
 	 * @throws XmlPullParserException
@@ -361,7 +352,7 @@ public class SyncDataTask implements BackGroundProcess  {
 	
 	/**
 	 * Write into DB
-	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 27/1/2015, 23:04:11
+	 * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param sm
 	 * @return void
 	 */
@@ -439,7 +430,13 @@ public class SyncDataTask implements BackGroundProcess  {
 		}
 		soapResponse = null;
 	}
-	
+	/**
+	 * Run a Query
+	 * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.coms
+	 * @param sql
+	 * @param data
+	 * @return void
+	 */
 	private void runQuery(String sql,Object[] data){
 		try{
 			if (data != null)

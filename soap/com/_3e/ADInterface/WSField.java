@@ -30,9 +30,9 @@ public class WSField extends SoapObject{
 	/** NameSpace */
 	public static final String NameSpace = "field";
 	/** Column */
-	public static final String Column = "field";
+	public static final String Column = "column";
 	/** Val */
-	public static final String Val = "field";
+	public static final String Val = "val";
 	
 	/**
 	 * *** Constructor ***
