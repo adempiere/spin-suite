@@ -21,7 +21,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Interface for SPS_SyncMenu
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765)
+ *  @version Release 3.7.0LTS
  */
 public interface I_SPS_SyncMenu 
 {
@@ -166,6 +166,28 @@ public interface I_SPS_SyncMenu
 	  */
 	public boolean isSummary();
 
+    /** Column name IsSynchronized */
+    public static final String COLUMNNAME_IsSynchronized = "IsSynchronized";
+
+	/** Set Synchronized	  */
+	public void setIsSynchronized (boolean IsSynchronized);
+
+	/** Get Synchronized	  */
+	public boolean isSynchronized();
+
+    /** Column name LastSynchronized */
+    public static final String COLUMNNAME_LastSynchronized = "LastSynchronized";
+
+	/** Set Last Synchronized.
+	  * Date when last synchronized
+	  */
+	public void setLastSynchronized (Date LastSynchronized);
+
+	/** Get Last Synchronized.
+	  * Date when last synchronized
+	  */
+	public Date getLastSynchronized();
+
     /** Column name Name */
     public static final String COLUMNNAME_Name = "Name";
 
@@ -178,6 +200,15 @@ public interface I_SPS_SyncMenu
 	  * Alphanumeric identifier of the entity
 	  */
 	public String getName();
+
+    /** Column name Processing */
+    public static final String COLUMNNAME_Processing = "Processing";
+
+	/** Set Process Now	  */
+	public void setProcessing (boolean Processing);
+
+	/** Get Process Now	  */
+	public boolean isProcessing();
 
     /** Column name SPS_SyncMenu_ID */
     public static final String COLUMNNAME_SPS_SyncMenu_ID = "SPS_SyncMenu_ID";
@@ -234,6 +265,15 @@ public interface I_SPS_SyncMenu
 
 	/** Get Web Service	  */
 	public int getWS_WebService_ID();
+
+    /** Column name WS_WebServiceMethod_ID */
+    public static final String COLUMNNAME_WS_WebServiceMethod_ID = "WS_WebServiceMethod_ID";
+
+	/** Set Web Service Method	  */
+	public void setWS_WebServiceMethod_ID (int WS_WebServiceMethod_ID);
+
+	/** Get Web Service Method	  */
+	public int getWS_WebServiceMethod_ID();
 
     /** Column name WS_WebServiceType_ID */
     public static final String COLUMNNAME_WS_WebServiceType_ID = "WS_WebServiceType_ID";

@@ -899,16 +899,23 @@ public abstract class PO {
 						}
 					}	//   for all fields
 				}
-
-				//	Housekeeping
-				m_IDs[0] = PO.I_ZERO;
+				
+				
 				if (conn == null)
 					LogM.log(getCtx(), PO.class, Level.FINE, "complete");
 				else
 					LogM.log(getCtx(), PO.class, Level.FINE, "[" + conn.toString() + "] - complete");
 			}
+			//2015-03-13 Carlos Parada Add Sync Record 
+			if (MSession.logMigration(this, m_TableInfo))
+				createSyncRecord(MSPSSyncTable.EVENTCHANGELOG_Delete,m_IDs[0]);
+			//End Carlos Parada 
+			//	Housekeeping
+			m_IDs[0] = PO.I_ZERO;
+			
 			if(handConnection)
 				conn.setTransactionSuccessful();
+			
 			//	
 			clear(true);
 			LogM.log(getCtx(), getClass(), Level.FINE, (String)m_OldValues[0]);
@@ -971,6 +978,7 @@ public abstract class PO {
 					sym.append("?");
 					//	
 					value = parseValue(column, i, true, true);
+					
 					if(column.IsMandatory 
 							&& value == null)
 						throw new Exception(m_ctx.getResources().getString(R.string.MustFillField) + 
@@ -1005,6 +1013,12 @@ public abstract class PO {
 					sym.toString() + 
 					")";
 			conn.executeSQL(sql, listValues.toArray());
+			
+			//2015-03-13 Carlos Parada Add Sync Record 
+			if (MSession.logMigration(this, m_TableInfo))
+				createSyncRecord(MSPSSyncTable.EVENTCHANGELOG_Insert,m_IDs[0]);
+			//End Carlos Parada 
+			
 			if(handConnection)
 				conn.setTransactionSuccessful();
 			//	Reload Key
@@ -1096,7 +1110,10 @@ public abstract class PO {
 				//End Carlos Parada
 			}
 			//	
-			
+			//2015-03-13 Carlos Parada Add Sync Record 
+			if (MSession.logMigration(this, m_TableInfo))
+				createSyncRecord(MSPSSyncTable.EVENTCHANGELOG_Update,m_IDs[0]);
+			//End Carlos Parada 
 			if(handConnection && conn.inTransaction())
 				conn.setTransactionSuccessful();
 		} catch (Exception e) {
@@ -1479,5 +1496,30 @@ public abstract class PO {
 	public boolean isDeleteable() {
 		return m_TableInfo.isDeleteable();
 	}
-	
+
+	/**
+	 * 
+	 * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com 03/09/2014, 23:10:35
+	 * @return void
+	 * @throws Exception 
+	 */
+	private void createSyncRecord(String p_EventChangeLog,int p_ID) throws Exception{
+		
+		MSPSSyncTable synctable = MSPSSyncTable.getSyncTable(getCtx(), conn, getSPS_Table_ID(), p_ID);
+		
+		if (synctable== null)
+			synctable = new MSPSSyncTable(getCtx(), 0, conn);
+		
+		if (synctable.getSPS_SyncTable_ID()==0){
+			synctable.setRecord_ID(p_ID);
+			synctable.setEventChangeLog(p_EventChangeLog);
+			synctable.setSPS_Table_ID(getSPS_Table_ID());
+			synctable.setIsSynchronized(false);
+			synctable.save();
+		}
+		else{
+			if (p_EventChangeLog.equals(X_SPS_SyncTable.EVENTCHANGELOG_Delete))
+				synctable.deleteEx();
+		}
+	}
 }

@@ -18,6 +18,7 @@ package org.spinsuite.sync;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -33,9 +34,11 @@ import org.spinsuite.model.PO;
 import org.spinsuite.model.Query;
 import org.spinsuite.model.X_AD_Rule;
 import org.spinsuite.model.X_AD_Table;
+import org.spinsuite.model.X_SPS_SyncTable;
 import org.spinsuite.model.X_WS_WebService;
 import org.spinsuite.model.X_WS_WebServiceMethod;
 import org.spinsuite.util.BackGroundTask;
+import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.SyncValues;
@@ -210,21 +213,27 @@ public class SyncDataTask implements BackGroundProcess  {
 					}
 					currentPage++;
 				}
-				if (syncm.getSPS_Table_ID()!=0){
-					MSPSTable table = new MSPSTable(m_ctx, syncm.getSPS_Table_ID(), conn);
-					Env.setContext(m_ctx, "#" + table.getTableName() + "_LastSyncDate", new Timestamp(System.currentTimeMillis()).toString());
-				}
+				syncm.setLastSynchronized(new Timestamp(System.currentTimeMillis()));
+				syncm.save();
 			}//End Query Data Web Service
 			
 			//Run Create Data Web Service
 			else if (m_MethodValue.equals(SyncValues.WSMCreateData)) {
 				if (syncm.getSPS_Table_ID()!=0){
 					MSPSTable table= new MSPSTable(m_ctx, syncm.getSPS_Table_ID(), conn);
-					String whereClause = "";
-					List<PO> rows = new Query(m_ctx, table.getTableName(), whereClause, conn).list();
+					String whereClause = " EXISTS (SELECT 1 "
+													+ "FROM "
+													+ "SPS_SyncTable "
+													+ "WHERE SPS_SyncTable.SPS_Table_ID = ? AND "
+													+ "SPS_SyncTable.Record_ID = "+table.getTableName()+"."+table.getTableName()+"_ID AND "
+													+ "SPS_SyncTable.EventChangeLog = ? )";
+					List<PO> rows = new Query(m_ctx, table.getTableName(), whereClause, conn)
+									.setParameters(new Object[]{table.getSPS_Table_ID(),X_SPS_SyncTable.EVENTCHANGELOG_Insert})
+									.list();
 					for (PO row : rows) {
 						param= getSoapParam(syncm,PageNo,row);
 						callWebService(param,syncm);
+						writeDB(syncm);
 					}
 				}
 			}//End Create Data Web Service
@@ -256,8 +265,12 @@ public class SyncDataTask implements BackGroundProcess  {
 		MWSWebServiceType wst = new MWSWebServiceType(m_ctx, sm.getWS_WebServiceType_ID(), conn);
 		
 		if(m_MethodValue.equals(SyncValues.WSMQueryData)){
-			String whereClause;
-			whereClause = Env.parseContext(m_ctx, sm.getWhereClause(), true);
+			String whereClause="";
+			
+			SimpleDateFormat sdf = DisplayType.getDateFormat(m_ctx, DisplayType.DATE_TIME, "yyyy-MM-dd hh:mm:ss");
+			whereClause +=(sm.getLastSynchronized()!=null ? "(UPDATED >= '" + sdf.format(sm.getLastSynchronized()) + "')" : "");
+			if (sm.getWhereClause()!=null)
+				whereClause += (whereClause.equals("")?"":" AND ") + "(" + Env.parseContext(m_ctx, sm.getWhereClause(), true) + ")";
 			param = new WSModelCRUDRequest(m_ctx, m_NameSpace, wst.getWS_WebServiceType_ID(), conn, 0, null, whereClause, PageNo);
 		}
 		else if (m_MethodValue.equals(SyncValues.WSMCreateData))
@@ -359,75 +372,85 @@ public class SyncDataTask implements BackGroundProcess  {
 	private void writeDB(MSPSSyncMenu sm)
 	{		
 		 
-		//Validate Data Set
-		if (soapResponse == null || !soapResponse.hasProperty(SyncValues.WSRespDataSet))
+		//Validate Response
+		if (soapResponse == null)
 			return;
-		
-		//Soap Data Set
-		SoapObject soapDataSet= (SoapObject) soapResponse.getProperty(SyncValues.WSRespDataSet);
-		
-		//Validate Data Row
-		if (soapDataSet == null || !soapDataSet.hasProperty(SyncValues.WSRespDataRow))
-			return;
-		
-		//Soap Data Row
-		SoapObject soapDataRow=(SoapObject)  soapDataSet.getProperty(SyncValues.WSRespDataRow);
-		
-		int countDataSet = soapDataSet.getPropertyCount();
-		int countDataRow = soapDataRow.getPropertyCount();
-		StringBuffer sql = new StringBuffer();
-		StringBuffer fields =new StringBuffer();
-		StringBuffer values =new StringBuffer();
-		String [] data = new String[countDataRow];
-		SoapObject field = null;
-		Object value =null;
-		String tableName = null;
-		
-		if (sm.getSPS_Table_ID()!= 0 ){
-			MSPSTable table = new MSPSTable(m_ctx, sm.getSPS_Table_ID(), conn);
-			tableName = table.getTableName();
-		}
-		else if (sm.getWS_WebServiceType_ID()!=0){
-			MWSWebServiceType wst = new MWSWebServiceType(m_ctx, sm.getWS_WebServiceType_ID(), conn);
-			if (wst.getAD_Table_ID()!=0){
-				X_AD_Table table = new X_AD_Table(m_ctx, wst.getAD_Table_ID(), conn);
+		if (m_MethodValue.equals(SyncValues.WSMQueryData)){
+			//Validate Data Set
+			if (!soapResponse.hasProperty(SyncValues.WSRespDataSet))
+				return;
+			//Soap Data Set
+			SoapObject soapDataSet= (SoapObject) soapResponse.getProperty(SyncValues.WSRespDataSet);
+			
+			//Validate Data Row
+			if (soapDataSet == null || !soapDataSet.hasProperty(SyncValues.WSRespDataRow))
+				return;
+			
+			//Soap Data Row
+			SoapObject soapDataRow=(SoapObject)  soapDataSet.getProperty(SyncValues.WSRespDataRow);
+			
+			int countDataSet = soapDataSet.getPropertyCount();
+			int countDataRow = soapDataRow.getPropertyCount();
+			StringBuffer sql = new StringBuffer();
+			StringBuffer fields =new StringBuffer();
+			StringBuffer values =new StringBuffer();
+			String [] data = new String[countDataRow];
+			SoapObject field = null;
+			Object value =null;
+			String tableName = null;
+			
+			if (sm.getSPS_Table_ID()!= 0 ){
+				MSPSTable table = new MSPSTable(m_ctx, sm.getSPS_Table_ID(), conn);
 				tableName = table.getTableName();
+			}
+			else if (sm.getWS_WebServiceType_ID()!=0){
+				MWSWebServiceType wst = new MWSWebServiceType(m_ctx, sm.getWS_WebServiceType_ID(), conn);
+				if (wst.getAD_Table_ID()!=0){
+					X_AD_Table table = new X_AD_Table(m_ctx, wst.getAD_Table_ID(), conn);
+					tableName = table.getTableName();
+				}
+				else
+					return;
 			}
 			else
 				return;
-		}
-		else
-			return;
-		m_MaxPB = countDataSet;
-		for (int i=0; i< countDataSet;i++){
-			m_Progress = i+1;
-			//Creating SQL Query
-			//Soap Data Row
-			soapDataRow = (SoapObject)  soapDataSet.getProperty(i);
-			sql = new StringBuffer();
-			fields = new StringBuffer();
-			values = new StringBuffer();
-			sql.append("INSERT OR REPLACE INTO " + tableName);
-
-			//Loading Fields And Values 
-			for (int j=0; j < countDataRow; j++){
-				field = (SoapObject) soapDataRow.getProperty(j);
-				String columnName = field.getAttributeAsString(SyncValues.WSColumn);
-				fields.append((fields.length()>0?","+columnName:columnName));
-				values.append((values.length()>0?",?":"?"));
-				if (field.getProperty(SyncValues.WSValue) == null)
-					value = null;
-				else
-					value = field.getPropertyAsString(SyncValues.WSValue);
+			m_MaxPB = countDataSet;
+			for (int i=0; i< countDataSet;i++){
+				m_Progress = i+1;
+				//Creating SQL Query
+				//Soap Data Row
+				soapDataRow = (SoapObject)  soapDataSet.getProperty(i);
+				sql = new StringBuffer();
+				fields = new StringBuffer();
+				values = new StringBuffer();
+				sql.append("INSERT OR REPLACE INTO " + tableName);
+	
+				//Loading Fields And Values 
+				for (int j=0; j < countDataRow; j++){
+					field = (SoapObject) soapDataRow.getProperty(j);
+					String columnName = field.getAttributeAsString(SyncValues.WSColumn);
+					fields.append((fields.length()>0?","+columnName:columnName));
+					values.append((values.length()>0?",?":"?"));
+					if (field.getProperty(SyncValues.WSValue) == null)
+						value = null;
+					else
+						value = field.getPropertyAsString(SyncValues.WSValue);
+					
+					data[j] = (value!=null ? value.toString() : null);
+				}
 				
-				data[j] = (value!=null ? value.toString() : null);
+				//Generating SQL
+				sql.append("("+fields.toString()+") VALUES ("+values+"); ");
+				
+				runQuery(sql.toString(),data);
 			}
-			
-			//Generating SQL
-			sql.append("("+fields.toString()+") VALUES ("+values+"); ");
-			
-			runQuery(sql.toString(),data);
 		}
+		else if (m_MethodValue.equals(SyncValues.WSMCreateData)){
+			
+			//System.out.println(soapResponse.hasProperty("Error"));
+			
+		}
+		
 		soapResponse = null;
 	}
 	/**

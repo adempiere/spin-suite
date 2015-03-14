@@ -84,16 +84,23 @@ public class X_SPS_SyncTable extends PO implements I_SPS_SyncTable {
 
 	/** Set Synchronized.
 		@param IsSynchronized Synchronized	  */
-	public void setIsSynchronized (Object IsSynchronized)
+	public void setIsSynchronized (boolean IsSynchronized)
 	{
-		set_Value (COLUMNNAME_IsSynchronized, IsSynchronized);
+		set_Value (COLUMNNAME_IsSynchronized, Boolean.valueOf(IsSynchronized));
 	}
 
 	/** Get Synchronized.
 		@return Synchronized	  */
-	public Object getIsSynchronized () 
+	public boolean isSynchronized () 
 	{
-				return get_Value(COLUMNNAME_IsSynchronized);
+		Object oo = get_Value(COLUMNNAME_IsSynchronized);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	/** Set Record ID.

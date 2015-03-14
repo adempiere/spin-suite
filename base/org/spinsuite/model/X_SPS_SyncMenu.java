@@ -19,12 +19,13 @@ package org.spinsuite.model;
 
 import android.content.Context;
 import android.database.Cursor;
+import java.util.Date;
 import org.spinsuite.base.DB;
 import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for SPS_SyncMenu
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_SPS_SyncMenu extends PO implements I_SPS_SyncMenu {
     /** Standard Constructor */
     public X_SPS_SyncMenu (Context ctx, int SPS_SyncMenu_ID, DB conn)
@@ -38,7 +39,6 @@ public class X_SPS_SyncMenu extends PO implements I_SPS_SyncMenu {
 // N
 			setName (null);
 			setSPS_SyncMenu_ID (0);
-			setSPS_Table_ID (0);
         } */
     }
 
@@ -195,6 +195,44 @@ public class X_SPS_SyncMenu extends PO implements I_SPS_SyncMenu {
 		return false;
 	}
 
+	/** Set Synchronized.
+		@param IsSynchronized Synchronized	  */
+	public void setIsSynchronized (boolean IsSynchronized)
+	{
+		set_Value (COLUMNNAME_IsSynchronized, Boolean.valueOf(IsSynchronized));
+	}
+
+	/** Get Synchronized.
+		@return Synchronized	  */
+	public boolean isSynchronized () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsSynchronized);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Last Synchronized.
+		@param LastSynchronized 
+		Date when last synchronized
+	  */
+	public void setLastSynchronized (Date LastSynchronized)
+	{
+		set_Value (COLUMNNAME_LastSynchronized, LastSynchronized);
+	}
+
+	/** Get Last Synchronized.
+		@return Date when last synchronized
+	  */
+	public Date getLastSynchronized () 
+	{
+		return (Date)get_Value(COLUMNNAME_LastSynchronized);
+	}
+
 	/** Set Name.
 		@param Name 
 		Alphanumeric identifier of the entity
@@ -219,6 +257,27 @@ public class X_SPS_SyncMenu extends PO implements I_SPS_SyncMenu {
     {
         return new KeyNamePair(get_ID(), getName());
     }
+
+	/** Set Process Now.
+		@param Processing Process Now	  */
+	public void setProcessing (boolean Processing)
+	{
+		set_Value (COLUMNNAME_Processing, Boolean.valueOf(Processing));
+	}
+
+	/** Get Process Now.
+		@return Process Now	  */
+	public boolean isProcessing () 
+	{
+		Object oo = get_Value(COLUMNNAME_Processing);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
 
 	/** Set Sync/Option Menu.
 		@param SPS_SyncMenu_ID Sync/Option Menu	  */
@@ -292,6 +351,26 @@ public class X_SPS_SyncMenu extends PO implements I_SPS_SyncMenu {
 	public int getWS_WebService_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_WS_WebService_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Web Service Method.
+		@param WS_WebServiceMethod_ID Web Service Method	  */
+	public void setWS_WebServiceMethod_ID (int WS_WebServiceMethod_ID)
+	{
+		if (WS_WebServiceMethod_ID < 1) 
+			set_Value (COLUMNNAME_WS_WebServiceMethod_ID, null);
+		else 
+			set_Value (COLUMNNAME_WS_WebServiceMethod_ID, Integer.valueOf(WS_WebServiceMethod_ID));
+	}
+
+	/** Get Web Service Method.
+		@return Web Service Method	  */
+	public int getWS_WebServiceMethod_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_WS_WebServiceMethod_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
