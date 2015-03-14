@@ -333,7 +333,9 @@ public class InitialLoadTask implements BackGroundProcess {
 		int iWS = -1;
 		int iPage =-1;
 		InitialLoad il = new InitialLoad(m_URL, m_NameSpace, m_Method, 
-				m_IsNetService, m_SoapAction, m_User, m_PassWord, this, m_Timeout, m_Callback);
+				m_IsNetService, m_SoapAction, m_User, m_PassWord
+				//, this
+				, m_Timeout, null);
 		
 		for (int i=0;i<Params.length;i++){
 			il.addPropertyToCall(Params[i].getKey(), Params[i].getName());
@@ -450,8 +452,6 @@ public class InitialLoadTask implements BackGroundProcess {
 		if(!m_Error) {
 			fr.loadData();
 			fr.setEnabled(true);
-		} else {
-			fr.setEnabled(false);
 		}
 	}
 }

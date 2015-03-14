@@ -21,13 +21,40 @@ package org.spinsuite.util;
  */
 public class SyncValues {
 	/**	Default Values for Web Services	*/
-	public static final String 		DEFAULT_SOAP_URL 	= "http://192.168.1.254:8081";
+	public static final String 		DEFAULT_SOAP_URL 	= "http://test-spinsuite.erpcya.com:9080";
 	public static final String 		DEFAULT_URL_PATH	= "ADInterface/services/";
 	public static final String 		DEFAULT_IL_VALUE	= "SpinSuiteService";
 	public static final String 		DEFAULT_NAME_SPACE 	= "http://www.erpcya.com/";
 	public static final String 		DEFAULT_METHOD 		= "InitialLoad";
 	public static final String 		DEFAULT_USER 		= "SuperUser";
 	public static final String 		DEFAULT_PASS 		= "System";
+	/**	Key For Map						*/
+	public static final String 		KEY_SOAP_URL 		= "Sync_SoapURL";
+	public static final String 		KEY_PATH_URL 		= "Sync_PathURL";
+	public static final String 		KEY_IL_VALUE 		= "Sync_InitialLoadValue";
+	public static final String 		KEY_NAME_SPACE 		= "Sync_NameSpace";
+	public static final String 		KEY_METHOD 			= "Sync_Method";
+	public static final String 		KEY_NET_SERVICE		= "Sync_NetService";
+	public static final String 		KEY_USER 			= "Sync_User";
+	public static final String 		KEY_PASS 			= "Sync_Pass";
+	public static final String 		KEY_SOAP_ACTION 	= "Sync_SoapAction";
+	public static final String 		KEY_TIMEOUT 		= "Sync_Timeout";
+	/**	Broadcast Filter				*/
+	public static final String 		BC_FILTER 			= "BC_Filter";
+	/**	Broadcast Values				*/
+	public static final String 		BC_KEY_MSG 			= "BCV_Msg";
+	public static final String 		BC_KEY_MSG_TYPE 	= "BCV_MsgType";
+	public static final String 		BC_KEY_PROGRESS 	= "BCV_Progress";
+	public static final String 		BC_KEY_STATUS 		= "BCV_Status";
+	public static final String 		BC_KEY_MAX_VALUE 	= "BCV_MaxValue";
+	/**	Message Type						*/
+	public static final String 		BC_MSG_TYPE_ERROR 	= "BCV_MT_Error";
+	public static final String 		BC_MSG_TYPE_PROGRESS= "BCV_MT_Progress";
+	public static final String 		BC_MSG_TYPE_MSG 	= "BCV_MT_Msg";
+	/**	Status								*/
+	public static final String 		BC_STATUS_START 	= "BCV_ST_Start";
+	public static final String 		BC_STATUS_PROGRESS 	= "BCV_ST_Progress";
+	public static final String 		BC_STATUS_END 		= "BCV_ST_End";
 	/** Web Service Method Query Data	*/
 	public static final String 		WSMQueryData 		= "queryData";
 	/** Web Service Method Create Data	*/
@@ -95,7 +122,7 @@ public class SyncValues {
 		int minutes = (int) (((duration / 1000) / 60) % 60);
 		int seconds = (int) ((duration / 1000) % 60);
 		//	Show Time
-		String time = "H:" + hours + " M:" + minutes + " S:" + seconds; 
+		String time = hours + "h :" + minutes + "m :" + seconds + "s"; 
 		//	Set Last Message
 		return time;
 	}

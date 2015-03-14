@@ -21,7 +21,7 @@ import java.io.File;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
-import org.spinsuite.sync.InitialLoadTask;
+import org.spinsuite.sync.SyncService;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.SyncValues;
@@ -33,11 +33,11 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 
 /**
@@ -71,6 +71,7 @@ public class T_Login_Init extends DialogFragment
 	public T_Login_Init(Activity p_Callback) {
 		m_Callback = p_Callback;
 	}
+	
 	@SuppressLint("InflateParams")
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -89,12 +90,12 @@ public class T_Login_Init extends DialogFragment
     	// Carlos Parada Setting Parameters for Spin-Suite Service Call 
     	et_UrlServer.setText(SyncValues.DEFAULT_SOAP_URL);
     	//End Carlos Parada
-		
+		//	
+    	
 		builder.setView(view);
 		
 		builder.setNegativeButton(R.string.Action_Cancel, this);
 		builder.setPositiveButton(android.R.string.ok, this);
-		
 		return builder.create();
 		
 	}
@@ -129,17 +130,33 @@ public class T_Login_Init extends DialogFragment
 		//	Add Value to Web
 		String url = et_UrlServer.getText().toString();
 		//	
-		InitialLoadTask ilt = new InitialLoadTask(SyncValues.getInitialUrl(url), 
-				SyncValues.DEFAULT_NAME_SPACE, 
-				SyncValues.DEFAULT_METHOD, true, 
-				et_User.getText().toString(), 
-				et_PassWord.getText().toString(), 
-				SyncValues.DEFAULT_NAME_SPACE + SyncValues.DEFAULT_METHOD, 
-				m_Callback, Env.getContextAsInt(m_Callback, "#Timeout"));
+		//	Instance Bundle
+		Bundle bundle = new Bundle();
+		//	Add Parameters
+		bundle.putString(SyncValues.KEY_SOAP_URL, SyncValues.getInitialUrl(url));
+		bundle.putString(SyncValues.KEY_NAME_SPACE, SyncValues.DEFAULT_NAME_SPACE);
+		bundle.putString(SyncValues.KEY_METHOD, SyncValues.DEFAULT_METHOD);
+		bundle.putBoolean(SyncValues.KEY_NET_SERVICE, true);
+		bundle.putString(SyncValues.KEY_USER, et_User.getText().toString());
+		bundle.putString(SyncValues.KEY_PASS, et_PassWord.getText().toString());
+		bundle.putString(SyncValues.KEY_SOAP_ACTION, SyncValues.DEFAULT_NAME_SPACE + SyncValues.DEFAULT_METHOD);
+		bundle.putInt(SyncValues.KEY_TIMEOUT, Env.getContextAsInt(m_Callback, "#Timeout"));
+		//	Instance Service
+		Intent m_Service = new Intent(getActivity(), SyncService.class);
+		m_Service.putExtras(bundle);
+		m_Callback.startService(m_Service);
 		//	
-		ilt.runTask();
+//		InitialLoadTask ilt = new InitialLoadTask(SyncValues.getInitialUrl(url), 
+//				SyncValues.DEFAULT_NAME_SPACE, 
+//				SyncValues.DEFAULT_METHOD, true, 
+//				et_User.getText().toString(), 
+//				et_PassWord.getText().toString(), 
+//				SyncValues.DEFAULT_NAME_SPACE + SyncValues.DEFAULT_METHOD, 
+//				m_Callback, Env.getContextAsInt(m_Callback, "#Timeout"));
 		//	
-		if(!Env.isEnvLoad(getActivity())) {
+		//ilt.runTask();
+		//	
+		//if(!Env.isEnvLoad(getActivity())) {
 			
 //			RemoteViews contentView = new RemoteViews(this.getPackageName(), R.layout.v_progressdialog);
 //	        contentView.setImageViewResource(R.id.iV_Synchronizing, R.drawable.syncserver_m);
@@ -150,14 +167,7 @@ public class T_Login_Init extends DialogFragment
 //	        m_load.setContentView(contentView);
 //	        m_load.setM_NotificationManager(notify);
 //			m_load.execute();
-		}
-	}
-	
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		getDialog().setTitle(R.string.tt_Conn);
-		return super.onCreateView(inflater, container, savedInstanceState);
+		//}
 	}
 	
 	/**
