@@ -39,8 +39,9 @@ public class SyncValues {
 	public static final String 		KEY_PASS 			= "Sync_Pass";
 	public static final String 		KEY_SOAP_ACTION 	= "Sync_SoapAction";
 	public static final String 		KEY_TIMEOUT 		= "Sync_Timeout";
-	/**	Broadcast Filter				*/
-	public static final String 		BC_FILTER 			= "BC_Filter";
+	/**	Broadcast Type Filter			*/
+	public static final String 		BC_IL_FILTER 		= "BC_IL_Filter";
+	public static final String 		BC_SS_FILTER 		= "BC_SS_Filter";
 	/**	Broadcast Values				*/
 	public static final String 		BC_KEY_MSG 			= "BCV_Msg";
 	public static final String 		BC_KEY_MSG_TYPE 	= "BCV_MsgType";

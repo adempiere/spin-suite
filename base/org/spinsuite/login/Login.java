@@ -140,7 +140,7 @@ public class Login extends TV_Base implements I_Login {
     			    	changeValues(context, intent);
     			    }
     			}, 
-    			new IntentFilter(SyncValues.BC_FILTER));
+    			new IntentFilter(SyncValues.BC_IL_FILTER));
     	//	
     }
     

@@ -22,7 +22,6 @@ import org.ksoap2.serialization.SoapObject;
 import org.spinsuite.base.R;
 import org.spinsuite.model.MSPSSyncMenu;
 import org.spinsuite.model.MWSWebServiceType;
-import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.StringNamePair;
 import org.spinsuite.util.SyncValues;
@@ -104,7 +103,7 @@ public class SyncService extends IntentService {
 	 * @return void
 	 */
 	public void sendStatus(String p_Status, String p_Msg, boolean p_Error, Integer p_Progress) {
-		Intent m_Filter = new Intent(SyncValues.BC_FILTER);
+		Intent m_Filter = new Intent(SyncValues.BC_IL_FILTER);
 		//	Valid Message to send
 		if(p_Msg != null
 				&& p_Msg.length() > 0) {
@@ -163,7 +162,7 @@ public class SyncService extends IntentService {
 	 * @return void
 	 */
 	public void setMaxValueProgressBar(int p_MaxValue) {
-		Intent m_Filter = new Intent(SyncValues.BC_FILTER);
+		Intent m_Filter = new Intent(SyncValues.BC_IL_FILTER);
 		m_Filter.putExtra(SyncValues.BC_KEY_STATUS, SyncValues.BC_STATUS_PROGRESS);
 		m_Filter.putExtra(SyncValues.BC_KEY_MAX_VALUE, p_MaxValue);
 		//	Send
@@ -221,7 +220,6 @@ public class SyncService extends IntentService {
 		} catch(Exception e) {
 			LogM.log(this, getClass(), Level.SEVERE, "Error", e);
 			m_LastMsg = e.getLocalizedMessage();
-			Env.setContext(this, "#InitialLoadSynchronizing", false);
 		} finally {
 			//	Get After Milliseconds
 			long afterMillis = System.currentTimeMillis();
@@ -234,7 +232,7 @@ public class SyncService extends IntentService {
 				//	
 				sendStatus(SyncValues.BC_STATUS_END, m_LastMsg);
 			} else  {
-				sendStatus(m_LastMsg, true, -1);
+				sendStatus(SyncValues.BC_STATUS_END, m_LastMsg, true, -1);
 			}
 		}
 		//df.dismiss();

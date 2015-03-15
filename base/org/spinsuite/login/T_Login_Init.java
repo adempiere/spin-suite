@@ -118,6 +118,8 @@ public class T_Login_Init extends DialogFragment
 		Env.setContext(getActivity(), "#SUrlSoap", et_UrlServer.getText().toString());
 		Env.setContext(getActivity(), "#SMethod", SyncValues.DEFAULT_METHOD);
 		Env.setContext(getActivity(), "#SNameSpace", SyncValues.DEFAULT_NAME_SPACE);
+		Env.setContext(getActivity(), "#SUser", et_User.getText().toString());
+		Env.setContext(getActivity(), "#SPass", et_PassWord.getText().toString());
 		//	Create Directory
 		createDBDirectory();
 		//	Valid Timeout
