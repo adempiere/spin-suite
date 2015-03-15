@@ -132,4 +132,5 @@
 	<string name="msg_InvalidProcessState">Invalid Process State</string>
 	<string name="msg_TableNotFound">Table Not Found</string>
 	<string name="msg_AppIsNotAssociated">There Is No Application Associated</string>
+	<string name="msg_NoRecordsPendingtoSync">No Records Pending to Synchronize</string>
 </resources>
