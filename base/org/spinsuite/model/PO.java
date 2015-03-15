@@ -1505,7 +1505,11 @@ public abstract class PO {
 	 */
 	private void createSyncRecord(String p_EventChangeLog,int p_ID) throws Exception{
 		
-		MSPSSyncTable synctable = MSPSSyncTable.getSyncTable(getCtx(), conn, getSPS_Table_ID(), p_ID);
+		String whereClause = "SPS_Table_ID = " + getSPS_Table_ID() + " AND "
+							+ "Record_ID = " + p_ID + " AND "
+							+ "EventChangeLog IN ('" + X_SPS_SyncTable.EVENTCHANGELOG_Insert + "','"+X_SPS_SyncTable.EVENTCHANGELOG_Update + "') AND IsSynchronized='N'";
+		
+		MSPSSyncTable synctable = MSPSSyncTable.getSyncTable(getCtx(), conn, whereClause);
 		
 		if (synctable== null)
 			synctable = new MSPSSyncTable(getCtx(), 0, conn);

@@ -28,6 +28,7 @@ import org.spinsuite.base.R;
 import org.spinsuite.conn.CommunicationSoap;
 import org.spinsuite.interfaces.BackGroundProcess;
 import org.spinsuite.model.MSPSSyncMenu;
+import org.spinsuite.model.MSPSSyncTable;
 import org.spinsuite.model.MSPSTable;
 import org.spinsuite.model.MWSWebServiceType;
 import org.spinsuite.model.PO;
@@ -165,7 +166,7 @@ public class SyncDataTask implements BackGroundProcess  {
 			if(!m_Error) {
 				long afterMillis = System.currentTimeMillis();
 				long duration = afterMillis - previousMillis;
-				m_PublicMsg = m_ctx.getString(R.string.DownloadEnding) + " " 
+				m_PublicMsg = (m_PublicMsg== null ?"":m_PublicMsg + " ") +m_ctx.getString(R.string.DownloadEnding) + " " 
 						+ m_ctx.getString(R.string.Sync_Duration) 
 						+ ": " + SyncValues.getDifferenceValue(duration);
 			}
@@ -206,7 +207,7 @@ public class SyncDataTask implements BackGroundProcess  {
 					qtyPages = Integer.parseInt(soapResponse.getAttributeAsString(SyncValues.WSQtyPages));
 				
 				while (currentPage <= qtyPages){
-					writeDB(syncm);
+					writeDB(syncm,0);
 					if (currentPage != qtyPages){
 						param = getSoapParam(syncm, currentPage);
 						callWebService(param, syncm);
@@ -226,14 +227,19 @@ public class SyncDataTask implements BackGroundProcess  {
 													+ "SPS_SyncTable "
 													+ "WHERE SPS_SyncTable.SPS_Table_ID = ? AND "
 													+ "SPS_SyncTable.Record_ID = "+table.getTableName()+"."+table.getTableName()+"_ID AND "
-													+ "SPS_SyncTable.EventChangeLog = ? )";
+													+ "SPS_SyncTable.EventChangeLog = ? AND "
+													+ "SPS_SyncTable.IsSynchronized='N' )";
 					List<PO> rows = new Query(m_ctx, table.getTableName(), whereClause, conn)
 									.setParameters(new Object[]{table.getSPS_Table_ID(),X_SPS_SyncTable.EVENTCHANGELOG_Insert})
 									.list();
 					for (PO row : rows) {
 						param= getSoapParam(syncm,PageNo,row);
 						callWebService(param,syncm);
-						writeDB(syncm);
+						writeDB(syncm,row.get_ID());
+					}
+					if (rows.size()==0){
+						m_PublicTittle = syncm.getName();
+						m_PublicMsg = m_ctx.getString(R.string.msg_NoRecordsPendingtoSync);
 					}
 				}
 			}//End Create Data Web Service
@@ -369,7 +375,7 @@ public class SyncDataTask implements BackGroundProcess  {
 	 * @param sm
 	 * @return void
 	 */
-	private void writeDB(MSPSSyncMenu sm)
+	private void writeDB(MSPSSyncMenu sm,int p_ID)
 	{		
 		 
 		//Validate Response
@@ -424,7 +430,7 @@ public class SyncDataTask implements BackGroundProcess  {
 				fields = new StringBuffer();
 				values = new StringBuffer();
 				sql.append("INSERT OR REPLACE INTO " + tableName);
-	
+				
 				//Loading Fields And Values 
 				for (int j=0; j < countDataRow; j++){
 					field = (SoapObject) soapDataRow.getProperty(j);
@@ -447,7 +453,32 @@ public class SyncDataTask implements BackGroundProcess  {
 		}
 		else if (m_MethodValue.equals(SyncValues.WSMCreateData)){
 			
-			//System.out.println(soapResponse.hasProperty("Error"));
+			if (soapResponse.hasProperty("Error")){
+				m_PublicMsg = soapResponse.getPropertyAsString("Error");
+				LogM.log(m_ctx, SyncDataTask.class, Level.SEVERE, m_PublicMsg);
+				publishOnRunning();
+			}
+			else if (soapResponse.hasAttribute("RecordID")){
+				String whereClause = "SPS_Table_ID = " + sm.getSPS_Table_ID() + " AND "
+						+ "Record_ID = " + p_ID + " AND "
+						+ "EventChangeLog IN ('" + X_SPS_SyncTable.EVENTCHANGELOG_Insert + "') AND IsSynchronized='N'";
+	
+				try {
+					MSPSSyncTable synctable = MSPSSyncTable.getSyncTable(sm.getCtx(), conn, whereClause);
+					if (synctable.getSPS_SyncTable_ID()>0){
+						synctable.setSyncRecord_ID(soapResponse.getAttributeAsString("RecordID"));
+						synctable.setIsSynchronized(true);
+						synctable.save();
+						sm.setLastSynchronized(new Timestamp(System.currentTimeMillis()));
+						sm.save();
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					m_PublicMsg = e.getLocalizedMessage();
+					LogM.log(m_ctx, SyncDataTask.class, Level.SEVERE, m_PublicMsg,e.getCause());
+					publishOnRunning();
+				}
+			}
 			
 		}
 		
