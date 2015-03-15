@@ -15,22 +15,35 @@
  *************************************************************************************/
 package org.spinsuite.login;
 
+import java.util.List;
+
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.model.MCountry;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.Msg;
+import org.spinsuite.util.SyncValues;
 import org.spinsuite.view.LV_Menu;
 import org.spinsuite.view.TV_Base;
 
 import test.LoadInitData;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -43,18 +56,28 @@ import android.view.MenuItem;
  */
 public class Login extends TV_Base implements I_Login {
     
-	/**	Data Base			*/
-	private final String 	DATA_BASE 		= "D";
-	/**	Role Access			*/
-	private final String 	ROLE_ACCESS 	= "R";
-	/**	Load Access Type	*/
-	private String			m_LoadType 		= ROLE_ACCESS;
-	/**	Activity			*/
-	private Activity		v_activity		= null;
-	/**	Sync				*/
-	private T_Login_Init	m_LoginInit;
-	/**	Enable				*/
-	private boolean			m_Enabled		= true;
+	/**	Data Base				*/
+	private final String 		DATA_BASE 		= "D";
+	/**	Role Access				*/
+	private final String 		ROLE_ACCESS 	= "R";
+	/**	Load Access Type		*/
+	private String				m_LoadType 		= ROLE_ACCESS;
+	/**	Activity				*/
+	private Activity			v_activity		= null;
+	/**	Sync					*/
+	private T_Login_Init		m_LoginInit;
+	/**	Enable					*/
+	//private boolean				m_Enabled		= true;
+	/** Notification Manager	*/
+	private NotificationManager m_NFManager = null;
+	/** Max Value Progress Bar	*/
+	private int 				m_MaxPB = 0;
+	/** Builder					*/
+	private Builder 			m_Builder = null;
+	/** Pending Intent Fragment */ 
+	private PendingIntent 		m_PendingIntent = null; 
+	/**	Notification ID			*/
+	private static final int	NOTIFICATION_ID = 1;
 	
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -62,13 +85,13 @@ public class Login extends TV_Base implements I_Login {
     	Env.resetActivityNo(getApplicationContext());
     	//	
     	super.onCreate(savedInstanceState);
-    	//	
-    	addFagment(T_Login.class, "Conn", R.string.tt_Conn);
-        addFagment(T_Role.class, "LoginRole", R.string.tt_LoginRole);
-        //	Set Activity
+    	//	Set Activity
         v_activity = this;
     	// Validate SD
-    	if(Env.isEnvLoad(this)){
+    	if(Env.isEnvLoad(this)) {
+        	//	
+        	addFagment(T_Login.class, "Conn", R.string.tt_Conn);
+            addFagment(T_Role.class, "LoginRole", R.string.tt_LoginRole);
     		setEnabled(true);
     		//	
     		if(!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
@@ -102,15 +125,115 @@ public class Login extends TV_Base implements I_Login {
     	} else {
     		setEnabled(false);
     		//	
-    		if(m_LoginInit == null)
+    		if(m_LoginInit == null
+    				&& !Env.getContextAsBoolean(v_activity, "#InitialLoadSynchronizing"))
     			loadInitSync();
     		//	For Demo
     		//m_LoadType = DATA_BASE;
 			//new LoadAccessTask().execute();
     	}
+		//	Register Receiver
+    	LocalBroadcastManager.getInstance(this).registerReceiver(
+    			new BroadcastReceiver() {
+    			    @Override
+    			    public void onReceive(Context context, Intent intent) {
+    			    	changeValues(context, intent);
+    			    }
+    			}, 
+    			new IntentFilter(SyncValues.BC_IL_FILTER));
     	//	
-    	//	
-    }  
+    }
+    
+    /**
+     * Change Values for Login and notifications
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param context
+     * @param intent
+     * @return void
+     */
+    private void changeValues(Context context, Intent intent) {
+    	String status = intent.getStringExtra(SyncValues.BC_KEY_STATUS);
+    	String msgType = intent.getStringExtra(SyncValues.BC_KEY_MSG_TYPE);
+    	String msg = intent.getStringExtra(SyncValues.BC_KEY_MSG);
+    	int progress = intent.getIntExtra(SyncValues.BC_KEY_PROGRESS, -1);
+    	//	Valid Status
+    	if(status == null)
+    		return;
+    	//	Verify Status and Instance Notification
+    	if(status.equals(SyncValues.BC_STATUS_START)
+    			|| m_PendingIntent == null) {
+    		setInstanceNotification();
+    		//	Set Value for Sync
+    		Env.setContext(v_activity, "#InitialLoadSynchronizing", true);
+    	} else { 
+    		m_Builder.setContentIntent(m_PendingIntent);
+    		m_Builder.setContentTitle(getString(R.string.Sync_Synchronzing));
+    		//	
+    		if(status.equals(SyncValues.BC_STATUS_PROGRESS)) {
+        		m_Builder.setContentText(msg)
+        								.setProgress(m_MaxPB, progress, progress == -1)
+        								.setSmallIcon(android.R.drawable.stat_sys_download);
+        	} else if(status.equals(SyncValues.BC_STATUS_END)) {
+        		if(msgType.equals(SyncValues.BC_MSG_TYPE_ERROR)) {
+        			m_Builder.setContentText(msg)
+        									.setSmallIcon(android.R.drawable.stat_sys_download);
+        		} else {
+        			m_Builder.setContentText(msg)
+            								.setSmallIcon(android.R.drawable.stat_sys_download);
+        		}
+        		//	Set Default Values
+        		setContext();
+        	}
+    		//	Notify
+    		m_NFManager.notify(NOTIFICATION_ID, m_Builder.build());
+    	}
+    }
+    
+    /**
+     * Reload Activity
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return void
+     */
+    private void reloadActivity(){
+    	Intent refresh = new Intent(this, Login.class);
+		startActivity(refresh);
+		finish();
+    }
+    
+    /**
+	 * Set Pending Item
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void setInstanceNotification() {
+		m_NFManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		m_Builder = new NotificationCompat.Builder(this);
+		ActivityManager m_ActivityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+		List<ActivityManager.RunningTaskInfo> tasks = m_ActivityManager.getRunningTasks(1);
+		ActivityManager.RunningTaskInfo task = tasks.get(0);
+		ComponentName mainActivity = task.baseActivity;
+		Intent intent = new Intent();
+		intent.setComponent(mainActivity);
+		intent.setAction(Intent.ACTION_MAIN);
+		intent.addCategory(Intent.CATEGORY_LAUNCHER);
+		//	Set Main Activity
+		m_PendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+	}
+    
+    /**
+	 * Set Context
+	 * @author Yamel Senih 30/11/2012, 11:55:26
+	 * @return void
+	 */
+	public void setContext() {
+		Env.setIsEnvLoad(this, true);
+		Env.setSavePass(this, true);
+		Env.setAutoLogin(this, true);
+		//	Set Value for Sync
+		Env.setContext(this, "#InitialLoadSynchronizing", false);
+		//	Reload
+		reloadActivity();
+	}
     
     /**
      * Load Initial Synchronization
@@ -143,9 +266,7 @@ public class Login extends TV_Base implements I_Login {
 			return true;
 		} else {
 			//	Valid Enable
-			if(!m_Enabled) {
-				return true;
-			} else if(!Env.isEnvLoad(this)) {
+			if(!Env.isEnvLoad(this)) {
 				loadInitSync();
 				return true;
 			}
@@ -169,7 +290,7 @@ public class Login extends TV_Base implements I_Login {
      * @return void
      */
     @Override
-    public boolean aceptAction(){
+    public boolean aceptAction() {
     	I_Login fr = (I_Login)getCurrentFragment();
     	boolean ret = fr.aceptAction();
 		if(fr instanceof T_Login){
@@ -229,7 +350,7 @@ public class Login extends TV_Base implements I_Login {
     
     @Override
 	public void setEnabled(boolean enabled) {
-    	m_Enabled = enabled;
+    	//m_Enabled = enabled;
     	int size = getSize();
     	for(int i = 0; i < size; i++) {
     		I_Login fr = (I_Login)getFragment(i);
@@ -246,9 +367,9 @@ public class Login extends TV_Base implements I_Login {
     @Override
     protected void onResume() {
         super.onResume();
-        if(!Env.isEnvLoad(this)){
-        	setCurrentFragment(0);
-        }
+//        if(!Env.isEnvLoad(this)) {
+//        	setCurrentFragment(0);
+//        }
     }
     @Override
     protected void onPause() {
