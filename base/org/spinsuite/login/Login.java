@@ -21,6 +21,7 @@ import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.model.MCountry;
+import org.spinsuite.sync.SyncService;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.SyncValues;
@@ -126,7 +127,7 @@ public class Login extends TV_Base implements I_Login {
     		setEnabled(false);
     		//	
     		if(m_LoginInit == null
-    				&& !Env.getContextAsBoolean(v_activity, "#InitialLoadSynchronizing"))
+    				&& !SyncService.isRunning())
     			loadInitSync();
     		//	For Demo
     		//m_LoadType = DATA_BASE;
@@ -255,6 +256,7 @@ public class Login extends TV_Base implements I_Login {
         getMenuInflater().inflate(R.menu.cancel_ok, menu);
         MenuItem item = menu.getItem(0);
         item.setVisible(true);
+        setVisibleProgress(!Env.isEnvLoad(v_activity));
         return true;
     }
     

@@ -130,6 +130,7 @@ public class T_Connection extends Activity implements I_Login {
 				Env.cacheReset(getApplicationContext());
 				Env.setIsEnvLoad(getApplicationContext(), false);
 				Env.setIsLogin(getApplicationContext(), false);
+				Env.setContext(getApplicationContext(), "#InitialLoadSynchronizing", false);
 			}
 		});
 		ask.show();

@@ -74,9 +74,22 @@ public class SyncService extends IntentService {
 	private int 						m_Timeout = 0;
 	/**	Broadcast				*/
 	private LocalBroadcastManager 		m_BCast = null;
+	/**	Instance				*/
+	private static boolean				m_IsRunning = false;
+	
+	/**
+	 * Verify if Running
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean isRunning() {
+		return m_IsRunning;
+	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		m_IsRunning = true;
 		Bundle extras = intent.getExtras();
 		m_URL 			= extras.getString(SyncValues.KEY_SOAP_URL);
 		m_NameSpace 	= extras.getString(SyncValues.KEY_NAME_SPACE);
