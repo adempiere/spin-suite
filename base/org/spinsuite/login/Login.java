@@ -157,7 +157,12 @@ public class Login extends TV_Base implements I_Login {
     	String status = intent.getStringExtra(SyncValues.BC_KEY_STATUS);
     	String msgType = intent.getStringExtra(SyncValues.BC_KEY_MSG_TYPE);
     	String msg = intent.getStringExtra(SyncValues.BC_KEY_MSG);
+    	int maxPB = intent.getIntExtra(SyncValues.BC_KEY_MAX_VALUE, -1);
     	int progress = intent.getIntExtra(SyncValues.BC_KEY_PROGRESS, -1);
+    	//	Valid Max Value for Progress Bar
+    	if(maxPB != -1)
+    		m_MaxPB = maxPB;
+    	//	
     	//	Valid Status
     	if(status == null)
     		return;

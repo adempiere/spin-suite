@@ -21,7 +21,6 @@ import java.util.logging.Level;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.spinsuite.base.DB;
-import org.spinsuite.base.R;
 import org.spinsuite.conn.CommunicationSoap;
 import org.spinsuite.util.LogM;
 import org.xmlpull.v1.XmlPullParserException;
@@ -150,7 +149,7 @@ public class InitialLoad extends CommunicationSoap {
 		int hasWSCount = (p_Resp.hasProperty("WSCount") ? 1 :0);
 		m_Callback.setMaxValueProgressBar(countrec - hasPages - hasWSCount);
 		
-		try{
+		try {
 			for (int i= 0;i< countrec;i++){
 				
 				if (p_Resp.getProperty(i) instanceof SoapPrimitive)
