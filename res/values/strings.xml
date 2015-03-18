@@ -176,9 +176,6 @@
 	<string name="app_phone4_erp" >+58(424)5484908</string>
 	<string name="app_phone5_erp" >+50768437413</string>
 	
-<<<<<<< HEAD
-</resources>
-=======
 	<!-- Synchronization -->
 	<string name="Sync_InitSyncManual">Manual Synchronization</string>
 	<string name="Sync_SynchronzeButtom">Synchronize</string>
@@ -192,4 +189,3 @@
 	<string name="Url_Server">URL (Server)</string>
 	
 </resources>
->>>>>>> refs/remotes/origin/SPIN-2-GUI-Changes
