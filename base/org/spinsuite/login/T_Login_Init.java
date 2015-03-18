@@ -106,7 +106,9 @@ public class T_Login_Init extends DialogFragment
 		if (which == -1
 				&& isValid()) {
 			startSynchronization();
-		}		
+		} else {
+			m_Callback.finish();
+		}
 	}
 	
 	/**

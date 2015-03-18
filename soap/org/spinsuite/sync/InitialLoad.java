@@ -157,14 +157,14 @@ public class InitialLoad extends CommunicationSoap {
 					continue;
 				
 				SoapObject query = (SoapObject) p_Resp.getProperty(i);
-							
-				m_Callback.sendStatus(query.getPropertyAsString("Name") +"\n" 
-						+ m_Callback.getString(R.string.Sync_Pages) + ": " + (p_PageCount != null && p_CurrentPage !=null 
-																			? p_CurrentPage + "/" + p_PageCount + "\n" 
-																					: "") 
-						+ m_Callback.getString(R.string.Sync_Records) + ": " + (i + 1) + "/" 
-													+ (countrec - hasPages - hasWSCount), false, (i + 1));
-				
+				//	Set Message
+				m_Callback.sendStatus(query.getPropertyAsString("Name"), false, (i + 1));
+//				m_Callback.sendStatus(query.getPropertyAsString("Name") +"\n" 
+//						+ m_Callback.getString(R.string.Sync_Pages) + ": " + (p_PageCount != null && p_CurrentPage !=null 
+//																			? p_CurrentPage + "/" + p_PageCount + "\n" 
+//																					: "") 
+//						+ m_Callback.getString(R.string.Sync_Records) + ": " + (i + 1) + "/" 
+//													+ (countrec - hasPages - hasWSCount), false, (i + 1));
 		    	String sql = query.getPropertyAsString("SQL");
 		    	
 		    	//Have Parameters
@@ -189,7 +189,7 @@ public class InitialLoad extends CommunicationSoap {
     	catch (Exception ex){
     		ex.printStackTrace();
     		m_Callback.sendStatus(ex.getLocalizedMessage(), true, null);
-    		return  false;
+    		return false;
     	}
     	finally{
     		DB.closeConnection(conn);

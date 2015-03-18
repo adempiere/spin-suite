@@ -37,6 +37,7 @@ import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
@@ -161,27 +162,47 @@ public class Login extends TV_Base implements I_Login {
     	if(status == null)
     		return;
     	//	Verify Status and Instance Notification
-    	if(status.equals(SyncValues.BC_STATUS_START)
+    	if(msgType != null 
+    			&& msgType.equals(SyncValues.BC_MSG_TYPE_ERROR)) {
+			m_Builder.setContentTitle(msg)
+									.setSmallIcon(android.R.drawable.stat_sys_download);
+			//	Set To Error
+			Env.setIsEnvLoad(this, false);
+    		//	Set Value for Sync
+    		Env.setContext(this, "#InitialLoadSynchronizing", false);
+    		android.app.AlertDialog.Builder ask = Msg.confirmMsg(this, msg);
+    		ask.setPositiveButton(getResources().getString(R.string.msg_Acept), new DialogInterface.OnClickListener() {
+    			public void onClick(DialogInterface dialog, int which) {
+    				dialog.dismiss();
+    				loadInitSync();
+    			}
+    		});
+    		ask.setNegativeButton(getResources().getString(R.string.msg_Cancel), new DialogInterface.OnClickListener() {
+    			public void onClick(DialogInterface dialog, int which) {
+    				dialog.dismiss();
+    				finish();
+    			}
+    		});
+    		//	
+    		if(!isFinishing())
+    			ask.show();
+    		//	Notify
+    		m_NFManager.notify(NOTIFICATION_ID, m_Builder.build());
+		} else if(status.equals(SyncValues.BC_STATUS_START)
     			|| m_PendingIntent == null) {
     		setInstanceNotification();
     		//	Set Value for Sync
     		Env.setContext(v_activity, "#InitialLoadSynchronizing", true);
     	} else { 
     		m_Builder.setContentIntent(m_PendingIntent);
-    		m_Builder.setContentTitle(getString(R.string.Sync_Synchronzing));
     		//	
     		if(status.equals(SyncValues.BC_STATUS_PROGRESS)) {
-        		m_Builder.setContentText(msg)
+        		m_Builder.setContentTitle(msg)
         								.setProgress(m_MaxPB, progress, progress == -1)
         								.setSmallIcon(android.R.drawable.stat_sys_download);
         	} else if(status.equals(SyncValues.BC_STATUS_END)) {
-        		if(msgType.equals(SyncValues.BC_MSG_TYPE_ERROR)) {
-        			m_Builder.setContentText(msg)
-        									.setSmallIcon(android.R.drawable.stat_sys_download);
-        		} else {
-        			m_Builder.setContentText(msg)
+        		m_Builder.setContentTitle(msg)
             								.setSmallIcon(android.R.drawable.stat_sys_download);
-        		}
         		//	Set Default Values
         		setContext();
         	}

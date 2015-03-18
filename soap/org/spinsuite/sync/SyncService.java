@@ -117,6 +117,9 @@ public class SyncService extends IntentService {
 	 */
 	public void sendStatus(String p_Status, String p_Msg, boolean p_Error, Integer p_Progress) {
 		Intent m_Filter = new Intent(SyncValues.BC_IL_FILTER);
+		//	Valid Progress
+		if(p_Progress == null)
+			p_Progress = -1;
 		//	Valid Message to send
 		if(p_Msg != null
 				&& p_Msg.length() > 0) {
@@ -137,8 +140,7 @@ public class SyncService extends IntentService {
 		}
 		//	
 		m_Filter.putExtra(SyncValues.BC_KEY_MSG_TYPE, msgType);
-		if(p_Progress != null
-				&& p_Progress.intValue() > 0) {
+		if(p_Progress > 0) {
 			m_Filter.putExtra(SyncValues.BC_KEY_PROGRESS, p_Progress);
 		}
 		//	Send
@@ -195,21 +197,30 @@ public class SyncService extends IntentService {
 		//Call Web Service Method Create Meta-data
 		sendStatus(getString(R.string.Calling) 
 				+ " " + getString(R.string.Sync_WebServiceDefinition), false, -1);
-		if (!callWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
+		
+		boolean callIsOk = callWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
 				new StringNamePair(ILCall.m_ServiceMethodField, InitialLoad.INITIALLOAD_ServiceMethodCreateMetaData),
-				new StringNamePair(ILCall.m_WSNumber, "0")))
+				new StringNamePair(ILCall.m_WSNumber, "0"));
+		//	Verify Call
+		if (!callIsOk) {
+			m_IsRunning = callIsOk;
 			return;
+		}
 		
 		//Call Web Service Method Web Service Definition
 		
 		sendStatus(getString(R.string.Calling) 
 				+ " " + getString(R.string.Sync_WebService), false, -1);
-		if (!callWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
+		//	
+		callIsOk = callWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
 				new StringNamePair(ILCall.m_ServiceMethodField, InitialLoad.INITIALLOAD_ServiceMethodWebServiceDefinition),
 				new StringNamePair(ILCall.m_Page, "0"),
-				new StringNamePair(ILCall.m_WSNumber, "0")
-				))
+				new StringNamePair(ILCall.m_WSNumber, "0"));
+		//	Verify Call
+		if (!callIsOk) {
+			m_IsRunning = callIsOk;
 			return;
+		}
 		
 		List<MSPSSyncMenu> sm = MSPSSyncMenu.getNodes(this, "0", InitialLoad.INITIALLOAD_ServiceDefinition, 
 				InitialLoad.INITIALLOAD_ServiceMethodDataSynchronization, null, null);
@@ -222,18 +233,23 @@ public class SyncService extends IntentService {
 				//	
 				sendStatus(getString(R.string.Calling) 
 						+ " " +  mspsSyncMenu.getName() , false, -1);
-				//Call Web Service Method Web Sevice Definition
-	    		if (!callWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
+				//	Call Web Service Method Web Service Definition
+	    		callIsOk = callWebService(new StringNamePair(ILCall.m_ServiceDefinitionField, InitialLoad.INITIALLOAD_ServiceDefinition),
 	    							new StringNamePair(ILCall.m_ServiceMethodField, InitialLoad.INITIALLOAD_ServiceMethodDataSynchronization),
 	    							new StringNamePair(ILCall.m_ServiceTypeField, wst.getValue()),
 	    							new StringNamePair(ILCall.m_Page, "0"),
-	    							new StringNamePair(ILCall.m_WSNumber, "0")))
-	    			break;		
+	    							new StringNamePair(ILCall.m_WSNumber, "0"));
+	    		//	Verify Call
+	    		if (!callIsOk) {
+	    			m_IsRunning = callIsOk;
+	    			break;
+	    		}
 			}
 		} catch(Exception e) {
 			LogM.log(this, getClass(), Level.SEVERE, "Error", e);
 			m_LastMsg = e.getLocalizedMessage();
 		} finally {
+			m_IsRunning = callIsOk;
 			//	Get After Milliseconds
 			long afterMillis = System.currentTimeMillis();
 			long duration = afterMillis - previousMillis;
@@ -288,7 +304,7 @@ public class SyncService extends IntentService {
 		//Call Service
 		SoapObject so = il.callService();
 		
-		if (so!= null){
+		if (so != null){
 			if (so.hasProperty(ILCall.m_Pages))
 				pages = Integer.parseInt(so.getPropertyAsString(ILCall.m_Pages));
 			if (so.hasProperty(ILCall.m_WSCount))
