@@ -18,12 +18,14 @@ package org.spinsuite.login;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.util.DisplaySpinner;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 import org.spinsuite.view.custom.Cust_Spinner;
 
@@ -44,12 +46,19 @@ import android.widget.EditText;
  * 	@see https://adempiere.atlassian.net/browse/SPIN-2
  */
 public class T_Login extends Fragment implements I_Login {
+	/**	Login User					*/
 	private EditText 		et_User;
+	/**	Login Pass					*/
 	private EditText 		et_Pass;
+	/**	Save Pass					*/
 	private CheckBox 		ch_SavePass;
+	/**	Auto Login					*/
 	private CheckBox 		ch_AutoLogin;
+	/**	Language					*/
 	private Cust_Spinner	sp_Language;
+	/**	Current View				*/
 	private View 			m_View = null;
+	/**	Is Load Ok					*/
 	private boolean			m_IsLoadOk = false;
 	
     @Override
@@ -142,21 +151,25 @@ public class T_Login extends Fragment implements I_Login {
      */
     private boolean findUser(String user, String pass){
     	boolean ok = false;
-    	DB con = new DB(this.getActivity());
-    	con.openDB(DB.READ_ONLY);
-    	String sql = "SELECT u.AD_User_ID " +
-    			"FROM AD_User u " +
-    			"WHERE u.Name = ? AND u.PassWord = ?";
-    	Cursor rs = con.querySQL(sql, new String[]{user, pass});
-    	//
-    	if(rs.moveToFirst()){
-    		Env.setAD_User_ID(this.getActivity(), rs.getInt(0));
-    		Env.setIsLogin(this.getActivity(), true);
-    		ok = true;
-    	} else {
-    		Env.setIsLogin(this.getActivity(), false);
+    	try {
+    		DB con = new DB(this.getActivity());
+        	con.openDB(DB.READ_ONLY);
+        	String sql = "SELECT u.AD_User_ID " +
+        			"FROM AD_User u " +
+        			"WHERE u.Name = ? AND u.PassWord = ?";
+        	Cursor rs = con.querySQL(sql, new String[]{user, pass});
+        	//
+        	if(rs.moveToFirst()){
+        		Env.setAD_User_ID(this.getActivity(), rs.getInt(0));
+        		Env.setIsLogin(this.getActivity(), true);
+        		ok = true;
+        	} else {
+        		Env.setIsLogin(this.getActivity(), false);
+        	}
+        	con.closeDB(rs);
+    	} catch(Exception e) {
+    		LogM.log(getActivity(), getClass(), Level.SEVERE, "Error", e);
     	}
-    	con.closeDB(rs);
     	return ok;
     }
     
@@ -219,5 +232,17 @@ public class T_Login extends Fragment implements I_Login {
  		//	
 		return true;
 	}
-    
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		if(!m_IsLoadOk)
+			return;
+		et_User.setEnabled(enabled);
+    	et_Pass.setEnabled(enabled);
+    	ch_SavePass.setEnabled(enabled);
+    	ch_SavePass.setClickable(enabled);
+    	ch_AutoLogin.setEnabled(enabled);
+    	ch_AutoLogin.setClickable(enabled);
+    	sp_Language.setEnabled(enabled);
+	}
 }

@@ -53,10 +53,13 @@ public class MSPSTable extends X_SPS_Table {
 		super(ctx, rs, conn);
 	}
 	
+	public static Class<?> getClass (Context ctx, String tableName){
+		return MSPSTable.getClass(ctx,tableName,null);
+	}
 	/**
 	 * Get Class 
 	 */
-	public static Class<?> getClass (Context ctx, String tableName){
+	public static Class<?> getClass (Context ctx, String tableName,DB conn){
 		//	Not supported
 		if (tableName == null || tableName.endsWith("_Trl"))
 			return null;
@@ -69,7 +72,7 @@ public class MSPSTable extends X_SPS_Table {
 			etmodelpackage = DB.getSQLValueStringEx(ctx, "SELECT et.ModelPackage " +
 					"FROM AD_EntityType et " +
 					"INNER JOIN SPS_Table t ON(t.EntityType = et.EntityType) " +
-					"WHERE t.TableName = ?", new String[]{tableName});
+					"WHERE t.TableName = ?",conn, new String[]{tableName});
 			//	Strip table name prefix (e.g. AD_) Customizations are 3/4
 			className = tableName;
 			int index = className.indexOf('_');
@@ -242,7 +245,7 @@ public class MSPSTable extends X_SPS_Table {
 	 */
 	public PO getPO (Cursor rs, DB conn) {
 		String tableName = getTableName();
-		Class<?> clazz = getClass(getCtx(), tableName);
+		Class<?> clazz = getClass(getCtx(), tableName,conn);
 		if (clazz == null) {
 			//log.log(Level.SEVERE, "(rs) - Class not found for " + tableName);
 			//return null;

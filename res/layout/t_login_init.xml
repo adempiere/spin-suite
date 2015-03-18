@@ -52,6 +52,31 @@
         	android:inputType="textPassword"
     	    android:hint="@string/Pass" />
     	
-    		
+    	<TextView
+        	android:id="@+id/tv_UrlServer"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/Url_Server" />	
+
+    	<EditText
+    	    android:id="@+id/et_UrlServer"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:inputType="textUri"
+    	    android:maxLength="600" >
+        </EditText>
+        
+    	<TextView
+        	android:id="@+id/tv_Timeout"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/Timeout" />
+
+    	<EditText
+        	android:id="@+id/et_Timeout"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:maxLength="10"
+        	android:inputType="numberDecimal" />
     </TableLayout>
 </ScrollView>

@@ -16,6 +16,8 @@
 package com._3e.ADInterface;
 import org.ksoap2.serialization.SoapObject;
 import org.spinsuite.base.DB;
+import org.spinsuite.model.PO;
+
 import android.content.Context;
 import android.database.Cursor;
 
@@ -32,6 +34,8 @@ public class WSDataRow extends SoapObject{
 	private DB m_con;
 	/** Cursor to Send */
 	private Cursor m_rsData;
+	/** PO to Send*/
+	private	PO m_poData;
 	/** Context */
 	private Context m_Ctx;
 	
@@ -45,12 +49,31 @@ public class WSDataRow extends SoapObject{
 	 * @param p_con
 	 * @param rs
 	 */
-	public WSDataRow(Context ctx, String NameSpace,Integer p_WS_WebServiceType_ID,DB p_con,Cursor rs) {
+	public WSDataRow(Context ctx, String NameSpace,Integer p_WS_WebServiceType_ID,DB p_con,Cursor data) {
 		super(NameSpace, WSDataRow.NameSpace);
 		m_Ctx=ctx;
 		m_WS_WebServiceType_ID =p_WS_WebServiceType_ID;
 		m_con = p_con;
-		m_rsData = rs;
+		m_rsData = data;
+		setFields();
+	}
+	
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 12/3/2015, 0:58:18
+	 * @param ctx
+	 * @param NameSpace
+	 * @param p_WS_WebServiceType_ID
+	 * @param p_con
+	 * @param data
+	 */
+	public WSDataRow(Context ctx, String NameSpace,Integer p_WS_WebServiceType_ID,DB p_con,PO data) {
+		super(NameSpace, WSDataRow.NameSpace);
+		m_Ctx=ctx;
+		m_WS_WebServiceType_ID =p_WS_WebServiceType_ID;
+		m_con = p_con;
+		m_poData = data;
 		setFields();
 	}
 	
@@ -69,12 +92,18 @@ public class WSDataRow extends SoapObject{
 		int i;
 		WSField l_field;
 		String l_NameColumn;
+		Object fieldData = null;
 		if (rs.moveToFirst()){
 			do {
 				l_NameColumn=rs.getString(0);
-				i = m_rsData.getColumnIndex(l_NameColumn);
-				if (i!=-1){
-					l_field = new WSField(getM_Ctx(), getNamespace(),l_NameColumn,m_rsData.getString(i));
+				if (m_poData != null)
+					fieldData = m_poData.get_Value(l_NameColumn);
+				else if (m_rsData != null){
+					i = m_rsData.getColumnIndex(l_NameColumn);
+					fieldData= m_rsData.getString(i);
+				}
+				if (fieldData != null){
+					l_field = new WSField(getM_Ctx(), getNamespace(),l_NameColumn,fieldData);
 					addProperty(l_field.getName(), l_field);
 				}
 				

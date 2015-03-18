@@ -45,4 +45,12 @@ public interface I_Login {
 	 * @return boolean
 	 */
 	public boolean loadData();
+	
+	/**
+	 * Set Enabled Status
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param enabled
+	 * @return void
+	 */
+	public void setEnabled(boolean enabled);
 }

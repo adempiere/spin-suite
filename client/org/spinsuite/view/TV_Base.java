@@ -36,6 +36,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -65,12 +66,19 @@ public class TV_Base extends FragmentActivity
     private FragmentTabArray		m_FragmentArray = null;
     /**	Log Tabs					*/
     private boolean					m_IsModifying = false;
+    /** Menu						*/
+    private Menu					m_CurrentMenu = null;
     
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
+    	//	Add Support to Progress Bar in Action Bar
+    	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+    	//	
     	super.setContentView(R.layout.tv_base);
+    	//	Set ProgressBar to false
+    	setProgressBarIndeterminateVisibility(false);
     	
     	actionBar = getActionBar();
     	 
@@ -143,6 +151,34 @@ public class TV_Base extends FragmentActivity
     }
     
     /**
+     * Set Visible a Indeterminate Progress Bar and hide or show Option Menu
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param visible
+     * @return void
+     */
+    protected void setVisibleProgress(boolean visible) {
+    	//	
+    	setProgressBarIndeterminateVisibility(visible);
+    	setVisibleMenu(!visible);
+    }
+    
+    /**
+     * Set Visible menu
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param visible
+     * @return void
+     */
+    protected void setVisibleMenu(boolean visible) {
+    	//	Valid Null
+    	if(m_CurrentMenu == null)
+    		return;
+    	//	Set Visible
+    	for(int i = 0; i < m_CurrentMenu.size(); i++) {
+    		m_CurrentMenu.getItem(i).setVisible(visible);
+    	}
+    }
+    
+    /**
      * Is Drawer Loader
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 16/03/2014, 10:29:47
      * @return
@@ -192,7 +228,9 @@ public class TV_Base extends FragmentActivity
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-    	return super.onCreateOptionsMenu(menu);
+    	boolean ok = super.onCreateOptionsMenu(menu);
+    	m_CurrentMenu = menu;
+    	return ok;
     }
     
     
@@ -405,5 +443,15 @@ public class TV_Base extends FragmentActivity
 	protected TabParameter getCurrentTabParameter() {
 		TabHandler tabHandler = getCurrentTabHandler();
 		return tabHandler.getTabParameter();
+	}
+	
+	/**
+	 * Get Size
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return int
+	 */
+	public int getSize() {
+		return m_FragmentArray.size();
 	}
 }

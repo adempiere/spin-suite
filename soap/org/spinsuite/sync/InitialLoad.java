@@ -17,43 +17,35 @@ package org.spinsuite.sync;
 
 import java.io.IOException;
 import java.util.logging.Level;
+
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.spinsuite.base.DB;
+import org.spinsuite.base.R;
 import org.spinsuite.conn.CommunicationSoap;
 import org.spinsuite.util.LogM;
 import org.xmlpull.v1.XmlPullParserException;
-import android.content.Context;
 
 /**
  * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a>
  *
  */
-public class InitialLoad extends CommunicationSoap{
+public class InitialLoad extends CommunicationSoap {
 
-	/** Soap Object for Params to Web Service Call */
-	private ILCall call  = null;
-	
-	/** Task */
-	private InitialLoadTask m_Task = null;
-	
-	/** Timeout to wait response from web server*/
-	private int m_Timeout = -1;
-
-	/** Context Value */
-	private Context m_Ctx = null; 
-	
-	/** Web Service Definition*/
-	public static String INITIALLOAD_ServiceDefinition = "Spin-Suite";
-	
-	/** Web Service Method Create Metadata*/
-	public static String INITIALLOAD_ServiceMethodCreateMetaData = "CreateMetadata";
-	
-	/** Web Service Method Create Web Service Definition */
-	public static String INITIALLOAD_ServiceMethodWebServiceDefinition = "WebServiceDefinition";
-	
-	/** Web Service Method Create Data Synchronization*/
-	public static String INITIALLOAD_ServiceMethodDataSynchronization = "DataSynchronization";
+	/** Soap Object for Params to Web Service Call 			*/
+	private ILCall m_Call  												= null;
+	/** Task 												*/
+	private SyncService m_Callback 										= null;
+	/** Timeout to wait response from web server			*/
+	private int m_Timeout 												= -1;
+	/** Web Service Definition								*/
+	public static String INITIALLOAD_ServiceDefinition 					= "Spin-Suite";
+	/** Web Service Method Create Meta-data					*/
+	public static String INITIALLOAD_ServiceMethodCreateMetaData 		= "CreateMetadata";
+	/** Web Service Method Create Web Service Definition 	*/
+	public static String INITIALLOAD_ServiceMethodWebServiceDefinition 	= "WebServiceDefinition";
+	/** Web Service Method Create Data Synchronization		*/
+	public static String INITIALLOAD_ServiceMethodDataSynchronization 	= "DataSynchronization";
 	
 	/**
 	 * *** Constructor ***
@@ -64,9 +56,9 @@ public class InitialLoad extends CommunicationSoap{
 	 * @param isNetService
 	 */
 	public InitialLoad(String p_Url, String p_NameSpace, String p_Method_Name,
-			boolean isNetService,Context p_Ctx) {
+			boolean isNetService, SyncService p_Task) {
 		super(p_Url, p_NameSpace, p_Method_Name, isNetService);
-		m_Ctx = p_Ctx;
+		m_Callback = p_Task;
 	}
 	
 	/**
@@ -79,7 +71,7 @@ public class InitialLoad extends CommunicationSoap{
 	 * @param p_SoapAction
 	 */
 	public InitialLoad(String p_Url, String p_NameSpace, String p_Method_Name,
-			boolean isNetService, String p_SoapAction ,Context p_Ctx) {
+			boolean isNetService, String p_SoapAction , SyncService p_Ctx) {
 		this(p_Url, p_NameSpace, p_Method_Name,
 				isNetService, p_Ctx);
 		setM_SoapAction(p_SoapAction);
@@ -95,16 +87,19 @@ public class InitialLoad extends CommunicationSoap{
 	 * @param p_SoapAction
 	 * @param p_User
 	 * @param p_PassWord
+	 * @param p_Task
 	 * @param p_ServiceType
 	 */
 	public InitialLoad(String p_Url, String p_NameSpace, String p_Method_Name,
-			boolean isNetService, String p_SoapAction, String p_User, String p_PassWord,InitialLoadTask p_Task, 
-				int p_Timeout, Context p_Ctx) {
-		this(p_Url, p_NameSpace, p_Method_Name,
-				isNetService, p_SoapAction, p_Ctx);
+			boolean isNetService, String p_SoapAction, String p_User, 
+			String p_PassWord,
+			int p_Timeout, SyncService p_Task) {
 		
-		m_Task = p_Task;
-		call = new ILCall(p_NameSpace, p_User, p_PassWord);
+		this(p_Url, p_NameSpace, p_Method_Name,
+				isNetService, p_SoapAction, p_Task);
+		
+		m_Callback = p_Task;
+		m_Call = new ILCall(p_NameSpace, p_User, p_PassWord);
 		m_Timeout = p_Timeout;
 	}
 	
@@ -118,7 +113,7 @@ public class InitialLoad extends CommunicationSoap{
 	 */
 	public SoapObject callService() {
 		SoapObject result = null;
-		addSoapObject(call);
+		addSoapObject(m_Call);
 		
 		init_envelope();
 		if (m_Timeout <= 0)
@@ -130,10 +125,10 @@ public class InitialLoad extends CommunicationSoap{
 		try {
 			call();
 			result = (SoapObject) getM_Envelope().getResponse();
-			LogM.log(m_Ctx, InitialLoad.class, Level.FINE, "Web Service Call");
+			LogM.log(m_Callback, InitialLoad.class, Level.FINE, "Web Service Call");
 		} catch (Exception e) {
-			LogM.log(m_Ctx, InitialLoad.class, Level.SEVERE,e.getLocalizedMessage(),e.getCause());
-			m_Task.refreshMSG(e.getLocalizedMessage(), true, null);
+			LogM.log(m_Callback, InitialLoad.class, Level.SEVERE,e.getLocalizedMessage(),e.getCause());
+			m_Callback.sendStatus(e.getLocalizedMessage(), true, null);
 		}
 		
 		return result;
@@ -145,15 +140,15 @@ public class InitialLoad extends CommunicationSoap{
 	 * @param resp
 	 * @return void
 	 */
-	public boolean writeDB(SoapObject p_Resp,Integer p_PageCount,Integer p_CurrentPage ){
+	public boolean writeDB(SoapObject p_Resp,Integer p_PageCount,Integer p_CurrentPage){
 		//boolean result = false;
-		DB conn = new DB(m_Ctx);
+		DB conn = new DB(m_Callback);
 		conn.openDB(DB.READ_WRITE);
 		Object [] params = null;
 		int countrec = p_Resp.getPropertyCount();
 		int hasPages = (p_Resp.hasProperty(ILCall.m_Pages) ? 1 :0);
 		int hasWSCount = (p_Resp.hasProperty("WSCount") ? 1 :0);
-		m_Task.setMaxValueProgressBar(countrec - hasPages - hasWSCount);
+		m_Callback.setMaxValueProgressBar(countrec - hasPages - hasWSCount);
 		
 		try{
 			for (int i= 0;i< countrec;i++){
@@ -162,11 +157,14 @@ public class InitialLoad extends CommunicationSoap{
 					continue;
 				
 				SoapObject query = (SoapObject) p_Resp.getProperty(i);
-							
-				m_Task.refreshMSG(query.getPropertyAsString("Name") +"\n" 
-						+ "Pages:" +(p_PageCount != null && p_CurrentPage !=null ? p_CurrentPage + "/"+ p_PageCount + "\n" : "") 
-						+ "Records : " + (i + 1) + " / " + (countrec - hasPages - hasWSCount), false, (i + 1));
-				
+				//	Set Message
+				m_Callback.sendStatus(query.getPropertyAsString("Name"), false, (i + 1));
+//				m_Callback.sendStatus(query.getPropertyAsString("Name") +"\n" 
+//						+ m_Callback.getString(R.string.Sync_Pages) + ": " + (p_PageCount != null && p_CurrentPage !=null 
+//																			? p_CurrentPage + "/" + p_PageCount + "\n" 
+//																					: "") 
+//						+ m_Callback.getString(R.string.Sync_Records) + ": " + (i + 1) + "/" 
+//													+ (countrec - hasPages - hasWSCount), false, (i + 1));
 		    	String sql = query.getPropertyAsString("SQL");
 		    	
 		    	//Have Parameters
@@ -190,8 +188,8 @@ public class InitialLoad extends CommunicationSoap{
 		}
     	catch (Exception ex){
     		ex.printStackTrace();
-    		m_Task.refreshMSG(ex.getLocalizedMessage(), true, null);
-    		return  false;
+    		m_Callback.sendStatus(ex.getLocalizedMessage(), true, null);
+    		return false;
     	}
     	finally{
     		DB.closeConnection(conn);
@@ -207,6 +205,6 @@ public class InitialLoad extends CommunicationSoap{
 	 * @return void
 	 */
 	public void addPropertyToCall(String p_Name, Object p_Value) {
-		call.addProperty(p_Name, p_Value);
+		m_Call.addProperty(p_Name, p_Value);
 	}
 }

@@ -75,6 +75,7 @@ public class Query
 	private boolean 	onlyActiveRecords 					= false;
 	private boolean 	onlyClient_ID 						= false;
 	private int 		onlySelection_ID 					= -1;
+	private boolean		handleConnection					= false;
 	
 	/**
 	 * @param ctx context 
@@ -87,7 +88,10 @@ public class Query
 		this.table = table;
 		this.whereClause = whereClause;
 		this.conn = conn;
-		this.conn = new DB(ctx); 
+		if (conn== null){
+			this.conn = new DB(ctx);
+			handleConnection = true;
+		}
 	}
 	
 	/**
@@ -198,7 +202,8 @@ public class Query
 		
 		Cursor rs = null;
 		try {
-			DB.loadConnection(conn, DB.READ_ONLY);
+			if (handleConnection)
+				DB.loadConnection(conn, DB.READ_ONLY);
 			rs = createResultSet(sql);
 			while (rs.moveToNext()) {
 				T po = (T)table.getPO(rs, conn);
@@ -207,7 +212,8 @@ public class Query
 		} catch (Exception e) {
 			LogM.log(ctx, getClass(), Level.SEVERE, sql, e);
 		} finally {
-			DB.closeConnection(conn);
+			if (handleConnection)
+				DB.closeConnection(conn);
 		}
 		return list;
 	}
@@ -232,7 +238,8 @@ public class Query
 			LogM.log(ctx, getClass(), Level.SEVERE, sql, e);
 			throw new Exception(e);
 		} finally {
-			DB.closeConnection(conn);
+			if (handleConnection)
+				DB.closeConnection(conn);
 		}
 		return po;
 	}
@@ -263,7 +270,8 @@ public class Query
 			LogM.log(ctx, getClass(), Level.SEVERE, sql, e);
 			throw new Exception(e);
 		} finally {
-			DB.closeConnection(conn);
+			if (handleConnection)
+				DB.closeConnection(conn);
 		}
 		return po;
 	}
@@ -319,7 +327,8 @@ public class Query
 		} catch (SQLException e) {
 			throw new Exception(e);
 		} finally {
-			DB.closeConnection(conn);
+			if (handleConnection)
+				DB.closeConnection(conn);
 		}
 		//
 		return id;
@@ -406,7 +415,8 @@ public class Query
 		} catch (SQLException e) {
 			throw new Exception(e);
 		} finally {
-			DB.closeConnection(conn);
+			if (handleConnection)
+				DB.closeConnection(conn);
 		}
 		//
 		if (value == null)
@@ -453,7 +463,8 @@ public class Query
 		} catch (SQLException e) {
 			throw new Exception(e);
 		} finally {
-			DB.closeConnection(conn);
+			if (handleConnection)
+				DB.closeConnection(conn);
 		}
 		return false;
 	}
@@ -660,7 +671,8 @@ public class Query
 		} catch (Exception e) {
 			throw new Exception(e);
 		} finally {
-			DB.closeConnection(conn);
+			if (handleConnection)
+				DB.closeConnection(conn);
 		}
 		//	Convert to array
 		int[] retValue = new int[list.size()];

@@ -17,6 +17,7 @@ package com._3e.ADInterface;
 
 import org.ksoap2.serialization.SoapObject;
 import org.spinsuite.base.DB;
+import org.spinsuite.model.PO;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -36,9 +37,6 @@ public class WSModelCrud extends SoapObject{
 	
 	/** Web Service Type ID */ 
 	private Integer m_WS_WebServiceType_ID;
-	
-	/** Cursor */ 
-	private Cursor m_rs;
 	
 	/** Record ID Static Value*/ 
 	public static final String PARAMETER_RecordID="RecordID";
@@ -70,20 +68,49 @@ public class WSModelCrud extends SoapObject{
 	 * @param rs
 	 * @param Filter
 	 */
-	public WSModelCrud(Context ctx, String NameSpace, Integer p_WS_WebServiceType_ID,DB con,Integer RecordID,Cursor rs,String Filter,int PageNo) {
+	public WSModelCrud(Context ctx, String NameSpace, Integer p_WS_WebServiceType_ID,DB con,Integer RecordID,Cursor data,String Filter,int PageNo) {
 		super(NameSpace,WSModelCrud.ModelCRUD);
 		// TODO Auto-generated constructor stub
 		m_Filter=Filter;
 		m_WS_WebServiceType_ID = p_WS_WebServiceType_ID;
 		m_con = con;
 		m_Record_ID = RecordID;
-		m_rs = rs;
 		m_PageNo = PageNo;
 		
 		//Load Parameters
 		loadWS_Service_Para();
 
-		WSDataRow l_data = new WSDataRow(ctx, NameSpace,m_WS_WebServiceType_ID,m_con, m_rs);
+		WSDataRow l_data = new WSDataRow(ctx, NameSpace,m_WS_WebServiceType_ID,m_con, data);
+		addProperty(l_data.getName(), l_data);
+		
+	}
+	
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 12/3/2015, 0:56:00
+	 * @param ctx
+	 * @param NameSpace
+	 * @param p_WS_WebServiceType_ID
+	 * @param data
+	 * @param RecordID
+	 * @param rs
+	 * @param Filter
+	 * @param PageNo
+	 */
+	public WSModelCrud(Context ctx, String NameSpace, Integer p_WS_WebServiceType_ID,DB con,Integer RecordID,PO data,String Filter,int PageNo) {
+		super(NameSpace,WSModelCrud.ModelCRUD);
+		// TODO Auto-generated constructor stub
+		m_Filter=Filter;
+		m_WS_WebServiceType_ID = p_WS_WebServiceType_ID;
+		m_con = con;
+		m_Record_ID = RecordID;
+		m_PageNo = PageNo;
+		
+		//Load Parameters
+		loadWS_Service_Para();
+
+		WSDataRow l_data = new WSDataRow(ctx, NameSpace,m_WS_WebServiceType_ID,m_con, data);
 		addProperty(l_data.getName(), l_data);
 		
 	}
