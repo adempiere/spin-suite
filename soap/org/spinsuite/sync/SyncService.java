@@ -142,6 +142,8 @@ public class SyncService extends IntentService {
 		m_Filter.putExtra(SyncValues.BC_KEY_MSG_TYPE, msgType);
 		if(p_Progress > 0) {
 			m_Filter.putExtra(SyncValues.BC_KEY_PROGRESS, p_Progress);
+		} else {
+			m_Filter.putExtra(SyncValues.BC_KEY_MAX_VALUE, 0);
 		}
 		//	Send
 		m_BCast.sendBroadcast(m_Filter);
@@ -322,8 +324,9 @@ public class SyncService extends IntentService {
 						p_Params[iWS] = new StringNamePair(Params[iWS].getKey(), Integer.valueOf(CurrentWS -1).toString());
 					
 					p_Params[iPage] = new StringNamePair(Params[iPage].getKey(), Integer.valueOf(CurrentPage).toString());
-					
-					//sendStatus(m_PublicMsg, false, -1);
+					//	Set to Call
+					sendStatus(getString(R.string.Calling) 
+							+ " " + getString(R.string.Sync_WebService), false, -1);
 					return callWebService(p_Params);
 				}
 				else{
@@ -331,8 +334,9 @@ public class SyncService extends IntentService {
 						p_Params[iPage] = new StringNamePair(Params[iPage].getKey(), Integer.valueOf(0).toString());
 
 					p_Params[iWS] = new StringNamePair(Params[iWS].getKey(), Integer.valueOf(CurrentWS).toString());
-					
-					//refreshMSG(m_PublicMsg, false, -1);
+					//	Set to Call
+					sendStatus(getString(R.string.Calling) 
+							+ " " + getString(R.string.Sync_WebService), false, -1);
 					return callWebService(p_Params);
 				}
 			}
@@ -341,7 +345,9 @@ public class SyncService extends IntentService {
 				if (CurrentPage - pages != 0 && pages > 0){
 					p_Params[iWS] = new StringNamePair(Params[iWS].getKey(), Integer.valueOf(0).toString());
 					p_Params[iPage] = new StringNamePair(Params[iPage].getKey(), Integer.valueOf(CurrentPage).toString());
-					//refreshMSG(m_PublicMsg, false, -1);
+					//	Set to Call
+					sendStatus(getString(R.string.Calling) 
+							+ " " + getString(R.string.Sync_WebService), false, -1);
 					return callWebService(p_Params);
 				}
 			}
