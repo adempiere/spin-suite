@@ -1843,7 +1843,7 @@ public final class Env {
 	 * @return String
 	 */
 	public static String getSOLanguage(Context ctx) {
-		return ctx.getResources().getConfiguration().locale.getDisplayName();
+		return ctx.getResources().getConfiguration().locale.getLanguage();
 	}
 	
 	/**

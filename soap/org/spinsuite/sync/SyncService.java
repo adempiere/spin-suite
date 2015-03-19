@@ -111,11 +111,12 @@ public class SyncService extends IntentService {
 	 * <li>Add Translation
 	 * @param p_Status
 	 * @param p_Msg
+	 * @param p_SubMsg
 	 * @param p_Error
 	 * @param p_Progress
 	 * @return void
 	 */
-	public void sendStatus(String p_Status, String p_Msg, boolean p_Error, Integer p_Progress) {
+	public void sendStatus(String p_Status, String p_Msg, String p_SubMsg, boolean p_Error, Integer p_Progress) {
 		Intent m_Filter = new Intent(SyncValues.BC_IL_FILTER);
 		//	Valid Progress
 		if(p_Progress == null)
@@ -124,6 +125,11 @@ public class SyncService extends IntentService {
 		if(p_Msg != null
 				&& p_Msg.length() > 0) {
 			m_Filter.putExtra(SyncValues.BC_KEY_MSG, p_Msg);
+		}
+		//	Valid Sub Message
+		if(p_SubMsg != null
+				&& p_SubMsg.length() > 0) {
+			m_Filter.putExtra(SyncValues.BC_KEY_SUB_MSG, p_SubMsg);
 		}
 		//	Valid Status
 		if(p_Status != null
@@ -147,6 +153,19 @@ public class SyncService extends IntentService {
 		}
 		//	Send
 		m_BCast.sendBroadcast(m_Filter);
+	}
+	
+	/**
+	 * Send Status Without Sub Message
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> Mar 18, 2015, 4:24:19 AM
+	 * @param p_Status
+	 * @param p_Msg
+	 * @param p_Error
+	 * @param p_Progress
+	 * @return void
+	 */
+	public void sendStatus(String p_Status, String p_Msg, boolean p_Error, Integer p_Progress) {
+		sendStatus(p_Status, p_Msg, null, p_Error, p_Progress);
 	}
 	
 	/**
@@ -257,16 +276,16 @@ public class SyncService extends IntentService {
 			long duration = afterMillis - previousMillis;
 			//	Set Last Message
 			if(m_LastMsg == null) {
-				m_LastMsg = getString(R.string.DownloadEnding) + " " 
-						+ getString(R.string.Sync_Duration) 
+				m_LastMsg =  getString(R.string.Sync_Duration) 
 						+ ": " + SyncValues.getDifferenceValue(duration);
 				//	
-				sendStatus(SyncValues.BC_STATUS_END, m_LastMsg);
+				sendStatus(SyncValues.BC_STATUS_END, 
+						getString(R.string.DownloadEnding), m_LastMsg, false, -1);
 			} else  {
-				sendStatus(SyncValues.BC_STATUS_END, m_LastMsg, true, -1);
+				sendStatus(SyncValues.BC_STATUS_END, 
+						getString(R.string.msg_Error), m_LastMsg, true, -1);
 			}
 		}
-		//df.dismiss();
 	}
 	
 	/**

@@ -44,6 +44,7 @@ public class SyncValues {
 	public static final String 		BC_SS_FILTER 		= "BC_SS_Filter";
 	/**	Broadcast Values				*/
 	public static final String 		BC_KEY_MSG 			= "BCV_Msg";
+	public static final String 		BC_KEY_SUB_MSG 		= "BCV_SubMsg";
 	public static final String 		BC_KEY_MSG_TYPE 	= "BCV_MsgType";
 	public static final String 		BC_KEY_PROGRESS 	= "BCV_Progress";
 	public static final String 		BC_KEY_STATUS 		= "BCV_Status";
