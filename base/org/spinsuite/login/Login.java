@@ -104,7 +104,8 @@ public class Login extends TV_Base implements I_Login {
     		}
     		//	Load Language
     		String languaje = Env.getAD_Language(this);
-    		if(languaje != null) {
+    		if(languaje != null
+    				&& languaje.length() > 0) {
     			Env.changeLanguage(this, languaje);
     		}
     		else {
