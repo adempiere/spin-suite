@@ -97,7 +97,7 @@ public class WSDataRow extends SoapObject{
 			do {
 				l_NameColumn=rs.getString(0);
 				if (m_poData != null)
-					fieldData = m_poData.get_Value(l_NameColumn);
+					fieldData = m_poData.get_SyncValue(l_NameColumn);
 				else if (m_rsData != null){
 					i = m_rsData.getColumnIndex(l_NameColumn);
 					fieldData= m_rsData.getString(i);
