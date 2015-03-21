@@ -18,6 +18,7 @@ package org.spinsuite.model;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
 
@@ -1562,8 +1563,35 @@ public abstract class PO {
 	 * @return Object
 	 */
 	public final Object get_SyncValue(String columnName) {
+		int displayType= m_TableInfo.getDisplayType(columnName);
 		int index = m_TableInfo.getColumnIndex(columnName);
 		LogM.log(getCtx(), getClass(), Level.FINE, "columnName = " + columnName);
-		return get_Value(index);
+		
+		if (Arrays.binarySearch(new int[]{DisplayType.ID, DisplayType.TABLE, 
+											DisplayType.TABLE_DIR, DisplayType.ACCOUNT,
+											DisplayType.ROW_ID, DisplayType.COLOR, DisplayType.SEARCH,
+											DisplayType.LOCATION, DisplayType.LOCATOR,
+											DisplayType.ASSIGNMENT, DisplayType.PATTRIBUTE}, displayType)>=0){
+			
+			String tableName = columnName.replace("_ID", "");
+			Object retValue = null;
+			String sql ="SELECT SyncRecord_ID " + 
+						"FROM " +
+						"SPS_SyncTable " +  
+						"WHERE "+ 
+						"IsSynchronized = 'Y' " +
+						"AND EventChangeLog = '"+ X_SPS_SyncTable.EVENTCHANGELOG_Insert + "'" + 
+						"AND Record_ID =  " + get_Value(index) + " " +
+						//"AND SPS_Table_ID = " + getSPS_Table_ID();
+						"AND EXISTS (SELECT 1 FROM SPS_Table WHERE SPS_SyncTable.SPS_Table_ID = SPS_Table.SPS_Table_ID AND SPS_Table.TableName = '"+tableName+"')";
+			retValue =DB.getSQLValueString(getCtx(), sql, conn, new String[]{});
+			if (retValue == null)
+				retValue = get_Value(index) ;
+			if (retValue.equals(0))
+				retValue = null; 
+			return retValue;
+		}else
+			return get_Value(index);
+		
 	}
 }

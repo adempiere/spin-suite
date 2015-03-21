@@ -96,14 +96,15 @@ public class WSDataRow extends SoapObject{
 		if (rs.moveToFirst()){
 			do {
 				l_NameColumn=rs.getString(0);
-				if (m_poData != null)
+				if (m_poData != null){
 					fieldData = m_poData.get_SyncValue(l_NameColumn);
+					System.out.println(fieldData);}
 				else if (m_rsData != null){
 					i = m_rsData.getColumnIndex(l_NameColumn);
 					fieldData= m_rsData.getString(i);
 				}
 				if (fieldData != null){
-					l_field = new WSField(getM_Ctx(), getNamespace(),l_NameColumn,fieldData);
+					l_field = new WSField(getM_Ctx(), getNamespace(),l_NameColumn,fieldData.toString());
 					addProperty(l_field.getName(), l_field);
 				}
 				
