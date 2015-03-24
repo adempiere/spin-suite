@@ -311,7 +311,7 @@ public class SyncDataTask implements BackGroundProcess  {
 		if (wst.getWS_WebService_ID() != 0){
 			X_WS_WebService ws = new X_WS_WebService(m_ctx, wst.getWS_WebService_ID(), conn);
 			m_Value = ws.getValue();
-			m_NameSpace =  ws.getNameSpace();
+			m_NameSpace =  (ws.getNameSpace() == null ? "" : ws.getNameSpace());
 			m_Current_URL = SyncValues.getValidURL(m_URL, m_Value);
 		}
 		
