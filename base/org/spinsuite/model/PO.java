@@ -18,6 +18,7 @@ package org.spinsuite.model;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
 
@@ -70,6 +71,7 @@ public abstract class PO {
 	public static String		NULL = "NULL";
 	/** Zero Integer				*/
 	protected static final Integer I_ZERO = Integer.valueOf(0);
+	private boolean					isSynchronization 	= false;
 	
 	/**
 	 * 
@@ -1088,14 +1090,6 @@ public abstract class PO {
 							column.ColumnName + "=" + value + " Mandatory=" + column.IsMandatory);
 				}
 				
-				String sql = "UPDATE " + 
-						m_TableInfo.getTableName() + 
-						" SET " + 
-						columns.toString() +
-						" WHERE "  + get_WhereClause(true, true);
-				
-				conn.executeSQL(sql, listValues.toArray());
-				
 				//Carlos Parada Add Support to Log for Mobile
 				if (session != null
 						&& m_IDs.length == 1
@@ -1120,6 +1114,13 @@ public abstract class PO {
 					}
 				//End Carlos Parada
 			}
+			String sql = "UPDATE " + 
+					m_TableInfo.getTableName() + 
+					" SET " + 
+					columns.toString() +
+					" WHERE "  + get_WhereClause(true, true);
+			
+			conn.executeSQL(sql, listValues.toArray());
 			//	
 			//2015-03-13 Carlos Parada Add Sync Record 
 			if (MSession.logMigration(this, m_TableInfo))
@@ -1168,7 +1169,11 @@ public abstract class PO {
 			Object value = m_currentValues[index]; 
 			if(isNew
 					&& column.ColumnName.equals(m_TableInfo.getTableName() + "_ID")) {
-				m_IDs = new int[]{MSequence.getNextID(m_ctx, getAD_Client_ID(), getTableName(), conn)};
+				Integer ID = (Integer) value;
+				if ( ID != null && ID > 0)
+					m_IDs = new int[]{ID};
+				else
+					m_IDs = new int[]{MSequence.getNextID(m_ctx, getAD_Client_ID(), getTableName(), conn)};
 				//	Set ID
 				set_Value(index, m_IDs[0]);
 				return m_IDs[0];
@@ -1515,6 +1520,9 @@ public abstract class PO {
 	 * @throws Exception 
 	 */
 	private void createSyncRecord(String p_EventChangeLog,int p_ID) throws Exception{
+		//No Create Record When Synchronization
+		if (isSynchronization())
+			return;
 		
 		String whereClause = "SPS_Table_ID = " + getSPS_Table_ID() + " AND "
 							+ "Record_ID = " + p_ID + " AND "
@@ -1536,5 +1544,65 @@ public abstract class PO {
 			if (p_EventChangeLog.equals(X_SPS_SyncTable.EVENTCHANGELOG_Delete))
 				synctable.deleteEx();
 		}
+	}
+
+	/**
+	 * 
+	 * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com 19/3/2015, 2:12:17
+	 * @return
+	 * @return boolean
+	 */
+	public boolean isSynchronization() {
+		return isSynchronization;
+	}
+	
+	/**
+	 * 
+	 * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com 19/3/2015, 2:12:21
+	 * @param isSynchronization
+	 * @return void
+	 */
+	public void setSynchronization(boolean isSynchronization) {
+		this.isSynchronization = isSynchronization;
+	}
+	
+	/**
+	 * Get Sync Value value with columnName
+	 ** @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com 28/03/2012, 00:22:56
+	 * @param columnName
+	 * @return
+	 * @return Object
+	 */
+	public final Object get_SyncValue(String columnName) {
+		int displayType= m_TableInfo.getDisplayType(columnName);
+		int index = m_TableInfo.getColumnIndex(columnName);
+		LogM.log(getCtx(), getClass(), Level.FINE, "columnName = " + columnName);
+		
+		if (Arrays.binarySearch(new int[]{DisplayType.ID, DisplayType.TABLE, 
+											DisplayType.TABLE_DIR, DisplayType.ACCOUNT,
+											DisplayType.ROW_ID, DisplayType.COLOR, DisplayType.SEARCH,
+											DisplayType.LOCATION, DisplayType.LOCATOR,
+											DisplayType.ASSIGNMENT, DisplayType.PATTRIBUTE}, displayType)>=0){
+			
+			String tableName = columnName.replace("_ID", "");
+			Object retValue = null;
+			String sql ="SELECT SyncRecord_ID " + 
+						"FROM " +
+						"SPS_SyncTable " +  
+						"WHERE "+ 
+						"IsSynchronized = 'Y' " +
+						"AND EventChangeLog = '"+ X_SPS_SyncTable.EVENTCHANGELOG_Insert + "'" + 
+						"AND Record_ID =  " + get_Value(index) + " " +
+						//"AND SPS_Table_ID = " + getSPS_Table_ID();
+						"AND EXISTS (SELECT 1 FROM SPS_Table WHERE SPS_SyncTable.SPS_Table_ID = SPS_Table.SPS_Table_ID AND SPS_Table.TableName = '"+tableName+"')";
+			retValue =DB.getSQLValueString(getCtx(), sql, conn, new String[]{});
+			if (retValue == null)
+				retValue = get_Value(index) ;
+			if (retValue.equals(0))
+				retValue = null; 
+			return retValue;
+		}else
+			return get_Value(index);
+		
 	}
 }
