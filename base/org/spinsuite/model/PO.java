@@ -15,18 +15,20 @@
  *************************************************************************************/
 package org.spinsuite.model;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
-import org.spinsuite.base.R;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.Msg;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -41,8 +43,13 @@ import android.database.Cursor;
 *  	<li>Add Support to Log for Mobile
 *  	@see https://adempiere.atlassian.net/browse/SPIN-6
 **/
-public abstract class PO {
+public abstract class PO implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4393558123583028851L;
+	
 	/** Context                 	*/
 	private Context					m_ctx 				= null;
 	/** Model Info              	*/
@@ -67,10 +74,10 @@ public abstract class PO {
 	private boolean					handConnection 		= true;
 	/**	Log Error					*/
 	private String					error 				= null;
-	/** NULL Value				*/
-	public static String		NULL = "NULL";
+	/** NULL Value					*/
+	public static String			NULL 				= "NULL";
 	/** Zero Integer				*/
-	protected static final Integer I_ZERO = Integer.valueOf(0);
+	protected static final Integer 	I_ZERO 				= Integer.valueOf(0);
 	private boolean					isSynchronization 	= false;
 	
 	/**
@@ -983,7 +990,7 @@ public abstract class PO {
 					
 					if(column.IsMandatory 
 							&& value == null)
-						throw new Exception(m_ctx.getResources().getString(R.string.MustFillField) + 
+						throw new Exception(Msg.getMsg(getCtx(), "MustFillField") + 
 								" \"@" + column.ColumnName + "@\"");
 					listValues.add(value);
 					LogM.log(getCtx(), getClass(), Level.FINE, column.ColumnName + "=" + value + " Mandatory=" + column.IsMandatory);
@@ -1070,7 +1077,7 @@ public abstract class PO {
 				Object value = parseValue(column, i, false, true);
 				if(column.IsMandatory 
 						&& value == null)
-					throw new Exception(m_ctx.getResources().getString(R.string.MustFillField) + 
+					throw new Exception(Msg.getMsg(getCtx(), "MustFillField") + 
 							" \"@" + column.ColumnName + "@\"");
 				if(!column.ColumnName.equals("Created")
 						&& !column.ColumnName.equals("CreatedBy")) {
@@ -1131,7 +1138,7 @@ public abstract class PO {
 	 * @return void
 	 */
 	private void setLogValues(boolean isNew) {
-		int m_AD_User_ID = Env.getAD_User_ID(m_ctx);
+		int m_AD_User_ID = Env.getAD_User_ID();
 		Date currentDate = Env.getCurrentDate();
 		if(isNew) {
 			setCreatedBy(m_AD_User_ID);
@@ -1593,5 +1600,21 @@ public abstract class PO {
 		}else
 			return get_Value(index);
 		
+	}
+	
+	/**
+	 * Get Hash Map
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	public HashMap<String, Object> toHashMap() {
+		HashMap<String, Object> array = new HashMap<String, Object>();
+		POInfoColumn[] m_ColumnNames = m_TableInfo.getInfoColumnArray();
+		//	Put in Array
+		for(int i = 0; i < m_ColumnNames.length; i++) {
+			array.put(m_ColumnNames[i].Name, m_currentValues[i]);
+		}
+		//	Default Result
+		return array;
 	}
 }

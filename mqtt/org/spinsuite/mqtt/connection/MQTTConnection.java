@@ -143,7 +143,7 @@ public class MQTTConnection {
 			return;
 		}
 		//	Connect
-		m_ClientLink.connect(m_ConnectionOption, m_ConnectionListener);
+		m_ClientLink.connect(m_ConnectionOption, null, m_ConnectionListener);
 	}
 	
 	/**
@@ -365,5 +365,11 @@ public class MQTTConnection {
 	public void unSubscribeEx(String p_Topic) throws MqttException {
 		m_ClientLink.unsubscribe(p_Topic);
 	}
-	
+
+	@Override
+	public String toString() {
+		return "MQTTConnection [m_Client_ID=" + m_Client_ID + ", m_Host="
+				+ m_Host + ", m_Port=" + m_Port + ", m_IsSSLConnection="
+				+ m_IsSSLConnection + ", isConnected()=" + isConnected() + "]";
+	}
 }

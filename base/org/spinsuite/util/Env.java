@@ -46,7 +46,27 @@ import com.google.gson.Gson;
  *
  */
 public final class Env {
-
+	
+	/**
+	 * Set Context
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @return void
+	 */
+	public static void setContext(Context ctx) {
+		m_Ctx = ctx;
+	}
+	
+	/**
+	 * Get Context
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return Context
+	 */
+	public static Context getCtx() {
+		return m_Ctx;
+	}
+	
 	/**
 	 * Verify if is loaded environment
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:58:55
@@ -1312,6 +1332,16 @@ public final class Env {
 	}	//	getAD_User_ID
 	
 	/**
+	 * Get Context
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return int
+	 */
+	public static int getAD_User_ID () {
+		return getContextAsInt(Env.getCtx(), "#AD_User_ID");
+	}
+	
+	/**
 	 * 	Get Login AD_Role_ID
 	 *	@param ctx context
 	 *	@return login AD_Role_ID
@@ -2107,6 +2137,9 @@ public final class Env {
 			return false;
 		return value.equals("Y");
 	}
+	
+	/**	Context					*/
+	private static Context 		m_Ctx;
 	
 	/**************************************************************************
 	 *  Application Context
