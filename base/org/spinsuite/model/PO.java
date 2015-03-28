@@ -1258,7 +1258,7 @@ public abstract class PO implements Serializable {
 	 *  @param ctxInto context
 	 *  @return int
 	 */
-	protected int getSPS_Table_ID() {
+	public int getSPS_Table_ID() {
 		return m_TableInfo.getSPS_Table_ID();
 	}
 	

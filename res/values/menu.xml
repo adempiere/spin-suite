@@ -39,6 +39,7 @@
     
     <!-- Export Option -->
     <string name="Action_Share">Share</string>
+    <string name="Action_BChat">Business Chat</string>
     <string name="Action_Export_XLS">Export to XLS</string>
     <string name="Action_Export_PDF">Export to PDF</string>
     <string name="Action_Export_XML">Export to XML</string>

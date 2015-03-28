@@ -19,21 +19,14 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.logging.Level;
 
-import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
+import org.spinsuite.bchat.view.V_BChat;
 import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.interfaces.I_FragmentSelectListener;
 import org.spinsuite.interfaces.OnFieldChangeListener;
-import org.spinsuite.model.PO;
-import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.process.DocAction;
 import org.spinsuite.util.AttachmentHandler;
 import org.spinsuite.util.DisplayMenuItem;
@@ -43,7 +36,6 @@ import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
-import org.spinsuite.util.SerializerUtil;
 import org.spinsuite.util.TabParameter;
 import org.spinsuite.view.lookup.GridField;
 import org.spinsuite.view.lookup.GridTab;
@@ -139,11 +131,12 @@ public class T_DynamicTab extends Fragment
 	protected static final int 			DELETED 			= 4;
 	
 	/**	Option Menu Item			*/
-	private final int O_SHARE								= 1;
-	private final int O_DELETE								= 2;
-	private final int O_ATTACH_PHOTO						= 3;
-	private final int O_ATTACH_FILE							= 4;
-	private final int O_VIEW_ATTACH							= 5;
+	private final int O_BUSINESS_CHAT						= 1;
+	private final int O_SHARE								= 2;
+	private final int O_DELETE								= 3;
+	private final int O_ATTACH_PHOTO						= 4;
+	private final int O_ATTACH_FILE							= 5;
+	private final int O_VIEW_ATTACH							= 6;
 	
 	/**	Option Menu					*/
 	private MenuItem mi_Search 								= null;
@@ -427,6 +420,9 @@ public class T_DynamicTab extends Fragment
     	View menuItemView = getActivity().findViewById(R.id.action_more);
 		PopupMenu popupMenu = new PopupMenu(getActivity(), menuItemView);
 		//	Share Record
+		popupMenu.getMenu().add(Menu.NONE, O_BUSINESS_CHAT, 
+					Menu.NONE, getString(R.string.Action_BChat));
+		//	Share Record
 		popupMenu.getMenu().add(Menu.NONE, O_SHARE, 
 					Menu.NONE, getString(R.string.Action_Share));
 		//	Delete Record
@@ -457,46 +453,11 @@ public class T_DynamicTab extends Fragment
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
 				switch (item.getItemId()) {
-	        		case O_SHARE:
-	        			
-	        			final PO poS = mGridTab.getPO();
-	        			final MQTTConnection conn = new MQTTConnection(v_activity, "0101", "erp-host.dlinkddns.com", 1883, false);
-	        			MqttConnectOptions opt = new MqttConnectOptions();
-	        			opt.setUserName("admin");
-	        			opt.setPassword("admin".toCharArray());
-	        			opt.setConnectionTimeout(30);
-	        			conn.setConnectionOptions(opt);
-						try {
-							conn.connect(new IMqttActionListener() {
-								
-								@Override
-								public void onSuccess(IMqttToken arg0) {
-									Msg.toastMsg(Env.getCtx(), "Connection Ok");
-									HashMap<String, Object> map = poS.toHashMap();
-									byte[] ser = SerializerUtil.serializeObject(map);
-									try {
-										conn.publishEx("Spin-Suite-App.1", ser, MQTTConnection.AT_LEAST_ONCE, false);
-										conn.disconnect();
-									} catch (MqttPersistenceException e) {
-										e.printStackTrace();
-									} catch (MqttException e) {
-										e.printStackTrace();
-									} catch (Exception e) {
-										e.printStackTrace();
-									}
-								}
-								
-								@Override
-								public void onFailure(IMqttToken arg0, Throwable arg1) {
-									Msg.toastMsg(Env.getCtx(), "Fail Connection" + arg1.getLocalizedMessage());
-									arg1.printStackTrace();
-								}
-							});
-						} catch (MqttException e) {
-							e.printStackTrace();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+					case O_BUSINESS_CHAT:
+						Intent bChat = new Intent(getActivity(), V_BChat.class);
+						startActivity(bChat);
+						return true;
+					case O_SHARE:
 	        			return true;
 	        		case O_DELETE:
 	        			//	Verify Parent Changed

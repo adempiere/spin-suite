@@ -17,7 +17,7 @@
  *************************************************************************************
  -->
     <style 
-        name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">   
+        name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
     </style>
 
     <!-- Application theme. -->
