@@ -54,11 +54,11 @@ public abstract class PO {
 	/**	Connection					*/
 	protected DB 					conn 				= null;  
 	/** Record_IDs          		*/
-	private int[]       			m_IDs 				= new int[] {0};
+	private Object[]       			m_IDs 				= new Object[] {I_ZERO};
 	/** Key Columns					*/
 	private String[]         		m_KeyColumns 		= null;
 	/** Record_IDs Old          	*/
-	private int[]       			m_OldIDs 			= new int[] {0};
+	private Object[]       			m_OldIDs 			= new Object[] {I_ZERO};
 	/** Key Columns Old				*/
 	private String[]         		m_OldKeyColumns 	= null;
 	/** Create New for Multi Key 	*/
@@ -70,7 +70,7 @@ public abstract class PO {
 	/** NULL Value				*/
 	public static String		NULL = "NULL";
 	/** Zero Integer				*/
-	protected static final Integer I_ZERO = Integer.valueOf(0);
+	public static final Integer I_ZERO = Integer.valueOf(0);
 	private boolean					isSynchronization 	= false;
 	
 	/**
@@ -214,7 +214,18 @@ public abstract class PO {
 	 * @return int[]
 	 */
 	public int[] getIDs() {
-		return m_IDs;
+		int[] retValue= new int[m_IDs.length];
+		int len = 0;
+		
+		for(int i=0;i<m_IDs.length;i++){
+			if (m_IDs[i] instanceof Integer){
+				retValue[len] = (Integer)m_IDs[i];
+				len++;
+			}
+		}
+		int newRetValue[] = new int[len];
+		System.arraycopy(retValue, 0, newRetValue, 0, len);
+		return newRetValue;
 	}
 	
 	
@@ -264,8 +275,10 @@ public abstract class PO {
 		boolean ok = false;
 		LogM.log(getCtx(), getClass(), Level.FINE, "loadData=" + String.valueOf(ID));
 		if(ID != null
-				&& ID[0] > 0) {
-			m_IDs = ID;
+				&& ID[0]>0)  {//&& Integer.parseInt(ID[0].toString()) > 0)) {
+			for(int i = 0; i< ID.length;i++)
+				m_IDs[i] = ID[i];
+			
 			m_KeyColumns = KeyColumns;
 			if(m_KeyColumns == null
 					|| m_KeyColumns.length == 0)
@@ -435,7 +448,10 @@ public abstract class PO {
 				
 			}
 			//Carlos Parada Add Support to Log for Mobile
-			m_OldValues[i] = DisplayType.getJDBC_Value(column.DisplayType, m_currentValues[i], false, false);
+			m_OldValues[i] = DisplayType.getJDBC_Value(column.DisplayType, m_currentValues[i], false, false
+					//2015-03-26 Carlos Parada Add ColumnName
+					,column.ColumnName);
+					//End Carlos Parada
 			//End Carlos Parada
 			
 			//	Set Is Ok
@@ -481,9 +497,10 @@ public abstract class PO {
 	 * @param ID
 	 * @return void
 	 */
-	public void setIDUpdate(int ID) {
-		if(ID > 0) {
-			m_IDs = new int[] {ID};
+	public void setIDUpdate(Object ID) {
+		//if(ID > 0) {
+		if(ID != null){
+			m_IDs = new Object[] {ID};
 			m_OldIDs = m_IDs;
 			m_KeyColumns = m_TableInfo.getKeyColumns();
 			isNew = false;
@@ -497,10 +514,10 @@ public abstract class PO {
 	 */
 	private void reloadKey() {
 		m_KeyColumns = m_TableInfo.getKeyColumns();
-		m_IDs = new int[m_KeyColumns.length];
+		m_IDs = new Object[m_KeyColumns.length];
 		//	
 		for (int i = 0; i < m_KeyColumns.length; i++) {
-			m_IDs[i] = get_ValueAsInt(m_KeyColumns[i]);
+			m_IDs[i] = get_Value(m_KeyColumns[i]);
 		}
 	}
 	
@@ -938,14 +955,14 @@ public abstract class PO {
 		isNew = true;
 		m_OldIDs = m_IDs;
 		m_OldKeyColumns = m_KeyColumns;
-		m_IDs = new int[]{0};
+		m_IDs = new Object[]{I_ZERO};
 		int size = m_TableInfo.getColumnCount();
 		m_currentValues = new Object[size];
 		//	Load default Values
 		loadDefaultValues();
 		//	
 		if(deleteBackup) {
-			m_OldIDs = new int[]{0};
+			m_OldIDs = new Object[]{I_ZERO};
 			m_OldValues = new Object[size];
 		}
 	}
@@ -1160,11 +1177,11 @@ public abstract class PO {
 					&& column.ColumnName.equals(m_TableInfo.getTableName() + "_ID")) {
 				Integer ID = (Integer) value;
 				if ( ID != null && ID > 0)
-					m_IDs = new int[]{ID};
+					m_IDs = new Object[]{ID};
 				else
-					m_IDs = new int[]{MSequence.getNextID(m_ctx, getAD_Client_ID(), getTableName(), conn)};
+					m_IDs = new Object[]{MSequence.getNextID(m_ctx, getAD_Client_ID(), getTableName(), conn)};
 				//	Set ID
-				set_Value(index, m_IDs[0]);
+				set_Value(index, (m_IDs[0] != null && m_IDs[0] instanceof Integer ? ((Integer)m_IDs[0]).intValue(): m_IDs[0]));
 				return m_IDs[0];
 			} else if(isNew 
 					&& column.ColumnName.equals("DocumentNo")) {
@@ -1188,7 +1205,11 @@ public abstract class PO {
 					String documentNo = MSequence.getDocumentNo(getCtx(), m_C_DocType_ID, m_TableInfo.getTableName(), false, conn);
 					return documentNo;
 				} else if(value != null) {
-					Object returnValue = DisplayType.getJDBC_Value(column.DisplayType, value, !toSave, !toSave);
+					Object returnValue = DisplayType.getJDBC_Value(column.DisplayType, value, !toSave, !toSave
+							//2015-03-26 Carlos Parada Add ColumnName
+							,column.ColumnName
+							//End Carlos Parada
+							);
 					return returnValue;
 				} else if(column.DefaultValue != null) {
 					if(toSave)
@@ -1508,7 +1529,7 @@ public abstract class PO {
 	 * @return void
 	 * @throws Exception 
 	 */
-	private void createSyncRecord(String p_EventChangeLog,int p_ID) throws Exception{
+	private void createSyncRecord(String p_EventChangeLog,Object p_ID) throws Exception{
 		//No Create Record When Synchronization
 		if (isSynchronization())
 			return;
@@ -1523,7 +1544,8 @@ public abstract class PO {
 			synctable = new MSPSSyncTable(getCtx(), 0, conn);
 		
 		if (synctable.getSPS_SyncTable_ID()==0){
-			synctable.setRecord_ID(p_ID);
+			//synctable.setRecord_ID(p_ID);
+			synctable.set_Value("Record_ID", p_ID);
 			synctable.setEventChangeLog(p_EventChangeLog);
 			synctable.setSPS_Table_ID(getSPS_Table_ID());
 			synctable.setIsSynchronized(false);

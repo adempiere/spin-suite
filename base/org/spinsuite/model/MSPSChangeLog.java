@@ -133,7 +133,7 @@ public class MSPSChangeLog extends X_SPS_ChangeLog
 	 */
 	public MSPSChangeLog (Context ctx, 
 			int AD_ChangeLog_ID, DB conn, int AD_Session_ID, 
-			int SPS_Table_ID, int SPS_Column_ID, int Record_ID,
+			int SPS_Table_ID, int SPS_Column_ID, Object Record_ID,
 			int AD_Client_ID, int AD_Org_ID,
 			Object OldValue, Object NewValue)
 	{
@@ -158,7 +158,7 @@ public class MSPSChangeLog extends X_SPS_ChangeLog
 	 */
 	public MSPSChangeLog (Context ctx, 
 		int AD_ChangeLog_ID, DB conn, int AD_Session_ID, 
-		int SPS_Table_ID, int SPS_Column_ID, int Record_ID,
+		int SPS_Table_ID, int SPS_Column_ID, Object Record_ID,
 		int AD_Client_ID, int AD_Org_ID,
 		Object OldValue, Object NewValue, String event)
 	{
@@ -174,7 +174,7 @@ public class MSPSChangeLog extends X_SPS_ChangeLog
 		//
 		setSPS_Table_ID (SPS_Table_ID);
 		setSPS_Column_ID (SPS_Column_ID);
-		setRecord_ID (Record_ID);
+		set_Value("Record_ID", Record_ID);
 		//
 		setClientOrg (AD_Client_ID, AD_Org_ID);
 		//

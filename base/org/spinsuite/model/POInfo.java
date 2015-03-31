@@ -429,7 +429,8 @@ public class POInfo {
 			}
 		}
 		//	Default ID
-		m_keyColumns = new String [] {getTableName() + "_ID"};
+		if (getColumnIndex(getTableName() + "_ID")!=-1)
+			m_keyColumns = new String [] {getTableName() + "_ID"};
 		return m_keyColumns;
 	}
 	
