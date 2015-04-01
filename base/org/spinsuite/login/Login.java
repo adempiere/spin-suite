@@ -85,37 +85,37 @@ public class Login extends TV_Base implements I_Login {
 	public void onCreate(Bundle savedInstanceState) {
     	Env.getInstance(getApplicationContext());
     	//	Reset Activity No
-    	Env.resetActivityNo(Env.getCtx());
+    	Env.resetActivityNo();
     	//	
     	super.onCreate(savedInstanceState);
     	//	Set Activity
         v_activity = this;
     	// Validate SD
-    	if(Env.isEnvLoad(this)) {
+    	if(Env.isEnvLoad()) {
         	//	
         	addFagment(T_Login.class, "Conn", R.string.tt_Conn);
             addFagment(T_Role.class, "LoginRole", R.string.tt_LoginRole);
     		setEnabled(true);
     		//	
     		if(!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
-    			if(!Env.getDB_PathName(this).equals(DB.DB_NAME)){
+    			if(!Env.getDB_PathName().equals(DB.DB_NAME)){
     				Msg.alertMsg(this, getResources().getString(R.string.msg_SDNotFoundDetail));
     				finish();
         		}	
     		}
     		//	Load Language
-    		String languaje = Env.getAD_Language(this);
+    		String languaje = Env.getAD_Language();
     		if(languaje != null
     				&& languaje.length() > 0) {
-    			Env.changeLanguage(this, languaje);
+    			Env.changeLanguage(languaje);
     		}
     		else {
-    			languaje = Env.getSOLanguage(this);
-    			Env.setAD_Language(this, languaje);
+    			languaje = Env.getSOLanguage();
+    			Env.setAD_Language(languaje);
     		}
     		//	Auto Login
-    		if(Env.isAutoLoginConfirmed(this)) {
-    			if(!Env.isAccessLoaded(this)) {
+    		if(Env.isAutoLoginConfirmed()) {
+    			if(!Env.isAccessLoaded()) {
 					//	Load Access Role
 					m_LoadType = ROLE_ACCESS;
 					new LoadAccessTask().execute();
@@ -175,9 +175,9 @@ public class Login extends TV_Base implements I_Login {
 			m_Builder.setContentTitle(msg)
 									.setSmallIcon(android.R.drawable.stat_sys_download);
 			//	Set To Error
-			Env.setIsEnvLoad(this, false);
+			Env.setIsEnvLoad(false);
     		//	Set Value for Sync
-    		Env.setContext(this, "#InitialLoadSynchronizing", false);
+    		Env.setContext("#InitialLoadSynchronizing", false);
     		android.app.AlertDialog.Builder ask = Msg.confirmMsg(this, msg);
     		ask.setPositiveButton(getResources().getString(R.string.msg_Acept), new DialogInterface.OnClickListener() {
     			public void onClick(DialogInterface dialog, int which) {
@@ -200,7 +200,7 @@ public class Login extends TV_Base implements I_Login {
     			|| m_PendingIntent == null) {
     		setInstanceNotification();
     		//	Set Value for Sync
-    		Env.setContext(v_activity, "#InitialLoadSynchronizing", true);
+    		Env.setContext("#InitialLoadSynchronizing", true);
     	} else { 
     		m_Builder.setContentIntent(m_PendingIntent);
     		//	
@@ -261,11 +261,11 @@ public class Login extends TV_Base implements I_Login {
 	 * @return void
 	 */
 	public void setContext() {
-		Env.setIsEnvLoad(this, true);
-		Env.setSavePass(this, true);
-		Env.setAutoLogin(this, true);
+		Env.setIsEnvLoad(true);
+		Env.setSavePass(true);
+		Env.setAutoLogin(true);
 		//	Set Value for Sync
-		Env.setContext(this, "#InitialLoadSynchronizing", false);
+		Env.setContext("#InitialLoadSynchronizing", false);
 		//	Reload
 		reloadActivity();
 	}
@@ -290,7 +290,7 @@ public class Login extends TV_Base implements I_Login {
         getMenuInflater().inflate(R.menu.cancel_ok, menu);
         MenuItem item = menu.getItem(0);
         item.setVisible(true);
-        setVisibleProgress(!Env.isEnvLoad(v_activity));
+        setVisibleProgress(!Env.isEnvLoad());
         return true;
     }
     
@@ -302,7 +302,7 @@ public class Login extends TV_Base implements I_Login {
 			return true;
 		} else {
 			//	Valid Enable
-			if(!Env.isEnvLoad(this)) {
+			if(!Env.isEnvLoad()) {
 				loadInitSync();
 				return true;
 			}
@@ -331,12 +331,12 @@ public class Login extends TV_Base implements I_Login {
     	boolean ret = fr.aceptAction();
 		if(fr instanceof T_Login){
 			if(ret){
-				if(!Env.isEnvLoad(this)){
+				if(!Env.isEnvLoad()){
 					Intent intent = new Intent(this, T_Connection.class);
 					startActivity(intent);
 				} else {
 					//	Is Logged
-					if(Env.isLogin(this)){
+					if(Env.isLogin()){
 						setCurrentFragment(1);
 						fr = (I_Login)getCurrentFragment();	
 					} else {
@@ -347,9 +347,9 @@ public class Login extends TV_Base implements I_Login {
 		} else if(fr instanceof T_Role){
 			if(ret){
 				//	Set Confirm Login
-				Env.setAutoLoginComfirmed(this, Env.isAutoLogin(this));
+				Env.setAutoLoginComfirmed(Env.isAutoLogin());
 				//	Set Country Code
-				String language = Env.getAD_Language(this);
+				String language = Env.getAD_Language();
 				//	
 				if(language == null
 						|| language.length() < 5)
@@ -365,7 +365,7 @@ public class Login extends TV_Base implements I_Login {
 				if(m_C_Country_ID < 0)
 					m_C_Country_ID = 0;
 				//	
-				Env.setContext(this, "#C_Country_ID", m_C_Country_ID);
+				Env.setContext("#C_Country_ID", m_C_Country_ID);
 				//	
 				if(!Env.isAccessLoaded(this)) {
 					//	Load Access Role
@@ -376,7 +376,7 @@ public class Login extends TV_Base implements I_Login {
 					Intent intent = new Intent(this, LV_Menu.class);
 					startActivity(intent);
 					//	Valid Auto Login
-					if(Env.isAutoLogin(this))
+					if(Env.isAutoLogin())
 						finish();
 				}
 			}
@@ -466,9 +466,9 @@ public class Login extends TV_Base implements I_Login {
 	    		initData.initialLoad_copyDB();
 			} else if(m_LoadType.equals(ROLE_ACCESS)) {
 				//	Load Role Access
-				Env.loadRoleAccess(v_activity);
+				Env.loadRoleAccess();
 				//	Load Context
-				Env.loadContext(v_activity);
+				Env.loadContext();
 			}
 			//	
 			return null;
@@ -494,7 +494,7 @@ public class Login extends TV_Base implements I_Login {
 				Intent intent = new Intent(v_activity, LV_Menu.class);
 				startActivity(intent);
 				//	Valid Auto Login
-				if(Env.isAutoLogin(v_activity))
+				if(Env.isAutoLogin())
 					finish();
 			}
 		}

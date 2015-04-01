@@ -85,11 +85,12 @@ public class MQTTSyncService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		m_IsRunning = true;
-		if(!Env.isEnvLoad(getApplicationContext()))
+		Env.getInstance(getApplicationContext());
+		if(!Env.isEnvLoad())
 			return;
 		//	
 		MQTTConnection.setClient_ID(getApplicationContext(), "0101010101");
-		MQTTConnection.setHost(getApplicationContext(), "192.168.1.102");
+		MQTTConnection.setHost(getApplicationContext(), "192.168.1.158");
 		MQTTConnection.setPort(getApplicationContext(), 1883);
 		MQTTConnection.setIsSSLConnection(getApplicationContext(), false);
 		MqttConnectOptions connOptions = new MqttConnectOptions();

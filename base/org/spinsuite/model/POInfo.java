@@ -89,8 +89,8 @@ public class POInfo {
 	 */
 	private void loadInfoColumn(Context ctx, int AD_Table_ID, String tableName, DB p_Conn) {
 		//	
-		String language = Env.getAD_Language(ctx);
-		boolean isBaseLanguage = Env.isBaseLanguage(ctx);
+		String language = Env.getAD_Language();
+		boolean isBaseLanguage = Env.isBaseLanguage();
 		//	
 		StringBuffer sql = new StringBuffer();
 		//	if Base Language
@@ -759,7 +759,7 @@ public class POInfo {
     		value = infoColumn.getTableName() + "." + infoColumn.getColumnName(index);
     	} else {
     		//	Parse SQL Column
-    		String columnSQL = Env.parseContext(ctx, infoColumn.getColumnSQL(index), false);
+    		String columnSQL = Env.parseContext(infoColumn.getColumnSQL(index), false);
     		value = columnSQL;
     	}
     	

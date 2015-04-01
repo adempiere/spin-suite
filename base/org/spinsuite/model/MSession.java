@@ -57,7 +57,7 @@ public class MSession extends X_AD_Session
 		{
 			session = new MSession(ctx, AD_Session_ID, null);
 			if (session.get_ID() != AD_Session_ID) {
-				Env.setContext (ctx, "#AD_Session_ID", AD_Session_ID);
+				Env.setContext ("#AD_Session_ID", AD_Session_ID);
 			}
 			s_sessions.put(AD_Session_ID, session);
 		}
@@ -67,7 +67,7 @@ public class MSession extends X_AD_Session
 			session = new MSession (ctx, null);	//	local session
 			session.save();
 			AD_Session_ID = session.getAD_Session_ID();
-			Env.setContext (ctx, "#AD_Session_ID", AD_Session_ID);
+			Env.setContext ("#AD_Session_ID", AD_Session_ID);
 			s_sessions.put (Integer.valueOf(AD_Session_ID), session);
 		}	
 		return session;
@@ -92,7 +92,7 @@ public class MSession extends X_AD_Session
 			session = new MSession (ctx, Remote_Addr, Remote_Host, null);	//	remote session
 			session.save();
 			AD_Session_ID = session.getAD_Session_ID();
-			Env.setContext(ctx, "#AD_Session_ID", AD_Session_ID);
+			Env.setContext("#AD_Session_ID", AD_Session_ID);
 			s_sessions.put(Integer.valueOf(AD_Session_ID), session);
 		}	
 		return session;
@@ -247,7 +247,7 @@ public class MSession extends X_AD_Session
 			return null;
 
 		//	Role Logging
-		X_AD_Role role = new X_AD_Role(getCtx(), Env.getAD_Role_ID(getCtx()), conn);
+		X_AD_Role role = new X_AD_Role(getCtx(), Env.getAD_Role_ID(), conn);
 		
 		//	Do we need to log
 		if (MSPSChangeLog.isLogged(getCtx(), AD_Table_ID, conn)		//	im/explicit log

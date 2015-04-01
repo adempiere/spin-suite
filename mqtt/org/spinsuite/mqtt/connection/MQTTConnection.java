@@ -118,7 +118,7 @@ public class MQTTConnection {
 	 * @return String
 	 */
 	public static String getClient_ID(Context p_Ctx) {
-		return Env.getContext(p_Ctx, MQTT_CLIENT_ID);
+		return Env.getContext(MQTT_CLIENT_ID);
 	}
 	
 	/**
@@ -129,7 +129,7 @@ public class MQTTConnection {
 	 * @return void
 	 */
 	public static void setClient_ID(Context p_Ctx, String p_Client_ID) {
-		Env.setContext(p_Ctx, MQTT_CLIENT_ID, p_Client_ID);
+		Env.setContext(MQTT_CLIENT_ID, p_Client_ID);
 	}
 	
 	/**
@@ -140,7 +140,7 @@ public class MQTTConnection {
 	 * @return String
 	 */
 	public static String getHost(Context p_Ctx) {
-		return Env.getContext(p_Ctx, MQTT_HOST);
+		return Env.getContext(MQTT_HOST);
 	}
 	
 	/**
@@ -151,7 +151,7 @@ public class MQTTConnection {
 	 * @return void
 	 */
 	public static void setHost(Context p_Ctx, String p_Host) {
-		Env.setContext(p_Ctx, MQTT_HOST, p_Host);
+		Env.setContext(MQTT_HOST, p_Host);
 	}
 	
 	/**
@@ -173,7 +173,7 @@ public class MQTTConnection {
 	 * @return void
 	 */
 	public static void setPort(Context p_Ctx, int p_Port) {
-		Env.setContext(p_Ctx, MQTT_PORT, p_Port);
+		Env.setContext(MQTT_PORT, p_Port);
 	}
 	
 	/**
@@ -184,7 +184,7 @@ public class MQTTConnection {
 	 * @return boolean
 	 */
 	public static boolean isSSLConnection(Context p_Ctx) {
-		return Env.getContextAsBoolean(p_Ctx, MQTT_IS_SSL_CONNECTION);
+		return Env.getContextAsBoolean(MQTT_IS_SSL_CONNECTION);
 	}
 	
 	/**
@@ -195,11 +195,11 @@ public class MQTTConnection {
 	 * @return void
 	 */
 	public static void setIsSSLConnection(Context p_Ctx, boolean p_IsSSLConnection) {
-		Env.setContext(p_Ctx, MQTT_IS_SSL_CONNECTION, p_IsSSLConnection);
+		Env.setContext(MQTT_IS_SSL_CONNECTION, p_IsSSLConnection);
 	}
 	
 	public static void setAlarmTime(Context p_Ctx, long time) {
-		//Env.setContext(p_Ctx, MQTT_ALARM_TIME, time);
+		//Env.setContext(MQTT_ALARM_TIME, time);
 	}
 	
 	/**

@@ -128,6 +128,6 @@ public class LogM {
 	 * @return void
 	 */
 	public static void setTraceLevel(Context ctx, Level traceLevel) {
-		Env.setContext(ctx, TRACE_LEVEL_KEY, traceLevel.intValue());
+		Env.setContext(TRACE_LEVEL_KEY, traceLevel.intValue());
 	}
 }

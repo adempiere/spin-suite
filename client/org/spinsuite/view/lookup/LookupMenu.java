@@ -81,10 +81,10 @@ public class LookupMenu {
 		//	Load Connection
 		DB.loadConnection(conn, DB.READ_ONLY);
 		//	
-		String language = Env.getAD_Language(ctx);
-		boolean isBaseLanguage = Env.isBaseLanguage(ctx);
+		String language = Env.getAD_Language();
+		boolean isBaseLanguage = Env.isBaseLanguage();
 		//	Get Role
-		int m_AD_Role_ID = Env.getAD_Role_ID(ctx);
+		int m_AD_Role_ID = Env.getAD_Role_ID();
 		//	SQL
 		StringBuffer sql = new StringBuffer();
 		

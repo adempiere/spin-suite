@@ -126,11 +126,11 @@ public class T_Connection extends Activity implements I_Login {
 				//	Delete
 				//	Delete DataBase
 				Msg.confirmMsg(getApplicationContext(), "");
-				deleteDatabase(Env.getDB_PathName(getApplicationContext()));
-				Env.cacheReset(getApplicationContext());
-				Env.setIsEnvLoad(getApplicationContext(), false);
-				Env.setIsLogin(getApplicationContext(), false);
-				Env.setContext(getApplicationContext(), "#InitialLoadSynchronizing", false);
+				deleteDatabase(Env.getDB_PathName());
+				Env.cacheReset();
+				Env.setIsEnvLoad(false);
+				Env.setIsLogin(false);
+				Env.setContext("#InitialLoadSynchronizing", false);
 			}
 		});
 		ask.show();
@@ -154,7 +154,7 @@ public class T_Connection extends Activity implements I_Login {
      * @return void
      */
     public void lockFront(){
-    	if(!Env.isEnvLoad(this)){
+    	if(!Env.isEnvLoad()){
     		setEnabled(true);
     	} else {
     		setEnabled(false);
@@ -186,7 +186,7 @@ public class T_Connection extends Activity implements I_Login {
     	String timeout = et_Timeout.getText().toString();
     	//	Load URL SOAP or SOPA JAJAJAJAJAJAJAJ
     	if(url == null || url.length() == 0){
-    		url = Env.getContext(this, "#SUrlSoap");
+    		url = Env.getContext("#SUrlSoap");
     		if(url != null)
     			et_UrlServer.setText(url);
     	}
@@ -224,7 +224,7 @@ public class T_Connection extends Activity implements I_Login {
     	sp_LogLevel.setSelection(position);
     	
     	//	Save SD
-    	ch_SaveSD.setChecked(Env.getContextAsBoolean(this, "#SaveSD"));
+    	ch_SaveSD.setChecked(Env.getContextAsBoolean("#SaveSD"));
     	
     	lockFront();
     	

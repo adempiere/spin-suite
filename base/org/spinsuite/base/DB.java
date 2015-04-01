@@ -71,7 +71,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param ctx
 	 */
 	public DB(Context ctx) {
-		super(ctx, Env.getDB_PathName(ctx), null, DB_VERSION);
+		super(ctx, Env.getDB_PathName(), null, DB_VERSION);
 		this.ctx = ctx;
 	}
 	

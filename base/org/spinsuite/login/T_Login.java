@@ -98,7 +98,7 @@ public class T_Login extends Fragment implements I_Login {
      * @return void
      */
     private void reloadLanguage(String language){
-    	Env.changeLanguage(getActivity(), language);
+    	Env.changeLanguage(language);
     	Intent refresh = new Intent(getActivity(), Login.class);
 		startActivity(refresh);
 		getActivity().finish();
@@ -115,16 +115,16 @@ public class T_Login extends Fragment implements I_Login {
     	String pass = et_Pass.getText().toString().trim();
     	if(user != null && user.length() > 0){
     		if(pass != null && pass.length() > 0){
-    			Env.setContext(this.getActivity(), "#SUser", user);
-    			Env.setContext(this.getActivity(), "#SPass", pass);
-    			Env.setSavePass(this.getActivity(), ch_SavePass.isChecked());
-    			Env.setAutoLogin(this.getActivity(), ch_AutoLogin.isChecked());
+    			Env.setContext("#SUser", user);
+    			Env.setContext("#SPass", pass);
+    			Env.setSavePass(ch_SavePass.isChecked());
+    			Env.setAutoLogin(ch_AutoLogin.isChecked());
     			String language = (String)((DisplaySpinner)sp_Language.getSelectedItem()).getHiddenValue();
-    			if(!language.equals(Env.getAD_Language(getActivity()))){
-    				Env.setAD_Language(getActivity(), language);
+    			if(!language.equals(Env.getAD_Language())){
+    				Env.setAD_Language(language);
     				reloadLanguage(language);
     			}
-    			if(!Env.isEnvLoad(this.getActivity()))
+    			if(!Env.isEnvLoad())
     				return true;
     			else if(findUser(user, pass)){
     				return true;
@@ -160,11 +160,11 @@ public class T_Login extends Fragment implements I_Login {
         	Cursor rs = con.querySQL(sql, new String[]{user, pass});
         	//
         	if(rs.moveToFirst()){
-        		Env.setAD_User_ID(this.getActivity(), rs.getInt(0));
-        		Env.setIsLogin(this.getActivity(), true);
+        		Env.setAD_User_ID(rs.getInt(0));
+        		Env.setIsLogin(true);
         		ok = true;
         	} else {
-        		Env.setIsLogin(this.getActivity(), false);
+        		Env.setIsLogin(false);
         	}
         	con.closeDB(rs);
     	} catch(Exception e) {
@@ -206,24 +206,24 @@ public class T_Login extends Fragment implements I_Login {
      	String pass = et_Pass.getText().toString();
      	//boolean isSavePass = ch_SavePass.isChecked();
      	if(user == null || user.length() == 0){
-     		user = Env.getContext(this.getActivity(), "#SUser");
+     		user = Env.getContext("#SUser");
      		if(user != null)
      			et_User.setText(user);
      	}
      	
      	//	Save Pass Check
-     	ch_SavePass.setChecked(Env.isSavePass(this.getActivity()));
+     	ch_SavePass.setChecked(Env.isSavePass());
      	//	Auto Login Check
-     	ch_AutoLogin.setChecked(Env.isAutoLogin(this.getActivity()));
+     	ch_AutoLogin.setChecked(Env.isAutoLogin());
      	
      	//	Save Pass
-     	if(Env.isSavePass(this.getActivity())){
-     		pass = Env.getContext(this.getActivity(), "#SPass");
+     	if(Env.isSavePass()){
+     		pass = Env.getContext("#SPass");
      		if(pass != null)
      			et_Pass.setText(pass);
 		}
  		//	Select Language
- 		String language = Env.getAD_Language(getActivity());
+ 		String language = Env.getAD_Language();
  		if(language != null
  				&& language.length() != 0){
  			sp_Language.setSelectedHiddenValue(language);

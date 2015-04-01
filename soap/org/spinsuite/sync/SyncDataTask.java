@@ -112,7 +112,7 @@ public class SyncDataTask implements BackGroundProcess  {
         m_NFManager = (NotificationManager) m_ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 		m_Builder = new NotificationCompat.Builder(m_ctx);
 		//	Set URL
-		m_URL = Env.getContext(m_ctx, "#SUrlSoap");
+		m_URL = Env.getContext("#SUrlSoap");
 		//	
 		bgTask = new BackGroundTask(this, m_ctx);
 		bgTask.runTask();
@@ -279,7 +279,7 @@ public class SyncDataTask implements BackGroundProcess  {
 			SimpleDateFormat sdf = DisplayType.getDateFormat(m_ctx, DisplayType.DATE_TIME, "yyyy-MM-dd hh:mm:ss");
 			whereClause +=(sm.getLastSynchronized()!=null ? "(UPDATED >= '" + sdf.format(sm.getLastSynchronized()) + "')" : "");
 			if (sm.getWhereClause()!=null)
-				whereClause += (whereClause.equals("")?"":" AND ") + "(" + Env.parseContext(m_ctx, sm.getWhereClause(), true) + ")";
+				whereClause += (whereClause.equals("")?"":" AND ") + "(" + Env.parseContext(sm.getWhereClause(), true) + ")";
 			param = new WSModelCRUDRequest(m_ctx, m_NameSpace, wst.getWS_WebServiceType_ID(), conn, 0, null, whereClause, PageNo);
 		}
 		else if (m_MethodValue.equals(SyncValues.WSMCreateData))

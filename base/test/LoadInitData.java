@@ -54,7 +54,7 @@ public class LoadInitData {
 	 * @return void
 	 */
 	public void initialLoad_copyDB() {
-		if(!Env.isEnvLoad(ctx)) {
+		if(!Env.isEnvLoad()) {
 			if(Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
 				String basePathName = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
 				//	Application Path
@@ -65,11 +65,11 @@ public class LoadInitData {
 				String tmpPathName = basePathName + Env.TMP_DIRECTORY;
 				String attPathName = basePathName + Env.ATT_DIRECTORY;
 				//	
-				Env.setAppBaseDirectory(ctx, basePathName);
-				Env.setDB_PathName(ctx, dbPathName);
-				Env.setDoc_DirectoryPathName(ctx, docPathName);
-				Env.setTmp_DirectoryPathName(ctx, tmpPathName);
-				Env.setAtt_DirectoryPathName(ctx, attPathName);
+				Env.setAppBaseDirectory(basePathName);
+				Env.setDB_PathName(dbPathName);
+				Env.setDoc_DirectoryPathName(docPathName);
+				Env.setTmp_DirectoryPathName(tmpPathName);
+				Env.setAtt_DirectoryPathName(attPathName);
 				//	Database
 				File f = new File(dbPath);
 				if(!f.exists()) {
@@ -109,13 +109,13 @@ public class LoadInitData {
 								+ "\"" + attPathName + "\"");
 				}
 			} else {
-				Env.setDB_PathName(ctx, DB.DB_NAME);
+				Env.setDB_PathName(DB.DB_NAME);
 			}
 			//	
 			try {
 				InputStream is = ctx.getResources().openRawResource(R.raw.spin_suite);
 				
-				File f = new File(Env.getDB_PathName(ctx));
+				File f = new File(Env.getDB_PathName());
 				
 				OutputStream outputStream = new FileOutputStream(f);
 
@@ -145,12 +145,12 @@ public class LoadInitData {
 	 */
 	public void setContextTest() {
 		//	Set Context Default Values for Demo
-		Env.setIsEnvLoad(ctx, true);
-		Env.setContext(ctx, "#SUser", "SuperUser");
-		Env.setContext(ctx, "#SPass", "System");
-		Env.setSavePass(ctx, true);
-		Env.setAutoLogin(ctx, true);
-		Env.setContext(ctx, KEY_POS_TAB, 1);
-		Env.setContext(ctx, "#Timeout", 10000000);
+		Env.setIsEnvLoad(true);
+		Env.setContext("#SUser", "SuperUser");
+		Env.setContext("#SPass", "System");
+		Env.setSavePass(true);
+		Env.setAutoLogin(true);
+		Env.setContext(KEY_POS_TAB, 1);
+		Env.setContext("#Timeout", 10000000);
 	}	
 }

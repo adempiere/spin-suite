@@ -119,7 +119,7 @@ public class VLookupCheckBox extends GridField {
 		//	Set Default Value
 		if(m_field.DefaultValue != null
 					&& m_field.DefaultValue.length() > 0)
-			setValue(Env.parseContext(getContext(), m_field.DefaultValue, false));
+			setValue(Env.parseContext(m_field.DefaultValue, false));
 	}
 	
 	/**

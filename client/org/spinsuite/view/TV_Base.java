@@ -91,7 +91,7 @@ public class TV_Base extends FragmentActivity
 		if(param == null)
     		param = new ActivityParameter();
 		//	
-    	m_ActivityNo = Env.getActivityNo(this);
+    	m_ActivityNo = Env.getActivityNo();
     	//	
     	actionBar.setDisplayHomeAsUpEnabled(true);
     	actionBar.setHomeButtonEnabled(true);
@@ -111,7 +111,7 @@ public class TV_Base extends FragmentActivity
     	m_DList = (ListView) findViewById(R.id.left_drawer);
         //	
         m_DLayout.setDrawerShadow(
-        		Env.getResourceID(this, R.attr.ic_ab_drawer_shadow), GravityCompat.START);
+        		Env.getResourceID(getApplicationContext(), R.attr.ic_ab_drawer_shadow), GravityCompat.START);
         
         m_DList.setOnItemClickListener(new ListView.OnItemClickListener() {
 

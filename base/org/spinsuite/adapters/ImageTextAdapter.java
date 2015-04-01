@@ -86,13 +86,13 @@ public class ImageTextAdapter extends ArrayAdapter<DisplayImageTextItem> {
 		} else if(diti.getValue() != null
 				&& diti.getValue().length() > 0) {
 			if(diti.getValue().toLowerCase(
-					Env.getLocate(getContext())).endsWith(".pdf")) {
-				img_Item.setImageResource(Env.getResourceID(getContext(), R.attr.ic_ls_pdf));
+					Env.getLocate()).endsWith(".pdf")) {
+				img_Item.setImageResource(Env.getResourceID(ctx, R.attr.ic_ls_pdf));
 			} else if(diti.getValue().toLowerCase(
-					Env.getLocate(getContext())).endsWith(".xls")) {
-				img_Item.setImageResource(Env.getResourceID(getContext(), R.attr.ic_ls_xls));
+					Env.getLocate()).endsWith(".xls")) {
+				img_Item.setImageResource(Env.getResourceID(ctx, R.attr.ic_ls_xls));
 			} else {
-				img_Item.setImageResource(Env.getResourceID(getContext(), R.attr.ic_ls_file));
+				img_Item.setImageResource(Env.getResourceID(ctx, R.attr.ic_ls_file));
 			}
 		}
 		//	Return

@@ -133,7 +133,7 @@ public class MUOM extends X_C_UOM {
 			+ "FROM C_UOM "
 			+ "WHERE AD_Client_ID IN (0, ?) "
 			+ "ORDER BY IsDefault DESC, AD_Client_ID DESC, C_UOM_ID";
-		return DB.getSQLValue(null, sql, String.valueOf(Env.getAD_Client_ID(ctx)));
+		return DB.getSQLValue(null, sql, String.valueOf(Env.getAD_Client_ID()));
 	}	//	getDefault_UOM_ID
 
 	/*************************************************************************/

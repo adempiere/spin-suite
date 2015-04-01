@@ -93,7 +93,7 @@ public class T_Role extends Fragment implements I_Login {
 					int position, long i) {
 				role_ID = ((DisplaySpinner) sp_Role.getItemAtPosition(position)).getID();
 				client_ID = loadClient(role_ID);
-				Env.setAD_Role_ID(ctx, role_ID);
+				Env.setAD_Role_ID(role_ID);
 			}
 
 			@Override
@@ -110,7 +110,7 @@ public class T_Role extends Fragment implements I_Login {
 					int position, long i) {
 				client_ID = ((DisplaySpinner) sp_Client.getItemAtPosition(position)).getID();
 				org_ID = loadOrg(client_ID);
-				Env.setAD_Client_ID(ctx, client_ID);
+				Env.setAD_Client_ID(client_ID);
 			}
 
 			@Override
@@ -127,7 +127,7 @@ public class T_Role extends Fragment implements I_Login {
 					int position, long i) {
 				org_ID = ((DisplaySpinner) sp_Org.getItemAtPosition(position)).getID();
 				warehouse_ID = loadWarehouse(org_ID);
-				Env.setAD_Org_ID(ctx, org_ID);
+				Env.setAD_Org_ID(org_ID);
 			}
 
 			@Override
@@ -143,7 +143,7 @@ public class T_Role extends Fragment implements I_Login {
 			public void onItemSelected(AdapterView<?> a, View v,
 					int position, long i) {
 				warehouse_ID = ((DisplaySpinner) sp_Warehouse.getItemAtPosition(position)).getID();
-				Env.setM_Warehouse_ID(ctx, warehouse_ID);
+				Env.setM_Warehouse_ID(warehouse_ID);
 			}
 
 			@Override
@@ -166,13 +166,13 @@ public class T_Role extends Fragment implements I_Login {
 				if(ds_Org != null
 						&& ds_Org.getValue() != null) {
 						
-					Env.setAD_Role_ID(getActivity(), role_ID);
-					Env.setContext(getActivity(), "#AD_Role_Name", ds_Role.getValue());
-					Env.setAD_Client_ID(getActivity(), client_ID);
-					Env.setContext(getActivity(), "#AD_Client_Name", ds_Client.getValue());
-					Env.setAD_Org_ID(getActivity(), org_ID);
-					Env.setContext(getActivity(), "#AD_Org_Name", ds_Org.getValue());
-					Env.setM_Warehouse_ID(getActivity(), warehouse_ID);
+					Env.setAD_Role_ID(role_ID);
+					Env.setContext("#AD_Role_Name", ds_Role.getValue());
+					Env.setAD_Client_ID(client_ID);
+					Env.setContext("#AD_Client_Name", ds_Client.getValue());
+					Env.setAD_Org_ID(org_ID);
+					Env.setContext("#AD_Org_Name", ds_Org.getValue());
+					Env.setM_Warehouse_ID(warehouse_ID);
 					//	Date
 					Calendar currentDate = Calendar.getInstance();
 					Calendar date = Calendar.getInstance();
@@ -186,7 +186,7 @@ public class T_Role extends Fragment implements I_Login {
 
 					//	Format Date yyyy-MM-dd hh:mm:ss
 					
-					Env.setContext(getActivity(), "#Date", sdf.format(date.getTime()));
+					Env.setContext("#Date", sdf.format(date.getTime()));
 					
 					sdf = new SimpleDateFormat("yyyy-MM-dd");
 					
@@ -195,17 +195,17 @@ public class T_Role extends Fragment implements I_Login {
 					
 					//	Format Date yyyy-MM-dd
 					
-					Env.setContext(getActivity(), "#DateP", ctxDate);
+					Env.setContext("#DateP", ctxDate);
 					
 					if(!(curDate.equals(ctxDate))){
-						Env.setContext(getActivity(), "#IsCurrentDate", "N");
+						Env.setContext("#IsCurrentDate", "N");
 						Msg.toastMsg(ctx, getResources().getString(R.string.msg_LoginOffDate) + 
 								"\n" + getResources().getString(R.string.msg_WritePermissionsBlocked));
 						//	
 						Msg.toastMsg(ctx, getResources().getString(R.string.msg_LoginOffDate) + 
 								"\n" + getResources().getString(R.string.msg_WritePermissionsBlocked));
 					} else {
-						Env.setContext(getActivity(), "#IsCurrentDate", "Y");
+						Env.setContext("#IsCurrentDate", "Y");
 					}
 					return true;
 				} else
@@ -227,9 +227,9 @@ public class T_Role extends Fragment implements I_Login {
 		int role_ID = LoadDataSpinner.load(getActivity(), sp_Role, "SELECT r.AD_Role_ID, r.Name, r.IsUseUserOrgAccess " +
     			"FROM AD_Role r " +
     			"INNER JOIN AD_User_Roles ur ON(ur.AD_Role_ID = r.AD_Role_ID) " +
-    			"WHERE ur.AD_User_ID = " + Env.getAD_User_ID(getActivity()), true, false);
+    			"WHERE ur.AD_User_ID = " + Env.getAD_User_ID(), true, false);
 		
-		int id_ctx = Env.getAD_Role_ID(ctx);
+		int id_ctx = Env.getAD_Role_ID();
 		if(id_ctx != 0){
 			role_ID = setIDSpinner(sp_Role, id_ctx);
 		}
@@ -252,7 +252,7 @@ public class T_Role extends Fragment implements I_Login {
 				"INNER JOIN AD_Client c ON(c.AD_Client_ID = r.AD_Client_ID) " +
 				"WHERE r.AD_Role_ID = " + role_ID, false, false);
 		
-		int id_ctx = Env.getAD_Client_ID(ctx);
+		int id_ctx = Env.getAD_Client_ID();
 		if(id_ctx != 0){
 			role_ID = setIDSpinner(sp_Client, id_ctx);
 		}
@@ -274,7 +274,7 @@ public class T_Role extends Fragment implements I_Login {
 		if(m_IsUseUserOrgAccess != null 
 				&& m_IsUseUserOrgAccess.equals("Y")){
 			sql.append("INNER JOIN AD_User_OrgAccess uo ON(uo.AD_Org_ID = o.AD_Org_ID) ");
-			sql.append("WHERE uo.AD_User_ID = " + Env.getAD_User_ID(ctx) + " ");
+			sql.append("WHERE uo.AD_User_ID = " + Env.getAD_User_ID() + " ");
 		} else {
 			sql.append("INNER JOIN AD_Role_OrgAccess orga ON(orga.AD_Org_ID = o.AD_Org_ID) " +
 					"INNER JOIN AD_User_Roles ur ON(ur.AD_Role_ID = orga.AD_Role_ID) ");
@@ -285,7 +285,7 @@ public class T_Role extends Fragment implements I_Login {
 		
 		int org_ID = LoadDataSpinner.load(getActivity(), sp_Org, sql.toString(), false, false);
 		
-		int id_ctx = Env.getAD_Org_ID(ctx);
+		int id_ctx = Env.getAD_Org_ID();
 		if(id_ctx != 0){
 			org_ID = setIDSpinner(sp_Org, id_ctx);
 		}
@@ -305,7 +305,7 @@ public class T_Role extends Fragment implements I_Login {
 				"FROM M_Warehouse w " + 
 				"WHERE w.AD_Org_ID = " + org_ID, false, false);
 		
-		int id_ctx = Env.getM_Warehouse_ID(ctx);
+		int id_ctx = Env.getM_Warehouse_ID();
 		if(id_ctx != 0){
 			warehouse_ID = setIDSpinner(sp_Warehouse, id_ctx);
 		}
@@ -345,7 +345,7 @@ public class T_Role extends Fragment implements I_Login {
 
 	@Override
 	public boolean loadData() {
-		if(Env.isEnvLoad(ctx)
+		if(Env.isEnvLoad()
 				&& !m_IsLoadOk) {
 			role_ID = loadRole();
 	    	//	Set Load

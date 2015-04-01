@@ -177,8 +177,8 @@ public class ProcessInfo {
 		DB.loadConnection(conn, DB.READ_ONLY);
 		//	Open Database
 		conn.openDB(DB.READ_ONLY);
-		String language = Env.getAD_Language(ctx);
-		boolean isBaseLanguage = Env.isBaseLanguage(ctx);
+		String language = Env.getAD_Language();
+		boolean isBaseLanguage = Env.isBaseLanguage();
 		//	SQL
 		StringBuffer sql = new StringBuffer();
 		//	if Base Language

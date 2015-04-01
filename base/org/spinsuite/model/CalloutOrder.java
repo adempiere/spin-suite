@@ -103,7 +103,7 @@ public class CalloutOrder extends CalloutEngine {
 				DocSubTypeSO = rs.getString(rs.getColumnIndex("DocSubTypeSO"));
 				if (DocSubTypeSO == null)
 					DocSubTypeSO = "--";
-				Env.setContext(ctx, WindowNo, "OrderType", DocSubTypeSO);
+				Env.setContext(WindowNo, "OrderType", DocSubTypeSO);
 				//	No Drop Ship other than Standard
 				if (!DocSubTypeSO.equals(MOrder.DocSubTypeSO_Standard))
 					mTab.setValue ("IsDropShip", "N");
@@ -135,7 +135,7 @@ public class CalloutOrder extends CalloutEngine {
 					IsSOTrx = false;
 
 				//	Set Context:
-				Env.setContext(ctx, WindowNo, "HasCharges", rs.getString(rs.getColumnIndex("HasCharges")));
+				Env.setContext(WindowNo, "HasCharges", rs.getString(rs.getColumnIndex("HasCharges")));
 
 				//	DocumentNo
 				if (rs.getString(rs.getColumnIndex("IsDocNoControlled")).equals("Y"))			//	IsDocNoControlled
@@ -169,7 +169,7 @@ public class CalloutOrder extends CalloutEngine {
 					+ "PaymentRulePO,PO_PaymentTerm_ID "
 					+ "FROM C_BPartner "
 					+ "WHERE C_BPartner_ID = ?";		//	#1
-				int C_BPartner_ID = Env.getContextAsInt(ctx, WindowNo, "C_BPartner_ID");
+				int C_BPartner_ID = Env.getContextAsInt(WindowNo, "C_BPartner_ID");
 				//	
 				rs = conn.querySQL(sql.toString(), new String[]{String.valueOf(C_BPartner_ID)});
 				if (rs.moveToFirst()) {
@@ -253,7 +253,7 @@ public class CalloutOrder extends CalloutEngine {
 			+ " LEFT OUTER JOIN AD_User c ON (p.C_BPartner_ID=c.C_BPartner_ID) "
 			+ "WHERE p.C_BPartner_ID=? AND p.IsActive='Y'";		//	#1
 
-		boolean IsSOTrx = "Y".equals(Env.getContext(ctx, WindowNo, "IsSOTrx"));
+		boolean IsSOTrx = "Y".equals(Env.getContext(WindowNo, "IsSOTrx"));
 		Cursor rs = null;
 		DB conn = new DB(ctx);
 		try {
@@ -276,7 +276,7 @@ public class CalloutOrder extends CalloutEngine {
 					mTab.setValue("M_PriceList_ID", ii);
 				else
 				{	//	get default PriceList
-					int i = Env.getContextAsInt(ctx, "#M_PriceList_ID");
+					int i = Env.getContextAsInt("#M_PriceList_ID");
 					if (i != 0)
 						mTab.setValue("M_PriceList_ID", i);
 				}
@@ -292,9 +292,9 @@ public class CalloutOrder extends CalloutEngine {
 				int shipTo_ID = rs.getInt(rs.getColumnIndex("C_BPartner_Location_ID"));
 				//	overwritten by InfoBP selection - works only if InfoWindow
 				//	was used otherwise creates error (uses last value, may belong to different BP)
-				if (C_BPartner_ID.toString().equals(Env.getContext(ctx, WindowNo, Env.TAB_INFO, "C_BPartner_ID")))
+				if (C_BPartner_ID.toString().equals(Env.getContext(WindowNo, Env.TAB_INFO, "C_BPartner_ID")))
 				{
-					String loc = Env.getContext(ctx, WindowNo, Env.TAB_INFO, "C_BPartner_Location_ID");
+					String loc = Env.getContext(WindowNo, Env.TAB_INFO, "C_BPartner_Location_ID");
 					if (loc.length() > 0)
 						shipTo_ID = Integer.parseInt(loc);
 				}
@@ -305,9 +305,9 @@ public class CalloutOrder extends CalloutEngine {
 
 				//	Contact - overwritten by InfoBP selection
 				int contID = rs.getInt(rs.getColumnIndex("AD_User_ID"));
-				if (C_BPartner_ID.toString().equals(Env.getContext(ctx, WindowNo, Env.TAB_INFO, "C_BPartner_ID")))
+				if (C_BPartner_ID.toString().equals(Env.getContext(WindowNo, Env.TAB_INFO, "C_BPartner_ID")))
 				{
-					String cont = Env.getContext(ctx, WindowNo, Env.TAB_INFO, "AD_User_ID");
+					String cont = Env.getContext(WindowNo, Env.TAB_INFO, "AD_User_ID");
 					if (cont.length() > 0)
 						contID = Integer.parseInt(cont);
 				}
@@ -355,7 +355,7 @@ public class CalloutOrder extends CalloutEngine {
 					mTab.setValue("IsDiscountPrinted", "N");
 
 				//	Defaults, if not Walkin Receipt or Walkin Invoice
-				String OrderType = Env.getContext(ctx, WindowNo, "OrderType");
+				String OrderType = Env.getContext(WindowNo, "OrderType");
 				if(OrderType == null)
 					OrderType = MOrder.DocSubTypeSO_Standard;
 				//	
@@ -449,7 +449,7 @@ public class CalloutOrder extends CalloutEngine {
 			+ " LEFT JOIN AD_User c ON (p.C_BPartner_ID=c.C_BPartner_ID) "
 			+ "WHERE p.C_BPartner_ID=? AND p.IsActive='Y'";		//	#1
 
-		boolean IsSOTrx = "Y".equals(Env.getContext(ctx, WindowNo, "IsSOTrx"));
+		boolean IsSOTrx = "Y".equals(Env.getContext(WindowNo, "IsSOTrx"));
 		Cursor rs = null;
 		DB conn = new DB(ctx);
 		try {
@@ -464,7 +464,7 @@ public class CalloutOrder extends CalloutEngine {
 					mTab.setValue("M_PriceList_ID", ii);
 				else
 				{	//	get default PriceList
-					int i = Env.getContextAsInt(ctx, "#M_PriceList_ID");
+					int i = Env.getContextAsInt("#M_PriceList_ID");
 					if (i != 0)
 						mTab.setValue("M_PriceList_ID", i);
 				}
@@ -472,9 +472,9 @@ public class CalloutOrder extends CalloutEngine {
 				int bill_Location_ID = rs.getInt(rs.getColumnIndex("Bill_Location_ID"));
 				//	overwritten by InfoBP selection - works only if InfoWindow
 				//	was used otherwise creates error (uses last value, may belong to different BP)
-				if (bill_BPartner_ID.toString().equals(Env.getContext(ctx, WindowNo, Env.TAB_INFO, "C_BPartner_ID")))
+				if (bill_BPartner_ID.toString().equals(Env.getContext(WindowNo, Env.TAB_INFO, "C_BPartner_ID")))
 				{
-					String loc = Env.getContext(ctx, WindowNo, Env.TAB_INFO, "C_BPartner_Location_ID");
+					String loc = Env.getContext(WindowNo, Env.TAB_INFO, "C_BPartner_Location_ID");
 					if (loc.length() > 0)
 						bill_Location_ID = Integer.parseInt(loc);
 				}
@@ -485,9 +485,9 @@ public class CalloutOrder extends CalloutEngine {
 
 				//	Contact - overwritten by InfoBP selection
 				int contID = rs.getInt(rs.getColumnIndex("AD_User_ID"));
-				if (bill_BPartner_ID.toString().equals(Env.getContext(ctx, WindowNo, Env.TAB_INFO, "C_BPartner_ID")))
+				if (bill_BPartner_ID.toString().equals(Env.getContext(WindowNo, Env.TAB_INFO, "C_BPartner_ID")))
 				{
-					String cont = Env.getContext(ctx, WindowNo, Env.TAB_INFO, "AD_User_ID");
+					String cont = Env.getContext(WindowNo, Env.TAB_INFO, "AD_User_ID");
 					if (cont.length() > 0)
 						contID = Integer.parseInt(cont);
 				}
@@ -528,7 +528,7 @@ public class CalloutOrder extends CalloutEngine {
 					mTab.setValue("IsDiscountPrinted", "N");
 
 				//	Defaults, if not Walkin Receipt or Walkin Invoice
-				String OrderType = Env.getContext(ctx, WindowNo, "OrderType");
+				String OrderType = Env.getContext(WindowNo, "OrderType");
 				mTab.setValue("InvoiceRule", X_C_Order.INVOICERULE_AfterDelivery);
 				mTab.setValue("PaymentRule", X_C_Order.PAYMENTRULE_OnCredit);
 				if (OrderType.equals(MOrder.DocSubTypeSO_Prepay))
@@ -616,12 +616,12 @@ public class CalloutOrder extends CalloutEngine {
 				//	Tax Included
 				mTab.setValue("IsTaxIncluded", "Y".equals(rs.getString(1)));
 				//	Price Limit Enforce
-				Env.setContext(ctx, WindowNo, "EnforcePriceLimit", rs.getString(2));
+				Env.setContext(WindowNo, "EnforcePriceLimit", rs.getString(2));
 				//	Currency
 				int ii = rs.getInt(3);
 				mTab.setValue("C_Currency_ID", ii);
 				//	PriceList Version
-				Env.setContext(ctx, WindowNo, "M_PriceList_Version_ID", rs.getInt(5));
+				Env.setContext(WindowNo, "M_PriceList_Version_ID", rs.getInt(5));
 			}
 		} catch (Exception e) {
 			LogM.log(ctx, getClass(), Level.SEVERE, "priceList (" + sql + ")", e);
@@ -654,23 +654,23 @@ public class CalloutOrder extends CalloutEngine {
 		//
 		mTab.setValue("C_Charge_ID", null);
 		//	Set Attribute
-		if (Env.getContextAsInt(ctx, WindowNo, Env.TAB_INFO, "M_Product_ID") == M_Product_ID.intValue()
-			&& Env.getContextAsInt(ctx, WindowNo, Env.TAB_INFO, "M_AttributeSetInstance_ID") != 0)
-			mTab.setValue("M_AttributeSetInstance_ID", Env.getContextAsInt(ctx, WindowNo, Env.TAB_INFO, "M_AttributeSetInstance_ID"));
+		if (Env.getContextAsInt(WindowNo, Env.TAB_INFO, "M_Product_ID") == M_Product_ID.intValue()
+			&& Env.getContextAsInt(WindowNo, Env.TAB_INFO, "M_AttributeSetInstance_ID") != 0)
+			mTab.setValue("M_AttributeSetInstance_ID", Env.getContextAsInt(WindowNo, Env.TAB_INFO, "M_AttributeSetInstance_ID"));
 		else
 			mTab.setValue("M_AttributeSetInstance_ID", null);
 			
 		/*****	Price Calculation see also qty	****/
-		int C_BPartner_ID = Env.getContextAsInt(ctx, WindowNo, "C_BPartner_ID");
+		int C_BPartner_ID = Env.getContextAsInt(WindowNo, "C_BPartner_ID");
 		BigDecimal Qty = (BigDecimal)mTab.getValue("QtyOrdered");
-		boolean IsSOTrx = Env.getContext(ctx, WindowNo, "IsSOTrx").equals("Y");
+		boolean IsSOTrx = Env.getContext(WindowNo, "IsSOTrx").equals("Y");
 		MProductPricing pp = new MProductPricing(ctx, M_Product_ID.intValue(), C_BPartner_ID, Qty, IsSOTrx);
 		//
-		int M_PriceList_ID = Env.getContextAsInt(ctx, WindowNo, "M_PriceList_ID");
+		int M_PriceList_ID = Env.getContextAsInt(WindowNo, "M_PriceList_ID");
 		pp.setM_PriceList_ID(M_PriceList_ID);
 		Date orderDate = (Date)mTab.getValue("DateOrdered");
 		/** PLV is only accurate if PL selected in header */
-		int M_PriceList_Version_ID = Env.getContextAsInt(ctx, WindowNo, "M_PriceList_Version_ID");
+		int M_PriceList_Version_ID = Env.getContextAsInt(WindowNo, "M_PriceList_Version_ID");
 		if ( M_PriceList_Version_ID == 0 && M_PriceList_ID > 0)
 		{
 			String sql = "SELECT plv.M_PriceList_Version_ID "
@@ -683,7 +683,7 @@ public class CalloutOrder extends CalloutEngine {
 			M_PriceList_Version_ID = DB.getSQLValueEx(ctx, sql, 
 					String.valueOf(M_PriceList_ID), String.valueOf(orderDate));
 			if ( M_PriceList_Version_ID > 0 )
-				Env.setContext(ctx, WindowNo, "M_PriceList_Version_ID", M_PriceList_Version_ID );
+				Env.setContext(WindowNo, "M_PriceList_Version_ID", M_PriceList_Version_ID );
 		}
 		pp.setM_PriceList_Version_ID(M_PriceList_Version_ID); 
 		pp.setPriceDate(orderDate);
@@ -696,11 +696,11 @@ public class CalloutOrder extends CalloutEngine {
 		mTab.setValue("Discount", pp.getDiscount());
 		mTab.setValue("C_UOM_ID", pp.getC_UOM_ID());
 		mTab.setValue("QtyOrdered", mTab.getValue("QtyEntered"));
-		Env.setContext(ctx, WindowNo, "EnforcePriceLimit", pp.isEnforcePriceLimit() ? "Y" : "N");
-		Env.setContext(ctx, WindowNo, "DiscountSchema", pp.isDiscountSchema() ? "Y" : "N");
+		Env.setContext(WindowNo, "EnforcePriceLimit", pp.isEnforcePriceLimit() ? "Y" : "N");
+		Env.setContext(WindowNo, "DiscountSchema", pp.isDiscountSchema() ? "Y" : "N");
 		
 		//	Check/Update Warehouse Setting
-		//	int M_Warehouse_ID = Env.getContextAsInt(ctx, WindowNo, "M_Warehouse_ID");
+		//	int M_Warehouse_ID = Env.getContextAsInt(WindowNo, "M_Warehouse_ID");
 		//	Integer wh = (Integer)mTab.getValue("M_Warehouse_ID");
 		//	if (wh.intValue() != M_Warehouse_ID)
 		//	{
@@ -715,8 +715,8 @@ public class CalloutOrder extends CalloutEngine {
 			//if (product.isStocked())
 			//{
 				//BigDecimal QtyOrdered = (BigDecimal)mTab.getValue("QtyOrdered");
-				//int M_Warehouse_ID = Env.getContextAsInt(ctx, WindowNo, "M_Warehouse_ID");
-				//int M_AttributeSetInstance_ID = Env.getContextAsInt(ctx, WindowNo, "M_AttributeSetInstance_ID");
+				//int M_Warehouse_ID = Env.getContextAsInt(WindowNo, "M_Warehouse_ID");
+				//int M_AttributeSetInstance_ID = Env.getContextAsInt(WindowNo, "M_AttributeSetInstance_ID");
 				//BigDecimal available = Env.ZERO;//MStorage.getQtyAvailable
 					//(M_Warehouse_ID, M_Product_ID.intValue(), M_AttributeSetInstance_ID, null);
 				//if (available == null)
@@ -772,12 +772,12 @@ public class CalloutOrder extends CalloutEngine {
 		if (column.equals("M_Product_ID"))
 			M_Product_ID = ((Integer)value).intValue();
 		else
-			M_Product_ID = Env.getContextAsInt(ctx, WindowNo, "M_Product_ID");
+			M_Product_ID = Env.getContextAsInt(WindowNo, "M_Product_ID");
 		int C_Charge_ID = 0;
 		if (column.equals("C_Charge_ID"))
 			C_Charge_ID = ((Integer)value).intValue();
 		else
-			C_Charge_ID = Env.getContextAsInt(ctx, WindowNo, "C_Charge_ID");
+			C_Charge_ID = Env.getContextAsInt(WindowNo, "C_Charge_ID");
 		LogM.log(ctx, getClass(), Level.FINE, "Product=" + M_Product_ID + ", C_Charge_ID=" + C_Charge_ID);
 		if (M_Product_ID == 0 && C_Charge_ID == 0)
 			return amt(ctx, WindowNo, mTab, mField, value);		//
@@ -787,7 +787,7 @@ public class CalloutOrder extends CalloutEngine {
 		if (column.equals("C_BPartner_Location_ID"))
 			shipC_BPartner_Location_ID = ((Integer)value).intValue();
 		else
-			shipC_BPartner_Location_ID = Env.getContextAsInt(ctx, WindowNo, "C_BPartner_Location_ID");
+			shipC_BPartner_Location_ID = Env.getContextAsInt(WindowNo, "C_BPartner_Location_ID");
 		if (shipC_BPartner_Location_ID == 0)
 			return amt(ctx, WindowNo, mTab, mField, value);		//
 		LogM.log(ctx, getClass(), Level.FINE, "Ship BP_Location=" + shipC_BPartner_Location_ID);
@@ -799,13 +799,13 @@ public class CalloutOrder extends CalloutEngine {
 		Date shipDate = (Date) DisplayType.parseValue(mTab.get_ValueAsString("DatePromised"), DisplayType.DATE);
 		LogM.log(ctx, getClass(), Level.FINE, "Ship Date=" + shipDate);
 
-		int AD_Org_ID = Env.getContextAsInt(ctx, WindowNo, "AD_Org_ID");
+		int AD_Org_ID = Env.getContextAsInt(WindowNo, "AD_Org_ID");
 		LogM.log(ctx, getClass(), Level.FINE, "Org=" + AD_Org_ID);
 
-		int M_Warehouse_ID = Env.getContextAsInt(ctx, WindowNo, "M_Warehouse_ID");
+		int M_Warehouse_ID = Env.getContextAsInt(WindowNo, "M_Warehouse_ID");
 		LogM.log(ctx, getClass(), Level.FINE, "Warehouse=" + M_Warehouse_ID);
 
-		int billC_BPartner_Location_ID = Env.getContextAsInt(ctx, WindowNo, "Bill_Location_ID");
+		int billC_BPartner_Location_ID = Env.getContextAsInt(WindowNo, "Bill_Location_ID");
 		if (billC_BPartner_Location_ID == 0)
 			billC_BPartner_Location_ID = shipC_BPartner_Location_ID;
 		LogM.log(ctx, getClass(), Level.FINE, "Bill BP_Location=" + billC_BPartner_Location_ID);
@@ -813,7 +813,7 @@ public class CalloutOrder extends CalloutEngine {
 		//
 		int C_Tax_ID = Tax.get(ctx, M_Product_ID, C_Charge_ID, billDate, shipDate,
 			AD_Org_ID, M_Warehouse_ID, billC_BPartner_Location_ID, shipC_BPartner_Location_ID,
-			"Y".equals(Env.getContext(ctx, WindowNo, "IsSOTrx")));
+			"Y".equals(Env.getContext(WindowNo, "IsSOTrx")));
 		//	
 		LogM.log(ctx, getClass(), Level.FINE, "Tax ID=" + C_Tax_ID);
 		//
@@ -843,9 +843,9 @@ public class CalloutOrder extends CalloutEngine {
 		if (isCalloutActive() || value == null)
 			return "";
 
-		int C_UOM_To_ID = Env.getContextAsInt(ctx, WindowNo, "C_UOM_ID");
-		int M_Product_ID = Env.getContextAsInt(ctx, WindowNo, "M_Product_ID");
-		int M_PriceList_ID = Env.getContextAsInt(ctx, WindowNo, "M_PriceList_ID");
+		int C_UOM_To_ID = Env.getContextAsInt(WindowNo, "C_UOM_ID");
+		int M_Product_ID = Env.getContextAsInt(WindowNo, "M_Product_ID");
+		int M_PriceList_ID = Env.getContextAsInt(WindowNo, "M_PriceList_ID");
 		int StdPrecision = MPriceList.getStandardPrecision(ctx, M_PriceList_ID);
 		BigDecimal QtyEntered, QtyOrdered, PriceEntered, PriceActual, PriceLimit, Discount, PriceList;
 		//	get values
@@ -882,18 +882,18 @@ public class CalloutOrder extends CalloutEngine {
 			|| mField.getColumnName().equals("QtyEntered")
 			|| mField.getColumnName().equals("C_UOM_ID")
 			|| mField.getColumnName().equals("M_Product_ID")) 
-			&& !"N".equals(Env.getContext(ctx, WindowNo, "DiscountSchema")))
+			&& !"N".equals(Env.getContext(WindowNo, "DiscountSchema")))
 		{
-			int C_BPartner_ID = Env.getContextAsInt(ctx, WindowNo, "C_BPartner_ID");
+			int C_BPartner_ID = Env.getContextAsInt(WindowNo, "C_BPartner_ID");
 			if (mField.getColumnName().equals("QtyEntered"))
 				QtyOrdered = MUOMConversion.convertProductFrom (ctx, M_Product_ID, 
 					C_UOM_To_ID, QtyEntered);
 			if (QtyOrdered == null)
 				QtyOrdered = QtyEntered;
-			boolean IsSOTrx = Env.getContext(ctx, WindowNo, "IsSOTrx").equals("Y");
+			boolean IsSOTrx = Env.getContext(WindowNo, "IsSOTrx").equals("Y");
 			MProductPricing pp = new MProductPricing(ctx, M_Product_ID, C_BPartner_ID, QtyOrdered, IsSOTrx);
 			pp.setM_PriceList_ID(M_PriceList_ID);
-			int M_PriceList_Version_ID = Env.getContextAsInt(ctx, WindowNo, "M_PriceList_Version_ID");
+			int M_PriceList_Version_ID = Env.getContextAsInt(WindowNo, "M_PriceList_Version_ID");
 			pp.setM_PriceList_Version_ID(M_PriceList_Version_ID);
 			Date date = (Date)mTab.getValue("DateOrdered");
 			pp.setPriceDate(date);
@@ -909,7 +909,7 @@ public class CalloutOrder extends CalloutEngine {
 			mTab.setValue("PriceActual", pp.getPriceStd());
 			mTab.setValue("Discount", pp.getDiscount());
 			mTab.setValue("PriceEntered", PriceEntered);
-			Env.setContext(ctx, WindowNo, "DiscountSchema", pp.isDiscountSchema() ? "Y" : "N");
+			Env.setContext(WindowNo, "DiscountSchema", pp.isDiscountSchema() ? "Y" : "N");
 		}
 		else if (mField.getColumnName().equals("PriceActual"))
 		{
@@ -964,7 +964,7 @@ public class CalloutOrder extends CalloutEngine {
 		LogM.log(ctx, getClass(), Level.FINE, "PriceEntered=" + PriceEntered + ", Actual=" + PriceActual + ", Discount=" + Discount);
 
 		//	Check PriceLimit
-		String epl = Env.getContext(ctx, WindowNo, "EnforcePriceLimit");
+		String epl = Env.getContext(WindowNo, "EnforcePriceLimit");
 		boolean enforce = Env.isSOTrx(ctx, WindowNo) && epl != null && epl.equals("Y");
 		if (enforce
 				//	Not yet implemented
@@ -1018,7 +1018,7 @@ public class CalloutOrder extends CalloutEngine {
 	public String qty (Context ctx, int WindowNo, GridTab mTab, GridField mField, Object value) {
 		if (isCalloutActive() || value == null)
 			return "";
-		int M_Product_ID = Env.getContextAsInt(ctx, WindowNo, "M_Product_ID");
+		int M_Product_ID = Env.getContextAsInt(WindowNo, "M_Product_ID");
 		BigDecimal QtyOrdered = Env.ZERO;
 		BigDecimal QtyEntered, PriceActual, PriceEntered;
 		
@@ -1053,13 +1053,13 @@ public class CalloutOrder extends CalloutEngine {
 				+ ", QtyEntered/PriceActual=" + QtyEntered + "/" + PriceActual
 				+ " -> " + conversion 
 				+ " QtyOrdered/PriceEntered=" + QtyOrdered + "/" + PriceEntered);
-			Env.setContext(ctx, WindowNo, "UOMConversion", conversion ? "Y" : "N");
+			Env.setContext(WindowNo, "UOMConversion", conversion ? "Y" : "N");
 			mTab.setValue("QtyOrdered", QtyOrdered);
 			mTab.setValue("PriceEntered", PriceEntered);
 		}
 		//	QtyEntered changed - calculate QtyOrdered
 		else if (mField.getColumnName().equals("QtyEntered")) {
-			int C_UOM_To_ID = Env.getContextAsInt(ctx, WindowNo, "C_UOM_ID");
+			int C_UOM_To_ID = Env.getContextAsInt(WindowNo, "C_UOM_ID");
 			QtyEntered = (BigDecimal)value;
 			BigDecimal QtyEntered1 = QtyEntered.setScale(MUOM.getPrecision(ctx, C_UOM_To_ID), BigDecimal.ROUND_HALF_UP);
 			if (QtyEntered.compareTo(QtyEntered1) != 0) {
@@ -1077,12 +1077,12 @@ public class CalloutOrder extends CalloutEngine {
 				+ ", QtyEntered=" + QtyEntered
 				+ " -> " + conversion 
 				+ " QtyOrdered=" + QtyOrdered);
-			Env.setContext(ctx, WindowNo, "UOMConversion", conversion ? "Y" : "N");
+			Env.setContext(WindowNo, "UOMConversion", conversion ? "Y" : "N");
 			mTab.setValue("QtyOrdered", QtyOrdered);
 		}
 		//	QtyOrdered changed - calculate QtyEntered (should not happen)
 		else if (mField.getColumnName().equals("QtyOrdered")) {
-			int C_UOM_To_ID = Env.getContextAsInt(ctx, WindowNo, "C_UOM_ID");
+			int C_UOM_To_ID = Env.getContextAsInt(WindowNo, "C_UOM_ID");
 			QtyOrdered = (BigDecimal)value;
 			int precision = MProduct.getUOMPrecision(ctx, M_Product_ID); 
 			BigDecimal QtyOrdered1 = QtyOrdered.setScale(precision, BigDecimal.ROUND_HALF_UP);
@@ -1101,7 +1101,7 @@ public class CalloutOrder extends CalloutEngine {
 				+ ", QtyOrdered=" + QtyOrdered
 				+ " -> " + conversion 
 				+ " QtyEntered=" + QtyEntered);
-			Env.setContext(ctx, WindowNo, "UOMConversion", conversion ? "Y" : "N");
+			Env.setContext(WindowNo, "UOMConversion", conversion ? "Y" : "N");
 			mTab.setValue("QtyEntered", QtyEntered);
 		} else {
 		//	QtyEntered = (BigDecimal)mTab.getValue("QtyEntered");
@@ -1115,8 +1115,8 @@ public class CalloutOrder extends CalloutEngine {
 		//{
 			//MProduct product = MProduct.get (ctx, M_Product_ID);
 			//if (product.isStocked()) {
-				//int M_Warehouse_ID = Env.getContextAsInt(ctx, WindowNo, "M_Warehouse_ID");
-				//int M_AttributeSetInstance_ID = Env.getContextAsInt(ctx, WindowNo, "M_AttributeSetInstance_ID");
+				//int M_Warehouse_ID = Env.getContextAsInt(WindowNo, "M_Warehouse_ID");
+				//int M_AttributeSetInstance_ID = Env.getContextAsInt(WindowNo, "M_AttributeSetInstance_ID");
 				//BigDecimal available = QtyOrdered;
 				//	Not yet implemented
 				//MStorage.getQtyAvailable

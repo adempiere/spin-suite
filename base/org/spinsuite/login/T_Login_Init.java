@@ -117,18 +117,18 @@ public class T_Login_Init extends DialogFragment
 	 * @return void
 	 */
 	public void startSynchronization() {
-		Env.setContext(getActivity(), "#SUrlSoap", et_UrlServer.getText().toString());
-		Env.setContext(getActivity(), "#SMethod", SyncValues.DEFAULT_METHOD);
-		Env.setContext(getActivity(), "#SNameSpace", SyncValues.DEFAULT_NAME_SPACE);
-		Env.setContext(getActivity(), "#SUser", et_User.getText().toString());
-		Env.setContext(getActivity(), "#SPass", et_PassWord.getText().toString());
+		Env.setContext("#SUrlSoap", et_UrlServer.getText().toString());
+		Env.setContext("#SMethod", SyncValues.DEFAULT_METHOD);
+		Env.setContext("#SNameSpace", SyncValues.DEFAULT_NAME_SPACE);
+		Env.setContext("#SUser", et_User.getText().toString());
+		Env.setContext("#SPass", et_PassWord.getText().toString());
 		//	Create Directory
 		createDBDirectory();
 		//	Valid Timeout
 		if(et_Timeout.getText() != null 
 				&& et_Timeout.getText().toString().length() > 0){
 			String limit = et_Timeout.getText().toString();
-			Env.setContext(getActivity(), "#Timeout", Integer.parseInt(limit));
+			Env.setContext("#Timeout", Integer.parseInt(limit));
 		}
 		((I_Login)m_Callback).setEnabled(false);
 		//	Add Value to Web
@@ -196,7 +196,7 @@ public class T_Login_Init extends DialogFragment
 	 * @return void
 	 */
 	private void createDBDirectory(){
-		if(!Env.isEnvLoad(getActivity())){
+		if(!Env.isEnvLoad()){
 			if(Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
 				String basePathName = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
 				//	Application Path
@@ -208,11 +208,11 @@ public class T_Login_Init extends DialogFragment
 				String attPathName = basePathName + Env.ATT_DIRECTORY;
 				
 				//	
-				Env.setAppBaseDirectory(getActivity(), basePathName);
-				Env.setDB_PathName(getActivity(), dbPathName);
-				Env.setDoc_DirectoryPathName(getActivity(), docPathName);
-				Env.setTmp_DirectoryPathName(getActivity(), tmpPathName);
-				Env.setAtt_DirectoryPathName(getActivity(), attPathName);
+				Env.setAppBaseDirectory(basePathName);
+				Env.setDB_PathName(dbPathName);
+				Env.setDoc_DirectoryPathName(docPathName);
+				Env.setTmp_DirectoryPathName(tmpPathName);
+				Env.setAtt_DirectoryPathName(attPathName);
 				//	Database
 				File f = new File(dbPath);
 				if(!f.exists()) {
@@ -252,7 +252,7 @@ public class T_Login_Init extends DialogFragment
 								+ "\"" + attPathName + "\"");
 				}
 			} else {
-				Env.setDB_PathName(getActivity(), DB.DB_NAME);
+				Env.setDB_PathName(DB.DB_NAME);
 			}	
     	}
 	}

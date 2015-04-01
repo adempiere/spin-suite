@@ -203,37 +203,37 @@ public class VLookupButtonPaymentRule extends VLookupButton {
 			if(paymentRule.equals(PAYMENTRULE_Cash)) {
 				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_Cash));
 				v_Button.setCompoundDrawablesWithIntrinsicBounds(
-						Env.getResourceID(getContext(), R.attr.ic_payment_rule_cash), 0, 0, 0);
+						Env.getResourceID(getActivity(), R.attr.ic_payment_rule_cash), 0, 0, 0);
 				this.paymentRule = paymentRule;
 			} else if(paymentRule.equals(PAYMENTRULE_Check)) {
 				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_Check));
 				v_Button.setCompoundDrawablesWithIntrinsicBounds(
-						Env.getResourceID(getContext(), R.attr.ic_payment_rule_check), 0, 0, 0);
+						Env.getResourceID(getActivity(), R.attr.ic_payment_rule_check), 0, 0, 0);
 				this.paymentRule = paymentRule;
 			} else if(paymentRule.equals(PAYMENTRULE_CreditCard)) {
 				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_CreditCard));
 				v_Button.setCompoundDrawablesWithIntrinsicBounds(
-						Env.getResourceID(getContext(), R.attr.ic_payment_rule_direct_credit), 0, 0, 0);
+						Env.getResourceID(getActivity(), R.attr.ic_payment_rule_direct_credit), 0, 0, 0);
 				this.paymentRule = paymentRule;
 			} else if(paymentRule.equals(PAYMENTRULE_DirectDebit)) {
 				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_DirectDebit));
 				v_Button.setCompoundDrawablesWithIntrinsicBounds(
-						Env.getResourceID(getContext(), R.attr.ic_payment_rule_direct_debit), 0, 0, 0);
+						Env.getResourceID(getActivity(), R.attr.ic_payment_rule_direct_debit), 0, 0, 0);
 				this.paymentRule = paymentRule;
 			} else if(paymentRule.equals(PAYMENTRULE_DirectDeposit)) {
 				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_DirectDeposit));
 				v_Button.setCompoundDrawablesWithIntrinsicBounds(
-						Env.getResourceID(getContext(), R.attr.ic_payment_rule_direct_deposit), 0, 0, 0);
+						Env.getResourceID(getActivity(), R.attr.ic_payment_rule_direct_deposit), 0, 0, 0);
 				this.paymentRule = paymentRule;
 			} else if(paymentRule.equals(PAYMENTRULE_Mixed)) {
 				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_Mixed));
 				v_Button.setCompoundDrawablesWithIntrinsicBounds(
-						Env.getResourceID(getContext(), R.attr.ic_payment_rule_mixed), 0, 0, 0);
+						Env.getResourceID(getActivity(), R.attr.ic_payment_rule_mixed), 0, 0, 0);
 				this.paymentRule = paymentRule;
 			} else if(paymentRule.equals(PAYMENTRULE_OnCredit)) {
 				v_Button.setText(getResources().getString(R.string.PAYMENTRULE_OnCredit));
 				v_Button.setCompoundDrawablesWithIntrinsicBounds(
-						Env.getResourceID(getContext(), R.attr.ic_payment_rule_on_credit), 0, 0, 0);
+						Env.getResourceID(getActivity(), R.attr.ic_payment_rule_on_credit), 0, 0, 0);
 				this.paymentRule = paymentRule;
 			}
 		}
