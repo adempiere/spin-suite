@@ -16,6 +16,7 @@
 package org.spinsuite.base;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -39,7 +40,12 @@ import android.database.sqlite.SQLiteStatement;
  * @author Yamel Senih
  *
  */
-public class DB extends SQLiteOpenHelper {
+public class DB extends SQLiteOpenHelper implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6009090066893971220L;
 
 	/**
 	 * 

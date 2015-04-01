@@ -134,6 +134,7 @@ public class TV_Base extends FragmentActivity
                 invalidateOptionsMenu();
             }
         };
+        m_DToggle.syncState();
         //	Set Toggle
         m_DLayout.setDrawerListener(m_DToggle);
         //	

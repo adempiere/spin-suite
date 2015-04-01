@@ -71,11 +71,11 @@ public class Login extends TV_Base implements I_Login {
 	/**	Enable					*/
 	//private boolean				m_Enabled		= true;
 	/** Notification Manager	*/
-	private NotificationManager m_NFManager = null;
+	private NotificationManager m_NFManager 	= null;
 	/** Max Value Progress Bar	*/
-	private int 				m_MaxPB = 0;
+	private int 				m_MaxPB 		= 0;
 	/** Builder					*/
-	private Builder 			m_Builder = null;
+	private Builder 			m_Builder 		= null;
 	/** Pending Intent Fragment */ 
 	private PendingIntent 		m_PendingIntent = null; 
 	/**	Notification ID			*/
@@ -83,8 +83,9 @@ public class Login extends TV_Base implements I_Login {
 	
     @Override
 	public void onCreate(Bundle savedInstanceState) {
+    	Env.getInstance(getApplicationContext());
     	//	Reset Activity No
-    	Env.resetActivityNo(getApplicationContext());
+    	Env.resetActivityNo(Env.getCtx());
     	//	
     	super.onCreate(savedInstanceState);
     	//	Set Activity

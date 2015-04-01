@@ -39,6 +39,7 @@
 	
     <!-- Export Option -->
     <string name="Action_Share">Compartir</string>
+    <string name="Action_BChat">Mensajería de Negocio</string>
     <string name="Action_Export_XLS">Exportar a XLS</string>
     <string name="Action_Export_PDF">Exportar a PDF</string>
     <string name="Action_Export_XML">Exportar a XML</string>

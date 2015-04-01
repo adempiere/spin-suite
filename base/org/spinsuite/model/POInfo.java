@@ -832,4 +832,14 @@ public class POInfo {
 	public boolean IsChangeLog(){
 		return m_IsChangeLog;
 	}
+	
+	/**
+	 * Get Array of Info Column
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return POInfoColumn[]
+	 */
+	public POInfoColumn [] getInfoColumnArray() {
+		return m_columns;
+	}
 }

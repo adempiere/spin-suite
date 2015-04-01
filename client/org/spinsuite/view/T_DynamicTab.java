@@ -23,6 +23,7 @@ import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
+import org.spinsuite.bchat.view.V_BChat;
 import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.interfaces.I_FragmentSelectListener;
 import org.spinsuite.interfaces.OnFieldChangeListener;
@@ -130,11 +131,12 @@ public class T_DynamicTab extends Fragment
 	protected static final int 			DELETED 			= 4;
 	
 	/**	Option Menu Item			*/
-	private final int O_SHARE								= 1;
-	private final int O_DELETE								= 2;
-	private final int O_ATTACH_PHOTO						= 3;
-	private final int O_ATTACH_FILE							= 4;
-	private final int O_VIEW_ATTACH							= 5;
+	private final int O_BUSINESS_CHAT						= 1;
+	private final int O_SHARE								= 2;
+	private final int O_DELETE								= 3;
+	private final int O_ATTACH_PHOTO						= 4;
+	private final int O_ATTACH_FILE							= 5;
+	private final int O_VIEW_ATTACH							= 6;
 	
 	/**	Option Menu					*/
 	private MenuItem mi_Search 								= null;
@@ -418,6 +420,9 @@ public class T_DynamicTab extends Fragment
     	View menuItemView = getActivity().findViewById(R.id.action_more);
 		PopupMenu popupMenu = new PopupMenu(getActivity(), menuItemView);
 		//	Share Record
+		popupMenu.getMenu().add(Menu.NONE, O_BUSINESS_CHAT, 
+					Menu.NONE, getString(R.string.Action_BChat));
+		//	Share Record
 		popupMenu.getMenu().add(Menu.NONE, O_SHARE, 
 					Menu.NONE, getString(R.string.Action_Share));
 		//	Delete Record
@@ -448,7 +453,11 @@ public class T_DynamicTab extends Fragment
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
 				switch (item.getItemId()) {
-	        		case O_SHARE:
+					case O_BUSINESS_CHAT:
+						Intent bChat = new Intent(getActivity(), V_BChat.class);
+						startActivity(bChat);
+						return true;
+					case O_SHARE:
 	        			return true;
 	        		case O_DELETE:
 	        			//	Verify Parent Changed

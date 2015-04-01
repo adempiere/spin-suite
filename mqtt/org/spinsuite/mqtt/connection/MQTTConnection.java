@@ -23,6 +23,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
+import org.spinsuite.util.Env;
 
 import android.content.Context;
 
@@ -33,29 +34,37 @@ import android.content.Context;
 public class MQTTConnection {
 
 	/**	Client Identifier			*/
-	private String 				m_Client_ID = null;
+	private String 					m_Client_ID = null;
 	/**	Server Host					*/
-	private String 				m_Host = null;
+	private String 					m_Host = null;
 	/**	Port						*/
-	private int 				m_Port = 0;
+	private int 					m_Port = 0;
 	/**	Client Link					*/
-	private MqttAndroidClient 	m_ClientLink = null;
+	private MqttAndroidClient 		m_ClientLink = null;
 	/**	Connection Options			*/
-	private MqttConnectOptions 	m_ConnectionOption;
+	private MqttConnectOptions 		m_ConnectionOption;
 	/**	Flag for SSL Connection		*/
-	private boolean 			m_IsSSLConnection = false;
+	private boolean 				m_IsSSLConnection = false;
 	/**	Callback Event Listener		*/
-	private IMqttActionListener	m_ConnectionListener = null;
+	private IMqttActionListener		m_ConnectionListener = null;
 	/**	Callback					*/
-	private MqttCallback		m_Callback = null;
+	private MqttCallback			m_Callback = null;
 	/**	Context						*/
-	private Context				m_Ctx = null;
+	private Context					m_Ctx = null;
+	/**	Connection					*/
+	private static MQTTConnection	m_Connection = null;
 	
-	/**	Qos						*/
-	public static final int		AT_MOST_ONCE = 0;
-	public static final int		AT_LEAST_ONCE = 1;
-	public static final int		EXACTLY_ONCE = 2;
-
+	/**	QoS							*/
+	public static final int			AT_MOST_ONCE 			= 0;
+	public static final int			AT_LEAST_ONCE 			= 1;
+	public static final int			EXACTLY_ONCE 			= 2;
+	/**	Default Constants for Context		*/
+	private static final String		MQTT_CLIENT_ID 			= "#MQTT_Client_ID";
+	private static final String		MQTT_HOST 				= "#MQTT_Host";
+	private static final String		MQTT_PORT 				= "#MQTT_Port";
+	private static final String		MQTT_IS_SSL_CONNECTION 	= "#MQTT_IsSSLConnection";
+	private static final String		MQTT_ALARM_TIME 		= "#MQTT_AlamTime";
+	
 	/**
 	 * Default Constructor
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
@@ -88,6 +97,136 @@ public class MQTTConnection {
 	public MQTTConnection(Context p_Ctx, String p_Client_ID, String p_Host, int p_Port, 
 			boolean p_IsSSLConnection) {
 		this(p_Ctx, p_Client_ID, p_Host, p_Port, p_IsSSLConnection, null);
+	}
+	
+	/**
+	 * Create Connection from Context Parameters
+	 * *** Constructor ***
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_ConnectionListener
+	 */
+	public MQTTConnection(Context p_Ctx, IMqttActionListener p_ConnectionListener) {
+		this(p_Ctx, getClient_ID(p_Ctx), getHost(p_Ctx), getPort(p_Ctx), isSSLConnection(p_Ctx), p_ConnectionListener);
+	}
+	
+	/**
+	 * Get Client ID
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return String
+	 */
+	public static String getClient_ID(Context p_Ctx) {
+		return Env.getContext(p_Ctx, MQTT_CLIENT_ID);
+	}
+	
+	/**
+	 * Set Client Identifier
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_Client_ID
+	 * @return void
+	 */
+	public static void setClient_ID(Context p_Ctx, String p_Client_ID) {
+		Env.setContext(p_Ctx, MQTT_CLIENT_ID, p_Client_ID);
+	}
+	
+	/**
+	 * Get MQTT Host
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return String
+	 */
+	public static String getHost(Context p_Ctx) {
+		return Env.getContext(p_Ctx, MQTT_HOST);
+	}
+	
+	/**
+	 * Set Host
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_Host
+	 * @return void
+	 */
+	public static void setHost(Context p_Ctx, String p_Host) {
+		Env.setContext(p_Ctx, MQTT_HOST, p_Host);
+	}
+	
+	/**
+	 * Get MQTT Port
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return int
+	 */
+	public static int getPort(Context p_Ctx) {
+		return Env.getContextAsInt(p_Ctx, MQTT_PORT);
+	}
+	
+	/**
+	 * Set Connection Port
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_Port
+	 * @return void
+	 */
+	public static void setPort(Context p_Ctx, int p_Port) {
+		Env.setContext(p_Ctx, MQTT_PORT, p_Port);
+	}
+	
+	/**
+	 * Get for Is SSL Connection
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean isSSLConnection(Context p_Ctx) {
+		return Env.getContextAsBoolean(p_Ctx, MQTT_IS_SSL_CONNECTION);
+	}
+	
+	/**
+	 * Set Is SSL Connection
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_IsSSLConnection
+	 * @return void
+	 */
+	public static void setIsSSLConnection(Context p_Ctx, boolean p_IsSSLConnection) {
+		Env.setContext(p_Ctx, MQTT_IS_SSL_CONNECTION, p_IsSSLConnection);
+	}
+	
+	public static void setAlarmTime(Context p_Ctx, long time) {
+		//Env.setContext(p_Ctx, MQTT_ALARM_TIME, time);
+	}
+	
+	/**
+	 * Get Instance for Connection
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_ConnectionListener
+	 * @return
+	 * @return MQTTConnection
+	 */
+	public static MQTTConnection getInstance(Context p_Ctx, IMqttActionListener p_ConnectionListener) {
+		if(m_Connection == null) {
+			m_Connection = new MQTTConnection(p_Ctx, p_ConnectionListener);
+		}
+		//	Default Return
+		return m_Connection;
+	}
+	
+	/**
+	 * Get Connection Instance without Connection Listener
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return MQTTConnection
+	 */
+	public static MQTTConnection getInstance(Context p_Ctx) {
+		return getInstance(p_Ctx, null);
 	}
 	
 	/**
@@ -143,7 +282,7 @@ public class MQTTConnection {
 			return;
 		}
 		//	Connect
-		m_ClientLink.connect(m_ConnectionOption, m_ConnectionListener);
+		m_ClientLink.connect(m_ConnectionOption, null, m_ConnectionListener);
 	}
 	
 	/**
@@ -175,7 +314,7 @@ public class MQTTConnection {
 	 * @return boolean
 	 */
 	public boolean isConnected() {
-		return m_ClientLink.isConnected();
+		return m_ClientLink != null && m_ClientLink.isConnected();
 	}
 	
 	/**
@@ -365,5 +504,11 @@ public class MQTTConnection {
 	public void unSubscribeEx(String p_Topic) throws MqttException {
 		m_ClientLink.unsubscribe(p_Topic);
 	}
-	
+
+	@Override
+	public String toString() {
+		return "MQTTConnection [m_Client_ID=" + m_Client_ID + ", m_Host="
+				+ m_Host + ", m_Port=" + m_Port + ", m_IsSSLConnection="
+				+ m_IsSSLConnection + ", isConnected()=" + isConnected() + "]";
+	}
 }

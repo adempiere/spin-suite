@@ -17,7 +17,7 @@
  *************************************************************************************
  -->
     <style 
-        name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">   
+        name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
     </style>
 
     <!-- Application theme. -->
@@ -49,6 +49,8 @@
 		<item name="ic_dr_report">@drawable/ic_action_view_as_list_light</item>
 		<item name="ic_dr_process">@drawable/ic_action_forward_light</item>
 		<item name="ic_dr_folder">@drawable/ic_action_collapse_light</item>
+		<!-- Drawer Business Chat -->
+		<item name="ic_dr_bc_action_person">@drawable/ic_action_person_light</item>
 		<!-- Menu Icon -->
 		<item name="ic_ml_construction">@drawable/contruction_h</item>
 		<item name="ic_ml_window">@drawable/window_h</item>

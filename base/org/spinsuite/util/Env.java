@@ -46,7 +46,42 @@ import com.google.gson.Gson;
  *
  */
 public final class Env {
-
+	
+	/**
+	 * Get Context
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return Context
+	 */
+	public static Context getCtx() {
+		return m_Ctx;
+	}
+	
+	/**
+	 * Get Instance
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return Env
+	 */
+	public static Env getInstance(Context p_Ctx) {
+		if(m_Instance == null) {
+			m_Instance = new Env(p_Ctx);
+		}
+		//	Default Return
+		return m_Instance;
+	}
+	
+	/**
+	 * Private
+	 * *** Constructor ***
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 */
+	private Env(Context p_Ctx) {
+		m_Ctx = p_Ctx;
+	}
+	
 	/**
 	 * Verify if is loaded environment
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:58:55
@@ -1312,6 +1347,16 @@ public final class Env {
 	}	//	getAD_User_ID
 	
 	/**
+	 * Get Context
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return int
+	 */
+	public static int getAD_User_ID () {
+		return getContextAsInt(Env.getCtx(), "#AD_User_ID");
+	}
+	
+	/**
 	 * 	Get Login AD_Role_ID
 	 *	@param ctx context
 	 *	@return login AD_Role_ID
@@ -2120,6 +2165,13 @@ public final class Env {
 			return false;
 		return value.equals("Y");
 	}
+	
+	/**	Context					*/
+	private static Context 		m_Ctx;
+	/**	Constext Editor			*/
+	private static Editor		m_Editor;
+	/**	Env Instance			*/
+	private static Env			m_Instance;
 	
 	/**************************************************************************
 	 *  Application Context
