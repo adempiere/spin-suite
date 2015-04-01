@@ -18,7 +18,7 @@ package org.spinsuite.bchat.adapters;
 import java.util.ArrayList;
 
 import org.spinsuite.base.R;
-import org.spinsuite.bchat.util.DisplayBChatItem;
+import org.spinsuite.bchat.util.DisplayBChatContactItem;
 import org.spinsuite.util.Env;
 
 import android.content.Context;
@@ -34,7 +34,7 @@ import android.widget.TextView;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
-public class BChatAdapter extends ArrayAdapter<DisplayBChatItem> {
+public class BChatContactAdapter extends ArrayAdapter<DisplayBChatContactItem> {
 
 	/**
 	 * 
@@ -44,7 +44,7 @@ public class BChatAdapter extends ArrayAdapter<DisplayBChatItem> {
 	 * @param id_View
 	 * @param data
 	 */
-	public BChatAdapter(Context ctx, int id_View, ArrayList<DisplayBChatItem> data) {
+	public BChatContactAdapter(Context ctx, int id_View, ArrayList<DisplayBChatContactItem> data) {
 		super(ctx, id_View, data);
 		this.ctx = ctx;
 		this.id_View = id_View;
@@ -52,13 +52,13 @@ public class BChatAdapter extends ArrayAdapter<DisplayBChatItem> {
 	}
 
 	/**	Context						*/
-	private Context 						ctx;
+	private Context 							ctx;
 	/**	Data						*/
-	private ArrayList<DisplayBChatItem> 	data = new ArrayList<DisplayBChatItem>();
+	private ArrayList<DisplayBChatContactItem> 	data = new ArrayList<DisplayBChatContactItem>();
 	/**	Identifier of View			*/
-	private int 							id_View;
+	private int 								id_View;
 	/**	Max Size					*/
-	private static final int				MAX_SIZE = 200;
+	private static final int					MAX_SIZE = 100;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -68,7 +68,7 @@ public class BChatAdapter extends ArrayAdapter<DisplayBChatItem> {
 			item = inflater.inflate(id_View, null);
 		}
 		
-		DisplayBChatItem diti = data.get(position);
+		DisplayBChatContactItem diti = data.get(position);
 		
 		//	Set Name
 		TextView tv_Name = (TextView)item.findViewById(R.id.tv_Name);
@@ -83,17 +83,8 @@ public class BChatAdapter extends ArrayAdapter<DisplayBChatItem> {
 		//	Set Image
 		if(diti.getImage() != null) {
 			img_Item.setImageBitmap(diti.getImage());
-		} else if(diti.getValue() != null
-				&& diti.getValue().length() > 0) {
-			if(diti.getValue().toLowerCase(
-					Env.getLocate(getContext())).endsWith(".pdf")) {
-				img_Item.setImageResource(Env.getResourceID(getContext(), R.attr.ic_ls_pdf));
-			} else if(diti.getValue().toLowerCase(
-					Env.getLocate(getContext())).endsWith(".xls")) {
-				img_Item.setImageResource(Env.getResourceID(getContext(), R.attr.ic_ls_xls));
-			} else {
-				img_Item.setImageResource(Env.getResourceID(getContext(), R.attr.ic_ls_file));
-			}
+		} else {
+			img_Item.setImageResource(Env.getResourceID(ctx, R.attr.ic_dr_bc_action_person));
 		}
 		//	Return
 		return item;

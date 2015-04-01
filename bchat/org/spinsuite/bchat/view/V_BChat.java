@@ -20,12 +20,15 @@ import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
-import org.spinsuite.bchat.adapters.BChatAdapter;
-import org.spinsuite.bchat.util.DisplayBChatItem;
+import org.spinsuite.bchat.adapters.BChatContactAdapter;
+import org.spinsuite.bchat.util.DisplayBChatContactItem;
+import org.spinsuite.mqtt.connection.MQTTSyncService;
+import org.spinsuite.sync.SyncService;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -60,7 +63,7 @@ public class V_BChat extends FragmentActivity {
     /** Menu						*/
     private Menu							m_CurrentMenu = null;
     /**	Contact Data				*/
-    private ArrayList<DisplayBChatItem> 	m_BChatContactData = null;
+    private ArrayList<DisplayBChatContactItem> 	m_BChatContactData = null;
     
     /** Called when the activity is first created. */
     @Override
@@ -74,8 +77,6 @@ public class V_BChat extends FragmentActivity {
     	setProgressBarIndeterminateVisibility(false);
     	
     	actionBar = getActionBar();
-    	 
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
     	//	
     	actionBar.setDisplayHomeAsUpEnabled(true);
     	actionBar.setHomeButtonEnabled(true);
@@ -104,7 +105,9 @@ public class V_BChat extends FragmentActivity {
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View arg1, int position,
 					long arg3) {
-				
+				m_DLayout.closeDrawers();
+				Intent m_Service = new Intent(getApplicationContext(), MQTTSyncService.class);
+				startService(m_Service);
 			}
         });
 
@@ -118,11 +121,17 @@ public class V_BChat extends FragmentActivity {
             public void onDrawerOpened(View drawerView) {
                 invalidateOptionsMenu();
             }
+            
+            @Override
+            public void onConfigurationChanged(Configuration newConfig) {
+            	super.onConfigurationChanged(newConfig);
+            	m_DToggle.onConfigurationChanged(newConfig);
+            }
         };
-        //	Set Toggle
-        m_DLayout.setDrawerListener(m_DToggle);
         //	
         m_DToggle.syncState();
+        //	Set Toggle
+        m_DLayout.setDrawerListener(m_DToggle);
         isDrawerLoaded = true;
     }
     
@@ -146,11 +155,11 @@ public class V_BChat extends FragmentActivity {
 			//	
 			Cursor rs = conn.querySQL(sql.toString(), null);
 			//	Instance
-			m_BChatContactData = new ArrayList<DisplayBChatItem>();
+			m_BChatContactData = new ArrayList<DisplayBChatContactItem>();
 			if(rs.moveToFirst()){
 				do {
 					m_BChatContactData.add(
-							new DisplayBChatItem(
+							new DisplayBChatContactItem(
 									rs.getInt(0), 
 									rs.getString(1), 
 									null
@@ -158,10 +167,12 @@ public class V_BChat extends FragmentActivity {
 					);
 				} while(rs.moveToNext());
 			}
+	    	//	Close Connection
+	    	DB.closeConnection(conn);
     	}
     	//	
-    	BChatAdapter mi_adapter = new BChatAdapter(this, R.layout.i_bchat, m_BChatContactData);
-		mi_adapter.setDropDownViewResource(R.layout.i_bchat);
+    	BChatContactAdapter mi_adapter = new BChatContactAdapter(this, R.layout.i_bchat_contact, m_BChatContactData);
+		mi_adapter.setDropDownViewResource(R.layout.i_bchat_contact);
 		getDrawerList().setAdapter(mi_adapter);
     }
     

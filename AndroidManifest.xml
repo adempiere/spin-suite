@@ -25,13 +25,14 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="21" />
 
-    <uses-permission android:name="android.permission.ACCESS_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     
     <application
         android:allowBackup="true"
@@ -66,5 +67,13 @@
         <service android:name="org.spinsuite.sync.SyncService"/>
         <!-- Mqtt Service -->
         <service android:name="org.eclipse.paho.android.service.MqttService"/>
+        <!-- Sync Service -->
+        <service android:name="org.spinsuite.mqtt.connection.MQTTSyncService"/>
+        <!-- Boot Start Service -->
+        <receiver android:name="org.spinsuite.mqtt.connection.MQTTBootStartService" >
+     	<intent-filter>
+        	<action android:name="android.intent.action.BOOT_COMPLETED" />
+     	</intent-filter>
+</receiver>
 	</application>
 </manifest>

@@ -24,13 +24,13 @@ import android.os.Parcel;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
-public class DisplayBChatItem extends DisplayRecordItem {
+public class DisplayBChatContactItem extends DisplayRecordItem {
 
 	/**
 	 * *** Constructor ***
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 09:42:02
 	 */
-	public DisplayBChatItem() {
+	public DisplayBChatContactItem() {
 		super();
 	}
 
@@ -40,7 +40,7 @@ public class DisplayBChatItem extends DisplayRecordItem {
 	 * @param pRecord_ID
 	 * @param pValue
 	 */
-	public DisplayBChatItem(int pRecord_ID, String pValue) {
+	public DisplayBChatContactItem(int pRecord_ID, String pValue) {
 		super(pRecord_ID, pValue);
 	}
 
@@ -51,7 +51,7 @@ public class DisplayBChatItem extends DisplayRecordItem {
 	 * @param pValue
 	 * @param pImageURL
 	 */
-	public DisplayBChatItem(int pRecord_ID, String pValue, String pImageURL) {
+	public DisplayBChatContactItem(int pRecord_ID, String pValue, String pImageURL) {
 		super(pRecord_ID, pValue, pImageURL);
 	}
 	
@@ -64,7 +64,7 @@ public class DisplayBChatItem extends DisplayRecordItem {
 	 * @param m_Description
 	 * @param m_Image
 	 */
-	public DisplayBChatItem(int pRecord_ID, String pValue, String m_Description, Bitmap m_Image) {
+	public DisplayBChatContactItem(int pRecord_ID, String pValue, String m_Description, Bitmap m_Image) {
 		super(pRecord_ID, pValue, null);
 		setImage(m_Image);
 		setDescription(m_Description);
@@ -75,7 +75,7 @@ public class DisplayBChatItem extends DisplayRecordItem {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 09:42:02
 	 * @param parcel
 	 */
-	public DisplayBChatItem(Parcel parcel) {
+	public DisplayBChatContactItem(Parcel parcel) {
 		super(parcel);
 	}
 	

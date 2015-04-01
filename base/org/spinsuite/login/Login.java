@@ -83,7 +83,7 @@ public class Login extends TV_Base implements I_Login {
 	
     @Override
 	public void onCreate(Bundle savedInstanceState) {
-    	Env.setContext(getApplicationContext());
+    	Env.getInstance(getApplicationContext());
     	//	Reset Activity No
     	Env.resetActivityNo(Env.getCtx());
     	//	

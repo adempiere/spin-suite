@@ -44,6 +44,8 @@
 	<attr name="ic_dr_report" format="reference"/>
 	<attr name="ic_dr_process" format="reference"/>
 	<attr name="ic_dr_folder" format="reference"/>
+	<!-- Drawer Business Chat -->
+	<attr name="ic_dr_bc_action_person" format="reference"/>
 	<!-- Menu -->
 	<attr name="ic_ml_construction" format="reference"/>
 	<attr name="ic_ml_window" format="reference"/>
