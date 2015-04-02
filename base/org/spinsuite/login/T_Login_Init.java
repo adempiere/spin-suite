@@ -144,7 +144,7 @@ public class T_Login_Init extends DialogFragment
 		bundle.putString(SyncValues.KEY_USER, et_User.getText().toString());
 		bundle.putString(SyncValues.KEY_PASS, et_PassWord.getText().toString());
 		bundle.putString(SyncValues.KEY_SOAP_ACTION, SyncValues.DEFAULT_NAME_SPACE + SyncValues.DEFAULT_METHOD);
-		bundle.putInt(SyncValues.KEY_TIMEOUT, Env.getContextAsInt(m_Callback, "#Timeout"));
+		bundle.putInt(SyncValues.KEY_TIMEOUT, Env.getContextAsInt("#Timeout"));
 		//	Instance Service
 		Intent m_Service = new Intent(getActivity(), SyncService.class);
 		m_Service.putExtras(bundle);

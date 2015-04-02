@@ -18,7 +18,6 @@ package org.spinsuite.mqtt.connection;
 import java.util.logging.Level;
 
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
@@ -89,10 +88,12 @@ public class MQTTSyncService extends IntentService {
 		if(!Env.isEnvLoad())
 			return;
 		//	
-		MQTTConnection.setClient_ID(getApplicationContext(), "0101010101");
+		MQTTConnection.setClient_ID(getApplicationContext(), String.valueOf(Env.getAD_User_ID()));
 		MQTTConnection.setHost(getApplicationContext(), "192.168.1.158");
 		MQTTConnection.setPort(getApplicationContext(), 1883);
 		MQTTConnection.setIsSSLConnection(getApplicationContext(), false);
+		MQTTConnection.setAlarmTime(getApplicationContext(), 100);
+		
 		MqttConnectOptions connOptions = new MqttConnectOptions();
 		connOptions.setUserName("admin");
 		connOptions.setPassword("admin".toCharArray());
@@ -118,6 +119,7 @@ public class MQTTSyncService extends IntentService {
 					Level.FINE, "connect(): Already Connected");
 			return;
 		}
+		//	
 		try {
 			m_Connection.connect();
 			LogM.log(getApplicationContext(), getClass(), 
@@ -137,7 +139,13 @@ public class MQTTSyncService extends IntentService {
 	private void schedule() {
 		AlarmManager alarm = (AlarmManager)getSystemService(ALARM_SERVICE);
 		alarm.set(AlarmManager.RTC_WAKEUP,
-		    System.currentTimeMillis() + (1000 * 10), 
+		    System.currentTimeMillis() 
+		    + 
+		    (
+		    		1000 
+		    		* 
+		    		MQTTConnection.getAlarmTime(getApplicationContext())
+		    ), 
 		    PendingIntent.getService(this, 0, new Intent(this, MQTTSyncService.class), 0)
 		);
 	}

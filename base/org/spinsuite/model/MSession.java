@@ -48,7 +48,7 @@ public class MSession extends X_AD_Session
 	 */
 	public static MSession get (Context ctx, boolean createNew)
 	{
-		int AD_Session_ID = Env.getContextAsInt(ctx, "#AD_Session_ID");
+		int AD_Session_ID = Env.getContextAsInt("#AD_Session_ID");
 		MSession session = null;
 		if (AD_Session_ID > 0)
 			session = (MSession)s_sessions.get(Integer.valueOf(AD_Session_ID));
@@ -83,7 +83,7 @@ public class MSession extends X_AD_Session
 	 */
 	public static MSession get (Context ctx, String Remote_Addr, String Remote_Host)
 	{
-		int AD_Session_ID = Env.getContextAsInt(ctx, "#AD_Session_ID");
+		int AD_Session_ID = Env.getContextAsInt("#AD_Session_ID");
 		MSession session = null;
 		if (AD_Session_ID > 0)
 			session = (MSession)s_sessions.get(Integer.valueOf(AD_Session_ID));
@@ -147,7 +147,7 @@ public class MSession extends X_AD_Session
 		/*setDescription(Adempiere.MAIN_VERSION + "_"
 				+ Adempiere.DATE_VERSION + " "
 				+ Adempiere.getImplementationVersion());*/
-		setAD_Role_ID(Env.getContextAsInt(ctx, "#AD_Role_ID"));
+		setAD_Role_ID(Env.getContextAsInt("#AD_Role_ID"));
 		setLoginDate(Env.getCurrentDate());
 	}	//	MSession
 
@@ -167,7 +167,7 @@ public class MSession extends X_AD_Session
 			/*setDescription(Adempiere.MAIN_VERSION + "_"
 					+ Adempiere.DATE_VERSION + " "
 					+ Adempiere.getImplementationVersion());*/
-			setAD_Role_ID(Env.getContextAsInt(ctx, "#AD_Role_ID"));
+			setAD_Role_ID(Env.getContextAsInt("#AD_Role_ID"));
 			setLoginDate(Env.getCurrentDate());
 		//}
 		//catch (UnknownHostException e)

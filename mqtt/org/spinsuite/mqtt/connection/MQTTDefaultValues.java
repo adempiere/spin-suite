@@ -24,8 +24,6 @@ public class MQTTDefaultValues {
 	private static final String INITIAL_LOAD_TOPIC 			= "Public-Initial-Load";
 	/**	Default Prefix for ADempiere Synchronization	*/
 	private static final String PRE_SYNC_TOPIC 				= "AD-Synchronization-";
-	/**	Default Prefix for Client Topic					*/
-	private static final String PRE_PUBLIC_TOPIC 			= "Public-Client-";
 	/**	Default Prefix for Request						*/
 	private static final String PRE_REQUEST_TOPIC 			= "Server-Request-";
 	
@@ -38,17 +36,6 @@ public class MQTTDefaultValues {
 	 */
 	public static String getSyncTopic(String p_User) {
 		return getUserTopic(PRE_SYNC_TOPIC, p_User);
-	}
-	
-	/**
-	 * Get Public Topic
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_User
-	 * @return
-	 * @return String
-	 */
-	public static String getPublicTopic(String p_User) {
-		return getUserTopic(PRE_PUBLIC_TOPIC, p_User);
 	}
 	
 	/**

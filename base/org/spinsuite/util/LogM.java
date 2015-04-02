@@ -118,7 +118,7 @@ public class LogM {
 	 * @return int
 	 */
 	public static int getTraceLevel(Context ctx){
-		return Env.getContextAsInt(ctx, TRACE_LEVEL_KEY);
+		return Env.getContextAsInt(TRACE_LEVEL_KEY);
 	}
 	
 	/**

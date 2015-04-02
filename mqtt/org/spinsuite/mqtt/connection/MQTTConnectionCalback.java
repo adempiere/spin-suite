@@ -18,7 +18,10 @@ package org.spinsuite.mqtt.connection;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.spinsuite.sync.content.SyncParent;
+import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.Msg;
+import org.spinsuite.util.SerializerUtil;
 
 import android.content.Context;
 
@@ -52,7 +55,16 @@ public class MQTTConnectionCalback implements MqttCallback {
 
 	@Override
 	public void messageArrived(String topic, MqttMessage msg) throws Exception {
-		
+		System.err.println(topic + ":" + msg);
+		if(msg != null) {
+			SyncParent parent = (SyncParent) SerializerUtil.deserializeObject(msg.getPayload());
+			if(parent instanceof SyncRequest) {
+				SyncRequest request = (SyncRequest) parent;
+				if(request.getRequestType().equals(SyncRequest.RT_BUSINESS_CHAT)) {
+					Msg.alertMsg(m_Ctx, "Call from: " + request.getLocalClient_ID() + " Topic: " + request.getTopicName());
+				}
+			}
+		}
 	}
 
 }

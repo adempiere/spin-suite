@@ -54,16 +54,19 @@ public class MQTTConnection {
 	/**	Connection					*/
 	private static MQTTConnection	m_Connection = null;
 	
-	/**	QoS							*/
-	public static final int			AT_MOST_ONCE 			= 0;
-	public static final int			AT_LEAST_ONCE 			= 1;
-	public static final int			EXACTLY_ONCE 			= 2;
+	/**	QoS									*/
+	public static final int			AT_MOST_ONCE_0 			= 0;
+	public static final int			AT_LEAST_ONCE_1 		= 1;
+	public static final int			EXACTLY_ONCE_2 			= 2;
 	/**	Default Constants for Context		*/
 	private static final String		MQTT_CLIENT_ID 			= "#MQTT_Client_ID";
 	private static final String		MQTT_HOST 				= "#MQTT_Host";
 	private static final String		MQTT_PORT 				= "#MQTT_Port";
 	private static final String		MQTT_IS_SSL_CONNECTION 	= "#MQTT_IsSSLConnection";
 	private static final String		MQTT_ALARM_TIME 		= "#MQTT_AlamTime";
+	/**	Default Topics						*/
+	
+	
 	
 	/**
 	 * Default Constructor
@@ -198,8 +201,26 @@ public class MQTTConnection {
 		Env.setContext(MQTT_IS_SSL_CONNECTION, p_IsSSLConnection);
 	}
 	
+	/**
+	 * Set Alamr Time in milliseconds
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param time
+	 * @return void
+	 */
 	public static void setAlarmTime(Context p_Ctx, long time) {
-		//Env.setContext(MQTT_ALARM_TIME, time);
+		Env.setContext(p_Ctx, MQTT_ALARM_TIME, time);
+	}
+	
+	/**
+	 * Get Alamr Time in milliseconds
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return long
+	 */
+	public static long getAlarmTime(Context p_Ctx) {
+		return Env.getContextAsLong(p_Ctx, MQTT_ALARM_TIME);
 	}
 	
 	/**

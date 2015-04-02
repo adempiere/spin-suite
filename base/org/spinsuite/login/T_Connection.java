@@ -174,7 +174,7 @@ public class T_Connection extends Activity implements I_Login {
     public void setTimeOut()
     {
     	//
-		int timeoutInt = Env.getContextAsInt(this, "#Timeout");
+		int timeoutInt = Env.getContextAsInt("#Timeout");
 		String timeout = String.valueOf(timeoutInt);
 		et_Timeout.setText(timeout);
     }
@@ -192,7 +192,7 @@ public class T_Connection extends Activity implements I_Login {
     	}
     	//	Timeout
     	if(timeout == null || timeout.length() == 0){
-    		int timeoutInt = Env.getContextAsInt(this, "#Timeout");
+    		int timeoutInt = Env.getContextAsInt("#Timeout");
     		timeout = String.valueOf(timeoutInt);
     		et_Timeout.setText(timeout);
     	}

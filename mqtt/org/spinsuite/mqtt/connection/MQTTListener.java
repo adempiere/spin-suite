@@ -17,6 +17,9 @@ package org.spinsuite.mqtt.connection;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttSecurityException;
+import org.spinsuite.util.Env;
 import org.spinsuite.util.Msg;
 
 import android.content.Context;
@@ -46,7 +49,28 @@ public class MQTTListener implements IMqttActionListener {
 
 	@Override
 	public void onSuccess(IMqttToken token) {
-		Msg.toastMsg(m_Ctx, "Connection Ok: " + token);
+		Msg.toastMsg(m_Ctx, "Connection MQTT is Ok");
+		subscribeToDefaultsTopics();
 	}
 
+	/**
+	 * Subscribe to topics
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void subscribeToDefaultsTopics() {
+		try {
+			MQTTConnection.getInstance(m_Ctx).subscribeEx(MQTTDefaultValues.getInitialLoadTopic(), 
+					MQTTConnection.AT_LEAST_ONCE_1);
+			MQTTConnection.getInstance(m_Ctx).subscribeEx(MQTTDefaultValues.getSyncTopic(String.valueOf(Env.getAD_User_ID())), 
+					MQTTConnection.AT_LEAST_ONCE_1);
+			MQTTConnection.getInstance(m_Ctx).subscribeEx(MQTTDefaultValues.getRequestTopic(String.valueOf(Env.getAD_User_ID())), 
+					MQTTConnection.AT_LEAST_ONCE_1);
+		} catch (MqttSecurityException e) {
+			e.printStackTrace();
+		} catch (MqttException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

@@ -16,16 +16,23 @@
 package org.spinsuite.bchat.view;
 
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.logging.Level;
 
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.adapters.BChatContactAdapter;
 import org.spinsuite.bchat.util.DisplayBChatContactItem;
+import org.spinsuite.mqtt.connection.MQTTConnection;
+import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.mqtt.connection.MQTTSyncService;
-import org.spinsuite.sync.SyncService;
+import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.SerializerUtil;
 
 import android.app.ActionBar;
 import android.content.Intent;
@@ -108,6 +115,27 @@ public class V_BChat extends FragmentActivity {
 				m_DLayout.closeDrawers();
 				Intent m_Service = new Intent(getApplicationContext(), MQTTSyncService.class);
 				startService(m_Service);
+				//	Send Request
+				try {
+					SyncRequest request = new SyncRequest(
+							String.valueOf(Env.getAD_User_ID()), 
+							SyncRequest.RT_BUSINESS_CHAT, 
+							String.valueOf(UUID.randomUUID()));
+					//	Verify Connection
+					MQTTConnection currentConnection = MQTTConnection.getInstance(getApplicationContext());
+					if(currentConnection.isConnected()) {
+						currentConnection.subscribeEx(request.getTopicName(), MQTTConnection.AT_LEAST_ONCE_1);
+						byte[] msg = SerializerUtil.serializeObject(request);
+						MqttMessage message = new MqttMessage(msg);
+						message.setQos(MQTTConnection.AT_LEAST_ONCE_1);
+						currentConnection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(Env.getAD_User_ID())), message);
+					}
+					
+				} catch (MqttSecurityException e) {
+					e.printStackTrace();
+				} catch (MqttException e) {
+					e.printStackTrace();
+				}
 			}
         });
 
