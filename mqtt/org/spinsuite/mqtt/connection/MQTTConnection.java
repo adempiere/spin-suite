@@ -64,6 +64,10 @@ public class MQTTConnection {
 	private static final String		MQTT_PORT 				= "#MQTT_Port";
 	private static final String		MQTT_IS_SSL_CONNECTION 	= "#MQTT_IsSSLConnection";
 	private static final String		MQTT_ALARM_TIME 		= "#MQTT_AlamTime";
+	private static final String		MQTT_NETWORK_OK 		= "#MQTT_NetworkOk";
+	private static final String		MQTT_USER_NAME 			= "#MQTT_UserName";
+	private static final String		MQTT_PASSWORD 			= "#MQTT_Password";
+	private static final String		MQTT_TIMEOUT 			= "#MQTT_Timeout";
 	/**	Default Topics						*/
 	
 	
@@ -86,6 +90,11 @@ public class MQTTConnection {
 	    m_Port = p_Port;
 	    m_IsSSLConnection = p_IsSSLConnection;
 	    m_ConnectionListener = p_ConnectionListener;
+	    m_ConnectionOption = new MqttConnectOptions();
+	    m_ConnectionOption.setUserName(MQTTConnection.getClient_ID(p_Ctx));
+	    m_ConnectionOption.setUserName(getMQTTUser(p_Ctx));
+	    m_ConnectionOption.setPassword(getMQTTPass(p_Ctx).toCharArray());
+	    m_ConnectionOption.setConnectionTimeout(getTimeout(p_Ctx));
 	}
 	
 	/**
@@ -180,6 +189,28 @@ public class MQTTConnection {
 	}
 	
 	/**
+	 * Get Timeout
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return int
+	 */
+	public static int getTimeout(Context p_Ctx) {
+		return Env.getContextAsInt(p_Ctx, MQTT_TIMEOUT);
+	}
+	
+	/**
+	 * Set Timeout
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_Timeout
+	 * @return void
+	 */
+	public static void setTimeout(Context p_Ctx, int p_Timeout) {
+		Env.setContext(MQTT_TIMEOUT, p_Timeout);
+	}
+	
+	/**
 	 * Get for Is SSL Connection
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Ctx
@@ -213,7 +244,7 @@ public class MQTTConnection {
 	}
 	
 	/**
-	 * Get Alamr Time in milliseconds
+	 * Get Alarm Time in milliseconds
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Ctx
 	 * @return
@@ -224,6 +255,77 @@ public class MQTTConnection {
 	}
 	
 	/**
+	 * Is Network Ok
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean isNetworkOk(Context p_Ctx) {
+		return Env.getContextAsBoolean(MQTT_NETWORK_OK);
+	}
+	
+	/**
+	 * Set Network Ok
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param ok
+	 * @return void
+	 */
+	public static void setNetworkOk(Context p_Ctx, boolean ok) {
+		Env.setContext(p_Ctx, MQTT_NETWORK_OK, ok);
+	}
+	
+	/**
+	 * Get User Name for connection with MQTT
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return String
+	 */
+	public static String getMQTTUser(Context p_Ctx) {
+		return Env.getContext(MQTT_USER_NAME);
+	}
+	
+	/**
+	 * Set User Name for connection with MQTT Server
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_UserName
+	 * @return void
+	 */
+	public static void setMQTTUser(Context p_Ctx, String p_UserName) {
+		Env.setContext(MQTT_USER_NAME, p_UserName);
+	}
+	
+	/**
+	 * Get Password for connection with MQTT Server
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return String
+	 */
+	public static String getMQTTPass(Context p_Ctx) {
+		String pass = Env.getContext(MQTT_PASSWORD);
+		//	Valid Null
+		if(pass == null)
+			pass = "";
+		//	Return
+		return pass;
+	}
+	
+	/**
+	 * Set Password for connection with MQTT Server
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_Password
+	 * @return void
+	 */
+	public static void setMQTTPassword(Context p_Ctx, String p_Password) {
+		Env.setContext(MQTT_PASSWORD, p_Password);
+	}
+	
+	/**
 	 * Get Instance for Connection
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Ctx
@@ -231,9 +333,12 @@ public class MQTTConnection {
 	 * @return
 	 * @return MQTTConnection
 	 */
-	public static MQTTConnection getInstance(Context p_Ctx, IMqttActionListener p_ConnectionListener) {
+	public static MQTTConnection getInstance(Context p_Ctx, IMqttActionListener p_ConnectionListener, MqttCallback p_Callback) {
 		if(m_Connection == null) {
 			m_Connection = new MQTTConnection(p_Ctx, p_ConnectionListener);
+			if(p_Callback != null) {
+				m_Connection.setCallback(p_Callback);
+			}
 		}
 		//	Default Return
 		return m_Connection;
@@ -247,7 +352,7 @@ public class MQTTConnection {
 	 * @return MQTTConnection
 	 */
 	public static MQTTConnection getInstance(Context p_Ctx) {
-		return getInstance(p_Ctx, null);
+		return getInstance(p_Ctx, null, null);
 	}
 	
 	/**
@@ -301,6 +406,10 @@ public class MQTTConnection {
 			m_ClientLink = new MqttAndroidClient(m_Ctx, serverURI, m_Client_ID);
 		} else if(m_ClientLink.isConnected()) {
 			return;
+		}
+		//	Set Call Back
+		if(m_Callback != null) {
+			m_ClientLink.setCallback(m_Callback);
 		}
 		//	Connect
 		m_ClientLink.connect(m_ConnectionOption, null, m_ConnectionListener);

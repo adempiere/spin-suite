@@ -28,14 +28,13 @@ import org.spinsuite.bchat.adapters.BChatContactAdapter;
 import org.spinsuite.bchat.util.DisplayBChatContactItem;
 import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
-import org.spinsuite.mqtt.connection.MQTTSyncService;
+import org.spinsuite.mqtt.connection.MQTTListener;
 import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.SerializerUtil;
 
 import android.app.ActionBar;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -113,8 +112,7 @@ public class V_BChat extends FragmentActivity {
 			public void onItemClick(AdapterView<?> adapter, View arg1, int position,
 					long arg3) {
 				m_DLayout.closeDrawers();
-				Intent m_Service = new Intent(getApplicationContext(), MQTTSyncService.class);
-				startService(m_Service);
+				DisplayBChatContactItem item = (DisplayBChatContactItem) adapter.getItemAtPosition(position);
 				//	Send Request
 				try {
 					SyncRequest request = new SyncRequest(
@@ -122,13 +120,16 @@ public class V_BChat extends FragmentActivity {
 							SyncRequest.RT_BUSINESS_CHAT, 
 							String.valueOf(UUID.randomUUID()));
 					//	Verify Connection
-					MQTTConnection currentConnection = MQTTConnection.getInstance(getApplicationContext());
+					MQTTConnection currentConnection = MQTTConnection.getInstance(getApplicationContext(), 
+							new MQTTListener(getApplicationContext()), 
+							null);
 					if(currentConnection.isConnected()) {
 						currentConnection.subscribeEx(request.getTopicName(), MQTTConnection.AT_LEAST_ONCE_1);
 						byte[] msg = SerializerUtil.serializeObject(request);
 						MqttMessage message = new MqttMessage(msg);
 						message.setQos(MQTTConnection.AT_LEAST_ONCE_1);
-						currentConnection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(Env.getAD_User_ID())), message);
+						message.setRetained(true);
+						currentConnection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(item.getRecord_ID())), message);
 					}
 					
 				} catch (MqttSecurityException e) {

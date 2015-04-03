@@ -15,16 +15,26 @@
  *************************************************************************************/
 package org.spinsuite.mqtt.connection;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.spinsuite.sync.content.SyncParent;
+import org.spinsuite.sync.content.SyncRequest;
+import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.SerializerUtil;
+import org.spinsuite.util.SyncValues;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Mar 30, 2015, 10:34:27 PM
@@ -40,6 +50,7 @@ public class MQTTSyncService extends IntentService {
 	 */
 	public MQTTSyncService(String name) {
 		super(name);
+		m_BCast = LocalBroadcastManager.getInstance(this);
 	}
 
 	/**
@@ -48,7 +59,7 @@ public class MQTTSyncService extends IntentService {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 */
 	public MQTTSyncService() {
-		super("MQTTSyncService");
+		this("MQTTSyncService");
 	}
 	
 	/**	Connection					*/
@@ -57,6 +68,8 @@ public class MQTTSyncService extends IntentService {
 	private static MQTTSyncService	m_CurrentService = null;
 	/**	Connect						*/
 	private static boolean 			m_IsRunning = false;
+	/**	Broadcast				*/
+	private LocalBroadcastManager 	m_BCast = null;
 	
 	/**
 	 * Get Instance
@@ -85,25 +98,37 @@ public class MQTTSyncService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		m_IsRunning = true;
 		Env.getInstance(getApplicationContext());
-		if(!Env.isEnvLoad())
+		if(!Env.isEnvLoad()
+				|| !MQTTConnection.isNetworkOk(this))
 			return;
 		//	
-		MQTTConnection.setClient_ID(getApplicationContext(), String.valueOf(Env.getAD_User_ID()));
-		MQTTConnection.setHost(getApplicationContext(), "192.168.1.158");
-		MQTTConnection.setPort(getApplicationContext(), 1883);
-		MQTTConnection.setIsSSLConnection(getApplicationContext(), false);
-		MQTTConnection.setAlarmTime(getApplicationContext(), 100);
-		
-		MqttConnectOptions connOptions = new MqttConnectOptions();
-		connOptions.setUserName("admin");
-		connOptions.setPassword("admin".toCharArray());
-		connOptions.setConnectionTimeout(100);
-		//	
-		m_Connection = MQTTConnection.getInstance(getApplicationContext(), new MQTTListener(getApplicationContext()));
-		//	
-		m_Connection.setConnectionOptions(connOptions);
-		//	
-		m_Connection.setCallback(new MQTTConnectionCalback(getApplicationContext()));
+		m_Connection = MQTTConnection.getInstance(getApplicationContext(), 
+				new MQTTListener(getApplicationContext()), 
+				new MqttCallback() {
+					
+					@Override
+					public void messageArrived(String topic, MqttMessage msg) throws Exception {
+						if(msg != null) {
+							SyncParent parent = (SyncParent) SerializerUtil.deserializeObject(msg.getPayload());
+							if(parent instanceof SyncRequest) {
+								SyncRequest request = (SyncRequest) parent;
+								if(request.getRequestType().equals(SyncRequest.RT_BUSINESS_CHAT)) {
+									requestArrived(request);
+								}
+							}
+						}
+					}
+					
+					@Override
+					public void deliveryComplete(IMqttDeliveryToken arg0) {
+						
+					}
+					
+					@Override
+					public void connectionLost(Throwable e) {
+						forConnectionLost(e);
+					}
+				});
 		//	Connection
 		connect();
 	}
@@ -137,17 +162,55 @@ public class MQTTSyncService extends IntentService {
 	 * @return void
 	 */
 	private void schedule() {
+		Intent service = new Intent(this, MQTTSyncService.class);
 		AlarmManager alarm = (AlarmManager)getSystemService(ALARM_SERVICE);
-		alarm.set(AlarmManager.RTC_WAKEUP,
-		    System.currentTimeMillis() 
-		    + 
-		    (
-		    		1000 
-		    		* 
-		    		MQTTConnection.getAlarmTime(getApplicationContext())
-		    ), 
-		    PendingIntent.getService(this, 0, new Intent(this, MQTTSyncService.class), 0)
-		);
+		if(MQTTConnection.isNetworkOk(this)) {
+			//	
+			long currentTime = System.currentTimeMillis();
+			long nextRun = currentTime + MQTTConnection.getAlarmTime(getApplicationContext());
+			//	Date Format
+			SimpleDateFormat sdf = DisplayType.getDateFormat(this, DisplayType.DATE_TIME);
+			//	Log
+			LogM.log(this, getClass(), Level.FINE, "Current Time[" + currentTime + "]-[" + sdf.format(new Date(currentTime)) + "]");
+			LogM.log(this, getClass(), Level.FINE, "Next Run[" + nextRun + "]-[" + sdf.format(new Date(nextRun)) + "]");
+			//	Set Alarm
+			PendingIntent sender = PendingIntent.getService(this, 0, service, 0);
+			alarm.set(AlarmManager.RTC_WAKEUP, nextRun, sender);
+		} else {
+			PendingIntent sender = PendingIntent.getBroadcast(this, 0, service, 0);
+			AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+			//	Cancel (Wait for Network)
+			alarmManager.cancel(sender);
+			//	Log
+			LogM.log(this, getClass(), Level.FINE, "Alarm Stoped");
+		}
+	}
+	
+	/**
+	 * For Request
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param request
+	 * @throws Exception
+	 * @return void
+	 */
+	private void requestArrived(SyncRequest request) throws Exception {
+		if(request.getRequestType().equals(SyncRequest.RT_BUSINESS_CHAT)) {
+			Intent m_Filter = new Intent(SyncValues.BC_BC_FILTER);
+			m_Filter.putExtra(SyncValues.BC_KEY_MSG, "Call from: " + request.getLocalClient_ID());
+			m_Filter.putExtra(SyncValues.BC_KEY_SUB_MSG, "Topic: " + request.getTopicName());
+			//	Send
+			m_BCast.sendBroadcast(m_Filter);
+		}
+	}
+	
+	/**
+	 * Connection is Lost
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param e
+	 * @return void
+	 */
+	private void forConnectionLost(Throwable e) {
+		LogM.log(this, getClass(), Level.SEVERE, "Error Connection Lost", e);
 	}
 	
 	@Override

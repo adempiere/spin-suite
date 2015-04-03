@@ -23,7 +23,7 @@ import android.content.Intent;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Mar 30, 2015, 9:59:53 PM
  *
  */
-public class MQTTBootStartService extends BroadcastReceiver {
+public class MQTTBootReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {

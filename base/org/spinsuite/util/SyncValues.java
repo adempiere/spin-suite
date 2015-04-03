@@ -40,7 +40,11 @@ public class SyncValues {
 	public static final String 		KEY_SOAP_ACTION 	= "Sync_SoapAction";
 	public static final String 		KEY_TIMEOUT 		= "Sync_Timeout";
 	/**	Broadcast Type Filter			*/
+	/**	Initial Load Filter				*/
 	public static final String 		BC_IL_FILTER 		= "BC_IL_Filter";
+	/**	Business Chat Filter			*/
+	public static final String 		BC_BC_FILTER 		= "BC_BC_Filter";
+	/**	Synchronization					*/
 	public static final String 		BC_SS_FILTER 		= "BC_SS_Filter";
 	/**	Broadcast Values				*/
 	public static final String 		BC_KEY_MSG 			= "BCV_Msg";

@@ -15,12 +15,14 @@
  *************************************************************************************/
 package org.spinsuite.mqtt.connection;
 
+import java.util.logging.Level;
+
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.spinsuite.util.Env;
-import org.spinsuite.util.Msg;
+import org.spinsuite.util.LogM;
 
 import android.content.Context;
 
@@ -43,13 +45,13 @@ public class MQTTListener implements IMqttActionListener {
 	private Context m_Ctx = null;
 	
 	@Override
-	public void onFailure(IMqttToken token, Throwable ex) {
-		Msg.toastMsg(m_Ctx, "Error: " + ex);
+	public void onFailure(IMqttToken token, Throwable e) {
+		LogM.log(m_Ctx, getClass(), Level.SEVERE, "Connection Error", e);
 	}
 
 	@Override
 	public void onSuccess(IMqttToken token) {
-		Msg.toastMsg(m_Ctx, "Connection MQTT is Ok");
+		LogM.log(m_Ctx, getClass(), Level.FINE, "Connection MQTT is Ok");
 		subscribeToDefaultsTopics();
 	}
 
@@ -67,9 +69,9 @@ public class MQTTListener implements IMqttActionListener {
 			MQTTConnection.getInstance(m_Ctx).subscribeEx(MQTTDefaultValues.getRequestTopic(String.valueOf(Env.getAD_User_ID())), 
 					MQTTConnection.AT_LEAST_ONCE_1);
 		} catch (MqttSecurityException e) {
-			e.printStackTrace();
+			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Security Exception", e);
 		} catch (MqttException e) {
-			e.printStackTrace();
+			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Exception", e);
 		}
 	}
 	
