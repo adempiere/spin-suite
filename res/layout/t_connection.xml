@@ -50,7 +50,72 @@
         	android:layout_height="wrap_content"
         	android:maxLength="10"
         	android:inputType="numberDecimal" />
-    	
+    	<!-- MQTT Server Values -->
+    	<!-- Server Name -->
+    	<TextView
+        	android:id="@+id/tv_MQTT_ServerName"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/MQTTHost" />	
+
+    	<EditText
+    	    android:id="@+id/et_MQTT_ServerName"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:inputType="text"
+    	    android:maxLength="600" >
+        </EditText>
+        <!-- User -->
+    	<TextView
+        	android:id="@+id/tv_MQTT_ServerUser"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/User" />	
+    	<EditText
+    	    android:id="@+id/et_MQTT_ServerUser"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:inputType="text"
+    	    android:hint="@string/User" >
+        </EditText>
+        <!-- Password -->
+    	<TextView
+        	android:id="@+id/tv_MQTT_ServerPass"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/Pass" />	
+    	<EditText
+    	    android:id="@+id/et_MQTT_ServerPass"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:inputType="textPassword" >
+        </EditText>
+        <!-- Port -->
+    	<TextView
+        	android:id="@+id/tv_MQTT_ServerPort"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/Port" />
+    	<EditText
+    	    android:id="@+id/et_MQTT_ServerPort"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:inputType="numberDecimal" >
+        </EditText>
+        <!-- Automatic MQTT Service -->
+    	<CheckBox
+    	    android:id="@+id/ch_MQTT_AutomaticService"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:checked="false"
+    	    android:text="@string/MQTTService"/>
+        <!-- SSL File -->
+    	<Button
+        	android:id="@+id/bt_MQTT_SSL_File_Path"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/SSLFile" />	
+		<!-- Log Level -->
     	<TextView
         	android:id="@+id/tv_LogLevel"
         	android:layout_width="wrap_content"

@@ -36,6 +36,10 @@
 	<string name="SaveSD">Guardar datos en SD(Lento)</string>
 	<string name="LogLevel">Nivel de Seguimiento</string>
 	<string name="DropDB">Borrar Base de Datos</string>
+	<string name="Port">Puerto</string>
+	<string name="SSLFile">Archivo SSL</string>
+	<string name="MQTTHost">Servidor (MQTT)</string>
+	<string name="MQTTService">Servicio (MQTT)</string>
 	
 	<string name="tt_TestConn">Prueba de Conexión</string>
 	<string name="tt_Conn">Conexión</string>

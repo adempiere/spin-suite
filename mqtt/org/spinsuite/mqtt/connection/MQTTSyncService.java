@@ -22,19 +22,23 @@ import java.util.logging.Level;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.spinsuite.bchat.model.SPS_BC_Request;
+import org.spinsuite.bchat.view.V_BChat;
 import org.spinsuite.sync.content.SyncParent;
 import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.SerializerUtil;
-import org.spinsuite.util.SyncValues;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Mar 30, 2015, 10:34:27 PM
@@ -50,7 +54,6 @@ public class MQTTSyncService extends IntentService {
 	 */
 	public MQTTSyncService(String name) {
 		super(name);
-		m_BCast = LocalBroadcastManager.getInstance(this);
 	}
 
 	/**
@@ -68,8 +71,12 @@ public class MQTTSyncService extends IntentService {
 	private static MQTTSyncService	m_CurrentService = null;
 	/**	Connect						*/
 	private static boolean 			m_IsRunning = false;
-	/**	Broadcast				*/
-	private LocalBroadcastManager 	m_BCast = null;
+	/**	Notification Manager		*/
+	private NotificationManager 	m_NotificationManager = null;
+	/**	Notification Builder		*/
+	private Builder 				m_Builder = null;
+	/**	Notification ID				*/
+	private static final int		NOTIFICATION_ID = 0;
 	
 	/**
 	 * Get Instance
@@ -99,7 +106,8 @@ public class MQTTSyncService extends IntentService {
 		m_IsRunning = true;
 		Env.getInstance(getApplicationContext());
 		if(!Env.isEnvLoad()
-				|| !MQTTConnection.isNetworkOk(this))
+				|| !MQTTConnection.isNetworkOk(this)
+				|| !MQTTConnection.isAutomaticService(this))
 			return;
 		//	
 		m_Connection = MQTTConnection.getInstance(getApplicationContext(), 
@@ -109,6 +117,9 @@ public class MQTTSyncService extends IntentService {
 					@Override
 					public void messageArrived(String topic, MqttMessage msg) throws Exception {
 						if(msg != null) {
+							//	Verify if is Duplicated
+							if(msg.isDuplicate())
+								return;
 							SyncParent parent = (SyncParent) SerializerUtil.deserializeObject(msg.getPayload());
 							if(parent instanceof SyncRequest) {
 								SyncRequest request = (SyncRequest) parent;
@@ -164,7 +175,8 @@ public class MQTTSyncService extends IntentService {
 	private void schedule() {
 		Intent service = new Intent(this, MQTTSyncService.class);
 		AlarmManager alarm = (AlarmManager)getSystemService(ALARM_SERVICE);
-		if(MQTTConnection.isNetworkOk(this)) {
+		if(MQTTConnection.isNetworkOk(this)
+				&& MQTTConnection.isAutomaticService(this)) {
 			//	
 			long currentTime = System.currentTimeMillis();
 			long nextRun = currentTime + MQTTConnection.getAlarmTime(getApplicationContext());
@@ -195,11 +207,33 @@ public class MQTTSyncService extends IntentService {
 	 */
 	private void requestArrived(SyncRequest request) throws Exception {
 		if(request.getRequestType().equals(SyncRequest.RT_BUSINESS_CHAT)) {
-			Intent m_Filter = new Intent(SyncValues.BC_BC_FILTER);
-			m_Filter.putExtra(SyncValues.BC_KEY_MSG, "Call from: " + request.getLocalClient_ID());
-			m_Filter.putExtra(SyncValues.BC_KEY_SUB_MSG, "Topic: " + request.getTopicName());
-			//	Send
-			m_BCast.sendBroadcast(m_Filter);
+			SPS_BC_Request.newInRequest(this, request);
+			//	Instance Notification Manager
+			instanceNM();
+			//	
+			m_Builder.setContentTitle("Call from: " + request.getLocalClient_ID())
+    			.setContentText("Topic: " + request.getTopicName())
+    			.setSmallIcon(android.R.drawable.stat_notify_chat);
+            m_NotificationManager.notify(NOTIFICATION_ID, m_Builder.build());
+		}
+	}
+	
+	/**
+	 * Instance Notification Manager
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void instanceNM() {
+		if(m_NotificationManager == null) {
+			m_NotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+	        m_Builder = new NotificationCompat.Builder(this);
+	        Intent intent = new Intent(this, V_BChat.class);
+			intent.setAction(Intent.ACTION_MAIN);
+			intent.addCategory(Intent.CATEGORY_LAUNCHER);
+			//	Set Main Activity
+			PendingIntent m_PendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+			m_Builder.setContentIntent(m_PendingIntent);
+			m_Builder.setAutoCancel(true);
 		}
 	}
 	
@@ -218,5 +252,4 @@ public class MQTTSyncService extends IntentService {
 		super.onDestroy();
 		schedule();
 	}
-	
 }

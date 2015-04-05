@@ -37,7 +37,9 @@ import android.database.sqlite.SQLiteStatement;
 
 /**
  * 
- * @author Yamel Senih
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Apr 5, 2015, 11:52:00 AM
+ * BR [] Database Is Locked
+ * @See https://adempiere.atlassian.net/browse/SPIN-13
  *
  */
 public class DB extends SQLiteOpenHelper implements Serializable {
@@ -89,10 +91,9 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	private String				m_SQL = null;
 	/**	Parameters				*/
 	private ArrayList<String>	m_Parameters = null;
+	/**	Current Connection		*/
+	//private static DB			m_Connection = null;
 	
-	/* (non-Javadoc)
-	 * @see android.database.sqlite.SQLiteOpenHelper#onCreate(android.database.sqlite.SQLiteDatabase)
-	 */
 	@Override
 	public void onCreate(SQLiteDatabase bd) {
 		if(sqlCreate != null
@@ -100,16 +101,13 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 			bd.execSQL(sqlCreate);
 	}
 	
-	//@Override
-	//public void onConfigure(SQLiteDatabase db) {
-		//super.onConfigure(db);
-		//	Enable Constraints
-		//db.setForeignKeyConstraintsEnabled(true);
-	//}
+//	@Override
+//	public void onConfigure(SQLiteDatabase db) {
+//		super.onConfigure(db);
+//		//	Enable Constraints
+//		db.setForeignKeyConstraintsEnabled(true);
+//	}
 
-	/* (non-Javadoc)
-	 * @see android.database.sqlite.SQLiteOpenHelper#onUpgrade(android.database.sqlite.SQLiteDatabase, int, int)
-	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
 		if(sqlUpdate != null
@@ -212,10 +210,39 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:46:02
 	 * @param sql
 	 * @return void
+	 * @throws Exception 
+	 */
+	public void executeSQLEx(String sql) throws Exception {
+		executeSQL(sql, null);
+	}
+	
+	/**
+	 * Execute SQL without exception
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param sql
+	 * @return void
 	 */
 	public void executeSQL(String sql) {
-		LogM.log(ctx, getClass(), Level.FINE, "SQL=" + sql);
-		db.execSQL(sql);
+		try {
+			executeSQLEx(sql);
+		} catch (Exception e) {
+			LogM.log(ctx, DB.class, Level.SEVERE, "SQL=[" + sql + "] " +  e.getLocalizedMessage());
+		}
+	}
+	
+	/**
+	 * Execute SQL without exception
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param sql
+	 * @param params
+	 * @return void
+	 */
+	public void executeSQL(String sql, Object [] params) {
+		try {
+			executeSQLEx(sql, params);
+		} catch (Exception e) {
+			LogM.log(ctx, DB.class, Level.SEVERE, "SQL=[" + sql + "] " +  e.getLocalizedMessage());
+		}
 	}
 	
 	/**
@@ -224,10 +251,19 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param sql
 	 * @param params
 	 * @return void
+	 * @throws Exception 
 	 */
-	public void executeSQL(String sql, Object [] params) {
+	public void executeSQLEx(String sql, Object [] params) throws Exception {
 		LogM.log(ctx, getClass(), Level.FINE, "SQL=" + sql);
-		db.execSQL(sql, params);
+		try {
+			if(params == null) {
+				db.execSQL(sql);
+			} else {
+				db.execSQL(sql, params);
+			}	
+		} catch (Exception e) {
+			throw e;
+		}
 	} 
 	
 	/**
@@ -274,10 +310,37 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param values
 	 * @return
 	 * @return Cursor
+	 * @throws Exception 
+	 */
+	public Cursor querySQLEx(String sql, String [] values) throws Exception {
+		LogM.log(ctx, getClass(), Level.FINE, "SQL=" + sql);
+		Cursor rs = null;
+		try {
+			rs = db.rawQuery(sql, values);
+		} catch (Exception e) {
+			throw e;
+		}
+		//	Default Return
+		return rs;
+	}
+	
+	/**
+	 * Query SQL without Exception
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param sql
+	 * @param values
+	 * @return
+	 * @return Cursor
 	 */
 	public Cursor querySQL(String sql, String [] values) {
-		LogM.log(ctx, getClass(), Level.FINE, "SQL=" + sql);
-		return db.rawQuery(sql, values);
+		Cursor rs = null;
+		try {
+			rs = querySQLEx(sql, values);
+		} catch (Exception e) {
+			LogM.log(ctx, DB.class, Level.SEVERE, "SQL=[" + sql + "] " +  e.getLocalizedMessage());
+		}
+		//	Default Return
+		return rs;
 	}
 	
 	/**
@@ -501,6 +564,38 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	}
 	
 	/**
+	 * Excecute Precompiled Query Insert, Update or Delete
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	public void executeSQL() {
+		Object [] values = null;
+		//	Add Parameters
+		if(m_Parameters != null
+				&& m_Parameters.size() > 0) {
+			values = new Object[m_Parameters.size()];
+			m_Parameters.toArray(values);
+		}
+		//	Excecute Query
+		executeSQL(m_SQL, values);
+	}
+	
+	/**
+	 * Get Current Instance
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @return
+	 * @return DB
+	 */
+//	public static synchronized DB getInstance(Context ctx) {
+//		if(m_Connection == null) {
+//			m_Connection = new DB(ctx);
+//		}
+//		//	Connection Return
+//		return m_Connection;
+//	}
+	
+	/**
 	 * Load a Connection
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/02/2014, 09:15:36
 	 * @param conn
@@ -523,7 +618,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param type
 	 * @return void
 	 */
-	public static DB loadConnection(Context ctx, int type) {
+	public static synchronized DB loadConnection(Context ctx, int type) {
 		DB conn = new DB(ctx);
 		conn.openDB(type);
 		if(type == READ_WRITE)
@@ -538,7 +633,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param conn
 	 * @return void
 	 */
-	public static void closeConnection(DB conn) {
+	public static synchronized void closeConnection(DB conn) {
 		if(conn != null 
 				&& conn.isOpen()) {
 			if(conn.inTransaction())

@@ -21,7 +21,6 @@ import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.model.MCountry;
-import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.sync.SyncService;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.Msg;
@@ -146,22 +145,6 @@ public class Login extends TV_Base implements I_Login {
     			    }
     			}, 
     			new IntentFilter(SyncValues.BC_IL_FILTER));
-		//	Register Receiver for Message
-    	LocalBroadcastManager.getInstance(this).registerReceiver(
-    			new BroadcastReceiver() {
-    			    @Override
-    			    public void onReceive(Context context, Intent intent) {
-    			    	setInstanceNotification();
-    			    	String msg = intent.getStringExtra(SyncValues.BC_KEY_MSG);
-    			    	String subMsg = intent.getStringExtra(SyncValues.BC_KEY_SUB_MSG);
-    			    	m_Builder.setContentTitle(msg)
-    			    		.setContentText(subMsg)
-							.setSmallIcon(android.R.drawable.stat_notify_chat);
-    			    	//	
-    			    	m_NFManager.notify(NOTIFICATION_ID, m_Builder.build());
-    			    }
-    			}, 
-    			new IntentFilter(SyncValues.BC_BC_FILTER));
     	//	
     }
     
@@ -344,15 +327,6 @@ public class Login extends TV_Base implements I_Login {
      */
     @Override
     public boolean aceptAction() {
-		//	
-		MQTTConnection.setClient_ID(getApplicationContext(), String.valueOf(Env.getAD_User_ID()));
-		MQTTConnection.setHost(getApplicationContext(), "192.168.12.103");
-		MQTTConnection.setPort(getApplicationContext(), 1883);
-		MQTTConnection.setIsSSLConnection(getApplicationContext(), false);
-		MQTTConnection.setAlarmTime(getApplicationContext(), 20000);
-		MQTTConnection.setMQTTUser(getApplicationContext(), "admin");
-		MQTTConnection.setMQTTPassword(getApplicationContext(), "admin");
-		MQTTConnection.setTimeout(getApplicationContext(), 100);
 		//	
     	I_Login fr = (I_Login)getCurrentFragment();
     	boolean ret = fr.aceptAction();

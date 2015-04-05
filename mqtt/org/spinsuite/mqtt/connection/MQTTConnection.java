@@ -55,22 +55,21 @@ public class MQTTConnection {
 	private static MQTTConnection	m_Connection = null;
 	
 	/**	QoS									*/
-	public static final int			AT_MOST_ONCE_0 			= 0;
-	public static final int			AT_LEAST_ONCE_1 		= 1;
-	public static final int			EXACTLY_ONCE_2 			= 2;
+	public static final int			AT_MOST_ONCE_0 				= 0;
+	public static final int			AT_LEAST_ONCE_1 			= 1;
+	public static final int			EXACTLY_ONCE_2 				= 2;
 	/**	Default Constants for Context		*/
-	private static final String		MQTT_CLIENT_ID 			= "#MQTT_Client_ID";
-	private static final String		MQTT_HOST 				= "#MQTT_Host";
-	private static final String		MQTT_PORT 				= "#MQTT_Port";
-	private static final String		MQTT_IS_SSL_CONNECTION 	= "#MQTT_IsSSLConnection";
-	private static final String		MQTT_ALARM_TIME 		= "#MQTT_AlamTime";
-	private static final String		MQTT_NETWORK_OK 		= "#MQTT_NetworkOk";
-	private static final String		MQTT_USER_NAME 			= "#MQTT_UserName";
-	private static final String		MQTT_PASSWORD 			= "#MQTT_Password";
-	private static final String		MQTT_TIMEOUT 			= "#MQTT_Timeout";
-	/**	Default Topics						*/
-	
-	
+	private static final String		MQTT_CLIENT_ID 				= "#MQTT_Client_ID";
+	private static final String		MQTT_HOST 					= "#MQTT_Host";
+	private static final String		MQTT_PORT 					= "#MQTT_Port";
+	private static final String		MQTT_IS_SSL_CONNECTION 		= "#MQTT_IsSSLConnection";
+	private static final String		MQTT_SSL_FILE_PATH 			= "#MQTT_SSLFilePath";
+	private static final String		MQTT_ALARM_TIME 			= "#MQTT_AlamTime";
+	private static final String		MQTT_IS_AUTOMATIC_SERVICE 	= "#MQTT_AutomaticService";
+	private static final String		MQTT_NETWORK_OK 			= "#MQTT_NetworkOk";
+	private static final String		MQTT_USER_NAME 				= "#MQTT_UserName";
+	private static final String		MQTT_PASSWORD 				= "#MQTT_Password";
+	private static final String		MQTT_TIMEOUT 				= "#MQTT_Timeout";
 	
 	/**
 	 * Default Constructor
@@ -167,6 +166,27 @@ public class MQTTConnection {
 	}
 	
 	/**
+	 * Get SSL File Path
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return String
+	 */
+	public static String getSSLFilePath(Context p_Ctx) {
+		return Env.getContext(MQTT_SSL_FILE_PATH);
+	}
+	
+	/**
+	 * Set SSL File Path
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_SSLFilePath
+	 * @return void
+	 */
+	public static void setSSLFilePath(Context p_Ctx, String p_SSLFilePath) {
+		Env.setContext(MQTT_SSL_FILE_PATH, p_SSLFilePath);
+	}
+	/**
 	 * Get MQTT Port
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Ctx
@@ -230,6 +250,28 @@ public class MQTTConnection {
 	 */
 	public static void setIsSSLConnection(Context p_Ctx, boolean p_IsSSLConnection) {
 		Env.setContext(MQTT_IS_SSL_CONNECTION, p_IsSSLConnection);
+	}
+	
+	/**
+	 * Verify if is Automatic Service
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean isAutomaticService(Context p_Ctx) {
+		return Env.getContextAsBoolean(MQTT_IS_AUTOMATIC_SERVICE);
+	}
+	
+	/**
+	 * Set Is Automatic Service for MQTT
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_IsAutomaticService
+	 * @return void
+	 */
+	public static void setIsAutomaticService(Context p_Ctx, boolean p_IsAutomaticService) {
+		Env.setContext(MQTT_IS_AUTOMATIC_SERVICE, p_IsAutomaticService);
 	}
 	
 	/**
