@@ -124,17 +124,16 @@
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
         	android:text="@string/Port" />
-
-    	<Button
-        	android:id="@+id/bt_MQTT_SSL_File_Path"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:text="@string/SSLFile" />
-    	<EditText
+		<EditText
     	    android:id="@+id/et_MQTT_ServerPort"
     	    android:layout_width="wrap_content"
     	    android:layout_height="wrap_content"
     	    android:inputType="numberDecimal" >
         </EditText> 	
+    	<Button
+        	android:id="@+id/bt_MQTT_SSL_File_Path"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/SSLFile" />
     </TableLayout>
 </ScrollView>
