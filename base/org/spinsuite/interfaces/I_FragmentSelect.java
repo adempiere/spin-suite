@@ -13,21 +13,19 @@
  * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
-package org.spinsuite.mqtt.connection;
-
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
+package org.spinsuite.interfaces;
 
 /**
- * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Mar 30, 2015, 9:59:53 PM
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
-public class MQTTBootStartService extends BroadcastReceiver {
-
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		Intent service = new Intent(context, MQTTSyncService.class);
-        context.startService(service);
-	}
+public interface I_FragmentSelect {
+	
+	/**
+	 * Method for selection
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Record_ID
+	 * @return void
+	 */
+	public void onItemSelected(int p_Record_ID);
 }

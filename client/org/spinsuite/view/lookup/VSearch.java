@@ -132,13 +132,13 @@ public class VSearch extends LinearLayout
 		//	Optional Business Partner and Product
 		if(m_field.ColumnName.equals("C_BPartner_ID"))
 			ib_Search.setImageResource(
-					Env.getResourceID(v_activity, R.attr.ic_lt_search_bpartner));
+					Env.getResourceID(getContext(), R.attr.ic_lt_search_bpartner));
 		else if(m_field.ColumnName.equals("M_Product_ID"))
 			ib_Search.setImageResource(
-					Env.getResourceID(v_activity, R.attr.ic_lt_search_product));
+					Env.getResourceID(getContext(), R.attr.ic_lt_search_product));
 		else if(m_field.ColumnName.equals("C_Location_ID"))
 			ib_Search.setImageResource(
-					Env.getResourceID(v_activity, R.attr.ic_lt_search_location));
+					Env.getResourceID(getContext(), R.attr.ic_lt_search_location));
 	}
 	
 	/**

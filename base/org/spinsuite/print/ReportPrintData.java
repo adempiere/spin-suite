@@ -698,7 +698,7 @@ public class ReportPrintData {
 	 * @return String
 	 */
 	public String createXLS() throws IOException, RowsExceededException, WriteException{
-		String path = Env.getDoc_DirectoryPathName(ctx);
+		String path = Env.getDoc_DirectoryPathName();
 		String title = m_reportQuery.getInfoReport().getName();
 		path = path + File.separator + title + ".xls";
 		//	Log
@@ -798,7 +798,7 @@ public class ReportPrintData {
 	 * @return String
 	 */
 	public String createPDF() throws FileNotFoundException, DocumentException{
-		String path = Env.getDoc_DirectoryPathName(ctx);
+		String path = Env.getDoc_DirectoryPathName();
 		String title = m_reportQuery.getInfoReport().getName();
 		path = path + File.separator + title + ".pdf";
 		//	Log
@@ -989,13 +989,13 @@ public class ReportPrintData {
         //	New Line
         document.add(Chunk.NEWLINE);
         //	Add Footer
-        StringBuffer footerText = new StringBuffer(Env.getContext(ctx, "#SUser"));
+        StringBuffer footerText = new StringBuffer(Env.getContext("#SUser"));
         footerText.append("(");
-        footerText.append(Env.getContext(ctx, "#AD_Role_Name"));
+        footerText.append(Env.getContext("#AD_Role_Name"));
         footerText.append("@");
-        footerText.append(Env.getContext(ctx, "#AD_Client_Name"));
+        footerText.append(Env.getContext("#AD_Client_Name"));
         footerText.append(".");
-        footerText.append(Env.getContext(ctx, "#AD_Org_Name"));
+        footerText.append(Env.getContext("#AD_Org_Name"));
         footerText.append("{")
         				.append(Build.MANUFACTURER).append(".")
         				.append(Build.MODEL)

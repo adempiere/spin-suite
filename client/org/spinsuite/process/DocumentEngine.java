@@ -576,7 +576,7 @@ public class DocumentEngine implements DocAction
 	 */
 	public boolean isValidAction (String action) {
 		//	Verify Role Action Access
-		if(!Env.getDocumentAccess(getCtx(), getC_DocType_ID(), action)) {
+		if(!Env.getDocumentAccess(getC_DocType_ID(), action)) {
 			return false;
 		}
 		//	

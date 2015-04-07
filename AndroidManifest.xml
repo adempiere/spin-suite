@@ -70,10 +70,18 @@
         <!-- Sync Service -->
         <service android:name="org.spinsuite.mqtt.connection.MQTTSyncService"/>
         <!-- Boot Start Service -->
-        <receiver android:name="org.spinsuite.mqtt.connection.MQTTBootStartService" >
-     	<intent-filter>
-        	<action android:name="android.intent.action.BOOT_COMPLETED" />
-     	</intent-filter>
-</receiver>
+        <receiver android:name="org.spinsuite.mqtt.connection.MQTTBootReceiver" >
+     		<intent-filter>
+        		<action android:name="android.intent.action.BOOT_COMPLETED"/>
+        		<action android:name="android.intent.action.QUICKBOOT_POWERON" /> 
+        		<action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+     		</intent-filter>
+		</receiver>
+		<!-- Network Stop -->
+        <receiver android:name="org.spinsuite.mqtt.connection.MQTTNetworkReceiver" >
+     		<intent-filter>
+        		<action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+     		</intent-filter>
+		</receiver>
 	</application>
 </manifest>

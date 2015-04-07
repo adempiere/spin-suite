@@ -54,16 +54,23 @@ public class MQTTConnection {
 	/**	Connection					*/
 	private static MQTTConnection	m_Connection = null;
 	
-	/**	QoS							*/
-	public static final int			AT_MOST_ONCE 			= 0;
-	public static final int			AT_LEAST_ONCE 			= 1;
-	public static final int			EXACTLY_ONCE 			= 2;
+	/**	QoS									*/
+	public static final int			AT_MOST_ONCE_0 				= 0;
+	public static final int			AT_LEAST_ONCE_1 			= 1;
+	public static final int			EXACTLY_ONCE_2 				= 2;
 	/**	Default Constants for Context		*/
-	private static final String		MQTT_CLIENT_ID 			= "#MQTT_Client_ID";
-	private static final String		MQTT_HOST 				= "#MQTT_Host";
-	private static final String		MQTT_PORT 				= "#MQTT_Port";
-	private static final String		MQTT_IS_SSL_CONNECTION 	= "#MQTT_IsSSLConnection";
-	private static final String		MQTT_ALARM_TIME 		= "#MQTT_AlamTime";
+	private static final String		MQTT_CLIENT_ID 				= "#MQTT_Client_ID";
+	private static final String		MQTT_HOST 					= "#MQTT_Host";
+	private static final String		MQTT_PORT 					= "#MQTT_Port";
+	private static final String		MQTT_IS_SSL_CONNECTION 		= "#MQTT_IsSSLConnection";
+	private static final String		MQTT_SSL_FILE_PATH 			= "#MQTT_SSLFilePath";
+	private static final String		MQTT_ALARM_TIME 			= "#MQTT_AlamTime";
+	private static final String		MQTT_IS_AUTOMATIC_SERVICE 	= "#MQTT_AutomaticService";
+	private static final String		MQTT_NETWORK_OK 			= "#MQTT_NetworkOk";
+	private static final String		MQTT_USER_NAME 				= "#MQTT_UserName";
+	private static final String		MQTT_PASSWORD 				= "#MQTT_Password";
+	private static final String		MQTT_TIMEOUT 				= "#MQTT_Timeout";
+	private static final String		MQTT_IS_RELOAD_SERVICE 		= "#MQTT_IsreloadService";
 	
 	/**
 	 * Default Constructor
@@ -83,6 +90,11 @@ public class MQTTConnection {
 	    m_Port = p_Port;
 	    m_IsSSLConnection = p_IsSSLConnection;
 	    m_ConnectionListener = p_ConnectionListener;
+	    m_ConnectionOption = new MqttConnectOptions();
+	    m_ConnectionOption.setUserName(MQTTConnection.getClient_ID(p_Ctx));
+	    m_ConnectionOption.setUserName(getMQTTUser(p_Ctx));
+	    m_ConnectionOption.setPassword(getMQTTPass(p_Ctx).toCharArray());
+	    m_ConnectionOption.setConnectionTimeout(getTimeout(p_Ctx));
 	}
 	
 	/**
@@ -118,7 +130,7 @@ public class MQTTConnection {
 	 * @return String
 	 */
 	public static String getClient_ID(Context p_Ctx) {
-		return Env.getContext(p_Ctx, MQTT_CLIENT_ID);
+		return Env.getContext(MQTT_CLIENT_ID);
 	}
 	
 	/**
@@ -129,7 +141,7 @@ public class MQTTConnection {
 	 * @return void
 	 */
 	public static void setClient_ID(Context p_Ctx, String p_Client_ID) {
-		Env.setContext(p_Ctx, MQTT_CLIENT_ID, p_Client_ID);
+		Env.setContext(MQTT_CLIENT_ID, p_Client_ID);
 	}
 	
 	/**
@@ -140,7 +152,7 @@ public class MQTTConnection {
 	 * @return String
 	 */
 	public static String getHost(Context p_Ctx) {
-		return Env.getContext(p_Ctx, MQTT_HOST);
+		return Env.getContext(MQTT_HOST);
 	}
 	
 	/**
@@ -151,9 +163,30 @@ public class MQTTConnection {
 	 * @return void
 	 */
 	public static void setHost(Context p_Ctx, String p_Host) {
-		Env.setContext(p_Ctx, MQTT_HOST, p_Host);
+		Env.setContext(MQTT_HOST, p_Host);
 	}
 	
+	/**
+	 * Get SSL File Path
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return String
+	 */
+	public static String getSSLFilePath(Context p_Ctx) {
+		return Env.getContext(MQTT_SSL_FILE_PATH);
+	}
+	
+	/**
+	 * Set SSL File Path
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_SSLFilePath
+	 * @return void
+	 */
+	public static void setSSLFilePath(Context p_Ctx, String p_SSLFilePath) {
+		Env.setContext(MQTT_SSL_FILE_PATH, p_SSLFilePath);
+	}
 	/**
 	 * Get MQTT Port
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
@@ -173,7 +206,29 @@ public class MQTTConnection {
 	 * @return void
 	 */
 	public static void setPort(Context p_Ctx, int p_Port) {
-		Env.setContext(p_Ctx, MQTT_PORT, p_Port);
+		Env.setContext(MQTT_PORT, p_Port);
+	}
+	
+	/**
+	 * Get Timeout
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return int
+	 */
+	public static int getTimeout(Context p_Ctx) {
+		return Env.getContextAsInt(p_Ctx, MQTT_TIMEOUT);
+	}
+	
+	/**
+	 * Set Timeout
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_Timeout
+	 * @return void
+	 */
+	public static void setTimeout(Context p_Ctx, int p_Timeout) {
+		Env.setContext(MQTT_TIMEOUT, p_Timeout);
 	}
 	
 	/**
@@ -184,7 +239,7 @@ public class MQTTConnection {
 	 * @return boolean
 	 */
 	public static boolean isSSLConnection(Context p_Ctx) {
-		return Env.getContextAsBoolean(p_Ctx, MQTT_IS_SSL_CONNECTION);
+		return Env.getContextAsBoolean(MQTT_IS_SSL_CONNECTION);
 	}
 	
 	/**
@@ -195,11 +250,144 @@ public class MQTTConnection {
 	 * @return void
 	 */
 	public static void setIsSSLConnection(Context p_Ctx, boolean p_IsSSLConnection) {
-		Env.setContext(p_Ctx, MQTT_IS_SSL_CONNECTION, p_IsSSLConnection);
+		Env.setContext(MQTT_IS_SSL_CONNECTION, p_IsSSLConnection);
 	}
 	
+	/**
+	 * Verify if is Automatic Service
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean isAutomaticService(Context p_Ctx) {
+		return Env.getContextAsBoolean(MQTT_IS_AUTOMATIC_SERVICE);
+	}
+	
+	/**
+	 * Set Is Automatic Service for MQTT
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_IsAutomaticService
+	 * @return void
+	 */
+	public static void setIsAutomaticService(Context p_Ctx, boolean p_IsAutomaticService) {
+		Env.setContext(MQTT_IS_AUTOMATIC_SERVICE, p_IsAutomaticService);
+	}
+	
+	/**
+	 * Verify if is Reload
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean isReloadService(Context p_Ctx) {
+		return Env.getContextAsBoolean(MQTT_IS_RELOAD_SERVICE);
+	}
+	
+	/**
+	 * Set the Reload property
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_IsReloadService
+	 * @return void
+	 */
+	public static void setIsReloadService(Context p_Ctx, boolean p_IsReloadService) {
+		Env.setContext(MQTT_IS_RELOAD_SERVICE, p_IsReloadService);
+	}
+	
+	/**
+	 * Set Alamr Time in milliseconds
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param time
+	 * @return void
+	 */
 	public static void setAlarmTime(Context p_Ctx, long time) {
-		//Env.setContext(p_Ctx, MQTT_ALARM_TIME, time);
+		Env.setContext(p_Ctx, MQTT_ALARM_TIME, time);
+	}
+	
+	/**
+	 * Get Alarm Time in milliseconds
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return long
+	 */
+	public static long getAlarmTime(Context p_Ctx) {
+		return Env.getContextAsLong(p_Ctx, MQTT_ALARM_TIME);
+	}
+	
+	/**
+	 * Is Network Ok
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean isNetworkOk(Context p_Ctx) {
+		return Env.getContextAsBoolean(MQTT_NETWORK_OK);
+	}
+	
+	/**
+	 * Set Network Ok
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param ok
+	 * @return void
+	 */
+	public static void setNetworkOk(Context p_Ctx, boolean ok) {
+		Env.setContext(p_Ctx, MQTT_NETWORK_OK, ok);
+	}
+	
+	/**
+	 * Get User Name for connection with MQTT
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return String
+	 */
+	public static String getMQTTUser(Context p_Ctx) {
+		return Env.getContext(MQTT_USER_NAME);
+	}
+	
+	/**
+	 * Set User Name for connection with MQTT Server
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_UserName
+	 * @return void
+	 */
+	public static void setMQTTUser(Context p_Ctx, String p_UserName) {
+		Env.setContext(MQTT_USER_NAME, p_UserName);
+	}
+	
+	/**
+	 * Get Password for connection with MQTT Server
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return String
+	 */
+	public static String getMQTTPass(Context p_Ctx) {
+		String pass = Env.getContext(MQTT_PASSWORD);
+		//	Valid Null
+		if(pass == null)
+			pass = "";
+		//	Return
+		return pass;
+	}
+	
+	/**
+	 * Set Password for connection with MQTT Server
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_Password
+	 * @return void
+	 */
+	public static void setMQTTPassword(Context p_Ctx, String p_Password) {
+		Env.setContext(MQTT_PASSWORD, p_Password);
 	}
 	
 	/**
@@ -207,12 +395,22 @@ public class MQTTConnection {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Ctx
 	 * @param p_ConnectionListener
+	 * @param p_Callback
+	 * @param reLoad Reload Instance
 	 * @return
 	 * @return MQTTConnection
 	 */
-	public static MQTTConnection getInstance(Context p_Ctx, IMqttActionListener p_ConnectionListener) {
-		if(m_Connection == null) {
+	public static MQTTConnection getInstance(Context p_Ctx, IMqttActionListener p_ConnectionListener, MqttCallback p_Callback, boolean reLoad) {
+		if(m_Connection == null
+				|| reLoad) {
 			m_Connection = new MQTTConnection(p_Ctx, p_ConnectionListener);
+			//	Set to false reload
+			if(reLoad) {
+				MQTTConnection.setIsAutomaticService(p_Ctx, false);
+			}
+			if(p_Callback != null) {
+				m_Connection.setCallback(p_Callback);
+			}
 		}
 		//	Default Return
 		return m_Connection;
@@ -226,7 +424,7 @@ public class MQTTConnection {
 	 * @return MQTTConnection
 	 */
 	public static MQTTConnection getInstance(Context p_Ctx) {
-		return getInstance(p_Ctx, null);
+		return getInstance(p_Ctx, null, null, false);
 	}
 	
 	/**
@@ -280,6 +478,10 @@ public class MQTTConnection {
 			m_ClientLink = new MqttAndroidClient(m_Ctx, serverURI, m_Client_ID);
 		} else if(m_ClientLink.isConnected()) {
 			return;
+		}
+		//	Set Call Back
+		if(m_Callback != null) {
+			m_ClientLink.setCallback(m_Callback);
 		}
 		//	Connect
 		m_ClientLink.connect(m_ConnectionOption, null, m_ConnectionListener);

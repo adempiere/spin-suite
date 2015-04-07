@@ -15,34 +15,26 @@
  * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpcya.com				  		                 *
  ************************************************************************************/
- -->
-<resources>
-    <string name="User">User</string>
-    <string name="Pass">Password</string>
-    <string name="ConfigConn">Config Connection</string>
-    <string name="NameSpace">Name Space</string>
-    <string name="AD_Client_ID">Client</string>
-    <string name="AD_Org_ID">Organization</string>
-    <string name="M_Warehouse_ID">Warehouse</string>
-    <string name="Date">Date</string>
-    <string name="MethodSync">Init Synchronization Method</string>
-    <string name="AD_Role_ID">Role</string>  
-	<string name="MustFillField">Must Fill in the Field</string>
-	<string name="InitSync">Initial Synchronization</string>
-	<string name="DBName">Database Name</string>
-	<string name="LimitQuery">Limit Query</string>
-	<string name="Timeout">Timeout</string>
-	<string name="SavePass">Save Pass</string>
-	<string name="SaveSD">Save data SD(Slow)</string>
-	<string name="LogLevel">Log Level</string>
-	<string name="DropDB">Delete Database</string>
-	<string name="Port">Port</string>
-	<string name="SSLFile">SSL File</string>
-	<string name="MQTTHost">Host (MQTT)</string>
-	<string name="MQTTService">Service (MQTT)</string>
-	
-	<string name="tt_TestConn">Test Connection</string>
-	<string name="tt_Conn">Connection</string>
-	<string name="tt_LoginRole">Login Role</string>
-	
-</resources>
+-->
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!-- The main content view -->
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager_container"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true" /> 
+    	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:id="@+id/ll_bc_list"
+		    android:orientation="vertical" >
+		</LinearLayout>
+    <!-- The navigation drawer -->
+    <ListView android:id="@+id/left_drawer"
+        style="@style/ListDrawer"/>
+</android.support.v4.widget.DrawerLayout>

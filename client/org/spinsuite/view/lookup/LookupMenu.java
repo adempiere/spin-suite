@@ -81,14 +81,14 @@ public class LookupMenu {
 		//	Load Connection
 		DB.loadConnection(conn, DB.READ_ONLY);
 		//	
-		String language = Env.getAD_Language(ctx);
-		boolean isBaseLanguage = Env.isBaseLanguage(ctx);
+		String language = Env.getAD_Language();
+		boolean isBaseLanguage = Env.isBaseLanguage();
 		//	Get Role
-		int m_AD_Role_ID = Env.getAD_Role_ID(ctx);
+		int m_AD_Role_ID = Env.getAD_Role_ID();
 		//	SQL
 		StringBuffer sql = new StringBuffer();
 		
-		if (menuType.equals(LookupMenu.SYNCHRONIZATION_MENU)){
+		if (menuType.equals(LookupMenu.SYNCHRONIZATION_MENU)) {
 			//	if Base Language
 			if(isBaseLanguage){
 				sql.append("SELECT m.SPS_SyncMenu_ID, " +
@@ -127,9 +127,9 @@ public class LookupMenu {
 							"m.AD_RuleAfter_ID, " +
 							"m.AD_RuleBefore_ID " +
 							"FROM SPS_SyncMenu m " + 
-							"INNER JOIN SPS_SyncMenu_Trl mt ON (m.SPS_SyncMenu_ID = mt.SPS_SyncMenu_ID) " +
 							"INNER JOIN WS_WebService ws ON(ws.WS_WebService_ID = m.WS_WebService_ID) " +
 							"INNER JOIN AD_Tree t ON(t.AD_Table_ID = 53501) " + 
+							"LEFT JOIN SPS_SyncMenu_Trl mt ON (m.SPS_SyncMenu_ID = mt.SPS_SyncMenu_ID AND mt.AD_Language = '").append(language).append("') " +
 							"LEFT  JOIN AD_TreeNode tn ON(tn.AD_Tree_ID = t.AD_Tree_ID AND tn.Node_ID = m.SPS_SyncMenu_ID)  ");
 			}
 			//	Where Clause

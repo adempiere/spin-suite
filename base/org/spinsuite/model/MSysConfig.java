@@ -275,7 +275,7 @@ public class MSysConfig extends X_AD_SysConfig {
 	 */
 	public static String getValue(Context ctx, String Name, String defaultValue, int AD_Client_ID, int AD_Org_ID, DB conn) {
 		String key = "#SysConfig|" + AD_Client_ID + "_" + AD_Org_ID + "_" + Name;
-		String str = Env.getContext(ctx, key);
+		String str = Env.getContext(key);
 		if (str != null)
 			return str;
 		//	
@@ -290,11 +290,11 @@ public class MSysConfig extends X_AD_SysConfig {
 		//
 		if (str != null) {
 			str = str.trim();
-			Env.setContext(ctx, key, str);
+			Env.setContext(key, str);
 			return str;
 		} else {
 			// anyways, put the not found key as null
-			Env.setContext(ctx, key, str);
+			Env.setContext(key, str);
 			return defaultValue;
 		}
 	}

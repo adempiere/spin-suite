@@ -42,12 +42,12 @@ public class WSADLoginRequest extends SoapObject{
 	 */
 	public WSADLoginRequest(Context ctx,String NameSpace) {
 		super(NameSpace,WSADLoginRequest.NameSpace);
-		addProperty(WSADLoginRequest.User, Env.getContext(ctx, "#SUser"));
-		addProperty(WSADLoginRequest.Pass, Env.getContext(ctx, "#SPass"));
-		addProperty(WSADLoginRequest.ClientID, Env.getAD_Client_ID(ctx));
-		addProperty(WSADLoginRequest.RoleID, Env.getAD_Role_ID(ctx));
-		addProperty(WSADLoginRequest.OrgID, Env.getAD_Org_ID(ctx));
-		addProperty(WSADLoginRequest.WarehouseID, Env.getM_Warehouse_ID(ctx));
+		addProperty(WSADLoginRequest.User, Env.getContext("#SUser"));
+		addProperty(WSADLoginRequest.Pass, Env.getContext("#SPass"));
+		addProperty(WSADLoginRequest.ClientID, Env.getAD_Client_ID());
+		addProperty(WSADLoginRequest.RoleID, Env.getAD_Role_ID());
+		addProperty(WSADLoginRequest.OrgID, Env.getAD_Org_ID());
+		addProperty(WSADLoginRequest.WarehouseID, Env.getM_Warehouse_ID());
 	}
 
 }

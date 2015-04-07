@@ -141,7 +141,8 @@
 	<string name="V_EndingBalanceAmt">Ending Balance Amt</string>
 	<string name="V_DifferenceAmt">Difference Amt</string>
 	<string name="V_ForDepositAmt">For Deposit Amt</string>
-	
+	<string name="BChat">Business Chat</string>
+	<string name="BChat_EnterMsg">Enter a Message</string>
 	
 	<string name="Language">Language</string>
 	

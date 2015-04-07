@@ -294,8 +294,8 @@ public abstract class PO implements Serializable {
 		} else {
 			isNew = true;
 			ok = loadDefaultValues();
-			setAD_Client_ID(Env.getAD_Client_ID(getCtx()));
-			setAD_Org_ID(Env.getAD_Org_ID(getCtx()));
+			setAD_Client_ID(Env.getAD_Client_ID());
+			setAD_Org_ID(Env.getAD_Org_ID());
 		}
 		return ok;
 	}
@@ -375,7 +375,7 @@ public abstract class PO implements Serializable {
 			if(!column.isColumnSQL())
 				sql.append(column.ColumnName);
 			else
-				sql.append(Env.parseContext(m_ctx, column.ColumnSQL, false));
+				sql.append(Env.parseContext(column.ColumnSQL, false));
 		}
 		sql.append(" FROM ");
 		sql.append(m_TableInfo.getTableName());
@@ -1220,10 +1220,10 @@ public abstract class PO implements Serializable {
 					return returnValue;
 				} else if(column.DefaultValue != null) {
 					if(toSave)
-						return Env.parseContext(getCtx(), (String)column.DefaultValue, false);
+						return Env.parseContext((String)column.DefaultValue, false);
 					else
 						return DisplayType.parseValue(
-										Env.parseContext(getCtx(), (String)column.DefaultValue, false)
+										Env.parseContext((String)column.DefaultValue, false)
 										, column.DisplayType);
 				} else
 					return null;

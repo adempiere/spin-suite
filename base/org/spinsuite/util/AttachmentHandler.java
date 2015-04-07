@@ -48,9 +48,9 @@ public class AttachmentHandler {
 		this.m_ctx = ctx;
 		this.m_Table_ID = m_Table_ID;
 		this.m_Record_ID = m_Record_ID;
-		m_AD_Client_ID = Env.getAD_Client_ID(m_ctx);
-		m_tmpDirectory = Env.getTmp_DirectoryPathName(m_ctx);
-		m_attDirectory = Env.getAtt_DirectoryPathName(m_ctx);
+		m_AD_Client_ID = Env.getAD_Client_ID();
+		m_tmpDirectory = Env.getTmp_DirectoryPathName();
+		m_attDirectory = Env.getAtt_DirectoryPathName();
 	}
 	
 	/**

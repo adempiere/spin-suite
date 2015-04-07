@@ -15,44 +15,19 @@
  *************************************************************************************/
 package org.spinsuite.mqtt.connection;
 
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.spinsuite.util.Msg;
-
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 
 /**
- * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Apr 1, 2015, 3:43:58 AM
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Mar 30, 2015, 9:59:53 PM
  *
  */
-public class MQTTConnectionCalback implements MqttCallback {
-
-	/**
-	 * *** Constructor ***
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_Ctx
-	 */
-	public MQTTConnectionCalback(Context p_Ctx) {
-		m_Ctx = p_Ctx;
-	}
-
-	/**	Context					*/
-	private Context m_Ctx = null;
+public class MQTTBootReceiver extends BroadcastReceiver {
 
 	@Override
-	public void connectionLost(Throwable ex) {
-		Msg.toastMsg(m_Ctx, "Error Connection Lost: " + ex.getLocalizedMessage());
+	public void onReceive(Context context, Intent intent) {
+		Intent service = new Intent(context, MQTTSyncService.class);
+        context.startService(service);
 	}
-
-	@Override
-	public void deliveryComplete(IMqttDeliveryToken token) {
-		
-	}
-
-	@Override
-	public void messageArrived(String topic, MqttMessage msg) throws Exception {
-		
-	}
-
 }

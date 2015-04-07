@@ -18,7 +18,7 @@ package org.spinsuite.view;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_DynamicTab;
-import org.spinsuite.interfaces.I_FragmentSelectListener;
+import org.spinsuite.interfaces.I_DT_FragmentSelectListener;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
 import org.spinsuite.util.MultiKeyNamePair;
@@ -39,7 +39,7 @@ public class FV_IndexRecordLine extends ListFragment
 									implements I_DynamicTab {
     
 	/**	Fragment Listener Call Back	*/
-	private I_FragmentSelectListener 		m_Callback 			= null;
+	private I_DT_FragmentSelectListener 	m_Callback 			= null;
 	/**	Parameters					*/
 	private TabParameter					tabParam 			= null;
 	/**	Tab Info					*/
@@ -73,7 +73,7 @@ public class FV_IndexRecordLine extends ListFragment
     	//	
     	if(tabParam != null
     			&& tabParam.getTabLevel() > 0){
-    		int[] currentParent_Record_ID = Env.getTabRecord_ID(getActivity(), 
+    		int[] currentParent_Record_ID = Env.getTabRecord_ID(
         			tabParam.getActivityNo(), tabParam.getParentTabNo());
         	if(m_Parent_Record_ID != currentParent_Record_ID[0]){
         		m_Parent_Record_ID = currentParent_Record_ID[0];
@@ -140,7 +140,7 @@ public class FV_IndexRecordLine extends ListFragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            m_Callback = (I_FragmentSelectListener) activity;
+            m_Callback = (I_DT_FragmentSelectListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement I_FragmentSelectListener");
@@ -168,7 +168,7 @@ public class FV_IndexRecordLine extends ListFragment
             //	Set Selected
     		MultiKeyNamePair pair = adapter.getItem(0);
             //	
-            Env.setTabRecord_ID(getActivity(), 
+            Env.setTabRecord_ID(
     				tabParam.getActivityNo(), tabParam.getTabNo(), pair.getMultiKey());
     	}
     }
@@ -181,9 +181,9 @@ public class FV_IndexRecordLine extends ListFragment
      */
     private void selectIndex(int [] record_ID, String [] keyColumns){
     	//	Set Record Identifier
-    	Env.setTabRecord_ID(getActivity(), 
+    	Env.setTabRecord_ID(
 				tabParam.getActivityNo(), tabParam.getTabNo(), record_ID);
-    	Env.setTabKeyColumns(getActivity(), 
+    	Env.setTabKeyColumns(
 				tabParam.getActivityNo(), tabParam.getTabNo(), keyColumns);
     	//	
     	m_Callback.onItemSelected(record_ID, keyColumns);
@@ -211,7 +211,7 @@ public class FV_IndexRecordLine extends ListFragment
 			loaded = loadData();
 			selectFirst();
 		} else if(tabParam.getTabLevel() > 0){
-    		int[] currentParent_Record_ID = Env.getTabRecord_ID(getActivity(), 
+    		int[] currentParent_Record_ID = Env.getTabRecord_ID(
         			tabParam.getActivityNo(), tabParam.getParentTabNo());
         	if(m_Parent_Record_ID != currentParent_Record_ID[0]){
         		m_Parent_Record_ID = currentParent_Record_ID[0];

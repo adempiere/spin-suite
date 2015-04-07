@@ -17,7 +17,7 @@ package org.spinsuite.view;
 
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_DynamicTab;
-import org.spinsuite.interfaces.I_FragmentSelectListener;
+import org.spinsuite.interfaces.I_DT_FragmentSelectListener;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.TabParameter;
 
@@ -36,7 +36,7 @@ import android.view.ViewGroup;
  *
  */
 public class T_DynamicTabDetail extends Fragment 
-		implements I_DynamicTab, I_FragmentSelectListener {
+		implements I_DynamicTab, I_DT_FragmentSelectListener {
 	
 	/**	Parameters				*/
 	private TabParameter		tabParam 			= null;
@@ -104,7 +104,7 @@ public class T_DynamicTabDetail extends Fragment
     		return;
     	//	Verify if is same table
     	if(parentTab == null) {
-    		parentTab = (TabParameter) Env.getContextObject(getActivity(), 
+    		parentTab = (TabParameter) Env.getContextObject(
         			tabParam.getActivityNo(), tabParam.getParentTabNo(), 
         			"TabParameter", TabParameter.class);
         	//	
@@ -114,7 +114,7 @@ public class T_DynamicTabDetail extends Fragment
     	}
     	//	
     	if(tabParam.getTabLevel() > 0){
-    		int[] currentParent_Record_ID = Env.getTabRecord_ID(getActivity(), 
+    		int[] currentParent_Record_ID = Env.getTabRecord_ID(
         			tabParam.getActivityNo(), tabParam.getParentTabNo());
         	if(m_Parent_Record_ID != currentParent_Record_ID[0]){
         		m_Parent_Record_ID = currentParent_Record_ID[0];
@@ -134,13 +134,13 @@ public class T_DynamicTabDetail extends Fragment
     	if (getActivity().findViewById(R.id.ll_List) != null) {
     		if(m_IsSameTable) {
     			transaction.add(R.id.ll_List, m_detailFragment, INDEX_FRAGMENT);
-    			int[] m_Parent_Record_ID = Env.getTabRecord_ID(getActivity(), 
+    			int[] m_Parent_Record_ID = Env.getTabRecord_ID(
     	    			tabParam.getActivityNo(), tabParam.getParentTabNo());
-    			String[] m_KeyColumn = Env.getTabKeyColumns(getActivity(), 
+    			String[] m_KeyColumn = Env.getTabKeyColumns(
     	    			tabParam.getActivityNo(), tabParam.getParentTabNo());
-    			Env.setTabRecord_ID(getActivity(), 
+    			Env.setTabRecord_ID(
     					tabParam.getActivityNo(), tabParam.getTabNo(), m_Parent_Record_ID);
-    			Env.setTabKeyColumns(getActivity(), 
+    			Env.setTabKeyColumns(
     					tabParam.getActivityNo(), tabParam.getTabNo(), m_KeyColumn);
     		} else {
     			transaction.add(R.id.ll_List, m_listFragment, INDEX_FRAGMENT);
@@ -212,9 +212,9 @@ public class T_DynamicTabDetail extends Fragment
         //	
         transaction.commit();
         //	
-        Env.setTabRecord_ID(getActivity(), 
+        Env.setTabRecord_ID(
 				tabParam.getActivityNo(), tabParam.getTabNo(), record_ID);
-        Env.setTabKeyColumns(getActivity(), 
+        Env.setTabKeyColumns(
 				tabParam.getActivityNo(), tabParam.getTabNo(), keyColumns);
         if(m_detailFragment != null) {
         	m_detailFragment.onItemSelected(record_ID, keyColumns);
@@ -242,13 +242,13 @@ public class T_DynamicTabDetail extends Fragment
 				getChildFragmentManager().findFragmentByTag(INDEX_FRAGMENT);
 		if(indexRecordLine != null) {
 			if(reQuery) {
-				if(!Env.isCurrentTab(getActivity(), 
+				if(!Env.isCurrentTab(
 						tabParam.getActivityNo(), tabParam.getTabNo())) {
 					indexRecordLine.refreshFromChange(reQuery);
 					loaded = true;
 				}
 			} else if(tabParam.getTabLevel() > 0){
-	    		int[] currentParent_Record_ID = Env.getTabRecord_ID(getActivity(), 
+	    		int[] currentParent_Record_ID = Env.getTabRecord_ID(
 	        			tabParam.getActivityNo(), tabParam.getParentTabNo());
 	        	if(m_Parent_Record_ID != currentParent_Record_ID[0]){
 	        		m_Parent_Record_ID = currentParent_Record_ID[0];
@@ -256,18 +256,18 @@ public class T_DynamicTabDetail extends Fragment
 	        			indexRecordLine.refreshFromChange(reQuery);
 		                //	
 		                if(m_detailFragment != null) {
-		                	int[] first_ID = Env.getTabRecord_ID(getActivity(), 
+		                	int[] first_ID = Env.getTabRecord_ID(
 		                			tabParam.getActivityNo(), tabParam.getTabNo());
-		                	String[] keyColumns = Env.getTabKeyColumns(getActivity(), 
+		                	String[] keyColumns = Env.getTabKeyColumns(
 		                			tabParam.getActivityNo(), tabParam.getTabNo());
 		                	m_detailFragment.onItemSelected(first_ID, keyColumns);
 		                }
 		        		loaded = true;
 	        		} else {
 	        			if(m_detailFragment != null) {
-	        				int[] first_ID = Env.getTabRecord_ID(getActivity(), 
+	        				int[] first_ID = Env.getTabRecord_ID(
 		                			tabParam.getActivityNo(), tabParam.getTabNo());
-		                	String[] keyColumns = Env.getTabKeyColumns(getActivity(), 
+		                	String[] keyColumns = Env.getTabKeyColumns(
 		                			tabParam.getActivityNo(), tabParam.getTabNo());
 		                	m_detailFragment.onItemSelected(first_ID, keyColumns);
 		                }

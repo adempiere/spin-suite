@@ -65,7 +65,7 @@ public class MSPSTable extends X_SPS_Table {
 			return null;
 		
 		String name = null;
-		String className = Env.getContext(ctx, "ClassName|" + tableName);
+		String className = Env.getContext("ClassName|" + tableName);
 		String etmodelpackage = null;
 		if(className == null
 				|| className.length() == 0){
@@ -91,7 +91,7 @@ public class MSPSTable extends X_SPS_Table {
 		Class<?> clazz = getPOclass(name, tableName);
 		if (clazz != null){
 			//	Save in context
-			Env.setContext(ctx, "ClassName|" + tableName, name);
+			Env.setContext("ClassName|" + tableName, name);
 			return clazz;
 		}
 		//	SFAndroid Class
@@ -100,7 +100,7 @@ public class MSPSTable extends X_SPS_Table {
 		if (clazz != null)
 		{
 			//	Save in context
-			Env.setContext(ctx, "ClassName|" + tableName, name);
+			Env.setContext("ClassName|" + tableName, name);
 			return clazz;
 		}
 		//	Adempiere Extension
@@ -109,7 +109,7 @@ public class MSPSTable extends X_SPS_Table {
 		if (clazz != null)
 		{
 			//	Save in context
-			Env.setContext(ctx, "ClassName|" + tableName, name);
+			Env.setContext("ClassName|" + tableName, name);
 			return clazz;
 		}
 		
@@ -120,7 +120,7 @@ public class MSPSTable extends X_SPS_Table {
 		if (clazz != null)
 		{
 			//	Save in context
-			Env.setContext(ctx, "ClassName|" + tableName, name);
+			Env.setContext("ClassName|" + tableName, name);
 			return clazz;
 		}
 
@@ -130,13 +130,13 @@ public class MSPSTable extends X_SPS_Table {
 		if (clazz != null)
 		{
 			//	Save in context
-			Env.setContext(ctx, "ClassName|" + tableName, name);
+			Env.setContext("ClassName|" + tableName, name);
 			return clazz;
 		}
 		//	Default
 		name = "org.compiere.model.GenericPO";
 		//	Save in context
-		Env.setContext(ctx, "ClassName|" + tableName, name);
+		Env.setContext("ClassName|" + tableName, name);
 		return null;
 	}	//	getClass*/
 	

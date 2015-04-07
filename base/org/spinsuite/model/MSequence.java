@@ -250,13 +250,13 @@ public class MSequence extends X_AD_Sequence {
 		//	create DocumentNo
 		StringBuffer doc = new StringBuffer();
 		if (prefix != null && prefix.length() > 0)
-			doc.append(Env.parseContext(ctx, prefix, true));
+			doc.append(Env.parseContext(prefix, true));
 		if (decimalPattern != null && decimalPattern.length() > 0)
 			doc.append(new DecimalFormat(decimalPattern).format(next));
 		else
 			doc.append(next);
 		if (suffix != null && suffix.length() > 0)
-			doc.append(Env.parseContext(ctx, suffix, true));
+			doc.append(Env.parseContext(suffix, true));
 		//	Set Document No
 		String documentNo = doc.toString();
 		//	Log

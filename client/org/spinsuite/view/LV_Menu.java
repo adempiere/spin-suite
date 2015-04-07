@@ -154,7 +154,7 @@ public class LV_Menu extends Activity {
 	     switch (item.getItemId()) {
 	        case android.R.id.home:
 	    		//	Auto Login
-	    		Env.setAutoLoginComfirmed(this, false);
+	    		Env.setAutoLoginComfirmed(false);
 	        	NavUtils.navigateUpTo(this, new Intent(this, Login.class));
 	        return true;
 	        default:

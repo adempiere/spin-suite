@@ -15,9 +15,14 @@
  *************************************************************************************/
 package org.spinsuite.mqtt.connection;
 
+import java.util.logging.Level;
+
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.spinsuite.util.Msg;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttSecurityException;
+import org.spinsuite.util.Env;
+import org.spinsuite.util.LogM;
 
 import android.content.Context;
 
@@ -40,13 +45,34 @@ public class MQTTListener implements IMqttActionListener {
 	private Context m_Ctx = null;
 	
 	@Override
-	public void onFailure(IMqttToken token, Throwable ex) {
-		Msg.toastMsg(m_Ctx, "Error: " + ex);
+	public void onFailure(IMqttToken token, Throwable e) {
+		LogM.log(m_Ctx, getClass(), Level.SEVERE, "Connection Error", e);
 	}
 
 	@Override
 	public void onSuccess(IMqttToken token) {
-		Msg.toastMsg(m_Ctx, "Connection Ok: " + token);
+		LogM.log(m_Ctx, getClass(), Level.FINE, "Connection MQTT is Ok");
+		subscribeToDefaultsTopics();
 	}
 
+	/**
+	 * Subscribe to topics
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void subscribeToDefaultsTopics() {
+		try {
+			MQTTConnection.getInstance(m_Ctx).subscribeEx(MQTTDefaultValues.getInitialLoadTopic(), 
+					MQTTConnection.AT_LEAST_ONCE_1);
+			MQTTConnection.getInstance(m_Ctx).subscribeEx(MQTTDefaultValues.getSyncTopic(String.valueOf(Env.getAD_User_ID())), 
+					MQTTConnection.AT_LEAST_ONCE_1);
+			MQTTConnection.getInstance(m_Ctx).subscribeEx(MQTTDefaultValues.getRequestTopic(String.valueOf(Env.getAD_User_ID())), 
+					MQTTConnection.AT_LEAST_ONCE_1);
+		} catch (MqttSecurityException e) {
+			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Security Exception", e);
+		} catch (MqttException e) {
+			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Exception", e);
+		}
+	}
+	
 }

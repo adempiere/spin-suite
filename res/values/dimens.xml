@@ -14,4 +14,7 @@
     <dimen name="button_layout_width">48dp</dimen>
     <dimen name="button_layout_height">48dp</dimen>
     <dimen name="checkBox_layout_height">48dp</dimen>
+    <!-- Business Chat -->
+    <dimen name="bc_button_layout_height">48dp</dimen>
+    <dimen name="bc_editText_layout_height">48dp</dimen>
 </resources>

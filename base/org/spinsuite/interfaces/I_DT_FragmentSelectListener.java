@@ -19,7 +19,7 @@ package org.spinsuite.interfaces;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
-public interface I_FragmentSelectListener {
+public interface I_DT_FragmentSelectListener {
 	
 	/**
 	 * On Item Selected

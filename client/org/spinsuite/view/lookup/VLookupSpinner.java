@@ -120,7 +120,7 @@ public class VLookupSpinner extends GridField
 		//	Set Default Value
 		if(m_field.DefaultValue != null
 					&& m_field.DefaultValue.length() > 0)
-			setValue(Env.parseContext(getContext(), m_field.DefaultValue, true));
+			setValue(Env.parseContext(m_field.DefaultValue, true));
 		//	Listener
 		v_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
 

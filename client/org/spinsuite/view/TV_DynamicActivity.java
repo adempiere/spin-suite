@@ -21,7 +21,7 @@ import org.spinsuite.adapters.MenuAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_DynamicTab;
-import org.spinsuite.interfaces.I_FragmentSelectListener;
+import org.spinsuite.interfaces.I_DT_FragmentSelectListener;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.Env;
@@ -45,7 +45,7 @@ import android.view.MenuItem;
  *
  */
 public class TV_DynamicActivity extends TV_Base 
-									implements I_FragmentSelectListener {
+									implements I_DT_FragmentSelectListener {
 	
 	/**	Parameters					*/
 	private ActivityParameter 	param			= null;
@@ -72,7 +72,7 @@ public class TV_DynamicActivity extends TV_Base
 		if(param == null)
     		param = new ActivityParameter();
 		//	
-		Env.setContext(this, m_ActivityNo, "IsSOTrx", param.isSOTrx());
+		Env.setContext(m_ActivityNo, "IsSOTrx", param.isSOTrx());
 		//	New Menu
         lookupMenu = new LookupMenu(getApplicationContext(), LookupMenu.ACTIVITY_MENU, null);
         //	Option
@@ -122,7 +122,7 @@ public class TV_DynamicActivity extends TV_Base
         		actParam.setActivityNo(tabParam.getActivityNo());
         		actParam.setFrom_SPS_Table_ID(tabParam.getSPS_Table_ID());
         		int[] record_ID = Env.getTabRecord_ID(
-            			getApplicationContext(), tabParam.getActivityNo(), tabParam.getTabNo());
+            			tabParam.getActivityNo(), tabParam.getTabNo());
             	actParam.setFrom_Record_ID(record_ID[0]);
 
     		}
@@ -191,8 +191,8 @@ public class TV_DynamicActivity extends TV_Base
     	DB conn = new DB(this);
     	DB.loadConnection(conn, DB.READ_ONLY);
 		Cursor rs = null;
-		String language = Env.getAD_Language(this);
-		boolean isBaseLanguage = Env.isBaseLanguage(this);
+		String language = Env.getAD_Language();
+		boolean isBaseLanguage = Env.isBaseLanguage();
 		String sql = null;
 		//	Handle Translation
 		if(isBaseLanguage) {
@@ -225,7 +225,7 @@ public class TV_DynamicActivity extends TV_Base
 			int index = 0;
 			int tabNo = 0;
 			//	Set Current Tab No
-			Env.setCurrentTab(this, m_ActivityNo, 0);
+			Env.setCurrentTab(m_ActivityNo, 0);
 			do{
 				TabParameter tabParam = new TabParameter();
 				tabParam.setActivityNo(m_ActivityNo);
@@ -247,17 +247,17 @@ public class TV_DynamicActivity extends TV_Base
 	    		bundle.putParcelable("TabParam", tabParam);
 	    		//bundle.putInt("Record_ID", m_Record_ID);
 	    		//	Set Tab Parameter to Context
-	    		Env.setContextObject(this, 
+	    		Env.setContextObject(
 	    				tabParam.getActivityNo(), tabParam.getTabNo(), "TabParameter", tabParam);
 	    		//	Set Context
-	    		Env.setContext(this, m_ActivityNo, 
+	    		Env.setContext(m_ActivityNo, 
 	    				tabParam.getSPS_Tab_ID(), "SPS_Tab_ID", tabParam.getSPS_Tab_ID());
 	    		//	Set record Identifier
 	    		if(tabParam.getTabNo() == 0)
-	    			Env.setTabRecord_ID(this, 
+	    			Env.setTabRecord_ID(
 	    					tabParam.getActivityNo(), tabParam.getTabNo(), m_Record_ID);
 	    		else
-	    			Env.setTabRecord_ID(this, 
+	    			Env.setTabRecord_ID(
 	    					tabParam.getActivityNo(), tabParam.getTabNo(), new int[]{0});
 	    		//	Dynamic Tab
 	    		if(tabParam.getSPS_Table_ID() != 0) {
@@ -300,8 +300,8 @@ public class TV_DynamicActivity extends TV_Base
 		invalidateOptionsMenu();
 		Fragment curFr = getCurrentFragment();
     	if(curFr != null
-    			&& curFr instanceof I_FragmentSelectListener){
-    		((I_FragmentSelectListener) curFr).onItemSelected(record_ID, keyColumns);
+    			&& curFr instanceof I_DT_FragmentSelectListener){
+    		((I_DT_FragmentSelectListener) curFr).onItemSelected(record_ID, keyColumns);
     	}
 	}
 	

@@ -352,7 +352,7 @@ public class LV_AttachView extends Activity {
 	 *	@return true if PDF
 	 */
 	public boolean isPDF(String fileName) {
-		return fileName.toLowerCase(Env.getLocate(v_activity)).endsWith(".pdf");
+		return fileName.toLowerCase(Env.getLocate()).endsWith(".pdf");
 	}	//	isPDF
 	
 	/**
@@ -361,7 +361,7 @@ public class LV_AttachView extends Activity {
 	 *	@return true if *.gif, *.jpg, *.png
 	 */
 	public boolean isGraphic(String fileName) {
-		String m_lowname = fileName.toLowerCase(Env.getLocate(v_activity));
+		String m_lowname = fileName.toLowerCase(Env.getLocate());
 		return m_lowname.endsWith(".gif") 
 				|| m_lowname.endsWith(".jpg")
 				|| m_lowname.endsWith(".jpeg")

@@ -290,7 +290,7 @@ public class V_LocationDialog extends DialogFragment {
 		MCountry m_country = null;
 		//	Default Country
 		if(m_location.getC_Location_ID() == 0) {
-			int m_C_Country_ID = Env.getContextAsInt(v_activity, "#C_Country_ID");
+			int m_C_Country_ID = Env.getContextAsInt("#C_Country_ID");
 			if(m_C_Country_ID < 0)
 				m_country = MCountry.getBaseCountry(v_activity);
 			else
