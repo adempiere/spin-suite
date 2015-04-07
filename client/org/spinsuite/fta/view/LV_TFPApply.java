@@ -193,7 +193,7 @@ public class LV_TFPApply extends Fragment
 	private void loadView() {
 		//	
 		v_button.setEnabled(
-				Env.get_TabRecord_ID(getActivity(), tabParam.getActivityNo(), 0) > 0
+				Env.getTabRecord_ID(getActivity(), tabParam.getActivityNo(), 0) > 0
 				&& !m_Processed);
 	}
 	
@@ -203,7 +203,7 @@ public class LV_TFPApply extends Fragment
 	 * @return void
 	 */
 	private void load() {
-		if(Env.get_TabRecord_ID(getActivity(), tabParam.getActivityNo(), 0) <= 0)
+		if(Env.getTabRecord_ID(getActivity(), tabParam.getActivityNo(), 0) <= 0)
 			return;
 		//	Load DB
 		DB conn = new DB(getActivity());

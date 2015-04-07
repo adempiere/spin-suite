@@ -2503,16 +2503,15 @@ public final class Env {
 	}
 	
 	/**
-	 * Get Integer from Tab Record ID
+	 * Get Tab Record Identifier
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param ctx
 	 * @param m_ActivityNo
 	 * @param TabNo
 	 * @return
-	 * @return int
+	 * @return int[]
 	 */
-	public static int get_TabRecord_ID(Context ctx, int m_ActivityNo, int TabNo) {
-		return getTabRecord_ID(ctx, m_ActivityNo, TabNo)[0];
+	public static int[] getTabRecord_ID(int m_ActivityNo, int TabNo) {
+		return getTabRecord_ID(getCtx(), m_ActivityNo, TabNo);
 	}
 	
 	/**
