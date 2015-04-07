@@ -85,6 +85,7 @@ public class SPS_BC_Request {
 				+ "AD_Client_ID, "
 				+ "AD_Org_ID, "
 				+ "AD_User_ID, "
+				+ "Name, "
 				+ "Created, "
 				+ "CreatedBy, "
 				+ "Updated, "
@@ -92,7 +93,7 @@ public class SPS_BC_Request {
 				+ "IsActive, "
 				+ "SPS_BC_Request_ID, "
 				+ "Topic, "
-				+ "Type) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				+ "Type) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		//	Add Values
 		int m_AD_Client_ID = Env.getAD_Client_ID();
 		int m_AD_Org_ID = Env.getAD_Org_ID();
@@ -102,6 +103,7 @@ public class SPS_BC_Request {
 		conn.addInt(m_AD_Client_ID);
 		conn.addInt(m_AD_Org_ID);
 		conn.addInt(m_AD_User_ID);
+		conn.addString(request.getName());
 		conn.addDateTime(now);
 		conn.addInt(m_AD_User_ID);
 		conn.addDateTime(now);

@@ -18,7 +18,7 @@ package org.spinsuite.view;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_DynamicTab;
-import org.spinsuite.interfaces.I_FragmentSelectListener;
+import org.spinsuite.interfaces.I_DT_FragmentSelectListener;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
 import org.spinsuite.util.MultiKeyNamePair;
@@ -39,7 +39,7 @@ public class FV_IndexRecordLine extends ListFragment
 									implements I_DynamicTab {
     
 	/**	Fragment Listener Call Back	*/
-	private I_FragmentSelectListener 		m_Callback 			= null;
+	private I_DT_FragmentSelectListener 	m_Callback 			= null;
 	/**	Parameters					*/
 	private TabParameter					tabParam 			= null;
 	/**	Tab Info					*/
@@ -140,7 +140,7 @@ public class FV_IndexRecordLine extends ListFragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            m_Callback = (I_FragmentSelectListener) activity;
+            m_Callback = (I_DT_FragmentSelectListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement I_FragmentSelectListener");

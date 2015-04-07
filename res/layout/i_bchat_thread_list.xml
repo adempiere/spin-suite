@@ -12,7 +12,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,    		 *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                     		 *
  * For the text or an alternative of this public license, you may reach us    		 *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpcya.com				  		                 *
  ************************************************************************************/
  -->
@@ -22,7 +22,7 @@
     android:orientation="horizontal" >
 
     <ImageView
-        android:id="@+id/img_Item"
+        android:id="@+id/img_Contact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -32,20 +32,46 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <TextView
-	        android:id="@+id/tv_Name"
-	        android:gravity="center_vertical"
-	        style="@style/TextItemMenu"
-	        android:text="@string/None"
-	        android:maxLines="1" />
-
-    	<TextView
-        	android:id="@+id/tv_Description"
-        	android:gravity="center_vertical"
-        	style="@style/TextItemSmallMenu"
-        	android:text="@string/None" />
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        android:weightSum="2" >
+		<LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        android:layout_weight="0.4" >
+	
+	        <TextView
+		        android:id="@+id/tv_Name"
+		        android:gravity="center_vertical"
+		        style="@style/TextItemMenu"
+		        android:text="@string/Name"
+		        android:maxLines="1" />
+	
+	    	<TextView
+	        	android:id="@+id/tv_Conversation"
+	        	android:gravity="center_vertical"
+	        	style="@style/TextItemSmallMenu"
+	        	android:text="@string/Description" />
+	    </LinearLayout>
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        android:layout_weight="1.6" >
+	
+	        <TextView
+		        android:id="@+id/tv_Time"
+		        android:gravity="center_vertical"
+		        style="@style/TextItemSmallMenu"
+		        android:text="@string/TimeOfEvent"
+		        android:maxLines="1" />
+	
+	    	<TextView
+	        	android:id="@+id/tv_Status"
+	        	android:gravity="center_vertical"
+	        	style="@style/TextItemSmallMenu"
+	        	android:text="@string/msg_Ok" />
+	    </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

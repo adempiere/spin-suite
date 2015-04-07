@@ -25,7 +25,9 @@ import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.adapters.BChatContactAdapter;
+import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.util.DisplayBChatContactItem;
+import org.spinsuite.interfaces.I_FragmentSelect;
 import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.mqtt.connection.MQTTListener;
@@ -39,9 +41,11 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,22 +58,33 @@ import android.widget.ListView;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
-public class V_BChat extends FragmentActivity {
+public class V_BChat extends FragmentActivity 
+		implements I_FragmentSelect {
 	
 	/**	Drawer Layout				*/
-	private DrawerLayout 					m_DLayout;
+	private DrawerLayout 						m_DLayout;
 	/**	List View with options		*/
-    private ListView 						m_DList;
+    private ListView 							m_DList;
     /**	Toggle						*/
-    private ActionBarDrawerToggle 			m_DToggle;
+    private ActionBarDrawerToggle 				m_DToggle;
     /**	Flag (Drawer Loaded)		*/
-    private boolean 						isDrawerLoaded = false;
+    private boolean 							isDrawerLoaded = false;
     /**	Action Bar					*/
-    private ActionBar 						actionBar = null;
+    private ActionBar 							actionBar = null;
     /** Menu						*/
-    private Menu							m_CurrentMenu = null;
+    private Menu								m_CurrentMenu = null;
     /**	Contact Data				*/
     private ArrayList<DisplayBChatContactItem> 	m_BChatContactData = null;
+	/**	Index Fragment				*/
+	public static final String 					INDEX_FRAGMENT = "Index";
+	/**	Detail Fragment				*/
+	public static final String 					DETAIL_FRAGMENT = "Detail";
+	/**	Fragment					*/
+	private FV_ThreadIndex 						m_listFragment = null;
+	/**	Detail Fragment				*/
+	private FV_Thread 							m_detailFragment = null;
+	/**	Is Index Fragment			*/
+	private boolean								m_IsDetailAdded	= false;
     
     /** Called when the activity is first created. */
     @Override
@@ -78,7 +93,7 @@ public class V_BChat extends FragmentActivity {
     	//	Add Support to Progress Bar in Action Bar
     	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
     	//	
-    	super.setContentView(R.layout.tv_base);
+    	super.setContentView(R.layout.v_business_chat);
     	//	Set ProgressBar to false
     	setProgressBarIndeterminateVisibility(false);
     	
@@ -86,11 +101,77 @@ public class V_BChat extends FragmentActivity {
     	//	
     	actionBar.setDisplayHomeAsUpEnabled(true);
     	actionBar.setHomeButtonEnabled(true);
+    	actionBar.setSubtitle(R.string.BChat);
     	//	Load Drawer
     	loadDrawer();
     	//	Load Contact
     	loadContact();
+    	//	
+    	loadFragment();
     }
+    
+    /**
+     * Load Fragment
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return void
+     */
+    private void loadFragment() {
+    	if(m_listFragment == null) {
+    		m_listFragment = new FV_ThreadIndex();
+    	}
+        //	Get Fragment Transaction
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        //	Instance if not exists
+        instanceDetailFragment();
+        //	Portrait
+    	if (findViewById(R.id.ll_bc_list) != null) {
+    		transaction.add(R.id.ll_bc_list, m_listFragment, INDEX_FRAGMENT);
+        } else if(findViewById(R.id.ll_bc_list_land) != null) {
+        	transaction.add(R.id.ll_bc_thread_list, m_listFragment, INDEX_FRAGMENT);
+        }
+    	//	Commit
+    	transaction.commit();
+    }
+    
+    /**
+     * Instan
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return void
+     */
+    private void instanceDetailFragment() {
+        //	Instance if not exists
+        if(m_detailFragment == null) {
+        	m_detailFragment = new FV_Thread();
+        }
+	}
+    
+	@Override
+	public void onItemSelected(int p_Record_ID) {
+	       //	Instance if not exists
+        instanceDetailFragment();
+        //	Transaction
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        //	
+        if(findViewById(R.id.ll_bc_list_land) != null) {
+        	if(!m_IsDetailAdded) {
+        		transaction.add(R.id.ll_bc_thread, m_detailFragment, DETAIL_FRAGMENT);
+        		m_IsDetailAdded = true;
+        	}
+        } else {
+        	transaction.hide(m_listFragment);
+        	if(m_detailFragment.isHidden()) {
+        		transaction.show(m_detailFragment);
+        	} else {
+        		transaction.add(R.id.ll_bc_list, m_detailFragment, DETAIL_FRAGMENT);
+        	}
+        }
+        //	
+        transaction.commit();
+        //	
+        if(m_detailFragment != null) {
+        	m_detailFragment.onItemSelected(p_Record_ID);
+        }
+	} 
     
     /**
      * Load Drawer
@@ -118,11 +199,13 @@ public class V_BChat extends FragmentActivity {
 					SyncRequest request = new SyncRequest(
 							String.valueOf(Env.getAD_User_ID()), 
 							SyncRequest.RT_BUSINESS_CHAT, 
-							String.valueOf(UUID.randomUUID()));
+							String.valueOf(UUID.randomUUID()), "Epale");
+					//	Insert New
+					SPS_BC_Request.newOutRequest(getApplicationContext(), request);
 					//	Verify Connection
 					MQTTConnection currentConnection = MQTTConnection.getInstance(getApplicationContext(), 
 							new MQTTListener(getApplicationContext()), 
-							null);
+							null, false);
 					if(currentConnection.isConnected()) {
 						currentConnection.subscribeEx(request.getTopicName(), MQTTConnection.AT_LEAST_ONCE_1);
 						byte[] msg = SerializerUtil.serializeObject(request);
@@ -154,7 +237,6 @@ public class V_BChat extends FragmentActivity {
             @Override
             public void onConfigurationChanged(Configuration newConfig) {
             	super.onConfigurationChanged(newConfig);
-            	m_DToggle.onConfigurationChanged(newConfig);
             }
         };
         //	
@@ -312,5 +394,47 @@ public class V_BChat extends FragmentActivity {
         		menu.setGroupVisible(R.id.group_tab_menu, false);
         }
         return super.onPrepareOptionsMenu(menu);
-    }    
+    } 
+    
+    @Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		boolean noBack = false;
+    	if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+			//	
+    		noBack = backToFragment();
+		}
+    	//	No Back
+    	if(!noBack)
+    		return super.onKeyDown(keyCode, event);
+		//	Default Return
+		return noBack;
+	}
+    
+    /**
+     * Back to previous fragment if is necessary
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return
+     * @return boolean
+     */
+    private boolean backToFragment() {
+		//	
+		if(findViewById(R.id.ll_bc_list_land) != null
+				|| m_detailFragment.isHidden()) {
+			return false;
+		}
+		//	Begin Transaction
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		//	Begin Transaction
+		transaction.hide(m_detailFragment);
+		//	
+		if(m_listFragment.isHidden()) {
+    		transaction.show(m_listFragment);
+    	} else {
+    		transaction.replace(R.id.ll_bc_list, m_listFragment, INDEX_FRAGMENT);
+    	}
+		//	Commit
+		transaction.commit();
+	    //	Return
+	    return true;
+	}
 }

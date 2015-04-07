@@ -70,6 +70,7 @@ public class MQTTConnection {
 	private static final String		MQTT_USER_NAME 				= "#MQTT_UserName";
 	private static final String		MQTT_PASSWORD 				= "#MQTT_Password";
 	private static final String		MQTT_TIMEOUT 				= "#MQTT_Timeout";
+	private static final String		MQTT_IS_RELOAD_SERVICE 		= "#MQTT_IsreloadService";
 	
 	/**
 	 * Default Constructor
@@ -275,6 +276,28 @@ public class MQTTConnection {
 	}
 	
 	/**
+	 * Verify if is Reload
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean isReloadService(Context p_Ctx) {
+		return Env.getContextAsBoolean(MQTT_IS_RELOAD_SERVICE);
+	}
+	
+	/**
+	 * Set the Reload property
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_IsReloadService
+	 * @return void
+	 */
+	public static void setIsReloadService(Context p_Ctx, boolean p_IsReloadService) {
+		Env.setContext(MQTT_IS_RELOAD_SERVICE, p_IsReloadService);
+	}
+	
+	/**
 	 * Set Alamr Time in milliseconds
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Ctx
@@ -372,12 +395,19 @@ public class MQTTConnection {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Ctx
 	 * @param p_ConnectionListener
+	 * @param p_Callback
+	 * @param reLoad Reload Instance
 	 * @return
 	 * @return MQTTConnection
 	 */
-	public static MQTTConnection getInstance(Context p_Ctx, IMqttActionListener p_ConnectionListener, MqttCallback p_Callback) {
-		if(m_Connection == null) {
+	public static MQTTConnection getInstance(Context p_Ctx, IMqttActionListener p_ConnectionListener, MqttCallback p_Callback, boolean reLoad) {
+		if(m_Connection == null
+				|| reLoad) {
 			m_Connection = new MQTTConnection(p_Ctx, p_ConnectionListener);
+			//	Set to false reload
+			if(reLoad) {
+				MQTTConnection.setIsAutomaticService(p_Ctx, false);
+			}
 			if(p_Callback != null) {
 				m_Connection.setCallback(p_Callback);
 			}
@@ -394,7 +424,7 @@ public class MQTTConnection {
 	 * @return MQTTConnection
 	 */
 	public static MQTTConnection getInstance(Context p_Ctx) {
-		return getInstance(p_Ctx, null, null);
+		return getInstance(p_Ctx, null, null, false);
 	}
 	
 	/**

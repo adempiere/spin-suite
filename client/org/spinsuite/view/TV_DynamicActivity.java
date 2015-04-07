@@ -21,7 +21,7 @@ import org.spinsuite.adapters.MenuAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_DynamicTab;
-import org.spinsuite.interfaces.I_FragmentSelectListener;
+import org.spinsuite.interfaces.I_DT_FragmentSelectListener;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.Env;
@@ -45,7 +45,7 @@ import android.view.MenuItem;
  *
  */
 public class TV_DynamicActivity extends TV_Base 
-									implements I_FragmentSelectListener {
+									implements I_DT_FragmentSelectListener {
 	
 	/**	Parameters					*/
 	private ActivityParameter 	param			= null;
@@ -300,8 +300,8 @@ public class TV_DynamicActivity extends TV_Base
 		invalidateOptionsMenu();
 		Fragment curFr = getCurrentFragment();
     	if(curFr != null
-    			&& curFr instanceof I_FragmentSelectListener){
-    		((I_FragmentSelectListener) curFr).onItemSelected(record_ID, keyColumns);
+    			&& curFr instanceof I_DT_FragmentSelectListener){
+    		((I_DT_FragmentSelectListener) curFr).onItemSelected(record_ID, keyColumns);
     	}
 	}
 	

@@ -19,14 +19,13 @@ package org.spinsuite.interfaces;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
-public interface I_FragmentSelectListener {
+public interface I_FragmentSelect {
 	
 	/**
-	 * On Item Selected
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/04/2014, 17:35:04
-	 * @param record_ID
-	 * @param keyColumns
+	 * Method for selection
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Record_ID
 	 * @return void
 	 */
-	public void onItemSelected(int [] record_ID, String [] keyColumns);
+	public void onItemSelected(int p_Record_ID);
 }

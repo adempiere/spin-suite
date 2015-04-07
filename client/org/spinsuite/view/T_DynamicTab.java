@@ -25,7 +25,7 @@ import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.view.V_BChat;
 import org.spinsuite.interfaces.I_DynamicTab;
-import org.spinsuite.interfaces.I_FragmentSelectListener;
+import org.spinsuite.interfaces.I_DT_FragmentSelectListener;
 import org.spinsuite.interfaces.OnFieldChangeListener;
 import org.spinsuite.process.DocAction;
 import org.spinsuite.util.AttachmentHandler;
@@ -80,7 +80,7 @@ import android.widget.TableLayout;
  *
  */
 public class T_DynamicTab extends Fragment 
-						implements I_DynamicTab, I_FragmentSelectListener {
+						implements I_DynamicTab, I_DT_FragmentSelectListener {
 	
 	/**
 	 * 

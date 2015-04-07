@@ -354,6 +354,8 @@ public class T_Connection extends Activity implements I_Login {
 		Intent service = new Intent(this, MQTTSyncService.class);
 		LogM.log(this, getClass(), Level.FINE, "Stoping MQTT Service");
 		stopService(service);
+		//	Set to true reload
+		MQTTConnection.setIsAutomaticService(this, true);
 		//	Start Service
 		LogM.log(this, getClass(), Level.FINE, "Starting MQTT Service");
 		startService(service);

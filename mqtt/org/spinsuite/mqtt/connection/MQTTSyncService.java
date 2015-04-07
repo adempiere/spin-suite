@@ -109,7 +109,9 @@ public class MQTTSyncService extends IntentService {
 				|| !MQTTConnection.isNetworkOk(this)
 				|| !MQTTConnection.isAutomaticService(this))
 			return;
-		//	
+		//	Verify Reload Service
+		boolean isReload = MQTTConnection.isReloadService(this);
+		//	Get Connection
 		m_Connection = MQTTConnection.getInstance(getApplicationContext(), 
 				new MQTTListener(getApplicationContext()), 
 				new MqttCallback() {
@@ -139,7 +141,7 @@ public class MQTTSyncService extends IntentService {
 					public void connectionLost(Throwable e) {
 						forConnectionLost(e);
 					}
-				});
+				}, isReload);
 		//	Connection
 		connect();
 	}
