@@ -141,8 +141,6 @@
 	<string name="V_EndingBalanceAmt">Saldo Final</string>
 	<string name="V_DifferenceAmt">Diferencia</string>
 	<string name="V_ForDepositAmt">Pendiente (Depósito)</string>
-	<string name="BChat">Mensajería de Negocio</string>
-	<string name="BChat_EnterMsg">Escriba un Mensaje</string>
 	
 	<string name="Language">Idioma</string>
 	

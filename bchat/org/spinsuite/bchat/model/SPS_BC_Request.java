@@ -127,7 +127,7 @@ public class SPS_BC_Request {
 					+ "IsActive, "
 					+ "SPS_BC_Request_ID, "
 					+ "AD_User_ID, "
-					+ "Status VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					+ "Status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			//	Add Users
 			for(Integer invited : request.getUsers()) {
 				conn.addInt(m_AD_Client_ID);

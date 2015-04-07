@@ -70,6 +70,10 @@ public class FV_Thread extends Fragment
 	private ImageButton					ib_Send				= null;
 	/**	Conversation Type			*/
 	private int 						m_ConversationType 	= 0;
+	/**	Request Identifier			*/
+	private int 						m_SPS_BC_Request_ID	= 0;
+	/**	Request						*/
+	private SyncRequest 				m_Request			= null;
 	/**	Conversation Type Constants	*/
 	public static final int				CT_REQUEST			= 0;
 	public static final int				CT_CHAT				= 1;
@@ -113,19 +117,15 @@ public class FV_Thread extends Fragment
     private void sendMessage() {
 		//	Send Request
 		try {
-			SyncRequest request = new SyncRequest(
-					String.valueOf(Env.getAD_User_ID()), 
-					SyncRequest.RT_BUSINESS_CHAT, 
-					String.valueOf(UUID.randomUUID()), "Epale");
 			//	Insert New
-			SPS_BC_Request.newOutRequest(getActivity(), request);
+			SPS_BC_Request.newOutRequest(getActivity(), m_Request);
 			//	Verify Connection
 			MQTTConnection currentConnection = MQTTConnection.getInstance(getActivity(), 
 					new MQTTListener(getActivity()), 
 					null, false);
 			if(currentConnection.isConnected()) {
-				currentConnection.subscribeEx(request.getTopicName(), MQTTConnection.AT_LEAST_ONCE_1);
-				byte[] msg = SerializerUtil.serializeObject(request);
+				currentConnection.subscribeEx(m_Request.getTopicName(), MQTTConnection.AT_LEAST_ONCE_1);
+				byte[] msg = SerializerUtil.serializeObject(m_Request);
 				MqttMessage message = new MqttMessage(msg);
 				message.setQos(MQTTConnection.AT_LEAST_ONCE_1);
 				message.setRetained(true);
@@ -147,6 +147,10 @@ public class FV_Thread extends Fragment
      * @return boolean
      */
     private boolean loadData(){
+    	if(m_Request != null
+    			& m_Request.getSPS_BC_Request_ID() == 0) {
+    		et_Message.setText(getString(R.string.BChat_NewRequest));
+    	}
     	//	Return
         return true;
     }
@@ -182,8 +186,13 @@ public class FV_Thread extends Fragment
     public void onItemSelected(int p_Record_ID) {
     	//	For Request
     	if(m_ConversationType == CT_REQUEST) {
-    		if(p_Record_ID < 0) {
-    			
+    		if(p_Record_ID != -1) {
+    			m_Request = new SyncRequest(0, 
+    					String.valueOf(Env.getAD_User_ID()), 
+    					SyncRequest.RT_BUSINESS_CHAT, 
+    					String.valueOf(UUID.randomUUID()), null);
+    			//	Add User to Request
+    			m_Request.addUser(p_Record_ID);
     		}
     	}
     }
