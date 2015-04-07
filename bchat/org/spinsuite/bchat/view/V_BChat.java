@@ -16,25 +16,15 @@
 package org.spinsuite.bchat.view;
 
 import java.util.ArrayList;
-import java.util.UUID;
 import java.util.logging.Level;
 
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.adapters.BChatContactAdapter;
-import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.util.DisplayBChatContactItem;
 import org.spinsuite.interfaces.I_FragmentSelect;
-import org.spinsuite.mqtt.connection.MQTTConnection;
-import org.spinsuite.mqtt.connection.MQTTDefaultValues;
-import org.spinsuite.mqtt.connection.MQTTListener;
-import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
-import org.spinsuite.util.SerializerUtil;
 
 import android.app.ActionBar;
 import android.content.res.Configuration;
@@ -80,9 +70,9 @@ public class V_BChat extends FragmentActivity
 	/**	Detail Fragment				*/
 	public static final String 					DETAIL_FRAGMENT = "Detail";
 	/**	Fragment					*/
-	private FV_ThreadIndex 						m_listFragment = null;
+	private FV_ThreadIndex 						m_ThereadListFragment = null;
 	/**	Detail Fragment				*/
-	private FV_Thread 							m_detailFragment = null;
+	private FV_Thread 							m_ThreadFragment = null;
 	/**	Is Index Fragment			*/
 	private boolean								m_IsDetailAdded	= false;
     
@@ -116,8 +106,8 @@ public class V_BChat extends FragmentActivity
      * @return void
      */
     private void loadFragment() {
-    	if(m_listFragment == null) {
-    		m_listFragment = new FV_ThreadIndex();
+    	if(m_ThereadListFragment == null) {
+    		m_ThereadListFragment = new FV_ThreadIndex();
     	}
         //	Get Fragment Transaction
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -125,9 +115,9 @@ public class V_BChat extends FragmentActivity
         instanceDetailFragment();
         //	Portrait
     	if (findViewById(R.id.ll_bc_list) != null) {
-    		transaction.add(R.id.ll_bc_list, m_listFragment, INDEX_FRAGMENT);
+    		transaction.add(R.id.ll_bc_list, m_ThereadListFragment, INDEX_FRAGMENT);
         } else if(findViewById(R.id.ll_bc_list_land) != null) {
-        	transaction.add(R.id.ll_bc_thread_list, m_listFragment, INDEX_FRAGMENT);
+        	transaction.add(R.id.ll_bc_thread_list, m_ThereadListFragment, INDEX_FRAGMENT);
         }
     	//	Commit
     	transaction.commit();
@@ -140,8 +130,8 @@ public class V_BChat extends FragmentActivity
      */
     private void instanceDetailFragment() {
         //	Instance if not exists
-        if(m_detailFragment == null) {
-        	m_detailFragment = new FV_Thread();
+        if(m_ThreadFragment == null) {
+        	m_ThreadFragment = new FV_Thread();
         }
 	}
     
@@ -154,22 +144,22 @@ public class V_BChat extends FragmentActivity
         //	
         if(findViewById(R.id.ll_bc_list_land) != null) {
         	if(!m_IsDetailAdded) {
-        		transaction.add(R.id.ll_bc_thread, m_detailFragment, DETAIL_FRAGMENT);
+        		transaction.add(R.id.ll_bc_thread, m_ThreadFragment, DETAIL_FRAGMENT);
         		m_IsDetailAdded = true;
         	}
         } else {
-        	transaction.hide(m_listFragment);
-        	if(m_detailFragment.isHidden()) {
-        		transaction.show(m_detailFragment);
+        	transaction.hide(m_ThereadListFragment);
+        	if(m_ThreadFragment.isHidden()) {
+        		transaction.show(m_ThreadFragment);
         	} else {
-        		transaction.add(R.id.ll_bc_list, m_detailFragment, DETAIL_FRAGMENT);
+        		transaction.add(R.id.ll_bc_list, m_ThreadFragment, DETAIL_FRAGMENT);
         	}
         }
         //	
         transaction.commit();
         //	
-        if(m_detailFragment != null) {
-        	m_detailFragment.onItemSelected(p_Record_ID);
+        if(m_ThreadFragment != null) {
+        	m_ThreadFragment.onItemSelected(p_Record_ID);
         }
 	} 
     
@@ -194,32 +184,8 @@ public class V_BChat extends FragmentActivity
 					long arg3) {
 				m_DLayout.closeDrawers();
 				DisplayBChatContactItem item = (DisplayBChatContactItem) adapter.getItemAtPosition(position);
-				//	Send Request
-				try {
-					SyncRequest request = new SyncRequest(
-							String.valueOf(Env.getAD_User_ID()), 
-							SyncRequest.RT_BUSINESS_CHAT, 
-							String.valueOf(UUID.randomUUID()), "Epale");
-					//	Insert New
-					SPS_BC_Request.newOutRequest(getApplicationContext(), request);
-					//	Verify Connection
-					MQTTConnection currentConnection = MQTTConnection.getInstance(getApplicationContext(), 
-							new MQTTListener(getApplicationContext()), 
-							null, false);
-					if(currentConnection.isConnected()) {
-						currentConnection.subscribeEx(request.getTopicName(), MQTTConnection.AT_LEAST_ONCE_1);
-						byte[] msg = SerializerUtil.serializeObject(request);
-						MqttMessage message = new MqttMessage(msg);
-						message.setQos(MQTTConnection.AT_LEAST_ONCE_1);
-						message.setRetained(true);
-						currentConnection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(item.getRecord_ID())), message);
-					}
-					
-				} catch (MqttSecurityException e) {
-					e.printStackTrace();
-				} catch (MqttException e) {
-					e.printStackTrace();
-				}
+				m_ThreadFragment.setConversationType(FV_Thread.CT_REQUEST);
+				onItemSelected(item.getRecord_ID());
 			}
         });
 
@@ -419,21 +385,25 @@ public class V_BChat extends FragmentActivity
     private boolean backToFragment() {
 		//	
 		if(findViewById(R.id.ll_bc_list_land) != null
-				|| m_detailFragment.isHidden()) {
+				|| m_ThreadFragment.isHidden()) {
 			return false;
 		}
 		//	Begin Transaction
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		//	Begin Transaction
-		transaction.hide(m_detailFragment);
+		transaction.hide(m_ThreadFragment);
 		//	
-		if(m_listFragment.isHidden()) {
-    		transaction.show(m_listFragment);
+		if(m_ThereadListFragment.isHidden()) {
+    		transaction.show(m_ThereadListFragment);
     	} else {
-    		transaction.replace(R.id.ll_bc_list, m_listFragment, INDEX_FRAGMENT);
+    		transaction.replace(R.id.ll_bc_list, m_ThereadListFragment, INDEX_FRAGMENT);
     	}
 		//	Commit
 		transaction.commit();
+		//	Reload Data
+		if(m_ThereadListFragment != null) {
+			m_ThereadListFragment.loadData();
+		}
 	    //	Return
 	    return true;
 	}

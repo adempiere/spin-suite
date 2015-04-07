@@ -68,7 +68,7 @@ public class FV_ThreadIndex extends ListFragment
      * @return
      * @return boolean
      */
-    private boolean loadData() {
+    public boolean loadData() {
     	//	Create Connection
     	DB conn = DB.loadConnection(getActivity(), DB.READ_ONLY);
     	//	Compile Query

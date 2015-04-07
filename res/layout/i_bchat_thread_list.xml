@@ -68,10 +68,13 @@
 		        android:maxLines="1" />
 	
 	    	<TextView
-	        	android:id="@+id/tv_Status"
-	        	android:gravity="center_vertical"
-	        	style="@style/TextItemSmallMenu"
-	        	android:text="@string/msg_Ok" />
+	    	    android:id="@+id/tv_Status"
+	    	    style="@style/TextItemSmallMenu"
+	    	    android:layout_width="match_parent"
+	    	    android:gravity="center_vertical"
+	    	    android:maxLines="1"
+	    	    android:text="@string/msg_Ok" />
+
 	    </LinearLayout>
     </LinearLayout>
 </LinearLayout>
