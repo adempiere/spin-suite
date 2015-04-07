@@ -400,37 +400,18 @@ public class SyncDataTask implements BackGroundProcess  {
 			
 			int countDataSet = soapDataSet.getPropertyCount();
 			int countDataRow = soapDataRow.getPropertyCount();
-			//StringBuffer sql = new StringBuffer();
-			//StringBuffer fields =new StringBuffer();
-			//StringBuffer values =new StringBuffer();
-			//String [] data = new String[countDataRow];
 			SoapObject field = null;
 			Object value =null;
-			//MSPSTable table = null;
 			PO data = null;
 			String whereClause = "";
-			//String tableName = null;
 			String [] keyColumns = null;
 			POInfo info = null;
-			if (sm.getSPS_Table_ID()!= 0 ){
-				//table = new MSPSTable(m_ctx, sm.getSPS_Table_ID(), conn);
-				//data =  MSPSTable.getPO(m_ctx, 0, table.getTableName(), conn);
+			if (sm.getSPS_Table_ID()!= 0)
 				info = POInfo.getPOInfo (m_ctx, sm.getSPS_Table_ID(), conn);
-				//tableName = table.getTableName();
-			}
+			
 			if (info == null )
 				return;
-			/*else if (sm.getWS_WebServiceType_ID()!=0){
-				MWSWebServiceType wst = new MWSWebServiceType(m_ctx, sm.getWS_WebServiceType_ID(), conn);
-				if (wst.getAD_Table_ID()!=0){
-					X_AD_Table table = new X_AD_Table(m_ctx, wst.getAD_Table_ID(), conn);
-					tableName = table.getTableName();
-				}
-				else
-					return;
-			}
-			else
-				return;*/
+			
 			m_MaxPB = countDataSet;
 			
 			
@@ -439,27 +420,17 @@ public class SyncDataTask implements BackGroundProcess  {
 			else
 				keyColumns = new String[]{};
 			
-			
+			Arrays.sort(keyColumns);
 			
 			for (int i = 0 ;i<keyColumns.length;i++)
 				whereClause += (whereClause.equals("") ? " ": " AND ") + keyColumns[i] + "=?";
 				
 			for (int i=0; i< countDataSet;i++){
 				m_Progress = i+1;
-				//Creating SQL Query
 				//Soap Data Row
 				soapDataRow = (SoapObject)  soapDataSet.getProperty(i);
 				Object [] keyValues = getKeyValues(soapDataRow, countDataRow, keyColumns);
-				
-				//sql = new StringBuffer();
-				//fields = new StringBuffer();
-				//values = new StringBuffer();
-				//sql.append("INSERT OR REPLACE INTO " + tableName);
-				
-				
-				
-				
-				
+
 				try {
 					data = new Query(m_ctx, info.getTableName(), whereClause, conn)
 					.setParameters(keyValues)
@@ -486,24 +457,29 @@ public class SyncDataTask implements BackGroundProcess  {
 						.first();
 
 					}
-					
-					if (data==null)
-						data = MSPSTable.getPO(m_ctx, 0, info.getTableName(), conn);	
+
+					if (data==null){
+						//Cursor rs = conn.querySQL(info.buildSelect().append(" WHERE 1=0 ").toString(),new String[]{});
+						MSPSTable table = new MSPSTable(m_ctx, info.getSPS_Table_ID(), conn);
+						data = table.getPO(null,conn);	
+					}
 					
 					if (data==null)
 						return;
 					for (int j=0; j < countDataRow; j++){
 						field = (SoapObject) soapDataRow.getProperty(j);
 						String columnName = field.getAttributeAsString(SyncValues.WSColumn);
-						int index = Arrays.binarySearch(keyColumns, columnName);
-						if (index >= 0 && data.get_ID()!=0)
-							continue; 
+						if (keyColumns.length <= 1){
+							int index = Arrays.binarySearch(keyColumns, columnName);
+							if (index >= 0 && data.get_ID()!=0)
+								continue;
+						}
 						if (field.getProperty(SyncValues.WSValue) == null)
 							value = null;
 						else
 							value = field.getPropertyAsString(SyncValues.WSValue);
 						
-						value = DisplayType.parseValue (value, info.getDisplayType(columnName));
+						value = DisplayType.parseValue (value, info.getDisplayType(columnName), columnName);
 						
 						data.set_Value(columnName, value);
 					}
@@ -516,29 +492,7 @@ public class SyncDataTask implements BackGroundProcess  {
 					LogM.log(m_ctx, SyncDataTask.class, Level.SEVERE, m_PublicMsg,e.getCause());
 					publishOnRunning();
 				} 
-				
-				
 					
-				//MSPSTable.getPO(ctx, Record_ID, tableName, conn)
-				//Loading Fields And Values 
-				/*
-				for (int j=0; j < countDataRow; j++){
-					field = (SoapObject) soapDataRow.getProperty(j);
-					String columnName = field.getAttributeAsString(SyncValues.WSColumn);
-					fields.append((fields.length()>0?","+columnName:columnName));
-					values.append((values.length()>0?",?":"?"));
-					if (field.getProperty(SyncValues.WSValue) == null)
-						value = null;
-					else
-						value = field.getPropertyAsString(SyncValues.WSValue);
-					
-					data[j] = (value!=null ? value.toString() : null);
-				}
-				*/
-				//Generating SQL
-				//sql.append("("+fields.toString()+") VALUES ("+values+"); ");
-				
-				//runQuery(sql.toString(),data);
 			}
 		}
 		else if (m_MethodValue.equals(SyncValues.WSMCreateData)){
@@ -563,7 +517,6 @@ public class SyncDataTask implements BackGroundProcess  {
 						sm.save();
 					}
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					m_PublicMsg = e.getLocalizedMessage();
 					LogM.log(m_ctx, SyncDataTask.class, Level.SEVERE, m_PublicMsg,e.getCause());
 					publishOnRunning();

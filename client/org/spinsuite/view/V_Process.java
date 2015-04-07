@@ -621,7 +621,11 @@ public class V_Process extends Activity {
     			break;
     		}
     		//	Get Value
-    		Object value = DisplayType.getJDBC_Value(field.DisplayType, lookup.getValue(), true, true);
+
+    		Object value = DisplayType.getJDBC_Value(field.DisplayType, lookup.getValue(), true, true
+    	    		//2015-03-26 Carlos Parada Add ColumnName 
+    				, field.ColumnName);
+    				//End Carlos Parada
     		if(!field.IsSameLine) {
     			parameter = new ProcessInfoParameter(field.ColumnName, 
     					value, field.Name, lookup.getDisplayValue(), field.DisplayType);

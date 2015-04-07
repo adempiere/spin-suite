@@ -430,13 +430,14 @@ public final class DisplayType
 	 * @return
 	 * @return Object
 	 */
-	public static Object getJDBC_Value (int displayType, Object value, boolean yesNoAsBoolean, boolean dateAsDate) {
+	public static Object getJDBC_Value (int displayType, Object value, boolean yesNoAsBoolean, boolean dateAsDate,String columnName) {
 		if(value == null)
 			return null;
+		
 		//	Else
 		if (isText(displayType) 
 				|| displayType == LIST
-				|| displayType == BUTTON) {
+				|| displayType == BUTTON || (columnName!=null && columnName.equals("AD_Language"))) {
 			if(String.valueOf(value).length() > 0)
 				return String.valueOf(value);
 			return null;
@@ -488,8 +489,23 @@ public final class DisplayType
 	 * @return Object
 	 */
 	public static Object getJDBC_Value (int displayType, Object value) {
-		return getJDBC_Value (displayType, value, false, false);
+		return getJDBC_Value (displayType, value, false, false, null);
 	}
+	
+	/**
+	 * Get Value From Display Type
+	 * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com 26/3/2015, 21:37:24
+	 * @param displayType
+	 * @param value
+	 * @param yesNoAsBoolean
+	 * @param dateAsDate
+	 * @return
+	 * @return Object
+	 */
+	public static Object getJDBC_Value (int displayType, Object value, boolean yesNoAsBoolean, boolean dateAsDate){
+		return getJDBC_Value (displayType, value, yesNoAsBoolean, dateAsDate, null);
+	}
+	
 	
 	/**
 	 * Set Context Value from activity
@@ -584,14 +600,14 @@ public final class DisplayType
 	 * @return
 	 * @return Object
 	 */
-	public static Object parseValue (Object value, int displayType) {
+	public static Object parseValue (Object value, int displayType, String columnName) {
 		//	Valid Null
 		if(value == null)
 			return null;
 		//	
 		if (isText(displayType) 
 				|| displayType == LIST
-				|| displayType == BUTTON) {
+				|| displayType == BUTTON || (columnName!=null && columnName.equals("AD_Language"))) {
 			return String.valueOf(value);
 		} else if (isID(displayType) || displayType == INTEGER) {
 			if(value instanceof Integer) {
@@ -618,6 +634,18 @@ public final class DisplayType
 			return null;
 		return null;
 	}   //  getContext
+	
+	/**
+	 * 
+	 * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com , 23:58:15
+	 * @param value
+	 * @param displayType
+	 * @return
+	 * @return Object
+	 */
+	public static Object parseValue (Object value, int displayType){
+		return parseValue (value, displayType, null);
+	}
 	
 	/**
 	 * 	Get Description

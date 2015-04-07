@@ -235,7 +235,7 @@ public class MSession extends X_AD_Session
 	 */
 	public MSPSChangeLog changeLog (
 		DB conn, int AD_ChangeLog_ID,
-		int AD_Table_ID, int AD_Column_ID, int Record_ID,
+		int AD_Table_ID, int AD_Column_ID, Object Record_ID,
 		int AD_Client_ID, int AD_Org_ID,
 		Object OldValue, Object NewValue, String event)
 	{
