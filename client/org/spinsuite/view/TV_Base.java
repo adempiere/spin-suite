@@ -111,7 +111,7 @@ public class TV_Base extends FragmentActivity
     	m_DList = (ListView) findViewById(R.id.left_drawer);
         //	
         m_DLayout.setDrawerShadow(
-        		Env.getResourceID(getApplicationContext(), R.attr.ic_ab_drawer_shadow), GravityCompat.START);
+        		Env.getResourceID(this, R.attr.ic_ab_drawer_shadow), GravityCompat.START);
         
         m_DList.setOnItemClickListener(new ListView.OnItemClickListener() {
 
