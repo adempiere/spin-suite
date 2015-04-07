@@ -122,7 +122,7 @@ public class Msg {
 	 *  @return translated text
 	 */
 	public static String getMsg (Context ctx, String AD_Message) {
-		String msg = getMsg (ctx, Env.getAD_Language(ctx), AD_Message);
+		String msg = getMsg (ctx, Env.getAD_Language(), AD_Message);
 		//	Base Language
 		if(msg == null
 				|| msg.length() == 0)
@@ -139,7 +139,7 @@ public class Msg {
 	 *  @see java.text.MessageFormat for formatting options
 	 */
 	public static String getMsg(Context ctx, String AD_Message, Object[] args) {
-		String msg = getMsg (ctx, Env.getAD_Language(ctx), AD_Message, args);
+		String msg = getMsg (ctx, Env.getAD_Language(), AD_Message, args);
 		//	Base Language
 		if(msg == null
 				|| msg.length() == 0)
@@ -233,7 +233,7 @@ public class Msg {
 				|| p_AD_Language.length() == 0)
 			p_AD_Language = Env.BASE_LANGUAGE;
 		//	
-		return Env.getContext(ctx, MSG_PREFIX + "|" + p_AD_Language + "|" + p_Msg);
+		return Env.getContext(MSG_PREFIX + "|" + p_AD_Language + "|" + p_Msg);
 	}
 	
 	/**
@@ -251,7 +251,7 @@ public class Msg {
 				|| p_AD_Language.length() == 0)
 			p_AD_Language = Env.BASE_LANGUAGE;
 		//	Set Context
-		Env.setContext(ctx, MSG_PREFIX + "|" + p_AD_Language + "|" + p_Msg, p_Value);
+		Env.setContext(MSG_PREFIX + "|" + p_AD_Language + "|" + p_Msg, p_Value);
 	}
 	
 
@@ -376,7 +376,7 @@ public class Msg {
 	 *  @return Name of the Column or "" if not found
 	 */
 	public static String getElement (Context ctx, String ColumnName) {
-		String language = Env.getAD_Language(ctx);
+		String language = Env.getAD_Language();
 		String msg = getElement (ctx, language, ColumnName, true);
 		if((msg == null
 				|| msg.length() == 0)
@@ -393,8 +393,8 @@ public class Msg {
 	 *  @return Name of the Column or "" if not found
 	 */
 	public static String getElement (Context ctx, String ColumnName, boolean isSOTrx) {
-		String language = Env.getAD_Language(ctx);
-		String msg = getElement (ctx, Env.getAD_Language(ctx), ColumnName, isSOTrx);
+		String language = Env.getAD_Language();
+		String msg = getElement (ctx, Env.getAD_Language(), ColumnName, isSOTrx);
 		if((msg == null
 				|| msg.length() == 0)
 				&& !language.equals(Env.BASE_LANGUAGE))
@@ -481,7 +481,7 @@ public class Msg {
 	public static String translate(Context ctx, String text) {
 		if (text == null || text.length() == 0)
 			return text;
-		return translate(ctx, Env.getAD_Language(ctx), Env.isSOTrx(ctx), text);
+		return translate(ctx, Env.getAD_Language(), Env.isSOTrx(), text);
 	}   //  translate*/
 
 	/**

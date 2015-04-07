@@ -101,7 +101,7 @@ public class VLookupButtonDocAction extends VLookupButton
 	protected void init() {
 		super.init();
 		v_Button.setCompoundDrawablesWithIntrinsicBounds(
-				Env.getResourceID(getContext(), R.attr.ic_doc_draft), 0, 0, 0);
+				Env.getResourceID(getActivity(), R.attr.ic_doc_draft), 0, 0, 0);
 		//	
 		setOnClickListener(new OnClickListener() {			
 			@Override
@@ -133,26 +133,26 @@ public class VLookupButtonDocAction extends VLookupButton
 		if(docEngine.isValidAction(DocAction.ACTION_Complete)){
 			mQAct.addActionItem(new ActionItemList(DocAction.ACTION_Complete, 
 					getResources().getString(R.string.ACTION_Complete), 
-					getResources().getDrawable(Env.getResourceID(getContext(), R.attr.ic_doc_complete))));
+					getResources().getDrawable(Env.getResourceID(getActivity(), R.attr.ic_doc_complete))));
 		}
 		//	Action Prepare
 		if(docEngine.isValidAction(DocAction.ACTION_Prepare)){
 			mQAct.addActionItem(new ActionItemList(DocAction.ACTION_Prepare, 
 					getResources().getString(R.string.ACTION_Prepare), 
-					getResources().getDrawable(Env.getResourceID(getContext(), R.attr.ic_doc_prepare))));	
+					getResources().getDrawable(Env.getResourceID(getActivity(), R.attr.ic_doc_prepare))));	
 		}
 		//	Action Void
 		if(docEngine.isValidAction(DocAction.ACTION_Void)){
 			mQAct.addActionItem(new ActionItemList(DocAction.ACTION_Void, 
 					getResources().getString(R.string.ACTION_Void), 
-					getResources().getDrawable(Env.getResourceID(getContext(), R.attr.ic_doc_void))));	
+					getResources().getDrawable(Env.getResourceID(getActivity(), R.attr.ic_doc_void))));	
 		}
 		//	Action Void
 		if(docEngine.isValidAction(DocAction.ACTION_ReActivate) 
 				&& !docEngine.getDocStatus().equals(DocAction.STATUS_Drafted)){
 			mQAct.addActionItem(new ActionItemList(DocAction.ACTION_ReActivate, 
 					getResources().getString(R.string.ACTION_ReActivate), 
-					getResources().getDrawable(Env.getResourceID(getContext(), R.attr.ic_doc_reactivate))));	
+					getResources().getDrawable(Env.getResourceID(getActivity(), R.attr.ic_doc_reactivate))));	
 		}
 		
 		mQAct.show(v);
@@ -188,22 +188,22 @@ public class VLookupButtonDocAction extends VLookupButton
 		if(action != null){
 			if(action.equals(DocAction.ACTION_Prepare)){						//	Prepare
 				label = getResources().getString(R.string.ACTION_Prepare);
-				img = getResources().getDrawable(Env.getResourceID(getContext(), R.attr.ic_doc_prepare));
+				img = getResources().getDrawable(Env.getResourceID(getActivity(), R.attr.ic_doc_prepare));
 			} else if(action.equals(DocAction.ACTION_Complete)){				//	Complete
 				label = getResources().getString(R.string.ACTION_Complete);
-				img = getResources().getDrawable(Env.getResourceID(getContext(), R.attr.ic_doc_complete));
+				img = getResources().getDrawable(Env.getResourceID(getActivity(), R.attr.ic_doc_complete));
 			} else if(action.equals(DocAction.ACTION_Close)){					//	Close
 				label = getResources().getString(R.string.ACTION_Close);
-				img = getResources().getDrawable(Env.getResourceID(getContext(), R.attr.ic_doc_close));
+				img = getResources().getDrawable(Env.getResourceID(getActivity(), R.attr.ic_doc_close));
 			} else if(action.equals(DocAction.ACTION_Void)){					//	Void
 				label = getResources().getString(R.string.ACTION_Void);
-				img = getResources().getDrawable(Env.getResourceID(getContext(), R.attr.ic_doc_void));
+				img = getResources().getDrawable(Env.getResourceID(getActivity(), R.attr.ic_doc_void));
 			} else if(action.equals(DocAction.ACTION_Reverse_Correct)){			//	Reverse Correct
 				label = getResources().getString(R.string.ACTION_Reverse);
-				img = getResources().getDrawable(Env.getResourceID(getContext(), R.attr.ic_doc_reverse_correct));
+				img = getResources().getDrawable(Env.getResourceID(getActivity(), R.attr.ic_doc_reverse_correct));
 			} else if(action.equals(DocAction.ACTION_ReActivate)){				//	Re-Activate
 				label = getResources().getString(R.string.ACTION_ReActivate);
-				img = getResources().getDrawable(Env.getResourceID(getContext(), R.attr.ic_doc_reactivate));
+				img = getResources().getDrawable(Env.getResourceID(getActivity(), R.attr.ic_doc_reactivate));
 			}
 		}
 		//	For All

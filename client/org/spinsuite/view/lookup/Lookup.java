@@ -88,8 +88,8 @@ public class Lookup {
 	public Lookup(Context ctx, TabParameter tabParam, InfoField field, String tableAlias) {
 		this.m_field = field;
 		this.ctx = ctx;
-		m_Language = Env.getAD_Language(ctx);
-		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
+		m_Language = Env.getAD_Language();
+		m_IsBaseLanguage = Env.isBaseLanguage();
 		m_TabParam = tabParam;
 		m_TableAlias = tableAlias;
 		//	Add Alias
@@ -135,8 +135,8 @@ public class Lookup {
 	public Lookup(Context ctx, TabParameter tabParam, int m_SPS_Column_ID, String tableAlias) {
 		this.m_field = GridField.loadInfoColumnField(ctx, m_SPS_Column_ID);
 		this.ctx = ctx;
-		m_Language = Env.getAD_Language(ctx);
-		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
+		m_Language = Env.getAD_Language();
+		m_IsBaseLanguage = Env.isBaseLanguage();
 		m_TabParam = tabParam;
 		m_TableAlias = tableAlias;
 		//	Add Alias
@@ -183,8 +183,8 @@ public class Lookup {
 		m_field = GridField.loadInfoColumnField(ctx, m_SPS_Column_ID);
 		//	Set Property
 		this.ctx = ctx;
-		m_Language = Env.getAD_Language(ctx);
-		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
+		m_Language = Env.getAD_Language();
+		m_IsBaseLanguage = Env.isBaseLanguage();
 		ctx_lookup_value = CTX_VALUE_PREFIX + m_Language + "|" + m_field.SPS_Column_ID;
 		ctx_lookup_has_where = CTX_HAS_WHERE + m_Language + "|" + m_field.SPS_Column_ID;
 		ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX + m_Language + "|" + m_field.SPS_Column_ID;
@@ -218,8 +218,8 @@ public class Lookup {
 		m_field = GridField.loadInfoColumnField(ctx, m_TableName, m_ColumnName);
 		//	Set Property
 		this.ctx = ctx;
-		m_Language = Env.getAD_Language(ctx);
-		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
+		m_Language = Env.getAD_Language();
+		m_IsBaseLanguage = Env.isBaseLanguage();
 		ctx_lookup_value = CTX_VALUE_PREFIX + m_Language + "|" + m_field.SPS_Column_ID;
 		ctx_lookup_has_where = CTX_HAS_WHERE + m_Language + "|" + m_field.SPS_Column_ID;
 		ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX + m_Language + "|" + m_field.SPS_Column_ID;
@@ -268,8 +268,8 @@ public class Lookup {
 	public Lookup(Context ctx, int m_SPS_Table_ID) {
 		this.m_SPS_Table_ID = m_SPS_Table_ID;
 		this.ctx = ctx;
-		m_Language = Env.getAD_Language(ctx);
-		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
+		m_Language = Env.getAD_Language();
+		m_IsBaseLanguage = Env.isBaseLanguage();
 		ctx_lookup_value = CTX_VALUE_PREFIX_TABLE + m_Language + "|" + m_SPS_Table_ID;
 		ctx_lookup_has_where = CTX_HAS_WHERE_TABLE + m_Language + "|" + m_SPS_Table_ID;
 		ctx_lookup_info = CTX_LOOKUP_INFO_PREFIX_TABLE + m_Language + "|" + m_SPS_Table_ID;
@@ -364,19 +364,19 @@ public class Lookup {
 	public String getSQL() {
 		//	Cache
 		if(m_IsLoaded)
-			return Env.parseContext(ctx, m_TabParam.getActivityNo(), m_TabParam.getTabNo(), getParsedSQL(m_SQL), false, null);
+			return Env.parseContext(m_TabParam.getActivityNo(), m_TabParam.getTabNo(), getParsedSQL(m_SQL), false, null);
 		//	
 		boolean isCache = false;
 		String sqlParsed = null;
 		//	
 		if(m_SPS_Table_ID == 0) {
 			//	
-			m_SQL = Env.getContext(ctx, ctx_lookup_value);
+			m_SQL = Env.getContext(ctx_lookup_value);
 			isCache = m_SQL != null;
 			//	Return Cache
 			if(isCache) {
-				m_IsHasWhere = Env.getContextAsBoolean(ctx, ctx_lookup_has_where);
-				m_InfoLookup = (InfoLookup) Env.getContextObject(ctx, ctx_lookup_info, InfoLookup.class);
+				m_IsHasWhere = Env.getContextAsBoolean(ctx_lookup_has_where);
+				m_InfoLookup = (InfoLookup) Env.getContextObject(ctx_lookup_info, InfoLookup.class);
 				//	From Cache Where Clause
 				if(m_InfoLookup != null)
 					LogM.log(ctx, getClass(), Level.FINE, "From Cache[Where Clause=" + m_InfoLookup.WhereClause + "]");
@@ -384,7 +384,7 @@ public class Lookup {
 				sqlParsed = getParsedSQL(m_SQL);
 				//	
 				LogM.log(ctx, getClass(), Level.FINE, "From Cache[SQL=" + sqlParsed + "]");
-				return Env.parseContext(ctx, m_TabParam.getActivityNo(), m_TabParam.getTabNo(), sqlParsed, false, null);
+				return Env.parseContext(m_TabParam.getActivityNo(), m_TabParam.getTabNo(), sqlParsed, false, null);
 			}
 			//	Reload
 			LogM.log(ctx, getClass(), Level.FINE, 
@@ -409,12 +409,12 @@ public class Lookup {
 			}
 		} else {
 			//	
-			m_SQL = Env.getContext(ctx, ctx_lookup_value);
+			m_SQL = Env.getContext(ctx_lookup_value);
 			isCache = m_SQL != null;
 			//	Return Cache
 			if(isCache) {
-				m_IsHasWhere = Env.getContextAsBoolean(ctx, ctx_lookup_has_where);
-				m_InfoLookup = (InfoLookup) Env.getContextObject(ctx, ctx_lookup_info, InfoLookup.class);
+				m_IsHasWhere = Env.getContextAsBoolean(ctx_lookup_has_where);
+				m_InfoLookup = (InfoLookup) Env.getContextObject(ctx_lookup_info, InfoLookup.class);
 				//	From Cache Where Clause
 				if(m_InfoLookup != null)
 					LogM.log(ctx, getClass(), Level.FINE, "From Cache[Where Clause=" + m_InfoLookup.WhereClause + "]");
@@ -422,7 +422,7 @@ public class Lookup {
 				sqlParsed = getParsedSQL(m_SQL);
 				//	
 				LogM.log(ctx, getClass(), Level.FINE, "From Cache[SQL=" + sqlParsed + "]");
-				return Env.parseContext(ctx, m_TabParam.getActivityNo(), m_TabParam.getTabNo(), sqlParsed, false, null);
+				return Env.parseContext(m_TabParam.getActivityNo(), m_TabParam.getTabNo(), sqlParsed, false, null);
 			}
 			//	
 			m_SQL = loadFromTable();
@@ -431,9 +431,9 @@ public class Lookup {
 		//	Set Is Loaded
 		m_IsLoaded = true;
 		//	Set to Cache
-		Env.setContext(ctx, ctx_lookup_value, m_SQL);
-		Env.setContext(ctx, ctx_lookup_has_where, m_IsHasWhere);
-		Env.setContextObject(ctx, ctx_lookup_info, m_InfoLookup);
+		Env.setContext(ctx_lookup_value, m_SQL);
+		Env.setContext(ctx_lookup_has_where, m_IsHasWhere);
+		Env.setContextObject(ctx_lookup_info, m_InfoLookup);
 		//	Parse SQL
 		sqlParsed = getParsedSQL(m_SQL);
 		//	
@@ -443,7 +443,7 @@ public class Lookup {
 		//	
 		LogM.log(ctx, getClass(), Level.FINE, "[SQL Without Cache=" + sqlParsed + "]");
 		//	Return
-		return Env.parseContext(ctx, m_TabParam.getActivityNo(), m_TabParam.getTabNo(), sqlParsed, false, null);
+		return Env.parseContext(m_TabParam.getActivityNo(), m_TabParam.getTabNo(), sqlParsed, false, null);
 	}
 	
 	/**
@@ -455,7 +455,7 @@ public class Lookup {
 	public InfoLookup getInfoLookup() {
 		//	Get SQL
 		if(m_InfoLookup == null) {
-			m_InfoLookup = (InfoLookup) Env.getContextObject(ctx, ctx_lookup_info, InfoLookup.class);
+			m_InfoLookup = (InfoLookup) Env.getContextObject(ctx_lookup_info, InfoLookup.class);
 			LogM.log(ctx, getClass(), Level.FINE, "[Get Lookup From Cache=" + m_InfoLookup + "]");
 		}
 		if(m_InfoLookup == null)

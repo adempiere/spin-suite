@@ -21,6 +21,8 @@ import java.io.File;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
+import org.spinsuite.mqtt.connection.MQTTConnection;
+import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.sync.SyncService;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.Msg;
@@ -38,6 +40,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 /**
@@ -56,9 +59,19 @@ public class T_Login_Init extends DialogFragment
 	/** Text Password			*/
 	private EditText 	et_PassWord;
 	/**	URL SOAP Communication	*/
-	public EditText 	et_UrlServer;
+	private EditText 	et_UrlServer;
 	/**	Time Out				*/
 	private EditText 	et_Timeout;
+	/**	For MQTT Server			*/
+	private EditText 	et_MQTT_ServerName;
+	/**	MQTT User				*/
+	private EditText 	et_MQTT_ServerUser;
+	/**	MQTT Pass				*/
+	private EditText 	et_MQTT_ServerPass;
+	/**	MQTT Port				*/
+	private EditText 	et_MQTT_ServerPort;
+	/**	MQTT File Path			*/
+	private Button 		bt_MQTT_SSL_File_Path;
 	/**	Context					*/
 	private Activity 	m_Callback = null;
 	
@@ -79,21 +92,31 @@ public class T_Login_Init extends DialogFragment
 		
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View view = inflater.inflate(R.layout.t_login_init, null);
-		
-		et_User		 	= (EditText) view.findViewById(R.id.et_User);
-		et_PassWord 	= (EditText) view.findViewById(R.id.et_Pass);
-		et_UrlServer 	= (EditText) view.findViewById(R.id.et_UrlServer);
-    	et_Timeout 		= (EditText) view.findViewById(R.id.et_Timeout);
+		//	Get Views
+		et_User		 			= (EditText) view.findViewById(R.id.et_User);
+		et_PassWord 			= (EditText) view.findViewById(R.id.et_Pass);
+		et_UrlServer 			= (EditText) view.findViewById(R.id.et_UrlServer);
+    	et_Timeout 				= (EditText) view.findViewById(R.id.et_Timeout);
+    	//	MQTT Server
+    	et_MQTT_ServerName 		= (EditText) view.findViewById(R.id.et_MQTT_ServerName);
+    	et_MQTT_ServerUser 		= (EditText) view.findViewById(R.id.et_MQTT_ServerUser);
+    	et_MQTT_ServerPass 		= (EditText) view.findViewById(R.id.et_MQTT_ServerPass);
+    	et_MQTT_ServerPort 		= (EditText) view.findViewById(R.id.et_MQTT_ServerPort);
+    	bt_MQTT_SSL_File_Path 	= (Button) view.findViewById(R.id.bt_MQTT_SSL_File_Path);
 		//	Set Authentication for test
-		et_User.setText(SyncValues.DEFAULT_USER);
-		et_PassWord.setText(SyncValues.DEFAULT_PASS);
+		et_User.setText(SyncValues.DEFAULT_AD_USER);
+		et_PassWord.setText(SyncValues.DEFAULT_AD_PASS);
     	// Carlos Parada Setting Parameters for Spin-Suite Service Call 
     	et_UrlServer.setText(SyncValues.DEFAULT_SOAP_URL);
     	//End Carlos Parada
+    	//	For MQTT Server
+    	et_MQTT_ServerName.setText(MQTTDefaultValues.DEFAULT_MQTT_SERVER_NAME);
+    	et_MQTT_ServerUser.setText(MQTTDefaultValues.DEFAULT_MQTT_USER);
+    	et_MQTT_ServerPass.setText(MQTTDefaultValues.DEFAULT_MQTT_PASS);
+    	et_MQTT_ServerPort.setText(String.valueOf(MQTTDefaultValues.DEFAULT_MQTT_PORT));
 		//	
-    	
 		builder.setView(view);
-		
+		//	
 		builder.setNegativeButton(R.string.Action_Cancel, this);
 		builder.setPositiveButton(android.R.string.ok, this);
 		return builder.create();
@@ -117,19 +140,44 @@ public class T_Login_Init extends DialogFragment
 	 * @return void
 	 */
 	public void startSynchronization() {
-		Env.setContext(getActivity(), "#SUrlSoap", et_UrlServer.getText().toString());
-		Env.setContext(getActivity(), "#SMethod", SyncValues.DEFAULT_METHOD);
-		Env.setContext(getActivity(), "#SNameSpace", SyncValues.DEFAULT_NAME_SPACE);
-		Env.setContext(getActivity(), "#SUser", et_User.getText().toString());
-		Env.setContext(getActivity(), "#SPass", et_PassWord.getText().toString());
+		Env.setContext("#SUrlSoap", et_UrlServer.getText().toString());
+		Env.setContext("#SMethod", SyncValues.DEFAULT_METHOD);
+		Env.setContext("#SNameSpace", SyncValues.DEFAULT_NAME_SPACE);
+		Env.setContext("#SUser", et_User.getText().toString());
+		Env.setContext("#SPass", et_PassWord.getText().toString());
 		//	Create Directory
 		createDBDirectory();
+		//	Set Values for MQTT Server
+		MQTTConnection.setClient_ID(getActivity(), String.valueOf(Env.getAD_User_ID()));
+		MQTTConnection.setHost(getActivity(), et_MQTT_ServerName.getText().toString());
+		MQTTConnection.setAlarmTime(getActivity(), MQTTDefaultValues.DEFAULT_MQTT_ALARM_TIME);
+		MQTTConnection.setMQTTUser(getActivity(), et_MQTT_ServerUser.getText().toString());
+		MQTTConnection.setMQTTPassword(getActivity(), et_MQTT_ServerPass.getText().toString());
+		//	Set Port
+		if(et_MQTT_ServerPort.getText() != null 
+				&& et_MQTT_ServerPort.getText().toString().length() > 0) {
+			String port = et_MQTT_ServerPort.getText().toString();
+			MQTTConnection.setPort(getActivity(), Integer.parseInt(port));
+		}
+		//	Valid SSL Connection
+		if(bt_MQTT_SSL_File_Path.getText() != null 
+				&& bt_MQTT_SSL_File_Path.getText().toString().length() > 0) {
+			String m_SSL_File = bt_MQTT_SSL_File_Path.getText().toString();
+			//	Hardcode
+			MQTTConnection.setIsSSLConnection(getActivity(), m_SSL_File.contains(".ssl"));
+			MQTTConnection.setSSLFilePath(getActivity(), m_SSL_File);
+		} else {
+			MQTTConnection.setIsSSLConnection(getActivity(), false);
+			MQTTConnection.setSSLFilePath(getActivity(), null);
+		}
 		//	Valid Timeout
 		if(et_Timeout.getText() != null 
 				&& et_Timeout.getText().toString().length() > 0){
 			String limit = et_Timeout.getText().toString();
-			Env.setContext(getActivity(), "#Timeout", Integer.parseInt(limit));
+			Env.setContext("#Timeout", Integer.parseInt(limit));
+			MQTTConnection.setTimeout(getActivity(), Integer.parseInt(limit));
 		}
+		//	
 		((I_Login)m_Callback).setEnabled(false);
 		//	Add Value to Web
 		String url = et_UrlServer.getText().toString();
@@ -144,7 +192,7 @@ public class T_Login_Init extends DialogFragment
 		bundle.putString(SyncValues.KEY_USER, et_User.getText().toString());
 		bundle.putString(SyncValues.KEY_PASS, et_PassWord.getText().toString());
 		bundle.putString(SyncValues.KEY_SOAP_ACTION, SyncValues.DEFAULT_NAME_SPACE + SyncValues.DEFAULT_METHOD);
-		bundle.putInt(SyncValues.KEY_TIMEOUT, Env.getContextAsInt(m_Callback, "#Timeout"));
+		bundle.putInt(SyncValues.KEY_TIMEOUT, Env.getContextAsInt("#Timeout"));
 		//	Instance Service
 		Intent m_Service = new Intent(getActivity(), SyncService.class);
 		m_Service.putExtras(bundle);
@@ -196,7 +244,7 @@ public class T_Login_Init extends DialogFragment
 	 * @return void
 	 */
 	private void createDBDirectory(){
-		if(!Env.isEnvLoad(getActivity())){
+		if(!Env.isEnvLoad()){
 			if(Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
 				String basePathName = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
 				//	Application Path
@@ -208,11 +256,11 @@ public class T_Login_Init extends DialogFragment
 				String attPathName = basePathName + Env.ATT_DIRECTORY;
 				
 				//	
-				Env.setAppBaseDirectory(getActivity(), basePathName);
-				Env.setDB_PathName(getActivity(), dbPathName);
-				Env.setDoc_DirectoryPathName(getActivity(), docPathName);
-				Env.setTmp_DirectoryPathName(getActivity(), tmpPathName);
-				Env.setAtt_DirectoryPathName(getActivity(), attPathName);
+				Env.setAppBaseDirectory(basePathName);
+				Env.setDB_PathName(dbPathName);
+				Env.setDoc_DirectoryPathName(docPathName);
+				Env.setTmp_DirectoryPathName(tmpPathName);
+				Env.setAtt_DirectoryPathName(attPathName);
 				//	Database
 				File f = new File(dbPath);
 				if(!f.exists()) {
@@ -252,7 +300,7 @@ public class T_Login_Init extends DialogFragment
 								+ "\"" + attPathName + "\"");
 				}
 			} else {
-				Env.setDB_PathName(getActivity(), DB.DB_NAME);
+				Env.setDB_PathName(DB.DB_NAME);
 			}	
     	}
 	}

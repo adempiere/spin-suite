@@ -32,7 +32,7 @@ public class CacheReset extends StdProcess {
 	@Override
 	protected String doIt() throws Exception {
 		//	Delete
-		int deleted = Env.cacheReset(getCtx());
+		int deleted = Env.cacheReset();
 		//	Default
 		return "@Deleted@ = " + deleted;
 	}

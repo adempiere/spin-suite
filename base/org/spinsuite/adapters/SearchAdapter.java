@@ -215,8 +215,8 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 	            	ArrayList<DisplayRecordItem> filteredResult = new ArrayList<DisplayRecordItem>();
 	                for(DisplayRecordItem item : originalData) {
 	                    if((item.getValue() != null 
-	                    		&& item.getValue().toLowerCase(Env.getLocate(ctx))
-	                    					.contains(constraint.toString().toLowerCase(Env.getLocate(ctx)))))
+	                    		&& item.getValue().toLowerCase(Env.getLocate())
+	                    					.contains(constraint.toString().toLowerCase(Env.getLocate()))))
 	                        filteredResult.add(item);
 	                }
 	                return filteredResult;

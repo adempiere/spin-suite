@@ -137,7 +137,7 @@ public class Query
 	 */
 	public Query setOrderBy(String orderBy) {
 		this.orderBy = orderBy != null ? orderBy.trim() : null;
-		if (this.orderBy != null && this.orderBy.toUpperCase(Env.getLocate(ctx)).startsWith("ORDER BY")) {
+		if (this.orderBy != null && this.orderBy.toUpperCase(Env.getLocate()).startsWith("ORDER BY")) {
 			this.orderBy = this.orderBy.substring(8);
 		}
 		return this;
@@ -633,7 +633,7 @@ public class Query
 			LogM.log(ctx, getClass(), Level.FINEST, "Parameter IsActive = Y");
 		}
 		if (this.onlyClient_ID) {
-			int AD_Client_ID = Env.getAD_Client_ID(ctx);
+			int AD_Client_ID = Env.getAD_Client_ID();
 			conn.addInt(AD_Client_ID);
 			LogM.log(ctx, getClass(), Level.FINEST, "Parameter AD_Client_ID = " + AD_Client_ID);
 		}

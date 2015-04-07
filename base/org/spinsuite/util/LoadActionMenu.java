@@ -132,7 +132,7 @@ public class LoadActionMenu {
 						//	
 						bundle.putInt("SPS_Table_ID", m_SPS_Table_ID);
 						//	Set Read Write
-						boolean m_IsReadWrite = Env.getWindowsAccess(activity, paramAct.getSPS_Window_ID());
+						boolean m_IsReadWrite = Env.getWindowsAccess(paramAct.getSPS_Window_ID());
 						bundle.putString("IsInsertRecord", (m_IsReadWrite? "Y": "N"));
 						//	
 		            	intent = new Intent(activity, LV_StandardSearch.class);
@@ -174,7 +174,7 @@ public class LoadActionMenu {
 		actParam.setActivityNo(tabParam.getActivityNo());
 		//	
 		actParam.setFrom_SPS_Table_ID(tabParam.getSPS_Table_ID());
-		int[] record_ID = Env.getTabRecord_ID(activity, tabParam.getActivityNo(), tabParam.getTabNo());
+		int[] record_ID = Env.getTabRecord_ID(tabParam.getActivityNo(), tabParam.getTabNo());
     	actParam.setFrom_Record_ID(record_ID[0]);
     	//	Is From Activity
     	actParam.setIsFromActivity(true);

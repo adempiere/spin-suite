@@ -232,7 +232,7 @@ public class V_Process extends Activity {
 			loadDrawerOption();
 		}
     	//	Set Is Read Write
-    	m_IsReadWrite = Env.getProcessAccess(this, m_pInfo.getAD_Process_ID());
+    	m_IsReadWrite = Env.getProcessAccess(m_pInfo.getAD_Process_ID());
 		//	Load Print Formats
 		loadPrintFormat();
 	}
@@ -249,7 +249,7 @@ public class V_Process extends Activity {
     	m_DList = (ListView) findViewById(R.id.left_drawer);
         //	
         m_DLayout.setDrawerShadow(
-        		Env.getResourceID(this, R.attr.ic_ab_drawer_shadow), GravityCompat.START);
+        		Env.getResourceID(getApplicationContext(), R.attr.ic_ab_drawer_shadow), GravityCompat.START);
         
         m_DList.setOnItemClickListener(new ListView.OnItemClickListener() {
 
@@ -621,7 +621,11 @@ public class V_Process extends Activity {
     			break;
     		}
     		//	Get Value
-    		Object value = DisplayType.getJDBC_Value(field.DisplayType, lookup.getValue(), true, true);
+
+    		Object value = DisplayType.getJDBC_Value(field.DisplayType, lookup.getValue(), true, true
+    	    		//2015-03-26 Carlos Parada Add ColumnName 
+    				, field.ColumnName);
+    				//End Carlos Parada
     		if(!field.IsSameLine) {
     			parameter = new ProcessInfoParameter(field.ColumnName, 
     					value, field.Name, lookup.getDisplayValue(), field.DisplayType);
@@ -719,7 +723,7 @@ public class V_Process extends Activity {
 					ll_ProcessInfo.setVisibility(TextView.VISIBLE);
 					ll_ProcessPara.setVisibility(ScrollView.VISIBLE);
 					tv_Summary.setVisibility(TextView.GONE);
-					item.setIcon(Env.getResourceID(this, R.attr.ic_ab_process));
+					item.setIcon(Env.getResourceID(getApplicationContext(), R.attr.ic_ab_process));
 				}
 				if(m_pInfo.isReport()) {
 					iSearch.setVisible(false);
@@ -967,7 +971,7 @@ public class V_Process extends Activity {
 					&& !m_activityParam.isFromActivity()){
 				if(m_pInfo.hasParameter()) {
 					ll_ProcessPara.setVisibility(ScrollView.GONE);
-					currentItem.setIcon(Env.getResourceID(v_activity, R.attr.ic_ab_settings));
+					currentItem.setIcon(Env.getResourceID(getApplicationContext(), R.attr.ic_ab_settings));
 				}
 			}
 			//	Hide dialog

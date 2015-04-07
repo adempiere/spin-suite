@@ -49,8 +49,8 @@ public class ReportPrintQuery {
 		//	Load Report Information
 		m_IR = new InfoReport(ctx, m_AD_PrintFormat_ID, conn);
 		m_orderColumns = new ArrayList<ReportSortColumnPair>();
-		m_AD_Language = Env.getAD_Language(ctx);
-		m_IsBaseLanguage = Env.isBaseLanguage(ctx);
+		m_AD_Language = Env.getAD_Language();
+		m_IsBaseLanguage = Env.isBaseLanguage();
 	}
 	
 	/**	Context								*/

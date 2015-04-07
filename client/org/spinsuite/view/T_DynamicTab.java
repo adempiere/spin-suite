@@ -25,7 +25,7 @@ import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.view.V_BChat;
 import org.spinsuite.interfaces.I_DynamicTab;
-import org.spinsuite.interfaces.I_FragmentSelectListener;
+import org.spinsuite.interfaces.I_DT_FragmentSelectListener;
 import org.spinsuite.interfaces.OnFieldChangeListener;
 import org.spinsuite.process.DocAction;
 import org.spinsuite.util.AttachmentHandler;
@@ -80,7 +80,7 @@ import android.widget.TableLayout;
  *
  */
 public class T_DynamicTab extends Fragment 
-						implements I_DynamicTab, I_FragmentSelectListener {
+						implements I_DynamicTab, I_DT_FragmentSelectListener {
 	
 	/**
 	 * 
@@ -178,7 +178,7 @@ public class T_DynamicTab extends Fragment
     	if(m_TabParam == null)
     		return;
     	//	Set Is Read Write
-    	m_IsReadWrite = Env.getWindowsAccess(getActivity(), m_TabParam.getSPS_Window_ID()) 
+    	m_IsReadWrite = Env.getWindowsAccess(m_TabParam.getSPS_Window_ID()) 
     							&& !m_TabParam.isReadOnly();
     	//	Is Insert Record
     	m_IsInsertRecord = m_TabParam.isInsertRecord();
@@ -524,7 +524,7 @@ public class T_DynamicTab extends Fragment
 		//	
 		if(m_TabParam.getTabLevel() > 0
 				&& getActivity() != null)
-			m_IsProcessed = Env.getContextAsBoolean(getActivity(),
+			m_IsProcessed = Env.getContextAsBoolean(
 				m_TabParam.getActivityNo(), m_TabParam.getParentTabNo(), "Processed");
     	//	
     	if(mGridTab.isProcessed()
@@ -639,7 +639,7 @@ public class T_DynamicTab extends Fragment
     		//	
     		if(m_TabParam.getTabLevel() > 0
     				&& getActivity() != null)
-    			m_IsProcessed = Env.getContextAsBoolean(getActivity(),
+    			m_IsProcessed = Env.getContextAsBoolean(
     				m_TabParam.getActivityNo(), m_TabParam.getParentTabNo(), "Processed");
     		//	
     		mi_Add.setVisible(m_IsReadWrite 
@@ -772,7 +772,7 @@ public class T_DynamicTab extends Fragment
     	if(reQuery) {
     		refresh(mGridTab.getKeys(), mGridTab.getKeyColumns(), true);
     	} else if(m_TabParam.getTabLevel() > 0) {
-    		int[] currentParent_Record_ID = Env.getTabRecord_ID(getActivity(), 
+    		int[] currentParent_Record_ID = Env.getTabRecord_ID(
         			m_TabParam.getActivityNo(), m_TabParam.getParentTabNo());
         	if(mGridTab.getParent_Record_ID() != currentParent_Record_ID[0]) {
         		refresh(0, true);

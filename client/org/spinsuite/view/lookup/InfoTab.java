@@ -261,8 +261,8 @@ public class InfoTab {
 		if(SPS_Tab_ID == 0)
 			return;
 		//	
-		String language = Env.getAD_Language(ctx);
-		boolean isBaseLanguage = Env.isBaseLanguage(ctx);
+		String language = Env.getAD_Language();
+		boolean isBaseLanguage = Env.isBaseLanguage();
 		StringBuffer sql = new StringBuffer();
 		//	if Base Language
 		if(isBaseLanguage) {

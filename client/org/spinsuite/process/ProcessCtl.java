@@ -126,7 +126,7 @@ public class ProcessCtl {
 		boolean started = false;
 		boolean clientOnly = false;
 		boolean isScriptProcess = m_pi.getClassName().toLowerCase(
-				Env.getLocate(m_pi.getCtx())).startsWith(SCRIPT_PREFIX);
+				Env.getLocate()).startsWith(SCRIPT_PREFIX);
 		if (!isScriptProcess) {
 			try {
 				Class<?> processClass = Class.forName(m_pi.getClassName());

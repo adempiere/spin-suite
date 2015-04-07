@@ -24,10 +24,18 @@ public class MQTTDefaultValues {
 	private static final String INITIAL_LOAD_TOPIC 			= "Public-Initial-Load";
 	/**	Default Prefix for ADempiere Synchronization	*/
 	private static final String PRE_SYNC_TOPIC 				= "AD-Synchronization-";
-	/**	Default Prefix for Client Topic					*/
-	private static final String PRE_PUBLIC_TOPIC 			= "Public-Client-";
 	/**	Default Prefix for Request						*/
 	private static final String PRE_REQUEST_TOPIC 			= "Server-Request-";
+	/**	Default Values for MQTT Server					*/
+	public static final String 	DEFAULT_MQTT_SERVER_NAME 	= "test-spinsuite.erpcya.com";
+	/**	User											*/
+	public static final String 	DEFAULT_MQTT_USER 			= "admin";
+	/**	Password										*/
+	public static final String 	DEFAULT_MQTT_PASS 			= "admin";
+	/**	Port											*/
+	public static final int 	DEFAULT_MQTT_PORT 			= 1883;
+	/**	Alarm Time										*/
+	public static final long 	DEFAULT_MQTT_ALARM_TIME 	= 600000;
 	
 	/**
 	 * Get Synchronization Topic
@@ -38,17 +46,6 @@ public class MQTTDefaultValues {
 	 */
 	public static String getSyncTopic(String p_User) {
 		return getUserTopic(PRE_SYNC_TOPIC, p_User);
-	}
-	
-	/**
-	 * Get Public Topic
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_User
-	 * @return
-	 * @return String
-	 */
-	public static String getPublicTopic(String p_User) {
-		return getUserTopic(PRE_PUBLIC_TOPIC, p_User);
 	}
 	
 	/**

@@ -280,7 +280,7 @@ public final class DisplayType
 	public static DecimalFormat getNumberFormat(Context ctx, int displayType, String pattern) {
 		String language = Env.BASE_LANGUAGE;
 		if(ctx != null)
-			language = Env.getAD_Language(ctx);
+			language = Env.getAD_Language();
 		//	
 		Locale locale = new Locale(language);
 		DecimalFormat format = null;
@@ -371,11 +371,11 @@ public final class DisplayType
 		}
 		
 		if (displayType == DATE_TIME)
-			return Env.getDateTimeFormat(ctx);
+			return Env.getDateTimeFormat();
 		else if (displayType == TIME)
-			return Env.getTimeFormat(ctx);
+			return Env.getTimeFormat();
 		//	
-		return Env.getDateFormat(ctx);		//	default
+		return Env.getDateFormat();		//	default
 	}	//	getDateFormat
 
 	/**
@@ -430,13 +430,14 @@ public final class DisplayType
 	 * @return
 	 * @return Object
 	 */
-	public static Object getJDBC_Value (int displayType, Object value, boolean yesNoAsBoolean, boolean dateAsDate) {
+	public static Object getJDBC_Value (int displayType, Object value, boolean yesNoAsBoolean, boolean dateAsDate,String columnName) {
 		if(value == null)
 			return null;
+		
 		//	Else
 		if (isText(displayType) 
 				|| displayType == LIST
-				|| displayType == BUTTON) {
+				|| displayType == BUTTON || (columnName!=null && columnName.equals("AD_Language"))) {
 			if(String.valueOf(value).length() > 0)
 				return String.valueOf(value);
 			return null;
@@ -488,8 +489,23 @@ public final class DisplayType
 	 * @return Object
 	 */
 	public static Object getJDBC_Value (int displayType, Object value) {
-		return getJDBC_Value (displayType, value, false, false);
+		return getJDBC_Value (displayType, value, false, false, null);
 	}
+	
+	/**
+	 * Get Value From Display Type
+	 * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com 26/3/2015, 21:37:24
+	 * @param displayType
+	 * @param value
+	 * @param yesNoAsBoolean
+	 * @param dateAsDate
+	 * @return
+	 * @return Object
+	 */
+	public static Object getJDBC_Value (int displayType, Object value, boolean yesNoAsBoolean, boolean dateAsDate){
+		return getJDBC_Value (displayType, value, yesNoAsBoolean, dateAsDate, null);
+	}
+	
 	
 	/**
 	 * Set Context Value from activity
@@ -507,24 +523,24 @@ public final class DisplayType
 				|| field.DisplayType == BUTTON) {
 			if(value != null
 					&& String.valueOf(value).length() > 0) {
-				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, String.valueOf(value));
-				Env.setContext(ctx, m_ActivityNo, field.ColumnName, String.valueOf(value));
+				Env.setContext(m_ActivityNo, TabNo, field.ColumnName, String.valueOf(value));
+				Env.setContext(m_ActivityNo, field.ColumnName, String.valueOf(value));
 			} else
-				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, null);
+				Env.setContext(m_ActivityNo, TabNo, field.ColumnName, null);
 		} else if (isID(field.DisplayType) 
 				|| isLookup(field.DisplayType)
 				|| field.DisplayType == INTEGER) {
 			if(value != null) {
-				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, (Integer)value);
-				Env.setContext(ctx, m_ActivityNo, field.ColumnName, (Integer)value);
+				Env.setContext(m_ActivityNo, TabNo, field.ColumnName, (Integer)value);
+				Env.setContext(m_ActivityNo, field.ColumnName, (Integer)value);
 			} else
-				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, -1);
+				Env.setContext(m_ActivityNo, TabNo, field.ColumnName, -1);
 		} else if (isNumeric(field.DisplayType)) {
 			if(value != null) {
-				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, ((BigDecimal) value).toString());
-				Env.setContext(ctx, m_ActivityNo, field.ColumnName, ((BigDecimal) value).toString());
+				Env.setContext(m_ActivityNo, TabNo, field.ColumnName, ((BigDecimal) value).toString());
+				Env.setContext(m_ActivityNo, field.ColumnName, ((BigDecimal) value).toString());
 			} else
-				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, null);
+				Env.setContext(m_ActivityNo, TabNo, field.ColumnName, null);
 		} else if (isDate(field.DisplayType)) {
 			if(value != null) {
 				//	Format
@@ -532,13 +548,13 @@ public final class DisplayType
 				//	Date and Time
 				format = getTimestampFormat_Default();
 				String dateString = format.format((Date) value);
-				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, dateString);
-				Env.setContext(ctx, m_ActivityNo, field.ColumnName, dateString);
+				Env.setContext(m_ActivityNo, TabNo, field.ColumnName, dateString);
+				Env.setContext(m_ActivityNo, field.ColumnName, dateString);
 			} else 
-				Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, null);
+				Env.setContext(m_ActivityNo, TabNo, field.ColumnName, null);
 		} else if (field.DisplayType == YES_NO) {
-			Env.setContext(ctx, m_ActivityNo, TabNo, field.ColumnName, (Boolean)value);
-			Env.setContext(ctx, m_ActivityNo, field.ColumnName, (Boolean)value);
+			Env.setContext(m_ActivityNo, TabNo, field.ColumnName, (Boolean)value);
+			Env.setContext(m_ActivityNo, field.ColumnName, (Boolean)value);
 		} else if (isLOB(field.DisplayType))	//	CLOB is String
 			return;
 	}   //  Set Context
@@ -557,19 +573,19 @@ public final class DisplayType
 		if (isText(field.DisplayType) 
 				|| field.DisplayType == LIST
 				|| field.DisplayType == BUTTON) {
-			return Env.getContext(ctx, m_ActivityNo, TabNo, field.ColumnName);
+			return Env.getContext(m_ActivityNo, TabNo, field.ColumnName);
 		} else if (isID(field.DisplayType) || field.DisplayType == INTEGER) {    //  note that Integer is stored as BD
-			return Env.getContextAsInt(ctx, m_ActivityNo, TabNo, field.ColumnName);
+			return Env.getContextAsInt(m_ActivityNo, TabNo, field.ColumnName);
 		} else if (isNumeric(field.DisplayType)) {
-			return getNumber(ctx, Env.getContext(ctx, m_ActivityNo, TabNo, field.ColumnName), field.DisplayType);
+			return getNumber(ctx, Env.getContext(m_ActivityNo, TabNo, field.ColumnName), field.DisplayType);
 		} else if (isDate(field.DisplayType)) {
-			String value = Env.getContext(ctx, m_ActivityNo, TabNo, field.ColumnName);
+			String value = Env.getContext(m_ActivityNo, TabNo, field.ColumnName);
 			if(value != null)
 				return getDate(value);
 				//	
 			return null;
 		} else if (field.DisplayType == YES_NO) {
-			return Env.getContextAsBoolean(ctx, m_ActivityNo, TabNo, field.ColumnName);
+			return Env.getContextAsBoolean(m_ActivityNo, TabNo, field.ColumnName);
 		} else if (isLOB(field.DisplayType))	//	CLOB is String
 			return null;
 		return null;
@@ -584,14 +600,14 @@ public final class DisplayType
 	 * @return
 	 * @return Object
 	 */
-	public static Object parseValue (Object value, int displayType) {
+	public static Object parseValue (Object value, int displayType, String columnName) {
 		//	Valid Null
 		if(value == null)
 			return null;
 		//	
 		if (isText(displayType) 
 				|| displayType == LIST
-				|| displayType == BUTTON) {
+				|| displayType == BUTTON || (columnName!=null && columnName.equals("AD_Language"))) {
 			return String.valueOf(value);
 		} else if (isID(displayType) || displayType == INTEGER) {
 			if(value instanceof Integer) {
@@ -618,6 +634,18 @@ public final class DisplayType
 			return null;
 		return null;
 	}   //  getContext
+	
+	/**
+	 * 
+	 * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com , 23:58:15
+	 * @param value
+	 * @param displayType
+	 * @return
+	 * @return Object
+	 */
+	public static Object parseValue (Object value, int displayType){
+		return parseValue (value, displayType, null);
+	}
 	
 	/**
 	 * 	Get Description

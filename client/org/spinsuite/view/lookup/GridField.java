@@ -781,8 +781,8 @@ public abstract class GridField extends LinearLayout {
 	private static InfoField loadInfoColumnField(Context ctx, String p_TableName, 
 			String p_ColumnName, int p_SPS_Column_ID){
 		//	
-		String language = Env.getAD_Language(ctx);
-		boolean isBaseLanguage = Env.isBaseLanguage(ctx);
+		String language = Env.getAD_Language();
+		boolean isBaseLanguage = Env.isBaseLanguage();
 		StringBuffer sql = new StringBuffer();
 		//	if Base Language
 		if(isBaseLanguage){
