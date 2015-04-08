@@ -22,7 +22,7 @@ import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.adapters.BChatContactAdapter;
 import org.spinsuite.bchat.util.DisplayBChatContactItem;
-import org.spinsuite.interfaces.I_FragmentSelect;
+import org.spinsuite.interfaces.I_BC_FragmentSelect;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
@@ -49,7 +49,7 @@ import android.widget.ListView;
  *
  */
 public class V_BChat extends FragmentActivity 
-		implements I_FragmentSelect {
+		implements I_BC_FragmentSelect {
 	
 	/**	Drawer Layout				*/
 	private DrawerLayout 						m_DLayout;
@@ -136,7 +136,7 @@ public class V_BChat extends FragmentActivity
 	}
     
 	@Override
-	public void onItemSelected(int p_Record_ID) {
+	public void onItemSelected(int p_Record_ID, String p_Name) {
 	       //	Instance if not exists
         instanceDetailFragment();
         //	Transaction
@@ -159,7 +159,7 @@ public class V_BChat extends FragmentActivity
         transaction.commit();
         //	
         if(m_ThreadFragment != null) {
-        	m_ThreadFragment.onItemSelected(p_Record_ID);
+        	m_ThreadFragment.requestUser(p_Record_ID, p_Name);
         }
 	} 
     
@@ -185,7 +185,7 @@ public class V_BChat extends FragmentActivity
 				m_DLayout.closeDrawers();
 				DisplayBChatContactItem item = (DisplayBChatContactItem) adapter.getItemAtPosition(position);
 				m_ThreadFragment.setConversationType(FV_Thread.CT_REQUEST);
-				onItemSelected(item.getRecord_ID());
+				onItemSelected(item.getRecord_ID(), item.getValue());
 			}
         });
 

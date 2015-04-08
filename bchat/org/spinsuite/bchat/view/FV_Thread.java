@@ -20,9 +20,10 @@ import java.util.UUID;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
+import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.model.SPS_BC_Request;
-import org.spinsuite.interfaces.I_FragmentSelect;
+import org.spinsuite.interfaces.I_BC_FragmentSelect;
 import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.mqtt.connection.MQTTListener;
@@ -35,8 +36,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -46,8 +47,7 @@ import android.widget.ListView;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Apr 6, 2015, 9:54:42 PM
  *
  */
-public class FV_Thread extends Fragment 
-				implements I_FragmentSelect {
+public class FV_Thread extends Fragment {
 
 	/**
 	 * 
@@ -59,7 +59,7 @@ public class FV_Thread extends Fragment
     }
     
     /**	Call Back					*/
-    private I_FragmentSelect			m_Callback 			= null;
+    private I_BC_FragmentSelect			m_Callback 			= null;
     /**	View 						*/
 	private View 						m_view 				= null;
 	/**	List View					*/
@@ -165,10 +165,10 @@ public class FV_Thread extends Fragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            m_Callback = (I_FragmentSelect) activity;
+            m_Callback = (I_BC_FragmentSelect) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement I_FragmentSelect");
+                    + " must implement I_BC_FragmentSelect");
         }
     }
     
@@ -182,18 +182,40 @@ public class FV_Thread extends Fragment
     	m_ConversationType = p_ConversationType;
     }
     
-    @Override
-    public void onItemSelected(int p_Record_ID) {
+    /**
+     * Select a Conversation
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_SPS_BC_Request_ID
+     * @return void
+     */
+    public void selectConversation(int p_SPS_BC_Request_ID) {
+    	//	Not yet implemented
+    }
+    
+    /**
+     * Select a User for request
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_AD_User_ID
+     * @param p_Name
+     * @return void
+     */
+    public void requestUser(int p_AD_User_ID, String p_Name) {
     	//	For Request
-    	if(m_ConversationType == CT_REQUEST) {
-    		if(p_Record_ID != -1) {
-    			m_Request = new SyncRequest(0, 
-    					String.valueOf(Env.getAD_User_ID()), 
-    					SyncRequest.RT_BUSINESS_CHAT, 
-    					String.valueOf(UUID.randomUUID()), null);
-    			//	Add User to Request
-    			m_Request.addUser(p_Record_ID);
-    		}
-    	}
+    	if(p_AD_User_ID != -1) {
+			int m_SPS_BC_Request_ID = DB.getSQLValue(getActivity(), 
+					"SELECT r.SPS_BC_Request_ID FROM SPS_BC_Request r "
+					+ "WHERE r.Name = ?", new String[]{p_Name});
+			//	
+			if(m_SPS_BC_Request_ID > 0) {
+				m_Request = SPS_BC_Request.getRequest(getActivity(), m_SPS_BC_Request_ID);
+			} else {
+				m_Request = new SyncRequest(0, 
+						String.valueOf(Env.getAD_User_ID()), 
+						SyncRequest.RT_BUSINESS_CHAT, 
+						String.valueOf(UUID.randomUUID()), p_Name);
+				//	Add User to Request
+				m_Request.addUser(p_AD_User_ID);
+			}
+		}
     }
 }

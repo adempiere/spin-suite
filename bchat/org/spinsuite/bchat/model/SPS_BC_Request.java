@@ -25,6 +25,7 @@ import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
 import android.content.Context;
+import android.database.Cursor;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Apr 5, 2015, 9:34:06 AM
@@ -62,6 +63,66 @@ public class SPS_BC_Request {
 	 */
 	public static void newOutRequest(Context ctx, SyncRequest request) {
 		newRequest(ctx, request, TYPE_OUT);
+	}
+	
+	/**
+	 * Get Sync Request for Message
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param p_SPS_BC_Request_ID
+	 * @return
+	 * @return SyncRequest
+	 */
+	public static SyncRequest getRequest(Context ctx, int p_SPS_BC_Request_ID) {
+		//	Valid 0 ID
+		if(p_SPS_BC_Request_ID <= 0)
+			return null;
+		//	
+		SyncRequest request = null;
+		//	Create Connection
+		DB conn = DB.loadConnection(ctx, DB.READ_ONLY);
+		//	Compile Query
+		conn.compileQuery("SELECT "
+				+ "r.SPS_BC_Request_ID, "
+				+ "r.Type "
+				+ "r.Topic, "
+				+ "r.Name, "
+				+ "r.AD_User_ID "
+				+ "FROM SPS_BC_Request r "
+				+ "WHERE r.SPS_BC_Request_ID = ?");
+		//	Add Parameter
+		conn.addInt(p_SPS_BC_Request_ID);
+		//	Query Data
+		Cursor rs = conn.querySQL();
+		//	Get Header Data
+		if(rs.moveToFirst()) {
+			request = new SyncRequest(
+					rs.getInt(0), 
+					null, 
+					rs.getString(1), 
+					rs.getString(2), 
+					rs.getString(3));
+			//	Query for Lines
+			conn.compileQuery("SELECT "
+					+ "ru.AD_User_ID, "
+					+ "ru.Status "
+					+ "FROM SPS_BC_Request_User ru "
+					+ "WHERE ru.SPS_BC_Request_ID = ?");
+			//	Add Parameter
+			conn.addInt(p_SPS_BC_Request_ID);
+			//	Query Data
+			rs = conn.querySQL();
+			if(rs.moveToFirst()) {
+				do {
+					request.addUser(rs.getInt(0));
+				} while(rs.moveToNext());
+			}
+			//	End
+		}
+		//	Close Connection
+		DB.closeConnection(conn);
+		//	Default Return
+		return request;
 	}
 	
 	/**
@@ -111,7 +172,7 @@ public class SPS_BC_Request {
 		conn.addBoolean(true);
 		conn.addInt(m_SPS_BC_Request_ID);
 		conn.addString(request.getTopicName());
-		conn.addString(request.getRequestType());
+		conn.addString(p_Type);
 		//	Execute
 		conn.executeSQL();
 		//	Add Child or Request Users

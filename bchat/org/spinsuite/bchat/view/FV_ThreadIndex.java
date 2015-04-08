@@ -21,6 +21,7 @@ import java.util.Date;
 import org.spinsuite.base.DB;
 import org.spinsuite.bchat.adapters.BChatThreadListAdapter;
 import org.spinsuite.bchat.util.DisplayBChatThreadListItem;
+import org.spinsuite.interfaces.I_BC_FragmentSelect;
 import org.spinsuite.interfaces.I_FragmentSelect;
 
 import android.app.Activity;
@@ -48,7 +49,7 @@ public class FV_ThreadIndex extends ListFragment
     }
     
     /**	Call Back					*/
-    private I_FragmentSelect			m_Callback 	= null;
+    private I_BC_FragmentSelect			m_Callback 	= null;
     /**	Adapter						*/
     private BChatThreadListAdapter		m_Adapter 	= null;
     
@@ -123,10 +124,10 @@ public class FV_ThreadIndex extends ListFragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            m_Callback = (I_FragmentSelect) activity;
+            m_Callback = (I_BC_FragmentSelect) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement I_FragmentSelect");
+                    + " must implement I_BC_FragmentSelect");
         }
     }
     
@@ -140,6 +141,6 @@ public class FV_ThreadIndex extends ListFragment
 
     @Override
     public void onItemSelected(int p_Record_ID) {
-    	m_Callback.onItemSelected(p_Record_ID);
+    	m_Callback.onItemSelected(p_Record_ID, null);
     }
 }
