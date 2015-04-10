@@ -26,7 +26,8 @@ public interface I_BC_FragmentSelect {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Record_ID
 	 * @param p_Name
+	 * @param p_Type
 	 * @return void
 	 */
-	public void onItemSelected(int p_Record_ID, String p_Name);
+	public void onItemSelected(int p_Record_ID, String p_Name, int p_Type);
 }

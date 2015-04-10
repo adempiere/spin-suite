@@ -51,8 +51,8 @@
 		<item name="ic_dr_folder">@drawable/ic_action_collapse_light</item>
 		<!-- Drawer Business Chat -->
 		<item name="ic_dr_bc_action_person">@drawable/ic_action_person_light</item>
-		<item name="ic_bc_background_local">@drawable/msg_background_local</item>
-		<item name="ic_bc_background_remote">@drawable/msg_background_remote</item>
+		<item name="ic_bc_bubble_local">@drawable/bc_bubble_local_2</item>
+		<item name="ic_bc_bubble_remote">@drawable/bc_bubble_remote_2</item>
 		<!-- Menu Icon -->
 		<item name="ic_ml_construction">@drawable/contruction_h</item>
 		<item name="ic_ml_window">@drawable/window_h</item>
@@ -262,6 +262,27 @@
         <item name="android:dividerHeight">0dp</item>
         <item name="android:layout_width">260dp</item>
     </style>
+    
+    <!-- Business Chat -->
+    <style name="Text_BChat_Thread" parent="TextStandard">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/bc_text_thread</item>
+        <item name="android:textSize">@dimen/fontSizeSmall</item>
+    </style>
+    
+    <style name="TextTitleList_BChat_Thread_List" parent="TextStandard">
+        <item name="android:textStyle">bold|normal</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">@dimen/fontSizeMedium</item>
+    </style>
+    
+    <style name="TextItemList_BChat_Thread_List" parent="TextStandard">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">@dimen/fontSizeSmall</item>
+    </style>
+    
+    <!-- End Business Chat -->
     
     <!-- Contribution -->
 	<style name="Animations" />

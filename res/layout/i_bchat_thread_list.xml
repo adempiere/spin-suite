@@ -44,14 +44,14 @@
 	        <TextView
 		        android:id="@+id/tv_Name"
 		        android:gravity="center_vertical"
-		        style="@style/TextItemMenu"
+		        style="@style/TextItemList_BChat_Thread_List"
 		        android:text="@string/Name"
 		        android:maxLines="1" />
 	
 	    	<TextView
 	        	android:id="@+id/tv_Conversation"
 	        	android:gravity="center_vertical"
-	        	style="@style/TextItemSmallMenu"
+	        	style="@style/TextItemList_BChat_Thread_List"
 	        	android:text="@string/Description" />
 	    </LinearLayout>
 	    <LinearLayout
@@ -63,13 +63,13 @@
 	        <TextView
 		        android:id="@+id/tv_Time"
 		        android:gravity="center_vertical"
-		        style="@style/TextItemSmallMenu"
+		        style="@style/TextItemList_BChat_Thread_List"
 		        android:text="@string/TimeOfEvent"
 		        android:maxLines="1" />
 	
 	    	<TextView
 	    	    android:id="@+id/tv_Status"
-	    	    style="@style/TextItemSmallMenu"
+	    	    style="@style/TextItemList_BChat_Thread_List"
 	    	    android:layout_width="match_parent"
 	    	    android:gravity="center_vertical"
 	    	    android:maxLines="1"

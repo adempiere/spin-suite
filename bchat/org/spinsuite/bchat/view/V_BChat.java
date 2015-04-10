@@ -69,6 +69,10 @@ public class V_BChat extends FragmentActivity
 	public static final String 					INDEX_FRAGMENT = "Index";
 	/**	Detail Fragment				*/
 	public static final String 					DETAIL_FRAGMENT = "Detail";
+	/**	Select Type					*/
+	public static final int						TYPE_REQUEST_USER = 1;
+	public static final int						TYPE_REQUEST_GROUP = 2;
+	public static final int						TYPE_SELECT_CONVERSATION = 3;
 	/**	Fragment					*/
 	private FV_ThreadIndex 						m_ThereadListFragment = null;
 	/**	Detail Fragment				*/
@@ -131,12 +135,12 @@ public class V_BChat extends FragmentActivity
     private void instanceDetailFragment() {
         //	Instance if not exists
         if(m_ThreadFragment == null) {
-        	m_ThreadFragment = new FV_Thread();
+        	m_ThreadFragment = new FV_Thread(this);
         }
 	}
     
 	@Override
-	public void onItemSelected(int p_Record_ID, String p_Name) {
+	public void onItemSelected(int p_Record_ID, String p_Name, int p_Type) {
 	       //	Instance if not exists
         instanceDetailFragment();
         //	Transaction
@@ -159,7 +163,11 @@ public class V_BChat extends FragmentActivity
         transaction.commit();
         //	
         if(m_ThreadFragment != null) {
-        	m_ThreadFragment.requestUser(p_Record_ID, p_Name);
+        	if(p_Type == TYPE_REQUEST_USER) {
+        		m_ThreadFragment.requestUser(p_Record_ID, p_Name);
+        	} else if(p_Type == TYPE_SELECT_CONVERSATION) {
+        		m_ThreadFragment.selectConversation(p_Record_ID);
+        	}
         }
 	} 
     
@@ -184,8 +192,7 @@ public class V_BChat extends FragmentActivity
 					long arg3) {
 				m_DLayout.closeDrawers();
 				DisplayBChatContactItem item = (DisplayBChatContactItem) adapter.getItemAtPosition(position);
-				m_ThreadFragment.setConversationType(FV_Thread.CT_REQUEST);
-				onItemSelected(item.getRecord_ID(), item.getValue());
+				onItemSelected(item.getRecord_ID(), item.getValue(), TYPE_REQUEST_USER);
 			}
         });
 
@@ -248,7 +255,7 @@ public class V_BChat extends FragmentActivity
 	    	DB.closeConnection(conn);
     	}
     	//	
-    	BChatContactAdapter mi_adapter = new BChatContactAdapter(this, R.layout.i_bchat_contact, m_BChatContactData);
+    	BChatContactAdapter mi_adapter = new BChatContactAdapter(this, m_BChatContactData);
 		mi_adapter.setDropDownViewResource(R.layout.i_bchat_contact);
 		getDrawerList().setAdapter(mi_adapter);
     }

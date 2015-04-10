@@ -18,7 +18,8 @@ package org.spinsuite.bchat.adapters;
 import java.util.ArrayList;
 
 import org.spinsuite.base.R;
-import org.spinsuite.bchat.util.DisplayBChatContactItem;
+import org.spinsuite.bchat.model.SPS_BC_Message;
+import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.util.Env;
 
 import android.content.Context;
@@ -26,15 +27,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout.LayoutParams;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
-public class BChatContactAdapter extends ArrayAdapter<DisplayBChatContactItem> {
+public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 
 	/**
 	 * 
@@ -44,21 +44,21 @@ public class BChatContactAdapter extends ArrayAdapter<DisplayBChatContactItem> {
 	 * @param id_View
 	 * @param data
 	 */
-	public BChatContactAdapter(Context ctx, ArrayList<DisplayBChatContactItem> data) {
-		super(ctx, R.layout.i_bchat_contact, data);
+	public BChatThreadAdapter(Context ctx, ArrayList<DisplayBChatThreadItem> data) {
+		super(ctx, R.layout.i_bchat_thread, data);
 		this.ctx = ctx;
-		this.id_View = R.layout.i_bchat_contact;
+		this.id_View = R.layout.i_bchat_thread;
 		this.data = data;
 	}
 
 	/**	Context						*/
-	private Context 							ctx;
+	private Context 								ctx;
 	/**	Data						*/
-	private ArrayList<DisplayBChatContactItem> 	data = new ArrayList<DisplayBChatContactItem>();
+	private ArrayList<DisplayBChatThreadItem> 		data = new ArrayList<DisplayBChatThreadItem>();
 	/**	Identifier of View			*/
-	private int 								id_View;
+	private int 									id_View;
 	/**	Max Size					*/
-	private static final int					MAX_SIZE = 100;
+	//private static final int						MAX_SIZE = 100;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -68,26 +68,22 @@ public class BChatContactAdapter extends ArrayAdapter<DisplayBChatContactItem> {
 			item = inflater.inflate(id_View, null);
 		}
 		
-		DisplayBChatContactItem diti = data.get(position);
+		DisplayBChatThreadItem diti = data.get(position);
 		
-		//	Set Name
-		TextView tv_Name = (TextView)item.findViewById(R.id.tv_Name);
-		tv_Name.setText(diti.getValue());
-		
-		//	Set Description
-		TextView tv_Description = (TextView)item.findViewById(R.id.tv_Description);
-		tv_Description.setText(diti.getDescription());
-		
-		ImageView img_Item = (ImageView)item.findViewById(R.id.img_Item);
-		img_Item.setLayoutParams(new LayoutParams(MAX_SIZE, MAX_SIZE));
-		//	Set Image
-		if(diti.getImage() != null) {
-			img_Item.setImageBitmap(diti.getImage());
-		} else {
-			img_Item.setImageResource(Env.getResourceID(ctx, R.attr.ic_dr_bc_action_person));
-		}
+		RelativeLayout rl_Conversation = (RelativeLayout) item.findViewById(R.id.rl_Conversation);
+		int id_att = R.attr.ic_bc_bubble_local;
+		//	For Type Message change Background
+		if(diti.getType().equals(SPS_BC_Message.TYPE_IN))
+			id_att = R.attr.ic_bc_bubble_remote;
+		//	
+		rl_Conversation.setBackgroundResource(Env.getResourceID(ctx, id_att));
+		//	Set Conversation
+		TextView tv_Conversation = (TextView) item.findViewById(R.id.tv_Conversation);
+		tv_Conversation.setText(diti.getValue());
+		//	Set Time
+		TextView tv_Time = (TextView)item.findViewById(R.id.tv_Time);
+		tv_Time.setText(diti.getTimeAsString());
 		//	Return
 		return item;
 	}
-	
 }

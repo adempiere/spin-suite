@@ -15,23 +15,23 @@
  *************************************************************************************/
 package org.spinsuite.bchat.view;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
 
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
+import org.spinsuite.bchat.adapters.BChatThreadAdapter;
+import org.spinsuite.bchat.model.SPS_BC_Message;
 import org.spinsuite.bchat.model.SPS_BC_Request;
-import org.spinsuite.interfaces.I_BC_FragmentSelect;
+import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.mqtt.connection.MQTTConnection;
-import org.spinsuite.mqtt.connection.MQTTDefaultValues;
-import org.spinsuite.mqtt.connection.MQTTListener;
+import org.spinsuite.sync.content.SyncMessage;
 import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.Env;
-import org.spinsuite.util.SerializerUtil;
 
-import android.app.Activity;
+import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -58,22 +58,32 @@ public class FV_Thread extends Fragment {
     	
     }
     
-    /**	Call Back					*/
-    private I_BC_FragmentSelect			m_Callback 			= null;
+    /**
+     * 
+     * *** Constructor ***
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_ctx
+     */
+    public FV_Thread(Context p_ctx){
+    	m_ctx = p_ctx;
+    }
+    
     /**	View 						*/
 	private View 						m_view 				= null;
 	/**	List View					*/
 	private ListView					lv_Thread			= null;
+	/**	Thread Adapter				*/
+	private BChatThreadAdapter			m_ThreadAdapter		= null;
 	/**	Message						*/
 	private EditText					et_Message 			= null;
 	/**	Button Send					*/
 	private ImageButton					ib_Send				= null;
-	/**	Conversation Type			*/
-	private int 						m_ConversationType 	= 0;
-	/**	Request Identifier			*/
-	private int 						m_SPS_BC_Request_ID	= 0;
 	/**	Request						*/
 	private SyncRequest 				m_Request			= null;
+	/**	Reload Data					*/
+	private boolean						m_Reload			= true;
+	/**	Context						*/
+	private Context						m_ctx 				= null;
 	/**	Conversation Type Constants	*/
 	public static final int				CT_REQUEST			= 0;
 	public static final int				CT_CHAT				= 1;
@@ -102,10 +112,17 @@ public class FV_Thread extends Fragment {
 		ib_Send.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
+				if(et_Message.getText() == null
+						|| et_Message.getText().toString().trim().length() == 0)
+					return;
 				//	Send Message
 				sendMessage();
 			}
 		});
+		//	Hide Separator
+		lv_Thread.setDividerHeight(0);
+		lv_Thread.setDivider(null);
+		
 		return m_view;
 	}
     
@@ -116,29 +133,56 @@ public class FV_Thread extends Fragment {
      */
     private void sendMessage() {
 		//	Send Request
-		try {
-			//	Insert New
+		if(m_Request != null
+    			&& m_Request.getSPS_BC_Request_ID() == 0) {
 			SPS_BC_Request.newOutRequest(getActivity(), m_Request);
-			//	Verify Connection
-			MQTTConnection currentConnection = MQTTConnection.getInstance(getActivity(), 
-					new MQTTListener(getActivity()), 
-					null, false);
-			if(currentConnection.isConnected()) {
-				currentConnection.subscribeEx(m_Request.getTopicName(), MQTTConnection.AT_LEAST_ONCE_1);
-				byte[] msg = SerializerUtil.serializeObject(m_Request);
-				MqttMessage message = new MqttMessage(msg);
-				message.setQos(MQTTConnection.AT_LEAST_ONCE_1);
-				message.setRetained(true);
-				currentConnection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(/*item.getRecord_ID()*/0)), message);
-			}
-			
-		} catch (MqttSecurityException e) {
-			e.printStackTrace();
-		} catch (MqttException e) {
-			e.printStackTrace();
+		} else {
+			m_Reload = true;
 		}
-
+		SyncMessage message = new SyncMessage(MQTTConnection.getClient_ID(getActivity()), 
+				et_Message.getText().toString(), null, null, 
+				m_Request.getSPS_BC_Request_ID(), Env.getAD_User_ID());
+		//	Save Message
+		SPS_BC_Message.newOutMessage(getActivity(), message);
+		//	Clear Data
+		et_Message.setText("");
+		//	Load
+		loadData();
     }
+    
+    /**
+     * Send Request
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return void
+     */
+//    private void sendRequest() {
+//    	try {
+//			//	Insert New
+//			SPS_BC_Request.newOutRequest(getActivity(), m_Request);
+//			SyncMessage msgRequest = new SyncMessage(MQTTConnection.getClient_ID(getActivity()), 
+//					et_Message.getText().toString(), null, null, 
+//					m_Request.getSPS_BC_Request_ID(), Env.getAD_User_ID());
+//			//	Add Message
+//			SPS_BC_Message.newOutMessage(getActivity(), msgRequest);
+//			//	Verify Connection
+//			MQTTConnection currentConnection = MQTTConnection.getInstance(getActivity(), 
+//					new MQTTListener(getActivity()), 
+//					null, false);
+//			if(currentConnection.isConnected()) {
+//				currentConnection.subscribeEx(m_Request.getTopicName(), MQTTConnection.AT_LEAST_ONCE_1);
+//				byte[] msg = SerializerUtil.serializeObject(m_Request);
+//				MqttMessage message = new MqttMessage(msg);
+//				message.setQos(MQTTConnection.AT_LEAST_ONCE_1);
+//				message.setRetained(true);
+//				currentConnection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(/*item.getRecord_ID()*/0)), message);
+//			}
+//			
+//		} catch (MqttSecurityException e) {
+//			e.printStackTrace();
+//		} catch (MqttException e) {
+//			e.printStackTrace();
+//		}
+//    }
     
     /**
      * Load List
@@ -146,40 +190,88 @@ public class FV_Thread extends Fragment {
      * @return
      * @return boolean
      */
-    private boolean loadData(){
-    	if(m_Request != null
-    			& m_Request.getSPS_BC_Request_ID() == 0) {
-    		et_Message.setText(getString(R.string.BChat_NewRequest));
+    private boolean loadData() {
+    	//	Verify if is reload data
+    	if(!m_Reload) {
+    		return false;
     	}
+    	m_Reload = false;
+    	if(m_Request != null
+    			&& m_Request.getSPS_BC_Request_ID() == 0) {
+    		et_Message.setText(getString(R.string.BChat_Hi) + " " 
+    			+ m_Request.getName() + ", " 
+    			+ getString(R.string.BChat_NewRequest));
+    		m_ThreadAdapter = new BChatThreadAdapter(getActivity(), new ArrayList<DisplayBChatThreadItem>());
+    		//	
+    	} else {
+    		//	Get Data
+    		m_ThreadAdapter = new BChatThreadAdapter(getActivity(), getData());
+    	}
+    	//	
+    	lv_Thread.setAdapter(m_ThreadAdapter);
+		lv_Thread.setSelection(m_ThreadAdapter.getCount() - 1);
     	//	Return
         return true;
+    }
+    
+    /**
+     * Get Data for Chat
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return
+     * @return ArrayList<DisplayBChatThreadItem>
+     */
+    private ArrayList<DisplayBChatThreadItem> getData() {
+    	//	Create Connection
+    	DB conn = DB.loadConnection(getActivity(), DB.READ_ONLY);
+    	//	Compile Query
+    	conn.compileQuery("SELECT "
+    			+ "m.SPS_BC_Message_ID, "
+    			+ "m.Text, "
+    			+ "m.SPS_BC_Request_ID, "
+    			+ "m.AD_User_ID, "
+    			+ "u.Name UserName, "
+    			+ "m.Type, "
+    			+ "m.Status, "
+    			+ "(strftime('%s', m.Updated)*1000) Updated "
+    			+ "FROM SPS_BC_Message m "
+    			+ "INNER JOIN AD_User u ON(u.AD_User_ID = m.AD_User_ID) "
+    			+ "WHERE m.SPS_BC_Request_ID = ? "
+    			+ "ORDER BY m.Updated");
+    	//	Add Parameter
+    	conn.addInt(m_Request.getSPS_BC_Request_ID());
+    	//	Load Data
+    	Cursor rs = conn.querySQL();
+		//	Instance Data
+		ArrayList<DisplayBChatThreadItem> data = new ArrayList<DisplayBChatThreadItem>();
+    	//	Valid Result set
+    	if(rs != null 
+    			&& rs.moveToFirst()) {
+    		int col = 0;
+    		//	Loop
+    		do {
+    			data.add(new DisplayBChatThreadItem(
+    					rs.getInt(col++), 
+    					rs.getString(col++), 
+    					rs.getInt(col++), 
+    					rs.getInt(col++), 
+    					rs.getString(col++), 
+    					rs.getString(col++), 
+    					rs.getString(col++), 
+    					new Date(rs.getLong(col++))));
+    			//	Set Column
+    			col = 0;
+    		} while(rs.moveToNext());
+    	}
+    	//	Close Connection
+    	DB.closeConnection(conn);
+    	//	Return
+    	return data;
     }
 
     @Override
     public void onStart() {
         super.onStart();
         loadData();
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            m_Callback = (I_BC_FragmentSelect) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement I_BC_FragmentSelect");
-        }
-    }
-    
-    /**
-     * Set Conversation Type
-     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-     * @param p_ConversationType
-     * @return void
-     */
-    public void setConversationType(int p_ConversationType) {
-    	m_ConversationType = p_ConversationType;
     }
     
     /**
@@ -189,7 +281,12 @@ public class FV_Thread extends Fragment {
      * @return void
      */
     public void selectConversation(int p_SPS_BC_Request_ID) {
-    	//	Not yet implemented
+    	m_Request = SPS_BC_Request.getRequest(m_ctx, p_SPS_BC_Request_ID);
+    	//	Set Reload Data
+    	m_Reload = true;
+    	if(m_view != null) {
+    		loadData();
+    	}
     }
     
     /**
@@ -202,12 +299,12 @@ public class FV_Thread extends Fragment {
     public void requestUser(int p_AD_User_ID, String p_Name) {
     	//	For Request
     	if(p_AD_User_ID != -1) {
-			int m_SPS_BC_Request_ID = DB.getSQLValue(getActivity(), 
+			int m_SPS_BC_Request_ID = DB.getSQLValue(m_ctx, 
 					"SELECT r.SPS_BC_Request_ID FROM SPS_BC_Request r "
 					+ "WHERE r.Name = ?", new String[]{p_Name});
 			//	
 			if(m_SPS_BC_Request_ID > 0) {
-				m_Request = SPS_BC_Request.getRequest(getActivity(), m_SPS_BC_Request_ID);
+				m_Request = SPS_BC_Request.getRequest(m_ctx, m_SPS_BC_Request_ID);
 			} else {
 				m_Request = new SyncRequest(0, 
 						String.valueOf(Env.getAD_User_ID()), 
@@ -217,5 +314,10 @@ public class FV_Thread extends Fragment {
 				m_Request.addUser(p_AD_User_ID);
 			}
 		}
+    	//	Set Reload Data
+    	m_Reload = true;
+    	if(m_view != null) {
+    		loadData();
+    	}
     }
 }

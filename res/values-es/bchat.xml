@@ -19,5 +19,6 @@
 <resources>
 	<string name="BChat">Mensajería de Negocio</string>
 	<string name="BChat_EnterMsg">Escriba un Mensaje</string>
-	<string name="BChat_NewRequest">Hola, quieres hablarme?</string>
+	<string name="BChat_Hi">Hola</string>
+	<string name="BChat_NewRequest">quieres hablarme?</string>
 </resources>

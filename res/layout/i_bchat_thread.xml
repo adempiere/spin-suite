@@ -16,9 +16,26 @@
  * Contributor(s): Yamel Senih www.erpcya.com				  		                 *
  ************************************************************************************/
  -->
-<resources>
-    <string name="BChat">Business Chat</string>
-	<string name="BChat_EnterMsg">Enter a Message</string>
-	<string name="BChat_Hi">Hi</string>
-	<string name="BChat_NewRequest">you can talk me?</string>
-</resources>
+ <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_Conversation"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/tv_Conversation"
+        style="@style/Text_BChat_Thread"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/tv_Time"
+        android:gravity="center_vertical"
+        android:text="@string/Description" />
+	<TextView
+	    android:id="@+id/tv_Time"
+	    style="@style/Text_BChat_Thread"
+	    android:layout_alignParentRight="true"
+	    android:layout_alignParentTop="true"
+	    android:gravity="center_vertical"
+	    android:maxLines="1"
+	    android:text="@string/TimeOfEvent" />
+
+</RelativeLayout>
