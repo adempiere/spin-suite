@@ -137,7 +137,7 @@ public class DisplayBChatThreadListItem extends DisplayRecordItem {
 		if(m_Time == null)
 			return null;
 		//	Get Date Format
-		SimpleDateFormat sdf = DisplayType.getDateFormat(Env.getCtx(), DisplayType.TIME);
+		SimpleDateFormat sdf = DisplayType.getDateFormat(Env.getCtx(), DisplayType.TIME, "h:mm a");
 		//	Return Value
 		return sdf.format(m_Time);
 	}

@@ -111,7 +111,7 @@ public class V_BChat extends FragmentActivity
      */
     private void loadFragment() {
     	if(m_ThereadListFragment == null) {
-    		m_ThereadListFragment = new FV_ThreadIndex();
+    		m_ThereadListFragment = new FV_ThreadIndex(this);
     	}
         //	Get Fragment Transaction
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -155,7 +155,7 @@ public class V_BChat extends FragmentActivity
         	transaction.hide(m_ThereadListFragment);
         	if(m_ThreadFragment.isHidden()) {
         		transaction.show(m_ThreadFragment);
-        	} else {
+        	} else if(!m_ThreadFragment.isAdded()) {
         		transaction.add(R.id.ll_bc_list, m_ThreadFragment, DETAIL_FRAGMENT);
         	}
         }

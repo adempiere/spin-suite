@@ -15,11 +15,13 @@
  *************************************************************************************/
 package org.spinsuite.bchat.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
+import org.spinsuite.sync.content.Invited;
 import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
@@ -63,6 +65,59 @@ public class SPS_BC_Request {
 	 */
 	public static void newOutRequest(Context ctx, SyncRequest request) {
 		newRequest(ctx, request, TYPE_OUT);
+	}
+	
+	/**
+	 * Get Request with Type and Status
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param p_Type
+	 * @param p_Status
+	 * @return
+	 * @return SyncRequest[]
+	 */
+	public static SyncRequest[] getRequest(Context ctx, String p_Type, String p_Status) {
+		//	
+		ArrayList<SyncRequest> requests = new ArrayList<SyncRequest>();
+		//	Create Connection
+		DB conn = DB.loadConnection(ctx, DB.READ_ONLY);
+		//	Compile Query
+		conn.compileQuery("SELECT "
+				+ "r.SPS_BC_Request_ID, "
+				+ "r.Type, "
+				+ "r.Topic, "
+				+ "r.Name, "
+				+ "r.AD_User_ID,"
+				+ "ru.AD_User_ID, "
+				+ "ru.Status "
+				+ "FROM SPS_BC_Request r "
+				+ "LEFT JOIN SPS_BC_Request_User ru ON(ru.SPS_BC_Request_ID = r.SPS_BC_Request_ID) "
+				+ "WHERE r.Type = ? "
+				+ "AND ru.Status = ?");
+		//	Add Parameter
+		conn.addString(p_Type);
+		conn.addString(p_Status);
+		//	Query Data
+		Cursor rs = conn.querySQL();
+		//	Get Header Data
+		if(rs.moveToFirst()) {
+			//	
+			SyncRequest request = new SyncRequest(null);
+			request.setSPS_BC_Request_ID(rs.getInt(0));
+			request.setType(rs.getString(1));
+			request.setTopicName(rs.getString(3));
+			request.setName(rs.getString(4));
+			//	Add Users
+			do {
+				request.addUser(new Invited(rs.getInt(6), rs.getString(7)));
+			} while(rs.moveToNext());
+			//	Add Request
+			requests.add(request);
+		}
+		//	Close Connection
+		DB.closeConnection(conn);
+		//	Default Return
+		return requests.toArray(new SyncRequest[requests.size()]);
 	}
 	
 	/**
@@ -114,7 +169,7 @@ public class SPS_BC_Request {
 			rs = conn.querySQL();
 			if(rs.moveToFirst()) {
 				do {
-					request.addUser(rs.getInt(0));
+					request.addUser(new Invited(rs.getInt(0), rs.getString(1)));
 				} while(rs.moveToNext());
 			}
 			//	End
@@ -190,7 +245,7 @@ public class SPS_BC_Request {
 					+ "AD_User_ID, "
 					+ "Status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			//	Add Users
-			for(Integer invited : request.getUsers()) {
+			for(Invited invited : request.getUsers()) {
 				conn.addInt(m_AD_Client_ID);
 				conn.addInt(m_AD_Org_ID);
 				conn.addDateTime(now);
@@ -199,7 +254,7 @@ public class SPS_BC_Request {
 				conn.addInt(m_AD_User_ID);
 				conn.addBoolean(true);
 				conn.addInt(m_SPS_BC_Request_ID);
-				conn.addInt(invited);
+				conn.addInt(invited.getAD_USer_ID());
 				conn.addString(STATUS_CREATED);
 				conn.executeSQL();
 			}

@@ -44,7 +44,7 @@
 	        <TextView
 		        android:id="@+id/tv_Name"
 		        android:gravity="center_vertical"
-		        style="@style/TextItemList_BChat_Thread_List"
+		        style="@style/TextTitleList_BChat_Thread_List"
 		        android:text="@string/Name"
 		        android:maxLines="1" />
 	
@@ -58,20 +58,20 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical"
-	        android:layout_weight="1.6" >
+	        android:layout_weight="1.5" >
 	
 	        <TextView
 		        android:id="@+id/tv_Time"
-		        android:gravity="center_vertical"
 		        style="@style/TextItemList_BChat_Thread_List"
 		        android:text="@string/TimeOfEvent"
+		        android:gravity="start"
 		        android:maxLines="1" />
 	
 	    	<TextView
 	    	    android:id="@+id/tv_Status"
 	    	    style="@style/TextItemList_BChat_Thread_List"
 	    	    android:layout_width="match_parent"
-	    	    android:gravity="center_vertical"
+	    	    android:gravity="end"
 	    	    android:maxLines="1"
 	    	    android:text="@string/msg_Ok" />
 

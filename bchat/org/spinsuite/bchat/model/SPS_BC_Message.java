@@ -21,6 +21,7 @@ import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.sync.content.SyncMessage;
+import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
@@ -161,6 +162,80 @@ public class SPS_BC_Message {
 		conn.addString(STATUS_CREATED);
 		//	Execute
 		conn.executeSQL();
+		//	Update Header
+		conn.compileQuery("UPDATE SPS_BC_Request "
+				+ "SET Updated = ?, "
+				+ "LastMsg = ? "
+				+ "WHERE SPS_BC_Request_ID = ?");
+		//	Add Parameters
+		conn.addDateTime(now);
+		conn.addString(message.getText());
+		conn.addInt(message.getSPS_BC_Request_ID());
+		//	Execute
+		conn.executeSQL();		
+		//	Successful
+		conn.setTransactionSuccessful();
+		//	End Transaction
+		DB.closeConnection(conn);
+	}
+	
+	/**
+	 * Delete Message
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param request
+	 * @param p_WhereClause
+	 * @return void
+	 */
+	public static void deleteMessage(Context ctx, SyncRequest request, String p_WhereClause) {
+		if(request == null) {
+			LogM.log(ctx, SPS_BC_Message.class, Level.CONFIG, "Null request for Insert");
+			return;
+		}
+		//	Create Connection
+		DB conn = DB.loadConnection(ctx, DB.READ_WRITE);
+		//	
+		StringBuffer sql = new StringBuffer("DELETE "
+				+ "FROM SPS_BC_Message "
+				+ "WHERE SPS_BC_Request_ID = ?");
+		//	Add Where Clause
+		if(p_WhereClause != null
+				&& p_WhereClause.trim().length() > 0) {
+			sql.append(" AND ")
+				.append(p_WhereClause);
+		}
+		//	Compile Query
+		conn.compileQuery(sql.toString());
+		//	Add Values
+		conn.addInt(request.getSPS_BC_Request_ID());
+		conn.executeSQL();
+		//	Get Last Message
+		conn.compileQuery("SELECT m.Text, (strftime('%s', m.Updated)*1000) Updated "
+				+ "FROM SPS_BC_Message m "
+				+ "WHERE SPS_BC_Request_ID = ? "
+				+ "ORDER BY Updated DESC");
+		//	Add Parameter
+		conn.addInt(request.getSPS_BC_Request_ID());
+		//	Execute
+		Cursor rs = conn.querySQL();
+		String m_LastText = null;
+		long m_time = 0;
+		if(rs != null
+				&& rs.moveToFirst()) {
+			m_LastText = rs.getString(0);
+			m_time = rs.getLong(1);
+		}
+		//	
+		conn.compileQuery("UPDATE SPS_BC_Request "
+				+ "SET Updated = ?, "
+				+ "LastMsg = ? "
+				+ "WHERE SPS_BC_Request_ID = ?");
+		//	Add Parameters
+		conn.addDateTime(new Date(m_time));
+		conn.addString(m_LastText);
+		conn.addInt(request.getSPS_BC_Request_ID());
+		//	Execute
+		conn.executeSQL();		
 		//	Successful
 		conn.setTransactionSuccessful();
 		//	End Transaction

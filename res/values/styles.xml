@@ -52,7 +52,9 @@
 		<!-- Drawer Business Chat -->
 		<item name="ic_dr_bc_action_person">@drawable/ic_action_person_light</item>
 		<item name="ic_bc_bubble_local">@drawable/bc_bubble_local_2</item>
+		<item name="ic_bc_bubble_local_selected">@drawable/bc_bubble_local_selected_2</item>
 		<item name="ic_bc_bubble_remote">@drawable/bc_bubble_remote_2</item>
+		<item name="ic_bc_bubble_remote_selected">@drawable/bc_bubble_remote_selected_2</item>
 		<!-- Menu Icon -->
 		<item name="ic_ml_construction">@drawable/contruction_h</item>
 		<item name="ic_ml_window">@drawable/window_h</item>

@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
@@ -55,6 +56,8 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 	private Context 								ctx;
 	/**	Data						*/
 	private ArrayList<DisplayBChatThreadListItem> 	data = new ArrayList<DisplayBChatThreadListItem>();
+	/**	Backup						*/
+	private ArrayList<DisplayBChatThreadListItem> 	originalData;
 	/**	Identifier of View			*/
 	private int 									id_View;
 	/**	Max Size					*/
@@ -94,5 +97,76 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 		tv_Status.setText(diti.getStatus());
 		//	Return
 		return item;
+	}
+	
+	@Override
+	public Filter getFilter() {
+	    return new Filter() {
+	        @SuppressWarnings("unchecked")
+	        @Override
+	        protected void publishResults(CharSequence constraint, FilterResults results) {
+	            data = (ArrayList<DisplayBChatThreadListItem>) results.values;
+	            if (results.count > 0) {
+	            	notifyDataSetChanged();
+	            } else {
+	            	notifyDataSetInvalidated();
+	            }  
+	        }
+
+	        @Override
+	        protected FilterResults performFiltering(CharSequence constraint) {
+	            //	Populate Original Data
+	        	if(originalData == null)
+	            	originalData = data;
+	        	//	Get filter result
+	        	ArrayList<DisplayBChatThreadListItem> filteredResults = getResults(constraint);
+	            //	Result
+	            FilterResults results = new FilterResults();
+	            //	
+	            results.values = filteredResults;
+	            results.count = filteredResults.size();
+	            //	
+	            return results;
+	        }
+
+	        /**
+	         * Search
+	         * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/03/2014, 03:19:33
+	         * @param constraint
+	         * @return
+	         * @return ArrayList<DisplayBChatThreadListItem>
+	         */
+	        private ArrayList<DisplayBChatThreadListItem> getResults(CharSequence constraint) {
+	        	//	Verify
+	            if(constraint != null
+	            		&& constraint.length() > 0) {
+	            	//	new Filter
+	            	ArrayList<DisplayBChatThreadListItem> filteredResult = new ArrayList<DisplayBChatThreadListItem>();
+	                for(DisplayBChatThreadListItem item : originalData) {
+	                    if((item.getValue() != null 
+	                    		&& item.getValue().toLowerCase(Env.getLocate())
+	                    					.contains(constraint.toString().toLowerCase(Env.getLocate())))
+	                    	|| (item.getDescription() != null 
+		                    		&& item.getDescription().toLowerCase(Env.getLocate())
+                					.contains(constraint.toString().toLowerCase(Env.getLocate())))) {
+	                    	filteredResult.add(item);
+	                    }
+	                }
+	                return filteredResult;
+	            }
+	            //	Only Data
+	            return originalData;
+	        }
+	    };
+	}
+	
+	@Override
+	public int getCount() {
+		return data.size();
+	}
+	
+	@Override
+	public DisplayBChatThreadListItem getItem(int position) {
+		return data.get(position);
 	}
 }

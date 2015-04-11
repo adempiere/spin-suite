@@ -21,9 +21,12 @@ import java.util.logging.Level;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.view.V_BChat;
+import org.spinsuite.sync.content.Invited;
 import org.spinsuite.sync.content.SyncParent;
 import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.DisplayType;
@@ -125,7 +128,7 @@ public class MQTTSyncService extends IntentService {
 							SyncParent parent = (SyncParent) SerializerUtil.deserializeObject(msg.getPayload());
 							if(parent instanceof SyncRequest) {
 								SyncRequest request = (SyncRequest) parent;
-								if(request.getRequestType().equals(SyncRequest.RT_BUSINESS_CHAT)) {
+								if(request.getType().equals(SyncRequest.RT_BUSINESS_CHAT)) {
 									requestArrived(request);
 								}
 							}
@@ -133,7 +136,7 @@ public class MQTTSyncService extends IntentService {
 					}
 					
 					@Override
-					public void deliveryComplete(IMqttDeliveryToken arg0) {
+					public void deliveryComplete(IMqttDeliveryToken token) {
 						
 					}
 					
@@ -144,7 +147,71 @@ public class MQTTSyncService extends IntentService {
 				}, isReload);
 		//	Connection
 		connect();
+		//	Send Request
+		sendOpenRequest(getApplicationContext());
 	}
+	
+	/**
+	 * Send Open Request
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param m_Connection
+	 * @return
+	 * @return boolean
+	 */
+	public boolean sendOpenRequest(Context ctx) {
+		try {
+			//	Verify Connection
+			if(m_Connection.isConnected()) {
+				
+				SyncRequest requestList[] = SPS_BC_Request.getRequest(ctx, SPS_BC_Request.TYPE_OUT, SPS_BC_Request.STATUS_CREATED);
+				//	
+				for(SyncRequest request : requestList) {
+					m_Connection.subscribeEx(request.getTopicName(), MQTTConnection.AT_LEAST_ONCE_1);
+					//	Send Request
+					for(Invited invited : request.getUsers()) {
+						byte[] msg = SerializerUtil.serializeObject(request);
+						MqttMessage message = new MqttMessage(msg);
+						message.setQos(MQTTConnection.AT_LEAST_ONCE_1);
+						message.setRetained(true);
+						m_Connection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(invited.getAD_USer_ID())), message);
+					}
+				}
+			}
+		} catch (MqttSecurityException e) {
+			LogM.log(ctx, getClass(), Level.SEVERE, "Error", e);e.printStackTrace();
+		} catch (MqttException e) {
+			LogM.log(ctx, getClass(), Level.SEVERE, "Error", e);e.printStackTrace();
+		}
+		//	Return Ok
+		return true;
+	}
+	
+//  private void sendRequest() {
+//	try {
+//		//	Insert New
+//		SPS_BC_Request.newOutRequest(getActivity(), m_Request);
+//		SyncMessage msgRequest = new SyncMessage(MQTTConnection.getClient_ID(getActivity()), 
+//				et_Message.getText().toString(), null, null, 
+//				m_Request.getSPS_BC_Request_ID(), Env.getAD_User_ID());
+//		//	Add Message
+//		SPS_BC_Message.newOutMessage(getActivity(), msgRequest);
+//		//	Verify Connection
+//		if(m_Connection.isConnected()) {
+//			m_Connection.subscribeEx(m_Request.getTopicName(), MQTTConnection.AT_LEAST_ONCE_1);
+//			byte[] msg = SerializerUtil.serializeObject(m_Request);
+//			MqttMessage message = new MqttMessage(msg);
+//			message.setQos(MQTTConnection.AT_LEAST_ONCE_1);
+//			message.setRetained(true);
+//			m_Connection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(/*item.getRecord_ID()*/0)), message);
+//		}
+//		
+//	} catch (MqttSecurityException e) {
+//		e.printStackTrace();
+//	} catch (MqttException e) {
+//		e.printStackTrace();
+//	}
+//}
 
 	/**
 	 * Connect with Server
@@ -208,7 +275,7 @@ public class MQTTSyncService extends IntentService {
 	 * @return void
 	 */
 	private void requestArrived(SyncRequest request) throws Exception {
-		if(request.getRequestType().equals(SyncRequest.RT_BUSINESS_CHAT)) {
+		if(request.getType().equals(SyncRequest.RT_BUSINESS_CHAT)) {
 			SPS_BC_Request.newInRequest(this, request);
 			//	Instance Notification Manager
 			instanceNM();

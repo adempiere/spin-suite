@@ -26,6 +26,7 @@ import org.spinsuite.bchat.model.SPS_BC_Message;
 import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.mqtt.connection.MQTTConnection;
+import org.spinsuite.sync.content.Invited;
 import org.spinsuite.sync.content.SyncMessage;
 import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.Env;
@@ -34,10 +35,21 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SearchViewCompat;
+import android.support.v4.widget.SearchViewCompat.OnCloseListenerCompat;
+import android.support.v4.widget.SearchViewCompat.OnQueryTextListenerCompat;
+import android.text.TextUtils;
+import android.util.SparseBooleanArray;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -96,6 +108,7 @@ public class FV_Thread extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
     
     @Override
@@ -122,6 +135,70 @@ public class FV_Thread extends Fragment {
 		//	Hide Separator
 		lv_Thread.setDividerHeight(0);
 		lv_Thread.setDivider(null);
+		lv_Thread.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		lv_Thread.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+
+			@Override
+			public void onItemCheckedStateChanged(ActionMode mode,
+					int position, long id, boolean checked) {
+				// Capture total checked items
+				final int checkedCount = lv_Thread.getCheckedItemCount();
+				// Set the CAB title according to total checked items
+				mode.setTitle(checkedCount + " " + getString(R.string.BChat_Selected));
+				// Calls toggleSelection method from ListViewAdapter Class
+				m_ThreadAdapter.toggleSelection(position);
+				
+			}
+
+			@Override
+			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+				switch (item.getItemId()) {
+				case R.id.action_delete:
+					SparseBooleanArray selectedItem = m_ThreadAdapter.getSelectedItems();
+					StringBuffer inClause = new StringBuffer();
+					for (int i = (selectedItem.size() - 1); i >= 0; i--) {
+						if (selectedItem.valueAt(i)) {
+							DisplayBChatThreadItem selecteditem = m_ThreadAdapter
+									.getItem(selectedItem.keyAt(i));
+							//	Add Separator
+							if(inClause.length() > 0) {
+								inClause.append(", ");
+							}
+							//	Add Value
+							inClause.append(selecteditem.getRecord_ID());
+							//	Remove Item
+							m_ThreadAdapter.remove(selecteditem);
+						}
+					}
+					//	Delete Records in DB
+					if(inClause.length() > 0) {
+						SPS_BC_Message.deleteMessage(m_ctx, m_Request, 
+								"SPS_BC_Message_ID IN(" + inClause.toString() + ")");
+					}
+					mode.finish();
+					return true;
+				default:
+					return false;
+				}
+			}
+
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+				mode.getMenuInflater().inflate(R.menu.bc_thread_selected, menu);
+				return true;
+			}
+
+			@Override
+			public void onDestroyActionMode(ActionMode mode) {
+				m_ThreadAdapter.removeSelection();
+			}
+
+			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+				return false;
+			}
+			
+		});
 		
 		return m_view;
 	}
@@ -136,8 +213,6 @@ public class FV_Thread extends Fragment {
 		if(m_Request != null
     			&& m_Request.getSPS_BC_Request_ID() == 0) {
 			SPS_BC_Request.newOutRequest(getActivity(), m_Request);
-		} else {
-			m_Reload = true;
 		}
 		SyncMessage message = new SyncMessage(MQTTConnection.getClient_ID(getActivity()), 
 				et_Message.getText().toString(), null, null, 
@@ -146,43 +221,11 @@ public class FV_Thread extends Fragment {
 		SPS_BC_Message.newOutMessage(getActivity(), message);
 		//	Clear Data
 		et_Message.setText("");
+		//	
+		m_Reload = true;
 		//	Load
 		loadData();
     }
-    
-    /**
-     * Send Request
-     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-     * @return void
-     */
-//    private void sendRequest() {
-//    	try {
-//			//	Insert New
-//			SPS_BC_Request.newOutRequest(getActivity(), m_Request);
-//			SyncMessage msgRequest = new SyncMessage(MQTTConnection.getClient_ID(getActivity()), 
-//					et_Message.getText().toString(), null, null, 
-//					m_Request.getSPS_BC_Request_ID(), Env.getAD_User_ID());
-//			//	Add Message
-//			SPS_BC_Message.newOutMessage(getActivity(), msgRequest);
-//			//	Verify Connection
-//			MQTTConnection currentConnection = MQTTConnection.getInstance(getActivity(), 
-//					new MQTTListener(getActivity()), 
-//					null, false);
-//			if(currentConnection.isConnected()) {
-//				currentConnection.subscribeEx(m_Request.getTopicName(), MQTTConnection.AT_LEAST_ONCE_1);
-//				byte[] msg = SerializerUtil.serializeObject(m_Request);
-//				MqttMessage message = new MqttMessage(msg);
-//				message.setQos(MQTTConnection.AT_LEAST_ONCE_1);
-//				message.setRetained(true);
-//				currentConnection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(/*item.getRecord_ID()*/0)), message);
-//			}
-//			
-//		} catch (MqttSecurityException e) {
-//			e.printStackTrace();
-//		} catch (MqttException e) {
-//			e.printStackTrace();
-//		}
-//    }
     
     /**
      * Load List
@@ -298,12 +341,14 @@ public class FV_Thread extends Fragment {
      */
     public void requestUser(int p_AD_User_ID, String p_Name) {
     	//	For Request
-    	if(p_AD_User_ID != -1) {
+    	if(p_AD_User_ID != 0
+    			&& p_AD_User_ID != -1) {
 			int m_SPS_BC_Request_ID = DB.getSQLValue(m_ctx, 
 					"SELECT r.SPS_BC_Request_ID FROM SPS_BC_Request r "
 					+ "WHERE r.Name = ?", new String[]{p_Name});
 			//	
-			if(m_SPS_BC_Request_ID > 0) {
+			if(m_SPS_BC_Request_ID != 0
+					&& m_SPS_BC_Request_ID != -1) {
 				m_Request = SPS_BC_Request.getRequest(m_ctx, m_SPS_BC_Request_ID);
 			} else {
 				m_Request = new SyncRequest(0, 
@@ -311,7 +356,7 @@ public class FV_Thread extends Fragment {
 						SyncRequest.RT_BUSINESS_CHAT, 
 						String.valueOf(UUID.randomUUID()), p_Name);
 				//	Add User to Request
-				m_Request.addUser(p_AD_User_ID);
+				m_Request.addUser(new Invited(p_AD_User_ID, SPS_BC_Request.STATUS_CREATED));
 			}
 		}
     	//	Set Reload Data
@@ -319,5 +364,47 @@ public class FV_Thread extends Fragment {
     	if(m_view != null) {
     		loadData();
     	}
+    }
+    
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    	super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.bc_thread, menu);
+		//	Get Item
+		MenuItem item = menu.findItem(R.id.action_search);
+		//	Search View
+		final View searchView = SearchViewCompat.newSearchView(m_ctx);
+		if (searchView != null) {
+			//	Set Back ground Color
+			int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+			EditText searchText = (EditText) searchView.findViewById(id);
+			//	Set Parameters
+			if(searchText != null)
+				searchText.setTextAppearance(m_ctx, R.style.TextSearch);
+			//	
+			SearchViewCompat.setOnQueryTextListener(searchView,
+					new OnQueryTextListenerCompat() {
+				@Override
+				public boolean onQueryTextChange(String newText) {
+					if(m_ThreadAdapter != null) {
+						String mFilter = !TextUtils.isEmpty(newText) ? newText : null;
+						m_ThreadAdapter.getFilter().filter(mFilter);
+					}
+					return true;
+				}
+			});
+			SearchViewCompat.setOnCloseListener(searchView,
+					new OnCloseListenerCompat() {
+				@Override
+				public boolean onClose() {
+					if (!TextUtils.isEmpty(SearchViewCompat.getQuery(searchView))) {
+						SearchViewCompat.setQuery(searchView, null, true);
+					}
+					return true;
+				}
+                    
+			});
+			MenuItemCompat.setActionView(item, searchView);
+		}
     }
 }
