@@ -21,6 +21,7 @@ import java.util.Date;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.adapters.BChatThreadListAdapter;
+import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.util.DisplayBChatThreadListItem;
 import org.spinsuite.interfaces.I_BC_FragmentSelect;
 import org.spinsuite.interfaces.I_FragmentSelect;
@@ -35,10 +36,13 @@ import android.support.v4.widget.SearchViewCompat;
 import android.support.v4.widget.SearchViewCompat.OnCloseListenerCompat;
 import android.support.v4.widget.SearchViewCompat.OnQueryTextListenerCompat;
 import android.text.TextUtils;
+import android.util.SparseBooleanArray;
+import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -79,6 +83,64 @@ public class FV_ThreadIndex extends ListFragment
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
+    	getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+    	getListView().setMultiChoiceModeListener(new MultiChoiceModeListener() {
+			@Override
+			public void onItemCheckedStateChanged(ActionMode mode,
+					int position, long id, boolean checked) {
+				// Capture total checked items
+				final int checkedCount = getListView().getCheckedItemCount();
+				// Set the CAB title according to total checked items
+				mode.setTitle(checkedCount + " " + getString(R.string.BChat_Selected));
+				// Calls toggleSelection method from ListViewAdapter Class
+				m_Adapter.toggleSelection(position);
+				
+			}
+
+			@Override
+			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+				switch (item.getItemId()) {
+				case R.id.action_delete:
+					SparseBooleanArray selectedItems = m_Adapter.getSelectedItems();
+					int[] ids = new int[selectedItems.size()];
+					for (int i = (selectedItems.size() - 1); i >= 0; i--) {
+						if (selectedItems.valueAt(i)) {
+							DisplayBChatThreadListItem selectedItem = m_Adapter
+									.getItem(selectedItems.keyAt(i));
+							//	Add Value
+							ids[i] = selectedItem.getRecord_ID();
+							//	Remove Item
+							m_Adapter.remove(selectedItem);
+						}
+					}
+					//	Delete Records in DB
+					if(ids.length > 0) {
+						SPS_BC_Request.deleteRequest(m_ctx, ids);
+					}
+					mode.finish();
+					return true;
+				default:
+					return false;
+				}
+			}
+
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+				mode.getMenuInflater().inflate(R.menu.bc_thread_selected, menu);
+				return true;
+			}
+
+			@Override
+			public void onDestroyActionMode(ActionMode mode) {
+				m_Adapter.removeSelection();
+			}
+
+			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+				return false;
+			}
+			
+		});
 	}
     
     @Override
@@ -130,6 +192,9 @@ public class FV_ThreadIndex extends ListFragment
     	m_Adapter = new BChatThreadListAdapter(getActivity(), data);
     	//	Set Adapter List
     	setListAdapter(m_Adapter);
+    	//	Set Title
+    	getActivity().getActionBar().setTitle(R.string.app_name);
+    	getActivity().getActionBar().setSubtitle(R.string.BChat);
     	//	Return
         return true;
     }
@@ -141,7 +206,7 @@ public class FV_ThreadIndex extends ListFragment
         //	Choice Mode
         if (getFragmentManager()
         		.findFragmentByTag(V_BChat.INDEX_FRAGMENT) != null) {
-            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            //getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         }
     }
 
@@ -162,7 +227,7 @@ public class FV_ThreadIndex extends ListFragment
     	DisplayBChatThreadListItem item = m_Adapter.getItem(position);
     	onItemSelected(item.getRecord_ID());
     	//	Change on List View
-    	getListView().setItemChecked(position, true);
+    	//getListView().setItemChecked(position, true);
     }
 
     @Override

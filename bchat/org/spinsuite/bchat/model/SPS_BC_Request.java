@@ -87,13 +87,15 @@ public class SPS_BC_Request {
 				+ "r.Type, "
 				+ "r.Topic, "
 				+ "r.Name, "
+				+ "r.LastMsg, "
 				+ "r.AD_User_ID,"
 				+ "ru.AD_User_ID, "
 				+ "ru.Status "
 				+ "FROM SPS_BC_Request r "
 				+ "LEFT JOIN SPS_BC_Request_User ru ON(ru.SPS_BC_Request_ID = r.SPS_BC_Request_ID) "
 				+ "WHERE r.Type = ? "
-				+ "AND ru.Status = ?");
+				+ "AND ru.Status = ? "
+				+ "ORDER BY r.SPS_BC_Request_ID, ru.Updated");
 		//	Add Parameter
 		conn.addString(p_Type);
 		conn.addString(p_Status);
@@ -101,18 +103,28 @@ public class SPS_BC_Request {
 		Cursor rs = conn.querySQL();
 		//	Get Header Data
 		if(rs.moveToFirst()) {
-			//	
-			SyncRequest request = new SyncRequest(null);
-			request.setSPS_BC_Request_ID(rs.getInt(0));
-			request.setType(rs.getString(1));
-			request.setTopicName(rs.getString(3));
-			request.setName(rs.getString(4));
-			//	Add Users
 			do {
-				request.addUser(new Invited(rs.getInt(6), rs.getString(7)));
+				//	
+				SyncRequest request = new SyncRequest(null);
+				request.setSPS_BC_Request_ID(rs.getInt(0));
+				request.setType(rs.getString(1));
+				request.setTopicName(rs.getString(2));
+				request.setName(rs.getString(3));
+				//	Set Last Message
+				request.setLastMsg(rs.getString(4));
+				//	Add Users
+				do {
+					int currentRequest_ID = rs.getInt(0);
+					//	Verify if is other request
+					if(request.getSPS_BC_Request_ID() != currentRequest_ID) {
+						break;
+					}
+					//	
+					request.addUser(new Invited(rs.getInt(6), rs.getString(7)));
+				} while(rs.moveToNext());
+				//	Add Request
+				requests.add(request);
 			} while(rs.moveToNext());
-			//	Add Request
-			requests.add(request);
 		}
 		//	Close Connection
 		DB.closeConnection(conn);
@@ -142,7 +154,8 @@ public class SPS_BC_Request {
 				+ "r.Type, "
 				+ "r.Topic, "
 				+ "r.Name, "
-				+ "r.AD_User_ID "
+				+ "r.AD_User_ID, "
+				+ "r.LastMsg "
 				+ "FROM SPS_BC_Request r "
 				+ "WHERE r.SPS_BC_Request_ID = ?");
 		//	Add Parameter
@@ -157,6 +170,8 @@ public class SPS_BC_Request {
 					rs.getString(1), 
 					rs.getString(2), 
 					rs.getString(3));
+			//	Set Last Message
+			request.setLastMsg(rs.getString(5));
 			//	Query for Lines
 			conn.compileQuery("SELECT "
 					+ "ru.AD_User_ID, "
@@ -265,5 +280,57 @@ public class SPS_BC_Request {
 		DB.closeConnection(conn);
 		//	Set ID
 		request.setSPS_BC_Request_ID(m_SPS_BC_Request_ID);
+	}
+	
+	/**
+	 * Delete Request from IDs
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param p_SPS_Request_IDs
+	 * @return void
+	 */
+	public static void deleteRequest(Context ctx, int [] p_SPS_Request_IDs) {
+		if(p_SPS_Request_IDs == null
+				|| p_SPS_Request_IDs.length == 0) {
+			LogM.log(ctx, SPS_BC_Request.class, Level.CONFIG, "Null where clause for delete");
+			return;
+		}
+		//	Create IN
+		StringBuffer inClause = new StringBuffer("WHERE SPS_BC_Request_ID IN(");
+		boolean first = true;
+		//	Iterate
+		for(int id : p_SPS_Request_IDs) {
+			if(!first) {
+				inClause.append(", ");
+			}
+			//	Add
+			inClause.append(id);
+			//	Change First
+			if(first) {
+				first = false;
+			}
+		}
+		//	Add Last
+		inClause.append(")");
+		//	Create Connection
+		DB conn = DB.loadConnection(ctx, DB.READ_WRITE);
+		//	Compile Query
+		conn.compileQuery("DELETE "
+				+ "FROM SPS_BC_Message " + inClause.toString());
+		//	Delete
+		conn.executeSQL();
+		//	Compile Query
+		conn.compileQuery("DELETE "
+				+ "FROM SPS_BC_Request_User " + inClause.toString());
+		//	Delete
+		conn.executeSQL();
+		//	Delete Request
+		conn.compileQuery("DELETE FROM SPS_BC_Request " + inClause.toString());
+		//	Execute
+		conn.executeSQL();
+		//	Successful
+		conn.setTransactionSuccessful();
+		//	End Transaction
+		DB.closeConnection(conn);
 	}
 }

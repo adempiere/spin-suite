@@ -22,6 +22,7 @@ import org.spinsuite.bchat.util.DisplayBChatThreadListItem;
 import org.spinsuite.util.Env;
 
 import android.content.Context;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,7 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 		this.ctx = ctx;
 		this.id_View = R.layout.i_bchat_thread_list;
 		this.data = data;
+		m_SelectedItems = new SparseBooleanArray();
 	}
 
 	/**	Context						*/
@@ -60,6 +62,8 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 	private ArrayList<DisplayBChatThreadListItem> 	originalData;
 	/**	Identifier of View			*/
 	private int 									id_View;
+	/**	Slected Items IDs			*/
+	private SparseBooleanArray 						m_SelectedItems;
 	/**	Max Size					*/
 	private static final int						MAX_SIZE = 100;
 	
@@ -168,5 +172,68 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 	@Override
 	public DisplayBChatThreadListItem getItem(int position) {
 		return data.get(position);
+	}
+	
+	/**
+	 * Remove Selections
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	public void removeSelection() {
+		m_SelectedItems = new SparseBooleanArray();
+		notifyDataSetChanged();
+	}
+	
+	/**
+	 * Toogle Selection
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param position
+	 * @return void
+	 */
+	public void toggleSelection(int position) {
+		selectView(position, !m_SelectedItems.get(position));
+	}
+
+	/**
+	 * Select View
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param position
+	 * @param value
+	 * @return void
+	 */
+	public void selectView(int position, boolean value) {
+		if (value) {
+			m_SelectedItems.put(position, value);
+		} else {
+			m_SelectedItems.delete(position);
+		}
+		//	Is Change
+		notifyDataSetChanged();
+	}
+
+	/**
+	 * Get Selected Count
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return int
+	 */
+	public int getSelectedCount() {
+		return m_SelectedItems.size();
+	}
+
+	/**
+	 * Get Selected Items
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return SparseBooleanArray
+	 */
+	public SparseBooleanArray getSelectedItems() {
+		return m_SelectedItems;
+	}
+	
+	@Override
+	public void remove(DisplayBChatThreadListItem object) {
+		data.remove(object);
+		notifyDataSetChanged();
 	}
 }

@@ -64,7 +64,7 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 	private ArrayList<DisplayBChatThreadItem> 		originalData;
 	/**	Identifier of View			*/
 	private int 									id_View;
-	/**	Slected Items IDs			*/
+	/**	Selected Items IDs			*/
 	private SparseBooleanArray 						m_SelectedItems;
 	/**	Inflater					*/
 	private LayoutInflater 							inflater;

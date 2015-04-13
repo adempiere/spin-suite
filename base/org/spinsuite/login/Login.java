@@ -128,11 +128,13 @@ public class Login extends TV_Base implements I_Login {
     			finish();
     		}
     	} else {
-    		setEnabled(false);
-    		//	
-    		if(m_LoginInit == null
-    				&& !SyncService.isRunning())
-    			loadInitSync();
+//    		setEnabled(false);
+//    		//	
+//    		if(m_LoginInit == null
+//    				&& !SyncService.isRunning())
+//    			loadInitSync();
+    		createDBDirectory();
+    		setContext();
     		//	For Demo
     		//m_LoadType = DATA_BASE;
 			//new LoadAccessTask().execute();

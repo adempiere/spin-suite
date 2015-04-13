@@ -95,6 +95,7 @@ public class V_BChat extends FragmentActivity
     	//	
     	actionBar.setDisplayHomeAsUpEnabled(true);
     	actionBar.setHomeButtonEnabled(true);
+    	actionBar.setTitle(R.string.app_name);
     	actionBar.setSubtitle(R.string.BChat);
     	//	Load Drawer
     	loadDrawer();
@@ -392,7 +393,7 @@ public class V_BChat extends FragmentActivity
     private boolean backToFragment() {
 		//	
 		if(findViewById(R.id.ll_bc_list_land) != null
-				|| m_ThreadFragment.isHidden()) {
+				|| !m_ThereadListFragment.isHidden()) {
 			return false;
 		}
 		//	Begin Transaction

@@ -15,6 +15,7 @@
  *************************************************************************************/
 package org.spinsuite.bchat.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 import java.util.logging.Level;
@@ -111,6 +112,53 @@ public class SPS_BC_Message {
 	}
 	
 	/**
+	 * Get Message from Status
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param p_Status
+	 * @param p_Type
+	 * @return
+	 * @return SyncMessage[]
+	 */
+	public static SyncMessage[] getMessage(Context ctx, String p_Status, String p_Type) {
+		//	
+		ArrayList<SyncMessage> msgs = new ArrayList<SyncMessage>();
+		//	Create Connection
+		DB conn = DB.loadConnection(ctx, DB.READ_ONLY);
+		//	Compile Query
+		conn.compileQuery("SELECT "
+				+ "m.SPS_BC_Request_ID, "
+				+ "m.SPS_BC_Message_ID, "
+				+ "m.AD_User_ID, "
+				+ "m.Text "
+				+ "FROM SPS_BC_Message m "
+				+ "WHERE m.Status = ? "
+				+ "AND m.Type = ?");
+		//	Add Parameter
+		conn.addString(p_Status);
+		conn.addString(p_Type);
+		//	Query Data
+		Cursor rs = conn.querySQL();
+		//	Get Header Data
+		if(rs.moveToFirst()) {
+			do {
+				//	
+				SyncMessage msg = new SyncMessage(null);
+				msg.setSPS_BC_Request_ID(rs.getInt(0));
+				msg.setSPS_BC_Message_ID(rs.getInt(1));
+				msg.setAD_User_ID(rs.getInt(2));
+				msg.setText(rs.getString(3));
+				//	Add Request
+				msgs.add(msg);
+			} while(rs.moveToNext());
+		}
+		//	Close Connection
+		DB.closeConnection(conn);
+		//	Default Return
+		return msgs.toArray(new SyncMessage[msgs.size()]);
+	}
+	
+	/**
 	 * Create a New Message
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
@@ -180,6 +228,30 @@ public class SPS_BC_Message {
 	}
 	
 	/**
+	 * Change Status
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param p_SPS_BC_Message_ID
+	 * @param p_Status
+	 * @return void
+	 */
+	public static void setStatus(Context ctx, int p_SPS_BC_Message_ID, String p_Status) {
+		DB conn = DB.loadConnection(ctx, DB.READ_WRITE);
+		//	Compile Query
+		conn.compileQuery("UPDATE SPS_BC_Message "
+				+ "SET Status = ? "
+				+ "WHERE SPS_BC_Message_ID = ? ");
+		//	Add Parameter
+		conn.addString(p_Status);
+		conn.addInt(p_SPS_BC_Message_ID);
+		conn.executeSQL();
+		//	Successful
+		conn.setTransactionSuccessful();
+		//	Close Connection
+		DB.closeConnection(conn);
+	}
+	
+	/**
 	 * Delete Message
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
@@ -189,7 +261,7 @@ public class SPS_BC_Message {
 	 */
 	public static void deleteMessage(Context ctx, SyncRequest request, String p_WhereClause) {
 		if(request == null) {
-			LogM.log(ctx, SPS_BC_Message.class, Level.CONFIG, "Null request for Insert");
+			LogM.log(ctx, SPS_BC_Message.class, Level.CONFIG, "Null request for delete");
 			return;
 		}
 		//	Create Connection

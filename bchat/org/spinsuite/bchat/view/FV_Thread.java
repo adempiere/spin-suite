@@ -18,6 +18,7 @@ package org.spinsuite.bchat.view;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
@@ -26,12 +27,15 @@ import org.spinsuite.bchat.model.SPS_BC_Message;
 import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.mqtt.connection.MQTTConnection;
+import org.spinsuite.mqtt.connection.MQTTSyncService;
 import org.spinsuite.sync.content.Invited;
 import org.spinsuite.sync.content.SyncMessage;
 import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.LogM;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -136,8 +140,8 @@ public class FV_Thread extends Fragment {
 		lv_Thread.setDividerHeight(0);
 		lv_Thread.setDivider(null);
 		lv_Thread.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		lv_Thread.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
 		lv_Thread.setMultiChoiceModeListener(new MultiChoiceModeListener() {
-
 			@Override
 			public void onItemCheckedStateChanged(ActionMode mode,
 					int position, long id, boolean checked) {
@@ -154,20 +158,20 @@ public class FV_Thread extends Fragment {
 			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 				switch (item.getItemId()) {
 				case R.id.action_delete:
-					SparseBooleanArray selectedItem = m_ThreadAdapter.getSelectedItems();
+					SparseBooleanArray selectedItems = m_ThreadAdapter.getSelectedItems();
 					StringBuffer inClause = new StringBuffer();
-					for (int i = (selectedItem.size() - 1); i >= 0; i--) {
-						if (selectedItem.valueAt(i)) {
-							DisplayBChatThreadItem selecteditem = m_ThreadAdapter
-									.getItem(selectedItem.keyAt(i));
+					for (int i = (selectedItems.size() - 1); i >= 0; i--) {
+						if (selectedItems.valueAt(i)) {
+							DisplayBChatThreadItem selectedItem = m_ThreadAdapter
+									.getItem(selectedItems.keyAt(i));
 							//	Add Separator
 							if(inClause.length() > 0) {
 								inClause.append(", ");
 							}
 							//	Add Value
-							inClause.append(selecteditem.getRecord_ID());
+							inClause.append(selectedItem.getRecord_ID());
 							//	Remove Item
-							m_ThreadAdapter.remove(selecteditem);
+							m_ThreadAdapter.remove(selectedItem);
 						}
 					}
 					//	Delete Records in DB
@@ -223,6 +227,13 @@ public class FV_Thread extends Fragment {
 		et_Message.setText("");
 		//	
 		m_Reload = true;
+		//	Stop Service
+		Intent service = new Intent(m_ctx, MQTTSyncService.class);
+		LogM.log(m_ctx, getClass(), Level.FINE, "Stoping MQTT Service");
+		m_ctx.stopService(service);
+		//	Start Service
+		LogM.log(m_ctx, getClass(), Level.FINE, "Starting MQTT Service");
+		m_ctx.startService(service);
 		//	Load
 		loadData();
     }
@@ -253,6 +264,9 @@ public class FV_Thread extends Fragment {
     	//	
     	lv_Thread.setAdapter(m_ThreadAdapter);
 		lv_Thread.setSelection(m_ThreadAdapter.getCount() - 1);
+		//	Change Title
+		getActivity().getActionBar().setTitle(m_Request.getName());
+		getActivity().getActionBar().setSubtitle(m_Request.getLastMsg());
     	//	Return
         return true;
     }

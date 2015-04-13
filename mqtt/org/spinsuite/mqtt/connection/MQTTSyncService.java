@@ -24,9 +24,12 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
+import org.spinsuite.bchat.model.SPS_BC_Message;
 import org.spinsuite.bchat.model.SPS_BC_Request;
+import org.spinsuite.bchat.model.SPS_BC_Request_User;
 import org.spinsuite.bchat.view.V_BChat;
 import org.spinsuite.sync.content.Invited;
+import org.spinsuite.sync.content.SyncMessage;
 import org.spinsuite.sync.content.SyncParent;
 import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.DisplayType;
@@ -128,9 +131,13 @@ public class MQTTSyncService extends IntentService {
 							SyncParent parent = (SyncParent) SerializerUtil.deserializeObject(msg.getPayload());
 							if(parent instanceof SyncRequest) {
 								SyncRequest request = (SyncRequest) parent;
-								if(request.getType().equals(SyncRequest.RT_BUSINESS_CHAT)) {
-									requestArrived(request);
-								}
+								//	Save request
+								requestArrived(request);
+								//	Subscribe to Topic request
+								subscribeToRequest(request);
+							} else if(parent instanceof SyncMessage) {
+								SyncMessage message = (SyncMessage) parent;
+								saveMessageArrived(message);
 							}
 						}
 					}
@@ -148,70 +155,99 @@ public class MQTTSyncService extends IntentService {
 		//	Connection
 		connect();
 		//	Send Request
-		sendOpenRequest(getApplicationContext());
+		sendOpenRequest();
+		//	Send Message
+		sendOpenMsg();
 	}
 	
 	/**
-	 * Send Open Request
+	 * Subscribe to Request
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param ctx
-	 * @param m_Connection
-	 * @return
-	 * @return boolean
+	 * @param request
+	 * @return void
 	 */
-	public boolean sendOpenRequest(Context ctx) {
+	private void subscribeToRequest(SyncRequest request) {
 		try {
 			//	Verify Connection
 			if(m_Connection.isConnected()) {
-				
-				SyncRequest requestList[] = SPS_BC_Request.getRequest(ctx, SPS_BC_Request.TYPE_OUT, SPS_BC_Request.STATUS_CREATED);
-				//	
-				for(SyncRequest request : requestList) {
-					m_Connection.subscribeEx(request.getTopicName(), MQTTConnection.AT_LEAST_ONCE_1);
-					//	Send Request
-					for(Invited invited : request.getUsers()) {
-						byte[] msg = SerializerUtil.serializeObject(request);
-						MqttMessage message = new MqttMessage(msg);
-						message.setQos(MQTTConnection.AT_LEAST_ONCE_1);
-						message.setRetained(true);
-						m_Connection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(invited.getAD_USer_ID())), message);
-					}
-				}
+				m_Connection.subscribeEx(request.getTopicName(), MQTTConnection.AT_LEAST_ONCE_1);
 			}
 		} catch (MqttSecurityException e) {
-			LogM.log(ctx, getClass(), Level.SEVERE, "Error", e);e.printStackTrace();
+			LogM.log(this, getClass(), Level.SEVERE, "Error", e);e.printStackTrace();
 		} catch (MqttException e) {
-			LogM.log(ctx, getClass(), Level.SEVERE, "Error", e);e.printStackTrace();
+			LogM.log(this, getClass(), Level.SEVERE, "Error", e);e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Send Pending Message
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return boolean
+	 */
+	public boolean sendOpenMsg() {
+		//	Verify Connection
+		if(m_Connection.isConnected()) {			
+			SyncMessage msgList[] = SPS_BC_Message.getMessage(this, SPS_BC_Message.STATUS_CREATED, SPS_BC_Message.TYPE_OUT);
+			//	
+			for(SyncMessage msgForSend : msgList) {
+				//	Get Request for Topic
+				SyncRequest request = SPS_BC_Request.getRequest(this, msgForSend.getSPS_BC_Request_ID());
+				byte[] msg = SerializerUtil.serializeObject(msgForSend);
+				MqttMessage message = new MqttMessage(msg);
+				message.setQos(MQTTConnection.AT_LEAST_ONCE_1);
+				message.setRetained(true);
+				m_Connection.publish(request.getTopicName(), message);
+				//	Change Status
+				SPS_BC_Message.setStatus(this, msgForSend.getSPS_BC_Message_ID(), SPS_BC_Message.STATUS_SENT);
+			}
 		}
 		//	Return Ok
 		return true;
 	}
 	
-//  private void sendRequest() {
-//	try {
-//		//	Insert New
-//		SPS_BC_Request.newOutRequest(getActivity(), m_Request);
-//		SyncMessage msgRequest = new SyncMessage(MQTTConnection.getClient_ID(getActivity()), 
-//				et_Message.getText().toString(), null, null, 
-//				m_Request.getSPS_BC_Request_ID(), Env.getAD_User_ID());
-//		//	Add Message
-//		SPS_BC_Message.newOutMessage(getActivity(), msgRequest);
-//		//	Verify Connection
-//		if(m_Connection.isConnected()) {
-//			m_Connection.subscribeEx(m_Request.getTopicName(), MQTTConnection.AT_LEAST_ONCE_1);
-//			byte[] msg = SerializerUtil.serializeObject(m_Request);
-//			MqttMessage message = new MqttMessage(msg);
-//			message.setQos(MQTTConnection.AT_LEAST_ONCE_1);
-//			message.setRetained(true);
-//			m_Connection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(/*item.getRecord_ID()*/0)), message);
-//		}
-//		
-//	} catch (MqttSecurityException e) {
-//		e.printStackTrace();
-//	} catch (MqttException e) {
-//		e.printStackTrace();
-//	}
-//}
+	/**
+	 * Send Open Request
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+
+	 * @param m_Connection
+	 * @return
+	 * @return boolean
+	 */
+	public boolean sendOpenRequest() {
+		try {
+			//	Verify Connection
+			if(m_Connection.isConnected()) {
+				SyncRequest requestList[] = SPS_BC_Request.getRequest(this, SPS_BC_Request.TYPE_OUT, SPS_BC_Request.STATUS_CREATED);
+				//	
+				for(SyncRequest request : requestList) {
+					m_Connection.subscribeEx(request.getTopicName(), MQTTConnection.AT_LEAST_ONCE_1);
+					//	Send Request
+					for(Invited invited : request.getUsers()) {
+						//	
+						if(invited.getStatus() == null
+								|| !invited.getStatus().equals(SPS_BC_Message.STATUS_CREATED))
+							continue;
+						//	
+						byte[] msg = SerializerUtil.serializeObject(request);
+						MqttMessage message = new MqttMessage(msg);
+						message.setQos(MQTTConnection.AT_LEAST_ONCE_1);
+						message.setRetained(true);
+						m_Connection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(invited.getAD_USer_ID())), message);
+						//	Change Status
+						SPS_BC_Request_User.setStatus(this, request.getSPS_BC_Request_ID(), 
+								invited.getAD_USer_ID(), SPS_BC_Message.STATUS_SENT);
+					}
+				}
+			}
+		} catch (MqttSecurityException e) {
+			LogM.log(this, getClass(), Level.SEVERE, "Error", e);e.printStackTrace();
+		} catch (MqttException e) {
+			LogM.log(this, getClass(), Level.SEVERE, "Error", e);e.printStackTrace();
+		}
+		//	Return Ok
+		return true;
+	}
 
 	/**
 	 * Connect with Server
@@ -275,16 +311,24 @@ public class MQTTSyncService extends IntentService {
 	 * @return void
 	 */
 	private void requestArrived(SyncRequest request) throws Exception {
-		if(request.getType().equals(SyncRequest.RT_BUSINESS_CHAT)) {
-			SPS_BC_Request.newInRequest(this, request);
-			//	Instance Notification Manager
-			instanceNM();
-			//	
-			m_Builder.setContentTitle("Call from: " + request.getLocalClient_ID())
-    			.setContentText("Topic: " + request.getTopicName())
-    			.setSmallIcon(android.R.drawable.stat_notify_chat);
+		SPS_BC_Request.newInRequest(this, request);
+	}
+	
+	/**
+	 * For Message
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param message
+	 * @return void
+	 */
+	private void saveMessageArrived(SyncMessage message) {
+		SPS_BC_Message.newInMessage(this, message);
+		//	Instance Notification Manager
+		instanceNM();
+		//	
+		m_Builder.setContentTitle("In Message")
+			.setContentText(message.getText())
+			.setSmallIcon(android.R.drawable.stat_notify_chat);
             m_NotificationManager.notify(NOTIFICATION_ID, m_Builder.build());
-		}
 	}
 	
 	/**
