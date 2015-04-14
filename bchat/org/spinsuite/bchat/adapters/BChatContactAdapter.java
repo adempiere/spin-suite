@@ -44,10 +44,10 @@ public class BChatContactAdapter extends ArrayAdapter<DisplayBChatContactItem> {
 	 * @param id_View
 	 * @param data
 	 */
-	public BChatContactAdapter(Context ctx, int id_View, ArrayList<DisplayBChatContactItem> data) {
-		super(ctx, id_View, data);
+	public BChatContactAdapter(Context ctx, ArrayList<DisplayBChatContactItem> data) {
+		super(ctx, R.layout.i_bchat_contact, data);
 		this.ctx = ctx;
-		this.id_View = id_View;
+		this.id_View = R.layout.i_bchat_contact;
 		this.data = data;
 	}
 

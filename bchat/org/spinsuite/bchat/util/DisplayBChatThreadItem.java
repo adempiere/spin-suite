@@ -22,41 +22,45 @@ import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 
-import android.graphics.Bitmap;
 import android.os.Parcel;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
-public class DisplayBChatThreadListItem extends DisplayRecordItem {
+public class DisplayBChatThreadItem extends DisplayRecordItem {
 
 	/**
 	 * *** Constructor ***
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 09:42:02
 	 */
-	public DisplayBChatThreadListItem() {
+	public DisplayBChatThreadItem() {
 		super();
 	}
 	
 	/**
-	 * With Image
-	 * *** Constructor ***
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 09:57:36
+	 * 
+	 * *** Full Constructor ***
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Record_ID
 	 * @param p_Value
-	 * @param p_Description
-	 * @param p_Image
-	 * @param p_Time
+	 * @param p_SPS_BC_Request_ID
+	 * @param p_AD_User_ID
+	 * @param p_UserName
+	 * @param p_Type
 	 * @param p_Status
+	 * @param p_Time
 	 */
-	public DisplayBChatThreadListItem(int p_Record_ID, String p_Value, String p_Description, 
-			Bitmap p_Image, Date p_Time, String p_Status) {
+	public DisplayBChatThreadItem(int p_Record_ID, String p_Value, 
+			int p_SPS_BC_Request_ID, int p_AD_User_ID, 
+			String p_UserName, String p_Type, String p_Status, Date p_Time) {
 		super(p_Record_ID, p_Value, null);
-		setImage(p_Image);
-		setDescription(p_Description);
-		setTime(p_Time);
+		setSPS_BC_Request_ID(p_SPS_BC_Request_ID);
+		setAD_User_ID(p_AD_User_ID);
+		setUserName(p_UserName);
+		setType(p_Type);
 		setStatus(p_Status);
+		setTime(p_Time);
 	}
 
 	/**
@@ -64,56 +68,121 @@ public class DisplayBChatThreadListItem extends DisplayRecordItem {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 09:42:02
 	 * @param parcel
 	 */
-	public DisplayBChatThreadListItem(Parcel parcel) {
+	public DisplayBChatThreadItem(Parcel parcel) {
 		super(parcel);
 	}
 	
-	/**	Image				*/
-	private Bitmap 		m_Image = null;
-	/**	Description			*/
-	private String 		m_Description = null;
+	/**	Request Identifier	*/
+	private int 		m_SPS_BC_Request_ID = 0;
+	/**	User Identifier		*/
+	private int 		m_AD_User_ID = 0;
+	/**	User Name			*/
+	private String 		m_UserName = null;
+	/**	Message Type		*/
+	private String 		m_Type = null;
+	/**	Message Status		*/
+	private String 		m_Status = null;
 	/**	Time				*/
 	private Date		m_Time = null;
-	/**	Status				*/
-	private String		m_Status = null;
+	
 	/**
-	 * Set Image
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 09:56:51
-	 * @param m_Image
+	 * Set Request Identifier
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_SPS_BC_Request_ID
 	 * @return void
 	 */
-	public void setImage(Bitmap m_Image){
-		this.m_Image = m_Image;
+	public void setSPS_BC_Request_ID(int p_SPS_BC_Request_ID) {
+		m_SPS_BC_Request_ID = p_SPS_BC_Request_ID;
 	}
 	
 	/**
-	 * Get Image
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 09:57:16
+	 * Get Requeste Identifier
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return
-	 * @return ImageView
+	 * @return int
 	 */
-	public Bitmap getImage(){
-		return m_Image;
+	public int getSPS_BC_Request_ID() {
+		return m_SPS_BC_Request_ID;
 	}
 	
 	/**
-	 * Set Image Name
-	 * @author Yamel Senih 28/04/2012, 00:25:17
+	 * Set User Identifier
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_AD_User_ID
+	 * @return void
+	 */
+	public void setAD_User_ID(int p_AD_User_ID) {
+		m_AD_User_ID = p_AD_User_ID;
+	}
+	
+	/**
+	 * Get User Identifier
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return int
+	 */
+	public int getAD_User_ID() {
+		return m_AD_User_ID;
+	}
+	
+	/**
+	 * Set User Name
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_UserName
+	 * @return void
+	 */
+	public void setUserName(String p_UserName) {
+		m_UserName = p_UserName;
+	}
+	
+	/**
+	 * Get User Name
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return
 	 * @return String
 	 */
-	public String getDescription(){
-		return m_Description;
+	public String getUserName() {
+		return m_UserName;
 	}
 	
 	/**
-	 * Set Activity Description
-	 * @author Yamel Senih 01/08/2012, 10:04:18
-	 * @param description
+	 * 	Set Message Type
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Type
 	 * @return void
 	 */
-	public void setDescription(String description){
-		this.m_Description = description;
+	public void setType(String p_Type) {
+		m_Type = p_Type;
+	}
+	
+	/**
+	 * Get Message Type
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return String
+	 */
+	public String getType() {
+		return m_Type;
+	}
+	
+	/**
+	 * Set Message Status
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Status
+	 * @return void
+	 */
+	public void setStatus(String p_Status) {
+		m_Status = p_Status;
+	}
+	
+	/**
+	 * Get Status
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return String
+	 */
+	public String getStatus() {
+		return m_Status;
 	}
 	
 	/**
@@ -150,25 +219,5 @@ public class DisplayBChatThreadListItem extends DisplayRecordItem {
 	 */
 	public void setTime(Date p_Time) {
 		m_Time = p_Time;
-	}
-	
-	/**
-	 * Get Status
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return
-	 * @return String
-	 */
-	public String getStatus() {
-		return m_Status;
-	}
-	
-	/**
-	 * Set Status
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_Status
-	 * @return void
-	 */
-	public void setStatus(String p_Status) {
-		m_Status = p_Status;
 	}
 }

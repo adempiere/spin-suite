@@ -18,7 +18,9 @@ package org.spinsuite.bchat.adapters;
 import java.util.ArrayList;
 
 import org.spinsuite.base.R;
-import org.spinsuite.bchat.util.DisplayBChatThreadListItem;
+import org.spinsuite.bchat.model.SPS_BC_Message;
+import org.spinsuite.bchat.util.BC_ThreadHolder;
+import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.util.Env;
 
 import android.content.Context;
@@ -28,15 +30,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
-import android.widget.ImageView;
-import android.widget.LinearLayout.LayoutParams;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
-public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListItem> {
+public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 
 	/**
 	 * 
@@ -46,61 +47,64 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 	 * @param id_View
 	 * @param data
 	 */
-	public BChatThreadListAdapter(Context ctx, ArrayList<DisplayBChatThreadListItem> data) {
-		super(ctx, R.layout.i_bchat_thread_list, data);
+	public BChatThreadAdapter(Context ctx, ArrayList<DisplayBChatThreadItem> data) {
+		super(ctx, R.layout.i_bchat_thread, data);
 		this.ctx = ctx;
-		this.id_View = R.layout.i_bchat_thread_list;
+		this.id_View = R.layout.i_bchat_thread;
 		this.data = data;
 		m_SelectedItems = new SparseBooleanArray();
+		inflater = LayoutInflater.from(ctx);
 	}
 
 	/**	Context						*/
 	private Context 								ctx;
 	/**	Data						*/
-	private ArrayList<DisplayBChatThreadListItem> 	data = new ArrayList<DisplayBChatThreadListItem>();
+	private ArrayList<DisplayBChatThreadItem> 		data = new ArrayList<DisplayBChatThreadItem>();
 	/**	Backup						*/
-	private ArrayList<DisplayBChatThreadListItem> 	originalData;
+	private ArrayList<DisplayBChatThreadItem> 		originalData;
 	/**	Identifier of View			*/
 	private int 									id_View;
-	/**	Slected Items IDs			*/
+	/**	Selected Items IDs			*/
 	private SparseBooleanArray 						m_SelectedItems;
-	/**	Max Size					*/
-	private static final int						MAX_SIZE = 100;
+	/**	Inflater					*/
+	private LayoutInflater 							inflater;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View item = convertView;
-		if(item == null){
-			LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			item = inflater.inflate(id_View, null);
-		}
-		
-		DisplayBChatThreadListItem diti = data.get(position);
-		
-		//	Set Name
-		TextView tv_Name = (TextView)item.findViewById(R.id.tv_Name);
-		tv_Name.setText(diti.getValue());
-		
-		//	Set Description
-		TextView tv_Description = (TextView)item.findViewById(R.id.tv_Conversation);
-		tv_Description.setText(diti.getDescription());
-		
-		ImageView img_Item = (ImageView)item.findViewById(R.id.img_Contact);
-		img_Item.setLayoutParams(new LayoutParams(MAX_SIZE, MAX_SIZE));
-		//	Set Image
-		if(diti.getImage() != null) {
-			img_Item.setImageBitmap(diti.getImage());
+		View view = convertView;
+		final BC_ThreadHolder msgHolder;
+		DisplayBChatThreadItem diti = data.get(position);
+		if(view == null) {
+			msgHolder = new BC_ThreadHolder();
+			view = inflater.inflate(id_View, null);
+			msgHolder.rl_Conversation = (RelativeLayout) view.findViewById(R.id.rl_Conversation);
+			msgHolder.tv_Conversation = (TextView) view.findViewById(R.id.tv_Conversation);
+			msgHolder.tv_Time = (TextView)view.findViewById(R.id.tv_Time);
+			view.setTag(msgHolder);
 		} else {
-			img_Item.setImageResource(Env.getResourceID(ctx, R.attr.ic_dr_bc_action_person));
+			msgHolder = (BC_ThreadHolder) view.getTag();
 		}
+		//	Set Conversation
+		msgHolder.tv_Conversation.setText(diti.getValue());
 		//	Set Time
-		TextView tv_Time = (TextView)item.findViewById(R.id.tv_Time);
-		tv_Time.setText(diti.getTimeAsString());
-		//	Set Status
-		TextView tv_Status = (TextView)item.findViewById(R.id.tv_Status);
-		tv_Status.setText(diti.getStatus());
+		msgHolder.tv_Time.setText(diti.getTimeAsString());
+		int id_att = R.attr.ic_bc_bubble_local;
+		//	For Type Message change Background
+		if(diti.getType().equals(SPS_BC_Message.TYPE_IN)) {
+			if(m_SelectedItems.get(position)) {
+				id_att = R.attr.ic_bc_bubble_remote_selected;
+			} else {
+				id_att = R.attr.ic_bc_bubble_remote;
+			}
+		} else {
+			if(m_SelectedItems.get(position)) {
+				id_att = R.attr.ic_bc_bubble_local_selected;
+			}
+		}
+		//	
+		msgHolder.rl_Conversation.setBackgroundResource(Env.getResourceID(ctx, id_att));
 		//	Return
-		return item;
+		return view;
 	}
 	
 	@Override
@@ -109,7 +113,7 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 	        @SuppressWarnings("unchecked")
 	        @Override
 	        protected void publishResults(CharSequence constraint, FilterResults results) {
-	            data = (ArrayList<DisplayBChatThreadListItem>) results.values;
+	            data = (ArrayList<DisplayBChatThreadItem>) results.values;
 	            if (results.count > 0) {
 	            	notifyDataSetChanged();
 	            } else {
@@ -123,7 +127,7 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 	        	if(originalData == null)
 	            	originalData = data;
 	        	//	Get filter result
-	        	ArrayList<DisplayBChatThreadListItem> filteredResults = getResults(constraint);
+	        	ArrayList<DisplayBChatThreadItem> filteredResults = getResults(constraint);
 	            //	Result
 	            FilterResults results = new FilterResults();
 	            //	
@@ -138,23 +142,19 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 	         * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/03/2014, 03:19:33
 	         * @param constraint
 	         * @return
-	         * @return ArrayList<DisplayBChatThreadListItem>
+	         * @return ArrayList<DisplayBChatThreadItem>
 	         */
-	        private ArrayList<DisplayBChatThreadListItem> getResults(CharSequence constraint) {
+	        private ArrayList<DisplayBChatThreadItem> getResults(CharSequence constraint) {
 	        	//	Verify
 	            if(constraint != null
 	            		&& constraint.length() > 0) {
 	            	//	new Filter
-	            	ArrayList<DisplayBChatThreadListItem> filteredResult = new ArrayList<DisplayBChatThreadListItem>();
-	                for(DisplayBChatThreadListItem item : originalData) {
+	            	ArrayList<DisplayBChatThreadItem> filteredResult = new ArrayList<DisplayBChatThreadItem>();
+	                for(DisplayBChatThreadItem item : originalData) {
 	                    if((item.getValue() != null 
 	                    		&& item.getValue().toLowerCase(Env.getLocate())
-	                    					.contains(constraint.toString().toLowerCase(Env.getLocate())))
-	                    	|| (item.getDescription() != null 
-		                    		&& item.getDescription().toLowerCase(Env.getLocate())
-                					.contains(constraint.toString().toLowerCase(Env.getLocate())))) {
-	                    	filteredResult.add(item);
-	                    }
+	                    					.contains(constraint.toString().toLowerCase(Env.getLocate()))))
+	                        filteredResult.add(item);
 	                }
 	                return filteredResult;
 	            }
@@ -170,7 +170,7 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 	}
 	
 	@Override
-	public DisplayBChatThreadListItem getItem(int position) {
+	public DisplayBChatThreadItem getItem(int position) {
 		return data.get(position);
 	}
 	
@@ -232,7 +232,7 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 	}
 	
 	@Override
-	public void remove(DisplayBChatThreadListItem object) {
+	public void remove(DisplayBChatThreadItem object) {
 		data.remove(object);
 		notifyDataSetChanged();
 	}

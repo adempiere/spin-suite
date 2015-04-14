@@ -35,7 +35,7 @@ public class MQTTDefaultValues {
 	/**	Port											*/
 	public static final int 	DEFAULT_MQTT_PORT 			= 1883;
 	/**	Alarm Time										*/
-	public static final long 	DEFAULT_MQTT_ALARM_TIME 	= 600000;
+	public static final long 	DEFAULT_MQTT_ALARM_TIME 	= 6000;
 	
 	/**
 	 * Get Synchronization Topic

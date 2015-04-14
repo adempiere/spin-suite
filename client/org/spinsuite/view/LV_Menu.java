@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import org.spinsuite.adapters.MenuAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
+import org.spinsuite.bchat.view.V_BChat;
 import org.spinsuite.login.Login;
 import org.spinsuite.model.MSession;
 import org.spinsuite.util.ActivityParameter;
@@ -35,6 +36,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -71,7 +73,7 @@ public class LV_Menu extends Activity {
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		super.setContentView(R.layout.v_menu);
-		
+		//	Get Params
 		Bundle bundle = getIntent().getExtras();		
     	if(bundle != null){
     		param = (ActivityParameter)bundle.getParcelable("Param");
@@ -113,7 +115,6 @@ public class LV_Menu extends Activity {
         //Carlos Parada Add Support to Log for Mobile
         MSession.get (this, true);
         //End Carlos Parada
-       
 	}
 	
 	/**
@@ -150,6 +151,13 @@ public class LV_Menu extends Activity {
     }
 	
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		getMenuInflater().inflate(R.menu.main_menu, menu);
+		return true;
+	}
+	
+	@Override
 	 public boolean onOptionsItemSelected(MenuItem item) {
 	     switch (item.getItemId()) {
 	        case android.R.id.home:
@@ -157,6 +165,10 @@ public class LV_Menu extends Activity {
 	    		Env.setAutoLoginComfirmed(false);
 	        	NavUtils.navigateUpTo(this, new Intent(this, Login.class));
 	        return true;
+	        case R.id.action_bchat:
+	        	Intent bChat = new Intent(this, V_BChat.class);
+				startActivity(bChat);
+				return true;
 	        default:
 	        	return super.onOptionsItemSelected(item);
 	     }

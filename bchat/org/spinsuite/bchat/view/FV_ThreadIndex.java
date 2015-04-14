@@ -19,15 +19,31 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.spinsuite.base.DB;
+import org.spinsuite.base.R;
 import org.spinsuite.bchat.adapters.BChatThreadListAdapter;
+import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.util.DisplayBChatThreadListItem;
+import org.spinsuite.interfaces.I_BC_FragmentSelect;
 import org.spinsuite.interfaces.I_FragmentSelect;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SearchViewCompat;
+import android.support.v4.widget.SearchViewCompat.OnCloseListenerCompat;
+import android.support.v4.widget.SearchViewCompat.OnQueryTextListenerCompat;
+import android.text.TextUtils;
+import android.util.SparseBooleanArray;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView.MultiChoiceModeListener;
+import android.widget.EditText;
 import android.widget.ListView;
 
 /**
@@ -47,19 +63,90 @@ public class FV_ThreadIndex extends ListFragment
     	
     }
     
+    /**
+     * With Context
+     * *** Constructor ***
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_ctx
+     */
+    public FV_ThreadIndex(Context p_ctx){
+    	m_ctx = p_ctx;
+    }
+    
     /**	Call Back					*/
-    private I_FragmentSelect			m_Callback 	= null;
+    private I_BC_FragmentSelect			m_Callback 	= null;
     /**	Adapter						*/
     private BChatThreadListAdapter		m_Adapter 	= null;
+    /**	Context						*/
+	private Context						m_ctx 		= null;
     
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
+    	getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+    	getListView().setMultiChoiceModeListener(new MultiChoiceModeListener() {
+			@Override
+			public void onItemCheckedStateChanged(ActionMode mode,
+					int position, long id, boolean checked) {
+				// Capture total checked items
+				final int checkedCount = getListView().getCheckedItemCount();
+				// Set the CAB title according to total checked items
+				mode.setTitle(checkedCount + " " + getString(R.string.BChat_Selected));
+				// Calls toggleSelection method from ListViewAdapter Class
+				m_Adapter.toggleSelection(position);
+				
+			}
+
+			@Override
+			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+				switch (item.getItemId()) {
+				case R.id.action_delete:
+					SparseBooleanArray selectedItems = m_Adapter.getSelectedItems();
+					int[] ids = new int[selectedItems.size()];
+					for (int i = (selectedItems.size() - 1); i >= 0; i--) {
+						if (selectedItems.valueAt(i)) {
+							DisplayBChatThreadListItem selectedItem = m_Adapter
+									.getItem(selectedItems.keyAt(i));
+							//	Add Value
+							ids[i] = selectedItem.getRecord_ID();
+							//	Remove Item
+							m_Adapter.remove(selectedItem);
+						}
+					}
+					//	Delete Records in DB
+					if(ids.length > 0) {
+						SPS_BC_Request.deleteRequest(m_ctx, ids);
+					}
+					mode.finish();
+					return true;
+				default:
+					return false;
+				}
+			}
+
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+				mode.getMenuInflater().inflate(R.menu.bc_thread_selected, menu);
+				return true;
+			}
+
+			@Override
+			public void onDestroyActionMode(ActionMode mode) {
+				m_Adapter.removeSelection();
+			}
+
+			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+				return false;
+			}
+			
+		});
 	}
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
     
     /**
@@ -75,6 +162,7 @@ public class FV_ThreadIndex extends ListFragment
     	Cursor rs = conn.querySQL("SELECT "
     			+ "rq.SPS_BC_Request_ID, "
     			+ "COALESCE(rq.Name, us.Name) Name, "
+    			+ "rq.LastMsg, "
     			+ "(strftime('%s', rq.Updated)*1000) Updated, "
     			+ "rq.Type "
     			+ "FROM SPS_BC_Request rq "
@@ -91,7 +179,7 @@ public class FV_ThreadIndex extends ListFragment
     			data.add(new DisplayBChatThreadListItem(
     					rs.getInt(col++), 
     					rs.getString(col++), 
-    					null, 
+    					rs.getString(col++), 
     					null, 
     					new Date(rs.getLong(col++)), 
     					rs.getString(col++)));
@@ -104,6 +192,9 @@ public class FV_ThreadIndex extends ListFragment
     	m_Adapter = new BChatThreadListAdapter(getActivity(), data);
     	//	Set Adapter List
     	setListAdapter(m_Adapter);
+    	//	Set Title
+    	getActivity().getActionBar().setTitle(R.string.app_name);
+    	getActivity().getActionBar().setSubtitle(R.string.BChat);
     	//	Return
         return true;
     }
@@ -115,7 +206,7 @@ public class FV_ThreadIndex extends ListFragment
         //	Choice Mode
         if (getFragmentManager()
         		.findFragmentByTag(V_BChat.INDEX_FRAGMENT) != null) {
-            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            //getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         }
     }
 
@@ -123,23 +214,67 @@ public class FV_ThreadIndex extends ListFragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            m_Callback = (I_FragmentSelect) activity;
+            m_Callback = (I_BC_FragmentSelect) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement I_FragmentSelect");
+                    + " must implement I_BC_FragmentSelect");
         }
     }
     
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
     	//	
-    	onItemSelected(position);
+    	DisplayBChatThreadListItem item = m_Adapter.getItem(position);
+    	onItemSelected(item.getRecord_ID());
     	//	Change on List View
-    	getListView().setItemChecked(position, true);
+    	//getListView().setItemChecked(position, true);
     }
 
     @Override
     public void onItemSelected(int p_Record_ID) {
-    	m_Callback.onItemSelected(p_Record_ID);
+    	m_Callback.onItemSelected(p_Record_ID, null, V_BChat.TYPE_SELECT_CONVERSATION);
     }
+    
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    	super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.bc_thread, menu);
+		//	Get Item
+		MenuItem item = menu.findItem(R.id.action_search);
+		//	Search View
+		final View searchView = SearchViewCompat.newSearchView(m_ctx);
+		if (searchView != null) {
+			//	Set Back ground Color
+			int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+			EditText searchText = (EditText) searchView.findViewById(id);
+			//	Set Parameters
+			if(searchText != null)
+				searchText.setTextAppearance(m_ctx, R.style.TextSearch);
+			//	
+			SearchViewCompat.setOnQueryTextListener(searchView,
+					new OnQueryTextListenerCompat() {
+				@Override
+				public boolean onQueryTextChange(String newText) {
+					if(m_Adapter != null) {
+						String mFilter = !TextUtils.isEmpty(newText) ? newText : null;
+						m_Adapter.getFilter().filter(mFilter);
+					}
+					return true;
+				}
+			});
+			SearchViewCompat.setOnCloseListener(searchView,
+					new OnCloseListenerCompat() {
+				@Override
+				public boolean onClose() {
+					if (!TextUtils.isEmpty(SearchViewCompat.getQuery(searchView))) {
+						SearchViewCompat.setQuery(searchView, null, true);
+					}
+					return true;
+				}
+                    
+			});
+			MenuItemCompat.setActionView(item, searchView);
+		}
+    }
+    
 }

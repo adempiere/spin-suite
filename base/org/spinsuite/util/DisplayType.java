@@ -349,7 +349,7 @@ public final class DisplayType
 	 *  @return date format
 	 */
 	public static SimpleDateFormat getDateFormat (Context ctx, int displayType) {
-		return getDateFormat (ctx, displayType, null);
+		return getDateFormat(ctx, displayType, null);
 	}   //  getDateFormat
 	
 	/**

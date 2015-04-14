@@ -85,6 +85,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	public static final int 	READ_WRITE = 1;
 	public static final String 	DB_NAME = "SpinSuite";
 	public static final int 	DB_VERSION = 1;
+	private static final String	LOCK = "DB_Lock";
 	/**	Context					*/
 	private Context 			ctx;
 	/**	SQL						*/
@@ -92,7 +93,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	/**	Parameters				*/
 	private ArrayList<String>	m_Parameters = null;
 	/**	Current Connection		*/
-	//private static DB			m_Connection = null;
+	private static DB			m_Connection = null;
 	
 	@Override
 	public void onCreate(SQLiteDatabase bd) {
@@ -133,12 +134,14 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return SQLiteDatabase
 	 */
 	public SQLiteDatabase openDB(int type) {
-		if(type == READ_ONLY) {
-			db = getReadableDatabase();
-		}else if(type == READ_WRITE) {
-			db = getWritableDatabase();
+		synchronized (LOCK) {
+			if(type == READ_ONLY) {
+				db = getReadableDatabase();
+			}else if(type == READ_WRITE) {
+				db = getWritableDatabase();
+			}
+			return db;
 		}
-		return db;
 	}
 	
 	/**
@@ -158,10 +161,12 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return void
 	 */
 	public void closeDB(Cursor rs) {
-		if(rs != null && !rs.isClosed())
-			rs.close();
-		db.close();
-		LogM.log(ctx, getClass(), Level.INFO, "Closed");
+		synchronized (LOCK) {
+			if(rs != null && !rs.isClosed())
+				rs.close();
+			db.close();
+			LogM.log(ctx, getClass(), Level.INFO, "Closed");
+		}
 	}
 	
 	/**
@@ -193,7 +198,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return void
 	 */
 	public void beginTransaction() {
-		db.beginTransaction();
+		db.beginTransactionNonExclusive();
 	}
 	
 	/**
@@ -587,13 +592,15 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return DB
 	 */
-//	public static synchronized DB getInstance(Context ctx) {
-//		if(m_Connection == null) {
-//			m_Connection = new DB(ctx);
-//		}
-//		//	Connection Return
-//		return m_Connection;
-//	}
+	public static DB getInstance(Context ctx) {
+		synchronized (LOCK) {
+			if(m_Connection == null) {
+				m_Connection = new DB(ctx);
+			}
+			//	Connection Return
+			return m_Connection;
+		}
+	}
 	
 	/**
 	 * Load a Connection
@@ -603,11 +610,13 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 */
 	public static void loadConnection(DB conn, int type) {
-		if(conn != null
-				&& !conn.isOpen()) {
-			conn.openDB(type);
-			if(type == READ_WRITE)
-				conn.beginTransaction();
+		synchronized (LOCK) {
+			if(conn != null
+					&& !conn.isOpen()) {
+				conn.openDB(type);
+				if(type == READ_WRITE)
+					conn.beginTransaction();
+			}
 		}
     }
 	
@@ -618,13 +627,15 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param type
 	 * @return void
 	 */
-	public static synchronized DB loadConnection(Context ctx, int type) {
-		DB conn = new DB(ctx);
-		conn.openDB(type);
-		if(type == READ_WRITE)
-			conn.beginTransaction();
-		//	Return
-		return conn;
+	public static DB loadConnection(Context ctx, int type) {
+		synchronized (LOCK) {
+			DB conn = getInstance(ctx);
+			conn.openDB(type);
+			if(type == READ_WRITE)
+				conn.beginTransaction();
+			//	Return
+			return conn;
+		}
     }
 	
 	/**
@@ -633,12 +644,14 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param conn
 	 * @return void
 	 */
-	public static synchronized void closeConnection(DB conn) {
-		if(conn != null 
-				&& conn.isOpen()) {
-			if(conn.inTransaction())
-				conn.endTransaction();
-			conn.close();
+	public static void closeConnection(DB conn) {
+		synchronized (LOCK) {
+			if(conn != null 
+					&& conn.isOpen()) {
+				if(conn.inTransaction())
+					conn.endTransaction();
+				conn.close();
+			}
 		}
     }
 	

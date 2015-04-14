@@ -34,7 +34,9 @@
     <item name="lookup_label_read_only" type="color">@android:color/black</item>
     <item name="lookup_text_read_only" type="color">@android:color/darker_gray</item>
 	<item name="lookup_text_read_write" type="color">@android:color/black</item>
-    
+    <!-- Business Chat -->
+	<item name="bc_text_thread" type="color">@android:color/black</item>
+	
     <integer-array name="androidcolors">
         <item>@color/blue</item>
         <item>@color/purple</item>

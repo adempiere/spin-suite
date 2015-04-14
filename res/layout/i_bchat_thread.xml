@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*************************************************************************************
+ * Product: Spin-Suite (Making your Business Spin)                                   *
+ * This program is free software; you can redistribute it and/or modify it    		 *
+ * under the terms version 2 of the GNU General Public License as published   		 *
+ * by the Free Software Foundation. This program is distributed in the hope   		 *
+ * that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 		 *
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.           		 *
+ * See the GNU General Public License for more details.                       		 *
+ * You should have received a copy of the GNU General Public License along    		 *
+ * with this program; if not, write to the Free Software Foundation, Inc.,    		 *
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                     		 *
+ * For the text or an alternative of this public license, you may reach us    		 *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com				  		                 *
+ ************************************************************************************/
+ -->
+ <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_Conversation"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/tv_Conversation"
+        style="@style/Text_BChat_Thread"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/tv_Time"
+        android:gravity="center_vertical"
+        android:text="@string/Description" />
+	<TextView
+	    android:id="@+id/tv_Time"
+	    style="@style/Text_BChat_Thread"
+	    android:layout_alignParentRight="true"
+	    android:layout_alignParentTop="true"
+	    android:gravity="center_vertical"
+	    android:maxLines="1"
+	    android:text="@string/TimeOfEvent" />
+
+</RelativeLayout>

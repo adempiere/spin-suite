@@ -304,6 +304,4 @@ public class T_Login_Init extends DialogFragment
 			}	
     	}
 	}
-
-	
 }
