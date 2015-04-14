@@ -18,24 +18,21 @@ package org.spinsuite.bchat.view;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.adapters.BChatThreadAdapter;
 import org.spinsuite.bchat.model.SPS_BC_Message;
 import org.spinsuite.bchat.model.SPS_BC_Request;
+import org.spinsuite.bchat.util.BC_OpenMsg;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.mqtt.connection.MQTTConnection;
-import org.spinsuite.mqtt.connection.MQTTSyncService;
 import org.spinsuite.sync.content.Invited;
 import org.spinsuite.sync.content.SyncMessage;
 import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.Env;
-import org.spinsuite.util.LogM;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -236,23 +233,16 @@ public class FV_Thread extends Fragment {
 				et_Message.getText().toString(), null, null, 
 				m_Request.getSPS_BC_Request_ID(), Env.getAD_User_ID());
 		//	Save Message
-		SPS_BC_Message.newOutMessage(getActivity(), message);
+		BC_OpenMsg.getInstance().addMsg(message);
 		//	Clear Data
 		et_Message.setText("");
 		//	
 		m_Reload = true;
-		//	Stop Service
-		Intent service = new Intent(m_ctx, MQTTSyncService.class);
-		LogM.log(m_ctx, getClass(), Level.FINE, "Stoping MQTT Service");
-		m_ctx.stopService(service);
-		//	Start Service
-		LogM.log(m_ctx, getClass(), Level.FINE, "Starting MQTT Service");
-		m_ctx.startService(service);
 		//	Load
 		addMsg(new DisplayBChatThreadItem(message.getSPS_BC_Message_ID(), 
 				message.getText(), message.getSPS_BC_Request_ID(), 
 				message.getAD_User_ID(), null, 
-				SPS_BC_Message.TYPE_IN, 
+				SPS_BC_Message.TYPE_OUT, 
 				SPS_BC_Message.STATUS_CREATED, 
 				new Date(System.currentTimeMillis())));
     }

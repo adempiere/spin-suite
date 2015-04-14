@@ -27,6 +27,7 @@ import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.spinsuite.bchat.model.SPS_BC_Message;
 import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.model.SPS_BC_Request_User;
+import org.spinsuite.bchat.util.BC_OpenMsg;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.bchat.view.FV_Thread;
 import org.spinsuite.bchat.view.V_BChat;
@@ -62,6 +63,7 @@ public class MQTTSyncService extends IntentService {
 	 */
 	public MQTTSyncService(String name) {
 		super(name);
+		m_OpenMsg = BC_OpenMsg.getInstance();
 	}
 
 	/**
@@ -83,6 +85,8 @@ public class MQTTSyncService extends IntentService {
 	private NotificationManager 	m_NotificationManager = null;
 	/**	Notification Builder		*/
 	private Builder 				m_Builder = null;
+	/**	Message Queue				*/
+	private BC_OpenMsg				m_OpenMsg = null;
 	/**	Notification ID				*/
 	private static final int		NOTIFICATION_ID = 0;
 	
@@ -118,6 +122,8 @@ public class MQTTSyncService extends IntentService {
 				|| !MQTTConnection.isNetworkOk(this)
 				|| !MQTTConnection.isAutomaticService(this))
 			return;
+		//	Save Current Message
+		saveMsg();
 		//	Verify Reload Service
 		boolean isReload = MQTTConnection.isReloadService(this);
 		//	Get Connection
@@ -167,6 +173,21 @@ public class MQTTSyncService extends IntentService {
 		sendOpenRequest();
 		//	Send Message
 		sendOpenMsg();
+	}
+	
+	/**
+	 * Save Msg
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void saveMsg() {
+		m_OpenMsg = BC_OpenMsg.getInstance();
+		SyncParent openMsg = null;
+		while ((openMsg = m_OpenMsg.getOpenMsg(true)) != null) {
+			if(openMsg instanceof SyncMessage) {
+				SPS_BC_Message.newOutMessage(this, (SyncMessage) openMsg);
+			}
+		}
 	}
 	
 	/**
