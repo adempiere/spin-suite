@@ -81,32 +81,39 @@ public class SPS_BC_Message {
 			return null;
 		//	
 		SyncMessage message = null;
-		//	Create Connection
-		DB conn = DB.loadConnection(ctx, DB.READ_ONLY);
-		//	Compile Query
-		conn.compileQuery("SELECT "
-				+ "m.Text, "
-				+ "m.SPS_BC_Request_ID, "
-				+ "m.AD_User_ID "
-				+ "FROM SPS_BC_Message m "
-				+ "WHERE m.SPS_BC_Message_ID = ?");
-		//	Add Parameter
-		conn.addInt(p_SPS_BC_Message_ID);
-		//	Query Data
-		Cursor rs = conn.querySQL();
-		//	Get Header Data
-		if(rs.moveToFirst()) {
-			message = new SyncMessage(
-					null, 
-					rs.getString(0), 
-					null, 
-					null, 
-					rs.getInt(1), 
-					rs.getInt(2));
-			//	End
+		//	Connection
+		DB conn = null;
+		try {
+			//	Create Connection
+			conn = DB.loadConnection(ctx, DB.READ_ONLY);
+			//	Compile Query
+			conn.compileQuery("SELECT "
+					+ "m.Text, "
+					+ "m.SPS_BC_Request_ID, "
+					+ "m.AD_User_ID "
+					+ "FROM SPS_BC_Message m "
+					+ "WHERE m.SPS_BC_Message_ID = ?");
+			//	Add Parameter
+			conn.addInt(p_SPS_BC_Message_ID);
+			//	Query Data
+			Cursor rs = conn.querySQL();
+			//	Get Header Data
+			if(rs.moveToFirst()) {
+				message = new SyncMessage(
+						null, 
+						rs.getString(0), 
+						null, 
+						null, 
+						rs.getInt(1), 
+						rs.getInt(2));
+				//	End
+			}
+		} catch (Exception e) {
+			LogM.log(ctx, SPS_BC_Message.class, Level.SEVERE, "Error", e);
+		} finally {
+			//	End Transaction
+			DB.closeConnection(conn);
 		}
-		//	Close Connection
-		DB.closeConnection(conn);
 		//	Default Return
 		return message;
 	}
@@ -117,43 +124,58 @@ public class SPS_BC_Message {
 	 * @param ctx
 	 * @param p_Status
 	 * @param p_Type
+	 * @param p_WhereClause
 	 * @return
 	 * @return SyncMessage[]
 	 */
-	public static SyncMessage[] getMessage(Context ctx, String p_Status, String p_Type) {
+	public static SyncMessage[] getMessage(Context ctx, String p_Status, String p_Type, String p_WhereClause) {
 		//	
 		ArrayList<SyncMessage> msgs = new ArrayList<SyncMessage>();
-		//	Create Connection
-		DB conn = DB.loadConnection(ctx, DB.READ_ONLY);
-		//	Compile Query
-		conn.compileQuery("SELECT "
-				+ "m.SPS_BC_Request_ID, "
-				+ "m.SPS_BC_Message_ID, "
-				+ "m.AD_User_ID, "
-				+ "m.Text "
-				+ "FROM SPS_BC_Message m "
-				+ "WHERE m.Status = ? "
-				+ "AND m.Type = ?");
-		//	Add Parameter
-		conn.addString(p_Status);
-		conn.addString(p_Type);
-		//	Query Data
-		Cursor rs = conn.querySQL();
-		//	Get Header Data
-		if(rs.moveToFirst()) {
-			do {
-				//	
-				SyncMessage msg = new SyncMessage(null);
-				msg.setSPS_BC_Request_ID(rs.getInt(0));
-				msg.setSPS_BC_Message_ID(rs.getInt(1));
-				msg.setAD_User_ID(rs.getInt(2));
-				msg.setText(rs.getString(3));
-				//	Add Request
-				msgs.add(msg);
-			} while(rs.moveToNext());
+		//	Connection
+		DB conn = null;
+		try {
+			//	Create Connection
+			conn = DB.loadConnection(ctx, DB.READ_ONLY);
+			StringBuffer sql = new StringBuffer("SELECT "
+					+ "SPS_BC_Request_ID, "
+					+ "SPS_BC_Message_ID, "
+					+ "AD_User_ID, "
+					+ "Text "
+					+ "FROM SPS_BC_Message "
+					+ "WHERE Status = ? "
+					+ "AND Type = ?");
+			//	Add Where Clause
+			if(p_WhereClause != null
+					&& p_WhereClause.trim().length() > 0) {
+				sql.append(" AND ")
+					.append(p_WhereClause);
+			}
+			//	Compile Query
+			conn.compileQuery(sql.toString());
+			//	Add Parameter
+			conn.addString(p_Status);
+			conn.addString(p_Type);
+			//	Query Data
+			Cursor rs = conn.querySQL();
+			//	Get Header Data
+			if(rs.moveToFirst()) {
+				do {
+					//	
+					SyncMessage msg = new SyncMessage(null);
+					msg.setSPS_BC_Request_ID(rs.getInt(0));
+					msg.setSPS_BC_Message_ID(rs.getInt(1));
+					msg.setAD_User_ID(rs.getInt(2));
+					msg.setText(rs.getString(3));
+					//	Add Request
+					msgs.add(msg);
+				} while(rs.moveToNext());
+			}
+		} catch (Exception e) {
+			LogM.log(ctx, SPS_BC_Message.class, Level.SEVERE, "Error", e);
+		} finally {
+			//	End Transaction
+			DB.closeConnection(conn);
 		}
-		//	Close Connection
-		DB.closeConnection(conn);
 		//	Default Return
 		return msgs.toArray(new SyncMessage[msgs.size()]);
 	}
@@ -171,60 +193,71 @@ public class SPS_BC_Message {
 			LogM.log(ctx, SPS_BC_Message.class, Level.CONFIG, "Null message for Insert");
 			return;
 		}
-		//	Create Connection
-		DB conn = DB.loadConnection(ctx, DB.READ_WRITE);
-		//	Compile Query
-		conn.compileQuery("INSERT INTO "
-				+ "SPS_BC_Message("
-				+ "AD_Client_ID, "
-				+ "AD_Org_ID, "
-				+ "AD_User_ID, "
-				+ "Text, "
-				+ "Created, "
-				+ "CreatedBy, "
-				+ "Updated, "
-				+ "UpdatedBy, "
-				+ "IsActive, "
-				+ "SPS_BC_Request_ID, "
-				+ "SPS_BC_Message_ID, "
-				+ "Type, "
-				+ "Status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		//	Add Values
-		int m_AD_Client_ID = Env.getAD_Client_ID();
-		int m_AD_Org_ID = Env.getAD_Org_ID();
-		int m_SPS_BC_Message_ID = new Random().nextInt();
-		int m_AD_User_ID = (p_Type.equals(TYPE_IN)? message.getAD_User_ID(): Env.getAD_User_ID());
-		Date now = new Date(System.currentTimeMillis());
-		conn.addInt(m_AD_Client_ID);
-		conn.addInt(m_AD_Org_ID);
-		conn.addInt(m_AD_User_ID);
-		conn.addString(message.getText());
-		conn.addDateTime(now);
-		conn.addInt(m_AD_User_ID);
-		conn.addDateTime(now);
-		conn.addInt(m_AD_User_ID);
-		conn.addBoolean(true);
-		conn.addInt(message.getSPS_BC_Request_ID());
-		conn.addInt(m_SPS_BC_Message_ID);
-		conn.addString(p_Type);
-		conn.addString(STATUS_CREATED);
-		//	Execute
-		conn.executeSQL();
-		//	Update Header
-		conn.compileQuery("UPDATE SPS_BC_Request "
-				+ "SET Updated = ?, "
-				+ "LastMsg = ? "
-				+ "WHERE SPS_BC_Request_ID = ?");
-		//	Add Parameters
-		conn.addDateTime(now);
-		conn.addString(message.getText());
-		conn.addInt(message.getSPS_BC_Request_ID());
-		//	Execute
-		conn.executeSQL();		
-		//	Successful
-		conn.setTransactionSuccessful();
-		//	End Transaction
-		DB.closeConnection(conn);
+		//	Connection
+		DB conn = null;
+		try {
+			//	Create Connection
+			conn = DB.loadConnection(ctx, DB.READ_WRITE);
+			//	Compile Query
+			conn.compileQuery("INSERT INTO "
+					+ "SPS_BC_Message("
+					+ "AD_Client_ID, "
+					+ "AD_Org_ID, "
+					+ "AD_User_ID, "
+					+ "Text, "
+					+ "Created, "
+					+ "CreatedBy, "
+					+ "Updated, "
+					+ "UpdatedBy, "
+					+ "IsActive, "
+					+ "SPS_BC_Request_ID, "
+					+ "SPS_BC_Message_ID, "
+					+ "Type, "
+					+ "Status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			//	Add Values
+			int m_AD_Client_ID = Env.getAD_Client_ID();
+			int m_AD_Org_ID = Env.getAD_Org_ID();
+			int m_SPS_BC_Message_ID = message.getSPS_BC_Message_ID();
+			//	For Out
+			if(p_Type.equals(TYPE_OUT)) {
+				m_SPS_BC_Message_ID = new Random().nextInt();
+			}
+			int m_AD_User_ID = (p_Type.equals(TYPE_IN)? message.getAD_User_ID(): Env.getAD_User_ID());
+			Date now = new Date(System.currentTimeMillis());
+			conn.addInt(m_AD_Client_ID);
+			conn.addInt(m_AD_Org_ID);
+			conn.addInt(m_AD_User_ID);
+			conn.addString(message.getText());
+			conn.addDateTime(now);
+			conn.addInt(m_AD_User_ID);
+			conn.addDateTime(now);
+			conn.addInt(m_AD_User_ID);
+			conn.addBoolean(true);
+			conn.addInt(message.getSPS_BC_Request_ID());
+			conn.addInt(m_SPS_BC_Message_ID);
+			conn.addString(p_Type);
+			conn.addString(STATUS_CREATED);
+			//	Execute
+			conn.executeSQL();
+			//	Update Header
+			conn.compileQuery("UPDATE SPS_BC_Request "
+					+ "SET Updated = ?, "
+					+ "LastMsg = ? "
+					+ "WHERE SPS_BC_Request_ID = ?");
+			//	Add Parameters
+			conn.addDateTime(now);
+			conn.addString(message.getText());
+			conn.addInt(message.getSPS_BC_Request_ID());
+			//	Execute
+			conn.executeSQL();		
+			//	Successful
+			conn.setTransactionSuccessful();
+		} catch (Exception e) {
+			LogM.log(ctx, SPS_BC_Message.class, Level.SEVERE, "Error", e);
+		} finally {
+			//	End Transaction
+			DB.closeConnection(conn);
+		}
 	}
 	
 	/**
@@ -236,19 +269,27 @@ public class SPS_BC_Message {
 	 * @return void
 	 */
 	public static void setStatus(Context ctx, int p_SPS_BC_Message_ID, String p_Status) {
-		DB conn = DB.loadConnection(ctx, DB.READ_WRITE);
-		//	Compile Query
-		conn.compileQuery("UPDATE SPS_BC_Message "
-				+ "SET Status = ? "
-				+ "WHERE SPS_BC_Message_ID = ? ");
-		//	Add Parameter
-		conn.addString(p_Status);
-		conn.addInt(p_SPS_BC_Message_ID);
-		conn.executeSQL();
-		//	Successful
-		conn.setTransactionSuccessful();
-		//	Close Connection
-		DB.closeConnection(conn);
+		//	Connection
+		DB conn = null;
+		try {
+			//	Create Connection
+			conn = DB.loadConnection(ctx, DB.READ_WRITE);
+			//	Compile Query
+			conn.compileQuery("UPDATE SPS_BC_Message "
+					+ "SET Status = ? "
+					+ "WHERE SPS_BC_Message_ID = ? ");
+			//	Add Parameter
+			conn.addString(p_Status);
+			conn.addInt(p_SPS_BC_Message_ID);
+			conn.executeSQL();
+			//	Successful
+			conn.setTransactionSuccessful();
+		} catch (Exception e) {
+			LogM.log(ctx, SPS_BC_Message.class, Level.SEVERE, "Error", e);
+		} finally {
+			//	End Transaction
+			DB.closeConnection(conn);
+		}
 	}
 	
 	/**
@@ -264,53 +305,60 @@ public class SPS_BC_Message {
 			LogM.log(ctx, SPS_BC_Message.class, Level.CONFIG, "Null request for delete");
 			return;
 		}
-		//	Create Connection
-		DB conn = DB.loadConnection(ctx, DB.READ_WRITE);
-		//	
-		StringBuffer sql = new StringBuffer("DELETE "
-				+ "FROM SPS_BC_Message "
-				+ "WHERE SPS_BC_Request_ID = ?");
-		//	Add Where Clause
-		if(p_WhereClause != null
-				&& p_WhereClause.trim().length() > 0) {
-			sql.append(" AND ")
-				.append(p_WhereClause);
+		//	Connection
+		DB conn = null;
+		try {
+			//	Create Connection
+			conn = DB.loadConnection(ctx, DB.READ_WRITE);
+			//	
+			StringBuffer sql = new StringBuffer("DELETE "
+					+ "FROM SPS_BC_Message "
+					+ "WHERE SPS_BC_Request_ID = ?");
+			//	Add Where Clause
+			if(p_WhereClause != null
+					&& p_WhereClause.trim().length() > 0) {
+				sql.append(" AND ")
+					.append(p_WhereClause);
+			}
+			//	Compile Query
+			conn.compileQuery(sql.toString());
+			//	Add Values
+			conn.addInt(request.getSPS_BC_Request_ID());
+			conn.executeSQL();
+			//	Get Last Message
+			conn.compileQuery("SELECT m.Text, (strftime('%s', m.Updated)*1000) Updated "
+					+ "FROM SPS_BC_Message m "
+					+ "WHERE SPS_BC_Request_ID = ? "
+					+ "ORDER BY Updated DESC");
+			//	Add Parameter
+			conn.addInt(request.getSPS_BC_Request_ID());
+			//	Execute
+			Cursor rs = conn.querySQL();
+			String m_LastText = null;
+			long m_time = 0;
+			if(rs != null
+					&& rs.moveToFirst()) {
+				m_LastText = rs.getString(0);
+				m_time = rs.getLong(1);
+			}
+			//	
+			conn.compileQuery("UPDATE SPS_BC_Request "
+					+ "SET Updated = ?, "
+					+ "LastMsg = ? "
+					+ "WHERE SPS_BC_Request_ID = ?");
+			//	Add Parameters
+			conn.addDateTime(new Date(m_time));
+			conn.addString(m_LastText);
+			conn.addInt(request.getSPS_BC_Request_ID());
+			//	Execute
+			conn.executeSQL();		
+			//	Successful
+			conn.setTransactionSuccessful();
+		} catch (Exception e) {
+			LogM.log(ctx, SPS_BC_Message.class, Level.SEVERE, "Error", e);
+		} finally {
+			//	End Transaction
+			DB.closeConnection(conn);
 		}
-		//	Compile Query
-		conn.compileQuery(sql.toString());
-		//	Add Values
-		conn.addInt(request.getSPS_BC_Request_ID());
-		conn.executeSQL();
-		//	Get Last Message
-		conn.compileQuery("SELECT m.Text, (strftime('%s', m.Updated)*1000) Updated "
-				+ "FROM SPS_BC_Message m "
-				+ "WHERE SPS_BC_Request_ID = ? "
-				+ "ORDER BY Updated DESC");
-		//	Add Parameter
-		conn.addInt(request.getSPS_BC_Request_ID());
-		//	Execute
-		Cursor rs = conn.querySQL();
-		String m_LastText = null;
-		long m_time = 0;
-		if(rs != null
-				&& rs.moveToFirst()) {
-			m_LastText = rs.getString(0);
-			m_time = rs.getLong(1);
-		}
-		//	
-		conn.compileQuery("UPDATE SPS_BC_Request "
-				+ "SET Updated = ?, "
-				+ "LastMsg = ? "
-				+ "WHERE SPS_BC_Request_ID = ?");
-		//	Add Parameters
-		conn.addDateTime(new Date(m_time));
-		conn.addString(m_LastText);
-		conn.addInt(request.getSPS_BC_Request_ID());
-		//	Execute
-		conn.executeSQL();		
-		//	Successful
-		conn.setTransactionSuccessful();
-		//	End Transaction
-		DB.closeConnection(conn);
 	}
 }

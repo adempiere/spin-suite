@@ -38,6 +38,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SearchViewCompat;
@@ -88,14 +90,14 @@ public class FV_Thread extends Fragment {
 	private View 						m_view 				= null;
 	/**	List View					*/
 	private ListView					lv_Thread			= null;
-	/**	Thread Adapter				*/
-	private BChatThreadAdapter			m_ThreadAdapter		= null;
 	/**	Message						*/
 	private EditText					et_Message 			= null;
 	/**	Button Send					*/
 	private ImageButton					ib_Send				= null;
 	/**	Request						*/
-	private SyncRequest 				m_Request			= null;
+	private static SyncRequest 			m_Request			= null;
+	/**	Thread Adapter				*/
+	private static BChatThreadAdapter	m_ThreadAdapter		= null;
 	/**	Reload Data					*/
 	private boolean						m_Reload			= true;
 	/**	Context						*/
@@ -103,6 +105,18 @@ public class FV_Thread extends Fragment {
 	/**	Conversation Type Constants	*/
 	public static final int				CT_REQUEST			= 0;
 	public static final int				CT_CHAT				= 1;
+	
+	/**	Handler						*/
+	public static Handler 				UIHandler;
+	
+    static {
+        UIHandler = new Handler(Looper.getMainLooper());
+    }
+
+    public static void runOnUI(Runnable runnable) {
+        UIHandler.post(runnable); 
+    }
+	
 	
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -235,7 +249,12 @@ public class FV_Thread extends Fragment {
 		LogM.log(m_ctx, getClass(), Level.FINE, "Starting MQTT Service");
 		m_ctx.startService(service);
 		//	Load
-		loadData();
+		addMsg(new DisplayBChatThreadItem(message.getSPS_BC_Message_ID(), 
+				message.getText(), message.getSPS_BC_Request_ID(), 
+				message.getAD_User_ID(), null, 
+				SPS_BC_Message.TYPE_IN, 
+				SPS_BC_Message.STATUS_CREATED, 
+				new Date(System.currentTimeMillis())));
     }
     
     /**
@@ -344,6 +363,29 @@ public class FV_Thread extends Fragment {
     	if(m_view != null) {
     		loadData();
     	}
+    }
+    
+    /**
+     * Add New Message
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param msg
+     * @return void
+     */
+    public static void addMsg(DisplayBChatThreadItem msg) {
+    	m_ThreadAdapter.add(msg);
+    	m_ThreadAdapter.notifyDataSetChanged();
+    }
+    
+    /**
+     * Verify if is open thread
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_SPS_BC_Request_ID
+     * @return
+     * @return boolean
+     */
+    public static boolean isOpened(int p_SPS_BC_Request_ID) {
+    	return (m_Request != null 
+    			&& m_Request.getSPS_BC_Request_ID() == p_SPS_BC_Request_ID);
     }
     
     /**

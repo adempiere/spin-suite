@@ -15,7 +15,10 @@
  *************************************************************************************/
 package org.spinsuite.bchat.model;
 
+import java.util.logging.Level;
+
 import org.spinsuite.base.DB;
+import org.spinsuite.util.LogM;
 
 import android.content.Context;
 
@@ -44,20 +47,28 @@ public class SPS_BC_Request_User {
 	 * @return void
 	 */
 	public static void setStatus(Context ctx, int p_SPS_BC_Request_ID, int p_AD_User_ID, String p_Status) {
-		DB conn = DB.loadConnection(ctx, DB.READ_WRITE);
-		//	Compile Query
-		conn.compileQuery("UPDATE SPS_BC_Request_User "
-				+ "SET Status = ? "
-				+ "WHERE SPS_BC_Request_ID = ? "
-				+ "AND AD_User_ID = ?");
-		//	Add Parameter
-		conn.addString(p_Status);
-		conn.addInt(p_SPS_BC_Request_ID);
-		conn.addInt(p_AD_User_ID);
-		conn.executeSQL();
-		//	Successful
-		conn.setTransactionSuccessful();
-		//	Close Connection
-		DB.closeConnection(conn);
+		//	Connection
+		DB conn = null;
+		try {
+			//	Create Connection
+			conn = DB.loadConnection(ctx, DB.READ_WRITE);
+			//	Compile Query
+			conn.compileQuery("UPDATE SPS_BC_Request_User "
+					+ "SET Status = ? "
+					+ "WHERE SPS_BC_Request_ID = ? "
+					+ "AND AD_User_ID = ?");
+			//	Add Parameter
+			conn.addString(p_Status);
+			conn.addInt(p_SPS_BC_Request_ID);
+			conn.addInt(p_AD_User_ID);
+			conn.executeSQL();
+			//	Successful
+			conn.setTransactionSuccessful();
+		} catch (Exception e) {
+			LogM.log(ctx, SPS_BC_Message.class, Level.SEVERE, "Error", e);
+		} finally {
+			//	End Transaction
+			DB.closeConnection(conn);
+		}
 	}
 }

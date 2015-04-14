@@ -27,6 +27,8 @@ import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.spinsuite.bchat.model.SPS_BC_Message;
 import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.model.SPS_BC_Request_User;
+import org.spinsuite.bchat.util.DisplayBChatThreadItem;
+import org.spinsuite.bchat.view.FV_Thread;
 import org.spinsuite.bchat.view.V_BChat;
 import org.spinsuite.sync.content.Invited;
 import org.spinsuite.sync.content.SyncMessage;
@@ -109,6 +111,7 @@ public class MQTTSyncService extends IntentService {
 	
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		//	
 		m_IsRunning = true;
 		Env.getInstance(getApplicationContext());
 		if(!Env.isEnvLoad()
@@ -129,6 +132,12 @@ public class MQTTSyncService extends IntentService {
 							if(msg.isDuplicate())
 								return;
 							SyncParent parent = (SyncParent) SerializerUtil.deserializeObject(msg.getPayload());
+							//	Verify if is local
+							if(parent.getLocalClient_ID() != null
+									&& parent.getLocalClient_ID()
+											.equals(MQTTConnection.getClient_ID(getApplicationContext()))) {
+								return;
+							}
 							if(parent instanceof SyncRequest) {
 								SyncRequest request = (SyncRequest) parent;
 								//	Save request
@@ -173,9 +182,9 @@ public class MQTTSyncService extends IntentService {
 				m_Connection.subscribeEx(request.getTopicName(), MQTTConnection.AT_LEAST_ONCE_1);
 			}
 		} catch (MqttSecurityException e) {
-			LogM.log(this, getClass(), Level.SEVERE, "Error", e);e.printStackTrace();
+			LogM.log(this, getClass(), Level.SEVERE, "Error", e);
 		} catch (MqttException e) {
-			LogM.log(this, getClass(), Level.SEVERE, "Error", e);e.printStackTrace();
+			LogM.log(this, getClass(), Level.SEVERE, "Error", e);
 		}
 	}
 	
@@ -188,9 +197,18 @@ public class MQTTSyncService extends IntentService {
 	public boolean sendOpenMsg() {
 		//	Verify Connection
 		if(m_Connection.isConnected()) {			
-			SyncMessage msgList[] = SPS_BC_Message.getMessage(this, SPS_BC_Message.STATUS_CREATED, SPS_BC_Message.TYPE_OUT);
+			SyncMessage msgList[] = SPS_BC_Message.getMessage(this, 
+					SPS_BC_Message.STATUS_CREATED, 
+					SPS_BC_Message.TYPE_OUT, 
+					"EXISTS(SELECT 1 FROM SPS_BC_Request_User ru "
+					+ "INNER JOIN SPS_BC_Request r ON(r.SPS_BC_Request_ID = ru.SPS_BC_Request_ID) "
+					+ "WHERE ru.SPS_BC_Request_ID = SPS_BC_Message.SPS_BC_Request_ID "
+					+ "AND (ru.Status = '" + SPS_BC_Request.STATUS_SENT + "' OR r.Type = '" + SPS_BC_Request.TYPE_IN + "'))");
 			//	
+			String m_LocalClient_ID = MQTTConnection.getClient_ID(this);
 			for(SyncMessage msgForSend : msgList) {
+				//	Set Client ID
+				msgForSend.setLocalClient_ID(m_LocalClient_ID);
 				//	Get Request for Topic
 				SyncRequest request = SPS_BC_Request.getRequest(this, msgForSend.getSPS_BC_Request_ID());
 				byte[] msg = SerializerUtil.serializeObject(msgForSend);
@@ -229,6 +247,8 @@ public class MQTTSyncService extends IntentService {
 								|| !invited.getStatus().equals(SPS_BC_Message.STATUS_CREATED))
 							continue;
 						//	
+						String m_LocalClient_ID = MQTTConnection.getClient_ID(this);
+						request.setLocalClient_ID(m_LocalClient_ID);
 						byte[] msg = SerializerUtil.serializeObject(request);
 						MqttMessage message = new MqttMessage(msg);
 						message.setQos(MQTTConnection.AT_LEAST_ONCE_1);
@@ -241,9 +261,9 @@ public class MQTTSyncService extends IntentService {
 				}
 			}
 		} catch (MqttSecurityException e) {
-			LogM.log(this, getClass(), Level.SEVERE, "Error", e);e.printStackTrace();
+			LogM.log(this, getClass(), Level.SEVERE, "Error", e);
 		} catch (MqttException e) {
-			LogM.log(this, getClass(), Level.SEVERE, "Error", e);e.printStackTrace();
+			LogM.log(this, getClass(), Level.SEVERE, "Error", e);
 		}
 		//	Return Ok
 		return true;
@@ -320,15 +340,60 @@ public class MQTTSyncService extends IntentService {
 	 * @param message
 	 * @return void
 	 */
-	private void saveMessageArrived(SyncMessage message) {
+	private void saveMessageArrived(final SyncMessage message) {
 		SPS_BC_Message.newInMessage(this, message);
 		//	Instance Notification Manager
 		instanceNM();
-		//	
+		//	Notify
+		FV_Thread.runOnUI(new Runnable() {
+			public void run() {
+				try {
+					//	Add to List View
+					if(!addMessage(message, SPS_BC_Message.TYPE_IN)) {
+						sendNotification(message);
+					}
+				} catch (Exception e) { 
+					LogM.log(getApplicationContext(), MQTTSyncService.class, Level.SEVERE, "Error", e);
+				}
+			}
+		});
+	}
+	
+	/**
+	 * Add Message to List
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param message
+	 * @param p_Type
+	 * @return
+	 * @return boolean
+	 */
+	private boolean addMessage(SyncMessage message, String p_Type) {
+		if(message != null
+				&& FV_Thread.isOpened(message.getSPS_BC_Request_ID())) {
+			FV_Thread.addMsg(new DisplayBChatThreadItem(message.getSPS_BC_Message_ID(), 
+					message.getText(), message.getSPS_BC_Request_ID(), 
+					message.getAD_User_ID(), null, 
+					p_Type, 
+					SPS_BC_Message.STATUS_CREATED, 
+					new Date(System.currentTimeMillis())));
+			return true;
+		}
+		//	Default Return
+		return false;
+	}
+	
+	/**
+	 * Send Message Notification
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param message
+	 * @return void
+	 */
+	private void sendNotification(SyncMessage message) {
 		m_Builder.setContentTitle("In Message")
 			.setContentText(message.getText())
 			.setSmallIcon(android.R.drawable.stat_notify_chat);
-            m_NotificationManager.notify(NOTIFICATION_ID, m_Builder.build());
+		//	Show Notification
+		m_NotificationManager.notify(NOTIFICATION_ID, m_Builder.build());
 	}
 	
 	/**
