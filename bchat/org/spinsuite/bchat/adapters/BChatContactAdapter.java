@@ -22,10 +22,12 @@ import org.spinsuite.bchat.util.DisplayBChatContactItem;
 import org.spinsuite.util.Env;
 
 import android.content.Context;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
@@ -49,14 +51,19 @@ public class BChatContactAdapter extends ArrayAdapter<DisplayBChatContactItem> {
 		this.ctx = ctx;
 		this.id_View = R.layout.i_bchat_contact;
 		this.data = data;
+		m_SelectedItems = new SparseBooleanArray();
 	}
 
 	/**	Context						*/
 	private Context 							ctx;
 	/**	Data						*/
 	private ArrayList<DisplayBChatContactItem> 	data = new ArrayList<DisplayBChatContactItem>();
+	/**	Backup						*/
+	private ArrayList<DisplayBChatContactItem> 	originalData;
 	/**	Identifier of View			*/
 	private int 								id_View;
+	/**	Slected Items IDs			*/
+	private SparseBooleanArray 					m_SelectedItems;
 	/**	Max Size					*/
 	private static final int					MAX_SIZE = 100;
 	
@@ -90,4 +97,128 @@ public class BChatContactAdapter extends ArrayAdapter<DisplayBChatContactItem> {
 		return item;
 	}
 	
+	@Override
+	public Filter getFilter() {
+	    return new Filter() {
+	        @SuppressWarnings("unchecked")
+	        @Override
+	        protected void publishResults(CharSequence constraint, FilterResults results) {
+	            data = (ArrayList<DisplayBChatContactItem>) results.values;
+	            if (results.count > 0) {
+	            	notifyDataSetChanged();
+	            } else {
+	            	notifyDataSetInvalidated();
+	            }  
+	        }
+
+	        @Override
+	        protected FilterResults performFiltering(CharSequence constraint) {
+	            //	Populate Original Data
+	        	if(originalData == null)
+	            	originalData = data;
+	        	//	Get filter result
+	        	ArrayList<DisplayBChatContactItem> filteredResults = getResults(constraint);
+	            //	Result
+	            FilterResults results = new FilterResults();
+	            //	
+	            results.values = filteredResults;
+	            results.count = filteredResults.size();
+	            //	
+	            return results;
+	        }
+
+	        /**
+	         * Search
+	         * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/03/2014, 03:19:33
+	         * @param constraint
+	         * @return
+	         * @return ArrayList<DisplayBChatContactItem>
+	         */
+	        private ArrayList<DisplayBChatContactItem> getResults(CharSequence constraint) {
+	        	//	Verify
+	            if(constraint != null
+	            		&& constraint.length() > 0) {
+	            	//	new Filter
+	            	ArrayList<DisplayBChatContactItem> filteredResult = new ArrayList<DisplayBChatContactItem>();
+	                for(DisplayBChatContactItem item : originalData) {
+	                    if((item.getValue() != null 
+	                    		&& item.getValue().toLowerCase(Env.getLocate())
+	                    					.contains(constraint.toString().toLowerCase(Env.getLocate()))))
+	                        filteredResult.add(item);
+	                }
+	                return filteredResult;
+	            }
+	            //	Only Data
+	            return originalData;
+	        }
+	    };
+	}
+	
+	@Override
+	public int getCount() {
+		return data.size();
+	}
+	
+	/**
+	 * Remove Selections
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	public void removeSelection() {
+		m_SelectedItems = new SparseBooleanArray();
+		notifyDataSetChanged();
+	}
+	
+	/**
+	 * Toogle Selection
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param position
+	 * @return void
+	 */
+	public void toggleSelection(int position) {
+		selectView(position, !m_SelectedItems.get(position));
+	}
+
+	/**
+	 * Select View
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param position
+	 * @param value
+	 * @return void
+	 */
+	public void selectView(int position, boolean value) {
+		if (value) {
+			m_SelectedItems.put(position, value);
+		} else {
+			m_SelectedItems.delete(position);
+		}
+		//	Is Change
+		notifyDataSetChanged();
+	}
+
+	/**
+	 * Get Selected Count
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return int
+	 */
+	public int getSelectedCount() {
+		return m_SelectedItems.size();
+	}
+
+	/**
+	 * Get Selected Items
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return SparseBooleanArray
+	 */
+	public SparseBooleanArray getSelectedItems() {
+		return m_SelectedItems;
+	}
+	
+	@Override
+	public void remove(DisplayBChatContactItem object) {
+		data.remove(object);
+		notifyDataSetChanged();
+	}
 }

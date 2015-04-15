@@ -119,12 +119,14 @@ public class MQTTSyncService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		//	
-		m_IsRunning = true;
 		Env.getInstance(getApplicationContext());
 		if(!Env.isEnvLoad()
 				|| !MQTTConnection.isNetworkOk(this)
-				|| !MQTTConnection.isAutomaticService(this))
+				|| !MQTTConnection.isAutomaticService(this)
+				|| MQTTSyncService.isRunning())
 			return;
+		//	
+		m_IsRunning = true;
 		//	Save Current Message
 		saveMsg();
 		//	Verify Reload Service
