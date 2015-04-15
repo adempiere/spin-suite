@@ -24,7 +24,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for C_DocType
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_C_DocType extends PO implements I_C_DocType {
     /** Standard Constructor */
     public X_C_DocType (Context ctx, int C_DocType_ID, DB conn)
@@ -316,6 +316,38 @@ public class X_C_DocType extends PO implements I_C_DocType {
 	public static final String DOCBASETYPE_ManufacturingCostCollector = "MCC";
 	/** Warehouse Management Order = WMO */
 	public static final String DOCBASETYPE_WarehouseManagementOrder = "WMO";
+	/** Farmer Credit = FFC */
+	public static final String DOCBASETYPE_FarmerCredit = "FFC";
+	/** Farmer Loan = FFL */
+	public static final String DOCBASETYPE_FarmerLoan = "FFL";
+	/** Mobilization Guide = FMG */
+	public static final String DOCBASETYPE_MobilizationGuide = "FMG";
+	/** Entry Ticket = FET */
+	public static final String DOCBASETYPE_EntryTicket = "FET";
+	/** Quality Analysis = FQA */
+	public static final String DOCBASETYPE_QualityAnalysis = "FQA";
+	/** Record Weight = FRW */
+	public static final String DOCBASETYPE_RecordWeight = "FRW";
+	/** Raw Material Liquidation = FRL */
+	public static final String DOCBASETYPE_RawMaterialLiquidation = "FRL";
+	/** Technical Form = FTF */
+	public static final String DOCBASETYPE_TechnicalForm = "FTF";
+	/** Credit Definition = FCD */
+	public static final String DOCBASETYPE_CreditDefinition = "FCD";
+	/** Chute Quality Analysis = FCA */
+	public static final String DOCBASETYPE_ChuteQualityAnalysis = "FCA";
+	/** Reception Agreement = FFR */
+	public static final String DOCBASETYPE_ReceptionAgreement = "FFR";
+	/** Credit Extension = FFE */
+	public static final String DOCBASETYPE_CreditExtension = "FFE";
+	/** Farmer Credit Act = FFA */
+	public static final String DOCBASETYPE_FarmerCreditAct = "FFA";
+	/** Bill of Exchenge = FBE */
+	public static final String DOCBASETYPE_BillOfExchenge = "FBE";
+	/** Payment Request = FPR */
+	public static final String DOCBASETYPE_PaymentRequest = "FPR";
+	/** Load Order = FLO */
+	public static final String DOCBASETYPE_LoadOrder = "FLO";
 	/** Set Document BaseType.
 		@param DocBaseType 
 		Logical type of document

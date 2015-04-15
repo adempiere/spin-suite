@@ -22,7 +22,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Interface for C_BPartner
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765)
+ *  @version Release 3.7.0LTS
  */
 public interface I_C_BPartner 
 {
@@ -415,6 +415,15 @@ public interface I_C_BPartner
 	  * Indicates if  this Business Partner is an employee
 	  */
 	public boolean isEmployee();
+
+    /** Column name IsFarmer */
+    public static final String COLUMNNAME_IsFarmer = "IsFarmer";
+
+	/** Set Is Farmer	  */
+	public void setIsFarmer (boolean IsFarmer);
+
+	/** Get Is Farmer	  */
+	public boolean isFarmer();
 
     /** Column name IsManufacturer */
     public static final String COLUMNNAME_IsManufacturer = "IsManufacturer";

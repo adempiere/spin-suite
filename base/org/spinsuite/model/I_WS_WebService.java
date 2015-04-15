@@ -21,7 +21,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Interface for WS_WebService
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765)
+ *  @version Release 3.7.0LTS
  */
 public interface I_WS_WebService 
 {
@@ -152,19 +152,6 @@ public interface I_WS_WebService
 	  * User who updated this records
 	  */
 	public int getUpdatedBy();
-
-    /** Column name URL */
-    public static final String COLUMNNAME_URL = "URL";
-
-	/** Set URL.
-	  * Full URL address - e.g. http://www.adempiere.org
-	  */
-	public void setURL (String URL);
-
-	/** Get URL.
-	  * Full URL address - e.g. http://www.adempiere.org
-	  */
-	public String getURL();
 
     /** Column name Value */
     public static final String COLUMNNAME_Value = "Value";

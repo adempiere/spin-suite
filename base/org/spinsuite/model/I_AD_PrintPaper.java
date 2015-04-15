@@ -22,7 +22,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Interface for AD_PrintPaper
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765)
+ *  @version Release 3.7.0LTS
  */
 public interface I_AD_PrintPaper 
 {

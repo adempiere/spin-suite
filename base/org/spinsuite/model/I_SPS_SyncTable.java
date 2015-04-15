@@ -102,10 +102,10 @@ public interface I_SPS_SyncTable
     public static final String COLUMNNAME_IsSynchronized = "IsSynchronized";
 
 	/** Set Synchronized	  */
-	public void setIsSynchronized (boolean IsSynchronized);
+	public void setIsSynchronized (Object IsSynchronized);
 
 	/** Get Synchronized	  */
-	public boolean isSynchronized();
+	public Object getIsSynchronized();
 
     /** Column name Record_ID */
     public static final String COLUMNNAME_Record_ID = "Record_ID";

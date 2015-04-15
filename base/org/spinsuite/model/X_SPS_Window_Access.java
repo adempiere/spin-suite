@@ -23,7 +23,7 @@ import org.spinsuite.base.DB;
 
 /** Generated Model for SPS_Window_Access
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_SPS_Window_Access extends PO implements I_SPS_Window_Access {
     /** Standard Constructor */
     public X_SPS_Window_Access (Context ctx, int SPS_Window_Access_ID, DB conn)

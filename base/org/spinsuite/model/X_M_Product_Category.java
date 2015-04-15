@@ -26,7 +26,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for M_Product_Category
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_M_Product_Category extends PO implements I_M_Product_Category {
     /** Standard Constructor */
     public X_M_Product_Category (Context ctx, int M_Product_Category_ID, DB conn)

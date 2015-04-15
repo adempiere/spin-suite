@@ -26,7 +26,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for C_PaymentTerm
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_C_PaymentTerm extends PO implements I_C_PaymentTerm {
     /** Standard Constructor */
     public X_C_PaymentTerm (Context ctx, int C_PaymentTerm_ID, DB conn)

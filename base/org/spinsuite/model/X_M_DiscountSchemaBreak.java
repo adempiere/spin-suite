@@ -26,7 +26,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for M_DiscountSchemaBreak
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_M_DiscountSchemaBreak extends PO implements I_M_DiscountSchemaBreak {
     /** Standard Constructor */
     public X_M_DiscountSchemaBreak (Context ctx, int M_DiscountSchemaBreak_ID, DB conn)

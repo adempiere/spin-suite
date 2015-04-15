@@ -1,5 +1,5 @@
 /******************************************************************************
- * Product: Adempiere ERP & CRM Smart Business Solution                       *
+ * Product: Spin-Suite (Making your Business Spin)                            *
  * Copyright (C) 1999-2007 ComPiere, Inc. All Rights Reserved.                *
  * This program is free software, you can redistribute it and/or modify it    *
  * under the terms version 2 of the GNU General Public License as published   *
@@ -17,13 +17,12 @@
 package org.spinsuite.model;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.Date;
 import org.spinsuite.util.KeyNamePair;
 
 /** Generated Interface for FTA_CreditDefinition
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765)
+ *  @version Release 3.7.0LTS
  */
 public interface I_FTA_CreditDefinition 
 {
@@ -70,15 +69,6 @@ public interface I_FTA_CreditDefinition
 	  * Amount
 	  */
 	public BigDecimal getAmt();
-
-    /** Column name Category_ID */
-    public static final String COLUMNNAME_Category_ID = "Category_ID";
-
-	/** Set Category	  */
-	public void setCategory_ID (int Category_ID);
-
-	/** Get Category	  */
-	public int getCategory_ID();
 
     /** Column name C_DocTypeClosedAP_ID */
     public static final String COLUMNNAME_C_DocTypeClosedAP_ID = "C_DocTypeClosedAP_ID";
@@ -265,15 +255,6 @@ public interface I_FTA_CreditDefinition
 	  * Unique identifier of a Price List
 	  */
 	public int getM_PriceList_ID();
-
-    /** Column name PlantingCycle_ID */
-    public static final String COLUMNNAME_PlantingCycle_ID = "PlantingCycle_ID";
-
-	/** Set Planting Cycle	  */
-	public void setPlantingCycle_ID (int PlantingCycle_ID);
-
-	/** Get Planting Cycle	  */
-	public int getPlantingCycle_ID();
 
     /** Column name Processed */
     public static final String COLUMNNAME_Processed = "Processed";

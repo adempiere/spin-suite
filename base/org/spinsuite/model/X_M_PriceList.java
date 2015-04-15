@@ -24,7 +24,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for M_PriceList
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_M_PriceList extends PO implements I_M_PriceList {
     /** Standard Constructor */
     public X_M_PriceList (Context ctx, int M_PriceList_ID, DB conn)

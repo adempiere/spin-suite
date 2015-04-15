@@ -21,7 +21,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Interface for AD_TreeBar
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765)
+ *  @version Release 3.7.0LTS
  */
 public interface I_AD_TreeBar 
 {
@@ -55,15 +55,6 @@ public interface I_AD_TreeBar
 	  * Organizational entity within client
 	  */
 	public int getAD_Org_ID();
-
-    /** Column name AD_TreeBar_ID */
-    public static final String COLUMNNAME_AD_TreeBar_ID = "AD_TreeBar_ID";
-
-	/** Set AD_TreeBar ID	  */
-	public void setAD_TreeBar_ID (int AD_TreeBar_ID);
-
-	/** Get AD_TreeBar ID	  */
-	public int getAD_TreeBar_ID();
 
     /** Column name AD_Tree_ID */
     public static final String COLUMNNAME_AD_Tree_ID = "AD_Tree_ID";

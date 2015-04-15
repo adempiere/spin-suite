@@ -22,7 +22,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Interface for M_DiscountSchema
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765)
+ *  @version Release 3.7.0LTS
  */
 public interface I_M_DiscountSchema 
 {
@@ -30,8 +30,8 @@ public interface I_M_DiscountSchema
     /** TableName=M_DiscountSchema */
     public static final String Table_Name = "M_DiscountSchema";
 
-    /** SPS_Table_ID=50306 */
-    public static final int SPS_Table_ID = 50306;
+    /** SPS_Table_ID=50323 */
+    public static final int SPS_Table_ID = 50323;
     KeyNamePair Model = new KeyNamePair(SPS_Table_ID, Table_Name);
 
     /** Load Meta Data */

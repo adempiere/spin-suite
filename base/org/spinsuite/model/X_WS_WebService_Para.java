@@ -23,7 +23,7 @@ import org.spinsuite.base.DB;
 
 /** Generated Model for WS_WebService_Para
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_WS_WebService_Para extends PO implements I_WS_WebService_Para {
     /** Standard Constructor */
     public X_WS_WebService_Para (Context ctx, int WS_WebService_Para_ID, DB conn)
@@ -79,8 +79,8 @@ public class X_WS_WebService_Para extends PO implements I_WS_WebService_Para {
 	public static final int PARAMETERNAME_AD_Reference_ID=53726;
 	/** Action = Action */
 	public static final String PARAMETERNAME_Action = "Action";
-	/** Record ID = Record_ID */
-	public static final String PARAMETERNAME_RecordID = "Record_ID";
+	/** Record ID = RecordID */
+	public static final String PARAMETERNAME_RecordID = "RecordID";
 	/** Table Name = TableName */
 	public static final String PARAMETERNAME_TableName = "TableName";
 	/** Reference = AD_Reference_ID */

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Product: Adempiere ERP & CRM Smart Business Solution                       *
+ * Product: Spin-Suite (Making your Business Spin)                            *
  * Copyright (C) 1999-2007 ComPiere, Inc. All Rights Reserved.                *
  * This program is free software, you can redistribute it and/or modify it    *
  * under the terms version 2 of the GNU General Public License as published   *
@@ -20,22 +20,14 @@ package org.spinsuite.model;
 import android.content.Context;
 import android.database.Cursor;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.Date;
 import org.spinsuite.base.DB;
 import org.spinsuite.util.Env;
 
 /** Generated Model for FTA_ProductsToApply
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
-public class X_FTA_ProductsToApply extends PO implements I_FTA_ProductsToApply
-{
-
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 20140922L;
-
+ *  @version Release 3.7.0LTS - $Id$ */
+public class X_FTA_ProductsToApply extends PO implements I_FTA_ProductsToApply {
     /** Standard Constructor */
     public X_FTA_ProductsToApply (Context ctx, int FTA_ProductsToApply_ID, DB conn)
     {

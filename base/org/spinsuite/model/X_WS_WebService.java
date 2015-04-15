@@ -24,7 +24,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for WS_WebService
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_WS_WebService extends PO implements I_WS_WebService {
     /** Standard Constructor */
     public X_WS_WebService (Context ctx, int WS_WebService_ID, DB conn)
@@ -133,23 +133,6 @@ public class X_WS_WebService extends PO implements I_WS_WebService {
 	public String getNameSpace () 
 	{
 		return (String)get_Value(COLUMNNAME_NameSpace);
-	}
-
-	/** Set URL.
-		@param URL 
-		Full URL address - e.g. http://www.adempiere.org
-	  */
-	public void setURL (String URL)
-	{
-		set_Value (COLUMNNAME_URL, URL);
-	}
-
-	/** Get URL.
-		@return Full URL address - e.g. http://www.adempiere.org
-	  */
-	public String getURL () 
-	{
-		return (String)get_Value(COLUMNNAME_URL);
 	}
 
 	/** Set Search Key.

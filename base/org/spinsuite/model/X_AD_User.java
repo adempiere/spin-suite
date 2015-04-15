@@ -25,7 +25,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for AD_User
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_AD_User extends PO implements I_AD_User {
     /** Standard Constructor */
     public X_AD_User (Context ctx, int AD_User_ID, DB conn)

@@ -23,7 +23,7 @@ import org.spinsuite.base.DB;
 
 /** Generated Model for WS_WebServiceFieldInput
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_WS_WebServiceFieldInput extends PO implements I_WS_WebServiceFieldInput {
     /** Standard Constructor */
     public X_WS_WebServiceFieldInput (Context ctx, int WS_WebServiceFieldInput_ID, DB conn)

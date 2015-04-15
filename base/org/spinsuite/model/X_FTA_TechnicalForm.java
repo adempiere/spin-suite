@@ -1,5 +1,5 @@
 /******************************************************************************
- * Product: Adempiere ERP & CRM Smart Business Solution                       *
+ * Product: Spin-Suite (Making your Business Spin)                            *
  * Copyright (C) 1999-2007 ComPiere, Inc. All Rights Reserved.                *
  * This program is free software, you can redistribute it and/or modify it    *
  * under the terms version 2 of the GNU General Public License as published   *
@@ -19,22 +19,14 @@ package org.spinsuite.model;
 
 import android.content.Context;
 import android.database.Cursor;
-import java.sql.Timestamp;
 import java.util.Date;
 import org.spinsuite.base.DB;
 import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for FTA_TechnicalForm
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
-public class X_FTA_TechnicalForm extends PO implements I_FTA_TechnicalForm
-{
-
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 20140922L;
-
+ *  @version Release 3.7.0LTS - $Id$ */
+public class X_FTA_TechnicalForm extends PO implements I_FTA_TechnicalForm {
     /** Standard Constructor */
     public X_FTA_TechnicalForm (Context ctx, int FTA_TechnicalForm_ID, DB conn)
     {
@@ -43,7 +35,7 @@ public class X_FTA_TechnicalForm extends PO implements I_FTA_TechnicalForm
         {
 			setC_BPartner_ID (0);
 			setC_DocType_ID (0);
-			setDateDoc (new Date( System.currentTimeMillis() ));
+			setDateDoc (null);
 // @#Date@
 			setFTA_TechnicalForm_ID (0);
 			setIsApproved (false);

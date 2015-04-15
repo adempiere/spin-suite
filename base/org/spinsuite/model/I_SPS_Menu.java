@@ -21,7 +21,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Interface for SPS_Menu
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765)
+ *  @version Release 3.7.0LTS
  */
 public interface I_SPS_Menu 
 {

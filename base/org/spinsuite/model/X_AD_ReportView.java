@@ -24,7 +24,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for AD_ReportView
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_AD_ReportView extends PO implements I_AD_ReportView {
     /** Standard Constructor */
     public X_AD_ReportView (Context ctx, int AD_ReportView_ID, DB conn)

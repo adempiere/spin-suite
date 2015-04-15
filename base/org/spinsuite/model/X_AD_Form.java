@@ -24,7 +24,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for AD_Form
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_AD_Form extends PO implements I_AD_Form {
     /** Standard Constructor */
     public X_AD_Form (Context ctx, int AD_Form_ID, DB conn)
