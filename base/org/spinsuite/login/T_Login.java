@@ -116,6 +116,7 @@ public class T_Login extends Fragment implements I_Login {
     	if(user != null && user.length() > 0){
     		if(pass != null && pass.length() > 0){
     			Env.setContext("#SUser", user);
+    			Env.setContext("#AD_User_Name", user);
     			Env.setContext("#SPass", pass);
     			Env.setSavePass(ch_SavePass.isChecked());
     			Env.setAutoLogin(ch_AutoLogin.isChecked());
@@ -126,7 +127,7 @@ public class T_Login extends Fragment implements I_Login {
     			}
     			if(!Env.isEnvLoad())
     				return true;
-    			else if(findUser(user, pass)){
+    			else if(findUser(user, pass)) {
     				return true;
     			} else {
     				Msg.alertMsg(this.getActivity(), 

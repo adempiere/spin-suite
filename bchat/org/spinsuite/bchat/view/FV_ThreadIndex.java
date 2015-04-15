@@ -126,7 +126,7 @@ public class FV_ThreadIndex extends ListFragment
 
 			@Override
 			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-				mode.getMenuInflater().inflate(R.menu.bc_thread_selected, menu);
+				mode.getMenuInflater().inflate(R.menu.bc_thread_list_selected, menu);
 				return true;
 			}
 
@@ -236,9 +236,20 @@ public class FV_ThreadIndex extends ListFragment
     }
     
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+		if (itemId == R.id.action_new_group) {
+			//	not yet implemented
+			return true;
+		}
+		//	
+        return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     	super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.bc_thread, menu);
+		inflater.inflate(R.menu.bc_thread_list, menu);
 		//	Get Item
 		MenuItem item = menu.findItem(R.id.action_search);
 		//	Search View
