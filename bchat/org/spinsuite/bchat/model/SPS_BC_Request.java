@@ -68,6 +68,46 @@ public class SPS_BC_Request {
 	}
 	
 	/**
+	 * Get All Topics
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @return
+	 * @return String[]
+	 */
+	public static String[] getTopics(Context ctx) {
+		//	
+		ArrayList<String> topics = new ArrayList<String>();
+		//	Connection
+		DB conn = null;
+		try {
+			//	Create Connection
+			conn = DB.loadConnection(ctx, DB.READ_ONLY);
+			//	Compile Query
+			conn.compileQuery("SELECT r.Topic "
+					+ "FROM SPS_BC_Request r "
+					+ "WHERE r.IsActive = ? ");
+			//	Add Parameter
+			conn.addBoolean(true);
+			//	Query Data
+			Cursor rs = conn.querySQL();
+			//	Get Header Data
+			if(rs.moveToFirst()) {
+				do {
+					//	
+					topics.add(rs.getString(0));
+				} while(rs.moveToNext());
+			}
+		} catch (Exception e) {
+			LogM.log(ctx, SPS_BC_Message.class, Level.SEVERE, "Error", e);
+		} finally {
+			//	End Transaction
+			DB.closeConnection(conn);
+		}
+		//	Default Return
+		return topics.toArray(new String[topics.size()]);
+	}
+	
+	/**
 	 * Get Request with Type and Status
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
@@ -164,9 +204,11 @@ public class SPS_BC_Request {
 					+ "r.Type, "
 					+ "r.Topic, "
 					+ "r.Name, "
+					+ "r.IsGroup, "
 					+ "r.AD_User_ID, "
 					+ "r.LastMsg "
 					+ "FROM SPS_BC_Request r "
+					+ "INNER JOIN AD_User u ON(u.AD_User_ID = r.AD_User_ID) "
 					+ "WHERE r.SPS_BC_Request_ID = ?");
 			//	Add Parameter
 			conn.addInt(p_SPS_BC_Request_ID);
@@ -179,9 +221,11 @@ public class SPS_BC_Request {
 						null, 
 						rs.getString(1), 
 						rs.getString(2), 
-						rs.getString(3));
+						rs.getString(3), 
+						(rs.getString(4) != null 
+							&& rs.getString(4).equals("Y")));
 				//	Set Last Message
-				request.setLastMsg(rs.getString(5));
+				request.setLastMsg(rs.getString(6));
 				//	Query for Lines
 				conn.compileQuery("SELECT "
 						+ "ru.AD_User_ID, "
@@ -241,7 +285,8 @@ public class SPS_BC_Request {
 					+ "IsActive, "
 					+ "SPS_BC_Request_ID, "
 					+ "Topic, "
-					+ "Type) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					+ "Type, "
+					+ "IsGroup) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			//	Add Values
 			int m_AD_Client_ID = Env.getAD_Client_ID();
 			int m_AD_Org_ID = Env.getAD_Org_ID();
@@ -264,6 +309,7 @@ public class SPS_BC_Request {
 			conn.addInt(m_SPS_BC_Request_ID);
 			conn.addString(request.getTopicName());
 			conn.addString(p_Type);
+			conn.addBoolean(request.isGroup());
 			//	Execute
 			conn.executeSQL();
 			//	Add Child or Request Users

@@ -15,6 +15,8 @@
  *************************************************************************************/
 package org.spinsuite.mqtt.connection;
 
+import java.util.ArrayList;
+
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -53,6 +55,10 @@ public class MQTTConnection {
 	private Context					m_Ctx = null;
 	/**	Connection					*/
 	private static MQTTConnection	m_Connection = null;
+	/**	Is Subscribe Done			*/
+	private boolean 				m_IsSubscribe = false;
+	/**	Current Subscriptions		*/
+	private ArrayList<String>		m_SubscribedTopics = null;
 	
 	/**	QoS									*/
 	public static final int			AT_MOST_ONCE_0 				= 0;
@@ -81,9 +87,10 @@ public class MQTTConnection {
 	 * @param p_Port
 	 * @param p_IsSSLConnection
 	 * @param p_ConnectionListener
+	 * @param p_SubscribedTopics
 	 */
 	public MQTTConnection(Context p_Ctx, String p_Client_ID, String p_Host, int p_Port, 
-			boolean p_IsSSLConnection, IMqttActionListener p_ConnectionListener) {
+			boolean p_IsSSLConnection, IMqttActionListener p_ConnectionListener, String[] p_SubscribedTopics) {
 		m_Ctx = p_Ctx;
 		m_Client_ID = p_Client_ID;
 	    m_Host = p_Host;
@@ -95,6 +102,14 @@ public class MQTTConnection {
 	    m_ConnectionOption.setUserName(getMQTTUser(p_Ctx));
 	    m_ConnectionOption.setPassword(getMQTTPass(p_Ctx).toCharArray());
 	    m_ConnectionOption.setConnectionTimeout(getTimeout(p_Ctx));
+	    //	
+	    m_IsSubscribe = false;
+	    m_SubscribedTopics = new ArrayList<String>();
+	    //	Add Topics
+	    if(p_SubscribedTopics != null) {
+	    	addTopic(p_SubscribedTopics);
+	    	setIsSubscribed(false);
+	    }
 	}
 	
 	/**
@@ -108,7 +123,7 @@ public class MQTTConnection {
 	 */
 	public MQTTConnection(Context p_Ctx, String p_Client_ID, String p_Host, int p_Port, 
 			boolean p_IsSSLConnection) {
-		this(p_Ctx, p_Client_ID, p_Host, p_Port, p_IsSSLConnection, null);
+		this(p_Ctx, p_Client_ID, p_Host, p_Port, p_IsSSLConnection, null, null);
 	}
 	
 	/**
@@ -117,9 +132,40 @@ public class MQTTConnection {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Ctx
 	 * @param p_ConnectionListener
+	 * @param p_SubscribedTopics
 	 */
-	public MQTTConnection(Context p_Ctx, IMqttActionListener p_ConnectionListener) {
-		this(p_Ctx, getClient_ID(p_Ctx), getHost(p_Ctx), getPort(p_Ctx), isSSLConnection(p_Ctx), p_ConnectionListener);
+	public MQTTConnection(Context p_Ctx, IMqttActionListener p_ConnectionListener, String[] p_SubscribedTopics) {
+		this(p_Ctx, getClient_ID(p_Ctx), getHost(p_Ctx), getPort(p_Ctx), isSSLConnection(p_Ctx), p_ConnectionListener, p_SubscribedTopics);
+	}
+	
+	/**
+	 * Get if is Subscribed to topics
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return boolean
+	 */
+	public boolean isSubscribed() {
+		return m_IsSubscribe;
+	}
+	
+	/**
+	 * Set Subscribed
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_IsSubscribe
+	 * @return void
+	 */
+	public void setIsSubscribed(boolean p_IsSubscribe) {
+		m_IsSubscribe = p_IsSubscribe;
+	}
+	
+	/**
+	 * Get Subscribed Topics
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return String[]
+	 */
+	public String[] getSubscribedTopics() {
+		return m_SubscribedTopics.toArray(new String[m_SubscribedTopics.size()]);
 	}
 	
 	/**
@@ -396,14 +442,16 @@ public class MQTTConnection {
 	 * @param p_Ctx
 	 * @param p_ConnectionListener
 	 * @param p_Callback
+	 * @param p_SubscribedTopics
 	 * @param reLoad Reload Instance
 	 * @return
 	 * @return MQTTConnection
 	 */
-	public static MQTTConnection getInstance(Context p_Ctx, IMqttActionListener p_ConnectionListener, MqttCallback p_Callback, boolean reLoad) {
+	public static MQTTConnection getInstance(Context p_Ctx, IMqttActionListener p_ConnectionListener, 
+			MqttCallback p_Callback, String[] p_SubscribedTopics, boolean reLoad) {
 		if(m_Connection == null
 				|| reLoad) {
-			m_Connection = new MQTTConnection(p_Ctx, p_ConnectionListener);
+			m_Connection = new MQTTConnection(p_Ctx, p_ConnectionListener, p_SubscribedTopics);
 			//	Set to false reload
 			if(reLoad) {
 				MQTTConnection.setIsAutomaticService(p_Ctx, false);
@@ -414,6 +462,21 @@ public class MQTTConnection {
 		}
 		//	Default Return
 		return m_Connection;
+	}
+	
+	/**
+	 * Get Instance without topics
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_ConnectionListener
+	 * @param p_Callback
+	 * @param reLoad
+	 * @return
+	 * @return MQTTConnection
+	 */
+	public static MQTTConnection getInstance(Context p_Ctx, IMqttActionListener p_ConnectionListener, 
+			MqttCallback p_Callback, boolean reLoad) {
+		return getInstance(p_Ctx, p_ConnectionListener, p_Callback, null, reLoad);
 	}
 	
 	/**
@@ -693,7 +756,82 @@ public class MQTTConnection {
 	 * @return void
 	 */
 	public void subscribeEx(String p_Topic, int p_QoS) throws MqttSecurityException, MqttException {
+		addTopic(p_Topic);
 		m_ClientLink.subscribe(p_Topic, p_QoS);
+	}
+	
+	/**
+	 * Add Topic to list
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Topic
+	 * @return void
+	 */
+	private void addTopic(String p_Topic) {
+		int currentPos = m_SubscribedTopics.indexOf(p_Topic);
+		if(currentPos > -1) {
+			m_SubscribedTopics.set(currentPos, p_Topic);
+		} else {
+			m_SubscribedTopics.add(p_Topic);
+		}
+		//	Set Is Subscribed Topics
+		if(!isSubscribed()) {
+			setIsSubscribed(true);
+		}
+	}
+	
+	/**
+	 * Add Array Topics
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Topics
+	 * @return void
+	 */
+	private void addTopic(String[] p_Topics) {
+		//	Valid Null
+		if(p_Topics == null) {
+			return;
+		}
+		//	Add Topics
+		for(String p_Topic : p_Topics) {
+			addTopic(p_Topic);
+		}
+	}
+	
+	/**
+	 * Subscribe to Topics array
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Topic
+	 * @param p_QoS
+	 * @throws MqttSecurityException
+	 * @throws MqttException
+	 * @return void
+	 */
+	public void subscribeEx(String[] p_Topic, int[] p_QoS) throws MqttSecurityException, MqttException {
+		addTopic(p_Topic);
+		m_ClientLink.subscribe(p_Topic, p_QoS);
+	}
+	
+	/**
+	 * Susbcribe current topics
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_QoS
+	 * @throws MqttSecurityException
+	 * @throws MqttException
+	 * @return void
+	 */
+	public void subscribeEx(int p_QoS) throws MqttSecurityException, MqttException {
+		String [] currentTopics = getSubscribedTopics();
+		//	Valid none
+		if(currentTopics == null
+				|| currentTopics.length == 0) {
+			return;
+		}
+		int [] p_QoS_Array = new int[currentTopics.length];
+		//	Fill array
+		for(int i = 0; i < p_QoS_Array.length; i++) {
+			p_QoS_Array[i] = p_QoS;
+		}
+		//	Subscribe
+		subscribeEx(getSubscribedTopics(), p_QoS_Array);
 	}
 	
 	/**

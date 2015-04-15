@@ -272,7 +272,9 @@ public class DocumentEngine implements DocAction
 		else if (ACTION_Post.equals(m_action))
 			success = postIt();
 		//	Get Msg
-		if (m_document != null) {
+		if (m_document != null
+				&& m_document.getProcessMsg() != null
+				&& m_document.getProcessMsg().length() > 0) {
 			m_message = m_document.getProcessMsg();
 			LogM.log(getCtx(), getClass(), Level.INFO, 
 					"**** Action = " + m_action + " Status = "  + m_status + " - Success=" + success);
@@ -407,8 +409,9 @@ public class DocumentEngine implements DocAction
 			|| m_document == null)
 			return false;
 
-		String error = null;//DocumentEngine.postImmediate(Env.getCtx(), m_document.getAD_Client_ID(), m_document.get_Table_ID(), m_document.get_ID(), true, m_document.get_TrxName());
-		return (error == null);
+//		String error = null;//DocumentEngine.postImmediate(Env.getCtx(), m_document.getAD_Client_ID(), m_document.get_Table_ID(), m_document.get_ID(), true, m_document.get_TrxName());
+//		return (error == null);
+		return true;
 	}	//	postIt
 	
 	/**
@@ -577,6 +580,7 @@ public class DocumentEngine implements DocAction
 	public boolean isValidAction (String action) {
 		//	Verify Role Action Access
 		if(!Env.getDocumentAccess(getC_DocType_ID(), action)) {
+			setProcessMsg("@ActionNotAllowedHere@ [@ProcessAction@: " + action + "]");
 			return false;
 		}
 		//	
@@ -585,6 +589,8 @@ public class DocumentEngine implements DocAction
 			if (options[i].equals(action))
 				return true;
 		}
+		//	
+		setProcessMsg("@ActionNotAllowedHere@ [@ProcessAction@: " + action + "]");
 		return false;
 	}	//	isValidAction
 

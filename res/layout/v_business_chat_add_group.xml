@@ -15,15 +15,32 @@
  * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpcya.com				  		                 *
  ************************************************************************************/
- -->
-<resources>
-	<string name="BChat">Mensajería de Negocio</string>
-	<string name="BChat_EnterMsg">Escriba un Mensaje</string>
-	<string name="BChat_Hi">Hola</string>
-	<string name="BChat_NewRequest">quieres hablarme?</string>
-	<string name="BChat_Selected">Seleccionados</string>
-	<string name="BChat_GroupName">Nombre de Grupo</string>
-	<string name="BChat_AddGroup">Agregar Grupo</string>
-	<string name="BChat_MustFillGroupName">Debe Llenar el Nombre del Grupo</string>
-	<string name="BChat_MustSelectContact">Debe Seleccionar los Contactos</string>
-</resources>
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_bc_contacts_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <EditText
+        android:id="@+id/et_GroupName"
+        style="@style/TextDynamicTabEditText"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bc_editText_layout_height"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:ems="10"
+        android:hint="@string/BChat_GroupName"
+        android:inputType="textCapWords" >
+
+    </EditText>
+    
+    <ListView
+        android:id="@+id/lv_Contacts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/et_GroupName"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
+
+    </ListView>
+</RelativeLayout>

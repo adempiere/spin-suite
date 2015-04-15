@@ -46,6 +46,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 
@@ -116,16 +119,24 @@ public class MQTTSyncService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		//	
-		m_IsRunning = true;
 		Env.getInstance(getApplicationContext());
 		if(!Env.isEnvLoad()
 				|| !MQTTConnection.isNetworkOk(this)
-				|| !MQTTConnection.isAutomaticService(this))
+				|| !MQTTConnection.isAutomaticService(this)
+				|| MQTTSyncService.isRunning())
 			return;
+		//	
+		m_IsRunning = true;
 		//	Save Current Message
 		saveMsg();
 		//	Verify Reload Service
 		boolean isReload = MQTTConnection.isReloadService(this);
+		//	Default Topics
+		String[] defaultTopics = null;
+		if(isReload
+				|| m_Connection == null) {
+			defaultTopics = SPS_BC_Request.getTopics(getApplicationContext());
+		}
 		//	Get Connection
 		m_Connection = MQTTConnection.getInstance(getApplicationContext(), 
 				new MQTTListener(getApplicationContext()), 
@@ -166,7 +177,7 @@ public class MQTTSyncService extends IntentService {
 					public void connectionLost(Throwable e) {
 						forConnectionLost(e);
 					}
-				}, isReload);
+				}, defaultTopics, isReload);
 		//	Connection
 		connect();
 		//	Send Request
@@ -248,7 +259,6 @@ public class MQTTSyncService extends IntentService {
 	/**
 	 * Send Open Request
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-
 	 * @param m_Connection
 	 * @return
 	 * @return boolean
@@ -270,6 +280,10 @@ public class MQTTSyncService extends IntentService {
 						//	
 						String m_LocalClient_ID = MQTTConnection.getClient_ID(this);
 						request.setLocalClient_ID(m_LocalClient_ID);
+						//	Set User Name
+						if(!request.isGroup()) {
+							request.setName(Env.getContext("#AD_User_Name"));
+						}
 						byte[] msg = SerializerUtil.serializeObject(request);
 						MqttMessage message = new MqttMessage(msg);
 						message.setQos(MQTTConnection.AT_LEAST_ONCE_1);
@@ -433,6 +447,13 @@ public class MQTTSyncService extends IntentService {
 			PendingIntent m_PendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 			m_Builder.setContentIntent(m_PendingIntent);
 			m_Builder.setAutoCancel(true);
+			//	Set Vibration
+			m_Builder.setVibrate(new long[] {1000, 500, 1000, 500, 1000});
+		    //	Set Light
+			m_Builder.setLights(Color.GRAY, 3000, 3000);
+			//	Set Sound
+			Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+			m_Builder.setSound(alarmSound);
 		}
 	}
 	

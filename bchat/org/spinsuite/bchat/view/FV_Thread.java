@@ -93,6 +93,8 @@ public class FV_Thread extends Fragment {
 	private ImageButton					ib_Send				= null;
 	/**	Request						*/
 	private static SyncRequest 			m_Request			= null;
+	/**	Is Active					*/
+	private static boolean				m_IsActive			= false;
 	/**	Thread Adapter				*/
 	private static BChatThreadAdapter	m_ThreadAdapter		= null;
 	/**	Reload Data					*/
@@ -340,6 +342,18 @@ public class FV_Thread extends Fragment {
         loadData();
     }
     
+    @Override
+    public void onResume() {
+    	super.onResume();
+    	m_IsActive = true;
+    }
+    
+    @Override
+    public void onPause() {
+    	super.onPause();
+    	m_IsActive = false;
+    }
+    
     /**
      * Select a Conversation
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
@@ -375,7 +389,8 @@ public class FV_Thread extends Fragment {
      */
     public static boolean isOpened(int p_SPS_BC_Request_ID) {
     	return (m_Request != null 
-    			&& m_Request.getSPS_BC_Request_ID() == p_SPS_BC_Request_ID);
+    			&& m_Request.getSPS_BC_Request_ID() == p_SPS_BC_Request_ID
+    			&& m_IsActive);
     }
     
     /**
@@ -400,7 +415,7 @@ public class FV_Thread extends Fragment {
 				m_Request = new SyncRequest(0, 
 						String.valueOf(Env.getAD_User_ID()), 
 						SyncRequest.RT_BUSINESS_CHAT, 
-						String.valueOf(UUID.randomUUID()), p_Name);
+						String.valueOf(UUID.randomUUID()), p_Name, false);
 				//	Add User to Request
 				m_Request.addUser(new Invited(p_AD_User_ID, SPS_BC_Request.STATUS_CREATED));
 			}

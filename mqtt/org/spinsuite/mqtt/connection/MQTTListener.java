@@ -62,12 +62,15 @@ public class MQTTListener implements IMqttActionListener {
 	 */
 	private void subscribeToDefaultsTopics() {
 		try {
-			MQTTConnection.getInstance(m_Ctx).subscribeEx(MQTTDefaultValues.getInitialLoadTopic(), 
+			MQTTConnection m_Connection = MQTTConnection.getInstance(m_Ctx);
+			m_Connection.subscribeEx(MQTTDefaultValues.getInitialLoadTopic(), 
 					MQTTConnection.AT_LEAST_ONCE_1);
-			MQTTConnection.getInstance(m_Ctx).subscribeEx(MQTTDefaultValues.getSyncTopic(String.valueOf(Env.getAD_User_ID())), 
+			m_Connection.subscribeEx(MQTTDefaultValues.getSyncTopic(String.valueOf(Env.getAD_User_ID())), 
 					MQTTConnection.AT_LEAST_ONCE_1);
-			MQTTConnection.getInstance(m_Ctx).subscribeEx(MQTTDefaultValues.getRequestTopic(String.valueOf(Env.getAD_User_ID())), 
+			m_Connection.subscribeEx(MQTTDefaultValues.getRequestTopic(String.valueOf(Env.getAD_User_ID())), 
 					MQTTConnection.AT_LEAST_ONCE_1);
+			//	Subscribe to Other topics
+			m_Connection.subscribeEx(MQTTConnection.AT_LEAST_ONCE_1);
 		} catch (MqttSecurityException e) {
 			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Security Exception", e);
 		} catch (MqttException e) {

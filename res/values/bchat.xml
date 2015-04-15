@@ -22,4 +22,8 @@
 	<string name="BChat_Hi">Hi</string>
 	<string name="BChat_NewRequest">you can talk me?</string>
 	<string name="BChat_Selected">Selected</string>
+	<string name="BChat_GroupName">Group Name</string>
+	<string name="BChat_AddGroup">Add Group</string>
+	<string name="BChat_MustFillGroupName">Must Fill Group Name</string>
+	<string name="BChat_MustSelectContact">Must Select Contact</string>
 </resources>

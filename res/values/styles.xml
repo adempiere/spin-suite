@@ -39,6 +39,7 @@
         <item name="ic_ab_drawer">@drawable/ic_drawer</item>
         <item name="ic_ab_drawer_shadow">@drawable/drawer_shadow</item>
         <item name="ic_ab_bchat">@drawable/ic_action_chat_dark</item>
+        <item name="ic_ab_bchat_new_group">@drawable/ic_action_add_group_dark</item>
         <!-- Drawer Icon -->
         <item name="ic_dr_share">@drawable/ic_action_share_light</item>
         <item name="ic_dr_pdf">@drawable/ic_action_view_as_list_light</item>

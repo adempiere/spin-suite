@@ -20,6 +20,7 @@ package org.spinsuite.mqtt.connection;
  *
  */
 public class MQTTDefaultValues {
+	
 	/**	Initial Load Topic								*/
 	private static final String INITIAL_LOAD_TOPIC 			= "Public-Initial-Load";
 	/**	Default Prefix for ADempiere Synchronization	*/
@@ -35,7 +36,7 @@ public class MQTTDefaultValues {
 	/**	Port											*/
 	public static final int 	DEFAULT_MQTT_PORT 			= 1883;
 	/**	Alarm Time										*/
-	public static final long 	DEFAULT_MQTT_ALARM_TIME 	= 6000;
+	public static final long 	DEFAULT_MQTT_ALARM_TIME 	= 1000;
 	
 	/**
 	 * Get Synchronization Topic

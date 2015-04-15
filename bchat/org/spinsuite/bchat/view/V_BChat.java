@@ -27,6 +27,7 @@ import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -354,9 +355,12 @@ public class V_BChat extends FragmentActivity
     	}
         // Handle action buttons
         switch(item.getItemId()) {
-        
-        default:
-            return super.onOptionsItemSelected(item);
+        	case R.id.action_new_group:
+        		Intent groupAdd = new Intent(this, V_BChat_AddGroup.class);
+        		startActivityForResult(groupAdd, 0);
+        		return true;
+        	default:
+        		return super.onOptionsItemSelected(item);
         }
     }
     
@@ -368,7 +372,7 @@ public class V_BChat extends FragmentActivity
         		menu.setGroupVisible(R.id.group_tab_menu, false);
         }
         return super.onPrepareOptionsMenu(menu);
-    } 
+    }
     
     @Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
