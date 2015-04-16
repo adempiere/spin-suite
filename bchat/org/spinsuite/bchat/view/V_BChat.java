@@ -434,8 +434,11 @@ public class V_BChat extends FragmentActivity
     
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	//	
-    	if (resultCode == Activity.RESULT_OK) {
+    	//	For Photo
+    	if(requestCode == FV_Thread.ACTION_TAKE_PHOTO
+    			|| requestCode == FV_Thread.ACTION_TAKE_FILE) {
+    		m_ThreadFragment.onActivityResult(requestCode, resultCode, data);
+    	} else if (resultCode == Activity.RESULT_OK) {
 	    	if(data != null) {
 	    		m_SPS_BC_Request_ID = data.getIntExtra("SPS_BC_Request_ID", 0);
 	    	}

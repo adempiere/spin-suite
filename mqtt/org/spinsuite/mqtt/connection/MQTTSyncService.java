@@ -15,6 +15,10 @@
  *************************************************************************************/
 package org.spinsuite.mqtt.connection;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
@@ -378,6 +382,22 @@ public class MQTTSyncService extends IntentService {
 	 * @return void
 	 */
 	private void saveMessageArrived(final SyncMessage message) {
+		//	Save File in Folder
+		if(message.getFileName() != null
+				&& message.getFileName().length() > 0
+				&& message.getAttachment() != null) {
+			try {		
+				String fileName = Env.getBC_IMG_DirectoryPathName(this) + File.separator + message.getFileName();
+				FileOutputStream fos = new FileOutputStream(fileName);
+				//	Write
+				fos.write(message.getAttachment());
+				fos.close();
+			} catch (FileNotFoundException e) {
+				LogM.log(this, getClass(), Level.SEVERE, "Error Saving File", e);
+			} catch (IOException e) {
+				LogM.log(this, getClass(), Level.SEVERE, "Error Saving File", e);
+			}
+		}
 		SPS_BC_Message.newInMessage(this, message);
 		//	Instance Notification Manager
 		instanceNM();
@@ -412,7 +432,9 @@ public class MQTTSyncService extends IntentService {
 					message.getAD_User_ID(), message.getUserName(), 
 					p_Type, 
 					SPS_BC_Message.STATUS_CREATED, 
-					new Date(System.currentTimeMillis())));
+					new Date(System.currentTimeMillis()), 
+					message.getFileName(), 
+					message.getAttachment()));
 			return true;
 		}
 		//	Default Return

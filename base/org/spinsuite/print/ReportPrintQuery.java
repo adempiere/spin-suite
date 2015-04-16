@@ -318,7 +318,7 @@ public class ReportPrintQuery {
 		m_from.append(lookup.TableName).append(" ").append(AS).append(" ").append(lookup.TableAlias).append(" ");
 		//	On
 		m_from.append(ON).append("(")
-							.append(lookup.TableAlias).append(POINT).append(lookup.KeyColumn)
+							.append(lookup.TableAlias).append(POINT).append(lookup.KeyColumn[0])
 							.append(EQUAL).append(tableName).append(POINT).append(linkColumn.ColumnName);
 		if(linkColumn.DisplayType == DisplayType.LIST) {
 			m_from.append(" ").append(AND).append(" ")

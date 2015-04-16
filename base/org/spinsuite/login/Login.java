@@ -15,7 +15,6 @@
  *************************************************************************************/
 package org.spinsuite.login;
 
-import java.io.File;
 import java.util.List;
 
 import org.spinsuite.base.DB;
@@ -90,7 +89,7 @@ public class Login extends TV_Base implements I_Login {
     	super.onCreate(savedInstanceState);
     	//	Set Activity
         v_activity = this;
-    	// Validate SD
+        // Validate SD
     	if(Env.isEnvLoad()) {
         	//	
         	addFagment(T_Login.class, "Conn", R.string.tt_Conn);
@@ -132,7 +131,7 @@ public class Login extends TV_Base implements I_Login {
 //    		if(m_LoginInit == null
 //    				&& !SyncService.isRunning())
 //    			loadInitSync();
-    		createDBDirectory();
+    		Env.createDefaultDirectory(this);
     		setContext();
     		//	For Demo
     		//m_LoadType = DATA_BASE;
@@ -270,73 +269,6 @@ public class Login extends TV_Base implements I_Login {
 		Env.setContext("#InitialLoadSynchronizing", false);
 		//	Reload
 		reloadActivity();
-	}
-	
-	/**
-	 * Set Database Directory
-	 * @author Yamel Senih 30/11/2012, 11:55:26
-	 * @return void
-	 */
-	private void createDBDirectory(){
-		if(!Env.isEnvLoad()){
-			if(Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
-				String basePathName = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
-				//	Application Path
-				String dbPath = basePathName + Env.DB_PATH_DIRECTORY;
-				String dbPathName = basePathName + Env.DB_PATH_NAME;
-				//	Documents 
-				String docPathName = basePathName + Env.DOC_DIRECTORY;
-				String tmpPathName = basePathName + Env.TMP_DIRECTORY;
-				String attPathName = basePathName + Env.ATT_DIRECTORY;
-				
-				//	
-				Env.setAppBaseDirectory(basePathName);
-				Env.setDB_PathName(dbPathName);
-				Env.setDoc_DirectoryPathName(docPathName);
-				Env.setTmp_DirectoryPathName(tmpPathName);
-				Env.setAtt_DirectoryPathName(attPathName);
-				//	Database
-				File f = new File(dbPath);
-				if(!f.exists()) {
-					if(!f.mkdirs())
-						Msg.toastMsg(this, getString(R.string.msg_ErrorCreatingDirectory) 
-								+ "\"" + dbPathName + "\"");
-				} else if(f.isDirectory()) {
-					File fDB = new File(dbPathName);
-					fDB.delete();
-				} else if(f.isFile()){
-					if(!f.mkdirs())
-						Msg.toastMsg(this, getString(R.string.msg_ErrorCreatingDirectory) 
-								+ "\"" + dbPathName + "\"");
-				}
-				//	Create Document Folder
-				File doc = new File(docPathName);
-				if(!doc.exists()
-						|| doc.isFile()) {
-					if(!doc.mkdirs())
-						Msg.toastMsg(this, getString(R.string.msg_ErrorCreatingDirectory) 
-								+ "\"" + docPathName + "\"");
-				}
-				//	Create Tmp Folder
-				File tmp = new File(tmpPathName);
-				if(!tmp.exists()
-						|| tmp.isFile()) {
-					if(!tmp.mkdirs())
-						Msg.toastMsg(this, getString(R.string.msg_ErrorCreatingDirectory) 
-								+ "\"" + tmpPathName + "\"");
-				}
-				//	Create Attachment Folder
-				File att = new File(attPathName);
-				if(!att.exists()
-						|| att.isFile()) {
-					if(!att.mkdirs())
-						Msg.toastMsg(this, getString(R.string.msg_ErrorCreatingDirectory) 
-								+ "\"" + attPathName + "\"");
-				}
-			} else {
-				Env.setDB_PathName(DB.DB_NAME);
-			}	
-    	}
 	}
     
     /**

@@ -41,6 +41,10 @@
         android:layout_alignParentLeft="true"
         android:layout_alignTop="@+id/ib_Send"
         android:layout_toLeftOf="@+id/ib_Send"
+        android:minLines="10"
+    	android:scrollbarStyle="insideInset"
+    	android:scrollbars="vertical" 
+    	android:overScrollMode="always"
         android:ems="10"
         android:inputType="textMultiLine" >
     </EditText>

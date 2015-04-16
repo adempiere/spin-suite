@@ -144,7 +144,8 @@ public class SPS_BC_Message {
 					+ "SPS_BC_Message.SPS_BC_Message_ID, "
 					+ "SPS_BC_Message.AD_User_ID, "
 					+ "SPS_BC_Message.Text, "
-					+ "u.Name UserName "
+					+ "u.Name UserName, "
+					+ "SPS_BC_Message.FileName "
 					+ "FROM SPS_BC_Message "
 					+ "INNER JOIN AD_User u ON(u.AD_User_ID = SPS_BC_Message.AD_User_ID) "
 					+ "WHERE SPS_BC_Message.Status = ? "
@@ -172,6 +173,7 @@ public class SPS_BC_Message {
 					msg.setAD_User_ID(rs.getInt(2));
 					msg.setText(rs.getString(3));
 					msg.setUserName(rs.getString(4));
+					msg.setFileName(rs.getString(5));
 					//	Add Request
 					msgs.add(msg);
 				} while(rs.moveToNext());
@@ -219,7 +221,8 @@ public class SPS_BC_Message {
 					+ "SPS_BC_Request_ID, "
 					+ "SPS_BC_Message_ID, "
 					+ "Type, "
-					+ "Status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					+ "Status, "
+					+ "FileName) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			//	Add Values
 			int m_AD_Client_ID = Env.getAD_Client_ID();
 			int m_AD_Org_ID = Env.getAD_Org_ID();
@@ -243,6 +246,7 @@ public class SPS_BC_Message {
 			conn.addInt(m_SPS_BC_Message_ID);
 			conn.addString(p_Type);
 			conn.addString(STATUS_CREATED);
+			conn.addString(message.getFileName());
 			//	Execute
 			conn.executeSQL();
 			//	Update Header

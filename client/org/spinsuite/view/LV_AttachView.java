@@ -65,8 +65,8 @@ public class LV_AttachView extends Activity {
 	/**	Number Format			*/
 	private DecimalFormat						m_numberFormat		= null;
 	/**	Option Menu				*/
-	private static final int 		O_SHARE 			= 1;
-	private static final int 		O_DELETE 			= 2;
+	private static final int 					O_SHARE 			= 1;
+	private static final int 					O_DELETE 			= 2;
 	
 	@Override
 	public void onCreate(Bundle icicle) {

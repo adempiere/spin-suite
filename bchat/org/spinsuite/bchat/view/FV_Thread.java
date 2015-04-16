@@ -15,10 +15,16 @@
  *************************************************************************************/
 package org.spinsuite.bchat.view;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
@@ -33,11 +39,14 @@ import org.spinsuite.sync.content.SyncMessage;
 import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.AttachmentHandler;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.LogM;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -114,8 +123,12 @@ public class FV_Thread extends Fragment {
 	public static final int				CT_CHAT				= 1;
 	
 	/**	Results						*/
-	private static final int 			ACTION_TAKE_FILE	= 3;
-	private static final int 			ACTION_TAKE_PHOTO	= 4;
+	public static final int 			ACTION_TAKE_FILE	= 3;
+	public static final int 			ACTION_TAKE_PHOTO	= 4;
+	
+	/**	Constants Type Save			*/
+	private static final String 		PHOTO_ATTACHMENT_SAVE	= "PS";
+	private static final String 		FILE_ATTACHMENT_SAVE	= "FS";
 	
 	/**	Handler						*/
 	public static Handler 				UIHandler;
@@ -158,7 +171,7 @@ public class FV_Thread extends Fragment {
 						|| et_Message.getText().toString().trim().length() == 0)
 					return;
 				//	Send Message
-				sendMessage();
+				sendMessage(null);
 			}
 		});
 		//	Hide Separator
@@ -237,14 +250,36 @@ public class FV_Thread extends Fragment {
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @return void
      */
-    private void sendMessage() {
+    private void sendMessage(String p_FileName) {
 		//	Send Request
 		if(m_Request != null
     			&& m_Request.getSPS_BC_Request_ID() == 0) {
 			SPS_BC_Request.newOutRequest(getActivity(), m_Request);
 		}
+		//	For Image
+		byte[] bytes = null;
+		if(p_FileName != null) {
+			//	Get Destination File
+			File destFile = new File(
+					Env.getBC_IMG_DirectoryPathName(getActivity()) 
+						+ File.separator + p_FileName);
+			if(destFile.exists()) {
+				int size = (int) destFile.length();
+				bytes = new byte[size];
+				try {
+				    BufferedInputStream buf = new BufferedInputStream(new FileInputStream(destFile));
+				    buf.read(bytes, 0, bytes.length);
+				    buf.close();
+				} catch (FileNotFoundException e) {
+					LogM.log(m_ctx, getClass(), Level.SEVERE, "Error", e);
+				} catch (IOException e) {
+					LogM.log(m_ctx, getClass(), Level.SEVERE, "Error", e);
+				}
+			}
+		}
+		//	Send Message
 		SyncMessage message = new SyncMessage(MQTTConnection.getClient_ID(getActivity()), 
-				et_Message.getText().toString(), null, null, 
+				et_Message.getText().toString(), p_FileName, bytes, 
 				m_Request.getSPS_BC_Request_ID(), Env.getAD_User_ID(), Env.getContext("#AD_User_Name"));
 		//	Save Message
 		BC_OpenMsg.getInstance().addMsg(message);
@@ -258,8 +293,12 @@ public class FV_Thread extends Fragment {
 				message.getAD_User_ID(), message.getUserName(), 
 				SPS_BC_Message.TYPE_OUT, 
 				SPS_BC_Message.STATUS_CREATED, 
-				new Date(System.currentTimeMillis())));
+				new Date(System.currentTimeMillis()), 
+				message.getFileName(), 
+				message.getAttachment()));
     }
+    
+    
     
     /**
      * Load List
@@ -312,7 +351,8 @@ public class FV_Thread extends Fragment {
     			+ "u.Name UserName, "
     			+ "m.Type, "
     			+ "m.Status, "
-    			+ "(strftime('%s', m.Updated)*1000) Updated "
+    			+ "(strftime('%s', m.Updated)*1000) Updated, "
+    			+ "m.FileName "
     			+ "FROM SPS_BC_Message m "
     			+ "INNER JOIN AD_User u ON(u.AD_User_ID = m.AD_User_ID) "
     			+ "WHERE m.SPS_BC_Request_ID = ? "
@@ -337,7 +377,9 @@ public class FV_Thread extends Fragment {
     					rs.getString(col++), 
     					rs.getString(col++), 
     					rs.getString(col++), 
-    					new Date(rs.getLong(col++))));
+    					new Date(rs.getLong(col++)), 
+    					rs.getString(col++), 
+    					null));
     			//	Set Column
     			col = 0;
     		} while(rs.moveToNext());
@@ -514,6 +556,65 @@ public class FV_Thread extends Fragment {
     	Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     	intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tmpFile));
 	    getActivity().startActivityForResult(intent, ACTION_TAKE_PHOTO);
+	}
+    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	//	
+    	if(requestCode == ACTION_TAKE_PHOTO) {
+    		new SaveTask().execute(PHOTO_ATTACHMENT_SAVE);
+    	}
+    }
+    
+    /**
+     * Async Task for Save File
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Apr 16, 2015, 9:33:44 AM
+     *
+     */
+    private class SaveTask extends AsyncTask<String, Void, Void> {
+
+		/**	Progress Bar			*/
+		private ProgressDialog 		v_PDialog;
+		private String				m_Type 	= null;
+		private String				m_FileName = null;
+		
+		@Override
+		protected void onPreExecute() {
+			v_PDialog = ProgressDialog.show(m_ctx, null, 
+					getString(R.string.msg_Saving), false, false);
+			//	Set Max
+		}
+		
+		@Override
+		protected Void doInBackground(String... params) {
+			m_Type = params[0];
+			//	Valid Null
+			if(m_Type == null)
+				return null;
+			//	
+			if(m_Type.equals(PHOTO_ATTACHMENT_SAVE)) {
+				String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+				m_AttHandler.processImgAttach(Env.getBC_IMG_DirectoryPathName(getActivity()), fileName);
+				m_FileName = fileName + AttachmentHandler.JPEG_FILE_SUFFIX;
+			} else if(m_Type.equals(FILE_ATTACHMENT_SAVE)) { 
+				String origFile = params[1];
+				m_AttHandler.processFileAttach(origFile);
+			}
+			//	
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Void... progress) {
+			
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			//	Hide
+			v_PDialog.dismiss();
+			sendMessage(m_FileName);
+		}
 	}
     
 }

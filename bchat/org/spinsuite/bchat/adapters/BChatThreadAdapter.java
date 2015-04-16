@@ -15,15 +15,19 @@
  *************************************************************************************/
 package org.spinsuite.bchat.adapters;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.model.SPS_BC_Message;
 import org.spinsuite.bchat.util.BC_ThreadHolder;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
+import org.spinsuite.util.AttachmentHandler;
 import org.spinsuite.util.Env;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.SparseBooleanArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -58,6 +62,7 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		this.isGroup = p_IsGroup;
 		m_SelectedItems = new SparseBooleanArray();
 		inflater = LayoutInflater.from(ctx);
+		m_DirectoryApp = Env.getBC_IMG_DirectoryPathName(ctx) + File.separator;
 	}
 
 	/**	Context						*/
@@ -74,6 +79,8 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 	private LayoutInflater 							inflater;
 	/**	Is Group					*/
 	private boolean 								isGroup = false;
+	/**	Directory by Default		*/
+	private String									m_DirectoryApp = null;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -104,6 +111,14 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 			msgHolder.tv_UserName.setVisibility(View.GONE);
 		} else {
 			msgHolder.tv_UserName.setVisibility(View.VISIBLE);
+		}
+		//	For Image
+		if(diti.getFileName() != null
+				&& diti.getFileName().length() > 0) {
+			Bitmap bmimage = AttachmentHandler.getBitmapFromFile(m_DirectoryApp + diti.getFileName(), 500, 500);
+			msgHolder.rl_Conversation.setBackgroundDrawable(new BitmapDrawable(ctx.getResources(), bmimage));
+		} else {
+			msgHolder.rl_Conversation.setBackgroundDrawable(null);
 		}
 		//	
 		int id_att = R.attr.ic_bc_bubble_local;

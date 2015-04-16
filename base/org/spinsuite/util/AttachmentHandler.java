@@ -231,21 +231,36 @@ public class AttachmentHandler {
 	}
 	
 	/**
-	 * Save Image to Attachment
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/11/2014, 20:50:39
+	 * Process Attach
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param fileName
 	 * @return
 	 * @return boolean
 	 */
 	public boolean processImgAttach(String fileName) {
+		return processImgAttach(null, fileName);
+	}
+	
+	/**
+	 * Save Image to Attachment
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/11/2014, 20:50:39
+	 * @param p_DestFolder
+	 * @param fileName
+	 * @return
+	 * @return boolean
+	 */
+	public boolean processImgAttach(String p_DestFolder, String fileName) {
     	File tmpFile = new File(getTMPImageName());
         if(!tmpFile.exists())
         	return false;
         //	
 		Bitmap mImage = getBitmapFromFile(getTMPImageName(), IMG_TARGET_W, IMG_TARGET_H);
 		//	
+		if(p_DestFolder == null) {
+			p_DestFolder = getAttDirectory() + File.separator + getAttachmentPathSnippet();
+		}
 		if(mImage != null) {
-			final File destFolder = new File(getAttDirectory() + File.separator + getAttachmentPathSnippet());
+			final File destFolder = new File(p_DestFolder);
 			if(!destFolder.exists()) {
 				if(!destFolder.mkdirs()) {
 					LogM.log(m_ctx, getClass(), Level.SEVERE, "unable to create folder: " + destFolder.getPath());
@@ -257,8 +272,7 @@ public class AttachmentHandler {
 			else if(!fileName.contains(JPEG_FILE_SUFFIX))
 				fileName += JPEG_FILE_SUFFIX;
 			//	
-			final File destFile = new File(getAttDirectory() + File.separator
-					+ getAttachmentPathSnippet() + File.separator + fileName);
+			final File destFile = new File(p_DestFolder + File.separator + fileName);
 			if(destFile.exists()) {
 				if(!destFile.delete()) {
 					destFile.deleteOnExit();
