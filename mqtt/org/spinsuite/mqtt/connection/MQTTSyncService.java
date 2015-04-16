@@ -184,6 +184,8 @@ public class MQTTSyncService extends IntentService {
 		sendOpenRequest();
 		//	Send Message
 		sendOpenMsg();
+		//	Set to false is Running
+		m_IsRunning = false;
 	}
 	
 	/**
@@ -407,7 +409,7 @@ public class MQTTSyncService extends IntentService {
 				&& FV_Thread.isOpened(message.getSPS_BC_Request_ID())) {
 			FV_Thread.addMsg(new DisplayBChatThreadItem(message.getSPS_BC_Message_ID(), 
 					message.getText(), message.getSPS_BC_Request_ID(), 
-					message.getAD_User_ID(), null, 
+					message.getAD_User_ID(), message.getUserName(), 
 					p_Type, 
 					SPS_BC_Message.STATUS_CREATED, 
 					new Date(System.currentTimeMillis())));

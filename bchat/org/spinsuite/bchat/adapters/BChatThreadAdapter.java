@@ -25,11 +25,13 @@ import org.spinsuite.util.Env;
 
 import android.content.Context;
 import android.util.SparseBooleanArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -46,12 +48,14 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 	 * @param ctx
 	 * @param id_View
 	 * @param data
+	 * @param p_IsGroup
 	 */
-	public BChatThreadAdapter(Context ctx, ArrayList<DisplayBChatThreadItem> data) {
+	public BChatThreadAdapter(Context ctx, ArrayList<DisplayBChatThreadItem> data, boolean p_IsGroup) {
 		super(ctx, R.layout.i_bchat_thread, data);
 		this.ctx = ctx;
 		this.id_View = R.layout.i_bchat_thread;
 		this.data = data;
+		this.isGroup = p_IsGroup;
 		m_SelectedItems = new SparseBooleanArray();
 		inflater = LayoutInflater.from(ctx);
 	}
@@ -68,6 +72,8 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 	private SparseBooleanArray 						m_SelectedItems;
 	/**	Inflater					*/
 	private LayoutInflater 							inflater;
+	/**	Is Group					*/
+	private boolean 								isGroup = false;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -77,9 +83,12 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		if(view == null) {
 			msgHolder = new BC_ThreadHolder();
 			view = inflater.inflate(id_View, null);
+			msgHolder.ll_Message = (LinearLayout) view.findViewById(R.id.ll_Message);
 			msgHolder.rl_Conversation = (RelativeLayout) view.findViewById(R.id.rl_Conversation);
 			msgHolder.tv_Conversation = (TextView) view.findViewById(R.id.tv_Conversation);
 			msgHolder.tv_Time = (TextView)view.findViewById(R.id.tv_Time);
+			msgHolder.tv_UserName = (TextView)view.findViewById(R.id.tv_UserName);
+			//	
 			view.setTag(msgHolder);
 		} else {
 			msgHolder = (BC_ThreadHolder) view.getTag();
@@ -88,21 +97,34 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		msgHolder.tv_Conversation.setText(diti.getValue());
 		//	Set Time
 		msgHolder.tv_Time.setText(diti.getTimeAsString());
+		msgHolder.tv_UserName.setText(diti.getUserName());
+		//	Set Visibility
+		if(!isGroup
+				|| !diti.getType().equals(SPS_BC_Message.TYPE_IN)) {
+			msgHolder.tv_UserName.setVisibility(View.GONE);
+		} else {
+			msgHolder.tv_UserName.setVisibility(View.VISIBLE);
+		}
+		//	
 		int id_att = R.attr.ic_bc_bubble_local;
 		//	For Type Message change Background
 		if(diti.getType().equals(SPS_BC_Message.TYPE_IN)) {
+			//	Change Position
+			msgHolder.tv_UserName.setGravity(Gravity.START);
+			//	
 			if(m_SelectedItems.get(position)) {
 				id_att = R.attr.ic_bc_bubble_remote_selected;
 			} else {
 				id_att = R.attr.ic_bc_bubble_remote;
 			}
 		} else {
+			//	
 			if(m_SelectedItems.get(position)) {
 				id_att = R.attr.ic_bc_bubble_local_selected;
 			}
 		}
 		//	
-		msgHolder.rl_Conversation.setBackgroundResource(Env.getResourceID(ctx, id_att));
+		msgHolder.ll_Message.setBackgroundResource(Env.getResourceID(ctx, id_att));
 		//	Return
 		return view;
 	}
@@ -153,7 +175,10 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 	                for(DisplayBChatThreadItem item : originalData) {
 	                    if((item.getValue() != null 
 	                    		&& item.getValue().toLowerCase(Env.getLocate())
-	                    					.contains(constraint.toString().toLowerCase(Env.getLocate()))))
+	                    					.contains(constraint.toString().toLowerCase(Env.getLocate())))
+	                    	|| (item.getUserName() != null 
+		                    		&& item.getUserName().toLowerCase(Env.getLocate())
+                					.contains(constraint.toString().toLowerCase(Env.getLocate()))))
 	                        filteredResult.add(item);
 	                }
 	                return filteredResult;

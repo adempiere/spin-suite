@@ -16,26 +16,41 @@
  * Contributor(s): Yamel Senih www.erpcya.com				  		                 *
  ************************************************************************************/
  -->
- <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rl_Conversation"
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_Message"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal" >
+    android:orientation="vertical" >
+    
+   	<TextView
+   	    android:id="@+id/tv_UserName"
+   	    style="@style/Text_BChat_Thread_Label"
+   	    android:layout_width="match_parent"
+   	    android:layout_alignParentLeft="true"
+   	    android:gravity="center_vertical"
+   	    android:text="@string/User" />
+ 
+	<RelativeLayout
+		android:id="@+id/rl_Conversation"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal" >
+	
+	    <TextView
+	        android:id="@+id/tv_Conversation"
+	        style="@style/Text_BChat_Thread"
+	        android:layout_alignParentLeft="true"
+	        android:layout_toLeftOf="@+id/tv_Time"
+	        android:gravity="center_vertical"
+	        android:text="@string/Description" />
+		<TextView
+		    android:id="@+id/tv_Time"
+		    style="@style/Text_BChat_Thread"
+		    android:layout_alignParentRight="true"
+		    android:layout_alignParentTop="true"
+		    android:gravity="center_vertical"
+		    android:maxLines="1"
+		    android:text="@string/TimeOfEvent" />
+	</RelativeLayout>
 
-    <TextView
-        android:id="@+id/tv_Conversation"
-        style="@style/Text_BChat_Thread"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/tv_Time"
-        android:gravity="center_vertical"
-        android:text="@string/Description" />
-	<TextView
-	    android:id="@+id/tv_Time"
-	    style="@style/Text_BChat_Thread"
-	    android:layout_alignParentRight="true"
-	    android:layout_alignParentTop="true"
-	    android:gravity="center_vertical"
-	    android:maxLines="1"
-	    android:text="@string/TimeOfEvent" />
-
-</RelativeLayout>
+</LinearLayout>

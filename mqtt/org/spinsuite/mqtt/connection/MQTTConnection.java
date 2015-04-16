@@ -456,7 +456,8 @@ public class MQTTConnection {
 			if(reLoad) {
 				MQTTConnection.setIsAutomaticService(p_Ctx, false);
 			}
-			if(p_Callback != null) {
+			if(p_Callback != null
+					&& m_Connection.getCallback() == null) {
 				m_Connection.setCallback(p_Callback);
 			}
 		}

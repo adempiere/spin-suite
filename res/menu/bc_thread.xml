@@ -20,6 +20,11 @@
     
     <item android:id="@+id/action_search"
         android:title="@string/Action_Search"
-        android:showAsAction="always|collapseActionView"
+        android:showAsAction="ifRoom"
         android:icon="?attr/ic_ab_search" />
+    
+    <item android:id="@+id/action_attach_photo"
+        android:title="@string/Action_AttachPhoto"
+        android:showAsAction="always|collapseActionView"
+        android:icon="?attr/ic_ab_attach_photo" />
 </menu>

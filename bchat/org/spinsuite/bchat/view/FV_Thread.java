@@ -15,6 +15,7 @@
  *************************************************************************************/
 package org.spinsuite.bchat.view;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
@@ -30,13 +31,17 @@ import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.sync.content.Invited;
 import org.spinsuite.sync.content.SyncMessage;
 import org.spinsuite.sync.content.SyncRequest;
+import org.spinsuite.util.AttachmentHandler;
 import org.spinsuite.util.Env;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SearchViewCompat;
@@ -101,9 +106,16 @@ public class FV_Thread extends Fragment {
 	private boolean						m_Reload			= true;
 	/**	Context						*/
 	private Context						m_ctx 				= null;
+	/**	Attach Handler				*/
+	private AttachmentHandler			m_AttHandler		= null;
+	
 	/**	Conversation Type Constants	*/
 	public static final int				CT_REQUEST			= 0;
 	public static final int				CT_CHAT				= 1;
+	
+	/**	Results						*/
+	private static final int 			ACTION_TAKE_FILE	= 3;
+	private static final int 			ACTION_TAKE_PHOTO	= 4;
 	
 	/**	Handler						*/
 	public static Handler 				UIHandler;
@@ -233,7 +245,7 @@ public class FV_Thread extends Fragment {
 		}
 		SyncMessage message = new SyncMessage(MQTTConnection.getClient_ID(getActivity()), 
 				et_Message.getText().toString(), null, null, 
-				m_Request.getSPS_BC_Request_ID(), Env.getAD_User_ID());
+				m_Request.getSPS_BC_Request_ID(), Env.getAD_User_ID(), Env.getContext("#AD_User_Name"));
 		//	Save Message
 		BC_OpenMsg.getInstance().addMsg(message);
 		//	Clear Data
@@ -243,7 +255,7 @@ public class FV_Thread extends Fragment {
 		//	Load
 		addMsg(new DisplayBChatThreadItem(message.getSPS_BC_Message_ID(), 
 				message.getText(), message.getSPS_BC_Request_ID(), 
-				message.getAD_User_ID(), null, 
+				message.getAD_User_ID(), message.getUserName(), 
 				SPS_BC_Message.TYPE_OUT, 
 				SPS_BC_Message.STATUS_CREATED, 
 				new Date(System.currentTimeMillis())));
@@ -266,11 +278,11 @@ public class FV_Thread extends Fragment {
     		et_Message.setText(getString(R.string.BChat_Hi) + " " 
     			+ m_Request.getName() + ", " 
     			+ getString(R.string.BChat_NewRequest));
-    		m_ThreadAdapter = new BChatThreadAdapter(getActivity(), new ArrayList<DisplayBChatThreadItem>());
+    		m_ThreadAdapter = new BChatThreadAdapter(getActivity(), new ArrayList<DisplayBChatThreadItem>(), m_Request.isGroup());
     		//	
     	} else {
     		//	Get Data
-    		m_ThreadAdapter = new BChatThreadAdapter(getActivity(), getData());
+    		m_ThreadAdapter = new BChatThreadAdapter(getActivity(), getData(), (m_Request != null && m_Request.isGroup()));
     	}
     	//	
     	lv_Thread.setAdapter(m_ThreadAdapter);
@@ -364,7 +376,8 @@ public class FV_Thread extends Fragment {
     	m_Request = SPS_BC_Request.getRequest(m_ctx, p_SPS_BC_Request_ID);
     	//	Set Reload Data
     	m_Reload = true;
-    	if(m_view != null) {
+    	if(m_view != null
+    			&& m_Request != null) {
     		loadData();
     	}
     }
@@ -468,4 +481,39 @@ public class FV_Thread extends Fragment {
 			MenuItemCompat.setActionView(item, searchView);
 		}
     }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch (item.getItemId()) {
+			case R.id.action_attach_photo:
+				attachPhoto();
+				return true;
+			//	Default
+			default:
+				return super.onOptionsItemSelected(item);
+    	}
+    }
+    
+    /**
+     * Attach Photo
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return void
+     */
+    private void attachPhoto() {
+    	//	Instance Attachment
+    	if(m_AttHandler == null)
+    		m_AttHandler = new AttachmentHandler(getActivity());
+    	//	
+    	//	Delete Temp File
+    	File tmpFile = new File(m_AttHandler.getTMPImageName());
+    	if(tmpFile.exists()) {
+    		if(!tmpFile.delete())
+    			tmpFile.deleteOnExit();
+    	}
+    	//	
+    	Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    	intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tmpFile));
+	    getActivity().startActivityForResult(intent, ACTION_TAKE_PHOTO);
+	}
+    
 }
