@@ -15,16 +15,11 @@
  *************************************************************************************/
 package org.spinsuite.bchat.view;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
@@ -34,12 +29,13 @@ import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.util.BC_OpenMsg;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.mqtt.connection.MQTTConnection;
+import org.spinsuite.mqtt.connection.MQTTSyncService;
 import org.spinsuite.sync.content.Invited;
 import org.spinsuite.sync.content.SyncMessage;
 import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.AttachmentHandler;
 import org.spinsuite.util.Env;
-import org.spinsuite.util.LogM;
+import org.spinsuite.util.SerializerUtil;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -178,7 +174,6 @@ public class FV_Thread extends Fragment {
 		lv_Thread.setDividerHeight(0);
 		lv_Thread.setDivider(null);
 		lv_Thread.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-		lv_Thread.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
 		lv_Thread.setMultiChoiceModeListener(new MultiChoiceModeListener() {
 			@Override
 			public void onItemCheckedStateChanged(ActionMode mode,
@@ -256,27 +251,9 @@ public class FV_Thread extends Fragment {
     			&& m_Request.getSPS_BC_Request_ID() == 0) {
 			SPS_BC_Request.newOutRequest(getActivity(), m_Request);
 		}
-		//	For Image
-		byte[] bytes = null;
-		if(p_FileName != null) {
-			//	Get Destination File
-			File destFile = new File(
-					Env.getBC_IMG_DirectoryPathName(getActivity()) 
-						+ File.separator + p_FileName);
-			if(destFile.exists()) {
-				int size = (int) destFile.length();
-				bytes = new byte[size];
-				try {
-				    BufferedInputStream buf = new BufferedInputStream(new FileInputStream(destFile));
-				    buf.read(bytes, 0, bytes.length);
-				    buf.close();
-				} catch (FileNotFoundException e) {
-					LogM.log(m_ctx, getClass(), Level.SEVERE, "Error", e);
-				} catch (IOException e) {
-					LogM.log(m_ctx, getClass(), Level.SEVERE, "Error", e);
-				}
-			}
-		}
+		//	
+		byte[] bytes = SerializerUtil.getFromFile(
+				Env.getBC_IMG_DirectoryPathName(getActivity()) + File.separator + p_FileName);
 		//	Send Message
 		SyncMessage message = new SyncMessage(MQTTConnection.getClient_ID(getActivity()), 
 				et_Message.getText().toString(), p_FileName, bytes, 
@@ -296,6 +273,11 @@ public class FV_Thread extends Fragment {
 				new Date(System.currentTimeMillis()), 
 				message.getFileName(), 
 				message.getAttachment()));
+		//	Start Service
+		if(!MQTTSyncService.isRunning()) {
+			Intent service = new Intent(m_ctx, MQTTSyncService.class);
+			m_ctx.startService(service);
+		}
     }
     
     
@@ -560,7 +542,7 @@ public class FV_Thread extends Fragment {
     
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	//	
+    	//	Valid Data
     	if(requestCode == ACTION_TAKE_PHOTO) {
     		new SaveTask().execute(PHOTO_ATTACHMENT_SAVE);
     	}
@@ -577,6 +559,7 @@ public class FV_Thread extends Fragment {
 		private ProgressDialog 		v_PDialog;
 		private String				m_Type 	= null;
 		private String				m_FileName = null;
+		private boolean				m_IsSaved = false;
 		
 		@Override
 		protected void onPreExecute() {
@@ -594,7 +577,7 @@ public class FV_Thread extends Fragment {
 			//	
 			if(m_Type.equals(PHOTO_ATTACHMENT_SAVE)) {
 				String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-				m_AttHandler.processImgAttach(Env.getBC_IMG_DirectoryPathName(getActivity()), fileName);
+				m_IsSaved = m_AttHandler.processImgAttach(Env.getBC_IMG_DirectoryPathName(getActivity()), fileName);
 				m_FileName = fileName + AttachmentHandler.JPEG_FILE_SUFFIX;
 			} else if(m_Type.equals(FILE_ATTACHMENT_SAVE)) { 
 				String origFile = params[1];
@@ -613,7 +596,10 @@ public class FV_Thread extends Fragment {
 		protected void onPostExecute(Void result) {
 			//	Hide
 			v_PDialog.dismiss();
-			sendMessage(m_FileName);
+			//	Save File
+			if(m_IsSaved) {
+				sendMessage(m_FileName);
+			}
 		}
 	}
     

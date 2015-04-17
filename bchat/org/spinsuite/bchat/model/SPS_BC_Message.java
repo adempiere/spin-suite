@@ -15,6 +15,7 @@
  *************************************************************************************/
 package org.spinsuite.bchat.model;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
@@ -25,6 +26,7 @@ import org.spinsuite.sync.content.SyncMessage;
 import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.SerializerUtil;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -128,10 +130,11 @@ public class SPS_BC_Message {
 	 * @param p_Status
 	 * @param p_Type
 	 * @param p_WhereClause
+	 * @param p_WithAttachment
 	 * @return
 	 * @return SyncMessage[]
 	 */
-	public static SyncMessage[] getMessage(Context ctx, String p_Status, String p_Type, String p_WhereClause) {
+	public static SyncMessage[] getMessage(Context ctx, String p_Status, String p_Type, String p_WhereClause, boolean p_WithAttachment) {
 		//	
 		ArrayList<SyncMessage> msgs = new ArrayList<SyncMessage>();
 		//	Connection
@@ -174,6 +177,8 @@ public class SPS_BC_Message {
 					msg.setText(rs.getString(3));
 					msg.setUserName(rs.getString(4));
 					msg.setFileName(rs.getString(5));
+					//	Get Attachment
+					msg.setAttachment(getAttachment(ctx, msg.getFileName()));
 					//	Add Request
 					msgs.add(msg);
 				} while(rs.moveToNext());
@@ -186,6 +191,24 @@ public class SPS_BC_Message {
 		}
 		//	Default Return
 		return msgs.toArray(new SyncMessage[msgs.size()]);
+	}
+	
+	/**
+	 * Get Attachment
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param p_FileName
+	 * @return
+	 * @return byte[]
+	 */
+	private static byte[] getAttachment(Context ctx, String p_FileName) {
+		//	Valid Null
+		if(p_FileName == null) {
+			return null;
+		}
+		//	Get from file
+		return SerializerUtil.getFromFile(
+				Env.getBC_IMG_DirectoryPathName(ctx) + File.separator + p_FileName);
 	}
 	
 	/**

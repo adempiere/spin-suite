@@ -241,7 +241,8 @@ public class MQTTSyncService extends IntentService {
 					"EXISTS(SELECT 1 FROM SPS_BC_Request_User ru "
 					+ "INNER JOIN SPS_BC_Request r ON(r.SPS_BC_Request_ID = ru.SPS_BC_Request_ID) "
 					+ "WHERE ru.SPS_BC_Request_ID = SPS_BC_Message.SPS_BC_Request_ID "
-					+ "AND (ru.Status = '" + SPS_BC_Request.STATUS_SENT + "' OR r.Type = '" + SPS_BC_Request.TYPE_IN + "'))");
+					+ "AND (ru.Status = '" + SPS_BC_Request.STATUS_SENT + "' OR r.Type = '" + SPS_BC_Request.TYPE_IN + "'))", 
+					true);
 			//	
 			String m_LocalClient_ID = MQTTConnection.getClient_ID(this);
 			for(SyncMessage msgForSend : msgList) {
