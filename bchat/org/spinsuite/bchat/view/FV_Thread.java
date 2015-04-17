@@ -15,6 +15,8 @@
  *************************************************************************************/
 package org.spinsuite.bchat.view;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
@@ -27,16 +29,24 @@ import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.util.BC_OpenMsg;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.mqtt.connection.MQTTConnection;
+import org.spinsuite.mqtt.connection.MQTTSyncService;
 import org.spinsuite.sync.content.Invited;
 import org.spinsuite.sync.content.SyncMessage;
 import org.spinsuite.sync.content.SyncRequest;
+import org.spinsuite.util.AttachmentHandler;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.SerializerUtil;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SearchViewCompat;
@@ -101,9 +111,20 @@ public class FV_Thread extends Fragment {
 	private boolean						m_Reload			= true;
 	/**	Context						*/
 	private Context						m_ctx 				= null;
+	/**	Attach Handler				*/
+	private AttachmentHandler			m_AttHandler		= null;
+	
 	/**	Conversation Type Constants	*/
 	public static final int				CT_REQUEST			= 0;
 	public static final int				CT_CHAT				= 1;
+	
+	/**	Results						*/
+	public static final int 			ACTION_TAKE_FILE	= 3;
+	public static final int 			ACTION_TAKE_PHOTO	= 4;
+	
+	/**	Constants Type Save			*/
+	private static final String 		PHOTO_ATTACHMENT_SAVE	= "PS";
+	private static final String 		FILE_ATTACHMENT_SAVE	= "FS";
 	
 	/**	Handler						*/
 	public static Handler 				UIHandler;
@@ -146,14 +167,13 @@ public class FV_Thread extends Fragment {
 						|| et_Message.getText().toString().trim().length() == 0)
 					return;
 				//	Send Message
-				sendMessage();
+				sendMessage(null);
 			}
 		});
 		//	Hide Separator
 		lv_Thread.setDividerHeight(0);
 		lv_Thread.setDivider(null);
 		lv_Thread.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-		lv_Thread.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
 		lv_Thread.setMultiChoiceModeListener(new MultiChoiceModeListener() {
 			@Override
 			public void onItemCheckedStateChanged(ActionMode mode,
@@ -225,15 +245,19 @@ public class FV_Thread extends Fragment {
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @return void
      */
-    private void sendMessage() {
+    private void sendMessage(String p_FileName) {
 		//	Send Request
 		if(m_Request != null
     			&& m_Request.getSPS_BC_Request_ID() == 0) {
 			SPS_BC_Request.newOutRequest(getActivity(), m_Request);
 		}
+		//	
+		byte[] bytes = SerializerUtil.getFromFile(
+				Env.getBC_IMG_DirectoryPathName(getActivity()) + File.separator + p_FileName);
+		//	Send Message
 		SyncMessage message = new SyncMessage(MQTTConnection.getClient_ID(getActivity()), 
-				et_Message.getText().toString(), null, null, 
-				m_Request.getSPS_BC_Request_ID(), Env.getAD_User_ID());
+				et_Message.getText().toString(), p_FileName, bytes, 
+				m_Request.getSPS_BC_Request_ID(), Env.getAD_User_ID(), Env.getContext("#AD_User_Name"));
 		//	Save Message
 		BC_OpenMsg.getInstance().addMsg(message);
 		//	Clear Data
@@ -243,11 +267,20 @@ public class FV_Thread extends Fragment {
 		//	Load
 		addMsg(new DisplayBChatThreadItem(message.getSPS_BC_Message_ID(), 
 				message.getText(), message.getSPS_BC_Request_ID(), 
-				message.getAD_User_ID(), null, 
+				message.getAD_User_ID(), message.getUserName(), 
 				SPS_BC_Message.TYPE_OUT, 
 				SPS_BC_Message.STATUS_CREATED, 
-				new Date(System.currentTimeMillis())));
+				new Date(System.currentTimeMillis()), 
+				message.getFileName(), 
+				message.getAttachment()));
+		//	Start Service
+		if(!MQTTSyncService.isRunning()) {
+			Intent service = new Intent(m_ctx, MQTTSyncService.class);
+			m_ctx.startService(service);
+		}
     }
+    
+    
     
     /**
      * Load List
@@ -266,11 +299,11 @@ public class FV_Thread extends Fragment {
     		et_Message.setText(getString(R.string.BChat_Hi) + " " 
     			+ m_Request.getName() + ", " 
     			+ getString(R.string.BChat_NewRequest));
-    		m_ThreadAdapter = new BChatThreadAdapter(getActivity(), new ArrayList<DisplayBChatThreadItem>());
+    		m_ThreadAdapter = new BChatThreadAdapter(getActivity(), new ArrayList<DisplayBChatThreadItem>(), m_Request.isGroup());
     		//	
     	} else {
     		//	Get Data
-    		m_ThreadAdapter = new BChatThreadAdapter(getActivity(), getData());
+    		m_ThreadAdapter = new BChatThreadAdapter(getActivity(), getData(), (m_Request != null && m_Request.isGroup()));
     	}
     	//	
     	lv_Thread.setAdapter(m_ThreadAdapter);
@@ -300,7 +333,8 @@ public class FV_Thread extends Fragment {
     			+ "u.Name UserName, "
     			+ "m.Type, "
     			+ "m.Status, "
-    			+ "(strftime('%s', m.Updated)*1000) Updated "
+    			+ "(strftime('%s', m.Updated)*1000) Updated, "
+    			+ "m.FileName "
     			+ "FROM SPS_BC_Message m "
     			+ "INNER JOIN AD_User u ON(u.AD_User_ID = m.AD_User_ID) "
     			+ "WHERE m.SPS_BC_Request_ID = ? "
@@ -325,7 +359,9 @@ public class FV_Thread extends Fragment {
     					rs.getString(col++), 
     					rs.getString(col++), 
     					rs.getString(col++), 
-    					new Date(rs.getLong(col++))));
+    					new Date(rs.getLong(col++)), 
+    					rs.getString(col++), 
+    					null));
     			//	Set Column
     			col = 0;
     		} while(rs.moveToNext());
@@ -364,7 +400,8 @@ public class FV_Thread extends Fragment {
     	m_Request = SPS_BC_Request.getRequest(m_ctx, p_SPS_BC_Request_ID);
     	//	Set Reload Data
     	m_Reload = true;
-    	if(m_view != null) {
+    	if(m_view != null
+    			&& m_Request != null) {
     		loadData();
     	}
     }
@@ -468,4 +505,102 @@ public class FV_Thread extends Fragment {
 			MenuItemCompat.setActionView(item, searchView);
 		}
     }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch (item.getItemId()) {
+			case R.id.action_attach_photo:
+				attachPhoto();
+				return true;
+			//	Default
+			default:
+				return super.onOptionsItemSelected(item);
+    	}
+    }
+    
+    /**
+     * Attach Photo
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return void
+     */
+    private void attachPhoto() {
+    	//	Instance Attachment
+    	if(m_AttHandler == null)
+    		m_AttHandler = new AttachmentHandler(getActivity());
+    	//	
+    	//	Delete Temp File
+    	File tmpFile = new File(m_AttHandler.getTMPImageName());
+    	if(tmpFile.exists()) {
+    		if(!tmpFile.delete())
+    			tmpFile.deleteOnExit();
+    	}
+    	//	
+    	Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    	intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tmpFile));
+	    getActivity().startActivityForResult(intent, ACTION_TAKE_PHOTO);
+	}
+    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	//	Valid Data
+    	if(requestCode == ACTION_TAKE_PHOTO) {
+    		new SaveTask().execute(PHOTO_ATTACHMENT_SAVE);
+    	}
+    }
+    
+    /**
+     * Async Task for Save File
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Apr 16, 2015, 9:33:44 AM
+     *
+     */
+    private class SaveTask extends AsyncTask<String, Void, Void> {
+
+		/**	Progress Bar			*/
+		private ProgressDialog 		v_PDialog;
+		private String				m_Type 	= null;
+		private String				m_FileName = null;
+		private boolean				m_IsSaved = false;
+		
+		@Override
+		protected void onPreExecute() {
+			v_PDialog = ProgressDialog.show(m_ctx, null, 
+					getString(R.string.msg_Saving), false, false);
+			//	Set Max
+		}
+		
+		@Override
+		protected Void doInBackground(String... params) {
+			m_Type = params[0];
+			//	Valid Null
+			if(m_Type == null)
+				return null;
+			//	
+			if(m_Type.equals(PHOTO_ATTACHMENT_SAVE)) {
+				String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+				m_IsSaved = m_AttHandler.processImgAttach(Env.getBC_IMG_DirectoryPathName(getActivity()), fileName);
+				m_FileName = fileName + AttachmentHandler.JPEG_FILE_SUFFIX;
+			} else if(m_Type.equals(FILE_ATTACHMENT_SAVE)) { 
+				String origFile = params[1];
+				m_AttHandler.processFileAttach(origFile);
+			}
+			//	
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Void... progress) {
+			
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			//	Hide
+			v_PDialog.dismiss();
+			//	Save File
+			if(m_IsSaved) {
+				sendMessage(m_FileName);
+			}
+		}
+	}
+    
 }

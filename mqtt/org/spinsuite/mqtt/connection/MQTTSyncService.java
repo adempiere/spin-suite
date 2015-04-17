@@ -15,6 +15,10 @@
  *************************************************************************************/
 package org.spinsuite.mqtt.connection;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
@@ -184,6 +188,8 @@ public class MQTTSyncService extends IntentService {
 		sendOpenRequest();
 		//	Send Message
 		sendOpenMsg();
+		//	Set to false is Running
+		m_IsRunning = false;
 	}
 	
 	/**
@@ -235,7 +241,8 @@ public class MQTTSyncService extends IntentService {
 					"EXISTS(SELECT 1 FROM SPS_BC_Request_User ru "
 					+ "INNER JOIN SPS_BC_Request r ON(r.SPS_BC_Request_ID = ru.SPS_BC_Request_ID) "
 					+ "WHERE ru.SPS_BC_Request_ID = SPS_BC_Message.SPS_BC_Request_ID "
-					+ "AND (ru.Status = '" + SPS_BC_Request.STATUS_SENT + "' OR r.Type = '" + SPS_BC_Request.TYPE_IN + "'))");
+					+ "AND (ru.Status = '" + SPS_BC_Request.STATUS_SENT + "' OR r.Type = '" + SPS_BC_Request.TYPE_IN + "'))", 
+					true);
 			//	
 			String m_LocalClient_ID = MQTTConnection.getClient_ID(this);
 			for(SyncMessage msgForSend : msgList) {
@@ -376,6 +383,22 @@ public class MQTTSyncService extends IntentService {
 	 * @return void
 	 */
 	private void saveMessageArrived(final SyncMessage message) {
+		//	Save File in Folder
+		if(message.getFileName() != null
+				&& message.getFileName().length() > 0
+				&& message.getAttachment() != null) {
+			try {		
+				String fileName = Env.getBC_IMG_DirectoryPathName(this) + File.separator + message.getFileName();
+				FileOutputStream fos = new FileOutputStream(fileName);
+				//	Write
+				fos.write(message.getAttachment());
+				fos.close();
+			} catch (FileNotFoundException e) {
+				LogM.log(this, getClass(), Level.SEVERE, "Error Saving File", e);
+			} catch (IOException e) {
+				LogM.log(this, getClass(), Level.SEVERE, "Error Saving File", e);
+			}
+		}
 		SPS_BC_Message.newInMessage(this, message);
 		//	Instance Notification Manager
 		instanceNM();
@@ -407,10 +430,12 @@ public class MQTTSyncService extends IntentService {
 				&& FV_Thread.isOpened(message.getSPS_BC_Request_ID())) {
 			FV_Thread.addMsg(new DisplayBChatThreadItem(message.getSPS_BC_Message_ID(), 
 					message.getText(), message.getSPS_BC_Request_ID(), 
-					message.getAD_User_ID(), null, 
+					message.getAD_User_ID(), message.getUserName(), 
 					p_Type, 
 					SPS_BC_Message.STATUS_CREATED, 
-					new Date(System.currentTimeMillis())));
+					new Date(System.currentTimeMillis()), 
+					message.getFileName(), 
+					message.getAttachment()));
 			return true;
 		}
 		//	Default Return

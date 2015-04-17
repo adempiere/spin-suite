@@ -27,6 +27,7 @@ import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -80,6 +81,8 @@ public class V_BChat extends FragmentActivity
 	private FV_Thread 							m_ThreadFragment = null;
 	/**	Is Index Fragment			*/
 	private boolean								m_IsDetailAdded	= false;
+	/**	Request						*/
+	private int									m_SPS_BC_Request_ID = 0;
     
     /** Called when the activity is first created. */
     @Override
@@ -419,4 +422,27 @@ public class V_BChat extends FragmentActivity
 	    //	Return
 	    return true;
 	}
+    
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    	if(m_SPS_BC_Request_ID != 0) {
+    		onItemSelected(m_SPS_BC_Request_ID, null, TYPE_SELECT_CONVERSATION);
+    		m_SPS_BC_Request_ID = 0;
+    	}
+    }
+    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	//	For Photo
+    	if(requestCode == FV_Thread.ACTION_TAKE_PHOTO
+    			|| requestCode == FV_Thread.ACTION_TAKE_FILE) {
+    		m_ThreadFragment.onActivityResult(requestCode, resultCode, data);
+    	} else if (resultCode == Activity.RESULT_OK) {
+	    	if(data != null) {
+	    		m_SPS_BC_Request_ID = data.getIntExtra("SPS_BC_Request_ID", 0);
+	    	}
+    	}
+    }
+    
 }

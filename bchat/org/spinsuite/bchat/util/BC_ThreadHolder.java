@@ -15,6 +15,7 @@
  *************************************************************************************/
 package org.spinsuite.bchat.util;
 
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -32,11 +33,14 @@ public class BC_ThreadHolder {
 		//	
 	}
 	
-	/**	For Backgrund			*/
+	/**	Linear Layout			*/
+	public LinearLayout 	ll_Message;
+	/**	For Background			*/
 	public RelativeLayout 	rl_Conversation;
 	/**	Text for Conversation	*/
 	public TextView 		tv_Conversation;
 	/**	Text for Time			*/
 	public TextView 		tv_Time;
-
+	/**	User Name				*/
+	public TextView 		tv_UserName;
 }

@@ -102,6 +102,7 @@ public class MQTTConnection {
 	    m_ConnectionOption.setUserName(getMQTTUser(p_Ctx));
 	    m_ConnectionOption.setPassword(getMQTTPass(p_Ctx).toCharArray());
 	    m_ConnectionOption.setConnectionTimeout(getTimeout(p_Ctx));
+	    m_ConnectionOption.setCleanSession(true);
 	    //	
 	    m_IsSubscribe = false;
 	    m_SubscribedTopics = new ArrayList<String>();
@@ -456,7 +457,8 @@ public class MQTTConnection {
 			if(reLoad) {
 				MQTTConnection.setIsAutomaticService(p_Ctx, false);
 			}
-			if(p_Callback != null) {
+			if(p_Callback != null
+					&& m_Connection.getCallback() == null) {
 				m_Connection.setCallback(p_Callback);
 			}
 		}

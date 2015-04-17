@@ -29,12 +29,14 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
+import org.spinsuite.base.R;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -70,6 +72,82 @@ public final class Env {
 		}
 		//	Default Return
 		return m_Instance;
+	}
+	
+	/**
+	 * Create default directory
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @return void
+	 */
+	public static void createDefaultDirectory(Context ctx){
+		if(Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+			String basePathName = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
+			//	Application Path
+			String dbPath = basePathName + Env.DB_PATH_DIRECTORY;
+			String dbPathName = basePathName + Env.DB_PATH_NAME;
+			//	Documents 
+			String docPathName = basePathName + Env.DOC_DIRECTORY;
+			String tmpPathName = basePathName + Env.TMP_DIRECTORY;
+			String attPathName = basePathName + Env.ATT_DIRECTORY;
+			String bcPathName  = basePathName + Env.BC_DIRECTORY;
+			
+			//	
+			Env.setAppBaseDirectory(basePathName);
+			Env.setDB_PathName(dbPathName);
+			Env.setDoc_DirectoryPathName(docPathName);
+			Env.setTmp_DirectoryPathName(tmpPathName);
+			Env.setAtt_DirectoryPathName(attPathName);
+			Env.setBC_DirectoryPathName(bcPathName);
+			//	Database
+			File f = new File(dbPath);
+			if(!f.exists()) {
+				if(!f.mkdirs())
+					Msg.toastMsg(ctx, ctx.getString(R.string.msg_ErrorCreatingDirectory) 
+							+ "\"" + dbPathName + "\"");
+			} else if(f.isDirectory()) {
+				File fDB = new File(dbPathName);
+				fDB.delete();
+			} else if(f.isFile()){
+				if(!f.mkdirs())
+					Msg.toastMsg(ctx, ctx.getString(R.string.msg_ErrorCreatingDirectory) 
+							+ "\"" + dbPathName + "\"");
+			}
+			//	Create Document Folder
+			File doc = new File(docPathName);
+			if(!doc.exists()
+					|| doc.isFile()) {
+				if(!doc.mkdirs())
+					Msg.toastMsg(ctx, ctx.getString(R.string.msg_ErrorCreatingDirectory) 
+							+ "\"" + docPathName + "\"");
+			}
+			//	Create Tmp Folder
+			File tmp = new File(tmpPathName);
+			if(!tmp.exists()
+					|| tmp.isFile()) {
+				if(!tmp.mkdirs())
+					Msg.toastMsg(ctx, ctx.getString(R.string.msg_ErrorCreatingDirectory) 
+							+ "\"" + tmpPathName + "\"");
+			}
+			//	Create Attachment Folder
+			File att = new File(attPathName);
+			if(!att.exists()
+					|| att.isFile()) {
+				if(!att.mkdirs())
+					Msg.toastMsg(ctx, ctx.getString(R.string.msg_ErrorCreatingDirectory) 
+							+ "\"" + attPathName + "\"");
+			}
+			//	Create Business Chat Folder
+			File bc = new File(bcPathName);
+			if(!bc.exists()
+					|| bc.isFile()) {
+				if(!bc.mkdirs())
+					Msg.toastMsg(ctx, ctx.getString(R.string.msg_ErrorCreatingDirectory) 
+							+ "\"" + bcPathName + "\"");
+			}
+		} else {
+			Env.setDB_PathName(DB.DB_NAME);
+		}
 	}
 	
 	/**
@@ -2435,6 +2513,49 @@ public final class Env {
 	public static String getAtt_DirectoryPathName(Context ctx) {
 		return getContext(ctx, ATT_DIRECTORY_KEY);
 	}
+
+	/**
+	 * Get Business Chat Directory
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @return
+	 * @return String
+	 */
+	public static String getBC_DirectoryPathName(Context ctx) {
+		return getContext(ctx, BC_DIRECTORY_KEY);
+	}
+	
+	/**
+	 * Get Business Chat Image Directory
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @return
+	 * @return String
+	 */
+	public static String getBC_IMG_DirectoryPathName(Context ctx) {
+		return getAppBaseDirectory(ctx) + BC_IMG_DIRECTORY;
+	}
+	
+	/**
+	 * Set Business Chat Directory
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param value
+	 * @return void
+	 */
+	public static void setBC_DirectoryPathName(Context ctx, String value) {
+		setContext(ctx, BC_DIRECTORY_KEY, value);
+	}
+	
+	/**
+	 * Set Business Chat Directory
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param value
+	 * @return void
+	 */
+	public static void setBC_DirectoryPathName(String value) {
+		setBC_DirectoryPathName(getCtx(), value);
+	}
 	
 	/**
 	 * Get Attachment Directory Name
@@ -3260,6 +3381,7 @@ public final class Env {
 	private static final String		DOC_DIRECTORY_KEY 	= "#DOC_Name";
 	private static final String		TMP_DIRECTORY_KEY 	= "#TMP_Name";
 	private static final String		ATT_DIRECTORY_KEY 	= "#ATT_Name";
+	private static final String		BC_DIRECTORY_KEY	= "#BC_Name";
 	/******************************************************************************
 	 * App Context
 	 */
@@ -3268,6 +3390,8 @@ public final class Env {
 	public static final String 		DOC_DIRECTORY 		= APP_DIRECTORY + File.separator + "Documents";
 	public static final String 		ATT_DIRECTORY 		= APP_DIRECTORY + File.separator + "Attachment";
 	public static final String 		TMP_DIRECTORY 		= APP_DIRECTORY + File.separator + "Tmp";
+	public static final String 		BC_DIRECTORY 		= APP_DIRECTORY + File.separator + "BChat";
+	public static final String 		BC_IMG_DIRECTORY 	= BC_DIRECTORY + File.separator + "Images";
 	//	Database
 	public static final String 		DB_PATH_DIRECTORY 	= APP_DIRECTORY + File.separator + DB_DIRECTORY;
 	public static final String		DB_PATH_NAME 		= DB_PATH_DIRECTORY + File.separator + DB.DB_NAME;

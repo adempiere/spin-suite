@@ -15,11 +15,16 @@
  *************************************************************************************/
 package org.spinsuite.util;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.logging.Level;
 
 /**
  * 
@@ -93,4 +98,36 @@ public class SerializerUtil {
     	//	Default
     	return null;
     }
+    
+    /**
+     * Get Byte from File
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_FromFile
+     * @return
+     * @return byte[]
+     */
+    public static byte[] getFromFile(String p_FromFile) {
+		//	For Image
+		byte[] bytes = null;
+		if(p_FromFile != null) {
+			//	Get Destination File
+			File destFile = new File(p_FromFile);
+			if(destFile.exists()) {
+				int size = (int) destFile.length();
+				bytes = new byte[size];
+				try {
+				    BufferedInputStream buf = new BufferedInputStream(new FileInputStream(destFile));
+				    buf.read(bytes, 0, bytes.length);
+				    buf.close();
+				} catch (FileNotFoundException e) {
+					LogM.log(Env.getCtx(), SerializerUtil.class, Level.SEVERE, "Error", e);
+				} catch (IOException e) {
+					LogM.log(Env.getCtx(), SerializerUtil.class, Level.SEVERE, "Error", e);
+				}
+			}
+		}
+		//	Default Return
+		return bytes;
+    }
+    
 }

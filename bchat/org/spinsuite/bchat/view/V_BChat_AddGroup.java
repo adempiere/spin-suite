@@ -31,6 +31,7 @@ import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -182,7 +183,7 @@ public class V_BChat_AddGroup extends Activity {
     			SyncRequest request = new SyncRequest(0, 
     					String.valueOf(Env.getAD_User_ID()), 
     					SyncRequest.RT_BUSINESS_CHAT, 
-    					String.valueOf(UUID.randomUUID()), et_GroupName.getText().toString(), false);
+    					String.valueOf(UUID.randomUUID()), et_GroupName.getText().toString(), true);
     			for(int i = 0; i < itemsChecked.size(); i++) {
         			boolean selected = itemsChecked.get(i);
         			if(selected) {
@@ -194,7 +195,10 @@ public class V_BChat_AddGroup extends Activity {
         		}
     			//	Save Request
     			SPS_BC_Request.newOutRequest(this, request);
-    			//	
+    			//	Add Param
+    			Intent intent = getIntent();
+    			intent.putExtra("SPS_BC_Request_ID", request.getSPS_BC_Request_ID());
+    			setResult(Activity.RESULT_OK, intent);
     			finish();
     		}
     	}

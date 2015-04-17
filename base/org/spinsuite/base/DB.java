@@ -629,7 +629,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 */
 	public static DB loadConnection(Context ctx, int type) {
 		synchronized (LOCK) {
-			DB conn = getInstance(ctx);
+			DB conn = new DB(ctx);
 			conn.openDB(type);
 			if(type == READ_WRITE)
 				conn.beginTransaction();

@@ -50,10 +50,13 @@ public class DisplayBChatThreadItem extends DisplayRecordItem {
 	 * @param p_Type
 	 * @param p_Status
 	 * @param p_Time
+	 * @param p_FileName
+	 * @param p_Attachment
 	 */
 	public DisplayBChatThreadItem(int p_Record_ID, String p_Value, 
 			int p_SPS_BC_Request_ID, int p_AD_User_ID, 
-			String p_UserName, String p_Type, String p_Status, Date p_Time) {
+			String p_UserName, String p_Type, String p_Status, Date p_Time, 
+			String p_FileName, byte[] p_Attachment) {
 		super(p_Record_ID, p_Value, null);
 		setSPS_BC_Request_ID(p_SPS_BC_Request_ID);
 		setAD_User_ID(p_AD_User_ID);
@@ -61,6 +64,8 @@ public class DisplayBChatThreadItem extends DisplayRecordItem {
 		setType(p_Type);
 		setStatus(p_Status);
 		setTime(p_Time);
+		setFileName(p_FileName);
+		setAttachment(p_Attachment);
 	}
 
 	/**
@@ -84,6 +89,10 @@ public class DisplayBChatThreadItem extends DisplayRecordItem {
 	private String 		m_Status = null;
 	/**	Time				*/
 	private Date		m_Time = null;
+	/**	File Name			*/
+	private String 		m_FileName = null;
+	/**	File				*/
+	private	byte[]		m_Attachment = null;
 	
 	/**
 	 * Set Request Identifier
@@ -143,6 +152,46 @@ public class DisplayBChatThreadItem extends DisplayRecordItem {
 	 */
 	public String getUserName() {
 		return m_UserName;
+	}
+	
+	/**
+	 * Set File Name
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_FileName
+	 * @return void
+	 */
+	public void setFileName(String p_FileName) {
+		m_FileName = p_FileName;
+	}
+	
+	/**
+	 * Get Message Attachment
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return byte[]
+	 */
+	public byte[] getAttachment() {
+		return m_Attachment;
+	}
+	
+	/**
+	 * Set Attachment
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Attachment
+	 * @return void
+	 */
+	public void setAttachment(byte[] p_Attachment) {
+		m_Attachment = p_Attachment;
+	}
+	
+	/**
+	 * Get File Name
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return String
+	 */
+	public String getFileName() {
+		return m_FileName;
 	}
 	
 	/**

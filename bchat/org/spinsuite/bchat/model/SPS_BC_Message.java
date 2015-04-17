@@ -15,6 +15,7 @@
  *************************************************************************************/
 package org.spinsuite.bchat.model;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
@@ -25,6 +26,7 @@ import org.spinsuite.sync.content.SyncMessage;
 import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.SerializerUtil;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -90,8 +92,10 @@ public class SPS_BC_Message {
 			conn.compileQuery("SELECT "
 					+ "m.Text, "
 					+ "m.SPS_BC_Request_ID, "
-					+ "m.AD_User_ID "
+					+ "m.AD_User_ID, "
+					+ "u.Name "
 					+ "FROM SPS_BC_Message m "
+					+ "INNER JOIN AD_User u ON(u.AD_User_ID = m.AD_User_ID) "
 					+ "WHERE m.SPS_BC_Message_ID = ?");
 			//	Add Parameter
 			conn.addInt(p_SPS_BC_Message_ID);
@@ -105,7 +109,8 @@ public class SPS_BC_Message {
 						null, 
 						null, 
 						rs.getInt(1), 
-						rs.getInt(2));
+						rs.getInt(2), 
+						rs.getString(3));
 				//	End
 			}
 		} catch (Exception e) {
@@ -125,10 +130,11 @@ public class SPS_BC_Message {
 	 * @param p_Status
 	 * @param p_Type
 	 * @param p_WhereClause
+	 * @param p_WithAttachment
 	 * @return
 	 * @return SyncMessage[]
 	 */
-	public static SyncMessage[] getMessage(Context ctx, String p_Status, String p_Type, String p_WhereClause) {
+	public static SyncMessage[] getMessage(Context ctx, String p_Status, String p_Type, String p_WhereClause, boolean p_WithAttachment) {
 		//	
 		ArrayList<SyncMessage> msgs = new ArrayList<SyncMessage>();
 		//	Connection
@@ -137,13 +143,16 @@ public class SPS_BC_Message {
 			//	Create Connection
 			conn = DB.loadConnection(ctx, DB.READ_ONLY);
 			StringBuffer sql = new StringBuffer("SELECT "
-					+ "SPS_BC_Request_ID, "
-					+ "SPS_BC_Message_ID, "
-					+ "AD_User_ID, "
-					+ "Text "
+					+ "SPS_BC_Message.SPS_BC_Request_ID, "
+					+ "SPS_BC_Message.SPS_BC_Message_ID, "
+					+ "SPS_BC_Message.AD_User_ID, "
+					+ "SPS_BC_Message.Text, "
+					+ "u.Name UserName, "
+					+ "SPS_BC_Message.FileName "
 					+ "FROM SPS_BC_Message "
-					+ "WHERE Status = ? "
-					+ "AND Type = ?");
+					+ "INNER JOIN AD_User u ON(u.AD_User_ID = SPS_BC_Message.AD_User_ID) "
+					+ "WHERE SPS_BC_Message.Status = ? "
+					+ "AND SPS_BC_Message.Type = ?");
 			//	Add Where Clause
 			if(p_WhereClause != null
 					&& p_WhereClause.trim().length() > 0) {
@@ -166,6 +175,10 @@ public class SPS_BC_Message {
 					msg.setSPS_BC_Message_ID(rs.getInt(1));
 					msg.setAD_User_ID(rs.getInt(2));
 					msg.setText(rs.getString(3));
+					msg.setUserName(rs.getString(4));
+					msg.setFileName(rs.getString(5));
+					//	Get Attachment
+					msg.setAttachment(getAttachment(ctx, msg.getFileName()));
 					//	Add Request
 					msgs.add(msg);
 				} while(rs.moveToNext());
@@ -178,6 +191,24 @@ public class SPS_BC_Message {
 		}
 		//	Default Return
 		return msgs.toArray(new SyncMessage[msgs.size()]);
+	}
+	
+	/**
+	 * Get Attachment
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param p_FileName
+	 * @return
+	 * @return byte[]
+	 */
+	private static byte[] getAttachment(Context ctx, String p_FileName) {
+		//	Valid Null
+		if(p_FileName == null) {
+			return null;
+		}
+		//	Get from file
+		return SerializerUtil.getFromFile(
+				Env.getBC_IMG_DirectoryPathName(ctx) + File.separator + p_FileName);
 	}
 	
 	/**
@@ -213,7 +244,8 @@ public class SPS_BC_Message {
 					+ "SPS_BC_Request_ID, "
 					+ "SPS_BC_Message_ID, "
 					+ "Type, "
-					+ "Status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					+ "Status, "
+					+ "FileName) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			//	Add Values
 			int m_AD_Client_ID = Env.getAD_Client_ID();
 			int m_AD_Org_ID = Env.getAD_Org_ID();
@@ -237,6 +269,7 @@ public class SPS_BC_Message {
 			conn.addInt(m_SPS_BC_Message_ID);
 			conn.addString(p_Type);
 			conn.addString(STATUS_CREATED);
+			conn.addString(message.getFileName());
 			//	Execute
 			conn.executeSQL();
 			//	Update Header

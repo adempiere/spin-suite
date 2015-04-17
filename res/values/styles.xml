@@ -40,6 +40,7 @@
         <item name="ic_ab_drawer_shadow">@drawable/drawer_shadow</item>
         <item name="ic_ab_bchat">@drawable/ic_action_chat_dark</item>
         <item name="ic_ab_bchat_new_group">@drawable/ic_action_add_group_dark</item>
+        <item name="ic_ab_attach_photo">@drawable/ic_action_camera_dark</item>
         <!-- Drawer Icon -->
         <item name="ic_dr_share">@drawable/ic_action_share_light</item>
         <item name="ic_dr_pdf">@drawable/ic_action_view_as_list_light</item>
@@ -270,6 +271,12 @@
     <!-- Business Chat -->
     <style name="Text_BChat_Thread" parent="TextStandard">
         <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/bc_text_thread</item>
+        <item name="android:textSize">@dimen/fontSizeSmall</item>
+    </style>
+    
+    <style name="Text_BChat_Thread_Label" parent="TextStandard">
+        <item name="android:textStyle">bold|italic</item>
         <item name="android:textColor">@color/bc_text_thread</item>
         <item name="android:textSize">@dimen/fontSizeSmall</item>
     </style>

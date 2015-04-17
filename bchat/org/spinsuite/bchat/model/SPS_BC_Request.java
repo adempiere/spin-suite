@@ -131,7 +131,8 @@ public class SPS_BC_Request {
 					+ "r.Topic, "
 					+ "r.Name, "
 					+ "r.LastMsg, "
-					+ "r.AD_User_ID,"
+					+ "r.AD_User_ID, "
+					+ "r.IsGroup, "
 					+ "ru.AD_User_ID, "
 					+ "ru.Status "
 					+ "FROM SPS_BC_Request r "
@@ -155,6 +156,9 @@ public class SPS_BC_Request {
 					request.setName(rs.getString(3));
 					//	Set Last Message
 					request.setLastMsg(rs.getString(4));
+					//	Is Group
+					request.setIsGroup(rs.getString(6) != null 
+							&& rs.getString(6).equals("Y"));
 					//	Add Users
 					do {
 						int currentRequest_ID = rs.getInt(0);
@@ -163,7 +167,7 @@ public class SPS_BC_Request {
 							break;
 						}
 						//	
-						request.addUser(new Invited(rs.getInt(6), rs.getString(7)));
+						request.addUser(new Invited(rs.getInt(7), rs.getString(8)));
 					} while(rs.moveToNext());
 					//	Add Request
 					requests.add(request);
@@ -339,6 +343,7 @@ public class SPS_BC_Request {
 					conn.addInt(invited.getAD_USer_ID());
 					conn.addString(STATUS_CREATED);
 					conn.executeSQL();
+					conn.clearParameters();
 				}
 			}
 			//	Successful
