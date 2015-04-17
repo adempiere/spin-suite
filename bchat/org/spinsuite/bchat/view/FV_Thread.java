@@ -63,6 +63,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView.MultiChoiceModeListener;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -174,6 +175,22 @@ public class FV_Thread extends Fragment {
 		lv_Thread.setDividerHeight(0);
 		lv_Thread.setDivider(null);
 		lv_Thread.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		lv_Thread.setOnItemClickListener(new ListView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> adapter, View arg1, int position,
+					long arg3) {
+				DisplayBChatThreadItem item = (DisplayBChatThreadItem) m_ThreadAdapter.getItem(position);
+				//	Show Image
+				if(item.getValue() != null) {
+					String fileName = item.getFileName();
+					String m_FilePath = Env.getBC_IMG_DirectoryPathName(m_ctx);
+					File file = new File(m_FilePath + File.separator + fileName);
+					//	Show
+					AttachmentHandler.showAttachment(m_ctx, Uri.fromFile(file));
+				}
+			}
+        });
 		lv_Thread.setMultiChoiceModeListener(new MultiChoiceModeListener() {
 			@Override
 			public void onItemCheckedStateChanged(ActionMode mode,
@@ -273,6 +290,8 @@ public class FV_Thread extends Fragment {
 				new Date(System.currentTimeMillis()), 
 				message.getFileName(), 
 				message.getAttachment()));
+		//	Set to last
+		lv_Thread.setSelection(m_ThreadAdapter.getCount() - 1);
 		//	Start Service
 		if(!MQTTSyncService.isRunning()) {
 			Intent service = new Intent(m_ctx, MQTTSyncService.class);

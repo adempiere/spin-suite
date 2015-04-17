@@ -16,23 +16,17 @@
 package org.spinsuite.view;
 
 import java.io.File;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 import org.spinsuite.adapters.ImageTextAdapter;
 import org.spinsuite.base.R;
 import org.spinsuite.util.AttachmentHandler;
 import org.spinsuite.util.DisplayImageTextItem;
-import org.spinsuite.util.DisplayType;
-import org.spinsuite.util.Env;
-import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -62,8 +56,6 @@ public class LV_AttachView extends Activity {
 	private Activity							v_activity			= null;
 	/**	Data					*/
 	private ArrayList<DisplayImageTextItem> 	data				= null;
-	/**	Number Format			*/
-	private DecimalFormat						m_numberFormat		= null;
 	/**	Option Menu				*/
 	private static final int 					O_SHARE 			= 1;
 	private static final int 					O_DELETE 			= 2;
@@ -88,7 +80,7 @@ public class LV_AttachView extends Activity {
 					String fileName = item.getValue();
 					File file = new File(m_FilePath + File.separator + fileName);
 					//	Show
-					showAttachment(Uri.fromFile(file));
+					AttachmentHandler.showAttachment(v_activity, Uri.fromFile(file));
 				}
 			}
         });
@@ -101,8 +93,6 @@ public class LV_AttachView extends Activity {
         getActionBar().setHomeButtonEnabled(true);
 		//	Title
     	getActionBar().setSubtitle(getString(R.string.Action_ViewAttachment));
-    	//	Get Default Number Format
-    	m_numberFormat = DisplayType.getNumberFormat(v_activity, DisplayType.AMOUNT, "###,###,###.##");
     	//	Load Files
     	new LoadTask().execute();
 	}
@@ -143,39 +133,6 @@ public class LV_AttachView extends Activity {
 		    default:
 		        return super.onContextItemSelected(item);
 	    }
-	}
-	
-	/**
-	 * Show a image
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param uriPath
-	 * @return void
-	 */
-	private void showAttachment(Uri uriPath) {
-		boolean ok = false;
-		try {
-			//	Launch Application
-			Intent intent = new Intent(Intent.ACTION_VIEW);
-			//	Set Data Type
-			if(isGraphic(uriPath.toString()))
-				intent.setDataAndType(uriPath, "image/*");
-			else if(isPDF(uriPath.toString()))
-				intent.setDataAndType(uriPath, "application/pdf");
-			else 
-				intent.setDataAndType(uriPath, "*/*");
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			//	Start Activity
-			startActivity(intent);
-			//	
-			ok = true;
-		} catch (ActivityNotFoundException e) {
-			LogM.log(this, getClass(), Level.WARNING, 
-					"Error Launch Image: " + e.getLocalizedMessage());
-		}
-		//	Show Toast
-		if(!ok)
-			Msg.toastMsg(v_activity, getString(R.string.msg_AppIsNotAssociated));
-
 	}
 	
 	/**
@@ -242,9 +199,9 @@ public class LV_AttachView extends Activity {
 				+ " \"" + item.getValue() + "\"");
 		shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_SharedFromSFAndroid));
 		//	
-		if(isGraphic(localPath))
+		if(AttachmentHandler.isGraphic(localPath))
 			shareIntent.setType("image/*");
-		else if(isPDF(localPath))
+		else if(AttachmentHandler.isPDF(localPath))
 			shareIntent.setType("application/pdf");
 		else 
 			shareIntent.setType("*/*");
@@ -315,56 +272,14 @@ public class LV_AttachView extends Activity {
 						//	Decode
 						Bitmap bmimage = AttachmentHandler.getBitmapFromFile(fileName, 200, 200);
 						//	Add to Array
-						data.add(new DisplayImageTextItem(0, m_File.getName(), getPrettySize(m_File), bmimage));
+						data.add(new DisplayImageTextItem(0, m_File.getName(), 
+								AttachmentHandler.getPrettySize(v_activity, m_File), bmimage));
 					} else {
-						data.add(new DisplayImageTextItem(0, m_File.getName(), getPrettySize(m_File), null));
+						data.add(new DisplayImageTextItem(0, m_File.getName(), 
+								AttachmentHandler.getPrettySize(v_activity, m_File), null));
 					}
 				}
 			}
 		}
-		
-		/**
-		 * Get Pretty Size
-		 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/11/2014, 13:39:39
-		 * @param file
-		 * @return
-		 * @return String
-		 */
-		private String getPrettySize(File file) {
-			float size = file.length();
-			if (size <= 1024) {
-				return m_numberFormat.format(size) + " B";
-			} else {
-				size /= 1024;
-				if (size > 1024) {
-					size /= 1024;
-					return m_numberFormat.format(size) + " MB";
-				} else {
-					return m_numberFormat.format(size) + " kB";
-				}
-			}
-		}
 	}
-	
-	/**
-	 * 	Is attachment entry a PDF
-	 *  @param fileName
-	 *	@return true if PDF
-	 */
-	public boolean isPDF(String fileName) {
-		return fileName.toLowerCase(Env.getLocate()).endsWith(".pdf");
-	}	//	isPDF
-	
-	/**
-	 * 	Is attachment entry a Graphic
-	 *  @param fileName
-	 *	@return true if *.gif, *.jpg, *.png
-	 */
-	public boolean isGraphic(String fileName) {
-		String m_lowname = fileName.toLowerCase(Env.getLocate());
-		return m_lowname.endsWith(".gif") 
-				|| m_lowname.endsWith(".jpg")
-				|| m_lowname.endsWith(".jpeg")
-				|| m_lowname.endsWith(".png");
-	}	//	isGraphic
 }

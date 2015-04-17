@@ -115,7 +115,7 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		//	For Image
 		if(diti.getFileName() != null
 				&& diti.getFileName().length() > 0) {
-			Bitmap bmimage = AttachmentHandler.getBitmapFromFile(m_DirectoryApp + diti.getFileName(), 500, 500);
+			Bitmap bmimage = AttachmentHandler.getBitmapFromFile(m_DirectoryApp + diti.getFileName(), 300, 300);
 			msgHolder.rl_Conversation.setBackgroundDrawable(new BitmapDrawable(ctx.getResources(), bmimage));
 		} else {
 			msgHolder.rl_Conversation.setBackgroundDrawable(null);
