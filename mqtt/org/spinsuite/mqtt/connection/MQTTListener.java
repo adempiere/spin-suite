@@ -64,13 +64,13 @@ public class MQTTListener implements IMqttActionListener {
 		try {
 			MQTTConnection m_Connection = MQTTConnection.getInstance(m_Ctx);
 			m_Connection.subscribeEx(MQTTDefaultValues.getInitialLoadTopic(), 
-					MQTTConnection.AT_LEAST_ONCE_1);
+					MQTTConnection.EXACTLY_ONCE_2);
 			m_Connection.subscribeEx(MQTTDefaultValues.getSyncTopic(String.valueOf(Env.getAD_User_ID())), 
-					MQTTConnection.AT_LEAST_ONCE_1);
+					MQTTConnection.EXACTLY_ONCE_2);
 			m_Connection.subscribeEx(MQTTDefaultValues.getRequestTopic(String.valueOf(Env.getAD_User_ID())), 
-					MQTTConnection.AT_LEAST_ONCE_1);
+					MQTTConnection.EXACTLY_ONCE_2);
 			//	Subscribe to Other topics
-			m_Connection.subscribeEx(MQTTConnection.AT_LEAST_ONCE_1);
+			m_Connection.subscribeEx(MQTTConnection.EXACTLY_ONCE_2);
 		} catch (MqttSecurityException e) {
 			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Security Exception", e);
 		} catch (MqttException e) {

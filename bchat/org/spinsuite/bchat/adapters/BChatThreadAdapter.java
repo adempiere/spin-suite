@@ -133,6 +133,13 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 				id_att = R.attr.ic_bc_bubble_remote;
 			}
 		} else {
+			if(diti.getStatus().equals(SPS_BC_Message.STATUS_CREATED)) {
+				id_att = R.attr.ic_bc_bubble_local;
+			} else if(diti.getStatus().equals(SPS_BC_Message.STATUS_SENT)) {
+				id_att = R.attr.ic_bc_bubble_local_sent;
+			} else if(diti.getStatus().equals(SPS_BC_Message.STATUS_DELIVERED)) {
+				id_att = R.attr.ic_bc_bubble_local_delivered;
+			}
 			//	
 			if(m_SelectedItems.get(position)) {
 				id_att = R.attr.ic_bc_bubble_local_selected;
@@ -275,5 +282,24 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 	public void remove(DisplayBChatThreadItem object) {
 		data.remove(object);
 		notifyDataSetChanged();
+	}
+	
+	/**
+	 * Change a Message
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_SPS_BC_Message_ID
+	 * @param p_Status
+	 * @return void
+	 */
+	public void changeMsgStatus(int p_SPS_BC_Message_ID, String p_Status) {
+		for(int i = 0; i < data.size(); i++) {
+			DisplayBChatThreadItem item = data.get(i);
+            if(item.getRecord_ID() == p_SPS_BC_Message_ID) {
+            	item.setStatus(p_Status);
+            	data.set(i, item);
+            	//	Break
+            	break;
+            }
+        }
 	}
 }

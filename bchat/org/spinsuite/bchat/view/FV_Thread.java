@@ -97,7 +97,7 @@ public class FV_Thread extends Fragment {
     /**	View 						*/
 	private View 						m_view 				= null;
 	/**	List View					*/
-	private ListView					lv_Thread			= null;
+	private static ListView					lv_Thread			= null;
 	/**	Message						*/
 	private EditText					et_Message 			= null;
 	/**	Button Send					*/
@@ -182,8 +182,9 @@ public class FV_Thread extends Fragment {
 					long arg3) {
 				DisplayBChatThreadItem item = (DisplayBChatThreadItem) m_ThreadAdapter.getItem(position);
 				//	Show Image
-				if(item.getValue() != null) {
-					String fileName = item.getFileName();
+				String fileName = item.getFileName();
+				if(fileName != null
+						&& fileName.length() > 0) {
 					String m_FilePath = Env.getBC_IMG_DirectoryPathName(m_ctx);
 					File file = new File(m_FilePath + File.separator + fileName);
 					//	Show
@@ -281,17 +282,6 @@ public class FV_Thread extends Fragment {
 		et_Message.setText("");
 		//	
 		m_Reload = true;
-		//	Load
-		addMsg(new DisplayBChatThreadItem(message.getSPS_BC_Message_ID(), 
-				message.getText(), message.getSPS_BC_Request_ID(), 
-				message.getAD_User_ID(), message.getUserName(), 
-				SPS_BC_Message.TYPE_OUT, 
-				SPS_BC_Message.STATUS_CREATED, 
-				new Date(System.currentTimeMillis()), 
-				message.getFileName(), 
-				message.getAttachment()));
-		//	Set to last
-		lv_Thread.setSelection(m_ThreadAdapter.getCount() - 1);
 		//	Start Service
 		if(!MQTTSyncService.isRunning()) {
 			Intent service = new Intent(m_ctx, MQTTSyncService.class);
@@ -299,7 +289,14 @@ public class FV_Thread extends Fragment {
 		}
     }
     
-    
+    /**
+     * Seek to Last Message
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return void
+     */
+    public static void seekToLastMsg() {
+    	lv_Thread.setSelection(m_ThreadAdapter.getCount() - 1);
+    }
     
     /**
      * Load List
@@ -433,6 +430,17 @@ public class FV_Thread extends Fragment {
      */
     public static void addMsg(DisplayBChatThreadItem msg) {
     	m_ThreadAdapter.add(msg);
+    	m_ThreadAdapter.notifyDataSetChanged();
+    }
+    
+    /**
+     * Change Message
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_Item
+     * @return void
+     */
+    public static void changeMsgStatus(int p_SPS_BC_Message_ID, String p_Status) {
+    	m_ThreadAdapter.changeMsgStatus(p_SPS_BC_Message_ID, p_Status);
     	m_ThreadAdapter.notifyDataSetChanged();
     }
     

@@ -174,7 +174,7 @@ public class MQTTSyncService extends IntentService {
 					
 					@Override
 					public void deliveryComplete(IMqttDeliveryToken token) {
-						
+						notifyDeliveryComplete(token);
 					}
 					
 					@Override
@@ -202,9 +202,92 @@ public class MQTTSyncService extends IntentService {
 		SyncParent openMsg = null;
 		while ((openMsg = m_OpenMsg.getOpenMsg(true)) != null) {
 			if(openMsg instanceof SyncMessage) {
-				SPS_BC_Message.newOutMessage(this, (SyncMessage) openMsg);
+				SyncMessage message = (SyncMessage) openMsg;
+				SPS_BC_Message.newOutMessage(this, message);
+				addMessage(message, SPS_BC_Message.TYPE_OUT);
 			}
 		}
+	}
+	
+	/**
+	 * Notify if delivery is complete
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param token
+	 * @return void
+	 */
+	public void notifyDeliveryComplete(IMqttDeliveryToken token) {
+		try {
+			MqttMessage msg = token.getMessage();
+			SyncParent parent = (SyncParent) SerializerUtil.deserializeObject(msg.getPayload());
+			//	Verify if is local	
+			if(parent instanceof SyncRequest) {
+				;
+			} else if(parent instanceof SyncMessage) {
+				//	Change Status
+				final SyncMessage message = (SyncMessage) parent;
+				SPS_BC_Message.setStatus(this, 
+						message.getSPS_BC_Message_ID(), SPS_BC_Message.STATUS_SENT);
+				//	Change UI Status
+				changeUIStatus(message.getSPS_BC_Message_ID(), 
+									SPS_BC_Message.STATUS_SENT);
+			}
+		} catch (MqttException e) {
+			LogM.log(this, getClass(), Level.SEVERE, "Error", e);
+		}
+	}
+	
+	/**
+	 * Change Status in List View
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_SPS_BC_Message_ID
+	 * @param p_Status
+	 * @return void
+	 */
+	private void changeUIStatus(final int p_SPS_BC_Message_ID, final String p_Status) {
+		FV_Thread.runOnUI(new Runnable() {
+			public void run() {
+				try {
+					FV_Thread.changeMsgStatus(p_SPS_BC_Message_ID, 
+							p_Status);
+				} catch (Exception e) { 
+					LogM.log(getApplicationContext(), MQTTSyncService.class, Level.SEVERE, "Error", e);
+				}
+			}
+		});
+	}
+	
+	/**
+	 * Add Message to List
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param message
+	 * @param p_Type
+	 * @return
+	 * @return boolean
+	 */
+	private boolean addMessage(final SyncMessage message, final String p_Type) {
+		FV_Thread.runOnUI(new Runnable() {
+			public void run() {
+				try {
+					if(message != null
+							&& FV_Thread.isOpened(message.getSPS_BC_Request_ID())) {
+						FV_Thread.addMsg(new DisplayBChatThreadItem(message.getSPS_BC_Message_ID(), 
+								message.getText(), message.getSPS_BC_Request_ID(), 
+								message.getAD_User_ID(), message.getUserName(), 
+								p_Type, 
+								SPS_BC_Message.STATUS_CREATED, 
+								new Date(System.currentTimeMillis()), 
+								message.getFileName(), 
+								message.getAttachment()));
+						//	Seek To Last
+						FV_Thread.seekToLastMsg();
+					}
+				} catch (Exception e) { 
+					LogM.log(getApplicationContext(), MQTTSyncService.class, Level.SEVERE, "Error", e);
+				}
+			}
+		});
+		//	Default Return
+		return false;
 	}
 	
 	/**
@@ -217,7 +300,7 @@ public class MQTTSyncService extends IntentService {
 		try {
 			//	Verify Connection
 			if(m_Connection.isConnected()) {
-				m_Connection.subscribeEx(request.getTopicName(), MQTTConnection.AT_LEAST_ONCE_1);
+				m_Connection.subscribeEx(request.getTopicName(), MQTTConnection.EXACTLY_ONCE_2);
 			}
 		} catch (MqttSecurityException e) {
 			LogM.log(this, getClass(), Level.SEVERE, "Error", e);
@@ -252,11 +335,9 @@ public class MQTTSyncService extends IntentService {
 				SyncRequest request = SPS_BC_Request.getRequest(this, msgForSend.getSPS_BC_Request_ID());
 				byte[] msg = SerializerUtil.serializeObject(msgForSend);
 				MqttMessage message = new MqttMessage(msg);
-				message.setQos(MQTTConnection.AT_LEAST_ONCE_1);
+				message.setQos(MQTTConnection.EXACTLY_ONCE_2);
 				message.setRetained(true);
-				m_Connection.publish(request.getTopicName(), message);
-				//	Change Status
-				SPS_BC_Message.setStatus(this, msgForSend.getSPS_BC_Message_ID(), SPS_BC_Message.STATUS_SENT);
+				m_Connection.publish(request.getTopicName(), message);				
 			}
 		}
 		//	Return Ok
@@ -277,7 +358,7 @@ public class MQTTSyncService extends IntentService {
 				SyncRequest requestList[] = SPS_BC_Request.getRequest(this, SPS_BC_Request.TYPE_OUT, SPS_BC_Request.STATUS_CREATED);
 				//	
 				for(SyncRequest request : requestList) {
-					m_Connection.subscribeEx(request.getTopicName(), MQTTConnection.AT_LEAST_ONCE_1);
+					m_Connection.subscribeEx(request.getTopicName(), MQTTConnection.EXACTLY_ONCE_2);
 					//	Send Request
 					for(Invited invited : request.getUsers()) {
 						//	
@@ -293,7 +374,7 @@ public class MQTTSyncService extends IntentService {
 						}
 						byte[] msg = SerializerUtil.serializeObject(request);
 						MqttMessage message = new MqttMessage(msg);
-						message.setQos(MQTTConnection.AT_LEAST_ONCE_1);
+						message.setQos(MQTTConnection.EXACTLY_ONCE_2);
 						message.setRetained(true);
 						m_Connection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(invited.getAD_USer_ID())), message);
 						//	Change Status
@@ -403,43 +484,9 @@ public class MQTTSyncService extends IntentService {
 		//	Instance Notification Manager
 		instanceNM();
 		//	Notify
-		FV_Thread.runOnUI(new Runnable() {
-			public void run() {
-				try {
-					//	Add to List View
-					if(!addMessage(message, SPS_BC_Message.TYPE_IN)) {
-						sendNotification(message);
-					}
-				} catch (Exception e) { 
-					LogM.log(getApplicationContext(), MQTTSyncService.class, Level.SEVERE, "Error", e);
-				}
-			}
-		});
-	}
-	
-	/**
-	 * Add Message to List
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param message
-	 * @param p_Type
-	 * @return
-	 * @return boolean
-	 */
-	private boolean addMessage(SyncMessage message, String p_Type) {
-		if(message != null
-				&& FV_Thread.isOpened(message.getSPS_BC_Request_ID())) {
-			FV_Thread.addMsg(new DisplayBChatThreadItem(message.getSPS_BC_Message_ID(), 
-					message.getText(), message.getSPS_BC_Request_ID(), 
-					message.getAD_User_ID(), message.getUserName(), 
-					p_Type, 
-					SPS_BC_Message.STATUS_CREATED, 
-					new Date(System.currentTimeMillis()), 
-					message.getFileName(), 
-					message.getAttachment()));
-			return true;
+		if(!addMessage(message, SPS_BC_Message.TYPE_IN)) {
+			sendNotification(message);
 		}
-		//	Default Return
-		return false;
 	}
 	
 	/**

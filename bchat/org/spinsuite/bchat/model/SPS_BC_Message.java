@@ -253,6 +253,7 @@ public class SPS_BC_Message {
 			//	For Out
 			if(p_Type.equals(TYPE_OUT)) {
 				m_SPS_BC_Message_ID = new Random().nextInt();
+				message.setSPS_BC_Message_ID(m_SPS_BC_Message_ID);
 			}
 			int m_AD_User_ID = (p_Type.equals(TYPE_IN)? message.getAD_User_ID(): Env.getAD_User_ID());
 			Date now = new Date(System.currentTimeMillis());
@@ -266,7 +267,7 @@ public class SPS_BC_Message {
 			conn.addInt(m_AD_User_ID);
 			conn.addBoolean(true);
 			conn.addInt(message.getSPS_BC_Request_ID());
-			conn.addInt(m_SPS_BC_Message_ID);
+			conn.addInt(message.getSPS_BC_Message_ID());
 			conn.addString(p_Type);
 			conn.addString(STATUS_CREATED);
 			conn.addString(message.getFileName());
@@ -285,6 +286,7 @@ public class SPS_BC_Message {
 			conn.executeSQL();		
 			//	Successful
 			conn.setTransactionSuccessful();
+			//	
 		} catch (Exception e) {
 			LogM.log(ctx, SPS_BC_Message.class, Level.SEVERE, "Error", e);
 		} finally {
