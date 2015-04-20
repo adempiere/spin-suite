@@ -21,6 +21,7 @@ import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.model.MCountry;
+import org.spinsuite.mqtt.connection.MQTTSyncService;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.SyncValues;
@@ -119,6 +120,11 @@ public class Login extends TV_Base implements I_Login {
 					m_LoadType = ROLE_ACCESS;
 					new LoadAccessTask().execute();
 				} else {
+					//	Start Service
+					if(!MQTTSyncService.isRunning()) {
+						Intent service = new Intent(this, MQTTSyncService.class);
+						startService(service);
+					}
 					//	Start Activity
 					Intent intent = new Intent(this, LV_Menu.class);
 					startActivity(intent);

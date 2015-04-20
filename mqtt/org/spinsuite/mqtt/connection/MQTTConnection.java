@@ -59,6 +59,8 @@ public class MQTTConnection {
 	private boolean 				m_IsSubscribe = false;
 	/**	Current Subscriptions		*/
 	private ArrayList<String>		m_SubscribedTopics = null;
+	/**	Status						*/
+	private int						m_Status = 0;
 	
 	/**	QoS									*/
 	public static final int			AT_MOST_ONCE_0 				= 0;
@@ -77,6 +79,12 @@ public class MQTTConnection {
 	private static final String		MQTT_PASSWORD 				= "#MQTT_Password";
 	private static final String		MQTT_TIMEOUT 				= "#MQTT_Timeout";
 	private static final String		MQTT_IS_RELOAD_SERVICE 		= "#MQTT_IsreloadService";
+	
+	/**	Connection Status					*/
+	public static final int			CONNECTED					= 1;
+	public static final int			DISCONNECTED				= 2;
+	public static final int			TRY_CONNECTING				= 3;
+	
 	
 	/**
 	 * Default Constructor
@@ -147,6 +155,26 @@ public class MQTTConnection {
 	 */
 	public boolean isSubscribed() {
 		return m_IsSubscribe;
+	}
+	
+	/**
+	 * Set Status
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Status
+	 * @return void
+	 */
+	public void setStatus(int p_Status) {
+		m_Status = p_Status;
+	}
+	
+	/**
+	 * Get Status
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return int
+	 */
+	public int getStatus() {
+		return m_Status;
 	}
 	
 	/**
@@ -449,17 +477,13 @@ public class MQTTConnection {
 	 * @return MQTTConnection
 	 */
 	public static MQTTConnection getInstance(Context p_Ctx, IMqttActionListener p_ConnectionListener, 
-			MqttCallback p_Callback, String[] p_SubscribedTopics, boolean reLoad) {
+			String[] p_SubscribedTopics, boolean reLoad) {
 		if(m_Connection == null
 				|| reLoad) {
 			m_Connection = new MQTTConnection(p_Ctx, p_ConnectionListener, p_SubscribedTopics);
 			//	Set to false reload
 			if(reLoad) {
 				MQTTConnection.setIsAutomaticService(p_Ctx, false);
-			}
-			if(p_Callback != null
-					&& m_Connection.getCallback() == null) {
-				m_Connection.setCallback(p_Callback);
 			}
 		}
 		//	Default Return
@@ -477,8 +501,8 @@ public class MQTTConnection {
 	 * @return MQTTConnection
 	 */
 	public static MQTTConnection getInstance(Context p_Ctx, IMqttActionListener p_ConnectionListener, 
-			MqttCallback p_Callback, boolean reLoad) {
-		return getInstance(p_Ctx, p_ConnectionListener, p_Callback, null, reLoad);
+			boolean reLoad) {
+		return getInstance(p_Ctx, p_ConnectionListener, null, reLoad);
 	}
 	
 	/**
@@ -850,7 +874,12 @@ public class MQTTConnection {
 	@Override
 	public String toString() {
 		return "MQTTConnection [m_Client_ID=" + m_Client_ID + ", m_Host="
-				+ m_Host + ", m_Port=" + m_Port + ", m_IsSSLConnection="
-				+ m_IsSSLConnection + ", isConnected()=" + isConnected() + "]";
+				+ m_Host + ", m_Port=" + m_Port + ", m_ClientLink="
+				+ m_ClientLink + ", m_ConnectionOption=" + m_ConnectionOption
+				+ ", m_IsSSLConnection=" + m_IsSSLConnection
+				+ ", m_ConnectionListener=" + m_ConnectionListener
+				+ ", m_Callback=" + m_Callback + ", m_Ctx=" + m_Ctx
+				+ ", m_IsSubscribe=" + m_IsSubscribe + ", m_SubscribedTopics="
+				+ m_SubscribedTopics + "]";
 	}
 }

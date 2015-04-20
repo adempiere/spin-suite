@@ -46,12 +46,14 @@ public class MQTTListener implements IMqttActionListener {
 	
 	@Override
 	public void onFailure(IMqttToken token, Throwable e) {
+		MQTTConnection.getInstance(m_Ctx).setStatus(MQTTConnection.DISCONNECTED);
 		LogM.log(m_Ctx, getClass(), Level.SEVERE, "Connection Error", e);
 	}
 
 	@Override
 	public void onSuccess(IMqttToken token) {
 		LogM.log(m_Ctx, getClass(), Level.FINE, "Connection MQTT is Ok");
+		MQTTConnection.getInstance(m_Ctx).setStatus(MQTTConnection.CONNECTED);
 		subscribeToDefaultsTopics();
 	}
 

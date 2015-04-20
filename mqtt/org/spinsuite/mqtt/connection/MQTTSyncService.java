@@ -15,16 +15,10 @@
  *************************************************************************************/
 package org.spinsuite.mqtt.connection;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
@@ -32,9 +26,6 @@ import org.spinsuite.bchat.model.SPS_BC_Message;
 import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.model.SPS_BC_Request_User;
 import org.spinsuite.bchat.util.BC_OpenMsg;
-import org.spinsuite.bchat.util.DisplayBChatThreadItem;
-import org.spinsuite.bchat.view.FV_Thread;
-import org.spinsuite.bchat.view.V_BChat;
 import org.spinsuite.sync.content.Invited;
 import org.spinsuite.sync.content.SyncMessage;
 import org.spinsuite.sync.content.SyncParent;
@@ -46,15 +37,8 @@ import org.spinsuite.util.SerializerUtil;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.Builder;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Mar 30, 2015, 10:34:27 PM
@@ -88,14 +72,10 @@ public class MQTTSyncService extends IntentService {
 	private static MQTTSyncService	m_CurrentService = null;
 	/**	Connect						*/
 	private static boolean 			m_IsRunning = false;
-	/**	Notification Manager		*/
-	private NotificationManager 	m_NotificationManager = null;
-	/**	Notification Builder		*/
-	private Builder 				m_Builder = null;
 	/**	Message Queue				*/
 	private BC_OpenMsg				m_OpenMsg = null;
-	/**	Notification ID				*/
-	private static final int		NOTIFICATION_ID = 0;
+	/**	Callback					*/
+	private MQTTConnectionCallback	m_CallBack = null;
 	
 	/**
 	 * Get Instance
@@ -144,46 +124,18 @@ public class MQTTSyncService extends IntentService {
 		//	Get Connection
 		m_Connection = MQTTConnection.getInstance(getApplicationContext(), 
 				new MQTTListener(getApplicationContext()), 
-				new MqttCallback() {
-					
-					@Override
-					public void messageArrived(String topic, MqttMessage msg) throws Exception {
-						if(msg != null) {
-							//	Verify if is Duplicated
-							if(msg.isDuplicate())
-								return;
-							SyncParent parent = (SyncParent) SerializerUtil.deserializeObject(msg.getPayload());
-							//	Verify if is local
-							if(parent.getLocalClient_ID() != null
-									&& parent.getLocalClient_ID()
-											.equals(MQTTConnection.getClient_ID(getApplicationContext()))) {
-								return;
-							}
-							if(parent instanceof SyncRequest) {
-								SyncRequest request = (SyncRequest) parent;
-								//	Save request
-								requestArrived(request);
-								//	Subscribe to Topic request
-								subscribeToRequest(request);
-							} else if(parent instanceof SyncMessage) {
-								SyncMessage message = (SyncMessage) parent;
-								saveMessageArrived(message);
-							}
-						}
-					}
-					
-					@Override
-					public void deliveryComplete(IMqttDeliveryToken token) {
-						notifyDeliveryComplete(token);
-					}
-					
-					@Override
-					public void connectionLost(Throwable e) {
-						forConnectionLost(e);
-					}
-				}, defaultTopics, isReload);
+				defaultTopics, isReload);
+		
+		m_CallBack = (MQTTConnectionCallback) m_Connection.getCallback();
+		if(m_CallBack == null) {
+			m_CallBack = new MQTTConnectionCallback(getApplicationContext());
+			m_Connection.setCallback(m_CallBack);
+		}
 		//	Connection
-		connect();
+		if(!connect()) {
+			m_IsRunning = false;
+			return;
+		}
 		//	Send Request
 		sendOpenRequest();
 		//	Send Message
@@ -204,108 +156,8 @@ public class MQTTSyncService extends IntentService {
 			if(openMsg instanceof SyncMessage) {
 				SyncMessage message = (SyncMessage) openMsg;
 				SPS_BC_Message.newOutMessage(this, message);
-				addMessage(message, SPS_BC_Message.TYPE_OUT);
+				MQTTConnectionCallback.addMessage(message, SPS_BC_Message.TYPE_OUT);
 			}
-		}
-	}
-	
-	/**
-	 * Notify if delivery is complete
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param token
-	 * @return void
-	 */
-	public void notifyDeliveryComplete(IMqttDeliveryToken token) {
-		try {
-			MqttMessage msg = token.getMessage();
-			SyncParent parent = (SyncParent) SerializerUtil.deserializeObject(msg.getPayload());
-			//	Verify if is local	
-			if(parent instanceof SyncRequest) {
-				;
-			} else if(parent instanceof SyncMessage) {
-				//	Change Status
-				final SyncMessage message = (SyncMessage) parent;
-				SPS_BC_Message.setStatus(this, 
-						message.getSPS_BC_Message_ID(), SPS_BC_Message.STATUS_SENT);
-				//	Change UI Status
-				changeUIStatus(message.getSPS_BC_Message_ID(), 
-									SPS_BC_Message.STATUS_SENT);
-			}
-		} catch (MqttException e) {
-			LogM.log(this, getClass(), Level.SEVERE, "Error", e);
-		}
-	}
-	
-	/**
-	 * Change Status in List View
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_SPS_BC_Message_ID
-	 * @param p_Status
-	 * @return void
-	 */
-	private void changeUIStatus(final int p_SPS_BC_Message_ID, final String p_Status) {
-		FV_Thread.runOnUI(new Runnable() {
-			public void run() {
-				try {
-					FV_Thread.changeMsgStatus(p_SPS_BC_Message_ID, 
-							p_Status);
-				} catch (Exception e) { 
-					LogM.log(getApplicationContext(), MQTTSyncService.class, Level.SEVERE, "Error", e);
-				}
-			}
-		});
-	}
-	
-	/**
-	 * Add Message to List
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param message
-	 * @param p_Type
-	 * @return
-	 * @return boolean
-	 */
-	private boolean addMessage(final SyncMessage message, final String p_Type) {
-		FV_Thread.runOnUI(new Runnable() {
-			public void run() {
-				try {
-					if(message != null
-							&& FV_Thread.isOpened(message.getSPS_BC_Request_ID())) {
-						FV_Thread.addMsg(new DisplayBChatThreadItem(message.getSPS_BC_Message_ID(), 
-								message.getText(), message.getSPS_BC_Request_ID(), 
-								message.getAD_User_ID(), message.getUserName(), 
-								p_Type, 
-								SPS_BC_Message.STATUS_CREATED, 
-								new Date(System.currentTimeMillis()), 
-								message.getFileName(), 
-								message.getAttachment()));
-						//	Seek To Last
-						FV_Thread.seekToLastMsg();
-					}
-				} catch (Exception e) { 
-					LogM.log(getApplicationContext(), MQTTSyncService.class, Level.SEVERE, "Error", e);
-				}
-			}
-		});
-		//	Default Return
-		return false;
-	}
-	
-	/**
-	 * Subscribe to Request
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param request
-	 * @return void
-	 */
-	private void subscribeToRequest(SyncRequest request) {
-		try {
-			//	Verify Connection
-			if(m_Connection.isConnected()) {
-				m_Connection.subscribeEx(request.getTopicName(), MQTTConnection.EXACTLY_ONCE_2);
-			}
-		} catch (MqttSecurityException e) {
-			LogM.log(this, getClass(), Level.SEVERE, "Error", e);
-		} catch (MqttException e) {
-			LogM.log(this, getClass(), Level.SEVERE, "Error", e);
 		}
 	}
 	
@@ -395,24 +247,32 @@ public class MQTTSyncService extends IntentService {
 	/**
 	 * Connect with Server
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return void
+	 * @return boolean
 	 */
-	private void connect() {
+	private boolean connect() {
 		if(m_Connection.isConnected()) {
 			LogM.log(getApplicationContext(), getClass(), 
 					Level.FINE, "connect(): Already Connected");
-			return;
+			return true;
 		}
 		//	
 		try {
+			//	Connect
+			if(m_Connection.getStatus() == MQTTConnection.TRY_CONNECTING) {
+				return false;
+			}
 			m_Connection.connect();
+			m_Connection.setStatus(MQTTConnection.TRY_CONNECTING);
 			LogM.log(getApplicationContext(), getClass(), 
 					Level.FINE, "connect(): Try Connecting");
+			//	
+			return true;
 		} catch (Exception e) {
 			LogM.log(getApplicationContext(), getClass(), 
 					Level.SEVERE, "connect(): Error", e);
 		}
 		//	
+		return false;
 	}
 	
 	/**
@@ -444,99 +304,6 @@ public class MQTTSyncService extends IntentService {
 			//	Log
 			LogM.log(this, getClass(), Level.FINE, "Alarm Stoped");
 		}
-	}
-	
-	/**
-	 * For Request
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param request
-	 * @throws Exception
-	 * @return void
-	 */
-	private void requestArrived(SyncRequest request) throws Exception {
-		SPS_BC_Request.newInRequest(this, request);
-	}
-	
-	/**
-	 * For Message
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param message
-	 * @return void
-	 */
-	private void saveMessageArrived(final SyncMessage message) {
-		//	Save File in Folder
-		if(message.getFileName() != null
-				&& message.getFileName().length() > 0
-				&& message.getAttachment() != null) {
-			try {		
-				String fileName = Env.getBC_IMG_DirectoryPathName(this) + File.separator + message.getFileName();
-				FileOutputStream fos = new FileOutputStream(fileName);
-				//	Write
-				fos.write(message.getAttachment());
-				fos.close();
-			} catch (FileNotFoundException e) {
-				LogM.log(this, getClass(), Level.SEVERE, "Error Saving File", e);
-			} catch (IOException e) {
-				LogM.log(this, getClass(), Level.SEVERE, "Error Saving File", e);
-			}
-		}
-		SPS_BC_Message.newInMessage(this, message);
-		//	Instance Notification Manager
-		instanceNM();
-		//	Notify
-		if(!addMessage(message, SPS_BC_Message.TYPE_IN)) {
-			sendNotification(message);
-		}
-	}
-	
-	/**
-	 * Send Message Notification
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param message
-	 * @return void
-	 */
-	private void sendNotification(SyncMessage message) {
-		m_Builder.setContentTitle("In Message")
-			.setContentText(message.getText())
-			.setSmallIcon(android.R.drawable.stat_notify_chat);
-		//	Show Notification
-		m_NotificationManager.notify(NOTIFICATION_ID, m_Builder.build());
-	}
-	
-	/**
-	 * Instance Notification Manager
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return void
-	 */
-	private void instanceNM() {
-		if(m_NotificationManager == null) {
-			m_NotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-	        m_Builder = new NotificationCompat.Builder(this);
-	        Intent intent = new Intent(this, V_BChat.class);
-			intent.setAction(Intent.ACTION_MAIN);
-			intent.addCategory(Intent.CATEGORY_LAUNCHER);
-			//	Set Main Activity
-			PendingIntent m_PendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-			m_Builder.setContentIntent(m_PendingIntent);
-			m_Builder.setAutoCancel(true);
-			//	Set Vibration
-			m_Builder.setVibrate(new long[] {1000, 500, 1000, 500, 1000});
-		    //	Set Light
-			m_Builder.setLights(Color.GRAY, 3000, 3000);
-			//	Set Sound
-			Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-			m_Builder.setSound(alarmSound);
-		}
-	}
-	
-	/**
-	 * Connection is Lost
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param e
-	 * @return void
-	 */
-	private void forConnectionLost(Throwable e) {
-		LogM.log(this, getClass(), Level.SEVERE, "Error Connection Lost", e);
 	}
 	
 	@Override

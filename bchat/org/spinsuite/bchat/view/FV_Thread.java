@@ -283,10 +283,10 @@ public class FV_Thread extends Fragment {
 		//	
 		m_Reload = true;
 		//	Start Service
-		if(!MQTTSyncService.isRunning()) {
-			Intent service = new Intent(m_ctx, MQTTSyncService.class);
-			m_ctx.startService(service);
-		}
+//		if(!MQTTSyncService.isRunning()) {
+//			Intent service = new Intent(m_ctx, MQTTSyncService.class);
+//			m_ctx.startService(service);
+//		}
     }
     
     /**
