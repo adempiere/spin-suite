@@ -29,7 +29,6 @@ import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.util.BC_OpenMsg;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.mqtt.connection.MQTTConnection;
-import org.spinsuite.mqtt.connection.MQTTSyncService;
 import org.spinsuite.sync.content.Invited;
 import org.spinsuite.sync.content.SyncMessage;
 import org.spinsuite.sync.content.SyncRequest;
@@ -97,7 +96,7 @@ public class FV_Thread extends Fragment {
     /**	View 						*/
 	private View 						m_view 				= null;
 	/**	List View					*/
-	private static ListView					lv_Thread			= null;
+	private static ListView				lv_Thread			= null;
 	/**	Message						*/
 	private EditText					et_Message 			= null;
 	/**	Button Send					*/

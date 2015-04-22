@@ -545,9 +545,6 @@ public class MQTTConnection {
 	 */
 	public void setCallback(MqttCallback p_Callback) {
 		m_Callback = p_Callback;
-		if(m_ClientLink != null) {
-			m_ClientLink.setCallback(m_Callback);
-		}
 	}
 	
 	/**
@@ -565,15 +562,17 @@ public class MQTTConnection {
 		String serverURI = createURI(m_Client_ID, m_Host, m_Port, m_IsSSLConnection);
 		if(m_ClientLink == null) {
 			m_ClientLink = new MqttAndroidClient(m_Ctx, serverURI, m_Client_ID);
+			//	Set Call Back
+			if(m_Callback != null) {
+				m_ClientLink.setCallback(m_Callback);
+			}
 		} else if(m_ClientLink.isConnected()) {
 			return;
-		}
-		//	Set Call Back
-		if(m_Callback != null) {
-			m_ClientLink.setCallback(m_Callback);
+		} else {
+			m_ClientLink.unregisterResources();
 		}
 		//	Connect
-		m_ClientLink.connect(m_ConnectionOption, null, m_ConnectionListener);
+		m_ClientLink.connect(m_ConnectionOption, m_Ctx, m_ConnectionListener);
 	}
 	
 	/**

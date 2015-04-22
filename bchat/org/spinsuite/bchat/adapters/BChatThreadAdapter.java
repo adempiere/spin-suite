@@ -24,7 +24,9 @@ import org.spinsuite.bchat.util.BC_ThreadHolder;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.util.AttachmentHandler;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.ImageCacheLru;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -63,6 +65,9 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		m_SelectedItems = new SparseBooleanArray();
 		inflater = LayoutInflater.from(ctx);
 		m_DirectoryApp = Env.getBC_IMG_DirectoryPathName(ctx) + File.separator;
+		int memClass = ((ActivityManager)ctx.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
+		int maxSize = 1024 * 1024 * memClass / 8;
+		m_ImageCache = new ImageCacheLru(maxSize);
 	}
 
 	/**	Context						*/
@@ -81,12 +86,16 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 	private boolean 								isGroup = false;
 	/**	Directory by Default		*/
 	private String									m_DirectoryApp = null;
+	/**	Images Cache				*/
+	private ImageCacheLru							m_ImageCache = null;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = convertView;
 		final BC_ThreadHolder msgHolder;
 		DisplayBChatThreadItem diti = data.get(position);
+		//	Image Key
+		String imageKey = m_DirectoryApp + diti.getFileName();
 		if(view == null) {
 			msgHolder = new BC_ThreadHolder();
 			view = inflater.inflate(id_View, null);
@@ -115,7 +124,11 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		//	For Image
 		if(diti.getFileName() != null
 				&& diti.getFileName().length() > 0) {
-			Bitmap bmimage = AttachmentHandler.getBitmapFromFile(m_DirectoryApp + diti.getFileName(), 300, 300);
+			Bitmap bmimage = m_ImageCache.get(imageKey);
+			if(bmimage == null) {
+				bmimage = AttachmentHandler.getBitmapFromFile(imageKey, 300, 300);
+				m_ImageCache.put(imageKey, bmimage);
+			}
 			msgHolder.rl_Conversation.setBackgroundDrawable(new BitmapDrawable(ctx.getResources(), bmimage));
 		} else {
 			msgHolder.rl_Conversation.setBackgroundDrawable(null);

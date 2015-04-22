@@ -17,6 +17,8 @@ package org.spinsuite.mqtt.connection;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -35,37 +37,16 @@ import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.SerializerUtil;
 
-import android.app.AlarmManager;
-import android.app.IntentService;
-import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Intent;
+import android.os.IBinder;
 
 /**
- * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Mar 30, 2015, 10:34:27 PM
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Apr 21, 2015, 4:15:10 PM
  *
  */
-public class MQTTSyncService extends IntentService {
+public class MQTTSyncService extends Service {
 
-	/**
-	 * 
-	 * *** Constructor ***
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param name
-	 */
-	public MQTTSyncService(String name) {
-		super(name);
-		m_OpenMsg = BC_OpenMsg.getInstance();
-	}
-
-	/**
-	 * 
-	 * *** Constructor ***
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 */
-	public MQTTSyncService() {
-		this("MQTTSyncService");
-	}
-	
 	/**	Connection					*/
 	private MQTTConnection 			m_Connection = null;
 	/**	Current Instance			*/
@@ -76,32 +57,55 @@ public class MQTTSyncService extends IntentService {
 	private BC_OpenMsg				m_OpenMsg = null;
 	/**	Callback					*/
 	private MQTTConnectionCallback	m_CallBack = null;
-	
-	/**
-	 * Get Instance
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return MQTTSyncService
-	 */
-	public static MQTTSyncService getInstance() {
-		if(m_CurrentService == null) {
-			m_CurrentService = new MQTTSyncService();
-		}
-		//	
-		return m_CurrentService;
-	}
-	
-	/**
-	 * Verify if is running process
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return
-	 * @return boolean
-	 */
-	public static boolean isRunning() {
-		return m_IsRunning;
-	}
+	/**	Time						*/
+	private long					m_millis = 0;
 	
 	@Override
-	protected void onHandleIntent(Intent intent) {
+	public IBinder onBind(Intent intent) {
+		return null;
+	}
+
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		if(!MQTTConnection.isNetworkOk(this)
+				&& !MQTTConnection.isAutomaticService(this)) {
+			stopSelf();
+		}
+		//	
+		Timer mTimer = new Timer();
+		m_millis = MQTTConnection.getAlarmTime(getApplicationContext());
+		mTimer.scheduleAtFixedRate(
+				new TimerTask(){
+					@Override
+					public void run() {
+						processThread();
+					}      
+				}
+		, 0, m_millis);
+		return START_STICKY;
+	}
+	
+	/**
+	 * Process Messages in threads
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void processThread() {
+		new Thread(new Runnable() {
+			public void run() {
+				processMsg();
+			}
+		}).start();
+	}
+	
+	/**
+	 * Process Messages
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void processMsg() {
+		//	Start Service
+		m_OpenMsg = BC_OpenMsg.getInstance();
 		//	
 		Env.getInstance(getApplicationContext());
 		if(!Env.isEnvLoad()
@@ -142,6 +146,37 @@ public class MQTTSyncService extends IntentService {
 		sendOpenMsg();
 		//	Set to false is Running
 		m_IsRunning = false;
+		//	
+		long currentTime = System.currentTimeMillis();
+		long nextRun = currentTime + m_millis;
+		//	Date Format
+		SimpleDateFormat sdf = DisplayType.getDateFormat(this, DisplayType.DATE_TIME);
+		//	Log
+		LogM.log(this, getClass(), Level.FINE, "Current Time[" + currentTime + "]-[" + sdf.format(new Date(currentTime)) + "]");
+		LogM.log(this, getClass(), Level.FINE, "Next Run[" + nextRun + "]-[" + sdf.format(new Date(nextRun)) + "]");
+	}
+	
+	/**
+	 * Get Instance
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return MQTTSyncService
+	 */
+	public static MQTTSyncService getInstance() {
+		if(m_CurrentService == null) {
+			m_CurrentService = new MQTTSyncService();
+		}
+		//	
+		return m_CurrentService;
+	}
+	
+	/**
+	 * Verify if is running process
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean isRunning() {
+		return m_IsRunning;
 	}
 	
 	/**
@@ -275,40 +310,17 @@ public class MQTTSyncService extends IntentService {
 		return false;
 	}
 	
-	/**
-	 * Schedule Service
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return void
-	 */
-	private void schedule() {
-		Intent service = new Intent(this, MQTTSyncService.class);
-		AlarmManager alarm = (AlarmManager)getSystemService(ALARM_SERVICE);
-		if(MQTTConnection.isNetworkOk(this)
-				&& MQTTConnection.isAutomaticService(this)) {
-			//	
-			long currentTime = System.currentTimeMillis();
-			long nextRun = currentTime + MQTTConnection.getAlarmTime(getApplicationContext());
-			//	Date Format
-			SimpleDateFormat sdf = DisplayType.getDateFormat(this, DisplayType.DATE_TIME);
-			//	Log
-			LogM.log(this, getClass(), Level.FINE, "Current Time[" + currentTime + "]-[" + sdf.format(new Date(currentTime)) + "]");
-			LogM.log(this, getClass(), Level.FINE, "Next Run[" + nextRun + "]-[" + sdf.format(new Date(nextRun)) + "]");
-			//	Set Alarm
-			PendingIntent sender = PendingIntent.getService(this, 0, service, 0);
-			alarm.set(AlarmManager.RTC_WAKEUP, nextRun, sender);
-		} else {
-			PendingIntent sender = PendingIntent.getBroadcast(this, 0, service, 0);
-			AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-			//	Cancel (Wait for Network)
-			alarmManager.cancel(sender);
-			//	Log
-			LogM.log(this, getClass(), Level.FINE, "Alarm Stoped");
-		}
-	}
-	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		schedule();
+		if(m_Connection != null
+				&& m_Connection.isConnected()) {
+			try {
+				m_Connection.disconnect();
+			} catch (MqttException e) {
+				LogM.log(getApplicationContext(), getClass(), 
+						Level.SEVERE, "disconnect(): Error", e);
+			}
+		}
 	}
 }
