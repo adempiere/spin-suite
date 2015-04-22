@@ -19,9 +19,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.spinsuite.base.R;
-import org.spinsuite.bchat.model.SPS_BC_Message;
 import org.spinsuite.bchat.util.BC_ThreadHolder;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
+import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.util.AttachmentHandler;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.ImageCacheLru;
@@ -116,7 +116,7 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		msgHolder.tv_UserName.setText(diti.getUserName());
 		//	Set Visibility
 		if(!isGroup
-				|| !diti.getType().equals(SPS_BC_Message.TYPE_IN)) {
+				|| !diti.getType().equals(MQTTDefaultValues.TYPE_IN)) {
 			msgHolder.tv_UserName.setVisibility(View.GONE);
 		} else {
 			msgHolder.tv_UserName.setVisibility(View.VISIBLE);
@@ -136,7 +136,7 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		//	
 		int id_att = R.attr.ic_bc_bubble_local;
 		//	For Type Message change Background
-		if(diti.getType().equals(SPS_BC_Message.TYPE_IN)) {
+		if(diti.getType().equals(MQTTDefaultValues.TYPE_IN)) {
 			//	Change Position
 			msgHolder.tv_UserName.setGravity(Gravity.START);
 			//	
@@ -146,11 +146,11 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 				id_att = R.attr.ic_bc_bubble_remote;
 			}
 		} else {
-			if(diti.getStatus().equals(SPS_BC_Message.STATUS_CREATED)) {
+			if(diti.getStatus().equals(MQTTDefaultValues.STATUS_CREATED)) {
 				id_att = R.attr.ic_bc_bubble_local;
-			} else if(diti.getStatus().equals(SPS_BC_Message.STATUS_SENT)) {
+			} else if(diti.getStatus().equals(MQTTDefaultValues.STATUS_SENT)) {
 				id_att = R.attr.ic_bc_bubble_local_sent;
-			} else if(diti.getStatus().equals(SPS_BC_Message.STATUS_DELIVERED)) {
+			} else if(diti.getStatus().equals(MQTTDefaultValues.STATUS_DELIVERED)) {
 				id_att = R.attr.ic_bc_bubble_local_delivered;
 			}
 			//	

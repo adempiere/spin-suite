@@ -28,16 +28,6 @@ import android.content.Context;
  */
 public class SPS_BC_Request_User {
 	
-	/**	Type Values					*/
-	public static final String TYPE_IN				= "I";
-	public static final String TYPE_OUT				= "O";
-	/**	Status Values				*/
-	public static final String STATUS_ACCEPTED 		= "A";
-	public static final String STATUS_CREATED 		= "C";
-	public static final String STATUS_DELIVERED 	= "D";
-	public static final String STATUS_REJECT 		= "R";
-	public static final String STATUS_SENT 			= "S";
-	
 	/**
 	 * Change Status
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com

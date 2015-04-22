@@ -22,6 +22,7 @@ import java.util.Random;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
+import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.sync.content.SyncMessage;
 import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.Env;
@@ -37,16 +38,6 @@ import android.database.Cursor;
  */
 public class SPS_BC_Message {
 	
-	/**	Type Values					*/
-	public static final String TYPE_IN				= "I";
-	public static final String TYPE_OUT				= "O";
-	/**	Status Values				*/
-	public static final String STATUS_ACCEPTED 		= "A";
-	public static final String STATUS_CREATED 		= "C";
-	public static final String STATUS_DELIVERED 	= "D";
-	public static final String STATUS_REJECT 		= "R";
-	public static final String STATUS_SENT 			= "S";
-	
 	/**
 	 * New In Message
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
@@ -55,7 +46,7 @@ public class SPS_BC_Message {
 	 * @return void
 	 */
 	public static void newInMessage(Context ctx, SyncMessage message) {
-		newMessage(ctx, message, TYPE_IN);
+		newMessage(ctx, message, MQTTDefaultValues.TYPE_IN);
 	}
 	
 	/**
@@ -66,7 +57,7 @@ public class SPS_BC_Message {
 	 * @return void
 	 */
 	public static void newOutMessage(Context ctx, SyncMessage message) {
-		newMessage(ctx, message, TYPE_OUT);
+		newMessage(ctx, message, MQTTDefaultValues.TYPE_OUT);
 	}
 	
 	/**
@@ -251,11 +242,11 @@ public class SPS_BC_Message {
 			int m_AD_Org_ID = Env.getAD_Org_ID();
 			int m_SPS_BC_Message_ID = message.getSPS_BC_Message_ID();
 			//	For Out
-			if(p_Type.equals(TYPE_OUT)) {
+			if(p_Type.equals(MQTTDefaultValues.TYPE_OUT)) {
 				m_SPS_BC_Message_ID = new Random().nextInt();
 				message.setSPS_BC_Message_ID(m_SPS_BC_Message_ID);
 			}
-			int m_AD_User_ID = (p_Type.equals(TYPE_IN)? message.getAD_User_ID(): Env.getAD_User_ID());
+			int m_AD_User_ID = (p_Type.equals(MQTTDefaultValues.TYPE_IN)? message.getAD_User_ID(): Env.getAD_User_ID());
 			Date now = new Date(System.currentTimeMillis());
 			conn.addInt(m_AD_Client_ID);
 			conn.addInt(m_AD_Org_ID);
@@ -269,7 +260,7 @@ public class SPS_BC_Message {
 			conn.addInt(message.getSPS_BC_Request_ID());
 			conn.addInt(message.getSPS_BC_Message_ID());
 			conn.addString(p_Type);
-			conn.addString(STATUS_CREATED);
+			conn.addString(MQTTDefaultValues.STATUS_CREATED);
 			conn.addString(message.getFileName());
 			//	Execute
 			conn.executeSQL();

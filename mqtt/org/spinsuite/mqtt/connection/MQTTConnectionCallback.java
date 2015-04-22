@@ -73,8 +73,6 @@ public class MQTTConnectionCallback implements MqttCallback {
 	private Builder 				m_Builder = null;
 	/**	Connection					*/
 	private MQTTConnection 			m_Connection = null;
-	/**	Notification ID				*/
-	private static final int		NOTIFICATION_ID = 0;
 	
 	@Override
 	public void connectionLost(Throwable e) {
@@ -148,11 +146,9 @@ public class MQTTConnectionCallback implements MqttCallback {
 		}
 		SPS_BC_Message.newInMessage(m_Ctx, message);
 		//	Instance Notification Manager
-		instanceNM();
+		instanceNM(message.getSPS_BC_Request_ID());
 		//	Notify
-		if(!addMessage(message, SPS_BC_Message.TYPE_IN)) {
-			sendNotification(message);
-		}
+		addMessage(message, MQTTDefaultValues.TYPE_IN);
 	}
 
 	/**
@@ -162,11 +158,12 @@ public class MQTTConnectionCallback implements MqttCallback {
 	 * @return void
 	 */
 	private void sendNotification(SyncMessage message) {
-		m_Builder.setContentTitle("In Message")
+		SyncRequest request = SPS_BC_Request.getRequest(m_Ctx, message.getSPS_BC_Request_ID());
+		m_Builder.setContentTitle(request.getName())
 			.setContentText(message.getText())
 			.setSmallIcon(android.R.drawable.stat_notify_chat);
 		//	Show Notification
-		m_NotificationManager.notify(NOTIFICATION_ID, m_Builder.build());
+		m_NotificationManager.notify(MQTTDefaultValues.NOTIFICATION_ID, m_Builder.build());
 	}
 	
 	/**
@@ -174,25 +171,28 @@ public class MQTTConnectionCallback implements MqttCallback {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return void
 	 */
-	private void instanceNM() {
+	private void instanceNM(int p_SPS_BC_Request_ID) {
 		if(m_NotificationManager == null) {
 			m_NotificationManager = (NotificationManager) m_Ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-	        m_Builder = new NotificationCompat.Builder(m_Ctx);
-	        Intent intent = new Intent(m_Ctx, V_BChat.class);
-			intent.setAction(Intent.ACTION_MAIN);
-			intent.addCategory(Intent.CATEGORY_LAUNCHER);
-			//	Set Main Activity
-			PendingIntent m_PendingIntent = PendingIntent.getActivity(m_Ctx, 0, intent, 0);
-			m_Builder.setContentIntent(m_PendingIntent);
-			m_Builder.setAutoCancel(true);
-			//	Set Vibration
-			m_Builder.setVibrate(new long[] {1000, 500, 1000, 500, 1000});
-		    //	Set Light
-			m_Builder.setLights(Color.GRAY, 3000, 3000);
-			//	Set Sound
-			Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-			m_Builder.setSound(alarmSound);
 		}
+		//	
+		m_Builder = new NotificationCompat.Builder(m_Ctx);
+        Intent intent = new Intent(m_Ctx, V_BChat.class);
+		intent.setAction(Intent.ACTION_MAIN);
+		intent.addCategory(Intent.CATEGORY_LAUNCHER);
+		//	Add Parameter Request
+		intent.putExtra("SPS_BC_Request_ID", p_SPS_BC_Request_ID);
+		//	Set Main Activity
+		PendingIntent m_PendingIntent = PendingIntent.getActivity(m_Ctx, 0, intent, 0);
+		m_Builder.setContentIntent(m_PendingIntent);
+		m_Builder.setAutoCancel(true);
+		//	Set Vibration
+		m_Builder.setVibrate(new long[] {1000, 500, 1000, 500, 1000});
+	    //	Set Light
+		m_Builder.setLights(Color.GRAY, 3000, 3000);
+		//	Set Sound
+		Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+		m_Builder.setSound(alarmSound);
 	}
 	
 	/**
@@ -244,9 +244,9 @@ public class MQTTConnectionCallback implements MqttCallback {
 				//	Change Status
 				final SyncMessage message = (SyncMessage) parent;
 				SPS_BC_Message.setStatus(m_Ctx, 
-						message.getSPS_BC_Message_ID(), SPS_BC_Message.STATUS_SENT);
+						message.getSPS_BC_Message_ID(), MQTTDefaultValues.STATUS_SENT);
 				//	Change UI Status
-				changeUIStatus(message, SPS_BC_Message.STATUS_SENT);
+				changeUIStatus(message, MQTTDefaultValues.STATUS_SENT);
 			}
 		} catch (MqttException e) {
 			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error", e);
@@ -283,7 +283,7 @@ public class MQTTConnectionCallback implements MqttCallback {
 	 * @return
 	 * @return boolean
 	 */
-	public static boolean addMessage(final SyncMessage message, final String p_Type) {
+	public void addMessage(final SyncMessage message, final String p_Type) {
 		FV_Thread.runOnUI(new Runnable() {
 			public void run() {
 				try {
@@ -293,20 +293,20 @@ public class MQTTConnectionCallback implements MqttCallback {
 								message.getText(), message.getSPS_BC_Request_ID(), 
 								message.getAD_User_ID(), message.getUserName(), 
 								p_Type, 
-								SPS_BC_Message.STATUS_CREATED, 
+								MQTTDefaultValues.STATUS_CREATED, 
 								new Date(System.currentTimeMillis()), 
 								message.getFileName(), 
 								message.getAttachment()));
 						//	Seek To Last
 						FV_Thread.seekToLastMsg();
+					} else {
+						sendNotification(message);
 					}
 				} catch (Exception e) { 
 					LogM.log(Env.getCtx(), MQTTSyncService.class, Level.SEVERE, "Error", e);
 				}
 			}
 		});
-		//	Default Return
-		return false;
 	}
 	
 }

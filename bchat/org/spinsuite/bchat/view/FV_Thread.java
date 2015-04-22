@@ -26,9 +26,9 @@ import org.spinsuite.base.R;
 import org.spinsuite.bchat.adapters.BChatThreadAdapter;
 import org.spinsuite.bchat.model.SPS_BC_Message;
 import org.spinsuite.bchat.model.SPS_BC_Request;
-import org.spinsuite.bchat.util.BC_OpenMsg;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.mqtt.connection.MQTTConnection;
+import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.sync.content.Invited;
 import org.spinsuite.sync.content.SyncMessage;
 import org.spinsuite.sync.content.SyncRequest;
@@ -36,6 +36,7 @@ import org.spinsuite.util.AttachmentHandler;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.SerializerUtil;
 
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -276,7 +277,11 @@ public class FV_Thread extends Fragment {
 				et_Message.getText().toString(), p_FileName, bytes, 
 				m_Request.getSPS_BC_Request_ID(), Env.getAD_User_ID(), Env.getContext("#AD_User_Name"));
 		//	Save Message
-		BC_OpenMsg.getInstance().addMsg(message);
+		SPS_BC_Message.newOutMessage(m_ctx, message);
+		//	Add Message
+		addMsg(message, MQTTDefaultValues.TYPE_OUT);
+		seekToLastMsg();
+//		BC_OpenMsg.getInstance().addMsg(message);
 		//	Clear Data
 		et_Message.setText("");
 		//	
@@ -397,6 +402,17 @@ public class FV_Thread extends Fragment {
     public void onResume() {
     	super.onResume();
     	m_IsActive = true;
+    	clearNotification();
+    }
+    
+    /**
+     * Clear Notification
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return void
+     */
+    private void clearNotification() {
+    	NotificationManager m_NotificationManager = (NotificationManager) m_ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+    	m_NotificationManager.cancel(MQTTDefaultValues.NOTIFICATION_ID);
     }
     
     @Override
@@ -430,6 +446,24 @@ public class FV_Thread extends Fragment {
     public static void addMsg(DisplayBChatThreadItem msg) {
     	m_ThreadAdapter.add(msg);
     	m_ThreadAdapter.notifyDataSetChanged();
+    }
+    
+    /**
+     * Add Message
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param message
+     * @param p_Type
+     * @return void
+     */
+    public static void addMsg(SyncMessage message, String p_Type) {
+    	addMsg(new DisplayBChatThreadItem(message.getSPS_BC_Message_ID(), 
+								message.getText(), message.getSPS_BC_Request_ID(), 
+								message.getAD_User_ID(), message.getUserName(), 
+								p_Type, 
+								MQTTDefaultValues.STATUS_CREATED, 
+								new Date(System.currentTimeMillis()), 
+								message.getFileName(), 
+								message.getAttachment()));
     }
     
     /**
@@ -480,7 +514,7 @@ public class FV_Thread extends Fragment {
 						SyncRequest.RT_BUSINESS_CHAT, 
 						String.valueOf(UUID.randomUUID()), p_Name, false);
 				//	Add User to Request
-				m_Request.addUser(new Invited(p_AD_User_ID, SPS_BC_Request.STATUS_CREATED));
+				m_Request.addUser(new Invited(p_AD_User_ID, MQTTDefaultValues.STATUS_CREATED));
 			}
 		}
     	//	Set Reload Data

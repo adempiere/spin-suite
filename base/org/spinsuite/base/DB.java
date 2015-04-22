@@ -57,6 +57,8 @@ public class DB extends SQLiteOpenHelper {
 		super(ctx, 	name, factory, version);
 		this.sqlCreate = sqlCreate;
 		this.ctx = ctx;
+		//	Instance Static DB
+		DB_Manager.createInstance(this);
 	}
 	
 	/**
@@ -68,11 +70,12 @@ public class DB extends SQLiteOpenHelper {
 	public DB(Context ctx) {
 		super(ctx, Env.getDB_PathName(), null, DB_VERSION);
 		this.ctx = ctx;
+		//	Instance Static DB
+		DB_Manager.createInstance(this);
 	}
 	
 	private String 				sqlCreate;
 	private String 				sqlUpdate;
-	private SQLiteDatabase 		db;
 	private SQLiteStatement 	stm;
 	public static final int 	READ_ONLY = 0;
 	public static final int 	READ_WRITE = 1;
@@ -105,7 +108,7 @@ public class DB extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
 		if(sqlUpdate != null
 				&& sqlUpdate.length() > 0)
-		db.execSQL(sqlUpdate);
+		DB_Manager.getInstance().open().execSQL(sqlUpdate);
 	}
 	
 	/**
@@ -115,7 +118,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return boolean
 	 */
 	public boolean isDatabaseIntegrityOk() {
-		return db.isDatabaseIntegrityOk();
+		return DB_Manager.getInstance().open().isDatabaseIntegrityOk();
 	}
 	
 	/**
@@ -126,12 +129,12 @@ public class DB extends SQLiteOpenHelper {
 	 * @return SQLiteDatabase
 	 */
 	public synchronized SQLiteDatabase openDB(int type) {
-		if(type == READ_ONLY) {
-			db = getReadableDatabase();
-		}else if(type == READ_WRITE) {
-			db = getWritableDatabase();
-		}
-		return db;
+//		if(type == READ_ONLY) {
+//			db = getReadableDatabase();
+//		}else if(type == READ_WRITE) {
+//			db = getWritableDatabase();
+//		}
+		return DB_Manager.getInstance().open();
 	}
 	
 	/**
@@ -141,7 +144,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return SQLiteDatabase
 	 */
 	public synchronized SQLiteDatabase getDB() {
-		return db;
+		return DB_Manager.getInstance().open();
 	}
 
 	/**
@@ -153,7 +156,7 @@ public class DB extends SQLiteOpenHelper {
 	public synchronized void closeDB(Cursor rs) {
 		if(rs != null && !rs.isClosed())
 			rs.close();
-		db.close();
+		DB_Manager.getInstance().close();
 		LogM.log(ctx, getClass(), Level.INFO, "Closed");
 	}
 	
@@ -165,9 +168,10 @@ public class DB extends SQLiteOpenHelper {
 	 */
 	public synchronized boolean isOpen() {
 		boolean ok = false;
-		if(db != null) {
-			ok = db.isOpen();
-		}
+//		if(db != null) {
+//			ok = db.isOpen();
+//		}
+		ok = DB_Manager.getInstance().open().isOpen();
 		return ok;
 	}
 	
@@ -177,7 +181,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return void
 	 */
 	public synchronized void endTransaction() {
-		db.endTransaction();
+		DB_Manager.getInstance().open().endTransaction();
 	}
 	
 	/**
@@ -186,7 +190,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return void
 	 */
 	public synchronized void beginTransaction() {
-		db.beginTransactionNonExclusive();
+		DB_Manager.getInstance().open().beginTransactionNonExclusive();
 	}
 	
 	/**
@@ -195,7 +199,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return void
 	 */
 	public synchronized void setTransactionSuccessful() {
-		db.setTransactionSuccessful();
+		DB_Manager.getInstance().open().setTransactionSuccessful();
 	}
 	
 	/**
@@ -250,9 +254,9 @@ public class DB extends SQLiteOpenHelper {
 		LogM.log(ctx, getClass(), Level.FINE, "SQL=" + sql);
 		try {
 			if(params == null) {
-				db.execSQL(sql);
+				DB_Manager.getInstance().open().execSQL(sql);
 			} else {
-				db.execSQL(sql, params);
+				DB_Manager.getInstance().open().execSQL(sql, params);
 			}	
 		} catch (Exception e) {
 			throw e;
@@ -268,7 +272,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return long
 	 */
 	public synchronized long insertSQL(String table, String columnaNull, ContentValues values) {
-		return db.insert(table, columnaNull, values);
+		return DB_Manager.getInstance().open().insert(table, columnaNull, values);
 	}
 	
 	/**
@@ -281,7 +285,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return int
 	 */
 	public synchronized int updateSQL(String table, ContentValues values, String where, String [] argmWhere) {
-		return db.update(table, values, where, argmWhere);
+		return DB_Manager.getInstance().open().update(table, values, where, argmWhere);
 	}
 	
 	/**
@@ -293,7 +297,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return int
 	 */
 	public synchronized int deleteSQL(String table, String where, String [] argmWhere) {
-		return db.delete(table, where, argmWhere);
+		return DB_Manager.getInstance().open().delete(table, where, argmWhere);
 	}
 	
 	/**
@@ -309,7 +313,7 @@ public class DB extends SQLiteOpenHelper {
 		LogM.log(ctx, getClass(), Level.FINE, "SQL=" + sql);
 		Cursor rs = null;
 		try {
-			rs = db.rawQuery(sql, values);
+			rs = DB_Manager.getInstance().open().rawQuery(sql, values);
 		} catch (Exception e) {
 			throw e;
 		}
@@ -353,7 +357,7 @@ public class DB extends SQLiteOpenHelper {
 	public synchronized Cursor querySQL(String table, String [] col, 
 			String where, String [] argsWhere, String group, 
 			String having, String orden, String limit) {
-		return db.query(table, col, where, argsWhere, group, having, orden, limit);
+		return DB_Manager.getInstance().open().query(table, col, where, argsWhere, group, having, orden, limit);
 	}
 	
 	/**
@@ -364,7 +368,7 @@ public class DB extends SQLiteOpenHelper {
 	 * @return SQLiteStatement
 	 */
 	public synchronized SQLiteStatement compileSQL(String sql) {
-		stm = db.compileStatement(sql);
+		stm = DB_Manager.getInstance().open().compileStatement(sql);
 		return stm;
 	}
 	
@@ -634,6 +638,11 @@ public class DB extends SQLiteOpenHelper {
 			conn.close();
 		}
     }
+	
+	@Override
+	public synchronized void close() {
+		DB_Manager.getInstance().close();
+	}
 	
 	/**
 	 * Execute Update.

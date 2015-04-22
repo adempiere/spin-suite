@@ -21,6 +21,7 @@ import java.util.Random;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
+import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.sync.content.Invited;
 import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.Env;
@@ -35,16 +36,6 @@ import android.database.Cursor;
  */
 public class SPS_BC_Request {
 	
-	/**	Type Values					*/
-	public static final String TYPE_IN				= "I";
-	public static final String TYPE_OUT				= "O";
-	/**	Status Values				*/
-	public static final String STATUS_ACCEPTED 		= "A";
-	public static final String STATUS_CREATED 		= "C";
-	public static final String STATUS_DELIVERED 	= "D";
-	public static final String STATUS_REJECT 		= "R";
-	public static final String STATUS_SENT 			= "S";
-	
 	/**
 	 * Create a New In Request
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
@@ -53,7 +44,7 @@ public class SPS_BC_Request {
 	 * @return void
 	 */
 	public static void newInRequest(Context ctx, SyncRequest request) {
-		newRequest(ctx, request, TYPE_IN);
+		newRequest(ctx, request, MQTTDefaultValues.TYPE_IN);
 	}
 	
 	/**
@@ -64,7 +55,7 @@ public class SPS_BC_Request {
 	 * @return void
 	 */
 	public static void newOutRequest(Context ctx, SyncRequest request) {
-		newRequest(ctx, request, TYPE_OUT);
+		newRequest(ctx, request, MQTTDefaultValues.TYPE_OUT);
 	}
 	
 	/**
@@ -296,7 +287,7 @@ public class SPS_BC_Request {
 			int m_AD_Org_ID = Env.getAD_Org_ID();
 			int m_SPS_BC_Request_ID = request.getSPS_BC_Request_ID();
 			//	For Out
-			if(p_Type.equals(TYPE_OUT)) {
+			if(p_Type.equals(MQTTDefaultValues.TYPE_OUT)) {
 				m_SPS_BC_Request_ID = new Random().nextInt();
 			}
 			int m_AD_User_ID = Env.getAD_User_ID();
@@ -341,7 +332,7 @@ public class SPS_BC_Request {
 					conn.addBoolean(true);
 					conn.addInt(m_SPS_BC_Request_ID);
 					conn.addInt(invited.getAD_USer_ID());
-					conn.addString(STATUS_CREATED);
+					conn.addString(MQTTDefaultValues.STATUS_CREATED);
 					conn.executeSQL();
 					conn.clearParameters();
 				}

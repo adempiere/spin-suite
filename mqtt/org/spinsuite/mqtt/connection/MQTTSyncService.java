@@ -27,10 +27,8 @@ import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.spinsuite.bchat.model.SPS_BC_Message;
 import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.model.SPS_BC_Request_User;
-import org.spinsuite.bchat.util.BC_OpenMsg;
 import org.spinsuite.sync.content.Invited;
 import org.spinsuite.sync.content.SyncMessage;
-import org.spinsuite.sync.content.SyncParent;
 import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
@@ -53,8 +51,6 @@ public class MQTTSyncService extends Service {
 	private static MQTTSyncService	m_CurrentService = null;
 	/**	Connect						*/
 	private static boolean 			m_IsRunning = false;
-	/**	Message Queue				*/
-	private BC_OpenMsg				m_OpenMsg = null;
 	/**	Callback					*/
 	private MQTTConnectionCallback	m_CallBack = null;
 	/**	Time						*/
@@ -104,8 +100,6 @@ public class MQTTSyncService extends Service {
 	 * @return void
 	 */
 	private void processMsg() {
-		//	Start Service
-		m_OpenMsg = BC_OpenMsg.getInstance();
 		//	
 		Env.getInstance(getApplicationContext());
 		if(!Env.isEnvLoad()
@@ -116,7 +110,6 @@ public class MQTTSyncService extends Service {
 		//	
 		m_IsRunning = true;
 		//	Save Current Message
-		saveMsg();
 		//	Verify Reload Service
 		boolean isReload = MQTTConnection.isReloadService(this);
 		//	Default Topics
@@ -180,23 +173,6 @@ public class MQTTSyncService extends Service {
 	}
 	
 	/**
-	 * Save Msg
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return void
-	 */
-	private void saveMsg() {
-		m_OpenMsg = BC_OpenMsg.getInstance();
-		SyncParent openMsg = null;
-		while ((openMsg = m_OpenMsg.getOpenMsg(true)) != null) {
-			if(openMsg instanceof SyncMessage) {
-				SyncMessage message = (SyncMessage) openMsg;
-				SPS_BC_Message.newOutMessage(this, message);
-				MQTTConnectionCallback.addMessage(message, SPS_BC_Message.TYPE_OUT);
-			}
-		}
-	}
-	
-	/**
 	 * Send Pending Message
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return
@@ -206,25 +182,29 @@ public class MQTTSyncService extends Service {
 		//	Verify Connection
 		if(m_Connection.isConnected()) {			
 			SyncMessage msgList[] = SPS_BC_Message.getMessage(this, 
-					SPS_BC_Message.STATUS_CREATED, 
-					SPS_BC_Message.TYPE_OUT, 
+					MQTTDefaultValues.STATUS_CREATED, 
+					MQTTDefaultValues.TYPE_OUT, 
 					"EXISTS(SELECT 1 FROM SPS_BC_Request_User ru "
 					+ "INNER JOIN SPS_BC_Request r ON(r.SPS_BC_Request_ID = ru.SPS_BC_Request_ID) "
 					+ "WHERE ru.SPS_BC_Request_ID = SPS_BC_Message.SPS_BC_Request_ID "
-					+ "AND (ru.Status = '" + SPS_BC_Request.STATUS_SENT + "' OR r.Type = '" + SPS_BC_Request.TYPE_IN + "'))", 
+					+ "AND (ru.Status = '" + MQTTDefaultValues.STATUS_SENT + "' OR r.Type = '" + MQTTDefaultValues.TYPE_IN + "'))", 
 					true);
 			//	
 			String m_LocalClient_ID = MQTTConnection.getClient_ID(this);
 			for(SyncMessage msgForSend : msgList) {
-				//	Set Client ID
-				msgForSend.setLocalClient_ID(m_LocalClient_ID);
-				//	Get Request for Topic
-				SyncRequest request = SPS_BC_Request.getRequest(this, msgForSend.getSPS_BC_Request_ID());
-				byte[] msg = SerializerUtil.serializeObject(msgForSend);
-				MqttMessage message = new MqttMessage(msg);
-				message.setQos(MQTTConnection.EXACTLY_ONCE_2);
-				message.setRetained(true);
-				m_Connection.publish(request.getTopicName(), message);				
+				try {
+					//	Set Client ID
+					msgForSend.setLocalClient_ID(m_LocalClient_ID);
+					//	Get Request for Topic
+					SyncRequest request = SPS_BC_Request.getRequest(this, msgForSend.getSPS_BC_Request_ID());
+					byte[] msg = SerializerUtil.serializeObject(msgForSend);
+					MqttMessage message = new MqttMessage(msg);
+					message.setQos(MQTTConnection.EXACTLY_ONCE_2);
+					message.setRetained(true);
+					m_Connection.publish(request.getTopicName(), message);
+				} catch (Exception e) {
+					LogM.log(this, getClass(), Level.SEVERE, "Error", e);
+				}
 			}
 		}
 		//	Return Ok
@@ -242,7 +222,7 @@ public class MQTTSyncService extends Service {
 		try {
 			//	Verify Connection
 			if(m_Connection.isConnected()) {
-				SyncRequest requestList[] = SPS_BC_Request.getRequest(this, SPS_BC_Request.TYPE_OUT, SPS_BC_Request.STATUS_CREATED);
+				SyncRequest requestList[] = SPS_BC_Request.getRequest(this, MQTTDefaultValues.TYPE_OUT, MQTTDefaultValues.STATUS_CREATED);
 				//	
 				for(SyncRequest request : requestList) {
 					m_Connection.subscribeEx(request.getTopicName(), MQTTConnection.EXACTLY_ONCE_2);
@@ -250,7 +230,7 @@ public class MQTTSyncService extends Service {
 					for(Invited invited : request.getUsers()) {
 						//	
 						if(invited.getStatus() == null
-								|| !invited.getStatus().equals(SPS_BC_Message.STATUS_CREATED))
+								|| !invited.getStatus().equals(MQTTDefaultValues.STATUS_CREATED))
 							continue;
 						//	
 						String m_LocalClient_ID = MQTTConnection.getClient_ID(this);
@@ -266,13 +246,15 @@ public class MQTTSyncService extends Service {
 						m_Connection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(invited.getAD_USer_ID())), message);
 						//	Change Status
 						SPS_BC_Request_User.setStatus(this, request.getSPS_BC_Request_ID(), 
-								invited.getAD_USer_ID(), SPS_BC_Message.STATUS_SENT);
+								invited.getAD_USer_ID(), MQTTDefaultValues.STATUS_SENT);
 					}
 				}
 			}
 		} catch (MqttSecurityException e) {
 			LogM.log(this, getClass(), Level.SEVERE, "Error", e);
 		} catch (MqttException e) {
+			LogM.log(this, getClass(), Level.SEVERE, "Error", e);
+		} catch (Exception e) {
 			LogM.log(this, getClass(), Level.SEVERE, "Error", e);
 		}
 		//	Return Ok

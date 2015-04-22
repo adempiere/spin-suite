@@ -88,6 +88,11 @@ public class V_BChat extends FragmentActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
+    	//	
+    	Bundle bundle = getIntent().getExtras();
+		if(bundle != null) {
+			m_SPS_BC_Request_ID = bundle.getInt("SPS_BC_Request_ID");
+		}
     	//	Add Support to Progress Bar in Action Bar
     	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
     	//	
@@ -107,6 +112,7 @@ public class V_BChat extends FragmentActivity
     	loadContact();
     	//	
     	loadFragment();
+    	//	
     }
     
     /**
