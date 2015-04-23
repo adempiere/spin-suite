@@ -129,7 +129,14 @@
     	    android:layout_width="wrap_content"
     	    android:layout_height="wrap_content"
     	    android:inputType="numberDecimal" >
-        </EditText> 	
+        </EditText>
+        <!-- Load Default Data -->
+    	<CheckBox
+    	    android:id="@+id/ch_LoadTestData"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:checked="false"
+    	    android:text="@string/LoadTestData"/>
     	<Button
         	android:id="@+id/bt_MQTT_SSL_File_Path"
         	android:layout_width="wrap_content"

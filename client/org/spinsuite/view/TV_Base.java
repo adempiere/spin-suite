@@ -348,8 +348,13 @@ public class TV_Base extends FragmentActivity
      * @return Fragment
      */
     protected Fragment getCurrentFragment() {
-		int index = actionBar.getSelectedTab().getPosition();
-    	return getFragment(index);
+		Tab tab = actionBar.getSelectedTab();
+		if(tab != null) {
+			int index = tab.getPosition();
+			return getFragment(index);
+		}
+		//	Default Return
+		return null;
 	}
     
     /**
