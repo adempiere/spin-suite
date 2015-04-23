@@ -21,6 +21,8 @@ import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.model.MCountry;
+import org.spinsuite.mqtt.connection.MQTTSyncService;
+import org.spinsuite.sync.SyncService;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.SyncValues;
@@ -119,6 +121,11 @@ public class Login extends TV_Base implements I_Login {
 					m_LoadType = ROLE_ACCESS;
 					new LoadAccessTask().execute();
 				} else {
+					//	Start Service
+					if(!MQTTSyncService.isRunning()) {
+						Intent service = new Intent(this, MQTTSyncService.class);
+						startService(service);
+					}
 					//	Start Activity
 					Intent intent = new Intent(this, LV_Menu.class);
 					startActivity(intent);
@@ -126,16 +133,11 @@ public class Login extends TV_Base implements I_Login {
     			finish();
     		}
     	} else {
-//    		setEnabled(false);
-//    		//	
-//    		if(m_LoginInit == null
-//    				&& !SyncService.isRunning())
-//    			loadInitSync();
-    		Env.createDefaultDirectory(this);
-    		setContext();
-    		//	For Demo
-    		//m_LoadType = DATA_BASE;
-			//new LoadAccessTask().execute();
+    		setEnabled(false);
+    		//	
+    		if(m_LoginInit == null
+    				&& !SyncService.isRunning())
+    			loadInitSync();
     	}
 		//	Register Receiver
     	LocalBroadcastManager.getInstance(this).registerReceiver(
@@ -213,7 +215,7 @@ public class Login extends TV_Base implements I_Login {
         		m_Builder.setContentTitle(msg)
             								.setSmallIcon(android.R.drawable.stat_sys_download);
         		//	Set Default Values
-        		setContext();
+        		loadDefaultData();
         	}
     		//	Set Sub Title
     		if(subMsg != null
@@ -261,14 +263,12 @@ public class Login extends TV_Base implements I_Login {
 	 * @author Yamel Senih 30/11/2012, 11:55:26
 	 * @return void
 	 */
-	public void setContext() {
-		Env.setIsEnvLoad(true);
-		Env.setSavePass(true);
-		Env.setAutoLogin(true);
-		//	Set Value for Sync
-		Env.setContext("#InitialLoadSynchronizing", false);
-		//	Reload
-		reloadActivity();
+	public void loadDefaultData() {
+		//	For Demo
+		addFagment(T_Login.class, "Conn", R.string.tt_Conn);
+        addFagment(T_Role.class, "LoginRole", R.string.tt_LoginRole);
+		m_LoadType = DATA_BASE;
+		new LoadAccessTask().execute();
 	}
     
     /**
@@ -490,6 +490,7 @@ public class Login extends TV_Base implements I_Login {
 				I_Login fr = (I_Login)getCurrentFragment();
 				if(fr != null) {
 					fr.loadData();
+					invalidateOptionsMenu();
 				}
 			} else if(m_LoadType.equals(ROLE_ACCESS)) {
 				//	Start Activity

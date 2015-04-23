@@ -41,7 +41,7 @@ public class LookupMenu {
 	/**	Quick Action Menu		*/
 	public static final String SYNCHRONIZATION_MENU = "S";
 	/** Spin-Suite Service**/
-	public static final int WS_ID = 50006;
+	public static final int 	WS_ID = 50006;
 	
 	/**	Menu Type				*/
 	private String 						menuType 	= MAIN_MENU;

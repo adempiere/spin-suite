@@ -24,6 +24,7 @@ import org.spinsuite.base.R;
 import org.spinsuite.bchat.adapters.BChatContactAdapter;
 import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.util.DisplayBChatContactItem;
+import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.sync.content.Invited;
 import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.Env;
@@ -190,7 +191,7 @@ public class V_BChat_AddGroup extends Activity {
         				DisplayBChatContactItem contact = m_ContactAdapter.getItem(i);
         				request.addUser(
         						new Invited(contact.getRecord_ID(), 
-        								SPS_BC_Request.STATUS_CREATED));
+        								MQTTDefaultValues.STATUS_CREATED));
         			}
         		}
     			//	Save Request

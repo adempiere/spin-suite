@@ -44,5 +44,6 @@
 	<string name="tt_TestConn">Prueba de Conexión</string>
 	<string name="tt_Conn">Conexión</string>
 	<string name="tt_LoginRole">Rol de Inicio</string>
+	<string name="LoadTestData">Cargar Datos de Prueba</string>
 	
 </resources>

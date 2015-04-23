@@ -15,8 +15,6 @@
  *************************************************************************************/
 package org.spinsuite.base;
 
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -42,12 +40,7 @@ import android.database.sqlite.SQLiteStatement;
  * @See https://adempiere.atlassian.net/browse/SPIN-13
  *
  */
-public class DB extends SQLiteOpenHelper implements Serializable {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6009090066893971220L;
+public class DB extends SQLiteOpenHelper {
 
 	/**
 	 * 
@@ -64,6 +57,8 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 		super(ctx, 	name, factory, version);
 		this.sqlCreate = sqlCreate;
 		this.ctx = ctx;
+		//	Instance Static DB
+		DB_Manager.createInstance(this);
 	}
 	
 	/**
@@ -75,17 +70,17 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	public DB(Context ctx) {
 		super(ctx, Env.getDB_PathName(), null, DB_VERSION);
 		this.ctx = ctx;
+		//	Instance Static DB
+		DB_Manager.createInstance(this);
 	}
 	
 	private String 				sqlCreate;
 	private String 				sqlUpdate;
-	private SQLiteDatabase 		db;
 	private SQLiteStatement 	stm;
 	public static final int 	READ_ONLY = 0;
 	public static final int 	READ_WRITE = 1;
 	public static final String 	DB_NAME = "SpinSuite";
 	public static final int 	DB_VERSION = 1;
-	private static final String	LOCK = "DB_Lock";
 	/**	Context					*/
 	private Context 			ctx;
 	/**	SQL						*/
@@ -113,7 +108,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
 		if(sqlUpdate != null
 				&& sqlUpdate.length() > 0)
-		db.execSQL(sqlUpdate);
+		DB_Manager.getInstance().open().execSQL(sqlUpdate);
 	}
 	
 	/**
@@ -123,7 +118,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return boolean
 	 */
 	public boolean isDatabaseIntegrityOk() {
-		return db.isDatabaseIntegrityOk();
+		return DB_Manager.getInstance().open().isDatabaseIntegrityOk();
 	}
 	
 	/**
@@ -133,15 +128,13 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return SQLiteDatabase
 	 */
-	public SQLiteDatabase openDB(int type) {
-		synchronized (LOCK) {
-			if(type == READ_ONLY) {
-				db = getReadableDatabase();
-			}else if(type == READ_WRITE) {
-				db = getWritableDatabase();
-			}
-			return db;
-		}
+	public synchronized SQLiteDatabase openDB(int type) {
+//		if(type == READ_ONLY) {
+//			db = getReadableDatabase();
+//		}else if(type == READ_WRITE) {
+//			db = getWritableDatabase();
+//		}
+		return DB_Manager.getInstance().open();
 	}
 	
 	/**
@@ -150,8 +143,8 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return SQLiteDatabase
 	 */
-	public SQLiteDatabase getDB() {
-		return db;
+	public synchronized SQLiteDatabase getDB() {
+		return DB_Manager.getInstance().open();
 	}
 
 	/**
@@ -160,13 +153,11 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param rs
 	 * @return void
 	 */
-	public void closeDB(Cursor rs) {
-		synchronized (LOCK) {
-			if(rs != null && !rs.isClosed())
-				rs.close();
-			db.close();
-			LogM.log(ctx, getClass(), Level.INFO, "Closed");
-		}
+	public synchronized void closeDB(Cursor rs) {
+		if(rs != null && !rs.isClosed())
+			rs.close();
+		DB_Manager.getInstance().close();
+		LogM.log(ctx, getClass(), Level.INFO, "Closed");
 	}
 	
 	/**
@@ -175,11 +166,12 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean isOpen() {
+	public synchronized boolean isOpen() {
 		boolean ok = false;
-		if(db != null) {
-			ok = db.isOpen();
-		}
+//		if(db != null) {
+//			ok = db.isOpen();
+//		}
+		ok = DB_Manager.getInstance().open().isOpen();
 		return ok;
 	}
 	
@@ -188,8 +180,8 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:44:54
 	 * @return void
 	 */
-	public void endTransaction() {
-		db.endTransaction();
+	public synchronized void endTransaction() {
+		DB_Manager.getInstance().open().endTransaction();
 	}
 	
 	/**
@@ -197,8 +189,8 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:45:07
 	 * @return void
 	 */
-	public void beginTransaction() {
-		db.beginTransactionNonExclusive();
+	public synchronized void beginTransaction() {
+		DB_Manager.getInstance().open().beginTransactionNonExclusive();
 	}
 	
 	/**
@@ -206,8 +198,8 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 03/02/2014, 21:45:34
 	 * @return void
 	 */
-	public void setTransactionSuccessful() {
-		db.setTransactionSuccessful();
+	public synchronized void setTransactionSuccessful() {
+		DB_Manager.getInstance().open().setTransactionSuccessful();
 	}
 	
 	/**
@@ -217,7 +209,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return void
 	 * @throws Exception 
 	 */
-	public void executeSQLEx(String sql) throws Exception {
+	public synchronized void executeSQLEx(String sql) throws Exception {
 		executeSQL(sql, null);
 	}
 	
@@ -227,7 +219,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param sql
 	 * @return void
 	 */
-	public void executeSQL(String sql) {
+	public synchronized void executeSQL(String sql) {
 		try {
 			executeSQLEx(sql);
 		} catch (Exception e) {
@@ -242,7 +234,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param params
 	 * @return void
 	 */
-	public void executeSQL(String sql, Object [] params) {
+	public synchronized void executeSQL(String sql, Object [] params) {
 		try {
 			executeSQLEx(sql, params);
 		} catch (Exception e) {
@@ -258,13 +250,13 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return void
 	 * @throws Exception 
 	 */
-	public void executeSQLEx(String sql, Object [] params) throws Exception {
+	public synchronized void executeSQLEx(String sql, Object [] params) throws Exception {
 		LogM.log(ctx, getClass(), Level.FINE, "SQL=" + sql);
 		try {
 			if(params == null) {
-				db.execSQL(sql);
+				DB_Manager.getInstance().open().execSQL(sql);
 			} else {
-				db.execSQL(sql, params);
+				DB_Manager.getInstance().open().execSQL(sql, params);
 			}	
 		} catch (Exception e) {
 			throw e;
@@ -279,8 +271,8 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param values
 	 * @return long
 	 */
-	public long insertSQL(String table, String columnaNull, ContentValues values) {
-		return db.insert(table, columnaNull, values);
+	public synchronized long insertSQL(String table, String columnaNull, ContentValues values) {
+		return DB_Manager.getInstance().open().insert(table, columnaNull, values);
 	}
 	
 	/**
@@ -292,8 +284,8 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param argmWhere
 	 * @return int
 	 */
-	public int updateSQL(String table, ContentValues values, String where, String [] argmWhere) {
-		return db.update(table, values, where, argmWhere);
+	public synchronized int updateSQL(String table, ContentValues values, String where, String [] argmWhere) {
+		return DB_Manager.getInstance().open().update(table, values, where, argmWhere);
 	}
 	
 	/**
@@ -304,8 +296,8 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param argmWhere
 	 * @return int
 	 */
-	public int deleteSQL(String table, String where, String [] argmWhere) {
-		return db.delete(table, where, argmWhere);
+	public synchronized int deleteSQL(String table, String where, String [] argmWhere) {
+		return DB_Manager.getInstance().open().delete(table, where, argmWhere);
 	}
 	
 	/**
@@ -317,11 +309,11 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return Cursor
 	 * @throws Exception 
 	 */
-	public Cursor querySQLEx(String sql, String [] values) throws Exception {
+	public synchronized Cursor querySQLEx(String sql, String [] values) throws Exception {
 		LogM.log(ctx, getClass(), Level.FINE, "SQL=" + sql);
 		Cursor rs = null;
 		try {
-			rs = db.rawQuery(sql, values);
+			rs = DB_Manager.getInstance().open().rawQuery(sql, values);
 		} catch (Exception e) {
 			throw e;
 		}
@@ -337,7 +329,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return Cursor
 	 */
-	public Cursor querySQL(String sql, String [] values) {
+	public synchronized Cursor querySQL(String sql, String [] values) {
 		Cursor rs = null;
 		try {
 			rs = querySQLEx(sql, values);
@@ -362,10 +354,10 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return Cursor
 	 */
-	public Cursor querySQL(String table, String [] col, 
+	public synchronized Cursor querySQL(String table, String [] col, 
 			String where, String [] argsWhere, String group, 
 			String having, String orden, String limit) {
-		return db.query(table, col, where, argsWhere, group, having, orden, limit);
+		return DB_Manager.getInstance().open().query(table, col, where, argsWhere, group, having, orden, limit);
 	}
 	
 	/**
@@ -375,8 +367,8 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return SQLiteStatement
 	 */
-	public SQLiteStatement compileSQL(String sql) {
-		stm = db.compileStatement(sql);
+	public synchronized SQLiteStatement compileSQL(String sql) {
+		stm = DB_Manager.getInstance().open().compileStatement(sql);
 		return stm;
 	}
 	
@@ -386,7 +378,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param sql
 	 * @return void
 	 */
-	public void compileQuery(String sql) {
+	public synchronized void compileQuery(String sql) {
 		m_SQL = sql;
 		m_Parameters = new ArrayList<String>();
 	}
@@ -397,7 +389,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return SQLiteStatement
 	 */
-	public SQLiteStatement getStatement() {
+	public synchronized SQLiteStatement getStatement() {
 		return stm;
 	}
 	
@@ -407,7 +399,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param value
 	 * @return DB
 	 */
-	public DB addInt(int value) {
+	public synchronized DB addInt(int value) {
 		if(m_Parameters == null)
 			m_Parameters = new ArrayList<String>();
 		//	
@@ -422,7 +414,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param value
 	 * @return DB
 	 */
-	public DB addLong(long value) {
+	public synchronized DB addLong(long value) {
 		if(m_Parameters == null)
 			m_Parameters = new ArrayList<String>();
 		//	
@@ -437,7 +429,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param value
 	 * @return DB
 	 */
-	public DB addString(String value) {
+	public synchronized DB addString(String value) {
 		if(m_Parameters == null)
 			m_Parameters = new ArrayList<String>();
 		//	
@@ -452,7 +444,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param value
 	 * @return DB
 	 */
-	public DB addDouble(double value) {
+	public synchronized DB addDouble(double value) {
 		if(m_Parameters == null)
 			m_Parameters = new ArrayList<String>();
 		//	
@@ -467,7 +459,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param value
 	 * @return DB
 	 */
-	public DB addDate(Date value) {
+	public synchronized DB addDate(Date value) {
 		if(m_Parameters == null)
 			m_Parameters = new ArrayList<String>();
 		//	Get JDBC Value
@@ -485,7 +477,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param value
 	 * @return DB
 	 */
-	public DB addBoolean(boolean value) {
+	public synchronized DB addBoolean(boolean value) {
 		if(m_Parameters == null)
 			m_Parameters = new ArrayList<String>();
 		//	Get JDBC Value
@@ -503,7 +495,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param value
 	 * @return DB
 	 */
-	public DB addDateTime(Date value) {
+	public synchronized DB addDateTime(Date value) {
 		if(m_Parameters == null)
 			m_Parameters = new ArrayList<String>();
 		//	Get JDBC Value
@@ -521,7 +513,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param value
 	 * @return DB
 	 */
-	public DB addParameter(Object value) {
+	public synchronized DB addParameter(Object value) {
 		if(m_Parameters == null)
 			m_Parameters = new ArrayList<String>();
 		//	Validate
@@ -546,7 +538,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 28/10/2014, 20:13:05
 	 * @return void
 	 */
-	public void clearParameters() {
+	public synchronized void clearParameters() {
 		m_Parameters = new ArrayList<String>();
 	}
 	
@@ -556,7 +548,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return Cursor
 	 */
-	public Cursor querySQL() {
+	public synchronized Cursor querySQL() {
 		String [] values = null;
 		//	Add Parameters
 		if(m_Parameters != null
@@ -573,7 +565,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return void
 	 */
-	public void executeSQL() {
+	public synchronized void executeSQL() {
 		Object [] values = null;
 		//	Add Parameters
 		if(m_Parameters != null
@@ -592,14 +584,12 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return DB
 	 */
-	public static DB getInstance(Context ctx) {
-		synchronized (LOCK) {
-			if(m_Connection == null) {
-				m_Connection = new DB(ctx);
-			}
-			//	Connection Return
-			return m_Connection;
+	public synchronized static DB getInstance(Context ctx) {
+		if(m_Connection == null) {
+			m_Connection = new DB(ctx);
 		}
+		//	Connection Return
+		return m_Connection;
 	}
 	
 	/**
@@ -610,13 +600,11 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 */
 	public static void loadConnection(DB conn, int type) {
-		synchronized (LOCK) {
-			if(conn != null
-					&& !conn.isOpen()) {
-				conn.openDB(type);
-				if(type == READ_WRITE)
-					conn.beginTransaction();
-			}
+		if(conn != null
+				&& !conn.isOpen()) {
+			conn.openDB(type);
+			if(type == READ_WRITE)
+				conn.beginTransaction();
 		}
     }
 	
@@ -627,15 +615,13 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param type
 	 * @return void
 	 */
-	public static DB loadConnection(Context ctx, int type) {
-		synchronized (LOCK) {
-			DB conn = new DB(ctx);
-			conn.openDB(type);
-			if(type == READ_WRITE)
-				conn.beginTransaction();
-			//	Return
-			return conn;
-		}
+	public synchronized static DB loadConnection(Context ctx, int type) {
+		DB conn = new DB(ctx);
+		conn.openDB(type);
+		if(type == READ_WRITE)
+			conn.beginTransaction();
+		//	Return
+		return conn;
     }
 	
 	/**
@@ -644,16 +630,19 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @param conn
 	 * @return void
 	 */
-	public static void closeConnection(DB conn) {
-		synchronized (LOCK) {
-			if(conn != null 
-					&& conn.isOpen()) {
-				if(conn.inTransaction())
-					conn.endTransaction();
-				conn.close();
-			}
+	public synchronized static void closeConnection(DB conn) {
+		if(conn != null 
+				&& conn.isOpen()) {
+			if(conn.inTransaction())
+				conn.endTransaction();
+			conn.close();
 		}
     }
+	
+	@Override
+	public synchronized void close() {
+		DB_Manager.getInstance().close();
+	}
 	
 	/**
 	 * Execute Update.
@@ -665,7 +654,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return int
 	 */
-	public static int executeUpdate(Context ctx, String sql, int param, DB conn) {
+	public synchronized static int executeUpdate(Context ctx, String sql, int param, DB conn) {
 		int no = -1;
 		try {
 			no = executeUpdate (ctx, sql, param, true, conn);
@@ -684,7 +673,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return int
 	 */
-	public static int executeUpdate(Context ctx, String sql, DB conn) {
+	public synchronized static int executeUpdate(Context ctx, String sql, DB conn) {
 		int no = -1;
 		try {
 			no = executeUpdate(ctx, sql, null, true, conn);
@@ -703,7 +692,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return int
 	 */
-	public static int executeUpdate(Context ctx, String sql, int param) {
+	public synchronized static int executeUpdate(Context ctx, String sql, int param) {
 		return executeUpdate(ctx, sql, param, null);
 	}
 	
@@ -717,7 +706,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @throws Exception
 	 * @return int
 	 */
-	public static int executeUpdateEx(Context ctx, String sql, DB conn) throws Exception {
+	public synchronized static int executeUpdateEx(Context ctx, String sql, DB conn) throws Exception {
 		return executeUpdate(ctx, sql, null, false, conn);
 	}
 
@@ -732,7 +721,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return int
 	 * @throws Exception 
 	 */
-	public static int executeUpdate (Context ctx, String sql, int param, boolean ignoreError) throws Exception{
+	public synchronized static int executeUpdate (Context ctx, String sql, int param, boolean ignoreError) throws Exception{
 		return executeUpdate(ctx, sql, new Object[]{param}, ignoreError, null);
 	}
 	
@@ -748,7 +737,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @throws Exception
 	 * @return int
 	 */
-	public static int executeUpdate (Context ctx, String sql, int param, boolean ignoreError, DB conn) throws Exception{
+	public synchronized static int executeUpdate (Context ctx, String sql, int param, boolean ignoreError, DB conn) throws Exception{
 		return executeUpdate(ctx, sql, new Object[]{param}, ignoreError, conn);
 	}
 	
@@ -764,7 +753,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return int
 	 * @throws Exception 
 	 */
-	public static int executeUpdate (Context ctx, String sql, Object[] params, boolean ignoreError, DB conn) throws Exception{
+	public synchronized static int executeUpdate (Context ctx, String sql, Object[] params, boolean ignoreError, DB conn) throws Exception{
 		if (sql == null || sql.length() == 0)
 			throw new IllegalArgumentException("Required parameter missing - " + sql);
 		//	
@@ -811,7 +800,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return String
 	 */
-	public static String getSQLValueStringEx(Context ctx, String sql, DB conn, String... params) {
+	public synchronized static String getSQLValueStringEx(Context ctx, String sql, DB conn, String... params) {
 		boolean handConnection = false;
 		//	Instance Connection
 		if(conn == null) {
@@ -845,7 +834,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return String
 	 */
-	public static String getSQLValueStringEx(Context ctx, String sql, String... params) {
+	public synchronized static String getSQLValueStringEx(Context ctx, String sql, String... params) {
 		 return getSQLValueStringEx(ctx, sql, null, params);
 	}
 	
@@ -861,7 +850,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return KeyNamePair[]
 	 * @throws Exception 
 	 */
-	public static KeyNamePair[] getKeyNamePairsEx(Context ctx, String sql, boolean optional, DB conn, String... params) throws Exception {
+	public synchronized static KeyNamePair[] getKeyNamePairsEx(Context ctx, String sql, boolean optional, DB conn, String... params) throws Exception {
 		ArrayList<KeyNamePair> list = new ArrayList<KeyNamePair>();
         //	If is Optional
 		if (optional) {
@@ -914,7 +903,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @throws Exception
 	 * @return MultiKeyNamePair[]
 	 */
-	public static MultiKeyNamePair[] getMultiKeyNamePairsEx(Context ctx, String sql, 
+	public synchronized static MultiKeyNamePair[] getMultiKeyNamePairsEx(Context ctx, String sql, 
 			int keyCount, boolean optional, DB conn, String... params) throws Exception {
 		ArrayList<MultiKeyNamePair> list = new ArrayList<MultiKeyNamePair>();
         //	If is Optional
@@ -974,7 +963,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return KeyNamePair[]
 	 * @throws Exception 
 	 */
-	public static KeyNamePair[] getKeyNamePairsEx(Context ctx, String sql, boolean optional, String... params) throws Exception {
+	public synchronized static KeyNamePair[] getKeyNamePairsEx(Context ctx, String sql, boolean optional, String... params) throws Exception {
 		return getKeyNamePairsEx(ctx, sql, optional, null, params);
 	}
 	
@@ -990,7 +979,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @throws Exception
 	 * @return MultiKeyNamePair[]
 	 */
-	public static MultiKeyNamePair[] getMultiKeyNamePairsEx(Context ctx, String sql, int keyCount, boolean optional, String... params) throws Exception {
+	public synchronized static MultiKeyNamePair[] getMultiKeyNamePairsEx(Context ctx, String sql, int keyCount, boolean optional, String... params) throws Exception {
 		return getMultiKeyNamePairsEx(ctx, sql, keyCount, optional, null, params);
 	}
 	
@@ -1004,7 +993,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return KeyNamePair[]
 	 */
-	public static KeyNamePair[] getKeyNamePairs(Context ctx, String sql, DB conn, String... params) {
+	public synchronized static KeyNamePair[] getKeyNamePairs(Context ctx, String sql, DB conn, String... params) {
 		KeyNamePair[] retValue = null;
 		try{
 			retValue = getKeyNamePairsEx(ctx, sql, false, conn, params);
@@ -1025,7 +1014,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return MultiKeyNamePair[]
 	 */
-	public static MultiKeyNamePair[] getMultiKeyNamePairs(Context ctx, String sql, int keyCount, DB conn, String... params) {
+	public synchronized static MultiKeyNamePair[] getMultiKeyNamePairs(Context ctx, String sql, int keyCount, DB conn, String... params) {
 		MultiKeyNamePair[] retValue = null;
 		try{
 			retValue = getMultiKeyNamePairsEx(ctx, sql, keyCount, false, conn, params);
@@ -1044,7 +1033,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return KeyNamePair[]
 	 */
-	public static KeyNamePair[] getKeyNamePairs(Context ctx, String sql, String... params) {
+	public synchronized static KeyNamePair[] getKeyNamePairs(Context ctx, String sql, String... params) {
 		return getKeyNamePairs(ctx, sql, null, params);
 	}
 	
@@ -1057,7 +1046,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return KeyNamePair[]
 	 */
-	public static KeyNamePair[] getKeyNamePairs(Context ctx, String sql, int param) {
+	public synchronized static KeyNamePair[] getKeyNamePairs(Context ctx, String sql, int param) {
 		return getKeyNamePairs(ctx, sql, null, new String[]{String.valueOf(param)});
 	}
 	
@@ -1071,7 +1060,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return MultiKeyNamePair[]
 	 */
-	public static MultiKeyNamePair[] getMultiKeyNamePairs(Context ctx, String sql, int keyCount, int param) {
+	public synchronized static MultiKeyNamePair[] getMultiKeyNamePairs(Context ctx, String sql, int keyCount, int param) {
 		return getMultiKeyNamePairs(ctx, sql, keyCount, null, new String[]{String.valueOf(param)});
 	}
 	
@@ -1085,7 +1074,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return MultiKeyNamePair[]
 	 */
-	public static MultiKeyNamePair[] getMultiKeyNamePairs(Context ctx, String sql, int keyColumn, String... params) {
+	public synchronized static MultiKeyNamePair[] getMultiKeyNamePairs(Context ctx, String sql, int keyColumn, String... params) {
 		return getMultiKeyNamePairs(ctx, sql, keyColumn, null, params);
 	}
 	
@@ -1099,7 +1088,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return int
 	 */
-	public static int getSQLValueEx(Context ctx, String sql, DB conn, String... params) {
+	public synchronized static int getSQLValueEx(Context ctx, String sql, DB conn, String... params) {
 		boolean handConnection = false;
 		//	Instance Connection
 		if(conn == null) {
@@ -1131,7 +1120,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return int
 	 */
-	public static int getSQLValueEx(Context ctx, String sql, String... params) {
+	public synchronized static int getSQLValueEx(Context ctx, String sql, String... params) {
 		return getSQLValueEx(ctx, sql, null, params);
 	}
 	
@@ -1143,7 +1132,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return int
 	 */
-	public static int getSQLValueEx(Context ctx, String sql) {
+	public synchronized static int getSQLValueEx(Context ctx, String sql) {
 		return getSQLValueEx(ctx, sql, null, (String[])null);
 	}
 	
@@ -1155,7 +1144,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return int
 	 */
-	public static int getSQLValue(Context ctx, String sql) {
+	public synchronized static int getSQLValue(Context ctx, String sql) {
 		return getSQLValue(ctx, sql, null, (String[])null);
 	}
 	
@@ -1169,7 +1158,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return int
 	 */
-	public static int getSQLValue(Context ctx, String sql, DB conn, String... params) {
+	public synchronized static int getSQLValue(Context ctx, String sql, DB conn, String... params) {
 		int retValue = -1;
 		try{
 			retValue = getSQLValueEx(ctx, sql, conn, params);
@@ -1188,7 +1177,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return int
 	 */
-	public static int getSQLValue(Context ctx, String sql, String... params) {
+	public synchronized static int getSQLValue(Context ctx, String sql, String... params) {
 		return getSQLValue(ctx, sql, null, params);
 	}
 	
@@ -1200,7 +1189,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return String
 	 */
-	public static String getSQLValueStringEx(Context ctx, String sql) {
+	public synchronized static String getSQLValueStringEx(Context ctx, String sql) {
 		return getSQLValueStringEx(ctx, sql, (String[])null);
 	}
 	
@@ -1212,7 +1201,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return String
 	 */
-	public static String getSQLValueString(Context ctx, String sql) {
+	public synchronized static String getSQLValueString(Context ctx, String sql) {
 		String retValue = null;
 		try{
 			retValue = getSQLValueStringEx(ctx, sql, (String[])null);
@@ -1231,7 +1220,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return String
 	 */
-	public static String getSQLValueString(Context ctx, String sql, String... params) {
+	public synchronized static String getSQLValueString(Context ctx, String sql, String... params) {
 		String retValue = null;
 		try{
 			retValue = getSQLValueStringEx(ctx, sql, params);
@@ -1251,7 +1240,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return String
 	 */
-	public static String getSQLValueString(Context ctx, String sql, DB conn, String... params) {
+	public synchronized static String getSQLValueString(Context ctx, String sql, DB conn, String... params) {
 		String retValue = null;
 		try{
 			retValue = getSQLValueStringEx(ctx, sql, conn, params);
@@ -1267,7 +1256,7 @@ public class DB extends SQLiteOpenHelper implements Serializable {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean inTransaction(){
+	public synchronized boolean inTransaction(){
 		return getDB().inTransaction();
 	}
 }

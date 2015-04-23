@@ -44,5 +44,6 @@
 	<string name="tt_TestConn">Test Connection</string>
 	<string name="tt_Conn">Connection</string>
 	<string name="tt_LoginRole">Login Role</string>
+	<string name="LoadTestData">Load Test Data</string>
 	
 </resources>

@@ -59,6 +59,8 @@ public class MQTTConnection {
 	private boolean 				m_IsSubscribe = false;
 	/**	Current Subscriptions		*/
 	private ArrayList<String>		m_SubscribedTopics = null;
+	/**	Status						*/
+	private int						m_Status = 0;
 	
 	/**	QoS									*/
 	public static final int			AT_MOST_ONCE_0 				= 0;
@@ -77,6 +79,12 @@ public class MQTTConnection {
 	private static final String		MQTT_PASSWORD 				= "#MQTT_Password";
 	private static final String		MQTT_TIMEOUT 				= "#MQTT_Timeout";
 	private static final String		MQTT_IS_RELOAD_SERVICE 		= "#MQTT_IsreloadService";
+	
+	/**	Connection Status					*/
+	public static final int			CONNECTED					= 1;
+	public static final int			DISCONNECTED				= 2;
+	public static final int			TRY_CONNECTING				= 3;
+	
 	
 	/**
 	 * Default Constructor
@@ -150,6 +158,26 @@ public class MQTTConnection {
 	}
 	
 	/**
+	 * Set Status
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Status
+	 * @return void
+	 */
+	public void setStatus(int p_Status) {
+		m_Status = p_Status;
+	}
+	
+	/**
+	 * Get Status
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return int
+	 */
+	public int getStatus() {
+		return m_Status;
+	}
+	
+	/**
 	 * Set Subscribed
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_IsSubscribe
@@ -177,7 +205,7 @@ public class MQTTConnection {
 	 * @return String
 	 */
 	public static String getClient_ID(Context p_Ctx) {
-		return Env.getContext(MQTT_CLIENT_ID);
+		return Env.getContext(p_Ctx, MQTT_CLIENT_ID);
 	}
 	
 	/**
@@ -188,7 +216,7 @@ public class MQTTConnection {
 	 * @return void
 	 */
 	public static void setClient_ID(Context p_Ctx, String p_Client_ID) {
-		Env.setContext(MQTT_CLIENT_ID, p_Client_ID);
+		Env.setContext(p_Ctx, MQTT_CLIENT_ID, p_Client_ID);
 	}
 	
 	/**
@@ -199,7 +227,7 @@ public class MQTTConnection {
 	 * @return String
 	 */
 	public static String getHost(Context p_Ctx) {
-		return Env.getContext(MQTT_HOST);
+		return Env.getContext(p_Ctx, MQTT_HOST);
 	}
 	
 	/**
@@ -210,7 +238,7 @@ public class MQTTConnection {
 	 * @return void
 	 */
 	public static void setHost(Context p_Ctx, String p_Host) {
-		Env.setContext(MQTT_HOST, p_Host);
+		Env.setContext(p_Ctx, MQTT_HOST, p_Host);
 	}
 	
 	/**
@@ -221,7 +249,7 @@ public class MQTTConnection {
 	 * @return String
 	 */
 	public static String getSSLFilePath(Context p_Ctx) {
-		return Env.getContext(MQTT_SSL_FILE_PATH);
+		return Env.getContext(p_Ctx, MQTT_SSL_FILE_PATH);
 	}
 	
 	/**
@@ -232,7 +260,7 @@ public class MQTTConnection {
 	 * @return void
 	 */
 	public static void setSSLFilePath(Context p_Ctx, String p_SSLFilePath) {
-		Env.setContext(MQTT_SSL_FILE_PATH, p_SSLFilePath);
+		Env.setContext(p_Ctx, MQTT_SSL_FILE_PATH, p_SSLFilePath);
 	}
 	/**
 	 * Get MQTT Port
@@ -253,7 +281,7 @@ public class MQTTConnection {
 	 * @return void
 	 */
 	public static void setPort(Context p_Ctx, int p_Port) {
-		Env.setContext(MQTT_PORT, p_Port);
+		Env.setContext(p_Ctx, MQTT_PORT, p_Port);
 	}
 	
 	/**
@@ -275,7 +303,7 @@ public class MQTTConnection {
 	 * @return void
 	 */
 	public static void setTimeout(Context p_Ctx, int p_Timeout) {
-		Env.setContext(MQTT_TIMEOUT, p_Timeout);
+		Env.setContext(p_Ctx, MQTT_TIMEOUT, p_Timeout);
 	}
 	
 	/**
@@ -286,7 +314,7 @@ public class MQTTConnection {
 	 * @return boolean
 	 */
 	public static boolean isSSLConnection(Context p_Ctx) {
-		return Env.getContextAsBoolean(MQTT_IS_SSL_CONNECTION);
+		return Env.getContextAsBoolean(p_Ctx, MQTT_IS_SSL_CONNECTION);
 	}
 	
 	/**
@@ -297,7 +325,7 @@ public class MQTTConnection {
 	 * @return void
 	 */
 	public static void setIsSSLConnection(Context p_Ctx, boolean p_IsSSLConnection) {
-		Env.setContext(MQTT_IS_SSL_CONNECTION, p_IsSSLConnection);
+		Env.setContext(p_Ctx, MQTT_IS_SSL_CONNECTION, p_IsSSLConnection);
 	}
 	
 	/**
@@ -308,7 +336,7 @@ public class MQTTConnection {
 	 * @return boolean
 	 */
 	public static boolean isAutomaticService(Context p_Ctx) {
-		return Env.getContextAsBoolean(MQTT_IS_AUTOMATIC_SERVICE);
+		return Env.getContextAsBoolean(p_Ctx, MQTT_IS_AUTOMATIC_SERVICE);
 	}
 	
 	/**
@@ -319,7 +347,7 @@ public class MQTTConnection {
 	 * @return void
 	 */
 	public static void setIsAutomaticService(Context p_Ctx, boolean p_IsAutomaticService) {
-		Env.setContext(MQTT_IS_AUTOMATIC_SERVICE, p_IsAutomaticService);
+		Env.setContext(p_Ctx, MQTT_IS_AUTOMATIC_SERVICE, p_IsAutomaticService);
 	}
 	
 	/**
@@ -330,7 +358,7 @@ public class MQTTConnection {
 	 * @return boolean
 	 */
 	public static boolean isReloadService(Context p_Ctx) {
-		return Env.getContextAsBoolean(MQTT_IS_RELOAD_SERVICE);
+		return Env.getContextAsBoolean(p_Ctx, MQTT_IS_RELOAD_SERVICE);
 	}
 	
 	/**
@@ -341,7 +369,7 @@ public class MQTTConnection {
 	 * @return void
 	 */
 	public static void setIsReloadService(Context p_Ctx, boolean p_IsReloadService) {
-		Env.setContext(MQTT_IS_RELOAD_SERVICE, p_IsReloadService);
+		Env.setContext(p_Ctx, MQTT_IS_RELOAD_SERVICE, p_IsReloadService);
 	}
 	
 	/**
@@ -374,7 +402,7 @@ public class MQTTConnection {
 	 * @return boolean
 	 */
 	public static boolean isNetworkOk(Context p_Ctx) {
-		return Env.getContextAsBoolean(MQTT_NETWORK_OK);
+		return Env.getContextAsBoolean(p_Ctx, MQTT_NETWORK_OK);
 	}
 	
 	/**
@@ -396,7 +424,7 @@ public class MQTTConnection {
 	 * @return String
 	 */
 	public static String getMQTTUser(Context p_Ctx) {
-		return Env.getContext(MQTT_USER_NAME);
+		return Env.getContext(p_Ctx, MQTT_USER_NAME);
 	}
 	
 	/**
@@ -407,7 +435,7 @@ public class MQTTConnection {
 	 * @return void
 	 */
 	public static void setMQTTUser(Context p_Ctx, String p_UserName) {
-		Env.setContext(MQTT_USER_NAME, p_UserName);
+		Env.setContext(p_Ctx, MQTT_USER_NAME, p_UserName);
 	}
 	
 	/**
@@ -418,7 +446,7 @@ public class MQTTConnection {
 	 * @return String
 	 */
 	public static String getMQTTPass(Context p_Ctx) {
-		String pass = Env.getContext(MQTT_PASSWORD);
+		String pass = Env.getContext(p_Ctx, MQTT_PASSWORD);
 		//	Valid Null
 		if(pass == null)
 			pass = "";
@@ -434,7 +462,7 @@ public class MQTTConnection {
 	 * @return void
 	 */
 	public static void setMQTTPassword(Context p_Ctx, String p_Password) {
-		Env.setContext(MQTT_PASSWORD, p_Password);
+		Env.setContext(p_Ctx, MQTT_PASSWORD, p_Password);
 	}
 	
 	/**
@@ -449,17 +477,13 @@ public class MQTTConnection {
 	 * @return MQTTConnection
 	 */
 	public static MQTTConnection getInstance(Context p_Ctx, IMqttActionListener p_ConnectionListener, 
-			MqttCallback p_Callback, String[] p_SubscribedTopics, boolean reLoad) {
+			String[] p_SubscribedTopics, boolean reLoad) {
 		if(m_Connection == null
 				|| reLoad) {
 			m_Connection = new MQTTConnection(p_Ctx, p_ConnectionListener, p_SubscribedTopics);
 			//	Set to false reload
 			if(reLoad) {
 				MQTTConnection.setIsAutomaticService(p_Ctx, false);
-			}
-			if(p_Callback != null
-					&& m_Connection.getCallback() == null) {
-				m_Connection.setCallback(p_Callback);
 			}
 		}
 		//	Default Return
@@ -477,8 +501,8 @@ public class MQTTConnection {
 	 * @return MQTTConnection
 	 */
 	public static MQTTConnection getInstance(Context p_Ctx, IMqttActionListener p_ConnectionListener, 
-			MqttCallback p_Callback, boolean reLoad) {
-		return getInstance(p_Ctx, p_ConnectionListener, p_Callback, null, reLoad);
+			boolean reLoad) {
+		return getInstance(p_Ctx, p_ConnectionListener, null, reLoad);
 	}
 	
 	/**
@@ -521,9 +545,6 @@ public class MQTTConnection {
 	 */
 	public void setCallback(MqttCallback p_Callback) {
 		m_Callback = p_Callback;
-		if(m_ClientLink != null) {
-			m_ClientLink.setCallback(m_Callback);
-		}
 	}
 	
 	/**
@@ -541,15 +562,17 @@ public class MQTTConnection {
 		String serverURI = createURI(m_Client_ID, m_Host, m_Port, m_IsSSLConnection);
 		if(m_ClientLink == null) {
 			m_ClientLink = new MqttAndroidClient(m_Ctx, serverURI, m_Client_ID);
+			//	Set Call Back
+			if(m_Callback != null) {
+				m_ClientLink.setCallback(m_Callback);
+			}
 		} else if(m_ClientLink.isConnected()) {
 			return;
-		}
-		//	Set Call Back
-		if(m_Callback != null) {
-			m_ClientLink.setCallback(m_Callback);
+		} else {
+			m_ClientLink.unregisterResources();
 		}
 		//	Connect
-		m_ClientLink.connect(m_ConnectionOption, null, m_ConnectionListener);
+		m_ClientLink.connect(m_ConnectionOption, m_Ctx, m_ConnectionListener);
 	}
 	
 	/**
@@ -850,7 +873,12 @@ public class MQTTConnection {
 	@Override
 	public String toString() {
 		return "MQTTConnection [m_Client_ID=" + m_Client_ID + ", m_Host="
-				+ m_Host + ", m_Port=" + m_Port + ", m_IsSSLConnection="
-				+ m_IsSSLConnection + ", isConnected()=" + isConnected() + "]";
+				+ m_Host + ", m_Port=" + m_Port + ", m_ClientLink="
+				+ m_ClientLink + ", m_ConnectionOption=" + m_ConnectionOption
+				+ ", m_IsSSLConnection=" + m_IsSSLConnection
+				+ ", m_ConnectionListener=" + m_ConnectionListener
+				+ ", m_Callback=" + m_Callback + ", m_Ctx=" + m_Ctx
+				+ ", m_IsSubscribe=" + m_IsSubscribe + ", m_SubscribedTopics="
+				+ m_SubscribedTopics + "]";
 	}
 }

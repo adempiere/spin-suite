@@ -19,12 +19,14 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.spinsuite.base.R;
-import org.spinsuite.bchat.model.SPS_BC_Message;
 import org.spinsuite.bchat.util.BC_ThreadHolder;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
+import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.util.AttachmentHandler;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.ImageCacheLru;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -63,6 +65,9 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		m_SelectedItems = new SparseBooleanArray();
 		inflater = LayoutInflater.from(ctx);
 		m_DirectoryApp = Env.getBC_IMG_DirectoryPathName(ctx) + File.separator;
+		int memClass = ((ActivityManager)ctx.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
+		int maxSize = 1024 * 1024 * memClass / 8;
+		m_ImageCache = new ImageCacheLru(maxSize);
 	}
 
 	/**	Context						*/
@@ -81,12 +86,16 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 	private boolean 								isGroup = false;
 	/**	Directory by Default		*/
 	private String									m_DirectoryApp = null;
+	/**	Images Cache				*/
+	private ImageCacheLru							m_ImageCache = null;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = convertView;
 		final BC_ThreadHolder msgHolder;
 		DisplayBChatThreadItem diti = data.get(position);
+		//	Image Key
+		String imageKey = m_DirectoryApp + diti.getFileName();
 		if(view == null) {
 			msgHolder = new BC_ThreadHolder();
 			view = inflater.inflate(id_View, null);
@@ -107,7 +116,7 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		msgHolder.tv_UserName.setText(diti.getUserName());
 		//	Set Visibility
 		if(!isGroup
-				|| !diti.getType().equals(SPS_BC_Message.TYPE_IN)) {
+				|| !diti.getType().equals(MQTTDefaultValues.TYPE_IN)) {
 			msgHolder.tv_UserName.setVisibility(View.GONE);
 		} else {
 			msgHolder.tv_UserName.setVisibility(View.VISIBLE);
@@ -115,7 +124,11 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		//	For Image
 		if(diti.getFileName() != null
 				&& diti.getFileName().length() > 0) {
-			Bitmap bmimage = AttachmentHandler.getBitmapFromFile(m_DirectoryApp + diti.getFileName(), 500, 500);
+			Bitmap bmimage = m_ImageCache.get(imageKey);
+			if(bmimage == null) {
+				bmimage = AttachmentHandler.getBitmapFromFile(imageKey, 300, 300);
+				m_ImageCache.put(imageKey, bmimage);
+			}
 			msgHolder.rl_Conversation.setBackgroundDrawable(new BitmapDrawable(ctx.getResources(), bmimage));
 		} else {
 			msgHolder.rl_Conversation.setBackgroundDrawable(null);
@@ -123,7 +136,7 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		//	
 		int id_att = R.attr.ic_bc_bubble_local;
 		//	For Type Message change Background
-		if(diti.getType().equals(SPS_BC_Message.TYPE_IN)) {
+		if(diti.getType().equals(MQTTDefaultValues.TYPE_IN)) {
 			//	Change Position
 			msgHolder.tv_UserName.setGravity(Gravity.START);
 			//	
@@ -133,6 +146,13 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 				id_att = R.attr.ic_bc_bubble_remote;
 			}
 		} else {
+			if(diti.getStatus().equals(MQTTDefaultValues.STATUS_CREATED)) {
+				id_att = R.attr.ic_bc_bubble_local;
+			} else if(diti.getStatus().equals(MQTTDefaultValues.STATUS_SENT)) {
+				id_att = R.attr.ic_bc_bubble_local_sent;
+			} else if(diti.getStatus().equals(MQTTDefaultValues.STATUS_DELIVERED)) {
+				id_att = R.attr.ic_bc_bubble_local_delivered;
+			}
 			//	
 			if(m_SelectedItems.get(position)) {
 				id_att = R.attr.ic_bc_bubble_local_selected;
@@ -275,5 +295,24 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 	public void remove(DisplayBChatThreadItem object) {
 		data.remove(object);
 		notifyDataSetChanged();
+	}
+	
+	/**
+	 * Change a Message
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_SPS_BC_Message_ID
+	 * @param p_Status
+	 * @return void
+	 */
+	public void changeMsgStatus(int p_SPS_BC_Message_ID, String p_Status) {
+		for(int i = 0; i < data.size(); i++) {
+			DisplayBChatThreadItem item = data.get(i);
+            if(item.getRecord_ID() == p_SPS_BC_Message_ID) {
+            	item.setStatus(p_Status);
+            	data.set(i, item);
+            	//	Break
+            	break;
+            }
+        }
 	}
 }

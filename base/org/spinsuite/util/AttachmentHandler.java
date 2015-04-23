@@ -22,9 +22,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.util.logging.Level;
 
+import org.spinsuite.base.R;
+
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -351,5 +356,87 @@ public class AttachmentHandler {
 		String [] m_FileName = directory.list();
 		//	Verify if has files
 		return m_FileName != null && m_FileName.length > 0;
+	}
+	
+	/**
+	 * Show a image
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param uriPath
+	 * @return void
+	 */
+	public static void showAttachment(Context ctx, Uri uriPath) {
+		boolean ok = false;
+		try {
+			//	Launch Application
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			//	Set Data Type
+			if(isGraphic(uriPath.toString()))
+				intent.setDataAndType(uriPath, "image/*");
+			else if(isPDF(uriPath.toString()))
+				intent.setDataAndType(uriPath, "application/pdf");
+			else 
+				intent.setDataAndType(uriPath, "*/*");
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			//	Start Activity
+			ctx.startActivity(intent);
+			//	
+			ok = true;
+		} catch (ActivityNotFoundException e) {
+			LogM.log(ctx, AttachmentHandler.class, Level.WARNING, 
+					"Error Launch Image: " + e.getLocalizedMessage());
+		}
+		//	Show Toast
+		if(!ok) {
+			Msg.toastMsg(ctx, ctx.getString(R.string.msg_AppIsNotAssociated));
+		}
+
+	}
+	
+	/**
+	 * 	Is attachment entry a PDF
+	 *  @param fileName
+	 *	@return true if PDF
+	 */
+	public static boolean isPDF(String fileName) {
+		return fileName.toLowerCase(Env.getLocate()).endsWith(".pdf");
+	}	//	isPDF
+	
+	/**
+	 * 	Is attachment entry a Graphic
+	 *  @param fileName
+	 *	@return true if *.gif, *.jpg, *.png
+	 */
+	public static boolean isGraphic(String fileName) {
+		String m_lowname = fileName.toLowerCase(Env.getLocate());
+		return m_lowname.endsWith(".gif") 
+				|| m_lowname.endsWith(".jpg")
+				|| m_lowname.endsWith(".jpeg")
+				|| m_lowname.endsWith(".png");
+	}	//	isGraphic
+	
+	/**
+	 * Get Pretty Size
+	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 11/11/2014, 13:39:39
+	 * @param ctx
+	 * @param file
+	 * @return
+	 * @return String
+	 */
+	public static String getPrettySize(Context ctx, File file) {
+		DecimalFormat m_numberFormat = DisplayType
+				.getNumberFormat(ctx, DisplayType.AMOUNT, "###,###,###.##");
+		float size = file.length();
+		if (size <= 1024) {
+			return m_numberFormat.format(size) + " B";
+		} else {
+			size /= 1024;
+			if (size > 1024) {
+				size /= 1024;
+				return m_numberFormat.format(size) + " MB";
+			} else {
+				return m_numberFormat.format(size) + " kB";
+			}
+		}
 	}
 }

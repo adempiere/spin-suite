@@ -37,6 +37,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 /**
@@ -68,6 +69,8 @@ public class T_Login_Init extends DialogFragment
 	private EditText 	et_MQTT_ServerPort;
 	/**	MQTT File Path			*/
 	private Button 		bt_MQTT_SSL_File_Path;
+	/**	Load Default Data		*/
+	private CheckBox	ch_ch_LoadTestData;
 	/**	Context					*/
 	private Activity 	m_Callback = null;
 	
@@ -98,7 +101,8 @@ public class T_Login_Init extends DialogFragment
     	et_MQTT_ServerUser 		= (EditText) view.findViewById(R.id.et_MQTT_ServerUser);
     	et_MQTT_ServerPass 		= (EditText) view.findViewById(R.id.et_MQTT_ServerPass);
     	et_MQTT_ServerPort 		= (EditText) view.findViewById(R.id.et_MQTT_ServerPort);
-    	bt_MQTT_SSL_File_Path 	= (Button) view.findViewById(R.id.bt_MQTT_SSL_File_Path);
+    	bt_MQTT_SSL_File_Path 	= (Button) 	 view.findViewById(R.id.bt_MQTT_SSL_File_Path);
+    	ch_ch_LoadTestData		= (CheckBox) view.findViewById(R.id.ch_LoadTestData);
 		//	Set Authentication for test
 		et_User.setText(SyncValues.DEFAULT_AD_USER);
 		et_PassWord.setText(SyncValues.DEFAULT_AD_PASS);
@@ -110,6 +114,7 @@ public class T_Login_Init extends DialogFragment
     	et_MQTT_ServerUser.setText(MQTTDefaultValues.DEFAULT_MQTT_USER);
     	et_MQTT_ServerPass.setText(MQTTDefaultValues.DEFAULT_MQTT_PASS);
     	et_MQTT_ServerPort.setText(String.valueOf(MQTTDefaultValues.DEFAULT_MQTT_PORT));
+    	ch_ch_LoadTestData.setChecked(false);
 		//	
 		builder.setView(view);
 		//	
@@ -136,6 +141,12 @@ public class T_Login_Init extends DialogFragment
 	 * @return void
 	 */
 	public void startSynchronization() {
+		if(ch_ch_LoadTestData.isChecked()) {
+			((Login)m_Callback).loadDefaultData();
+			//	Default Return
+			return;
+		}
+		//	Else
 		Env.setContext("#SUrlSoap", et_UrlServer.getText().toString());
 		Env.setContext("#SMethod", SyncValues.DEFAULT_METHOD);
 		Env.setContext("#SNameSpace", SyncValues.DEFAULT_NAME_SPACE);
@@ -193,29 +204,6 @@ public class T_Login_Init extends DialogFragment
 		Intent m_Service = new Intent(getActivity(), SyncService.class);
 		m_Service.putExtras(bundle);
 		m_Callback.startService(m_Service);
-		//	
-//		InitialLoadTask ilt = new InitialLoadTask(SyncValues.getInitialUrl(url), 
-//				SyncValues.DEFAULT_NAME_SPACE, 
-//				SyncValues.DEFAULT_METHOD, true, 
-//				et_User.getText().toString(), 
-//				et_PassWord.getText().toString(), 
-//				SyncValues.DEFAULT_NAME_SPACE + SyncValues.DEFAULT_METHOD, 
-//				m_Callback, Env.getContextAsInt(m_Callback, "#Timeout"));
-		//	
-		//ilt.runTask();
-		//	
-		//if(!Env.isEnvLoad(getActivity())) {
-			
-//			RemoteViews contentView = new RemoteViews(this.getPackageName(), R.layout.v_progressdialog);
-//	        contentView.setImageViewResource(R.id.iV_Synchronizing, R.drawable.syncserver_m);
-//	        contentView.setTextViewText(R.id.tV_CurrentSinchronizing, this.getResources().getString(R.string.msg_CallingWebService));
-//	        contentView.setTextViewText(R.id.tV_Percentaje, "0%");
-//	        
-//	        NotificationManager notify = Msg.notificationMsg(this, R.drawable.syncserver_h, "",0, this.getParent().getIntent(), contentView);
-//	        m_load.setContentView(contentView);
-//	        m_load.setM_NotificationManager(notify);
-//			m_load.execute();
-		//}
 	}
 	
 	/**
