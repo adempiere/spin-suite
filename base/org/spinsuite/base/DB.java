@@ -567,8 +567,9 @@ public class DB extends SQLiteOpenHelper {
 	 * Excecute Precompiled Query Insert, Update or Delete
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return void
+	 * @throws Exception 
 	 */
-	public synchronized void executeSQL() {
+	public synchronized void executeSQLEx() throws Exception {
 		Object [] values = null;
 		//	Add Parameters
 		if(m_Parameters != null
@@ -577,7 +578,20 @@ public class DB extends SQLiteOpenHelper {
 			m_Parameters.toArray(values);
 		}
 		//	Excecute Query
-		executeSQL(m_SQL, values);
+		executeSQLEx(m_SQL, values);
+	}
+	
+	/**
+	 * Execute SQL without Exception
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	public synchronized void executeSQL() {
+		try {
+			executeSQLEx();
+		} catch (Exception e) {
+			LogM.log(ctx, DB.class, Level.SEVERE, "Error executeSQL()", e);
+		}
 	}
 	
 	/**

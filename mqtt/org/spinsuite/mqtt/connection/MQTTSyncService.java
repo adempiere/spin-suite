@@ -198,7 +198,7 @@ public class MQTTSyncService extends Service {
 					msgForSend.setLocalClient_ID(m_LocalClient_ID);
 					//	Get Request for Topic
 					SyncRequest request = SPS_BC_Request.getRequest(this, msgForSend.getSPS_BC_Request_ID());
-					byte[] msg = SerializerUtil.serializeObject(msgForSend);
+					byte[] msg = SerializerUtil.serializeObjectEx(msgForSend);
 					MqttMessage message = new MqttMessage(msg);
 					message.setQos(MQTTConnection.EXACTLY_ONCE_2);
 					message.setRetained(true);
@@ -220,12 +220,11 @@ public class MQTTSyncService extends Service {
 	 * @return boolean
 	 */
 	public boolean sendOpenRequest() {
-		try {
-			//	Verify Connection
-			if(m_Connection.isConnected()) {
-				SyncRequest requestList[] = SPS_BC_Request.getRequest(this, MQTTDefaultValues.TYPE_OUT, MQTTDefaultValues.STATUS_CREATED);
-				//	
-				for(SyncRequest request : requestList) {
+		if(m_Connection.isConnected()) {
+			SyncRequest requestList[] = SPS_BC_Request.getRequest(this, MQTTDefaultValues.TYPE_OUT, MQTTDefaultValues.STATUS_CREATED);
+			//	
+			for(SyncRequest request : requestList) {
+				try {
 					m_Connection.subscribeEx(request.getTopicName(), MQTTConnection.EXACTLY_ONCE_2);
 					//	Send Request
 					for(Invited invited : request.getUsers()) {
@@ -234,29 +233,31 @@ public class MQTTSyncService extends Service {
 								|| !invited.getStatus().equals(MQTTDefaultValues.STATUS_CREATED))
 							continue;
 						//	
-						String m_LocalClient_ID = MQTTConnection.getClient_ID(this);
-						request.setLocalClient_ID(m_LocalClient_ID);
-						//	Set User Name
-						if(!request.isGroup()) {
-							request.setName(Env.getContext("#AD_User_Name"));
+						try {
+							String m_LocalClient_ID = MQTTConnection.getClient_ID(this);
+							request.setLocalClient_ID(m_LocalClient_ID);
+							//	Set User Name
+							if(!request.isGroup()) {
+								request.setName(Env.getContext("#AD_User_Name"));
+							}
+							byte[] msg = SerializerUtil.serializeObjectEx(request);
+							MqttMessage message = new MqttMessage(msg);
+							message.setQos(MQTTConnection.EXACTLY_ONCE_2);
+							message.setRetained(true);
+							m_Connection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(invited.getAD_USer_ID())), message);
+							//	Change Status
+							SPS_BC_Request_User.setStatus(this, request.getSPS_BC_Request_ID(), 
+									invited.getAD_USer_ID(), MQTTDefaultValues.STATUS_SENT);
+						} catch (Exception e) {
+							LogM.log(this, getClass(), Level.SEVERE, "Error", e);
 						}
-						byte[] msg = SerializerUtil.serializeObject(request);
-						MqttMessage message = new MqttMessage(msg);
-						message.setQos(MQTTConnection.EXACTLY_ONCE_2);
-						message.setRetained(true);
-						m_Connection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(invited.getAD_USer_ID())), message);
-						//	Change Status
-						SPS_BC_Request_User.setStatus(this, request.getSPS_BC_Request_ID(), 
-								invited.getAD_USer_ID(), MQTTDefaultValues.STATUS_SENT);
 					}
+				} catch (MqttSecurityException e) {
+					LogM.log(this, getClass(), Level.SEVERE, "Error", e);
+				} catch (MqttException e) {
+					LogM.log(this, getClass(), Level.SEVERE, "Error", e);
 				}
 			}
-		} catch (MqttSecurityException e) {
-			LogM.log(this, getClass(), Level.SEVERE, "Error", e);
-		} catch (MqttException e) {
-			LogM.log(this, getClass(), Level.SEVERE, "Error", e);
-		} catch (Exception e) {
-			LogM.log(this, getClass(), Level.SEVERE, "Error", e);
 		}
 		//	Return Ok
 		return true;

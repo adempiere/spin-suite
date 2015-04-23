@@ -144,11 +144,14 @@ public class MQTTConnectionCallback implements MqttCallback {
 				LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error Saving File", e);
 			}
 		}
-		SPS_BC_Message.newInMessage(m_Ctx, message);
-		//	Instance Notification Manager
-		instanceNM(message.getSPS_BC_Request_ID());
-		//	Notify
-		addMessage(message, MQTTDefaultValues.TYPE_IN);
+		boolean ok = SPS_BC_Message.newInMessage(m_Ctx, message);
+		//	
+		if(ok) {
+			//	Instance Notification Manager
+			instanceNM(message.getSPS_BC_Request_ID());
+			//	Notify
+			addMessage(message, MQTTDefaultValues.TYPE_IN);
+		}
 	}
 
 	/**
