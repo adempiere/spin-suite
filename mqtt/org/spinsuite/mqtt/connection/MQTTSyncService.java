@@ -111,8 +111,7 @@ public class MQTTSyncService extends Service {
 		Env.getInstance(getApplicationContext());
 		if(!Env.isEnvLoad()
 				|| !MQTTConnection.isNetworkOk(this)
-				|| !MQTTConnection.isAutomaticService(this)
-				|| MQTTSyncService.isRunning())
+				|| !MQTTConnection.isAutomaticService(this))
 			return;
 		//	Save Current Message
 		//	Verify Reload Service

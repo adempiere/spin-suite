@@ -488,7 +488,7 @@ public class MQTTConnection {
 			m_Connection = new MQTTConnection(p_Ctx, p_ConnectionListener, p_SubscribedTopics);
 			//	Set to false reload
 			if(reLoad) {
-				MQTTConnection.setIsAutomaticService(p_Ctx, false);
+				MQTTConnection.setIsReloadService(p_Ctx, false);
 			}
 		}
 		//	Default Return
@@ -609,7 +609,9 @@ public class MQTTConnection {
 	 * @return boolean
 	 */
 	public boolean isConnected() {
-		return m_ClientLink != null && m_ClientLink.isConnected();
+		return m_Status == CONNECTED
+				|| (m_ClientLink != null 
+						&& m_ClientLink.isConnected());
 	}
 	
 	/**

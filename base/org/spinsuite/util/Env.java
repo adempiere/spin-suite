@@ -3033,7 +3033,10 @@ public final class Env {
 	 * @return Locale
 	 */
 	public static Locale getLocate(Context ctx) {
-		return new Locale(getAD_Language(ctx));
+		String language = getAD_Language(ctx);
+		if(language == null)
+			language = BASE_LANGUAGE;
+		return new Locale(language);
 	}
 	
 	/**
