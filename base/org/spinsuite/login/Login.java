@@ -228,17 +228,6 @@ public class Login extends TV_Base implements I_Login {
     }
     
     /**
-     * Reload Activity
-     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-     * @return void
-     */
-    private void reloadActivity(){
-    	Intent refresh = new Intent(this, Login.class);
-		startActivity(refresh);
-		finish();
-    }
-    
-    /**
 	 * Set Pending Item
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return void

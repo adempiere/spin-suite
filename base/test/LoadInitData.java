@@ -104,5 +104,6 @@ public class LoadInitData {
 		MQTTConnection.setMQTTPassword(ctx, MQTTDefaultValues.DEFAULT_MQTT_PASS);
 		MQTTConnection.setPort(ctx, MQTTDefaultValues.DEFAULT_MQTT_PORT);
 		MQTTConnection.setIsAutomaticService(ctx, false);
+		MQTTConnection.setNetworkOk(ctx, true);
 	}	
 }
