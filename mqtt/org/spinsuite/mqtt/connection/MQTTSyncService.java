@@ -63,21 +63,28 @@ public class MQTTSyncService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		//	
+		m_IsRunning = true;
+		//	
 		if(!MQTTConnection.isNetworkOk(this)
 				&& !MQTTConnection.isAutomaticService(this)) {
 			stopSelf();
+			//	
+			return START_NOT_STICKY;
 		}
 		//	
 		Timer mTimer = new Timer();
 		m_millis = MQTTConnection.getAlarmTime(getApplicationContext());
 		mTimer.scheduleAtFixedRate(
-				new TimerTask(){
+				new TimerTask() {
 					@Override
 					public void run() {
 						processThread();
 					}      
 				}
 		, 0, m_millis);
+		//	Set to false is Running
+		m_IsRunning = false;
 		return START_STICKY;
 	}
 	
@@ -107,8 +114,6 @@ public class MQTTSyncService extends Service {
 				|| !MQTTConnection.isAutomaticService(this)
 				|| MQTTSyncService.isRunning())
 			return;
-		//	
-		m_IsRunning = true;
 		//	Save Current Message
 		//	Verify Reload Service
 		boolean isReload = MQTTConnection.isReloadService(this);
@@ -130,15 +135,12 @@ public class MQTTSyncService extends Service {
 		}
 		//	Connection
 		if(!connect()) {
-			m_IsRunning = false;
 			return;
 		}
 		//	Send Request
 		sendOpenRequest();
 		//	Send Message
 		sendOpenMsg();
-		//	Set to false is Running
-		m_IsRunning = false;
 		//	
 		long currentTime = System.currentTimeMillis();
 		long nextRun = currentTime + m_millis;

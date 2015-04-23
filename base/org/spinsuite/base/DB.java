@@ -199,7 +199,10 @@ public class DB extends SQLiteOpenHelper {
 	 * @return void
 	 */
 	public synchronized void setTransactionSuccessful() {
-		DB_Manager.getInstance().open().setTransactionSuccessful();
+		//	
+		if(DB_Manager.getInstance().open().inTransaction()) {
+			DB_Manager.getInstance().open().setTransactionSuccessful();
+		}
 	}
 	
 	/**
