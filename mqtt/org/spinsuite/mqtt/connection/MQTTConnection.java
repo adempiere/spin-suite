@@ -391,7 +391,12 @@ public class MQTTConnection {
 	 * @return long
 	 */
 	public static long getAlarmTime(Context p_Ctx) {
-		return Env.getContextAsLong(p_Ctx, MQTT_ALARM_TIME);
+		long time = Env.getContextAsLong(p_Ctx, MQTT_ALARM_TIME);
+		//	Valid Time
+		if(time <= 0) {
+			time = 1000L;
+		}
+		return time;
 	}
 	
 	/**
