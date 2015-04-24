@@ -1019,6 +1019,7 @@ public abstract class PO implements Serializable {
 						&& !column.IsEncrypted		//	not encrypted
 						&& !"Password".equals(column.ColumnName)
 						&& MSession.logMigration(this, m_TableInfo)
+						&& !isSynchronization()
 						)
 				{
 					// change log on new
@@ -1109,6 +1110,7 @@ public abstract class PO implements Serializable {
 						&& column.IsAllowLogging		//	logging allowed
 						&& !column.IsEncrypted		//	not encrypted
 						&& !"Password".equals(column.ColumnName)
+						&& !isSynchronization()
 						)
 					{
 						Object oldV = m_OldValues[i];
