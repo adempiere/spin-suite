@@ -384,6 +384,13 @@ public class SyncDataTask implements BackGroundProcess  {
 		//Validate Response
 		if (soapResponse == null)
 			return;
+		
+		if (soapResponse.hasProperty("Error")){
+			m_PublicMsg = soapResponse.getPropertyAsString("Error");
+			LogM.log(m_ctx, SyncDataTask.class, Level.SEVERE, m_PublicMsg);
+			publishOnRunning();
+			return;
+		}
 		if (m_MethodValue.equals(SyncValues.WSMQueryData)){
 			//Validate Data Set
 			if (!soapResponse.hasProperty(SyncValues.WSRespDataSet))
@@ -496,13 +503,8 @@ public class SyncDataTask implements BackGroundProcess  {
 			}
 		}
 		else if (m_MethodValue.equals(SyncValues.WSMCreateData)){
-			
-			if (soapResponse.hasProperty("Error")){
-				m_PublicMsg = soapResponse.getPropertyAsString("Error");
-				LogM.log(m_ctx, SyncDataTask.class, Level.SEVERE, m_PublicMsg);
-				publishOnRunning();
-			}
-			else if (soapResponse.hasAttribute("RecordID")){
+
+			if (soapResponse.hasAttribute("RecordID")){
 				String whereClause = "SPS_Table_ID = " + sm.getSPS_Table_ID() + " AND "
 						+ "Record_ID = " + p_ID + " AND "
 						+ "EventChangeLog IN ('" + X_SPS_SyncTable.EVENTCHANGELOG_Insert + "') AND IsSynchronized='N'";
@@ -529,7 +531,7 @@ public class SyncDataTask implements BackGroundProcess  {
 	}
 	/**
 	 * Run a Query
-	 * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.coms
+	 * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param sql
 	 * @param data
 	 * @return void
