@@ -28,11 +28,11 @@ public class MQTTDefaultValues {
 	/**	Default Prefix for Request						*/
 	private static final String PRE_REQUEST_TOPIC 			= "Server-Request-";
 	/**	Default Values for MQTT Server					*/
-	public static final String 	DEFAULT_MQTT_SERVER_NAME 	= "test-spinsuite.erpcya.com";
+	public static final String 	DEFAULT_MQTT_SERVER_NAME 	= "test.mosquitto.org";
 	/**	User											*/
-	public static final String 	DEFAULT_MQTT_USER 			= "admin";
+	public static final String 	DEFAULT_MQTT_USER 			= "";
 	/**	Password										*/
-	public static final String 	DEFAULT_MQTT_PASS 			= "admin";
+	public static final String 	DEFAULT_MQTT_PASS 			= "";
 	/**	Port											*/
 	public static final int 	DEFAULT_MQTT_PORT 			= 1883;
 	/**	Alarm Time										*/

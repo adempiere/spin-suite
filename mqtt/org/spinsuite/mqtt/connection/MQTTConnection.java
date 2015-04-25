@@ -101,14 +101,28 @@ public class MQTTConnection {
 			boolean p_IsSSLConnection, IMqttActionListener p_ConnectionListener, String[] p_SubscribedTopics) {
 		m_Ctx = p_Ctx;
 		m_Client_ID = p_Client_ID;
-	    m_Host = p_Host;
+		//	Process Host
+		if(p_Host != null
+				&& p_Host.trim().length() > 0) {
+			m_Host = p_Host.trim();
+		}
 	    m_Port = p_Port;
 	    m_IsSSLConnection = p_IsSSLConnection;
 	    m_ConnectionListener = p_ConnectionListener;
 	    m_ConnectionOption = new MqttConnectOptions();
-	    m_ConnectionOption.setUserName(MQTTConnection.getClient_ID(p_Ctx));
-	    m_ConnectionOption.setUserName(getMQTTUser(p_Ctx));
-	    m_ConnectionOption.setPassword(getMQTTPass(p_Ctx).toCharArray());
+	    //	For User and Pass
+	    String user = getMQTTUser(p_Ctx);
+	    String pass = getMQTTPass(p_Ctx);
+	    //	Valid User
+	    if(user != null
+	    		&& user.length() > 0) {
+	    	m_ConnectionOption.setUserName(user);
+	    }
+	    //	Valid Pass
+	    if(pass != null
+	    		&& pass.length() > 0) {
+	    	m_ConnectionOption.setPassword(pass.toCharArray());
+	    }
 	    m_ConnectionOption.setConnectionTimeout(getTimeout(p_Ctx));
 	    m_ConnectionOption.setCleanSession(true);
 	    //	

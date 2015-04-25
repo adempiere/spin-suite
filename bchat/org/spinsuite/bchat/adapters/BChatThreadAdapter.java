@@ -126,10 +126,17 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 				&& diti.getFileName().length() > 0) {
 			Bitmap bmimage = m_ImageCache.get(imageKey);
 			if(bmimage == null) {
-				bmimage = AttachmentHandler.getBitmapFromFile(imageKey, 300, 300);
-				m_ImageCache.put(imageKey, bmimage);
+				bmimage = AttachmentHandler.getBitmapFromFile(imageKey, AttachmentHandler.IMG_TARGET_W, AttachmentHandler.IMG_TARGET_H);
+				//	Re-Check
+				if(bmimage != null) {
+					m_ImageCache.put(imageKey, bmimage);
+					msgHolder.rl_Conversation.setBackgroundDrawable(new BitmapDrawable(ctx.getResources(), bmimage));
+				} else {
+					msgHolder.rl_Conversation.setBackgroundDrawable(null);
+				}
+			} else {
+				msgHolder.rl_Conversation.setBackgroundDrawable(new BitmapDrawable(ctx.getResources(), bmimage));
 			}
-			msgHolder.rl_Conversation.setBackgroundDrawable(new BitmapDrawable(ctx.getResources(), bmimage));
 		} else {
 			msgHolder.rl_Conversation.setBackgroundDrawable(null);
 		}

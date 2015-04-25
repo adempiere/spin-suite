@@ -93,8 +93,8 @@ public class AttachmentHandler {
 	public static String 		m_tmpDirectory		= null;
 	public static String 		m_attDirectory		= null;
 	/**	Images				*/
-	public static final int 	IMG_TARGET_W		= 1280;//640;
-	public static final int 	IMG_TARGET_H		= 960;//480;
+	public static final int 	IMG_TARGET_W		= 1024;//1280;//640;
+	public static final int 	IMG_TARGET_H		= 768;//960;//480;
 	
 	
 	/**
@@ -328,10 +328,14 @@ public class AttachmentHandler {
 		//	Set bitmap options to scale the image decode target
 		options.inJustDecodeBounds = false;
 		options.inSampleSize = scaleFactor;
-		options.inPurgeable = true;
-
 		//	Decode the JPEG file into a Bitmap
-		return BitmapFactory.decodeFile(fileName, options);
+		Bitmap image = BitmapFactory.decodeFile(fileName, options);
+		//	
+		if(image == null) {
+			return image;
+		}
+		//	
+		return Bitmap.createScaledBitmap(image, IMG_TARGET_W, IMG_TARGET_H, true);
 	}
 	
 	/**
