@@ -23,7 +23,6 @@ import java.io.OutputStream;
 
 import org.spinsuite.base.R;
 import org.spinsuite.mqtt.connection.MQTTConnection;
-import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.util.Env;
 
 import android.content.Context;
@@ -90,19 +89,11 @@ public class LoadInitData {
 	public void setContextTest() {
 		//	Set Context Default Values for Demo
 		Env.setIsEnvLoad(ctx, true);
-		Env.setContext(ctx, "#SUser", "SuperUser");
-		Env.setContext(ctx, "#SPass", "System");
 		Env.setSavePass(ctx, true);
 		Env.setAutoLogin(ctx, true);
 		Env.setContext(ctx, KEY_POS_TAB, 1);
-		Env.setContext(ctx, "#Timeout", 10000000);
 		//	Set Value for Sync
 		Env.setContext(ctx, "#InitialLoadSynchronizing", false);
-		//	
-		MQTTConnection.setHost(ctx, MQTTDefaultValues.DEFAULT_MQTT_SERVER_NAME);
-		MQTTConnection.setMQTTUser(ctx, MQTTDefaultValues.DEFAULT_MQTT_USER);
-		MQTTConnection.setMQTTPassword(ctx, MQTTDefaultValues.DEFAULT_MQTT_PASS);
-		MQTTConnection.setPort(ctx, MQTTDefaultValues.DEFAULT_MQTT_PORT);
 		MQTTConnection.setIsAutomaticService(ctx, false);
 		MQTTConnection.setNetworkOk(ctx, true);
 	}	

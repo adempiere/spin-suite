@@ -108,6 +108,7 @@ public class T_Login_Init extends DialogFragment
 		et_PassWord.setText(SyncValues.DEFAULT_AD_PASS);
     	// Carlos Parada Setting Parameters for Spin-Suite Service Call 
     	et_UrlServer.setText(SyncValues.DEFAULT_SOAP_URL);
+    	et_Timeout.setText(String.valueOf(SyncValues.DEFAULT_TIMEOUT));
     	//End Carlos Parada
     	//	For MQTT Server
     	et_MQTT_ServerName.setText(MQTTDefaultValues.DEFAULT_MQTT_SERVER_NAME);
@@ -141,19 +142,12 @@ public class T_Login_Init extends DialogFragment
 	 * @return void
 	 */
 	public void startSynchronization() {
-		if(ch_ch_LoadTestData.isChecked()) {
-			((Login)m_Callback).loadDefaultData();
-			//	Default Return
-			return;
-		}
 		//	Else
 		Env.setContext("#SUrlSoap", et_UrlServer.getText().toString());
 		Env.setContext("#SMethod", SyncValues.DEFAULT_METHOD);
 		Env.setContext("#SNameSpace", SyncValues.DEFAULT_NAME_SPACE);
 		Env.setContext("#SUser", et_User.getText().toString());
 		Env.setContext("#SPass", et_PassWord.getText().toString());
-		//	Create Directory
-		Env.createDefaultDirectory(getActivity());
 		//	Set Values for MQTT Server
 		MQTTConnection.setClient_ID(getActivity(), String.valueOf(Env.getAD_User_ID()));
 		MQTTConnection.setHost(getActivity(), et_MQTT_ServerName.getText().toString());
@@ -184,6 +178,14 @@ public class T_Login_Init extends DialogFragment
 			Env.setContext("#Timeout", Integer.parseInt(limit));
 			MQTTConnection.setTimeout(getActivity(), Integer.parseInt(limit));
 		}
+		//	For Test Data
+		if(ch_ch_LoadTestData.isChecked()) {
+			((Login)m_Callback).loadDefaultData();
+			//	Default Return
+			return;
+		}
+		//	Create Directory
+		Env.createDefaultDirectory(getActivity());
 		//	
 		((I_Login)m_Callback).setEnabled(false);
 		//	Add Value to Web
