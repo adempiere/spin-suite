@@ -302,15 +302,15 @@ public class AttachmentHandler {
 	 * Get Bitmap from File
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 11/11/2014, 14:24:16
 	 * @param fileName
-	 * @param weight
+	 * @param widgth
 	 * @param height
 	 * @return
 	 * @return Bitmap
 	 */
-	public static Bitmap getBitmapFromFile(String fileName, int weight, int height) {
+	public static Bitmap getBitmapFromFile(String fileName, int widgth, int height) {
 		//	Valid Size
-		if(weight <= 0)
-			weight = 1;
+		if(widgth <= 0)
+			widgth = 1;
 		//	
 		if(height <= 0)
 			height = 1;
@@ -323,19 +323,13 @@ public class AttachmentHandler {
 		
 		//	Figure out which way needs to be reduced less
 		int scaleFactor = 1;
-		scaleFactor = Math.min(photoW/weight, photoH/height);	
+		scaleFactor = Math.max(photoW/widgth, photoH/height);	
 
 		//	Set bitmap options to scale the image decode target
 		options.inJustDecodeBounds = false;
 		options.inSampleSize = scaleFactor;
 		//	Decode the JPEG file into a Bitmap
-		Bitmap image = BitmapFactory.decodeFile(fileName, options);
-		//	
-		if(image == null) {
-			return image;
-		}
-		//	
-		return Bitmap.createScaledBitmap(image, IMG_TARGET_W, IMG_TARGET_H, true);
+		return BitmapFactory.decodeFile(fileName, options);
 	}
 	
 	/**
@@ -346,7 +340,7 @@ public class AttachmentHandler {
 	 * @return Bitmap
 	 */
 	public static Bitmap getBitmapFromFile(String fileName) {
-		return getBitmapFromFile(fileName, 0, 0);
+		return getBitmapFromFile(fileName, IMG_TARGET_W, IMG_TARGET_H);
 	}
 	
 	/**

@@ -33,6 +33,8 @@ public class MQTTDefaultValues {
 	public static final String 	DEFAULT_MQTT_USER 			= "";
 	/**	Password										*/
 	public static final String 	DEFAULT_MQTT_PASS 			= "";
+	/**	Keep Alive										*/
+	public static final int 	DEFAULT_MQTT_KEEP_ALIVE_INT = 60;
 	/**	Port											*/
 	public static final int 	DEFAULT_MQTT_PORT 			= 1883;
 	/**	Alarm Time										*/

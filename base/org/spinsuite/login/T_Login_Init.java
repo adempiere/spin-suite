@@ -178,6 +178,8 @@ public class T_Login_Init extends DialogFragment
 			Env.setContext("#Timeout", Integer.parseInt(limit));
 			MQTTConnection.setTimeout(getActivity(), Integer.parseInt(limit));
 		}
+		//	For Change to Dynamic
+		MQTTConnection.setKeepAliveInverval(getActivity(), MQTTDefaultValues.DEFAULT_MQTT_KEEP_ALIVE_INT);
 		//	For Test Data
 		if(ch_ch_LoadTestData.isChecked()) {
 			((Login)m_Callback).loadDefaultData();
