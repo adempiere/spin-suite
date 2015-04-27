@@ -35,6 +35,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.LinearLayout;
@@ -68,6 +69,7 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		int memClass = ((ActivityManager)ctx.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
 		int maxSize = 1024 * 1024 * memClass / 8;
 		m_ImageCache = new ImageCacheLru(maxSize);
+		m_CurrentWidth = ctx.getResources().getDisplayMetrics().widthPixels;
 	}
 
 	/**	Context						*/
@@ -88,6 +90,11 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 	private String									m_DirectoryApp = null;
 	/**	Images Cache				*/
 	private ImageCacheLru							m_ImageCache = null;
+	/**	Current Width				*/
+	private int 									m_CurrentWidth = 0;
+	/**	Default Image Size			*/
+	private final int								IMG_W = 300;
+	private final int								IMG_H = 300;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -96,9 +103,14 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		DisplayBChatThreadItem diti = data.get(position);
 		//	Image Key
 		String imageKey = m_DirectoryApp + diti.getFileName();
+		//	Size
+		int desiredWidth = 0;
+		boolean isImage = false;
+		//	Inflate
 		if(view == null) {
 			msgHolder = new BC_ThreadHolder();
 			view = inflater.inflate(id_View, null);
+			msgHolder.ll_MainMessage = (LinearLayout) view.findViewById(R.id.ll_MainMessage);
 			msgHolder.ll_Message = (LinearLayout) view.findViewById(R.id.ll_Message);
 			msgHolder.rl_Conversation = (RelativeLayout) view.findViewById(R.id.rl_Conversation);
 			msgHolder.tv_Conversation = (TextView) view.findViewById(R.id.tv_Conversation);
@@ -109,24 +121,28 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		} else {
 			msgHolder = (BC_ThreadHolder) view.getTag();
 		}
+		//	Parameters
+		LinearLayout.LayoutParams params = 
+				(LinearLayout.LayoutParams) msgHolder.ll_Message.getLayoutParams();
+
 		//	Set Conversation
 		msgHolder.tv_Conversation.setText(diti.getValue());
 		//	Set Time
 		msgHolder.tv_Time.setText(diti.getTimeAsString());
 		msgHolder.tv_UserName.setText(diti.getUserName());
-		//	Set Visibility
-		if(!isGroup
-				|| !diti.getType().equals(MQTTDefaultValues.TYPE_IN)) {
-			msgHolder.tv_UserName.setVisibility(View.GONE);
-		} else {
-			msgHolder.tv_UserName.setVisibility(View.VISIBLE);
-		}
+		//	Get Size from text
+		msgHolder.ll_Message.measure(0, 0);
+		msgHolder.tv_Conversation.measure(0, 0);
+		msgHolder.tv_UserName.measure(0, 0);
+		msgHolder.tv_Time.measure(0, 0);
 		//	For Image
 		if(diti.getFileName() != null
 				&& diti.getFileName().length() > 0) {
+			//	Set flag
+			isImage = true;
 			Bitmap bmimage = m_ImageCache.get(imageKey);
 			if(bmimage == null) {
-				bmimage = AttachmentHandler.getBitmapFromFile(imageKey, AttachmentHandler.IMG_TARGET_W, AttachmentHandler.IMG_TARGET_H);
+				bmimage = AttachmentHandler.getBitmapFromFile(imageKey, IMG_W, IMG_H);
 				//	Re-Check
 				if(bmimage != null) {
 					m_ImageCache.put(imageKey, bmimage);
@@ -141,7 +157,25 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 			msgHolder.rl_Conversation.setBackgroundDrawable(null);
 		}
 		//	
+		desiredWidth = msgHolder.rl_Conversation.getMeasuredWidth();
+		//	
+		desiredWidth += msgHolder.tv_Conversation.getMeasuredWidth();
+		//	Set Visibility
+		if(!isGroup
+				|| !diti.getType().equals(MQTTDefaultValues.TYPE_IN)) {
+			msgHolder.tv_UserName.setVisibility(View.GONE);
+		} else {
+			msgHolder.tv_UserName.setVisibility(View.VISIBLE);
+			//	Change Desired
+			desiredWidth = Math.max(desiredWidth, 
+					msgHolder.tv_UserName.getMeasuredWidth());
+		}
+		//	Add Time
+		desiredWidth += msgHolder.tv_Time.getMeasuredWidth();
+		//	
 		int id_att = R.attr.ic_bc_bubble_local;
+		int gravity = Gravity.START;
+		//	Verify with parent
 		//	For Type Message change Background
 		if(diti.getType().equals(MQTTDefaultValues.TYPE_IN)) {
 			//	Change Position
@@ -164,9 +198,25 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 			if(m_SelectedItems.get(position)) {
 				id_att = R.attr.ic_bc_bubble_local_selected;
 			}
+			//	Change Gravity
+			gravity = Gravity.END;
 		}
 		//	
 		msgHolder.ll_Message.setBackgroundResource(Env.getResourceID(ctx, id_att));
+		//	Change Size
+		if(m_CurrentWidth < desiredWidth) {
+			desiredWidth = LayoutParams.WRAP_CONTENT;
+		}
+		//	Change Width
+		if(isImage) {
+			params.width = IMG_W;
+			params.height = IMG_H;
+		} else {
+			params.width = desiredWidth;
+			params.height = LayoutParams.WRAP_CONTENT;
+		}
+		//	Change Gravity
+		params.gravity = gravity;
 		//	Return
 		return view;
 	}
