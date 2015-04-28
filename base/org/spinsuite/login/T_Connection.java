@@ -318,6 +318,18 @@ public class T_Connection extends Activity implements I_Login {
 	
     @Override
 	public boolean aceptAction() {
+    	//	Standard Values
+    	String url = et_UrlServer.getText().toString();
+    	if(url != null 
+    			&& url.length() > 0){
+    		Env.setContext("#SUrlSoap", url);
+    	}
+    	//	
+    	String timeout = et_Timeout.getText().toString();
+    	if(timeout != null 
+    			&& timeout.length() > 0){
+    		Env.setContext("#Timeout", Integer.parseInt(timeout));
+    	}
 		//	Set Values for MQTT Server
 		MQTTConnection.setClient_ID(this, String.valueOf(Env.getAD_User_ID()));
 		MQTTConnection.setHost(this, et_MQTT_ServerName.getText().toString());
@@ -377,7 +389,6 @@ public class T_Connection extends Activity implements I_Login {
 
 	@Override
 	public void setEnabled(boolean enabled) {
-		et_UrlServer.setEnabled(enabled);
 		ch_SaveSD.setEnabled(enabled);
 		ch_SaveSD.setChecked(enabled);
 	}
