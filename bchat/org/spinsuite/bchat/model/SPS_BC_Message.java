@@ -43,10 +43,10 @@ public class SPS_BC_Message {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
 	 * @param message
-	 * @return void
+	 * @return boolean
 	 */
-	public static void newInMessage(Context ctx, SyncMessage message) {
-		newMessage(ctx, message, MQTTDefaultValues.TYPE_IN);
+	public static boolean newInMessage(Context ctx, SyncMessage message) {
+		return newMessage(ctx, message, MQTTDefaultValues.TYPE_IN);
 	}
 	
 	/**
@@ -54,10 +54,10 @@ public class SPS_BC_Message {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
 	 * @param message
-	 * @return void
+	 * @return boolean
 	 */
-	public static void newOutMessage(Context ctx, SyncMessage message) {
-		newMessage(ctx, message, MQTTDefaultValues.TYPE_OUT);
+	public static boolean newOutMessage(Context ctx, SyncMessage message) {
+		return newMessage(ctx, message, MQTTDefaultValues.TYPE_OUT);
 	}
 	
 	/**
@@ -208,12 +208,13 @@ public class SPS_BC_Message {
 	 * @param ctx
 	 * @param message
 	 * @param p_Type
-	 * @return void
+	 * @return boolean
 	 */
-	public static void newMessage(Context ctx, SyncMessage message, String p_Type) {
+	public static boolean newMessage(Context ctx, SyncMessage message, String p_Type) {
+		boolean ok = false;
 		if(message == null) {
 			LogM.log(ctx, SPS_BC_Message.class, Level.CONFIG, "Null message for Insert");
-			return;
+			return ok;
 		}
 		//	Connection
 		DB conn = null;
@@ -263,7 +264,7 @@ public class SPS_BC_Message {
 			conn.addString(MQTTDefaultValues.STATUS_CREATED);
 			conn.addString(message.getFileName());
 			//	Execute
-			conn.executeSQL();
+			conn.executeSQLEx();
 			//	Update Header
 			conn.compileQuery("UPDATE SPS_BC_Request "
 					+ "SET Updated = ?, "
@@ -274,9 +275,11 @@ public class SPS_BC_Message {
 			conn.addString(message.getText());
 			conn.addInt(message.getSPS_BC_Request_ID());
 			//	Execute
-			conn.executeSQL();		
+			conn.executeSQLEx();		
 			//	Successful
 			conn.setTransactionSuccessful();
+			//	
+			ok = true;
 			//	
 		} catch (Exception e) {
 			LogM.log(ctx, SPS_BC_Message.class, Level.SEVERE, "Error", e);
@@ -284,6 +287,8 @@ public class SPS_BC_Message {
 			//	End Transaction
 			DB.closeConnection(conn);
 		}
+		//	Return
+		return ok;
 	}
 	
 	/**

@@ -28,6 +28,7 @@ public class SyncValues {
 	public static final String 		DEFAULT_METHOD 		= "InitialLoad";
 	public static final String 		DEFAULT_AD_USER 	= "SuperUser";
 	public static final String 		DEFAULT_AD_PASS 	= "System";
+	public static final int 		DEFAULT_TIMEOUT 	= 60;
 	/**	Key For Map						*/
 	public static final String 		KEY_SOAP_URL 		= "Sync_SoapURL";
 	public static final String 		KEY_PATH_URL 		= "Sync_PathURL";

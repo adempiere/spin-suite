@@ -16,6 +16,7 @@
 package org.spinsuite.mqtt.connection;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -26,6 +27,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.LogM;
 
 import android.content.Context;
 
@@ -78,6 +80,7 @@ public class MQTTConnection {
 	private static final String		MQTT_USER_NAME 				= "#MQTT_UserName";
 	private static final String		MQTT_PASSWORD 				= "#MQTT_Password";
 	private static final String		MQTT_TIMEOUT 				= "#MQTT_Timeout";
+	private static final String		MQTT_KEEP_ALIVE_INTERVAL 	= "#MQTT_KeepAliveInterval";
 	private static final String		MQTT_IS_RELOAD_SERVICE 		= "#MQTT_IsreloadService";
 	
 	/**	Connection Status					*/
@@ -101,15 +104,32 @@ public class MQTTConnection {
 			boolean p_IsSSLConnection, IMqttActionListener p_ConnectionListener, String[] p_SubscribedTopics) {
 		m_Ctx = p_Ctx;
 		m_Client_ID = p_Client_ID;
-	    m_Host = p_Host;
+		//	Process Host
+		if(p_Host != null
+				&& p_Host.trim().length() > 0) {
+			m_Host = p_Host.trim();
+		}
 	    m_Port = p_Port;
 	    m_IsSSLConnection = p_IsSSLConnection;
 	    m_ConnectionListener = p_ConnectionListener;
 	    m_ConnectionOption = new MqttConnectOptions();
-	    m_ConnectionOption.setUserName(MQTTConnection.getClient_ID(p_Ctx));
-	    m_ConnectionOption.setUserName(getMQTTUser(p_Ctx));
-	    m_ConnectionOption.setPassword(getMQTTPass(p_Ctx).toCharArray());
+	    //	For User and Pass
+	    String user = getMQTTUser(p_Ctx);
+	    String pass = getMQTTPass(p_Ctx);
+	    //	Valid User
+	    if(user != null
+	    		&& user.length() > 0) {
+	    	m_ConnectionOption.setUserName(user);
+	    }
+	    //	Valid Pass
+	    if(pass != null
+	    		&& pass.length() > 0) {
+	    	m_ConnectionOption.setPassword(pass.toCharArray());
+	    }
+	    //	Timeout
 	    m_ConnectionOption.setConnectionTimeout(getTimeout(p_Ctx));
+	    //	Keep Alive Interval
+	    m_ConnectionOption.setKeepAliveInterval(getKeepAliveInverval(p_Ctx));
 	    m_ConnectionOption.setCleanSession(true);
 	    //	
 	    m_IsSubscribe = false;
@@ -304,6 +324,28 @@ public class MQTTConnection {
 	 */
 	public static void setTimeout(Context p_Ctx, int p_Timeout) {
 		Env.setContext(p_Ctx, MQTT_TIMEOUT, p_Timeout);
+	}
+	
+	/**
+	 * Get Keep Alive Interval in Context
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return int
+	 */
+	public static int getKeepAliveInverval(Context p_Ctx) {
+		return Env.getContextAsInt(p_Ctx, MQTT_KEEP_ALIVE_INTERVAL);
+	}
+	
+	/**
+	 * Set Keep Alive Interval in Context
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_KeepAliveInverval
+	 * @return void
+	 */
+	public static void setKeepAliveInverval(Context p_Ctx, int p_KeepAliveInverval) {
+		Env.setContext(p_Ctx, MQTT_KEEP_ALIVE_INTERVAL, p_KeepAliveInverval);
 	}
 	
 	/**
@@ -609,9 +651,19 @@ public class MQTTConnection {
 	 * @return boolean
 	 */
 	public boolean isConnected() {
-		return m_Status == CONNECTED
-				|| (m_ClientLink != null 
-						&& m_ClientLink.isConnected());
+		//	Connected Value
+		boolean isConnected = false;
+		try {
+			isConnected = 
+					(m_Status != DISCONNECTED
+							&& m_Status != TRY_CONNECTING)
+					&& (m_ClientLink != null 
+							&& m_ClientLink.isConnected());
+		} catch (Exception e) {
+			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Validation Connection Error", e);
+		}
+		//	Default Return
+		return isConnected;
 	}
 	
 	/**

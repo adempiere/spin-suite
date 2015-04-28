@@ -15,7 +15,6 @@
  *************************************************************************************/
 package org.spinsuite.model;
 
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,12 +42,7 @@ import android.database.Cursor;
 *  	<li>Add Support to Log for Mobile
 *  	@see https://adempiere.atlassian.net/browse/SPIN-6
 **/
-public abstract class PO implements Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4393558123583028851L;
+public abstract class PO {
 	
 	/** Context                 	*/
 	private Context					m_ctx 				= null;
@@ -75,7 +69,7 @@ public abstract class PO implements Serializable {
 	/**	Log Error					*/
 	private String					error 				= null;
 	/** NULL Value					*/
-	public static String			NULL 				= "NULL";
+	public static final String		NULL 				= "NULL";
 	/** Zero Integer				*/
 	protected static final Integer 	I_ZERO 				= Integer.valueOf(0);
 	private boolean					isSynchronization 	= false;
@@ -1204,6 +1198,7 @@ public abstract class PO implements Serializable {
 				set_Value(index, (m_IDs[0] != null && m_IDs[0] instanceof Integer ? ((Integer)m_IDs[0]).intValue(): m_IDs[0]));
 				return m_IDs[0];
 			} else if(isNew 
+					&& value == null
 					&& column.ColumnName.equals("DocumentNo")) {
 					//	Get Document Type
 					int m_C_DocType_ID = get_ValueAsInt("C_DocType_ID");

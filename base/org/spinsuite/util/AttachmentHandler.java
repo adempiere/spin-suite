@@ -93,8 +93,10 @@ public class AttachmentHandler {
 	public static String 		m_tmpDirectory		= null;
 	public static String 		m_attDirectory		= null;
 	/**	Images				*/
-	public static final int 	IMG_TARGET_W		= 1280;//640;
-	public static final int 	IMG_TARGET_H		= 960;//480;
+	public static final int 	IMG_TARGET_W		= 1024;//1280;//640;
+	public static final int 	IMG_TARGET_H		= 768;//960;//480;
+	public static final int 	IMG_MAX_Q			= 100;
+	public static final int 	IMG_STD_Q			= 60;
 	
 	
 	/**
@@ -243,7 +245,7 @@ public class AttachmentHandler {
 	 * @return boolean
 	 */
 	public boolean processImgAttach(String fileName) {
-		return processImgAttach(null, fileName);
+		return processImgAttach(null, fileName, IMG_MAX_Q);
 	}
 	
 	/**
@@ -251,10 +253,11 @@ public class AttachmentHandler {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/11/2014, 20:50:39
 	 * @param p_DestFolder
 	 * @param fileName
+	 * @param quality
 	 * @return
 	 * @return boolean
 	 */
-	public boolean processImgAttach(String p_DestFolder, String fileName) {
+	public boolean processImgAttach(String p_DestFolder, String fileName, int quality) {
     	File tmpFile = new File(getTMPImageName());
         if(!tmpFile.exists())
         	return false;
@@ -286,7 +289,7 @@ public class AttachmentHandler {
 			//	Write File
 			try {
 				FileOutputStream outStream = new FileOutputStream(destFile);
-				mImage.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+				mImage.compress(Bitmap.CompressFormat.JPEG, quality, outStream);
 				outStream.flush();
 				outStream.close();
 			} catch (Exception e) {
@@ -302,15 +305,15 @@ public class AttachmentHandler {
 	 * Get Bitmap from File
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 11/11/2014, 14:24:16
 	 * @param fileName
-	 * @param weight
+	 * @param width
 	 * @param height
 	 * @return
 	 * @return Bitmap
 	 */
-	public static Bitmap getBitmapFromFile(String fileName, int weight, int height) {
+	public static Bitmap getBitmapFromFile(String fileName, int width, int height) {
 		//	Valid Size
-		if(weight <= 0)
-			weight = 1;
+		if(width <= 0)
+			width = 1;
 		//	
 		if(height <= 0)
 			height = 1;
@@ -318,20 +321,42 @@ public class AttachmentHandler {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(fileName, options);
-		int photoW = options.outWidth;
-		int photoH = options.outHeight;
-		
-		//	Figure out which way needs to be reduced less
-		int scaleFactor = 1;
-		scaleFactor = Math.min(photoW/weight, photoH/height);	
-
 		//	Set bitmap options to scale the image decode target
 		options.inJustDecodeBounds = false;
-		options.inSampleSize = scaleFactor;
-		options.inPurgeable = true;
-
+		options.inSampleSize = calculateInSampleSize(options, width, height);
 		//	Decode the JPEG file into a Bitmap
 		return BitmapFactory.decodeFile(fileName, options);
+	}
+	
+	/**
+	 * @See http://developer.android.com/training/displaying-bitmaps/load-bitmap.html
+	 * @param options
+	 * @param reqWidth
+	 * @param reqHeight
+	 * @return
+	 * @return int
+	 */
+	public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+	    // Raw height and width of image
+	    final int height = options.outHeight;
+	    final int width = options.outWidth;
+	    int inSampleSize = 1;
+
+	    if (height > reqHeight || width > reqWidth) {
+
+	        final int halfHeight = height / 2;
+	        final int halfWidth = width / 2;
+
+	        // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+	        // height and width larger than the requested height and width.
+	        while ((halfHeight / inSampleSize) > reqHeight
+	                && (halfWidth / inSampleSize) > reqWidth) {
+	            inSampleSize *= 2;
+	        }
+	    }
+	    //	Default Return
+	    return inSampleSize;
 	}
 	
 	/**
@@ -342,7 +367,7 @@ public class AttachmentHandler {
 	 * @return Bitmap
 	 */
 	public static Bitmap getBitmapFromFile(String fileName) {
-		return getBitmapFromFile(fileName, 0, 0);
+		return getBitmapFromFile(fileName, IMG_TARGET_W, IMG_TARGET_H);
 	}
 	
 	/**

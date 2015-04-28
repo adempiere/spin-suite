@@ -257,9 +257,9 @@ public class SyncDataTask implements BackGroundProcess  {
 		//Get Child's Web Services
 		List<MSPSSyncMenu> syncms = MSPSSyncMenu.getNodesFromParent(m_ctx, Integer.valueOf(p_SPS_SyncMenu_ID).toString(), conn);
 		
-		for (MSPSSyncMenu mspsSyncMenu : syncms)
+		for (MSPSSyncMenu mspsSyncMenu : syncms) {
 			syncData(mspsSyncMenu.getSPS_SyncMenu_ID(),0);
-		
+		}
 	}
 	
 	/**
@@ -536,25 +536,34 @@ public class SyncDataTask implements BackGroundProcess  {
 	 * @param data
 	 * @return void
 	 */
-	private void runQuery(String sql,Object[] data){
-		try{
+	private void runQuery(String sql, Object[] data){
+		try {
+			//	Parse SQL
+			String parsedSQL = Env.parseContext(sql, true);
 			if (data != null)
-				conn.executeSQL(sql,data);
+				conn.executeSQL(parsedSQL, data);
 			else
-				conn.executeSQL(sql);
-			
-		}catch (SQLiteException e){
+				conn.executeSQL(parsedSQL);
+		} catch (SQLiteException e){
 			e.printStackTrace();
 			m_PublicMsg = e.getLocalizedMessage();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			m_PublicMsg = e.getLocalizedMessage();
-	 	}
-		finally{
+	 	} finally{
 			publishOnRunning();
 		}
 	}
 	
+	/**
+	 * Get Key Values
+	 * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param soapDataRow
+	 * @param countDataRow
+	 * @param keyColumns
+	 * @return
+	 * @return Object[]
+	 */
 	private Object[] getKeyValues(SoapObject soapDataRow,int countDataRow,String[] keyColumns){
 		Object [] keyValues = new String[keyColumns.length];
 		SoapObject field = null;
@@ -570,7 +579,7 @@ public class SyncDataTask implements BackGroundProcess  {
 				keyValues[index] = field.getPropertyAsString(SyncValues.WSValue);
 			
 		}
-		
+		//	Return
 		return keyValues;
 	}
 }

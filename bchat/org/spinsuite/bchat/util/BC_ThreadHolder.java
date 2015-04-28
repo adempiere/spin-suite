@@ -33,6 +33,8 @@ public class BC_ThreadHolder {
 		//	
 	}
 	
+	/**	Main Parent				*/
+	public LinearLayout 	ll_MainMessage;
 	/**	Linear Layout			*/
 	public LinearLayout 	ll_Message;
 	/**	For Background			*/
