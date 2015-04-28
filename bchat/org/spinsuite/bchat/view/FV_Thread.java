@@ -319,11 +319,13 @@ public class FV_Thread extends Fragment {
     		et_Message.setText(getString(R.string.BChat_Hi) + " " 
     			+ m_Request.getName() + ", " 
     			+ getString(R.string.BChat_NewRequest));
-    		m_ThreadAdapter = new BChatThreadAdapter(getActivity(), new ArrayList<DisplayBChatThreadItem>(), m_Request.isGroup());
+    		m_ThreadAdapter = new BChatThreadAdapter(getActivity(), 
+    				new ArrayList<DisplayBChatThreadItem>(), m_Request.isGroup());
     		//	
     	} else {
     		//	Get Data
-    		m_ThreadAdapter = new BChatThreadAdapter(getActivity(), getData(), (m_Request != null && m_Request.isGroup()));
+    		m_ThreadAdapter = new BChatThreadAdapter(getActivity(), 
+    				getData(), (m_Request != null && m_Request.isGroup()));
     	}
     	//	
     	lv_Thread.setAdapter(m_ThreadAdapter);
@@ -637,7 +639,8 @@ public class FV_Thread extends Fragment {
 			//	
 			if(m_Type.equals(PHOTO_ATTACHMENT_SAVE)) {
 				String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-				m_IsSaved = m_AttHandler.processImgAttach(Env.getBC_IMG_DirectoryPathName(getActivity()), fileName);
+				m_IsSaved = m_AttHandler.processImgAttach(
+						Env.getBC_IMG_DirectoryPathName(getActivity()), fileName, AttachmentHandler.IMG_STD_Q);
 				m_FileName = fileName + AttachmentHandler.JPEG_FILE_SUFFIX;
 			} else if(m_Type.equals(FILE_ATTACHMENT_SAVE)) { 
 				String origFile = params[1];

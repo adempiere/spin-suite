@@ -93,8 +93,8 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 	/**	Current Width				*/
 	private int 									m_CurrentWidth = 0;
 	/**	Default Image Size			*/
-	private final int								IMG_W = 300;
-	private final int								IMG_H = 300;
+	private final int								IMG_W = 600;
+	private final int								IMG_H = 600;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
