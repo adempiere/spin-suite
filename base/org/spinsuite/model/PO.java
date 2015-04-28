@@ -1013,6 +1013,7 @@ public abstract class PO {
 						&& !column.IsEncrypted		//	not encrypted
 						&& !"Password".equals(column.ColumnName)
 						&& MSession.logMigration(this, m_TableInfo)
+						&& !isSynchronization()
 						)
 				{
 					// change log on new
@@ -1103,6 +1104,7 @@ public abstract class PO {
 						&& column.IsAllowLogging		//	logging allowed
 						&& !column.IsEncrypted		//	not encrypted
 						&& !"Password".equals(column.ColumnName)
+						&& !isSynchronization()
 						)
 					{
 						Object oldV = m_OldValues[i];
