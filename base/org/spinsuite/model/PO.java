@@ -1627,9 +1627,9 @@ public abstract class PO {
 			if (retValue.equals(0))
 				retValue = null; 
 			return retValue;
-		}else
-			return get_Value(index);
-		
+		} else {
+			return DisplayType.getJDBC_Value(displayType, get_Value(index), false, false, columnName);
+		}
 	}
 	
 	/**
