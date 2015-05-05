@@ -180,8 +180,6 @@ public class T_Login_Init extends DialogFragment
 		}
 		//	For Change to Dynamic
 		MQTTConnection.setKeepAliveInverval(getActivity(), MQTTDefaultValues.DEFAULT_MQTT_KEEP_ALIVE_INT);
-		//	Start Service
-		MQTTConnection.setIsAutomaticService(getActivity(), true);
 		//	For Test Data
 		if(ch_ch_LoadTestData.isChecked()) {
 			((Login)m_Callback).loadDefaultData();
