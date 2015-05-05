@@ -20,12 +20,15 @@ import java.util.Date;
 import java.util.Random;
 import java.util.logging.Level;
 
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.spinsuite.base.DB;
+import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.sync.content.Invited;
 import org.spinsuite.sync.content.SyncRequest;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.SerializerUtil;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -407,4 +410,38 @@ public class SPS_BC_Request {
 			DB.closeConnection(conn);
 		}
 	}
+	
+	/**
+     * Send Message
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_ctx
+     * @param request
+     * @return void
+     */
+    public static void sendRequest(Context p_ctx, SyncRequest request) {
+    	//	Valid Request
+    	if(request == null) {
+    		return;
+    	}
+		//	Save Request
+		newOutRequest(p_ctx, request);
+		//	Send
+		MQTTConnection m_Connection = MQTTConnection.getInstance(p_ctx);
+		if(m_Connection.isConnected()) {
+			try {
+				//	Set Client ID
+				request.setLocalClient_ID(MQTTConnection.getClient_ID(p_ctx));
+				//	Get Request for Topic
+				byte[] msg = SerializerUtil.serializeObjectEx(request);
+				MqttMessage message = new MqttMessage(msg);
+				message.setQos(MQTTConnection.EXACTLY_ONCE_2);
+				message.setRetained(true);
+				m_Connection.publish(request.getTopicName(), message);
+			} catch (Exception e) {
+				LogM.log(p_ctx, SPS_BC_Request.class, Level.SEVERE, "Error", e);
+			}
+		} else {
+			LogM.log(p_ctx, SPS_BC_Request.class, Level.SEVERE, "Error Sending Request (No Connected)");
+		}
+    }
 }

@@ -192,6 +192,7 @@ public class FV_Thread extends Fragment {
 				}
 			}
         });
+		//	
 		lv_Thread.setMultiChoiceModeListener(new MultiChoiceModeListener() {
 			@Override
 			public void onItemCheckedStateChanged(ActionMode mode,
@@ -267,30 +268,24 @@ public class FV_Thread extends Fragment {
 		//	Send Request
 		if(m_Request != null
     			&& m_Request.getSPS_BC_Request_ID() == 0) {
-			SPS_BC_Request.newOutRequest(getActivity(), m_Request);
+			SPS_BC_Request.sendRequest(m_ctx, m_Request);
 		}
 		//	
 		byte[] bytes = SerializerUtil.getFromFile(
-				Env.getBC_IMG_DirectoryPathName(getActivity()) + File.separator + p_FileName);
+				Env.getBC_IMG_DirectoryPathName(m_ctx) + File.separator + p_FileName);
 		//	Send Message
-		SyncMessage message = new SyncMessage(MQTTConnection.getClient_ID(getActivity()), 
+		SyncMessage message = new SyncMessage(MQTTConnection.getClient_ID(m_ctx), 
 				et_Message.getText().toString(), p_FileName, bytes, 
 				m_Request.getSPS_BC_Request_ID(), Env.getAD_User_ID(), Env.getContext("#AD_User_Name"));
-		//	Save Message
-		SPS_BC_Message.newOutMessage(m_ctx, message);
+		//	Send Message
+		SPS_BC_Message.sendMsg(m_ctx, message);
 		//	Add Message
 		addMsg(message, MQTTDefaultValues.TYPE_OUT);
 		seekToLastMsg();
-//		BC_OpenMsg.getInstance().addMsg(message);
 		//	Clear Data
 		et_Message.setText("");
 		//	
 		m_Reload = true;
-		//	Start Service
-//		if(!MQTTSyncService.isRunning()) {
-//			Intent service = new Intent(m_ctx, MQTTSyncService.class);
-//			m_ctx.startService(service);
-//		}
     }
     
     /**

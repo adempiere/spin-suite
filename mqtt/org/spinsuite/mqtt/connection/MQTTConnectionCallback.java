@@ -81,7 +81,9 @@ public class MQTTConnectionCallback implements MqttCallback {
 
 	@Override
 	public void deliveryComplete(IMqttDeliveryToken token) {
-		notifyDeliveryComplete(token);
+		if(token != null) {
+			notifyDeliveryComplete(token);
+		}
 	}
 
 	@Override
@@ -144,6 +146,7 @@ public class MQTTConnectionCallback implements MqttCallback {
 				LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error Saving File", e);
 			}
 		}
+		//	
 		boolean ok = SPS_BC_Message.newInMessage(m_Ctx, message);
 		//	
 		if(ok) {

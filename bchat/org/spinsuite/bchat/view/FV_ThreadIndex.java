@@ -25,6 +25,7 @@ import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.util.DisplayBChatThreadListItem;
 import org.spinsuite.interfaces.I_BC_FragmentSelect;
 import org.spinsuite.interfaces.I_FragmentSelect;
+import org.spinsuite.util.Env;
 
 import android.app.Activity;
 import android.content.Context;
@@ -158,8 +159,7 @@ public class FV_ThreadIndex extends ListFragment
     public boolean loadData() {
     	//	Create Connection
     	DB conn = DB.loadConnection(getActivity(), DB.READ_ONLY);
-    	//	Compile Query
-    	Cursor rs = conn.querySQL("SELECT "
+    	conn.compileQuery("SELECT "
     			+ "rq.SPS_BC_Request_ID, "
     			+ "COALESCE(rq.Name, us.Name) Name, "
     			+ "rq.LastMsg, "
@@ -168,7 +168,14 @@ public class FV_ThreadIndex extends ListFragment
     			+ "FROM SPS_BC_Request rq "
     			+ "INNER JOIN AD_User us ON(us.AD_User_ID = rq.AD_User_ID) "
     			+ "WHERE rq.IsActive = 'Y' "
-    			+ "ORDER BY rq.Updated DESC", null);
+    			+ "AND (rq.AD_User_ID = ?"
+    			+ "		OR EXISTS(SELECT 1 FROM SPS_BC_Request_User ru WHERE ru.AD_User_ID = ?)) "
+    			+ "ORDER BY rq.Updated DESC");
+    	//	Add Parameters
+    	conn.addInt(Env.getAD_User_ID(m_ctx));
+    	conn.addInt(Env.getAD_User_ID(m_ctx));
+    	//	Compile Query
+    	Cursor rs = conn.querySQL();
 		//	Instance Data
 		ArrayList<DisplayBChatThreadListItem> data = new ArrayList<DisplayBChatThreadListItem>();
     	//	Valid Result set

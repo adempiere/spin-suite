@@ -361,8 +361,10 @@ public class SyncService extends IntentService {
 			}
 			else
 			{
-				if (CurrentPage - pages != 0 && pages > 0){
-					p_Params[iWS] = new StringNamePair(Params[iWS].getKey(), Integer.valueOf(0).toString());
+				if (CurrentPage - pages != 0 && pages > 0) {
+					//	Fixed infinite loop by Salvatore Alonge 2018-05-05
+					p_Params[iWS] = new StringNamePair(Params[iWS].getKey(), Integer.valueOf(CurrentWS -1).toString());
+					//	End
 					p_Params[iPage] = new StringNamePair(Params[iPage].getKey(), Integer.valueOf(CurrentPage).toString());
 					//	Set to Call
 					sendStatus(getString(R.string.Calling) 

@@ -51,8 +51,6 @@ public class MQTTSyncService extends Service {
 	private static MQTTSyncService	m_CurrentService = null;
 	/**	Connect						*/
 	private static boolean 			m_IsRunning = false;
-	/**	Callback					*/
-	private MQTTConnectionCallback	m_CallBack = null;
 	/**	Time						*/
 	private long					m_millis = 0;
 	
@@ -69,6 +67,8 @@ public class MQTTSyncService extends Service {
 		if(!MQTTConnection.isNetworkOk(this)
 				&& !MQTTConnection.isAutomaticService(this)) {
 			stopSelf();
+			//	Set to false is Running
+			m_IsRunning = false;
 			//	
 			return START_NOT_STICKY;
 		}
@@ -124,14 +124,7 @@ public class MQTTSyncService extends Service {
 		}
 		//	Get Connection
 		m_Connection = MQTTConnection.getInstance(getApplicationContext(), 
-				new MQTTListener(getApplicationContext()), 
 				defaultTopics, isReload);
-		
-		m_CallBack = (MQTTConnectionCallback) m_Connection.getCallback();
-		if(m_CallBack == null) {
-			m_CallBack = new MQTTConnectionCallback(getApplicationContext());
-			m_Connection.setCallback(m_CallBack);
-		}
 		//	Connection
 		if(!connect()) {
 			return;
