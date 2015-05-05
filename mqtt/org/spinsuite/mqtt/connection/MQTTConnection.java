@@ -523,11 +523,16 @@ public class MQTTConnection {
 	 * @return
 	 * @return MQTTConnection
 	 */
-	public static MQTTConnection getInstance(Context p_Ctx, IMqttActionListener p_ConnectionListener, 
+	public static MQTTConnection getInstance(Context p_Ctx, 
+			IMqttActionListener p_ConnectionListener, MqttCallback p_Callback, 
 			String[] p_SubscribedTopics, boolean reLoad) {
 		if(m_Connection == null
 				|| reLoad) {
 			m_Connection = new MQTTConnection(p_Ctx, p_ConnectionListener, p_SubscribedTopics);
+			//	Valid Callback
+			if(p_Callback != null) {
+				m_Connection.setCallback(p_Callback);
+			}
 			//	Set to false reload
 			if(reLoad) {
 				MQTTConnection.setIsReloadService(p_Ctx, false);
@@ -538,29 +543,27 @@ public class MQTTConnection {
 	}
 	
 	/**
-	 * Get Instance without topics
+	 * Get Connection Instance without Connection Listener
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Ctx
-	 * @param p_ConnectionListener
-	 * @param p_Callback
+	 * @param p_SubscribedTopics
 	 * @param reLoad
 	 * @return
 	 * @return MQTTConnection
 	 */
-	public static MQTTConnection getInstance(Context p_Ctx, IMqttActionListener p_ConnectionListener, 
-			boolean reLoad) {
-		return getInstance(p_Ctx, p_ConnectionListener, null, reLoad);
+	public static MQTTConnection getInstance(Context p_Ctx, String[] p_SubscribedTopics, boolean reLoad) {
+		return getInstance(p_Ctx, new MQTTListener(p_Ctx), new MQTTConnectionCallback(p_Ctx), p_SubscribedTopics, reLoad);
 	}
 	
 	/**
-	 * Get Connection Instance without Connection Listener
+	 * Get Connection Instance
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Ctx
 	 * @return
 	 * @return MQTTConnection
 	 */
 	public static MQTTConnection getInstance(Context p_Ctx) {
-		return getInstance(p_Ctx, null, null, false);
+		return getInstance(p_Ctx, null, false);
 	}
 	
 	/**

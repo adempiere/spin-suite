@@ -94,8 +94,7 @@ public class Login extends TV_Base implements I_Login {
         // Validate SD
     	if(Env.isEnvLoad()) {
         	//	
-        	addFagment(T_Login.class, "Conn", R.string.tt_Conn);
-            addFagment(T_Role.class, "LoginRole", R.string.tt_LoginRole);
+        	loadTabs();
     		setEnabled(true);
     		//	
     		if(!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
@@ -214,8 +213,8 @@ public class Login extends TV_Base implements I_Login {
         	} else if(status.equals(SyncValues.BC_STATUS_END)) {
         		m_Builder.setContentTitle(msg)
             								.setSmallIcon(android.R.drawable.stat_sys_download);
-        		//	Set Default Values
-        		loadDefaultData();
+        		//	Load Default Tabs
+        		loadTabs();
         	}
     		//	Set Sub Title
     		if(subMsg != null
@@ -253,11 +252,19 @@ public class Login extends TV_Base implements I_Login {
 	 * @return void
 	 */
 	public void loadDefaultData() {
-		//	For Demo
-		addFagment(T_Login.class, "Conn", R.string.tt_Conn);
-        addFagment(T_Role.class, "LoginRole", R.string.tt_LoginRole);
+		loadTabs();
 		m_LoadType = DATA_BASE;
 		new LoadAccessTask().execute();
+	}
+	
+	/**
+	 * Load Tabs for Login
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void loadTabs() {
+		addFagment(T_Login.class, "Conn", R.string.tt_Conn);
+        addFagment(T_Role.class, "LoginRole", R.string.tt_LoginRole);
 	}
     
     /**

@@ -38,7 +38,7 @@ public class MQTTDefaultValues {
 	/**	Port											*/
 	public static final int 	DEFAULT_MQTT_PORT 			= 1883;
 	/**	Alarm Time										*/
-	public static final long 	DEFAULT_MQTT_ALARM_TIME 	= 1000 * 3;
+	public static final long 	DEFAULT_MQTT_ALARM_TIME 	= 1000 * 60;
 	/**	Notification ID									*/
 	public static final int		NOTIFICATION_ID 			= 777;
 	
@@ -53,6 +53,7 @@ public class MQTTDefaultValues {
 	public static final String STATUS_READED 		= "R";
 	public static final String STATUS_SENT 			= "S";
 	public static final String STATUS_REJECT 		= "J";
+	public static final String STATUS_SENDING 		= "G";
 	/**
 	 * Get Synchronization Topic
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com

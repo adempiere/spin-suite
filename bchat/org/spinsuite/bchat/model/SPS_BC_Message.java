@@ -21,7 +21,9 @@ import java.util.Date;
 import java.util.Random;
 import java.util.logging.Level;
 
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.spinsuite.base.DB;
+import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.sync.content.SyncMessage;
 import org.spinsuite.sync.content.SyncRequest;
@@ -46,7 +48,7 @@ public class SPS_BC_Message {
 	 * @return boolean
 	 */
 	public static boolean newInMessage(Context ctx, SyncMessage message) {
-		return newMessage(ctx, message, MQTTDefaultValues.TYPE_IN);
+		return newMessage(ctx, message, MQTTDefaultValues.TYPE_IN, null);
 	}
 	
 	/**
@@ -54,10 +56,11 @@ public class SPS_BC_Message {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
 	 * @param message
+	 * @param p_Status
 	 * @return boolean
 	 */
-	public static boolean newOutMessage(Context ctx, SyncMessage message) {
-		return newMessage(ctx, message, MQTTDefaultValues.TYPE_OUT);
+	public static boolean newOutMessage(Context ctx, SyncMessage message, String p_Status) {
+		return newMessage(ctx, message, MQTTDefaultValues.TYPE_OUT, p_Status);
 	}
 	
 	/**
@@ -208,9 +211,10 @@ public class SPS_BC_Message {
 	 * @param ctx
 	 * @param message
 	 * @param p_Type
+	 * @param p_Status
 	 * @return boolean
 	 */
-	public static boolean newMessage(Context ctx, SyncMessage message, String p_Type) {
+	public static boolean newMessage(Context ctx, SyncMessage message, String p_Type, String p_Status) {
 		boolean ok = false;
 		if(message == null) {
 			LogM.log(ctx, SPS_BC_Message.class, Level.CONFIG, "Null message for Insert");
@@ -249,6 +253,9 @@ public class SPS_BC_Message {
 			}
 			int m_AD_User_ID = (p_Type.equals(MQTTDefaultValues.TYPE_IN)? message.getAD_User_ID(): Env.getAD_User_ID());
 			Date now = new Date(System.currentTimeMillis());
+			if(p_Status == null)
+				p_Status = MQTTDefaultValues.STATUS_CREATED;
+			
 			conn.addInt(m_AD_Client_ID);
 			conn.addInt(m_AD_Org_ID);
 			conn.addInt(m_AD_User_ID);
@@ -261,7 +268,7 @@ public class SPS_BC_Message {
 			conn.addInt(message.getSPS_BC_Request_ID());
 			conn.addInt(message.getSPS_BC_Message_ID());
 			conn.addString(p_Type);
-			conn.addString(MQTTDefaultValues.STATUS_CREATED);
+			conn.addString(p_Status);
 			conn.addString(message.getFileName());
 			//	Execute
 			conn.executeSQLEx();
@@ -392,4 +399,46 @@ public class SPS_BC_Message {
 			DB.closeConnection(conn);
 		}
 	}
+	
+	/**
+     * Send Message
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_ctx
+     * @param message
+     * @return void
+     */
+    public static void sendMsg(Context p_ctx, SyncMessage message) {
+    	//	Valid Message
+    	if(message == null) {
+    		return;
+    	}
+		//	Save Message
+		newOutMessage(p_ctx, message, MQTTDefaultValues.STATUS_SENDING);
+		//	Send
+		MQTTConnection m_Connection = MQTTConnection.getInstance(p_ctx);
+		if(m_Connection.isConnected()) {
+			try {
+				//	Set Client ID
+				message.setLocalClient_ID(MQTTConnection.getClient_ID(p_ctx));
+				//	Get Request for Topic
+				SyncRequest request = SPS_BC_Request.getRequest(p_ctx, message.getSPS_BC_Request_ID());
+				//	Valid Request
+				if(request == null) {
+					return;
+				}
+				byte[] payload = SerializerUtil.serializeObjectEx(message);
+				MqttMessage msg = new MqttMessage(payload);
+				msg.setQos(MQTTConnection.EXACTLY_ONCE_2);
+				msg.setRetained(true);
+				m_Connection.publish(request.getTopicName(), msg);
+			} catch (Exception e) {
+				LogM.log(p_ctx, SPS_BC_Message.class, Level.SEVERE, "Error", e);
+				SPS_BC_Message.setStatus(p_ctx, 
+						message.getSPS_BC_Message_ID(), MQTTDefaultValues.STATUS_CREATED);
+			}
+		} else {
+			setStatus(p_ctx, 
+					message.getSPS_BC_Message_ID(), MQTTDefaultValues.STATUS_CREATED);
+		}
+    }
 }

@@ -87,7 +87,7 @@ public class Lookup {
 	 */
 	public Lookup(Context ctx, TabParameter tabParam, InfoField field, String tableAlias) {
 		this.m_field = field;
-		this.ctx = ctx;
+		this.m_ctx = ctx;
 		m_Language = Env.getAD_Language();
 		m_IsBaseLanguage = Env.isBaseLanguage();
 		m_TabParam = tabParam;
@@ -134,7 +134,7 @@ public class Lookup {
 	 */
 	public Lookup(Context ctx, TabParameter tabParam, int m_SPS_Column_ID, String tableAlias) {
 		this.m_field = GridField.loadInfoColumnField(ctx, m_SPS_Column_ID);
-		this.ctx = ctx;
+		this.m_ctx = ctx;
 		m_Language = Env.getAD_Language();
 		m_IsBaseLanguage = Env.isBaseLanguage();
 		m_TabParam = tabParam;
@@ -182,7 +182,7 @@ public class Lookup {
 		//	Load Field
 		m_field = GridField.loadInfoColumnField(ctx, m_SPS_Column_ID);
 		//	Set Property
-		this.ctx = ctx;
+		this.m_ctx = ctx;
 		m_Language = Env.getAD_Language();
 		m_IsBaseLanguage = Env.isBaseLanguage();
 		ctx_lookup_value = CTX_VALUE_PREFIX + m_Language + "|" + m_field.SPS_Column_ID;
@@ -217,7 +217,7 @@ public class Lookup {
 		//	Load Field
 		m_field = GridField.loadInfoColumnField(ctx, m_TableName, m_ColumnName);
 		//	Set Property
-		this.ctx = ctx;
+		this.m_ctx = ctx;
 		m_Language = Env.getAD_Language();
 		m_IsBaseLanguage = Env.isBaseLanguage();
 		ctx_lookup_value = CTX_VALUE_PREFIX + m_Language + "|" + m_field.SPS_Column_ID;
@@ -267,7 +267,7 @@ public class Lookup {
 	 */
 	public Lookup(Context ctx, int m_SPS_Table_ID) {
 		this.m_SPS_Table_ID = m_SPS_Table_ID;
-		this.ctx = ctx;
+		this.m_ctx = ctx;
 		m_Language = Env.getAD_Language();
 		m_IsBaseLanguage = Env.isBaseLanguage();
 		ctx_lookup_value = CTX_VALUE_PREFIX_TABLE + m_Language + "|" + m_SPS_Table_ID;
@@ -283,7 +283,7 @@ public class Lookup {
 	/**	Table					*/
 	private int									m_SPS_Table_ID 			= 0;
 	/**	Context					*/
-	private Context								ctx 					= null;
+	private Context								m_ctx 					= null;
 	/**	Optional where clause	*/
 	private String								m_OptionalWhereClause 	= null;
 	/**	Validation Rule			*/
@@ -364,7 +364,7 @@ public class Lookup {
 	public String getSQL() {
 		//	Cache
 		if(m_IsLoaded)
-			return Env.parseContext(m_TabParam.getActivityNo(), m_TabParam.getTabNo(), getParsedSQL(m_SQL), false, null);
+			return Env.parseContext(m_ctx, m_TabParam.getActivityNo(), m_TabParam.getTabNo(), getParsedSQL(m_SQL), false, null);
 		//	
 		boolean isCache = false;
 		String sqlParsed = null;
@@ -379,33 +379,33 @@ public class Lookup {
 				m_InfoLookup = (InfoLookup) Env.getContextObject(ctx_lookup_info, InfoLookup.class);
 				//	From Cache Where Clause
 				if(m_InfoLookup != null)
-					LogM.log(ctx, getClass(), Level.FINE, "From Cache[Where Clause=" + m_InfoLookup.WhereClause + "]");
+					LogM.log(m_ctx, getClass(), Level.FINE, "From Cache[Where Clause=" + m_InfoLookup.WhereClause + "]");
 				//	Parse
 				sqlParsed = getParsedSQL(m_SQL);
 				//	
-				LogM.log(ctx, getClass(), Level.FINE, "From Cache[SQL=" + sqlParsed + "]");
-				return Env.parseContext(m_TabParam.getActivityNo(), m_TabParam.getTabNo(), sqlParsed, false, null);
+				LogM.log(m_ctx, getClass(), Level.FINE, "From Cache[SQL=" + sqlParsed + "]");
+				return Env.parseContext(m_ctx, m_TabParam.getActivityNo(), m_TabParam.getTabNo(), sqlParsed, false, null);
 			}
 			//	Reload
-			LogM.log(ctx, getClass(), Level.FINE, 
+			LogM.log(m_ctx, getClass(), Level.FINE, 
 					"Reload Field=(" + m_field.ColumnName + ", " 
 							+ m_field.DisplayType + ", " + m_field.AD_Reference_Value_ID + ")");
 			//	
 			if(m_field.DisplayType == DisplayType.TABLE_DIR) {
 				m_SQL = loadSQLTableDirect();
-				LogM.log(ctx, getClass(), Level.FINE, "SQLTableDirect=" + m_SQL);
+				LogM.log(m_ctx, getClass(), Level.FINE, "SQLTableDirect=" + m_SQL);
 			} else if((m_field.DisplayType == DisplayType.TABLE 
 					|| m_field.DisplayType == DisplayType.SEARCH)
 					&& m_field.AD_Reference_Value_ID != 0) {
 				m_SQL = loadSQLTableSearch();
-				LogM.log(ctx, getClass(), Level.FINE, "SQLTableSearch=" + m_SQL);
+				LogM.log(m_ctx, getClass(), Level.FINE, "SQLTableSearch=" + m_SQL);
 			} else if((m_field.DisplayType == DisplayType.LIST)
 					&& m_field.AD_Reference_Value_ID != 0) {
 				m_SQL = loadSQLList();
-				LogM.log(ctx, getClass(), Level.FINE, "SQLList=" + m_SQL);
+				LogM.log(m_ctx, getClass(), Level.FINE, "SQLList=" + m_SQL);
 			} else {
 				m_SQL = loadSQLTableDirect();
-				LogM.log(ctx, getClass(), Level.FINE, "SQLTableDirectDefault=" + m_SQL);
+				LogM.log(m_ctx, getClass(), Level.FINE, "SQLTableDirectDefault=" + m_SQL);
 			}
 		} else {
 			//	
@@ -417,16 +417,16 @@ public class Lookup {
 				m_InfoLookup = (InfoLookup) Env.getContextObject(ctx_lookup_info, InfoLookup.class);
 				//	From Cache Where Clause
 				if(m_InfoLookup != null)
-					LogM.log(ctx, getClass(), Level.FINE, "From Cache[Where Clause=" + m_InfoLookup.WhereClause + "]");
+					LogM.log(m_ctx, getClass(), Level.FINE, "From Cache[Where Clause=" + m_InfoLookup.WhereClause + "]");
 				//	Parse
 				sqlParsed = getParsedSQL(m_SQL);
 				//	
-				LogM.log(ctx, getClass(), Level.FINE, "From Cache[SQL=" + sqlParsed + "]");
-				return Env.parseContext(m_TabParam.getActivityNo(), m_TabParam.getTabNo(), sqlParsed, false, null);
+				LogM.log(m_ctx, getClass(), Level.FINE, "From Cache[SQL=" + sqlParsed + "]");
+				return Env.parseContext(m_ctx, m_TabParam.getActivityNo(), m_TabParam.getTabNo(), sqlParsed, false, null);
 			}
 			//	
 			m_SQL = loadFromTable();
-			LogM.log(ctx, getClass(), Level.FINE, "SQL=" + m_SQL);
+			LogM.log(m_ctx, getClass(), Level.FINE, "SQL=" + m_SQL);
 		}
 		//	Set Is Loaded
 		m_IsLoaded = true;
@@ -439,11 +439,11 @@ public class Lookup {
 		//	
 		//	From Cache Where Clause
 		if(m_InfoLookup != null)
-			LogM.log(ctx, getClass(), Level.FINE, "Without Cache[Where Clause=" + m_InfoLookup.WhereClause + "]");
+			LogM.log(m_ctx, getClass(), Level.FINE, "Without Cache[Where Clause=" + m_InfoLookup.WhereClause + "]");
 		//	
-		LogM.log(ctx, getClass(), Level.FINE, "[SQL Without Cache=" + sqlParsed + "]");
+		LogM.log(m_ctx, getClass(), Level.FINE, "[SQL Without Cache=" + sqlParsed + "]");
 		//	Return
-		return Env.parseContext(m_TabParam.getActivityNo(), m_TabParam.getTabNo(), sqlParsed, false, null);
+		return Env.parseContext(m_ctx, m_TabParam.getActivityNo(), m_TabParam.getTabNo(), sqlParsed, false, null);
 	}
 	
 	/**
@@ -456,7 +456,7 @@ public class Lookup {
 		//	Get SQL
 		if(m_InfoLookup == null) {
 			m_InfoLookup = (InfoLookup) Env.getContextObject(ctx_lookup_info, InfoLookup.class);
-			LogM.log(ctx, getClass(), Level.FINE, "[Get Lookup From Cache=" + m_InfoLookup + "]");
+			LogM.log(m_ctx, getClass(), Level.FINE, "[Get Lookup From Cache=" + m_InfoLookup + "]");
 		}
 		if(m_InfoLookup == null)
 			getSQL();
@@ -477,7 +477,7 @@ public class Lookup {
 		if(m_ValRule != null)
 			return m_ValRule;
 		//	
-		String code = DB.getSQLValueString(ctx, "SELECT vr.Code " +
+		String code = DB.getSQLValueString(m_ctx, "SELECT vr.Code " +
 				"FROM AD_Val_Rule vr " +
 				"WHERE AD_Val_Rule_ID = " + m_field.AD_Val_Rule_ID);
 		//	Parse
@@ -510,7 +510,7 @@ public class Lookup {
 		//	SQL
 		sql.append("SELECT ").append(m_TableAlias).append(".").append(m_field.ColumnName);
 		//	
-		DB conn = new DB(ctx);
+		DB conn = new DB(m_ctx);
 		DB.loadConnection(conn, DB.READ_ONLY);
 		Cursor rs = null;
 		//	Query
@@ -536,7 +536,7 @@ public class Lookup {
 					longColumn.append("||'_'||");
 				//	
 				if(DisplayType.isLookup(displayType)) {
-					Lookup lookup = new Lookup(ctx, m_SPS_Column_ID, aliasPrefix + aliasCount++);
+					Lookup lookup = new Lookup(m_ctx, m_SPS_Column_ID, aliasPrefix + aliasCount++);
 					InfoLookup infoLookup = lookup.getInfoLookup();
 					//	Add to Display Column
 					longColumn.append(infoLookup.DisplayColumn
@@ -554,7 +554,7 @@ public class Lookup {
 			//	
 			sql.append(longColumn);
 			//	Check Document Status
-			int m_DocAction_ID = DB.getSQLValue(ctx, "SELECT c.SPS_Column_ID " +
+			int m_DocAction_ID = DB.getSQLValue(m_ctx, "SELECT c.SPS_Column_ID " +
 										"FROM SPS_Column c " +
 										"WHERE c.SPS_Table_ID = " + m_SPS_Table_ID + " " +
 										"AND c.ColumnName = ?", DOC_STATUS);
@@ -614,7 +614,7 @@ public class Lookup {
 		StringBuffer sql = new StringBuffer();
 		StringBuffer where = new StringBuffer();
 		sql.append("SELECT ");
-		DB conn = new DB(ctx);
+		DB conn = new DB(m_ctx);
 		DB.loadConnection(conn, DB.READ_ONLY);
 		Cursor rs = null;
 		//	Query
@@ -660,7 +660,7 @@ public class Lookup {
 			longColumn.append("COALESCE(").append(m_TableAlias).append(".").append(dColumnName).append(",'')");
 			sql.append(longColumn);
 			//	Check Document Status
-			int m_DocAction_ID = DB.getSQLValue(ctx, "SELECT c.SPS_Column_ID " +
+			int m_DocAction_ID = DB.getSQLValue(m_ctx, "SELECT c.SPS_Column_ID " +
 										"FROM SPS_Column c " +
 										"WHERE c.SPS_Table_ID = " + m_SPS_Table_ID + " " +
 										"AND c.ColumnName = ?", DOC_STATUS);
@@ -793,7 +793,7 @@ public class Lookup {
 		//	
 		StringBuffer sql = new StringBuffer();
 		String tableName = null;
-		DB conn = new DB(ctx);
+		DB conn = new DB(m_ctx);
 		DB.loadConnection(conn, DB.READ_ONLY);
 		Cursor rs = null;
 		boolean isParent = false;
@@ -846,7 +846,7 @@ public class Lookup {
 					longColumn.append("||'").append(InfoLookup.TABLE_SEARCH_SEPARATOR).append("'||");
 				//	
 				if(DisplayType.isLookup(displayType)) {
-					Lookup lookup = new Lookup(ctx, m_SPS_Column_ID, aliasPrefix + aliasCount++);
+					Lookup lookup = new Lookup(m_ctx, m_SPS_Column_ID, aliasPrefix + aliasCount++);
 					InfoLookup infoLookup = lookup.getInfoLookup();
 					//	Add to Display Column
 					longColumn.append(infoLookup.DisplayColumn);
@@ -878,7 +878,7 @@ public class Lookup {
 			//	Add Long Column
 			sql.append(longColumn);
 			//	Check Document Status
-			int m_DocAction_ID = DB.getSQLValue(ctx, "SELECT c.SPS_Column_ID " +
+			int m_DocAction_ID = DB.getSQLValue(m_ctx, "SELECT c.SPS_Column_ID " +
 										"FROM SPS_Column c " +
 										"WHERE c.SPS_Table_ID = " + m_SPS_Table_ID + " " +
 										"AND c.ColumnName = ?", DOC_STATUS);
@@ -905,7 +905,7 @@ public class Lookup {
 		m_IsHasWhere = false;
 		m_InfoLookup.WhereClause = null;
 		sql.append(MARK_WHERE);
-		LogM.log(ctx, getClass(), Level.FINE, "SQL (loadFromTable())= " + sql.toString());
+		LogM.log(m_ctx, getClass(), Level.FINE, "SQL (loadFromTable())= " + sql.toString());
 		//	Return
 		return sql.toString();
 	}
@@ -994,7 +994,7 @@ public class Lookup {
 				return;
 			}
 			//	
-			DB conn = new DB(ctx);
+			DB conn = new DB(m_ctx);
 			//	
 			DB.loadConnection(conn, DB.READ_ONLY);
 			Cursor rs = null;
@@ -1023,7 +1023,7 @@ public class Lookup {
 		} catch(Exception e) {
 			isSyntaxError = true;
 			data = new ArrayList<DisplayLookupSpinner>();
-			LogM.log(ctx, getClass(), Level.SEVERE, "Error in Load", e);
+			LogM.log(m_ctx, getClass(), Level.SEVERE, "Error in Load", e);
 		}
 	}
 	
@@ -1084,7 +1084,7 @@ public class Lookup {
 	@Override
 	public String toString() {
 		return "LookupDisplayType [m_field=" + m_field + ", m_SPS_Table_ID="
-				+ m_SPS_Table_ID + ", ctx=" + ctx + ", m_optionalWhereClause="
+				+ m_SPS_Table_ID + ", ctx=" + m_ctx + ", m_optionalWhereClause="
 				+ m_OptionalWhereClause + ", m_InfoLookup=" + m_InfoLookup
 				+ ", m_IsLoaded=" + m_IsLoaded + ", m_SQL=" + m_SQL + "]";
 	}

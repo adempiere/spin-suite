@@ -2905,11 +2905,11 @@ public final class Env {
 	 * 	@param ignoreUnparsable if true, unsuccessful @return parsed String or "" if not successful and ignoreUnparsable
 	 *	@return parsed context 
 	 */
-	public static String parseContext(int m_ActivityNo, int m_TabNo, 
-			String whereClause, boolean ignoreUnparsable,String defaultUnparseable) {
-		return parseContext(getCtx(), m_ActivityNo, m_TabNo, 
-				whereClause, ignoreUnparsable, defaultUnparseable);
-	}
+//	public static String parseContext(int m_ActivityNo, int m_TabNo, 
+//			String whereClause, boolean ignoreUnparsable,String defaultUnparseable) {
+//		return parseContext(getCtx(), m_ActivityNo, m_TabNo, 
+//				whereClause, ignoreUnparsable, defaultUnparseable);
+//	}
 	
 	/**
 	 * Get Default Language
