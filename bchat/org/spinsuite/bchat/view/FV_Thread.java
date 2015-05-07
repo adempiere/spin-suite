@@ -255,7 +255,7 @@ public class FV_Thread extends Fragment {
 			}
 			
 		});
-		
+		//	Return
 		return m_view;
 	}
     
@@ -276,7 +276,8 @@ public class FV_Thread extends Fragment {
 		//	Send Message
 		SyncMessage message = new SyncMessage(MQTTConnection.getClient_ID(m_ctx), 
 				et_Message.getText().toString(), p_FileName, bytes, 
-				m_Request.getSPS_BC_Request_ID(), Env.getAD_User_ID(), Env.getContext("#AD_User_Name"));
+				m_Request.getSPS_BC_Request_ID(), Env.getAD_User_ID(), 
+				Env.getContext("#AD_User_Name"), m_Request.getTopicName());
 		//	Send Message
 		SPS_BC_Message.sendMsg(m_ctx, message);
 		//	Add Message
@@ -421,11 +422,11 @@ public class FV_Thread extends Fragment {
     /**
      * Select a Conversation
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-     * @param p_SPS_BC_Request_ID
+     * @param p_TopicName
      * @return void
      */
-    public void selectConversation(int p_SPS_BC_Request_ID) {
-    	m_Request = SPS_BC_Request.getRequest(m_ctx, p_SPS_BC_Request_ID);
+    public void selectConversation(String p_TopicName) {
+    	m_Request = SPS_BC_Request.getRequest(m_ctx, p_TopicName);
     	//	Set Reload Data
     	m_Reload = true;
     	if(m_view != null
@@ -498,13 +499,12 @@ public class FV_Thread extends Fragment {
     	//	For Request
     	if(p_AD_User_ID != 0
     			&& p_AD_User_ID != -1) {
-			int m_SPS_BC_Request_ID = DB.getSQLValue(m_ctx, 
+			String m_TopicName = DB.getSQLValueString(m_ctx, 
 					"SELECT r.SPS_BC_Request_ID FROM SPS_BC_Request r "
 					+ "WHERE r.Name = ?", new String[]{p_Name});
 			//	
-			if(m_SPS_BC_Request_ID != 0
-					&& m_SPS_BC_Request_ID != -1) {
-				m_Request = SPS_BC_Request.getRequest(m_ctx, m_SPS_BC_Request_ID);
+			if(m_TopicName != null) {
+				m_Request = SPS_BC_Request.getRequest(m_ctx, m_TopicName);
 			} else {
 				m_Request = new SyncRequest(0, 
 						String.valueOf(Env.getAD_User_ID()), 

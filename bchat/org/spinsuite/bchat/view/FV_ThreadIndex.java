@@ -164,7 +164,8 @@ public class FV_ThreadIndex extends ListFragment
     			+ "COALESCE(rq.Name, us.Name) Name, "
     			+ "rq.LastMsg, "
     			+ "(strftime('%s', rq.Updated)*1000) Updated, "
-    			+ "rq.Type "
+    			+ "rq.Type, "
+    			+ "rq.Topic "
     			+ "FROM SPS_BC_Request rq "
     			+ "INNER JOIN AD_User us ON(us.AD_User_ID = rq.AD_User_ID) "
     			+ "WHERE rq.IsActive = 'Y' "
@@ -189,6 +190,7 @@ public class FV_ThreadIndex extends ListFragment
     					rs.getString(col++), 
     					null, 
     					new Date(rs.getLong(col++)), 
+    					rs.getString(col++), 
     					rs.getString(col++)));
     			//	Set Column
     			col = 0;
@@ -232,14 +234,14 @@ public class FV_ThreadIndex extends ListFragment
     public void onListItemClick(ListView l, View v, int position, long id) {
     	//	
     	DisplayBChatThreadListItem item = m_Adapter.getItem(position);
-    	onItemSelected(item.getRecord_ID());
+    	onItemSelected(item.getTopicName());
     	//	Change on List View
     	//getListView().setItemChecked(position, true);
     }
 
     @Override
-    public void onItemSelected(int p_Record_ID) {
-    	m_Callback.onItemSelected(p_Record_ID, null, V_BChat.TYPE_SELECT_CONVERSATION);
+    public void onItemSelected(String p_TopicName) {
+    	m_Callback.onItemSelected(0, p_TopicName, V_BChat.TYPE_SELECT_CONVERSATION);
     }
     
     @Override

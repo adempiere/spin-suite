@@ -452,12 +452,10 @@ public final class DisplayType
 			if(dateAsDate)
 				return value;
 			//	Format
-			SimpleDateFormat format;
-			//	For Any
-			format = getTimestampFormat_Default();
-			//	Date
-			Date valueDate = (Date) value;
-			//	Date to String
+			SimpleDateFormat format = getTimestampFormat_Default();
+			//	Convert from Date to Standard Format
+			Date valueDate = getDateToFormat((Date) value, format);
+			//	Parse
 			String valueString = format.format(valueDate);
 			//	Return
 			return valueString;
@@ -479,6 +477,24 @@ public final class DisplayType
 		//
 		return value;
 	}   //  getClass
+	
+	
+	/**
+	 * Get OffSet from Time to Format
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Date
+	 * @param p_To_Format
+	 * @return
+	 * @return Date
+	 */
+	public static Date getDateToFormat(Date p_Date, SimpleDateFormat p_To_Format) {
+		//	Date to String
+		long currentTimeLong = p_Date.getTime();
+		long diffTimeLong = p_To_Format.getTimeZone().getRawOffset();
+		diffTimeLong = diffTimeLong * Long.signum(diffTimeLong);
+		//	Convert
+		return new Date(currentTimeLong + diffTimeLong);
+	}
 	
 	/**
 	 * Get value from Display Type

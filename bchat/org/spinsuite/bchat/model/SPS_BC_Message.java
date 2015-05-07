@@ -85,9 +85,11 @@ public class SPS_BC_Message {
 			//	Compile Query
 			conn.compileQuery("SELECT "
 					+ "m.Text, "
+					+ "m.FileName, "
 					+ "m.SPS_BC_Request_ID, "
 					+ "m.AD_User_ID, "
-					+ "u.Name "
+					+ "u.Name, "
+					+ "m.Topic "
 					+ "FROM SPS_BC_Message m "
 					+ "INNER JOIN AD_User u ON(u.AD_User_ID = m.AD_User_ID) "
 					+ "WHERE m.SPS_BC_Message_ID = ?");
@@ -100,11 +102,12 @@ public class SPS_BC_Message {
 				message = new SyncMessage(
 						null, 
 						rs.getString(0), 
+						rs.getString(1), 
 						null, 
-						null, 
-						rs.getInt(1), 
 						rs.getInt(2), 
-						rs.getString(3));
+						rs.getInt(3), 
+						rs.getString(4), 
+						rs.getString(5));
 				//	End
 			}
 		} catch (Exception e) {
@@ -142,7 +145,8 @@ public class SPS_BC_Message {
 					+ "SPS_BC_Message.AD_User_ID, "
 					+ "SPS_BC_Message.Text, "
 					+ "u.Name UserName, "
-					+ "SPS_BC_Message.FileName "
+					+ "SPS_BC_Message.FileName, "
+					+ "SPS_BC_Message.Topic "
 					+ "FROM SPS_BC_Message "
 					+ "INNER JOIN AD_User u ON(u.AD_User_ID = SPS_BC_Message.AD_User_ID) "
 					+ "WHERE SPS_BC_Message.Status = ? "
@@ -171,6 +175,7 @@ public class SPS_BC_Message {
 					msg.setText(rs.getString(3));
 					msg.setUserName(rs.getString(4));
 					msg.setFileName(rs.getString(5));
+					msg.setTopicName(rs.getString(6));
 					//	Get Attachment
 					msg.setAttachment(getAttachment(ctx, msg.getFileName()));
 					//	Add Request
@@ -241,21 +246,29 @@ public class SPS_BC_Message {
 					+ "SPS_BC_Message_ID, "
 					+ "Type, "
 					+ "Status, "
-					+ "FileName) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					+ "FileName, "
+					+ "Topic) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			//	Add Values
 			int m_AD_Client_ID = Env.getAD_Client_ID();
 			int m_AD_Org_ID = Env.getAD_Org_ID();
-			int m_SPS_BC_Message_ID = message.getSPS_BC_Message_ID();
+			int m_SPS_BC_Message_ID = new Random().nextInt();
+			int m_AD_User_ID = message.getAD_User_ID();
+			String m_Topic = message.getTopicName();
+			message.setSPS_BC_Message_ID(m_SPS_BC_Message_ID);
 			//	For Out
 			if(p_Type.equals(MQTTDefaultValues.TYPE_OUT)) {
-				m_SPS_BC_Message_ID = new Random().nextInt();
-				message.setSPS_BC_Message_ID(m_SPS_BC_Message_ID);
+				m_AD_User_ID = Env.getAD_User_ID(); 
+			} else if(p_Type.equals(MQTTDefaultValues.TYPE_IN)) {
+				SyncRequest request = SPS_BC_Request.getRequest(ctx, message.getTopicName());
+				if(request != null) {
+					message.setSPS_BC_Request_ID(request.getSPS_BC_Request_ID());
+				}
 			}
-			int m_AD_User_ID = (p_Type.equals(MQTTDefaultValues.TYPE_IN)? message.getAD_User_ID(): Env.getAD_User_ID());
+			//	
 			Date now = new Date(System.currentTimeMillis());
-			if(p_Status == null)
+			if(p_Status == null) {
 				p_Status = MQTTDefaultValues.STATUS_CREATED;
-			
+			}
 			conn.addInt(m_AD_Client_ID);
 			conn.addInt(m_AD_Org_ID);
 			conn.addInt(m_AD_User_ID);
@@ -270,16 +283,19 @@ public class SPS_BC_Message {
 			conn.addString(p_Type);
 			conn.addString(p_Status);
 			conn.addString(message.getFileName());
+			conn.addString(m_Topic);
 			//	Execute
 			conn.executeSQLEx();
 			//	Update Header
 			conn.compileQuery("UPDATE SPS_BC_Request "
 					+ "SET Updated = ?, "
-					+ "LastMsg = ? "
+					+ "LastMsg = ?, "
+					+ "LastFileName = ? "
 					+ "WHERE SPS_BC_Request_ID = ?");
 			//	Add Parameters
 			conn.addDateTime(now);
 			conn.addString(message.getText());
+			conn.addString(message.getFileName());
 			conn.addInt(message.getSPS_BC_Request_ID());
 			//	Execute
 			conn.executeSQLEx();		
@@ -364,7 +380,7 @@ public class SPS_BC_Message {
 			conn.addInt(request.getSPS_BC_Request_ID());
 			conn.executeSQL();
 			//	Get Last Message
-			conn.compileQuery("SELECT m.Text, (strftime('%s', m.Updated)*1000) Updated "
+			conn.compileQuery("SELECT m.Text, m.FileName, (strftime('%s', m.Updated)*1000) Updated "
 					+ "FROM SPS_BC_Message m "
 					+ "WHERE SPS_BC_Request_ID = ? "
 					+ "ORDER BY Updated DESC");
@@ -373,20 +389,24 @@ public class SPS_BC_Message {
 			//	Execute
 			Cursor rs = conn.querySQL();
 			String m_LastText = null;
+			String m_LastFileName = null;
 			long m_time = 0;
 			if(rs != null
 					&& rs.moveToFirst()) {
 				m_LastText = rs.getString(0);
-				m_time = rs.getLong(1);
+				m_LastFileName = rs.getString(1);
+				m_time = rs.getLong(2);
 			}
 			//	
 			conn.compileQuery("UPDATE SPS_BC_Request "
 					+ "SET Updated = ?, "
-					+ "LastMsg = ? "
+					+ "LastMsg = ?, "
+					+ "LastFileName = ? "
 					+ "WHERE SPS_BC_Request_ID = ?");
 			//	Add Parameters
 			conn.addDateTime(new Date(m_time));
 			conn.addString(m_LastText);
+			conn.addString(m_LastFileName);
 			conn.addInt(request.getSPS_BC_Request_ID());
 			//	Execute
 			conn.executeSQL();		
@@ -421,11 +441,12 @@ public class SPS_BC_Message {
 				//	Set Client ID
 				message.setLocalClient_ID(MQTTConnection.getClient_ID(p_ctx));
 				//	Get Request for Topic
-				SyncRequest request = SPS_BC_Request.getRequest(p_ctx, message.getSPS_BC_Request_ID());
+				SyncRequest request = SPS_BC_Request.getRequest(p_ctx, message.getTopicName());
 				//	Valid Request
 				if(request == null) {
 					return;
 				}
+				//	
 				byte[] payload = SerializerUtil.serializeObjectEx(message);
 				MqttMessage msg = new MqttMessage(payload);
 				msg.setQos(MQTTConnection.EXACTLY_ONCE_2);

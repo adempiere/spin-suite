@@ -27,6 +27,7 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
+import org.spinsuite.base.DB;
 import org.spinsuite.bchat.model.SPS_BC_Message;
 import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
@@ -101,15 +102,35 @@ public class MQTTConnectionCallback implements MqttCallback {
 			}
 			if(parent instanceof SyncRequest) {
 				SyncRequest request = (SyncRequest) parent;
+				//	Valid if Exists
+				if(existsRequest(request))
+					return;
 				//	Save request
 				requestArrived(request);
 				//	Subscribe to Topic request
 				subscribeToRequest(request);
 			} else if(parent instanceof SyncMessage) {
 				SyncMessage message = (SyncMessage) parent;
+				message.setTopicName(topic);
 				saveMessageArrived(message);
 			}
 		}
+	}
+	
+	/**
+	 * Verify if Exists Request
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param request
+	 * @return
+	 * @return boolean
+	 */
+	private boolean existsRequest(SyncRequest request) {
+		int m_SPS_Request_ID = DB.getSQLValue(m_Ctx, 
+				"SELECT SPS_BC_Request_ID "
+				+ "FROM SPS_BC_Request "
+				+ "WHERE Topic = ?", request.getTopicName());
+		//	Verify if exists
+		return (m_SPS_Request_ID != 0);
 	}
 	
 	/**
@@ -164,7 +185,7 @@ public class MQTTConnectionCallback implements MqttCallback {
 	 * @return void
 	 */
 	private void sendNotification(SyncMessage message) {
-		SyncRequest request = SPS_BC_Request.getRequest(m_Ctx, message.getSPS_BC_Request_ID());
+		SyncRequest request = SPS_BC_Request.getRequest(m_Ctx, message.getTopicName());
 		m_Builder.setContentTitle(request.getName())
 			.setContentText(message.getText())
 			.setSmallIcon(android.R.drawable.stat_notify_chat);
@@ -195,7 +216,7 @@ public class MQTTConnectionCallback implements MqttCallback {
 		//	Set Vibration
 		m_Builder.setVibrate(new long[] {1000, 500, 1000, 500, 1000});
 	    //	Set Light
-		m_Builder.setLights(Color.GRAY, 3000, 3000);
+		m_Builder.setLights(Color.GREEN, 3000, 3000);
 		//	Set Sound
 		Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 		m_Builder.setSound(alarmSound);

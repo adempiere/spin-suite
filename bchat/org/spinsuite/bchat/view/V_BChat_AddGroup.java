@@ -195,7 +195,7 @@ public class V_BChat_AddGroup extends Activity {
         			}
         		}
     			//	Save Request
-    			SPS_BC_Request.newOutRequest(this, request);
+    			SPS_BC_Request.sendRequest(this, request);
     			//	Add Param
     			Intent intent = getIntent();
     			intent.putExtra("SPS_BC_Request_ID", request.getSPS_BC_Request_ID());

@@ -177,12 +177,8 @@ public class MQTTSyncService extends Service {
 		if(m_Connection.isConnected()) {			
 			SyncMessage msgList[] = SPS_BC_Message.getMessage(this, 
 					MQTTDefaultValues.STATUS_CREATED, 
-					MQTTDefaultValues.TYPE_OUT, 
-					"EXISTS(SELECT 1 FROM SPS_BC_Request_User ru "
-					+ "INNER JOIN SPS_BC_Request r ON(r.SPS_BC_Request_ID = ru.SPS_BC_Request_ID) "
-					+ "WHERE ru.SPS_BC_Request_ID = SPS_BC_Message.SPS_BC_Request_ID "
-					+ "AND (ru.Status = '" + MQTTDefaultValues.STATUS_SENT + "' OR r.Type = '" + MQTTDefaultValues.TYPE_IN + "'))", 
-					true);
+					MQTTDefaultValues.TYPE_OUT,
+					null, true);
 			//	
 			String m_LocalClient_ID = MQTTConnection.getClient_ID(this);
 			for(SyncMessage msgForSend : msgList) {
@@ -190,7 +186,7 @@ public class MQTTSyncService extends Service {
 					//	Set Client ID
 					msgForSend.setLocalClient_ID(m_LocalClient_ID);
 					//	Get Request for Topic
-					SyncRequest request = SPS_BC_Request.getRequest(this, msgForSend.getSPS_BC_Request_ID());
+					SyncRequest request = SPS_BC_Request.getRequest(this, msgForSend.getTopicName());
 					byte[] msg = SerializerUtil.serializeObjectEx(msgForSend);
 					MqttMessage message = new MqttMessage(msg);
 					message.setQos(MQTTConnection.EXACTLY_ONCE_2);

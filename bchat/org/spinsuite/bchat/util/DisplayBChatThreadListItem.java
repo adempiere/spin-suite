@@ -49,14 +49,16 @@ public class DisplayBChatThreadListItem extends DisplayRecordItem {
 	 * @param p_Image
 	 * @param p_Time
 	 * @param p_Status
+	 * @param p_TopicName
 	 */
 	public DisplayBChatThreadListItem(int p_Record_ID, String p_Value, String p_Description, 
-			Bitmap p_Image, Date p_Time, String p_Status) {
+			Bitmap p_Image, Date p_Time, String p_Status, String p_TopicName) {
 		super(p_Record_ID, p_Value, null);
 		setImage(p_Image);
 		setDescription(p_Description);
 		setTime(p_Time);
 		setStatus(p_Status);
+		setTopicName(p_TopicName);
 	}
 
 	/**
@@ -76,6 +78,9 @@ public class DisplayBChatThreadListItem extends DisplayRecordItem {
 	private Date		m_Time = null;
 	/**	Status				*/
 	private String		m_Status = null;
+	/**	Status				*/
+	private String		m_Topic = null;
+	
 	/**
 	 * Set Image
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 09:56:51
@@ -170,5 +175,25 @@ public class DisplayBChatThreadListItem extends DisplayRecordItem {
 	 */
 	public void setStatus(String p_Status) {
 		m_Status = p_Status;
+	}
+	
+	/**
+	 * Get Topic
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return String
+	 */
+	public String getTopicName() {
+		return m_Topic;
+	}
+	
+	/**
+	 * Set Topic
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_TopicName
+	 * @return void
+	 */
+	public void setTopicName(String p_TopicName) {
+		m_Topic = p_TopicName;
 	}
 }

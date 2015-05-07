@@ -20,7 +20,9 @@ import java.util.Date;
 import java.util.Random;
 import java.util.logging.Level;
 
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.spinsuite.base.DB;
 import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
@@ -47,7 +49,7 @@ public class SPS_BC_Request {
 	 * @return void
 	 */
 	public static void newInRequest(Context ctx, SyncRequest request) {
-		newRequest(ctx, request, MQTTDefaultValues.TYPE_IN);
+		newRequest(ctx, request, MQTTDefaultValues.TYPE_IN, null);
 	}
 	
 	/**
@@ -55,10 +57,11 @@ public class SPS_BC_Request {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
 	 * @param request
+	 * @param p_Status
 	 * @return void
 	 */
-	public static void newOutRequest(Context ctx, SyncRequest request) {
-		newRequest(ctx, request, MQTTDefaultValues.TYPE_OUT);
+	public static void newOutRequest(Context ctx, SyncRequest request, String p_Status) {
+		newRequest(ctx, request, MQTTDefaultValues.TYPE_OUT, p_Status);
 	}
 	
 	/**
@@ -127,6 +130,8 @@ public class SPS_BC_Request {
 					+ "r.LastMsg, "
 					+ "r.AD_User_ID, "
 					+ "r.IsGroup, "
+					+ "r.LastFileName, "
+					+ "r.Status, "
 					+ "ru.AD_User_ID, "
 					+ "ru.Status "
 					+ "FROM SPS_BC_Request r "
@@ -153,6 +158,9 @@ public class SPS_BC_Request {
 					//	Is Group
 					request.setIsGroup(rs.getString(6) != null 
 							&& rs.getString(6).equals("Y"));
+					//	Set Last File Name
+					request.setLastFileName(rs.getString(7));
+					request.setStatus(rs.getString(8));
 					//	Add Users
 					do {
 						int currentRequest_ID = rs.getInt(0);
@@ -181,13 +189,13 @@ public class SPS_BC_Request {
 	 * Get Sync Request for Message
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
-	 * @param p_SPS_BC_Request_ID
+	 * @param p_TopicName
 	 * @return
 	 * @return SyncRequest
 	 */
-	public static SyncRequest getRequest(Context ctx, int p_SPS_BC_Request_ID) {
+	public static SyncRequest getRequest(Context ctx, String p_TopicName) {
 		//	Valid 0 ID
-		if(p_SPS_BC_Request_ID == 0)
+		if(p_TopicName == null)
 			return null;
 		//	
 		SyncRequest request = null;
@@ -204,12 +212,14 @@ public class SPS_BC_Request {
 					+ "r.Name, "
 					+ "r.IsGroup, "
 					+ "r.AD_User_ID, "
-					+ "r.LastMsg "
+					+ "r.LastMsg, "
+					+ "r.LastFileName, "
+					+ "r.Status "
 					+ "FROM SPS_BC_Request r "
 					+ "INNER JOIN AD_User u ON(u.AD_User_ID = r.AD_User_ID) "
-					+ "WHERE r.SPS_BC_Request_ID = ?");
+					+ "WHERE r.Topic = ?");
 			//	Add Parameter
-			conn.addInt(p_SPS_BC_Request_ID);
+			conn.addString(p_TopicName);
 			//	Query Data
 			Cursor rs = conn.querySQL();
 			//	Get Header Data
@@ -224,6 +234,8 @@ public class SPS_BC_Request {
 							&& rs.getString(4).equals("Y")));
 				//	Set Last Message
 				request.setLastMsg(rs.getString(6));
+				request.setLastFileName(rs.getString(7));
+				request.setStatus(rs.getString(8));
 				//	Query for Lines
 				conn.compileQuery("SELECT "
 						+ "ru.AD_User_ID, "
@@ -231,7 +243,7 @@ public class SPS_BC_Request {
 						+ "FROM SPS_BC_Request_User ru "
 						+ "WHERE ru.SPS_BC_Request_ID = ?");
 				//	Add Parameter
-				conn.addInt(p_SPS_BC_Request_ID);
+				conn.addInt(request.getSPS_BC_Request_ID());
 				//	Query Data
 				rs = conn.querySQL();
 				if(rs.moveToFirst()) {
@@ -257,9 +269,10 @@ public class SPS_BC_Request {
 	 * @param ctx
 	 * @param request
 	 * @param p_Type
+	 * @param p_Status
 	 * @return void
 	 */
-	public static void newRequest(Context ctx, SyncRequest request, String p_Type) {
+	public static void newRequest(Context ctx, SyncRequest request, String p_Type, String p_Status) {
 		if(request == null) {
 			LogM.log(ctx, SPS_BC_Request.class, Level.CONFIG, "Null request for Insert");
 			return;
@@ -284,16 +297,17 @@ public class SPS_BC_Request {
 					+ "SPS_BC_Request_ID, "
 					+ "Topic, "
 					+ "Type, "
-					+ "IsGroup) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					+ "IsGroup, "
+					+ "Status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			//	Add Values
 			int m_AD_Client_ID = Env.getAD_Client_ID();
 			int m_AD_Org_ID = Env.getAD_Org_ID();
-			int m_SPS_BC_Request_ID = request.getSPS_BC_Request_ID();
-			//	For Out
-			if(p_Type.equals(MQTTDefaultValues.TYPE_OUT)) {
-				m_SPS_BC_Request_ID = new Random().nextInt();
-			}
+			int m_SPS_BC_Request_ID = new Random().nextInt();
 			int m_AD_User_ID = Env.getAD_User_ID();
+			request.setSPS_BC_Request_ID(m_SPS_BC_Request_ID);
+			if(p_Status == null) {
+				p_Status = MQTTDefaultValues.STATUS_CREATED;
+			}
 			Date now = new Date(System.currentTimeMillis());
 			conn.addInt(m_AD_Client_ID);
 			conn.addInt(m_AD_Org_ID);
@@ -304,10 +318,11 @@ public class SPS_BC_Request {
 			conn.addDateTime(now);
 			conn.addInt(m_AD_User_ID);
 			conn.addBoolean(true);
-			conn.addInt(m_SPS_BC_Request_ID);
+			conn.addInt(request.getSPS_BC_Request_ID());
 			conn.addString(request.getTopicName());
 			conn.addString(p_Type);
 			conn.addBoolean(request.isGroup());
+			conn.addString(p_Status);
 			//	Execute
 			conn.executeSQL();
 			//	Add Child or Request Users
@@ -424,24 +439,89 @@ public class SPS_BC_Request {
     		return;
     	}
 		//	Save Request
-		newOutRequest(p_ctx, request);
+		newOutRequest(p_ctx, request, MQTTDefaultValues.STATUS_SENDING);
 		//	Send
 		MQTTConnection m_Connection = MQTTConnection.getInstance(p_ctx);
-		if(m_Connection.isConnected()) {
-			try {
-				//	Set Client ID
-				request.setLocalClient_ID(MQTTConnection.getClient_ID(p_ctx));
-				//	Get Request for Topic
-				byte[] msg = SerializerUtil.serializeObjectEx(request);
-				MqttMessage message = new MqttMessage(msg);
-				message.setQos(MQTTConnection.EXACTLY_ONCE_2);
-				message.setRetained(true);
-				m_Connection.publish(request.getTopicName(), message);
-			} catch (Exception e) {
-				LogM.log(p_ctx, SPS_BC_Request.class, Level.SEVERE, "Error", e);
+		try {
+			if(m_Connection.isConnected()) {
+				m_Connection.subscribeEx(request.getTopicName(), MQTTConnection.EXACTLY_ONCE_2);
+				//	Send Request
+				for(Invited invited : request.getUsers()) {
+					//	
+					if(invited.getStatus() == null
+							|| !invited.getStatus().equals(MQTTDefaultValues.STATUS_CREATED))
+						continue;
+					//	
+					try {
+						String m_LocalClient_ID = MQTTConnection.getClient_ID(p_ctx);
+						request.setLocalClient_ID(m_LocalClient_ID);
+						//	Set User Name
+						if(!request.isGroup()) {
+							request.setName(Env.getContext("#AD_User_Name"));
+						}
+						//	
+						byte[] msg = SerializerUtil.serializeObjectEx(request);
+						MqttMessage message = new MqttMessage(msg);
+						message.setQos(MQTTConnection.EXACTLY_ONCE_2);
+						message.setRetained(true);
+						m_Connection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(invited.getAD_USer_ID())), message);
+						//	Change Status
+						SPS_BC_Request_User.setStatus(p_ctx, request.getSPS_BC_Request_ID(), 
+								invited.getAD_USer_ID(), MQTTDefaultValues.STATUS_SENT);
+						//	Set Status 
+						if(request.getStatus() != null 
+								&& !request.getStatus().equals(MQTTDefaultValues.STATUS_SENT)) {
+							request.setStatus(MQTTDefaultValues.STATUS_SENT);
+							setStatus(p_ctx, request.getSPS_BC_Request_ID(), MQTTDefaultValues.STATUS_SENT);
+						}
+					} catch (Exception e) {
+						LogM.log(p_ctx, SPS_BC_Request.class, Level.SEVERE, "Error", e);
+					}
+				}
+			} else {
+				//	Set Status 
+				if(request.getStatus() != null 
+						&& !request.getStatus().equals(MQTTDefaultValues.STATUS_SENT)) {
+					setStatus(p_ctx, request.getSPS_BC_Request_ID(), MQTTDefaultValues.STATUS_CREATED);
+				}
+				LogM.log(p_ctx, SPS_BC_Request.class, Level.SEVERE, "Error Sending Request (No Connected)");
 			}
-		} else {
-			LogM.log(p_ctx, SPS_BC_Request.class, Level.SEVERE, "Error Sending Request (No Connected)");
+		} catch (MqttSecurityException e) {
+			LogM.log(p_ctx, SPS_BC_Request.class, Level.SEVERE, "Error", e);
+		} catch (MqttException e) {
+			LogM.log(p_ctx, SPS_BC_Request.class, Level.SEVERE, "Error", e);
 		}
     }
+    
+    /**
+     * Change Status
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param ctx
+     * @param p_SPS_BC_Request_ID
+     * @param p_Status
+     * @return void
+     */
+    public static void setStatus(Context ctx, int p_SPS_BC_Request_ID, String p_Status) {
+		//	Connection
+		DB conn = null;
+		try {
+			//	Create Connection
+			conn = DB.loadConnection(ctx, DB.READ_WRITE);
+			//	Compile Query
+			conn.compileQuery("UPDATE SPS_BC_Request "
+					+ "SET Status = ? "
+					+ "WHERE SPS_BC_Request_ID = ? ");
+			//	Add Parameter
+			conn.addString(p_Status);
+			conn.addInt(p_SPS_BC_Request_ID);
+			conn.executeSQL();
+			//	Successful
+			conn.setTransactionSuccessful();
+		} catch (Exception e) {
+			LogM.log(ctx, SPS_BC_Message.class, Level.SEVERE, "Error", e);
+		} finally {
+			//	End Transaction
+			DB.closeConnection(conn);
+		}
+	}
 }

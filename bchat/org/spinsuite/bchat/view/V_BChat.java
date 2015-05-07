@@ -82,7 +82,7 @@ public class V_BChat extends FragmentActivity
 	/**	Is Index Fragment			*/
 	private boolean								m_IsDetailAdded	= false;
 	/**	Request						*/
-	private int									m_SPS_BC_Request_ID = 0;
+	private String								m_TopicName = null;
     
     /** Called when the activity is first created. */
     @Override
@@ -91,7 +91,7 @@ public class V_BChat extends FragmentActivity
     	//	
     	Bundle bundle = getIntent().getExtras();
 		if(bundle != null) {
-			m_SPS_BC_Request_ID = bundle.getInt("SPS_BC_Request_ID");
+			m_TopicName = bundle.getString("TopicName");
 		}
     	//	Add Support to Progress Bar in Action Bar
     	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -151,7 +151,7 @@ public class V_BChat extends FragmentActivity
 	}
     
 	@Override
-	public void onItemSelected(int p_Record_ID, String p_Name, int p_Type) {
+	public void onItemSelected(int p_AD_User_ID, String p_Name, int p_Type) {
 	       //	Instance if not exists
         instanceDetailFragment();
         //	Transaction
@@ -175,9 +175,9 @@ public class V_BChat extends FragmentActivity
         //	
         if(m_ThreadFragment != null) {
         	if(p_Type == TYPE_REQUEST_USER) {
-        		m_ThreadFragment.requestUser(p_Record_ID, p_Name);
+        		m_ThreadFragment.requestUser(p_AD_User_ID, p_Name);
         	} else if(p_Type == TYPE_SELECT_CONVERSATION) {
-        		m_ThreadFragment.selectConversation(p_Record_ID);
+        		m_ThreadFragment.selectConversation(p_Name);
         	}
         }
 	} 
@@ -432,9 +432,9 @@ public class V_BChat extends FragmentActivity
     @Override
     protected void onResume() {
     	super.onResume();
-    	if(m_SPS_BC_Request_ID != 0) {
-    		onItemSelected(m_SPS_BC_Request_ID, null, TYPE_SELECT_CONVERSATION);
-    		m_SPS_BC_Request_ID = 0;
+    	if(m_TopicName != null) {
+    		onItemSelected(0, m_TopicName, TYPE_SELECT_CONVERSATION);
+    		m_TopicName = null;
     	}
     }
     
@@ -446,7 +446,7 @@ public class V_BChat extends FragmentActivity
     		m_ThreadFragment.onActivityResult(requestCode, resultCode, data);
     	} else if (resultCode == Activity.RESULT_OK) {
 	    	if(data != null) {
-	    		m_SPS_BC_Request_ID = data.getIntExtra("SPS_BC_Request_ID", 0);
+	    		m_TopicName = data.getStringExtra("TopicName");
 	    	}
     	}
     }
