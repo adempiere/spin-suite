@@ -57,6 +57,7 @@
 		<item name="ic_bc_bubble_local">@drawable/bc_bubble_local_2</item>
 		<item name="ic_bc_bubble_local_sent">@drawable/bc_bubble_local_sent_2</item>
 		<item name="ic_bc_bubble_local_delivered">@drawable/bc_bubble_local_delivered_2</item>
+		<item name="ic_bc_bubble_local_readed">@drawable/bc_bubble_local_readed_2</item>
 		<item name="ic_bc_bubble_local_selected">@drawable/bc_bubble_local_selected_2</item>
 		<item name="ic_bc_bubble_remote">@drawable/bc_bubble_remote_2</item>
 		<item name="ic_bc_bubble_remote_selected">@drawable/bc_bubble_remote_selected_2</item>

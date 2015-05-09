@@ -28,8 +28,8 @@ import org.spinsuite.bchat.model.SPS_BC_Message;
 import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.model.SPS_BC_Request_User;
 import org.spinsuite.sync.content.Invited;
-import org.spinsuite.sync.content.SyncMessage;
-import org.spinsuite.sync.content.SyncRequest;
+import org.spinsuite.sync.content.SyncMessage_BC;
+import org.spinsuite.sync.content.SyncRequest_BC;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
@@ -175,18 +175,17 @@ public class MQTTSyncService extends Service {
 	public boolean sendOpenMsg() {
 		//	Verify Connection
 		if(m_Connection.isConnected()) {			
-			SyncMessage msgList[] = SPS_BC_Message.getMessage(this, 
+			SyncMessage_BC msgList[] = SPS_BC_Message.getMessage(this, 
 					MQTTDefaultValues.STATUS_CREATED, 
-					MQTTDefaultValues.TYPE_OUT,
-					null, true);
+					MQTTDefaultValues.TYPE_OUT, true);
 			//	
 			String m_LocalClient_ID = MQTTConnection.getClient_ID(this);
-			for(SyncMessage msgForSend : msgList) {
+			for(SyncMessage_BC msgForSend : msgList) {
 				try {
 					//	Set Client ID
 					msgForSend.setLocalClient_ID(m_LocalClient_ID);
 					//	Get Request for Topic
-					SyncRequest request = SPS_BC_Request.getRequest(this, msgForSend.getTopicName());
+					SyncRequest_BC request = SPS_BC_Request.getRequest(this, msgForSend.getSPS_BC_Request_UUID());
 					byte[] msg = SerializerUtil.serializeObjectEx(msgForSend);
 					MqttMessage message = new MqttMessage(msg);
 					message.setQos(MQTTConnection.EXACTLY_ONCE_2);
@@ -210,9 +209,9 @@ public class MQTTSyncService extends Service {
 	 */
 	public boolean sendOpenRequest() {
 		if(m_Connection.isConnected()) {
-			SyncRequest requestList[] = SPS_BC_Request.getRequest(this, MQTTDefaultValues.TYPE_OUT, MQTTDefaultValues.STATUS_CREATED);
+			SyncRequest_BC requestList[] = SPS_BC_Request.getRequest(this, MQTTDefaultValues.TYPE_OUT, MQTTDefaultValues.STATUS_CREATED);
 			//	
-			for(SyncRequest request : requestList) {
+			for(SyncRequest_BC request : requestList) {
 				try {
 					m_Connection.subscribeEx(request.getTopicName(), MQTTConnection.EXACTLY_ONCE_2);
 					//	Send Request
@@ -235,7 +234,7 @@ public class MQTTSyncService extends Service {
 							message.setRetained(true);
 							m_Connection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(invited.getAD_USer_ID())), message);
 							//	Change Status
-							SPS_BC_Request_User.setStatus(this, request.getSPS_BC_Request_ID(), 
+							SPS_BC_Request_User.setStatus(this, request.getSPS_BC_Request_UUID(), 
 									invited.getAD_USer_ID(), MQTTDefaultValues.STATUS_SENT);
 						} catch (Exception e) {
 							LogM.log(this, getClass(), Level.SEVERE, "Error", e);

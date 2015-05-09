@@ -32,11 +32,11 @@ public class SPS_BC_Request_User {
 	 * Change Status
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
-	 * @param p_SPS_BC_Request_ID
+	 * @param p_SPS_BC_Request_UUID
 	 * @param p_Status
 	 * @return void
 	 */
-	public static void setStatus(Context ctx, int p_SPS_BC_Request_ID, int p_AD_User_ID, String p_Status) {
+	public static void setStatus(Context ctx, String p_SPS_BC_Request_UUID, int p_AD_User_ID, String p_Status) {
 		//	Connection
 		DB conn = null;
 		try {
@@ -45,11 +45,11 @@ public class SPS_BC_Request_User {
 			//	Compile Query
 			conn.compileQuery("UPDATE SPS_BC_Request_User "
 					+ "SET Status = ? "
-					+ "WHERE SPS_BC_Request_ID = ? "
+					+ "WHERE SPS_BC_Request_UUID = ? "
 					+ "AND AD_User_ID = ?");
 			//	Add Parameter
 			conn.addString(p_Status);
-			conn.addInt(p_SPS_BC_Request_ID);
+			conn.addString(p_SPS_BC_Request_UUID);
 			conn.addInt(p_AD_User_ID);
 			conn.executeSQL();
 			//	Successful

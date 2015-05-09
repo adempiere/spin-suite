@@ -82,7 +82,7 @@ public class V_BChat extends FragmentActivity
 	/**	Is Index Fragment			*/
 	private boolean								m_IsDetailAdded	= false;
 	/**	Request						*/
-	private String								m_TopicName = null;
+	private String								m_SPS_BC_Request_UUID = null;
     
     /** Called when the activity is first created. */
     @Override
@@ -91,7 +91,7 @@ public class V_BChat extends FragmentActivity
     	//	
     	Bundle bundle = getIntent().getExtras();
 		if(bundle != null) {
-			m_TopicName = bundle.getString("TopicName");
+			m_SPS_BC_Request_UUID = bundle.getString("SPS_BC_Request_UUID");
 		}
     	//	Add Support to Progress Bar in Action Bar
     	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -432,9 +432,9 @@ public class V_BChat extends FragmentActivity
     @Override
     protected void onResume() {
     	super.onResume();
-    	if(m_TopicName != null) {
-    		onItemSelected(0, m_TopicName, TYPE_SELECT_CONVERSATION);
-    		m_TopicName = null;
+    	if(m_SPS_BC_Request_UUID != null) {
+    		onItemSelected(0, m_SPS_BC_Request_UUID, TYPE_SELECT_CONVERSATION);
+    		m_SPS_BC_Request_UUID = null;
     	}
     }
     
@@ -446,7 +446,7 @@ public class V_BChat extends FragmentActivity
     		m_ThreadFragment.onActivityResult(requestCode, resultCode, data);
     	} else if (resultCode == Activity.RESULT_OK) {
 	    	if(data != null) {
-	    		m_TopicName = data.getStringExtra("TopicName");
+	    		m_SPS_BC_Request_UUID = data.getStringExtra("SPS_BC_Request_UUID");
 	    	}
     	}
     }

@@ -103,13 +103,13 @@ public class FV_ThreadIndex extends ListFragment
 				switch (item.getItemId()) {
 				case R.id.action_delete:
 					SparseBooleanArray selectedItems = m_Adapter.getSelectedItems();
-					int[] ids = new int[selectedItems.size()];
+					String[] ids = new String[selectedItems.size()];
 					for (int i = (selectedItems.size() - 1); i >= 0; i--) {
 						if (selectedItems.valueAt(i)) {
 							DisplayBChatThreadListItem selectedItem = m_Adapter
 									.getItem(selectedItems.keyAt(i));
 							//	Add Value
-							ids[i] = selectedItem.getRecord_ID();
+							ids[i] = selectedItem.getSPS_BC_Request_UUID();
 							//	Remove Item
 							m_Adapter.remove(selectedItem);
 						}
@@ -160,12 +160,13 @@ public class FV_ThreadIndex extends ListFragment
     	//	Create Connection
     	DB conn = DB.loadConnection(getActivity(), DB.READ_ONLY);
     	conn.compileQuery("SELECT "
-    			+ "rq.SPS_BC_Request_ID, "
+    			+ "rq.SPS_BC_Request_UUID, "
     			+ "COALESCE(rq.Name, us.Name) Name, "
-    			+ "rq.LastMsg, "
-    			+ "(strftime('%s', rq.Updated)*1000) Updated, "
+    			+ "rq.Topic, "
     			+ "rq.Type, "
-    			+ "rq.Topic "
+    			+ "rq.LastMsg, "
+    			+ "rq.LastFileName, "
+    			+ "(strftime('%s', rq.Updated)*1000) Updated "
     			+ "FROM SPS_BC_Request rq "
     			+ "INNER JOIN AD_User us ON(us.AD_User_ID = rq.AD_User_ID) "
     			+ "WHERE rq.IsActive = 'Y' "
@@ -185,13 +186,14 @@ public class FV_ThreadIndex extends ListFragment
     		//	Loop
     		do {
     			data.add(new DisplayBChatThreadListItem(
-    					rs.getInt(col++), 
+    					rs.getString(col++), 
+    					rs.getString(col++),
     					rs.getString(col++), 
     					rs.getString(col++), 
-    					null, 
-    					new Date(rs.getLong(col++)), 
     					rs.getString(col++), 
-    					rs.getString(col++)));
+    					rs.getString(col++), 
+    					new Date(rs.getLong(col++)),
+    					null));
     			//	Set Column
     			col = 0;
     		} while(rs.moveToNext());

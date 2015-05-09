@@ -33,9 +33,9 @@ import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.bchat.view.FV_Thread;
 import org.spinsuite.bchat.view.V_BChat;
-import org.spinsuite.sync.content.SyncMessage;
+import org.spinsuite.sync.content.SyncMessage_BC;
 import org.spinsuite.sync.content.SyncParent;
-import org.spinsuite.sync.content.SyncRequest;
+import org.spinsuite.sync.content.SyncRequest_BC;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.SerializerUtil;
@@ -100,8 +100,8 @@ public class MQTTConnectionCallback implements MqttCallback {
 							.equals(MQTTConnection.getClient_ID(m_Ctx))) {
 				return;
 			}
-			if(parent instanceof SyncRequest) {
-				SyncRequest request = (SyncRequest) parent;
+			if(parent instanceof SyncRequest_BC) {
+				SyncRequest_BC request = (SyncRequest_BC) parent;
 				//	Valid if Exists
 				if(existsRequest(request))
 					return;
@@ -109,9 +109,8 @@ public class MQTTConnectionCallback implements MqttCallback {
 				requestArrived(request);
 				//	Subscribe to Topic request
 				subscribeToRequest(request);
-			} else if(parent instanceof SyncMessage) {
-				SyncMessage message = (SyncMessage) parent;
-				message.setTopicName(topic);
+			} else if(parent instanceof SyncMessage_BC) {
+				SyncMessage_BC message = (SyncMessage_BC) parent;
 				saveMessageArrived(message);
 			}
 		}
@@ -124,13 +123,13 @@ public class MQTTConnectionCallback implements MqttCallback {
 	 * @return
 	 * @return boolean
 	 */
-	private boolean existsRequest(SyncRequest request) {
-		int m_SPS_Request_ID = DB.getSQLValue(m_Ctx, 
-				"SELECT SPS_BC_Request_ID "
+	private boolean existsRequest(SyncRequest_BC request) {
+		String topic = DB.getSQLValueString(m_Ctx, 
+				"SELECT Topic "
 				+ "FROM SPS_BC_Request "
 				+ "WHERE Topic = ?", request.getTopicName());
 		//	Verify if exists
-		return (m_SPS_Request_ID != 0);
+		return (topic != null);
 	}
 	
 	/**
@@ -140,7 +139,7 @@ public class MQTTConnectionCallback implements MqttCallback {
 	 * @throws Exception
 	 * @return void
 	 */
-	private void requestArrived(SyncRequest request) throws Exception {
+	private void requestArrived(SyncRequest_BC request) throws Exception {
 		SPS_BC_Request.newInRequest(m_Ctx, request);
 	}
 	
@@ -150,7 +149,7 @@ public class MQTTConnectionCallback implements MqttCallback {
 	 * @param message
 	 * @return void
 	 */
-	private void saveMessageArrived(final SyncMessage message) {
+	private void saveMessageArrived(final SyncMessage_BC message) {
 		//	Save File in Folder
 		if(message.getFileName() != null
 				&& message.getFileName().length() > 0
@@ -172,7 +171,7 @@ public class MQTTConnectionCallback implements MqttCallback {
 		//	
 		if(ok) {
 			//	Instance Notification Manager
-			instanceNM(message.getSPS_BC_Request_ID());
+			instanceNM(message.getSPS_BC_Request_UUID());
 			//	Notify
 			addMessage(message, MQTTDefaultValues.TYPE_IN);
 		}
@@ -184,8 +183,8 @@ public class MQTTConnectionCallback implements MqttCallback {
 	 * @param message
 	 * @return void
 	 */
-	private void sendNotification(SyncMessage message) {
-		SyncRequest request = SPS_BC_Request.getRequest(m_Ctx, message.getTopicName());
+	private void sendNotification(SyncMessage_BC message) {
+		SyncRequest_BC request = SPS_BC_Request.getRequest(m_Ctx, message.getSPS_BC_Request_UUID());
 		m_Builder.setContentTitle(request.getName())
 			.setContentText(message.getText())
 			.setSmallIcon(android.R.drawable.stat_notify_chat);
@@ -198,7 +197,7 @@ public class MQTTConnectionCallback implements MqttCallback {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return void
 	 */
-	private void instanceNM(int p_SPS_BC_Request_ID) {
+	private void instanceNM(String p_SPS_BC_Request_UUID) {
 		if(m_NotificationManager == null) {
 			m_NotificationManager = (NotificationManager) m_Ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 		}
@@ -208,7 +207,7 @@ public class MQTTConnectionCallback implements MqttCallback {
 		intent.setAction(Intent.ACTION_MAIN);
 		intent.addCategory(Intent.CATEGORY_LAUNCHER);
 		//	Add Parameter Request
-		intent.putExtra("SPS_BC_Request_ID", p_SPS_BC_Request_ID);
+		intent.putExtra("SPS_BC_Request_UUID", p_SPS_BC_Request_UUID);
 		//	Set Main Activity
 		PendingIntent m_PendingIntent = PendingIntent.getActivity(m_Ctx, 0, intent, 0);
 		m_Builder.setContentIntent(m_PendingIntent);
@@ -240,7 +239,7 @@ public class MQTTConnectionCallback implements MqttCallback {
 	 * @param request
 	 * @return void
 	 */
-	private void subscribeToRequest(SyncRequest request) {
+	private void subscribeToRequest(SyncRequest_BC request) {
 		try {
 			m_Connection = MQTTConnection.getInstance(m_Ctx);
 			//	Verify Connection
@@ -265,13 +264,13 @@ public class MQTTConnectionCallback implements MqttCallback {
 			MqttMessage msg = token.getMessage();
 			SyncParent parent = (SyncParent) SerializerUtil.deserializeObject(msg.getPayload());
 			//	Verify if is local	
-			if(parent instanceof SyncRequest) {
+			if(parent instanceof SyncRequest_BC) {
 				;
-			} else if(parent instanceof SyncMessage) {
+			} else if(parent instanceof SyncMessage_BC) {
 				//	Change Status
-				final SyncMessage message = (SyncMessage) parent;
+				final SyncMessage_BC message = (SyncMessage_BC) parent;
 				SPS_BC_Message.setStatus(m_Ctx, 
-						message.getSPS_BC_Message_ID(), MQTTDefaultValues.STATUS_SENT);
+						message.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_SENT);
 				//	Change UI Status
 				changeUIStatus(message, MQTTDefaultValues.STATUS_SENT);
 			}
@@ -287,12 +286,12 @@ public class MQTTConnectionCallback implements MqttCallback {
 	 * @param p_Status
 	 * @return void
 	 */
-	private void changeUIStatus(final SyncMessage message, final String p_Status) {
+	private void changeUIStatus(final SyncMessage_BC message, final String p_Status) {
 		FV_Thread.runOnUI(new Runnable() {
 			public void run() {
 				try {
-					if(FV_Thread.isOpened(message.getSPS_BC_Request_ID())) {
-						FV_Thread.changeMsgStatus(message.getSPS_BC_Message_ID(), 
+					if(FV_Thread.isOpened(message.getSPS_BC_Request_UUID())) {
+						FV_Thread.changeMsgStatus(message.getSPS_BC_Message_UUID(), 
 								p_Status);
 					}
 				} catch (Exception e) { 
@@ -310,15 +309,15 @@ public class MQTTConnectionCallback implements MqttCallback {
 	 * @return
 	 * @return boolean
 	 */
-	public void addMessage(final SyncMessage message, final String p_Type) {
+	public void addMessage(final SyncMessage_BC message, final String p_Type) {
 		FV_Thread.runOnUI(new Runnable() {
 			public void run() {
 				try {
 					if(message != null
-							&& FV_Thread.isOpened(message.getSPS_BC_Request_ID())) {
-						FV_Thread.addMsg(new DisplayBChatThreadItem(message.getSPS_BC_Message_ID(), 
-								message.getText(), message.getSPS_BC_Request_ID(), 
+							&& FV_Thread.isOpened(message.getSPS_BC_Request_UUID())) {
+						FV_Thread.addMsg(new DisplayBChatThreadItem(message.getSPS_BC_Message_UUID(), message.getSPS_BC_Request_UUID(), 
 								message.getAD_User_ID(), message.getUserName(), 
+								message.getText(), 
 								p_Type, 
 								MQTTDefaultValues.STATUS_CREATED, 
 								new Date(System.currentTimeMillis()), 

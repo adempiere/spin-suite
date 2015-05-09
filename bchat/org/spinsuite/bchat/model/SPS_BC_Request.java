@@ -17,7 +17,7 @@ package org.spinsuite.bchat.model;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Random;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -27,7 +27,7 @@ import org.spinsuite.base.DB;
 import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.sync.content.Invited;
-import org.spinsuite.sync.content.SyncRequest;
+import org.spinsuite.sync.content.SyncRequest_BC;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.SerializerUtil;
@@ -48,7 +48,7 @@ public class SPS_BC_Request {
 	 * @param request
 	 * @return void
 	 */
-	public static void newInRequest(Context ctx, SyncRequest request) {
+	public static void newInRequest(Context ctx, SyncRequest_BC request) {
 		newRequest(ctx, request, MQTTDefaultValues.TYPE_IN, null);
 	}
 	
@@ -60,7 +60,7 @@ public class SPS_BC_Request {
 	 * @param p_Status
 	 * @return void
 	 */
-	public static void newOutRequest(Context ctx, SyncRequest request, String p_Status) {
+	public static void newOutRequest(Context ctx, SyncRequest_BC request, String p_Status) {
 		newRequest(ctx, request, MQTTDefaultValues.TYPE_OUT, p_Status);
 	}
 	
@@ -111,11 +111,11 @@ public class SPS_BC_Request {
 	 * @param p_Type
 	 * @param p_Status
 	 * @return
-	 * @return SyncRequest[]
+	 * @return SyncRequest_BC[]
 	 */
-	public static SyncRequest[] getRequest(Context ctx, String p_Type, String p_Status) {
+	public static SyncRequest_BC[] getRequest(Context ctx, String p_Type, String p_Status) {
 		//	
-		ArrayList<SyncRequest> requests = new ArrayList<SyncRequest>();
+		ArrayList<SyncRequest_BC> requests = new ArrayList<SyncRequest_BC>();
 		//	Connection
 		DB conn = null;
 		try {
@@ -123,22 +123,19 @@ public class SPS_BC_Request {
 			conn = DB.loadConnection(ctx, DB.READ_ONLY);
 			//	Compile Query
 			conn.compileQuery("SELECT "
-					+ "r.SPS_BC_Request_ID, "
-					+ "r.Type, "
+					+ "r.SPS_BC_Request_UUID, "
 					+ "r.Topic, "
 					+ "r.Name, "
 					+ "r.LastMsg, "
-					+ "r.AD_User_ID, "
-					+ "r.IsGroup, "
 					+ "r.LastFileName, "
-					+ "r.Status, "
+					+ "r.IsGroup, "
 					+ "ru.AD_User_ID, "
 					+ "ru.Status "
 					+ "FROM SPS_BC_Request r "
-					+ "LEFT JOIN SPS_BC_Request_User ru ON(ru.SPS_BC_Request_ID = r.SPS_BC_Request_ID) "
+					+ "LEFT JOIN SPS_BC_Request_User ru ON(ru.SPS_BC_Request_UUID = r.SPS_BC_Request_UUID) "
 					+ "WHERE r.Type = ? "
 					+ "AND ru.Status = ? "
-					+ "ORDER BY r.SPS_BC_Request_ID, ru.Updated");
+					+ "ORDER BY r.SPS_BC_Request_UUID, ru.Updated");
 			//	Add Parameter
 			conn.addString(p_Type);
 			conn.addString(p_Status);
@@ -148,24 +145,22 @@ public class SPS_BC_Request {
 			if(rs.moveToFirst()) {
 				do {
 					//	
-					SyncRequest request = new SyncRequest(null);
-					request.setSPS_BC_Request_ID(rs.getInt(0));
-					request.setType(rs.getString(1));
-					request.setTopicName(rs.getString(2));
-					request.setName(rs.getString(3));
-					//	Set Last Message
-					request.setLastMsg(rs.getString(4));
-					//	Is Group
-					request.setIsGroup(rs.getString(6) != null 
-							&& rs.getString(6).equals("Y"));
-					//	Set Last File Name
-					request.setLastFileName(rs.getString(7));
-					request.setStatus(rs.getString(8));
+					SyncRequest_BC request = new SyncRequest_BC(
+							rs.getString(0), 
+							null, 
+							rs.getString(1), 
+							rs.getString(2), 
+							rs.getString(3),
+							rs.getString(4), 
+							(rs.getString(5) != null 
+								&& rs.getString(5).equals("Y")));
 					//	Add Users
 					do {
-						int currentRequest_ID = rs.getInt(0);
+						String currentRequest_UUID = rs.getString(0);
 						//	Verify if is other request
-						if(request.getSPS_BC_Request_ID() != currentRequest_ID) {
+						if(request.getSPS_BC_Request_UUID() != null
+								&& currentRequest_UUID != null
+								&& request.getSPS_BC_Request_UUID().equals(currentRequest_UUID)) {
 							break;
 						}
 						//	
@@ -182,23 +177,23 @@ public class SPS_BC_Request {
 			DB.closeConnection(conn);
 		}
 		//	Default Return
-		return requests.toArray(new SyncRequest[requests.size()]);
+		return requests.toArray(new SyncRequest_BC[requests.size()]);
 	}
 	
 	/**
 	 * Get Sync Request for Message
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
-	 * @param p_TopicName
+	 * @param p_SPS_BC_Request_UUID
 	 * @return
-	 * @return SyncRequest
+	 * @return SyncRequest_BC
 	 */
-	public static SyncRequest getRequest(Context ctx, String p_TopicName) {
+	public static SyncRequest_BC getRequest(Context ctx, String p_SPS_BC_Request_UUID) {
 		//	Valid 0 ID
-		if(p_TopicName == null)
+		if(p_SPS_BC_Request_UUID == null)
 			return null;
 		//	
-		SyncRequest request = null;
+		SyncRequest_BC request = null;
 		//	Connection
 		DB conn = null;
 		try {
@@ -206,44 +201,38 @@ public class SPS_BC_Request {
 			conn = DB.loadConnection(ctx, DB.READ_ONLY);
 			//	Compile Query
 			conn.compileQuery("SELECT "
-					+ "r.SPS_BC_Request_ID, "
-					+ "r.Type, "
+					+ "r.SPS_BC_Request_UUID, "
 					+ "r.Topic, "
 					+ "r.Name, "
-					+ "r.IsGroup, "
-					+ "r.AD_User_ID, "
 					+ "r.LastMsg, "
 					+ "r.LastFileName, "
-					+ "r.Status "
+					+ "r.IsGroup "
 					+ "FROM SPS_BC_Request r "
 					+ "INNER JOIN AD_User u ON(u.AD_User_ID = r.AD_User_ID) "
-					+ "WHERE r.Topic = ?");
+					+ "WHERE r.SPS_BC_Request_UUID = ?");
 			//	Add Parameter
-			conn.addString(p_TopicName);
+			conn.addString(p_SPS_BC_Request_UUID);
 			//	Query Data
 			Cursor rs = conn.querySQL();
 			//	Get Header Data
 			if(rs.moveToFirst()) {
-				request = new SyncRequest(
-						rs.getInt(0), 
+				request = new SyncRequest_BC(
+						rs.getString(0), 
 						null, 
 						rs.getString(1), 
 						rs.getString(2), 
-						rs.getString(3), 
-						(rs.getString(4) != null 
-							&& rs.getString(4).equals("Y")));
-				//	Set Last Message
-				request.setLastMsg(rs.getString(6));
-				request.setLastFileName(rs.getString(7));
-				request.setStatus(rs.getString(8));
+						rs.getString(3),
+						rs.getString(4), 
+						(rs.getString(5) != null 
+							&& rs.getString(5).equals("Y")));
 				//	Query for Lines
 				conn.compileQuery("SELECT "
 						+ "ru.AD_User_ID, "
 						+ "ru.Status "
 						+ "FROM SPS_BC_Request_User ru "
-						+ "WHERE ru.SPS_BC_Request_ID = ?");
+						+ "WHERE ru.SPS_BC_Request_UUID = ?");
 				//	Add Parameter
-				conn.addInt(request.getSPS_BC_Request_ID());
+				conn.addString(request.getSPS_BC_Request_UUID());
 				//	Query Data
 				rs = conn.querySQL();
 				if(rs.moveToFirst()) {
@@ -272,7 +261,7 @@ public class SPS_BC_Request {
 	 * @param p_Status
 	 * @return void
 	 */
-	public static void newRequest(Context ctx, SyncRequest request, String p_Type, String p_Status) {
+	public static void newRequest(Context ctx, SyncRequest_BC request, String p_Type, String p_Status) {
 		if(request == null) {
 			LogM.log(ctx, SPS_BC_Request.class, Level.CONFIG, "Null request for Insert");
 			return;
@@ -294,20 +283,27 @@ public class SPS_BC_Request {
 					+ "Updated, "
 					+ "UpdatedBy, "
 					+ "IsActive, "
-					+ "SPS_BC_Request_ID, "
+					+ "SPS_BC_Request_UUID, "
 					+ "Topic, "
 					+ "Type, "
-					+ "IsGroup, "
-					+ "Status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					+ "IsGroup) "
+					+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			//	Add Values
 			int m_AD_Client_ID = Env.getAD_Client_ID();
 			int m_AD_Org_ID = Env.getAD_Org_ID();
-			int m_SPS_BC_Request_ID = new Random().nextInt();
+			String m_SPS_BC_Request_UUID = UUID.randomUUID().toString();
+			//	Add Topic
+			if(request.getTopicName() == null) {
+				request.setTopicName(UUID.randomUUID().toString());
+			}
 			int m_AD_User_ID = Env.getAD_User_ID();
-			request.setSPS_BC_Request_ID(m_SPS_BC_Request_ID);
+			//	Set ID
+			request.setSPS_BC_Request_UUID(m_SPS_BC_Request_UUID);
+			//	Set Status
 			if(p_Status == null) {
 				p_Status = MQTTDefaultValues.STATUS_CREATED;
 			}
+			//	
 			Date now = new Date(System.currentTimeMillis());
 			conn.addInt(m_AD_Client_ID);
 			conn.addInt(m_AD_Org_ID);
@@ -318,11 +314,10 @@ public class SPS_BC_Request {
 			conn.addDateTime(now);
 			conn.addInt(m_AD_User_ID);
 			conn.addBoolean(true);
-			conn.addInt(request.getSPS_BC_Request_ID());
+			conn.addString(request.getSPS_BC_Request_UUID());
 			conn.addString(request.getTopicName());
 			conn.addString(p_Type);
 			conn.addBoolean(request.isGroup());
-			conn.addString(p_Status);
 			//	Execute
 			conn.executeSQL();
 			//	Add Child or Request Users
@@ -336,7 +331,7 @@ public class SPS_BC_Request {
 						+ "Updated, "
 						+ "UpdatedBy, "
 						+ "IsActive, "
-						+ "SPS_BC_Request_ID, "
+						+ "SPS_BC_Request_UUID, "
 						+ "AD_User_ID, "
 						+ "Status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 				//	Add Users
@@ -348,7 +343,7 @@ public class SPS_BC_Request {
 					conn.addDateTime(now);
 					conn.addInt(m_AD_User_ID);
 					conn.addBoolean(true);
-					conn.addInt(m_SPS_BC_Request_ID);
+					conn.addString(m_SPS_BC_Request_UUID);
 					conn.addInt(invited.getAD_USer_ID());
 					conn.addString(MQTTDefaultValues.STATUS_CREATED);
 					conn.executeSQL();
@@ -357,8 +352,6 @@ public class SPS_BC_Request {
 			}
 			//	Successful
 			conn.setTransactionSuccessful();
-			//	Set ID
-			request.setSPS_BC_Request_ID(m_SPS_BC_Request_ID);
 		} catch (Exception e) {
 			LogM.log(ctx, SPS_BC_Message.class, Level.SEVERE, "Error", e);
 		} finally {
@@ -371,20 +364,20 @@ public class SPS_BC_Request {
 	 * Delete Request from IDs
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
-	 * @param p_SPS_Request_IDs
+	 * @param p_SPS_Request_UUIDs
 	 * @return void
 	 */
-	public static void deleteRequest(Context ctx, int [] p_SPS_Request_IDs) {
-		if(p_SPS_Request_IDs == null
-				|| p_SPS_Request_IDs.length == 0) {
+	public static void deleteRequest(Context ctx, String [] p_SPS_Request_UUIDs) {
+		if(p_SPS_Request_UUIDs == null
+				|| p_SPS_Request_UUIDs.length == 0) {
 			LogM.log(ctx, SPS_BC_Request.class, Level.CONFIG, "Null where clause for delete");
 			return;
 		}
 		//	Create IN
-		StringBuffer inClause = new StringBuffer("WHERE SPS_BC_Request_ID IN(");
+		StringBuffer inClause = new StringBuffer("WHERE SPS_BC_Request_UUID IN(");
 		boolean first = true;
 		//	Iterate
-		for(int id : p_SPS_Request_IDs) {
+		for(String id : p_SPS_Request_UUIDs) {
 			if(!first) {
 				inClause.append(", ");
 			}
@@ -433,7 +426,7 @@ public class SPS_BC_Request {
      * @param request
      * @return void
      */
-    public static void sendRequest(Context p_ctx, SyncRequest request) {
+    public static void sendRequest(Context p_ctx, SyncRequest_BC request) {
     	//	Valid Request
     	if(request == null) {
     		return;
@@ -466,24 +459,13 @@ public class SPS_BC_Request {
 						message.setRetained(true);
 						m_Connection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(invited.getAD_USer_ID())), message);
 						//	Change Status
-						SPS_BC_Request_User.setStatus(p_ctx, request.getSPS_BC_Request_ID(), 
+						SPS_BC_Request_User.setStatus(p_ctx, request.getSPS_BC_Request_UUID(), 
 								invited.getAD_USer_ID(), MQTTDefaultValues.STATUS_SENT);
-						//	Set Status 
-						if(request.getStatus() != null 
-								&& !request.getStatus().equals(MQTTDefaultValues.STATUS_SENT)) {
-							request.setStatus(MQTTDefaultValues.STATUS_SENT);
-							setStatus(p_ctx, request.getSPS_BC_Request_ID(), MQTTDefaultValues.STATUS_SENT);
-						}
 					} catch (Exception e) {
 						LogM.log(p_ctx, SPS_BC_Request.class, Level.SEVERE, "Error", e);
 					}
 				}
 			} else {
-				//	Set Status 
-				if(request.getStatus() != null 
-						&& !request.getStatus().equals(MQTTDefaultValues.STATUS_SENT)) {
-					setStatus(p_ctx, request.getSPS_BC_Request_ID(), MQTTDefaultValues.STATUS_CREATED);
-				}
 				LogM.log(p_ctx, SPS_BC_Request.class, Level.SEVERE, "Error Sending Request (No Connected)");
 			}
 		} catch (MqttSecurityException e) {
@@ -497,11 +479,11 @@ public class SPS_BC_Request {
      * Change Status
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @param ctx
-     * @param p_SPS_BC_Request_ID
+     * @param p_SPS_BC_Request_UUID
      * @param p_Status
      * @return void
      */
-    public static void setStatus(Context ctx, int p_SPS_BC_Request_ID, String p_Status) {
+    public static void setStatus(Context ctx, int p_SPS_BC_Request_UUID, String p_Status) {
 		//	Connection
 		DB conn = null;
 		try {
@@ -510,10 +492,10 @@ public class SPS_BC_Request {
 			//	Compile Query
 			conn.compileQuery("UPDATE SPS_BC_Request "
 					+ "SET Status = ? "
-					+ "WHERE SPS_BC_Request_ID = ? ");
+					+ "WHERE SPS_BC_Request_UUID = ? ");
 			//	Add Parameter
 			conn.addString(p_Status);
-			conn.addInt(p_SPS_BC_Request_ID);
+			conn.addInt(p_SPS_BC_Request_UUID);
 			conn.executeSQL();
 			//	Successful
 			conn.setTransactionSuccessful();

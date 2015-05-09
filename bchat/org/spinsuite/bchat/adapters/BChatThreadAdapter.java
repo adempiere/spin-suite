@@ -126,7 +126,7 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 				(LinearLayout.LayoutParams) msgHolder.ll_Message.getLayoutParams();
 
 		//	Set Conversation
-		msgHolder.tv_Conversation.setText(diti.getValue());
+		msgHolder.tv_Conversation.setText(diti.getText());
 		//	Set Time
 		msgHolder.tv_Time.setText(diti.getTimeAsString());
 		msgHolder.tv_UserName.setText(diti.getUserName());
@@ -265,8 +265,8 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 	            	//	new Filter
 	            	ArrayList<DisplayBChatThreadItem> filteredResult = new ArrayList<DisplayBChatThreadItem>();
 	                for(DisplayBChatThreadItem item : originalData) {
-	                    if((item.getValue() != null 
-	                    		&& item.getValue().toLowerCase(Env.getLocate())
+	                    if((item.getText() != null 
+	                    		&& item.getText().toLowerCase(Env.getLocate())
 	                    					.contains(constraint.toString().toLowerCase(Env.getLocate())))
 	                    	|| (item.getUserName() != null 
 		                    		&& item.getUserName().toLowerCase(Env.getLocate())
@@ -357,14 +357,16 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 	/**
 	 * Change a Message
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_SPS_BC_Message_ID
+	 * @param p_SPS_BC_Message_UUID
 	 * @param p_Status
 	 * @return void
 	 */
-	public void changeMsgStatus(int p_SPS_BC_Message_ID, String p_Status) {
+	public void changeMsgStatus(String p_SPS_BC_Message_UUID, String p_Status) {
 		for(int i = 0; i < data.size(); i++) {
 			DisplayBChatThreadItem item = data.get(i);
-            if(item.getRecord_ID() == p_SPS_BC_Message_ID) {
+            if(item.getSPS_BC_Message_UUID() != null
+            		&& p_SPS_BC_Message_UUID != null
+            		&& item.getSPS_BC_Message_UUID().equals(p_SPS_BC_Message_UUID)) {
             	item.setStatus(p_Status);
             	data.set(i, item);
             	//	Break

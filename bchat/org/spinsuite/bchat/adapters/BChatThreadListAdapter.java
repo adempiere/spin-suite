@@ -79,11 +79,11 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 		
 		//	Set Name
 		TextView tv_Name = (TextView)item.findViewById(R.id.tv_Name);
-		tv_Name.setText(diti.getValue());
+		tv_Name.setText(diti.getName());
 		
 		//	Set Description
 		TextView tv_Description = (TextView)item.findViewById(R.id.tv_Conversation);
-		tv_Description.setText(diti.getDescription());
+		tv_Description.setText(diti.getLastMsg());
 		
 		ImageView img_Item = (ImageView)item.findViewById(R.id.img_Contact);
 		img_Item.setLayoutParams(new LayoutParams(MAX_SIZE, MAX_SIZE));
@@ -97,8 +97,8 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 		TextView tv_Time = (TextView)item.findViewById(R.id.tv_Time);
 		tv_Time.setText(diti.getTimeAsString());
 		//	Set Status
-		TextView tv_Status = (TextView)item.findViewById(R.id.tv_Status);
-		tv_Status.setText(diti.getStatus());
+//		TextView tv_Status = (TextView)item.findViewById(R.id.tv_Status);
+//		tv_Status.setText(diti.getName());
 		//	Return
 		return item;
 	}
@@ -147,11 +147,11 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 	            	//	new Filter
 	            	ArrayList<DisplayBChatThreadListItem> filteredResult = new ArrayList<DisplayBChatThreadListItem>();
 	                for(DisplayBChatThreadListItem item : originalData) {
-	                    if((item.getValue() != null 
-	                    		&& item.getValue().toLowerCase(Env.getLocate())
+	                    if((item.getName() != null 
+	                    		&& item.getName().toLowerCase(Env.getLocate())
 	                    					.contains(constraint.toString().toLowerCase(Env.getLocate())))
-	                    	|| (item.getDescription() != null 
-		                    		&& item.getDescription().toLowerCase(Env.getLocate())
+	                    	|| (item.getLastMsg() != null 
+		                    		&& item.getLastMsg().toLowerCase(Env.getLocate())
                 					.contains(constraint.toString().toLowerCase(Env.getLocate())))) {
 	                    	filteredResult.add(item);
 	                    }

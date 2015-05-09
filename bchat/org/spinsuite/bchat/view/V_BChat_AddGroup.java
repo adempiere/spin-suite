@@ -16,7 +16,6 @@
 package org.spinsuite.bchat.view;
 
 import java.util.ArrayList;
-import java.util.UUID;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
@@ -26,7 +25,7 @@ import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.util.DisplayBChatContactItem;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.sync.content.Invited;
-import org.spinsuite.sync.content.SyncRequest;
+import org.spinsuite.sync.content.SyncRequest_BC;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
@@ -181,10 +180,11 @@ public class V_BChat_AddGroup extends Activity {
     			Msg.alertMsg(this, getString(R.string.BChat_MustFillGroupName));
     		} else {
     			//	Create Request
-    			SyncRequest request = new SyncRequest(0, 
+    			SyncRequest_BC request = new SyncRequest_BC(null, 
     					String.valueOf(Env.getAD_User_ID()), 
-    					SyncRequest.RT_BUSINESS_CHAT, 
-    					String.valueOf(UUID.randomUUID()), et_GroupName.getText().toString(), true);
+    					null, 
+    					et_GroupName.getText().toString(), 
+    					null, null, true);
     			for(int i = 0; i < itemsChecked.size(); i++) {
         			boolean selected = itemsChecked.get(i);
         			if(selected) {
@@ -198,7 +198,7 @@ public class V_BChat_AddGroup extends Activity {
     			SPS_BC_Request.sendRequest(this, request);
     			//	Add Param
     			Intent intent = getIntent();
-    			intent.putExtra("SPS_BC_Request_ID", request.getSPS_BC_Request_ID());
+    			intent.putExtra("SPS_BC_Request_UUID", request.getSPS_BC_Request_UUID());
     			setResult(Activity.RESULT_OK, intent);
     			finish();
     		}
