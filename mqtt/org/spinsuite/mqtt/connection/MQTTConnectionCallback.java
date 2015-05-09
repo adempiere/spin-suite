@@ -208,8 +208,9 @@ public class MQTTConnectionCallback implements MqttCallback {
 		intent.addCategory(Intent.CATEGORY_LAUNCHER);
 		//	Add Parameter Request
 		intent.putExtra("SPS_BC_Request_UUID", p_SPS_BC_Request_UUID);
+		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		//	Set Main Activity
-		PendingIntent m_PendingIntent = PendingIntent.getActivity(m_Ctx, 0, intent, 0);
+		PendingIntent m_PendingIntent = PendingIntent.getActivity(m_Ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		m_Builder.setContentIntent(m_PendingIntent);
 		m_Builder.setAutoCancel(true);
 		//	Set Vibration

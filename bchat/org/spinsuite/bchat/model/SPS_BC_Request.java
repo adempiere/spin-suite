@@ -291,14 +291,16 @@ public class SPS_BC_Request {
 			//	Add Values
 			int m_AD_Client_ID = Env.getAD_Client_ID();
 			int m_AD_Org_ID = Env.getAD_Org_ID();
-			String m_SPS_BC_Request_UUID = UUID.randomUUID().toString();
 			//	Add Topic
 			if(request.getTopicName() == null) {
 				request.setTopicName(UUID.randomUUID().toString());
 			}
 			int m_AD_User_ID = Env.getAD_User_ID();
 			//	Set ID
-			request.setSPS_BC_Request_UUID(m_SPS_BC_Request_UUID);
+			if(request.getSPS_BC_Request_UUID() == null) {
+				String m_SPS_BC_Request_UUID = UUID.randomUUID().toString();
+				request.setSPS_BC_Request_UUID(m_SPS_BC_Request_UUID);
+			}
 			//	Set Status
 			if(p_Status == null) {
 				p_Status = MQTTDefaultValues.STATUS_CREATED;
@@ -343,7 +345,7 @@ public class SPS_BC_Request {
 					conn.addDateTime(now);
 					conn.addInt(m_AD_User_ID);
 					conn.addBoolean(true);
-					conn.addString(m_SPS_BC_Request_UUID);
+					conn.addString(request.getSPS_BC_Request_UUID());
 					conn.addInt(invited.getAD_USer_ID());
 					conn.addString(MQTTDefaultValues.STATUS_CREATED);
 					conn.executeSQL();
@@ -373,26 +375,26 @@ public class SPS_BC_Request {
 			LogM.log(ctx, SPS_BC_Request.class, Level.CONFIG, "Null where clause for delete");
 			return;
 		}
-		//	Create IN
-		StringBuffer inClause = new StringBuffer("WHERE SPS_BC_Request_UUID IN(");
-		boolean first = true;
-		//	Iterate
-		for(String id : p_SPS_Request_UUIDs) {
-			if(!first) {
-				inClause.append(", ");
-			}
-			//	Add
-			inClause.append(id);
-			//	Change First
-			if(first) {
-				first = false;
-			}
-		}
-		//	Add Last
-		inClause.append(")");
 		//	Connection
 		DB conn = null;
 		try {
+			//	Create IN
+			StringBuffer inClause = new StringBuffer("WHERE SPS_BC_Request_UUID IN(");
+			boolean first = true;
+			//	Iterate
+			for(String id : p_SPS_Request_UUIDs) {
+				if(!first) {
+					inClause.append(", ");
+				}
+				//	Add
+				inClause.append("'").append(id).append("'");
+				//	Change First
+				if(first) {
+					first = false;
+				}
+			}
+			//	Add Last
+			inClause.append(")");
 			//	Create Connection
 			conn = DB.loadConnection(ctx, DB.READ_WRITE);
 			//	Compile Query

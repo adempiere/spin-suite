@@ -102,7 +102,7 @@ public class FV_Thread extends Fragment {
 	/**	Button Send					*/
 	private ImageButton					ib_Send				= null;
 	/**	Request						*/
-	private static SyncRequest_BC 			m_Request			= null;
+	private static SyncRequest_BC 		m_Request			= null;
 	/**	Is Active					*/
 	private static boolean				m_IsActive			= false;
 	/**	Thread Adapter				*/
@@ -339,6 +339,11 @@ public class FV_Thread extends Fragment {
      * @return ArrayList<DisplayBChatThreadItem>
      */
     private ArrayList<DisplayBChatThreadItem> getData() {
+		//	Instance Data
+		ArrayList<DisplayBChatThreadItem> data = new ArrayList<DisplayBChatThreadItem>();
+		//	Valid Request
+    	if(m_Request == null)
+    		return data;
     	//	Create Connection
     	DB conn = DB.loadConnection(getActivity(), DB.READ_ONLY);
     	//	Compile Query
@@ -360,8 +365,6 @@ public class FV_Thread extends Fragment {
     	conn.addString(m_Request.getSPS_BC_Request_UUID());
     	//	Load Data
     	Cursor rs = conn.querySQL();
-		//	Instance Data
-		ArrayList<DisplayBChatThreadItem> data = new ArrayList<DisplayBChatThreadItem>();
     	//	Valid Result set
     	if(rs != null 
     			&& rs.moveToFirst()) {
@@ -482,6 +485,8 @@ public class FV_Thread extends Fragment {
      * @return boolean
      */
     public static boolean isOpened(String p_SPS_BC_Request_UUID) {
+    	if(m_Request == null)
+    		return false;
     	//	Valid Request Parameter
     	if(p_SPS_BC_Request_UUID == null)
     		return false;

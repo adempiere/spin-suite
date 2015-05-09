@@ -236,14 +236,14 @@ public class FV_ThreadIndex extends ListFragment
     public void onListItemClick(ListView l, View v, int position, long id) {
     	//	
     	DisplayBChatThreadListItem item = m_Adapter.getItem(position);
-    	onItemSelected(item.getTopicName());
+    	onItemSelected(item.getSPS_BC_Request_UUID());
     	//	Change on List View
     	//getListView().setItemChecked(position, true);
     }
 
     @Override
-    public void onItemSelected(String p_TopicName) {
-    	m_Callback.onItemSelected(0, p_TopicName, V_BChat.TYPE_SELECT_CONVERSATION);
+    public void onItemSelected(String p_SPS_BC_Request_UUID) {
+    	m_Callback.onItemSelected(0, p_SPS_BC_Request_UUID, V_BChat.TYPE_SELECT_CONVERSATION);
     }
     
     @Override
