@@ -220,7 +220,7 @@ public class FV_Thread extends Fragment {
 								inClause.append(", ");
 							}
 							//	Add Value
-							inClause.append(selectedItem.getSPS_BC_Message_UUID());
+							inClause.append("'").append(selectedItem.getSPS_BC_Message_UUID()).append("'");
 							//	Remove Item
 							m_ThreadAdapter.remove(selectedItem);
 						}

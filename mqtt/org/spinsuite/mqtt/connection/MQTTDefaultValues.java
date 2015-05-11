@@ -54,6 +54,8 @@ public class MQTTDefaultValues {
 	public static final String STATUS_SENT 			= "S";
 	public static final String STATUS_REJECT 		= "J";
 	public static final String STATUS_SENDING 		= "G";
+	public static final String STATUS_NOTIFIED 		= "N";
+	
 	/**
 	 * Get Synchronization Topic
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com

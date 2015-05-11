@@ -438,7 +438,7 @@ public class SPS_BC_Request {
 		//	Send
 		MQTTConnection m_Connection = MQTTConnection.getInstance(p_ctx);
 		try {
-			if(m_Connection.isConnected()) {
+			if(m_Connection.connect()) {
 				m_Connection.subscribeEx(request.getTopicName(), MQTTConnection.EXACTLY_ONCE_2);
 				//	Send Request
 				for(Invited invited : request.getUsers()) {

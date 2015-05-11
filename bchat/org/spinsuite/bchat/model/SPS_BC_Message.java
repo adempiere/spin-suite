@@ -25,6 +25,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.spinsuite.base.DB;
 import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
+import org.spinsuite.sync.content.SyncAcknowledgment;
 import org.spinsuite.sync.content.SyncMessage_BC;
 import org.spinsuite.sync.content.SyncRequest_BC;
 import org.spinsuite.util.Env;
@@ -433,7 +434,7 @@ public class SPS_BC_Message {
 		newOutMessage(p_ctx, message, MQTTDefaultValues.STATUS_SENDING);
 		//	Send
 		MQTTConnection m_Connection = MQTTConnection.getInstance(p_ctx);
-		if(m_Connection.isConnected()) {
+		if(m_Connection.connect()) {
 			try {
 				//	Set Client ID
 				message.setLocalClient_ID(MQTTConnection.getClient_ID(p_ctx));
@@ -457,6 +458,47 @@ public class SPS_BC_Message {
 		} else {
 			setStatus(p_ctx, 
 					message.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_CREATED);
+		}
+    }
+    
+    /**
+     * Send Acknowledgement
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_ctx
+     * @param message
+     * @param p_Topic
+     * @return void
+     */
+    public static void sendAcknowledgment(Context p_ctx, SyncMessage_BC message, String p_Topic) {
+    	//	Valid Message
+    	if(message == null) {
+    		return;
+    	}
+    	//	Send
+		MQTTConnection m_Connection = MQTTConnection.getInstance(p_ctx);
+		if(m_Connection.connect()) {
+			try {
+				SyncAcknowledgment acknowledgment = new SyncAcknowledgment(MQTTConnection.getClient_ID(p_ctx));
+				//	Set Request Identifier
+				acknowledgment.setSPS_BC_Request_UUID(message.getSPS_BC_Request_UUID());
+				//	Set Message Identifier
+				acknowledgment.setSPS_BC_Message_UUID(message.getSPS_BC_Message_UUID());
+				//	Set User Identifier
+				acknowledgment.setAD_User_ID(Env.getAD_User_ID(p_ctx));
+				//	
+				byte[] payload = SerializerUtil.serializeObjectEx(acknowledgment);
+				MqttMessage msg = new MqttMessage(payload);
+				msg.setQos(MQTTConnection.EXACTLY_ONCE_2);
+				msg.setRetained(true);
+				m_Connection.publish(p_Topic, msg);
+			} catch (Exception e) {
+				LogM.log(p_ctx, SPS_BC_Message.class, Level.SEVERE, "Error", e);
+//				SPS_BC_Message.setStatus(p_ctx, 
+//						message.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_CREATED);
+			}
+		} else {
+//			setStatus(p_ctx, 
+//					message.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_CREATED);
 		}
     }
 }

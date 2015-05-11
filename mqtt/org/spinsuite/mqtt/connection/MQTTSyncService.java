@@ -126,7 +126,7 @@ public class MQTTSyncService extends Service {
 		m_Connection = MQTTConnection.getInstance(getApplicationContext(), 
 				defaultTopics, isReload);
 		//	Connection
-		if(!connect()) {
+		if(!m_Connection.connect()) {
 			return;
 		}
 		//	Send Request
@@ -249,37 +249,6 @@ public class MQTTSyncService extends Service {
 		}
 		//	Return Ok
 		return true;
-	}
-
-	/**
-	 * Connect with Server
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return boolean
-	 */
-	private boolean connect() {
-		if(m_Connection.isConnected()) {
-			LogM.log(getApplicationContext(), getClass(), 
-					Level.FINE, "connect(): Already Connected");
-			return true;
-		}
-		//	
-		try {
-			//	Connect
-			if(m_Connection.getStatus() == MQTTConnection.TRY_CONNECTING) {
-				return false;
-			}
-			m_Connection.connect();
-			m_Connection.setStatus(MQTTConnection.TRY_CONNECTING);
-			LogM.log(getApplicationContext(), getClass(), 
-					Level.FINE, "connect(): Try Connecting");
-			//	
-			return true;
-		} catch (Exception e) {
-			LogM.log(getApplicationContext(), getClass(), 
-					Level.SEVERE, "connect(): Error", e);
-		}
-		//	
-		return false;
 	}
 	
 	@Override

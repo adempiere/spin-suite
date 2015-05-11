@@ -19,9 +19,6 @@ import java.util.logging.Level;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttSecurityException;
-import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
 import android.content.Context;
@@ -30,14 +27,14 @@ import android.content.Context;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Apr 1, 2015, 3:36:57 AM
  *
  */
-public class MQTTListener implements IMqttActionListener {
+public class MQTTBCListener implements IMqttActionListener {
 
 	/**
 	 * *** Constructor ***
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Ctx
 	 */
-	public MQTTListener(Context p_Ctx) {
+	public MQTTBCListener(Context p_Ctx) {
 		m_Ctx = p_Ctx;
 	}
 
@@ -46,38 +43,12 @@ public class MQTTListener implements IMqttActionListener {
 	
 	@Override
 	public void onFailure(IMqttToken token, Throwable e) {
-		MQTTConnection.getInstance(m_Ctx).setStatus(MQTTConnection.DISCONNECTED);
-		LogM.log(m_Ctx, getClass(), Level.SEVERE, "Connection Error", e);
+		LogM.log(m_Ctx, getClass(), Level.SEVERE, "Send Error", e);
 	}
 
 	@Override
 	public void onSuccess(IMqttToken token) {
-		LogM.log(m_Ctx, getClass(), Level.FINE, "Connection MQTT is Ok");
-		MQTTConnection.getInstance(m_Ctx).setStatus(MQTTConnection.CONNECTED);
-		subscribeToDefaultsTopics();
+		token.getResponse();
+		LogM.log(m_Ctx, getClass(), Level.FINE, "Send is Ok");
 	}
-
-	/**
-	 * Subscribe to topics
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return void
-	 */
-	private void subscribeToDefaultsTopics() {
-		try {
-			MQTTConnection m_Connection = MQTTConnection.getInstance(m_Ctx);
-			m_Connection.subscribeEx(MQTTDefaultValues.getInitialLoadTopic(), 
-					MQTTConnection.EXACTLY_ONCE_2);
-			m_Connection.subscribeEx(MQTTDefaultValues.getSyncTopic(String.valueOf(Env.getAD_User_ID())), 
-					MQTTConnection.EXACTLY_ONCE_2);
-			m_Connection.subscribeEx(MQTTDefaultValues.getRequestTopic(String.valueOf(Env.getAD_User_ID())), 
-					MQTTConnection.EXACTLY_ONCE_2);
-			//	Subscribe to Other topics
-			m_Connection.subscribeEx(MQTTConnection.EXACTLY_ONCE_2);
-		} catch (MqttSecurityException e) {
-			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Security Exception", e);
-		} catch (MqttException e) {
-			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Exception", e);
-		}
-	}
-	
 }

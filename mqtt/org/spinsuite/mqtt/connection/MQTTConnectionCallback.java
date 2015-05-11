@@ -33,6 +33,7 @@ import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.bchat.view.FV_Thread;
 import org.spinsuite.bchat.view.V_BChat;
+import org.spinsuite.sync.content.SyncAcknowledgment;
 import org.spinsuite.sync.content.SyncMessage_BC;
 import org.spinsuite.sync.content.SyncParent;
 import org.spinsuite.sync.content.SyncRequest_BC;
@@ -111,7 +112,15 @@ public class MQTTConnectionCallback implements MqttCallback {
 				subscribeToRequest(request);
 			} else if(parent instanceof SyncMessage_BC) {
 				SyncMessage_BC message = (SyncMessage_BC) parent;
-				saveMessageArrived(message);
+				saveMessageArrived(message, topic);
+			} else if(parent instanceof SyncAcknowledgment) {
+				SyncAcknowledgment acknowledgment = (SyncAcknowledgment) parent;
+				//	Change DB Status
+				SPS_BC_Message.setStatus(m_Ctx, 
+						acknowledgment.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_DELIVERED);
+				//	Possible Change UI Status
+				changeUIStatus(acknowledgment.getSPS_BC_Request_UUID(), 
+						acknowledgment.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_DELIVERED);
 			}
 		}
 	}
@@ -147,9 +156,10 @@ public class MQTTConnectionCallback implements MqttCallback {
 	 * For Message
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param message
+	 * @param p_Topic
 	 * @return void
 	 */
-	private void saveMessageArrived(final SyncMessage_BC message) {
+	private void saveMessageArrived(SyncMessage_BC message, String p_Topic) {
 		//	Save File in Folder
 		if(message.getFileName() != null
 				&& message.getFileName().length() > 0
@@ -170,6 +180,8 @@ public class MQTTConnectionCallback implements MqttCallback {
 		boolean ok = SPS_BC_Message.newInMessage(m_Ctx, message);
 		//	
 		if(ok) {
+			//	Send Acknowledgment
+			SPS_BC_Message.sendAcknowledgment(m_Ctx, message, p_Topic);
 			//	Instance Notification Manager
 			instanceNM(message.getSPS_BC_Request_UUID());
 			//	Notify
@@ -273,7 +285,7 @@ public class MQTTConnectionCallback implements MqttCallback {
 				SPS_BC_Message.setStatus(m_Ctx, 
 						message.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_SENT);
 				//	Change UI Status
-				changeUIStatus(message, MQTTDefaultValues.STATUS_SENT);
+				changeUIStatus(message.getSPS_BC_Request_UUID(), message.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_SENT);
 			}
 		} catch (MqttException e) {
 			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error", e);
@@ -283,16 +295,17 @@ public class MQTTConnectionCallback implements MqttCallback {
 	/**
 	 * Change Status in List View
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param message
+	 * @param p_SPS_BC_Request_UUID
+	 * @param p_SPS_BC_Message_UUID
 	 * @param p_Status
 	 * @return void
 	 */
-	private void changeUIStatus(final SyncMessage_BC message, final String p_Status) {
+	private void changeUIStatus(final String p_SPS_BC_Request_UUID, final String p_SPS_BC_Message_UUID, final String p_Status) {
 		FV_Thread.runOnUI(new Runnable() {
 			public void run() {
 				try {
-					if(FV_Thread.isOpened(message.getSPS_BC_Request_UUID())) {
-						FV_Thread.changeMsgStatus(message.getSPS_BC_Message_UUID(), 
+					if(FV_Thread.isOpened(p_SPS_BC_Request_UUID)) {
+						FV_Thread.changeMsgStatus(p_SPS_BC_Message_UUID, 
 								p_Status);
 					}
 				} catch (Exception e) { 

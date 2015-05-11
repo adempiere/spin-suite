@@ -17,9 +17,9 @@ package org.spinsuite.mqtt.connection;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
-
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -51,6 +51,8 @@ public class MQTTConnection {
 	private boolean 				m_IsSSLConnection = false;
 	/**	Callback Event Listener		*/
 	private IMqttActionListener		m_ConnectionListener = null;
+	/**	Callback Event Listener		*/
+	private IMqttActionListener		m_MessageListener = null;
 	/**	Callback					*/
 	private MqttCallback			m_Callback = null;
 	/**	Context						*/
@@ -131,6 +133,8 @@ public class MQTTConnection {
 	    //	Keep Alive Interval
 	    m_ConnectionOption.setKeepAliveInterval(getKeepAliveInverval(p_Ctx));
 	    m_ConnectionOption.setCleanSession(true);
+	    //	
+	    m_MessageListener = new MQTTBCListener(m_Ctx);
 	    //	
 	    m_IsSubscribe = false;
 	    m_SubscribedTopics = new ArrayList<String>();
@@ -552,7 +556,7 @@ public class MQTTConnection {
 	 * @return MQTTConnection
 	 */
 	public static MQTTConnection getInstance(Context p_Ctx, String[] p_SubscribedTopics, boolean reLoad) {
-		return getInstance(p_Ctx, new MQTTListener(p_Ctx), new MQTTConnectionCallback(p_Ctx), p_SubscribedTopics, reLoad);
+		return getInstance(p_Ctx, new MQTTConnectionListener(p_Ctx), new MQTTConnectionCallback(p_Ctx), p_SubscribedTopics, reLoad);
 	}
 	
 	/**
@@ -626,13 +630,34 @@ public class MQTTConnection {
 	}
 	
 	/**
-	 * Connect to Server without Callback
+	 * Connect with Server if it not connected
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @throws MqttException
-	 * @return void
+	 * @return boolean
 	 */
-	public void connect() throws MqttException {
-		connect(null);
+	public boolean connect() {
+		if(isConnected()) {
+			LogM.log(m_Ctx, getClass(), 
+					Level.FINE, "connect(): Already Connected");
+			return true;
+		}
+		//	
+		try {
+			//	Connect
+			if(getStatus() == MQTTConnection.TRY_CONNECTING) {
+				return false;
+			}
+			connect(null);
+			setStatus(MQTTConnection.TRY_CONNECTING);
+			LogM.log(m_Ctx, getClass(), 
+					Level.FINE, "connect(): Try Connecting");
+			//	
+			return true;
+		} catch (Exception e) {
+			LogM.log(m_Ctx, getClass(), 
+					Level.SEVERE, "connect(): Error", e);
+		}
+		//	
+		return false;
 	}
 	
 	/**
@@ -768,11 +793,13 @@ public class MQTTConnection {
 	 * @param p_IsRetained
 	 * @throws MqttPersistenceException
 	 * @throws MqttException
-	 * @return void
+	 * @return IMqttDeliveryToken
 	 */
-	public void publishEx(String p_Topic, byte[] p_PayLoad, 
+	public IMqttDeliveryToken publishEx(String p_Topic, byte[] p_PayLoad, 
 			int p_QoS, boolean p_IsRetained) throws MqttPersistenceException, MqttException {
-		m_ClientLink.publish(p_Topic, p_PayLoad, p_QoS, p_IsRetained);
+		IMqttDeliveryToken token = m_ClientLink.publish(p_Topic, p_PayLoad, p_QoS, p_IsRetained);
+		token.setActionCallback(m_MessageListener);
+		return token;
 	}
 	
 	/**
@@ -784,8 +811,11 @@ public class MQTTConnection {
 	 * @throws MqttException
 	 * @return void
 	 */
-	public void publishEx(String p_Topic, MqttMessage p_Message) throws MqttPersistenceException, MqttException {
-		m_ClientLink.publish(p_Topic, p_Message);
+	public IMqttDeliveryToken publishEx(String p_Topic, MqttMessage p_Message) throws MqttPersistenceException, MqttException {
+		IMqttDeliveryToken token = m_ClientLink.publish(p_Topic, p_Message);
+		//m_ClientLink.acknowledgeMessage((ParcelableMqttMessage)p_Message);
+		token.setActionCallback(m_MessageListener);
+		return token;
 	}
 	
 	/**
@@ -794,19 +824,18 @@ public class MQTTConnection {
 	 * @param p_Topic
 	 * @param p_Message
 	 * @return
-	 * @return boolean
+	 * @return IMqttDeliveryToken
 	 */
-	public boolean publish(String p_Topic, MqttMessage p_Message) {
+	public IMqttDeliveryToken publish(String p_Topic, MqttMessage p_Message) {
 		try {
-			publishEx(p_Topic, p_Message);
-			return true;
+			return publishEx(p_Topic, p_Message);
 		} catch (MqttPersistenceException e) {
-			e.printStackTrace();
+			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error (publish) ", e);
 		} catch (MqttException e) {
-			e.printStackTrace();
+			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error (publish) ", e);
 		}
 		//	Default
-		return false;
+		return null;
 	}
 	
 	/**
@@ -817,20 +846,19 @@ public class MQTTConnection {
 	 * @param p_QoS
 	 * @param p_IsRetained
 	 * @return
-	 * @return boolean
+	 * @return IMqttDeliveryToken
 	 */
-	public boolean publish(String p_Topic, byte[] p_PayLoad, 
+	public IMqttDeliveryToken publish(String p_Topic, byte[] p_PayLoad, 
 			int p_QoS, boolean p_IsRetained) {
 		try {
-			publishEx(p_Topic, p_PayLoad, p_QoS, p_IsRetained);
-			return true;
+			return publishEx(p_Topic, p_PayLoad, p_QoS, p_IsRetained);
 		} catch (MqttPersistenceException e) {
-			e.printStackTrace();
+			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error (publish) ", e);
 		} catch (MqttException e) {
-			e.printStackTrace();
+			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error (publish) ", e);
 		}
 		//	Default
-		return false;
+		return null;
 	}
 	
 	/**
