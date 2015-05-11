@@ -17,6 +17,7 @@ package org.spinsuite.mqtt.connection;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
+
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -84,6 +85,7 @@ public class MQTTConnection {
 	private static final String		MQTT_TIMEOUT 				= "#MQTT_Timeout";
 	private static final String		MQTT_KEEP_ALIVE_INTERVAL 	= "#MQTT_KeepAliveInterval";
 	private static final String		MQTT_IS_RELOAD_SERVICE 		= "#MQTT_IsreloadService";
+	private static final String		MQTT_TIME_FOR_RECONNECT 	= "#MQTT_TimeForReConnect";
 	
 	/**	Connection Status					*/
 	public static final int			CONNECTED					= 1;
@@ -169,6 +171,49 @@ public class MQTTConnection {
 	 */
 	public MQTTConnection(Context p_Ctx, IMqttActionListener p_ConnectionListener, String[] p_SubscribedTopics) {
 		this(p_Ctx, getClient_ID(p_Ctx), getHost(p_Ctx), getPort(p_Ctx), isSSLConnection(p_Ctx), p_ConnectionListener, p_SubscribedTopics);
+	}
+	
+	/**
+	 * Connect in Thread
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return void
+	 */
+	public void connectInThread() {
+		//	Try in other thread
+		new Thread(new Runnable() {
+			public void run() {
+				//	Connect
+				connect();
+			}
+		}).start();
+	}
+	
+	/**
+	 * Try Connect in other thread
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	public void tryConnect() {
+		if(!isNetworkOk(m_Ctx)
+				&& !isAutomaticService(m_Ctx)) {
+			return;
+		}
+		//	
+		LogM.log(m_Ctx, getClass(), Level.FINE, "Try Connecting");
+		//	Try in other thread
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					Thread.sleep(getTimeForReconnect(m_Ctx));
+				} catch (InterruptedException ex) {
+					LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error Sleep", ex);
+				}
+				LogM.log(m_Ctx, getClass(), Level.FINE, "Connecting...");
+				//	Connect
+				connect();
+			}
+		}).start();
 	}
 	
 	/**
@@ -408,6 +453,34 @@ public class MQTTConnection {
 	}
 	
 	/**
+	 * Set Time for re-connect
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_TimeInMillis
+	 * @return void
+	 */
+	public static void setTimeForReconnect(Context p_Ctx, long p_TimeInMillis) {
+		Env.setContext(p_Ctx, MQTT_TIME_FOR_RECONNECT, p_TimeInMillis);
+	}
+	
+	/**
+	 * Get Time for re-connect
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return long
+	 */
+	public static long getTimeForReconnect(Context p_Ctx) {
+		long time = Env.getContextAsLong(p_Ctx, MQTT_TIME_FOR_RECONNECT);
+		//	Time
+		if(time <= 0) {
+			time = MQTTDefaultValues.DEFAULT_MQTT_TIME_RECONNECT;
+		}
+		//	Return
+		return time;
+	}
+	
+	/**
 	 * Set the Reload property
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Ctx
@@ -532,11 +605,17 @@ public class MQTTConnection {
 			String[] p_SubscribedTopics, boolean reLoad) {
 		if(m_Connection == null
 				|| reLoad) {
-			m_Connection = new MQTTConnection(p_Ctx, p_ConnectionListener, p_SubscribedTopics);
-			//	Valid Callback
-			if(p_Callback != null) {
-				m_Connection.setCallback(p_Callback);
+			//	Instance Listener
+			if(p_ConnectionListener == null) {
+				p_ConnectionListener = new MQTTConnectionListener(p_Ctx);
 			}
+			//	Instance Callbak
+			if(p_Callback == null) {
+				p_Callback = new MQTTConnectionCallback(p_Ctx);
+			}
+			m_Connection = new MQTTConnection(p_Ctx, p_ConnectionListener, p_SubscribedTopics);
+			//	Add Callback
+			m_Connection.setCallback(p_Callback);
 			//	Set to false reload
 			if(reLoad) {
 				MQTTConnection.setIsReloadService(p_Ctx, false);
@@ -556,7 +635,7 @@ public class MQTTConnection {
 	 * @return MQTTConnection
 	 */
 	public static MQTTConnection getInstance(Context p_Ctx, String[] p_SubscribedTopics, boolean reLoad) {
-		return getInstance(p_Ctx, new MQTTConnectionListener(p_Ctx), new MQTTConnectionCallback(p_Ctx), p_SubscribedTopics, reLoad);
+		return getInstance(p_Ctx, null, null, p_SubscribedTopics, reLoad);
 	}
 	
 	/**
@@ -798,7 +877,11 @@ public class MQTTConnection {
 	public IMqttDeliveryToken publishEx(String p_Topic, byte[] p_PayLoad, 
 			int p_QoS, boolean p_IsRetained) throws MqttPersistenceException, MqttException {
 		IMqttDeliveryToken token = m_ClientLink.publish(p_Topic, p_PayLoad, p_QoS, p_IsRetained);
-		token.setActionCallback(m_MessageListener);
+		//	Callback
+		if(m_MessageListener != null) {
+			token.setActionCallback(m_MessageListener);
+		}
+		//	Default Return
 		return token;
 	}
 	
@@ -813,8 +896,11 @@ public class MQTTConnection {
 	 */
 	public IMqttDeliveryToken publishEx(String p_Topic, MqttMessage p_Message) throws MqttPersistenceException, MqttException {
 		IMqttDeliveryToken token = m_ClientLink.publish(p_Topic, p_Message);
-		//m_ClientLink.acknowledgeMessage((ParcelableMqttMessage)p_Message);
-		token.setActionCallback(m_MessageListener);
+		//	Callback
+		if(m_MessageListener != null) {
+			token.setActionCallback(m_MessageListener);
+		}
+		//	Default Return
 		return token;
 	}
 	
@@ -881,7 +967,7 @@ public class MQTTConnection {
 	 * @param p_Topic
 	 * @return void
 	 */
-	private void addTopic(String p_Topic) {
+	public void addTopic(String p_Topic) {
 		int currentPos = m_SubscribedTopics.indexOf(p_Topic);
 		if(currentPos > -1) {
 			m_SubscribedTopics.set(currentPos, p_Topic);
@@ -900,7 +986,7 @@ public class MQTTConnection {
 	 * @param p_Topics
 	 * @return void
 	 */
-	private void addTopic(String[] p_Topics) {
+	public void addTopic(String[] p_Topics) {
 		//	Valid Null
 		if(p_Topics == null) {
 			return;

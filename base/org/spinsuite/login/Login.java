@@ -21,6 +21,7 @@ import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.model.MCountry;
+import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.mqtt.connection.MQTTSyncService;
 import org.spinsuite.sync.SyncService;
 import org.spinsuite.util.Env;
@@ -69,8 +70,6 @@ public class Login extends TV_Base implements I_Login {
 	private Activity			v_activity		= null;
 	/**	Sync					*/
 	private T_Login_Init		m_LoginInit;
-	/**	Enable					*/
-	//private boolean				m_Enabled		= true;
 	/** Notification Manager	*/
 	private NotificationManager m_NFManager 	= null;
 	/** Max Value Progress Bar	*/
@@ -121,10 +120,11 @@ public class Login extends TV_Base implements I_Login {
 					new LoadAccessTask().execute();
 				} else {
 					//	Start Service
-					if(!MQTTSyncService.isRunning()) {
-						Intent service = new Intent(this, MQTTSyncService.class);
-						startService(service);
-					}
+//					if(!MQTTSyncService.isRunning()) {
+//						Intent service = new Intent(this, MQTTSyncService.class);
+//						startService(service);
+//					}
+					MQTTConnection.getInstance(v_activity).connectInThread();
 					//	Start Activity
 					Intent intent = new Intent(this, LV_Menu.class);
 					startActivity(intent);

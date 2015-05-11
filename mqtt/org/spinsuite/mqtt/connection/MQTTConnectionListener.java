@@ -21,6 +21,8 @@ import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
+import org.spinsuite.bchat.model.BCMessageHandle;
+import org.spinsuite.bchat.model.SPS_BC_Request;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
@@ -42,12 +44,16 @@ public class MQTTConnectionListener implements IMqttActionListener {
 	}
 
 	/**	Context					*/
-	private Context m_Ctx = null;
+	private Context 			m_Ctx = null;
+	/**	Default Topics			*/
+	private String[] 			m_DefaultTopics = null;
 	
 	@Override
 	public void onFailure(IMqttToken token, Throwable e) {
 		MQTTConnection.getInstance(m_Ctx).setStatus(MQTTConnection.DISCONNECTED);
 		LogM.log(m_Ctx, getClass(), Level.SEVERE, "Connection Error", e);
+		//	Try Connect
+		MQTTConnection.getInstance(m_Ctx).tryConnect();
 	}
 
 	@Override
@@ -55,6 +61,7 @@ public class MQTTConnectionListener implements IMqttActionListener {
 		LogM.log(m_Ctx, getClass(), Level.FINE, "Connection MQTT is Ok");
 		MQTTConnection.getInstance(m_Ctx).setStatus(MQTTConnection.CONNECTED);
 		subscribeToDefaultsTopics();
+		BCMessageHandle.getInstance(m_Ctx).processMessageThread();
 	}
 
 	/**
@@ -65,13 +72,16 @@ public class MQTTConnectionListener implements IMqttActionListener {
 	private void subscribeToDefaultsTopics() {
 		try {
 			MQTTConnection m_Connection = MQTTConnection.getInstance(m_Ctx);
-			m_Connection.subscribeEx(MQTTDefaultValues.getInitialLoadTopic(), 
-					MQTTConnection.EXACTLY_ONCE_2);
-			m_Connection.subscribeEx(MQTTDefaultValues.getSyncTopic(String.valueOf(Env.getAD_User_ID())), 
-					MQTTConnection.EXACTLY_ONCE_2);
-			m_Connection.subscribeEx(MQTTDefaultValues.getRequestTopic(String.valueOf(Env.getAD_User_ID())), 
-					MQTTConnection.EXACTLY_ONCE_2);
-			//	Subscribe to Other topics
+			//	Verify Topics for conversations
+			if(m_DefaultTopics == null) {
+				m_DefaultTopics = SPS_BC_Request.getTopics(m_Ctx);
+				m_Connection.addTopic(m_DefaultTopics);
+			}
+			//	Add Standard Topics
+			m_Connection.addTopic(MQTTDefaultValues.getInitialLoadTopic());
+			m_Connection.addTopic(MQTTDefaultValues.getSyncTopic(String.valueOf(Env.getAD_User_ID())));
+			m_Connection.addTopic(MQTTDefaultValues.getRequestTopic(String.valueOf(Env.getAD_User_ID())));
+			//	Subscribe to the topics
 			m_Connection.subscribeEx(MQTTConnection.EXACTLY_ONCE_2);
 		} catch (MqttSecurityException e) {
 			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Security Exception", e);
@@ -79,5 +89,4 @@ public class MQTTConnectionListener implements IMqttActionListener {
 			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Exception", e);
 		}
 	}
-	
 }

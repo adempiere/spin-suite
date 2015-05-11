@@ -39,6 +39,8 @@ public class MQTTDefaultValues {
 	public static final int 	DEFAULT_MQTT_PORT 			= 1883;
 	/**	Alarm Time										*/
 	public static final long 	DEFAULT_MQTT_ALARM_TIME 	= 1000 * 60;
+	/**	Alarm Time										*/
+	public static final long 	DEFAULT_MQTT_TIME_RECONNECT = 1000 * 6;
 	/**	Notification ID									*/
 	public static final int		NOTIFICATION_ID 			= 777;
 	

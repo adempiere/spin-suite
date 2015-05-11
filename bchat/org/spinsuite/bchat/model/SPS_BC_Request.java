@@ -485,7 +485,7 @@ public class SPS_BC_Request {
      * @param p_Status
      * @return void
      */
-    public static void setStatus(Context ctx, int p_SPS_BC_Request_UUID, String p_Status) {
+    public static void setStatus(Context ctx, String p_SPS_BC_Request_UUID, String p_Status) {
 		//	Connection
 		DB conn = null;
 		try {
@@ -497,7 +497,7 @@ public class SPS_BC_Request {
 					+ "WHERE SPS_BC_Request_UUID = ? ");
 			//	Add Parameter
 			conn.addString(p_Status);
-			conn.addInt(p_SPS_BC_Request_UUID);
+			conn.addString(p_SPS_BC_Request_UUID);
 			conn.executeSQL();
 			//	Successful
 			conn.setTransactionSuccessful();

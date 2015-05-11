@@ -244,6 +244,7 @@ public class MQTTConnectionCallback implements MqttCallback {
 		m_Connection = MQTTConnection.getInstance(m_Ctx);
 		m_Connection.setStatus(MQTTConnection.DISCONNECTED);
 		LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error Connection Lost", e);
+		MQTTConnection.getInstance(m_Ctx).tryConnect();
 	}
 	
 	/**
@@ -286,6 +287,10 @@ public class MQTTConnectionCallback implements MqttCallback {
 						message.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_SENT);
 				//	Change UI Status
 				changeUIStatus(message.getSPS_BC_Request_UUID(), message.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_SENT);
+			} else if(parent instanceof SyncAcknowledgment) {
+				SyncAcknowledgment acknowledgment = (SyncAcknowledgment) parent;
+				SPS_BC_Message.setStatus(m_Ctx, 
+						acknowledgment.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_NOTIFIED);
 			}
 		} catch (MqttException e) {
 			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error", e);
@@ -309,7 +314,7 @@ public class MQTTConnectionCallback implements MqttCallback {
 								p_Status);
 					}
 				} catch (Exception e) { 
-					LogM.log(m_Ctx, MQTTSyncService.class, Level.SEVERE, "Error", e);
+					LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error", e);
 				}
 			}
 		});
@@ -343,7 +348,7 @@ public class MQTTConnectionCallback implements MqttCallback {
 						sendNotification(message);
 					}
 				} catch (Exception e) { 
-					LogM.log(Env.getCtx(), MQTTSyncService.class, Level.SEVERE, "Error", e);
+					LogM.log(Env.getCtx(), getClass(), Level.SEVERE, "Error (addMessage)", e);
 				}
 			}
 		});

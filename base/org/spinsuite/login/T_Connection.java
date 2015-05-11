@@ -21,7 +21,6 @@ import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
-import org.spinsuite.mqtt.connection.MQTTSyncService;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
@@ -37,13 +36,13 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.view.View.OnClickListener;
 
 /**
  * 
@@ -363,14 +362,15 @@ public class T_Connection extends Activity implements I_Login {
 			MQTTConnection.setTimeout(this, Integer.parseInt(limit));
 		}
 		//	Stop Service
-		Intent service = new Intent(this, MQTTSyncService.class);
-		LogM.log(this, getClass(), Level.FINE, "Stoping MQTT Service");
-		stopService(service);
-		MQTTConnection.setIsReloadService(this, true);
-		//	Start Service
-		LogM.log(this, getClass(), Level.FINE, "Starting MQTT Service");
-		startService(service);
+//		Intent service = new Intent(this, MQTTSyncService.class);
+//		LogM.log(this, getClass(), Level.FINE, "Stoping MQTT Service");
+//		stopService(service);
+//		MQTTConnection.setIsReloadService(this, true);
+//		//	Start Service
+//		LogM.log(this, getClass(), Level.FINE, "Starting MQTT Service");
+//		startService(service);
 		//	
+		MQTTConnection.getInstance(this).connectInThread();
 		finish();
 		//	Default Return
 		return true;

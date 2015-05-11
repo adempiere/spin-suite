@@ -434,6 +434,7 @@ public class SPS_BC_Message {
 		newOutMessage(p_ctx, message, MQTTDefaultValues.STATUS_SENDING);
 		//	Send
 		MQTTConnection m_Connection = MQTTConnection.getInstance(p_ctx);
+		boolean sent = false;
 		if(m_Connection.connect()) {
 			try {
 				//	Set Client ID
@@ -449,14 +450,19 @@ public class SPS_BC_Message {
 				MqttMessage msg = new MqttMessage(payload);
 				msg.setQos(MQTTConnection.EXACTLY_ONCE_2);
 				msg.setRetained(true);
-				m_Connection.publish(request.getTopicName(), msg);
+				m_Connection.publishEx(request.getTopicName(), msg);
+				sent = true;
 			} catch (Exception e) {
 				LogM.log(p_ctx, SPS_BC_Message.class, Level.SEVERE, "Error", e);
-				SPS_BC_Message.setStatus(p_ctx, 
-						message.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_CREATED);
+				//	Try Send
+				BCMessageHandle.getInstance(p_ctx).processMessageThread();
 			}
 		} else {
-			setStatus(p_ctx, 
+			LogM.log(p_ctx, SPS_BC_Message.class, Level.SEVERE, "Error (No Connected)");
+		}
+		//	
+		if(!sent) {
+			SPS_BC_Message.setStatus(p_ctx, 
 					message.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_CREATED);
 		}
     }
@@ -490,15 +496,12 @@ public class SPS_BC_Message {
 				MqttMessage msg = new MqttMessage(payload);
 				msg.setQos(MQTTConnection.EXACTLY_ONCE_2);
 				msg.setRetained(true);
-				m_Connection.publish(p_Topic, msg);
+				m_Connection.publishEx(p_Topic, msg);
 			} catch (Exception e) {
 				LogM.log(p_ctx, SPS_BC_Message.class, Level.SEVERE, "Error", e);
-//				SPS_BC_Message.setStatus(p_ctx, 
-//						message.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_CREATED);
 			}
 		} else {
-//			setStatus(p_ctx, 
-//					message.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_CREATED);
+			LogM.log(p_ctx, SPS_BC_Message.class, Level.SEVERE, "Error (No Connected)");
 		}
     }
 }

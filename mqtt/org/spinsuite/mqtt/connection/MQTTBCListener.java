@@ -18,8 +18,19 @@ package org.spinsuite.mqtt.connection;
 import java.util.logging.Level;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.spinsuite.bchat.model.BCMessageHandle;
+import org.spinsuite.bchat.model.SPS_BC_Message;
+import org.spinsuite.bchat.model.SPS_BC_Request;
+import org.spinsuite.sync.content.SyncAcknowledgment;
+import org.spinsuite.sync.content.SyncMessage_BC;
+import org.spinsuite.sync.content.SyncParent;
+import org.spinsuite.sync.content.SyncRequest_BC;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.SerializerUtil;
 
 import android.content.Context;
 
@@ -39,11 +50,39 @@ public class MQTTBCListener implements IMqttActionListener {
 	}
 
 	/**	Context					*/
-	private Context m_Ctx = null;
+	private Context 			m_Ctx = null;
 	
 	@Override
 	public void onFailure(IMqttToken token, Throwable e) {
 		LogM.log(m_Ctx, getClass(), Level.SEVERE, "Send Error", e);
+		if(token instanceof IMqttDeliveryToken) {
+			IMqttDeliveryToken deliveryToken = (IMqttDeliveryToken) token;
+			try {
+				MqttMessage msg = deliveryToken.getMessage();
+				if(msg != null) {
+					SyncParent parent = (SyncParent) SerializerUtil
+							.deserializeObject(deliveryToken.getMessage().getPayload());
+						//	Verify Message
+					if(parent instanceof SyncRequest_BC) {
+						SyncRequest_BC request = (SyncRequest_BC) parent;
+						SPS_BC_Request.setStatus(m_Ctx, 
+								request.getSPS_BC_Request_UUID(), MQTTDefaultValues.STATUS_CREATED);
+					} else if(parent instanceof SyncMessage_BC) {
+						SyncMessage_BC message = (SyncMessage_BC) parent;
+						SPS_BC_Message.setStatus(m_Ctx, 
+								message.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_CREATED);
+					} else if(parent instanceof SyncAcknowledgment) {
+						SyncAcknowledgment acknowledgment = (SyncAcknowledgment) parent;
+						SPS_BC_Message.setStatus(m_Ctx, 
+								acknowledgment.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_CREATED);
+					}
+				}
+			} catch (MqttException ex) {
+				LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error (onFailure)", ex);
+			}
+		}
+		//	Re-Send
+		BCMessageHandle.getInstance(m_Ctx).processMessageThread(MQTTConnection.getTimeForReconnect(m_Ctx));
 	}
 
 	@Override
