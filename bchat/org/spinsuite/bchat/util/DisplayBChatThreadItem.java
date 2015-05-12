@@ -16,6 +16,7 @@
 package org.spinsuite.bchat.util;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 import org.spinsuite.util.DisplayType;
@@ -295,5 +296,14 @@ public class DisplayBChatThreadItem {
 		m_Time = p_Time;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "DisplayBChatThreadItem [m_SPS_BC_Message_UUID="
+				+ m_SPS_BC_Message_UUID + ", m_SPS_BC_Request_UUID="
+				+ m_SPS_BC_Request_UUID + ", m_AD_User_ID=" + m_AD_User_ID
+				+ ", m_UserName=" + m_UserName + ", m_Text=" + m_Text
+				+ ", m_Type=" + m_Type + ", m_Status=" + m_Status + ", m_Time="
+				+ m_Time + ", m_FileName=" + m_FileName + ", m_Attachment="
+				+ Arrays.toString(m_Attachment) + "]";
+	}
 }

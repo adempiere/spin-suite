@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.spinsuite.base.R;
+import org.spinsuite.bchat.model.SPS_BC_Message;
 import org.spinsuite.bchat.util.BC_ThreadHolder;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
@@ -193,6 +194,8 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 				id_att = R.attr.ic_bc_bubble_local_sent;
 			} else if(diti.getStatus().equals(MQTTDefaultValues.STATUS_DELIVERED)) {
 				id_att = R.attr.ic_bc_bubble_local_delivered;
+			} else if(diti.getStatus().equals(MQTTDefaultValues.STATUS_READED)) {
+				id_att = R.attr.ic_bc_bubble_local_readed;
 			}
 			//	
 			if(m_SelectedItems.get(position)) {
@@ -217,6 +220,13 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		}
 		//	Change Gravity
 		params.gravity = gravity;
+		//	Send Status
+		if(diti.getType().equals(MQTTDefaultValues.TYPE_IN)
+				&& !diti.getStatus().equals(MQTTDefaultValues.STATUS_READED)) {
+			SPS_BC_Message.sendStatusAcknowledgment(ctx, 
+					diti.getSPS_BC_Request_UUID(), diti.getSPS_BC_Message_UUID(), 
+					null, MQTTDefaultValues.STATUS_READED);
+		}
 		//	Return
 		return view;
 	}

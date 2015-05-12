@@ -174,7 +174,8 @@ public class BCMessageHandle {
 					//	Valid Request
 					if(request == null)
 						continue;
-					SPS_BC_Message.sendAcknowledgment(m_Ctx, msgReceipt, request.getTopicName());
+					SPS_BC_Message.sendStatusAcknowledgment(m_Ctx, msgReceipt, 
+							request.getTopicName(), MQTTDefaultValues.STATUS_DELIVERED);
 				} catch (Exception e) {
 					LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error", e);
 				}

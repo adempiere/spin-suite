@@ -471,26 +471,36 @@ public class SPS_BC_Message {
      * Send Acknowledgement
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @param p_ctx
-     * @param message
+     * @param p_SPS_BC_Request_UUID
+     * @param p_SPS_BC_Message_UUID
      * @param p_Topic
+     * @param p_Status
      * @return void
      */
-    public static void sendAcknowledgment(Context p_ctx, SyncMessage_BC message, String p_Topic) {
-    	//	Valid Message
-    	if(message == null) {
-    		return;
-    	}
+    public static void sendStatusAcknowledgment(Context p_ctx, 
+    		String p_SPS_BC_Request_UUID, String p_SPS_BC_Message_UUID, String p_Topic, String p_Status) {
     	//	Send
 		MQTTConnection m_Connection = MQTTConnection.getInstance(p_ctx);
 		if(m_Connection.connect()) {
 			try {
 				SyncAcknowledgment acknowledgment = new SyncAcknowledgment(MQTTConnection.getClient_ID(p_ctx));
 				//	Set Request Identifier
-				acknowledgment.setSPS_BC_Request_UUID(message.getSPS_BC_Request_UUID());
+				acknowledgment.setSPS_BC_Request_UUID(p_SPS_BC_Request_UUID);
 				//	Set Message Identifier
-				acknowledgment.setSPS_BC_Message_UUID(message.getSPS_BC_Message_UUID());
+				acknowledgment.setSPS_BC_Message_UUID(p_SPS_BC_Message_UUID);
 				//	Set User Identifier
 				acknowledgment.setAD_User_ID(Env.getAD_User_ID(p_ctx));
+				//	Set status
+				acknowledgment.setStatus(p_Status);
+				if(p_Topic == null) {
+					SyncRequest_BC request = SPS_BC_Request.getRequest(p_ctx, p_SPS_BC_Request_UUID);
+					//	Valid Request
+					if(request == null) {
+						return;
+					}
+					//	Get Topic
+					p_Topic = request.getTopicName();
+				}
 				//	
 				byte[] payload = SerializerUtil.serializeObjectEx(acknowledgment);
 				MqttMessage msg = new MqttMessage(payload);
@@ -503,5 +513,24 @@ public class SPS_BC_Message {
 		} else {
 			LogM.log(p_ctx, SPS_BC_Message.class, Level.SEVERE, "Error (No Connected)");
 		}
+    }
+    
+    /**
+     * Send Acknowledgement With Message
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_ctx
+     * @param message
+     * @param p_Topic
+     * @param p_Status
+     * @return void
+     */
+    public static void sendStatusAcknowledgment(Context p_ctx, SyncMessage_BC message, String p_Topic, String p_Status) {
+    	//	Valid Message
+    	if(message == null) {
+    		return;
+    	}
+    	//	Send
+    	sendStatusAcknowledgment(p_ctx, message.getSPS_BC_Request_UUID(), 
+    			message.getSPS_BC_Message_UUID(), p_Topic, p_Status);
     }
 }

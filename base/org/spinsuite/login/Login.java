@@ -120,10 +120,10 @@ public class Login extends TV_Base implements I_Login {
 					new LoadAccessTask().execute();
 				} else {
 					//	Start Service
-//					if(!MQTTSyncService.isRunning()) {
-//						Intent service = new Intent(this, MQTTSyncService.class);
-//						startService(service);
-//					}
+					if(!MQTTSyncService.isRunning()) {
+						Intent service = new Intent(this, MQTTSyncService.class);
+						startService(service);
+					}
 					MQTTConnection.getInstance(v_activity).connectInThread();
 					//	Start Activity
 					Intent intent = new Intent(this, LV_Menu.class);
@@ -370,6 +370,11 @@ public class Login extends TV_Base implements I_Login {
 					m_LoadType = ROLE_ACCESS;
 					new LoadAccessTask().execute();
 				} else {
+					//	Start Service
+					if(!MQTTSyncService.isRunning()) {
+						Intent service = new Intent(this, MQTTSyncService.class);
+						startService(service);
+					}
 					//	Start Activity
 					Intent intent = new Intent(this, LV_Menu.class);
 					startActivity(intent);

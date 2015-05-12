@@ -61,6 +61,7 @@ public class MQTTConnectionListener implements IMqttActionListener {
 		LogM.log(m_Ctx, getClass(), Level.FINE, "Connection MQTT is Ok");
 		MQTTConnection.getInstance(m_Ctx).setStatus(MQTTConnection.CONNECTED);
 		subscribeToDefaultsTopics();
+		//	Verify Messages
 		BCMessageHandle.getInstance(m_Ctx).processMessageThread();
 	}
 

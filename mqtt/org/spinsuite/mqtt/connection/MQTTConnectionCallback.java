@@ -117,10 +117,10 @@ public class MQTTConnectionCallback implements MqttCallback {
 				SyncAcknowledgment acknowledgment = (SyncAcknowledgment) parent;
 				//	Change DB Status
 				SPS_BC_Message.setStatus(m_Ctx, 
-						acknowledgment.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_DELIVERED);
+						acknowledgment.getSPS_BC_Message_UUID(), acknowledgment.getStatus());
 				//	Possible Change UI Status
 				changeUIStatus(acknowledgment.getSPS_BC_Request_UUID(), 
-						acknowledgment.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_DELIVERED);
+						acknowledgment.getSPS_BC_Message_UUID(), acknowledgment.getStatus());
 			}
 		}
 	}
@@ -181,7 +181,7 @@ public class MQTTConnectionCallback implements MqttCallback {
 		//	
 		if(ok) {
 			//	Send Acknowledgment
-			SPS_BC_Message.sendAcknowledgment(m_Ctx, message, p_Topic);
+			SPS_BC_Message.sendStatusAcknowledgment(m_Ctx, message, p_Topic, MQTTDefaultValues.STATUS_DELIVERED);
 			//	Instance Notification Manager
 			instanceNM(message.getSPS_BC_Request_UUID());
 			//	Notify
@@ -290,7 +290,7 @@ public class MQTTConnectionCallback implements MqttCallback {
 			} else if(parent instanceof SyncAcknowledgment) {
 				SyncAcknowledgment acknowledgment = (SyncAcknowledgment) parent;
 				SPS_BC_Message.setStatus(m_Ctx, 
-						acknowledgment.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_NOTIFIED);
+						acknowledgment.getSPS_BC_Message_UUID(), acknowledgment.getStatus());
 			}
 		} catch (MqttException e) {
 			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error", e);
