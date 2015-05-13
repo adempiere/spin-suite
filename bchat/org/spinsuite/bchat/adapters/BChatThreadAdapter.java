@@ -128,6 +128,7 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 
 		//	Set Conversation
 		msgHolder.tv_Conversation.setText(diti.getText());
+
 		//	Set Time
 		msgHolder.tv_Time.setText(diti.getTimeAsString());
 		msgHolder.tv_UserName.setText(diti.getUserName());

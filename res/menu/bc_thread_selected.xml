@@ -20,6 +20,10 @@
     
     <item android:id="@+id/action_delete"
         android:title="@string/Action_Search"
-        android:showAsAction="always|collapseActionView"
+        android:showAsAction="ifRoom"
         android:icon="?attr/ic_ab_delete" />
+    <item android:id="@+id/action_copy"
+        android:title="@string/Action_Copy"
+        android:showAsAction="always|collapseActionView"
+        android:icon="?attr/ic_ab_copy" />
 </menu>

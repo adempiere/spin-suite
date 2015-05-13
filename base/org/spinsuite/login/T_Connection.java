@@ -370,7 +370,7 @@ public class T_Connection extends Activity implements I_Login {
 //		LogM.log(this, getClass(), Level.FINE, "Starting MQTT Service");
 //		startService(service);
 		//	
-		MQTTConnection.getInstance(this).connectInThread();
+//		MQTTConnection.getInstance(this).connectInThread();
 		finish();
 		//	Default Return
 		return true;

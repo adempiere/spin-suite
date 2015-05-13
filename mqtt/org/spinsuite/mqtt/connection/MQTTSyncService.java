@@ -15,11 +15,7 @@
  *************************************************************************************/
 package org.spinsuite.mqtt.connection;
 
-import java.util.logging.Level;
-
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.spinsuite.bchat.model.BCMessageHandle;
-import org.spinsuite.util.LogM;
 
 import android.app.Service;
 import android.content.Intent;
@@ -31,8 +27,6 @@ import android.os.IBinder;
  */
 public class MQTTSyncService extends Service {
 
-	/**	Connection					*/
-	private MQTTConnection 			m_Connection = null;
 	/**	Current Instance			*/
 	private static MQTTSyncService	m_CurrentService = null;
 	/**	Connect						*/
@@ -84,19 +78,5 @@ public class MQTTSyncService extends Service {
 	 */
 	public static boolean isRunning() {
 		return m_IsRunning;
-	}
-	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		if(m_Connection != null
-				&& m_Connection.isConnected()) {
-			try {
-				m_Connection.disconnect();
-			} catch (MqttException e) {
-				LogM.log(getApplicationContext(), getClass(), 
-						Level.SEVERE, "disconnect(): Error", e);
-			}
-		}
 	}
 }

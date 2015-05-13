@@ -124,7 +124,7 @@ public class Login extends TV_Base implements I_Login {
 						Intent service = new Intent(this, MQTTSyncService.class);
 						startService(service);
 					}
-					MQTTConnection.getInstance(v_activity).connectInThread();
+//					MQTTConnection.getInstance(v_activity).connectInThread();
 					//	Start Activity
 					Intent intent = new Intent(this, LV_Menu.class);
 					startActivity(intent);

@@ -208,32 +208,61 @@ public class FV_Thread extends Fragment {
 			@Override
 			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 				switch (item.getItemId()) {
-				case R.id.action_delete:
-					SparseBooleanArray selectedItems = m_ThreadAdapter.getSelectedItems();
-					StringBuffer inClause = new StringBuffer();
-					for (int i = (selectedItems.size() - 1); i >= 0; i--) {
-						if (selectedItems.valueAt(i)) {
-							DisplayBChatThreadItem selectedItem = m_ThreadAdapter
-									.getItem(selectedItems.keyAt(i));
-							//	Add Separator
-							if(inClause.length() > 0) {
-								inClause.append(", ");
+					case R.id.action_delete:
+						SparseBooleanArray selectedItems = m_ThreadAdapter.getSelectedItems();
+						StringBuffer inClause = new StringBuffer();
+						for (int i = (selectedItems.size() - 1); i >= 0; i--) {
+							if (selectedItems.valueAt(i)) {
+								DisplayBChatThreadItem selectedItem = m_ThreadAdapter
+										.getItem(selectedItems.keyAt(i));
+								//	Add Separator
+								if(inClause.length() > 0) {
+									inClause.append(", ");
+								}
+								//	Add Value
+								inClause.append("'").append(selectedItem.getSPS_BC_Message_UUID()).append("'");
+								//	Remove Item
+								m_ThreadAdapter.remove(selectedItem);
 							}
-							//	Add Value
-							inClause.append("'").append(selectedItem.getSPS_BC_Message_UUID()).append("'");
-							//	Remove Item
-							m_ThreadAdapter.remove(selectedItem);
 						}
-					}
-					//	Delete Records in DB
-					if(inClause.length() > 0) {
-						SPS_BC_Message.deleteMessage(m_ctx, m_Request, 
-								"SPS_BC_Message_UUID IN(" + inClause.toString() + ")");
-					}
-					mode.finish();
-					return true;
-				default:
-					return false;
+						//	Delete Records in DB
+						if(inClause.length() > 0) {
+							SPS_BC_Message.deleteMessage(m_ctx, m_Request, 
+									"SPS_BC_Message_UUID IN(" + inClause.toString() + ")");
+						}
+						mode.finish();
+						return true;
+					case R.id.action_copy:
+						selectedItems = m_ThreadAdapter.getSelectedItems();
+						boolean justOne = selectedItems.size() == 1; 
+						StringBuffer text = new StringBuffer();
+						for (int i = (selectedItems.size() - 1); i >= 0; i--) {
+							if (selectedItems.valueAt(i)) {
+								DisplayBChatThreadItem selectedItem = m_ThreadAdapter
+										.getItem(selectedItems.keyAt(i));
+								//	Valid File
+								if(selectedItem.getFileName() != null)
+									continue;
+								//	Add New Line
+								if(text.length() > 0) {
+									text.append(Env.NL);
+								}
+								//	Add to Text
+								if(justOne) {
+									text.append(selectedItem.getText());
+								} else {
+									text.append(selectedItem.getCopy());
+								}
+							}
+						}
+						//	Add To Clipboard
+						if(text.length() > 0) {
+							 Env.setClipboardText(m_ctx, text.toString());
+						}
+						mode.finish();
+						return true;
+					default:
+						return false;
 				}
 			}
 

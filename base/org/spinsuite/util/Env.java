@@ -3328,6 +3328,24 @@ public final class Env {
 		return value.equals("Y");
 	}
 	
+	/**
+	 * Set Text to Clipboard
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_Text
+	 * @return void
+	 */
+	public static void setClipboardText(Context p_Ctx, String p_Text) {
+	    if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+	        android.text.ClipboardManager clipB = (android.text.ClipboardManager) p_Ctx.getSystemService(Context.CLIPBOARD_SERVICE);
+	        clipB.setText(p_Text);
+	    } else {
+	        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) p_Ctx.getSystemService(Context.CLIPBOARD_SERVICE);
+	        android.content.ClipData clip = android.content.ClipData.newPlainText("", p_Text);
+	        clipboard.setPrimaryClip(clip);
+	    }
+	}
+	
 	/**	Context					*/
 	public static Context 				m_Ctx;
 	/**	Share Preferences		*/

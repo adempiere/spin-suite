@@ -287,6 +287,22 @@ public class DisplayBChatThreadItem {
 	}
 	
 	/**
+	 * Get Date As String
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return String
+	 */
+	public String getDateAsString() {
+		//	Valid Null Value
+		if(m_Time == null)
+			return null;
+		//	Get Date Format
+		SimpleDateFormat sdf = DisplayType.getDateFormat(Env.getCtx(), DisplayType.DATE);
+		//	Return Value
+		return sdf.format(m_Time);
+	}
+	
+	/**
 	 * Set Time
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Time
@@ -305,5 +321,15 @@ public class DisplayBChatThreadItem {
 				+ ", m_Type=" + m_Type + ", m_Status=" + m_Status + ", m_Time="
 				+ m_Time + ", m_FileName=" + m_FileName + ", m_Attachment="
 				+ Arrays.toString(m_Attachment) + "]";
+	}
+	
+	/**
+	 * Get For Copy
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return String
+	 */
+	public String getCopy() {
+		return m_UserName + "(" + getDateAsString() + ", " + getTimeAsString() + "): " + m_Text;
 	}
 }

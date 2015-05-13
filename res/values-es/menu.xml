@@ -32,6 +32,7 @@
 	<string name="Action_AttachFile">Adjuntar Archivo</string>
 	<string name="Action_ViewAttachment">Ver Adjunto</string>
 	<string name="Action_DownloadAttachment">Descargar</string>
+	<string name="Action_Copy">Copiar</string>
 	
 	<!-- Drawer Option -->
 	<string name="drawer_open">Abrir Caja de Navegación</string>

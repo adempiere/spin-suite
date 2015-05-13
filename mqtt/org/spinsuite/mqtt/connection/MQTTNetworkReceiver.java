@@ -15,6 +15,10 @@
  *************************************************************************************/
 package org.spinsuite.mqtt.connection;
 
+import java.util.logging.Level;
+
+import org.spinsuite.util.LogM;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,18 +33,18 @@ public class MQTTNetworkReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-//		Intent service = new Intent(context, MQTTSyncService.class);
+		Intent service = new Intent(context, MQTTSyncService.class);
 		boolean networkAvailable = isNetworkAvailable(context);
 		MQTTConnection.setNetworkOk(context, networkAvailable);
-//		if(!networkAvailable) {
-//			LogM.log(context, getClass(), Level.FINE, "Network Is not Ok");
-//			context.stopService(service);
-//		} else {
-//			LogM.log(context, getClass(), Level.FINE, "Network Is Ok");
-//			if(!MQTTSyncService.isRunning()) {
-//				context.startService(service);
-//			}
-//		}
+		if(!networkAvailable) {
+			LogM.log(context, getClass(), Level.FINE, "Network Is not Ok");
+			context.stopService(service);
+		} else {
+			LogM.log(context, getClass(), Level.FINE, "Network Is Ok");
+			if(!MQTTSyncService.isRunning()) {
+				context.startService(service);
+			}
+		}
 	}
 	
 	/**
