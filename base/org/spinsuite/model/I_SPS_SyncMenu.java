@@ -153,6 +153,15 @@ public interface I_SPS_SyncMenu
 	  */
 	public boolean isActive();
 
+    /** Column name IsForced */
+    public static final String COLUMNNAME_IsForced = "IsForced";
+
+	/** Set Forced	  */
+	public void setIsForced (boolean IsForced);
+
+	/** Get Forced	  */
+	public boolean isForced();
+
     /** Column name IsSummary */
     public static final String COLUMNNAME_IsSummary = "IsSummary";
 
