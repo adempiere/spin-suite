@@ -1205,8 +1205,13 @@ public abstract class PO {
 					//	Target Document
 					if(m_C_DocType_ID == 0)
 						m_C_DocType_ID = get_ValueAsInt("C_DocTypeTarget_ID");
-					//	Get Document No
-					String documentNo = MSequence.getDocumentNo(getCtx(), m_C_DocType_ID, m_TableInfo.getTableName(), true, conn);
+
+					//2015-05-16 Dixon Martinez Bad Code
+					//Get Document No
+					String documentNo = null; 
+					if (m_C_DocType_ID > 0)
+						documentNo = MSequence.getDocumentNo(getCtx(), m_C_DocType_ID, m_TableInfo.getTableName(), true, conn);	
+					//End Dixon Martinez
 					return documentNo;
 			} else {
 				if(value == null
@@ -1216,8 +1221,14 @@ public abstract class PO {
 					//	Target Document
 					if(m_C_DocType_ID == 0)
 						m_C_DocType_ID = get_ValueAsInt("C_DocTypeTarget_ID");
-					//	Get Document No
-					String documentNo = MSequence.getDocumentNo(getCtx(), m_C_DocType_ID, m_TableInfo.getTableName(), false, conn);
+					
+					//2015-05-16 Dixon Martinez Bad Code
+					//Get Document No
+					String documentNo = null; 
+					if (m_C_DocType_ID > 0)
+						documentNo = MSequence.getDocumentNo(getCtx(), m_C_DocType_ID, m_TableInfo.getTableName(), false, conn);	
+					//End Dixon Martinez
+					
 					return documentNo;
 				} else if(value != null) {
 					Object returnValue = DisplayType.getJDBC_Value(column.DisplayType, value, !toSave, !toSave
