@@ -21,6 +21,7 @@ import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
+import org.spinsuite.mqtt.connection.MQTTSyncService;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
@@ -63,6 +64,8 @@ public class T_Connection extends Activity implements I_Login {
 	private EditText 		et_MQTT_ServerPass;
 	/**	MQTT Port				*/
 	private EditText 		et_MQTT_ServerPort;
+	/**	MQTT Keep Alive Interval*/
+	private EditText 		et_MQTT_KeepAliveInverval;
 	/**	Enable Connection		*/
 	private CheckBox 		ch_MQTT_AutomaticService;
 	/**	MQTT File Path			*/
@@ -94,6 +97,7 @@ public class T_Connection extends Activity implements I_Login {
     	et_MQTT_ServerUser 			= (EditText) findViewById(R.id.et_MQTT_ServerUser);
     	et_MQTT_ServerPass 			= (EditText) findViewById(R.id.et_MQTT_ServerPass);
     	et_MQTT_ServerPort 			= (EditText) findViewById(R.id.et_MQTT_ServerPort);
+    	et_MQTT_KeepAliveInverval	= (EditText) findViewById(R.id.et_MQTT_KeepAliveInverval);
     	ch_MQTT_AutomaticService	= (CheckBox) findViewById(R.id.ch_MQTT_AutomaticService);
     	bt_MQTT_SSL_File_Path 		= (Button) findViewById(R.id.bt_MQTT_SSL_File_Path);
     	//	
@@ -236,12 +240,13 @@ public class T_Connection extends Activity implements I_Login {
     		et_Timeout.setText(timeout);
     	}
     	//	For MQTT Server
-    	String m_MQTT_ServerName = et_MQTT_ServerName.getText().toString();
-    	String m_MQTT_ServerUser = et_MQTT_ServerUser.getText().toString();
-    	String m_MQTT_ServerPass = et_MQTT_ServerPass.getText().toString();
-    	String m_MQTT_ServerPort = et_MQTT_ServerPort.getText().toString();
-    	String m_MQTT_SSL_File_Path = bt_MQTT_SSL_File_Path.getText().toString();
-    	boolean m_MQTT_AutomaticService = MQTTConnection.isAutomaticService(this);
+    	String m_MQTT_ServerName 			= et_MQTT_ServerName.getText().toString();
+    	String m_MQTT_ServerUser 			= et_MQTT_ServerUser.getText().toString();
+    	String m_MQTT_ServerPass 			= et_MQTT_ServerPass.getText().toString();
+    	String m_MQTT_ServerPort 			= et_MQTT_ServerPort.getText().toString();
+    	String m_MQTT_KeepAliveInverval 	= et_MQTT_KeepAliveInverval.getText().toString();
+    	String m_MQTT_SSL_File_Path 		= bt_MQTT_SSL_File_Path.getText().toString();
+    	boolean m_MQTT_AutomaticService 	= MQTTConnection.isAutomaticService(this);
 		//	For MQTT Server
     	if(m_MQTT_ServerName == null || m_MQTT_ServerName.length() == 0){
     		m_MQTT_ServerName = MQTTConnection.getHost(this);
@@ -267,6 +272,12 @@ public class T_Connection extends Activity implements I_Login {
     		int port = MQTTConnection.getPort(this);
     		m_MQTT_ServerPort = String.valueOf(port);
     		et_MQTT_ServerPort.setText(m_MQTT_ServerPort);
+    	}
+       	//	Keep Alive Interval
+    	if(m_MQTT_KeepAliveInverval == null || m_MQTT_KeepAliveInverval.length() == 0) {
+    		int interval = MQTTConnection.getKeepAliveInverval(this);
+    		m_MQTT_KeepAliveInverval = String.valueOf(interval);
+    		et_MQTT_KeepAliveInverval.setText(m_MQTT_KeepAliveInverval);
     	}
     	//	For SSL
     	if(m_MQTT_SSL_File_Path == null || m_MQTT_SSL_File_Path.length() == 0){
@@ -341,6 +352,12 @@ public class T_Connection extends Activity implements I_Login {
 			String port = et_MQTT_ServerPort.getText().toString();
 			MQTTConnection.setPort(this, Integer.parseInt(port));
 		}
+		//	Set Keep Alive Interval
+		if(et_MQTT_KeepAliveInverval.getText() != null 
+				&& et_MQTT_KeepAliveInverval.getText().toString().length() > 0) {
+			String interal = et_MQTT_KeepAliveInverval.getText().toString();
+			MQTTConnection.setKeepAliveInverval(this, Integer.parseInt(interal));
+		}
 		//	Is Automatic Service
 		MQTTConnection.setIsAutomaticService(this, ch_MQTT_AutomaticService.isChecked());
 		//	Valid SSL Connection
@@ -362,15 +379,15 @@ public class T_Connection extends Activity implements I_Login {
 			MQTTConnection.setTimeout(this, Integer.parseInt(limit));
 		}
 		//	Stop Service
-//		Intent service = new Intent(this, MQTTSyncService.class);
-//		LogM.log(this, getClass(), Level.FINE, "Stoping MQTT Service");
-//		stopService(service);
-//		MQTTConnection.setIsReloadService(this, true);
-//		//	Start Service
-//		LogM.log(this, getClass(), Level.FINE, "Starting MQTT Service");
-//		startService(service);
+		Intent service = new Intent(this, MQTTSyncService.class);
+		LogM.log(this, getClass(), Level.FINE, "Stoping MQTT Service");
+		stopService(service);
+		MQTTConnection.setIsReloadService(this, true);
+		//	Start Service
+		LogM.log(this, getClass(), Level.FINE, "Starting MQTT Service");
+		startService(service);
 		//	
-//		MQTTConnection.getInstance(this).connectInThread();
+		MQTTConnection.getInstance(Env.getCtx()).connectInThread();
 		finish();
 		//	Default Return
 		return true;

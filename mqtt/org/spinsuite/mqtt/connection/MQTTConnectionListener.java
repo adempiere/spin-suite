@@ -21,8 +21,7 @@ import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
-import org.spinsuite.bchat.model.BCMessageHandle;
-import org.spinsuite.bchat.model.SPS_BC_Request;
+import org.spinsuite.bchat.util.BCMessageHandle;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
@@ -75,7 +74,7 @@ public class MQTTConnectionListener implements IMqttActionListener {
 			MQTTConnection m_Connection = MQTTConnection.getInstance(m_Ctx);
 			//	Verify Topics for conversations
 			if(m_DefaultTopics == null) {
-				m_DefaultTopics = SPS_BC_Request.getTopics(m_Ctx);
+				m_DefaultTopics = BCMessageHandle.getInstance(m_Ctx).getTopics();
 				m_Connection.addTopic(m_DefaultTopics);
 			}
 			//	Add Standard Topics

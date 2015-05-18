@@ -134,7 +134,7 @@ public class MQTTConnection {
 	    m_ConnectionOption.setConnectionTimeout(getTimeout(p_Ctx));
 	    //	Keep Alive Interval
 	    m_ConnectionOption.setKeepAliveInterval(getKeepAliveInverval(p_Ctx));
-	    m_ConnectionOption.setCleanSession(true);
+	    m_ConnectionOption.setCleanSession(false);
 	    //	
 	    m_MessageListener = new MQTTBCListener(m_Ctx);
 	    //	
@@ -171,6 +171,87 @@ public class MQTTConnection {
 	 */
 	public MQTTConnection(Context p_Ctx, IMqttActionListener p_ConnectionListener, String[] p_SubscribedTopics) {
 		this(p_Ctx, getClient_ID(p_Ctx), getHost(p_Ctx), getPort(p_Ctx), isSSLConnection(p_Ctx), p_ConnectionListener, p_SubscribedTopics);
+	}
+	
+	/**
+	 * Get Instance for Connection
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_ConnectionListener
+	 * @param p_Callback
+	 * @param p_SubscribedTopics
+	 * @param reLoad Reload Instance
+	 * @return
+	 * @return MQTTConnection
+	 */
+	public static MQTTConnection getInstance(Context p_Ctx, 
+			IMqttActionListener p_ConnectionListener, MqttCallback p_Callback, 
+			String[] p_SubscribedTopics, boolean reLoad) {
+		if(m_Connection == null
+				|| reLoad) {
+			//	Instance Listener
+			if(p_ConnectionListener == null) {
+				p_ConnectionListener = new MQTTConnectionListener(p_Ctx);
+			}
+			//	Instance Callbak
+			if(p_Callback == null) {
+				p_Callback = new MQTTConnectionCallback(p_Ctx);
+			}
+			m_Connection = new MQTTConnection(p_Ctx, p_ConnectionListener, p_SubscribedTopics);
+			//	Add Callback
+			m_Connection.setCallback(p_Callback);
+			//	Set to false reload
+			if(reLoad) {
+				MQTTConnection.setIsReloadService(p_Ctx, false);
+			}
+		}
+		//	Default Return
+		return m_Connection;
+	}
+	
+	/**
+	 * Get Connection Instance without Connection Listener
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_SubscribedTopics
+	 * @param reLoad
+	 * @return
+	 * @return MQTTConnection
+	 */
+	public static MQTTConnection getInstance(Context p_Ctx, String[] p_SubscribedTopics, boolean reLoad) {
+		return getInstance(p_Ctx, null, null, p_SubscribedTopics, reLoad);
+	}
+	
+	/**
+	 * Get Connection Instance
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return MQTTConnection
+	 */
+	public static MQTTConnection getInstance(Context p_Ctx) {
+		return getInstance(p_Ctx, null, isReloadService(p_Ctx));
+	}
+	
+	/**
+	 * Create Uri for connection
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Client_ID
+	 * @param p_Host
+	 * @param p_Port
+	 * @param p_IsSSLConnection
+	 * @return
+	 * @return String
+	 */
+	private String createURI(String p_Client_ID, String p_Host, int p_Port, boolean p_IsSSLConnection) {
+		String m_URI = null;
+		if (p_IsSSLConnection) {
+			m_URI = "ssl://" + p_Host + ":" + p_Port;
+		} else {
+			m_URI = "tcp://" + p_Host + ":" + p_Port;
+		}
+		//	Return Uri
+		return m_URI;
 	}
 	
 	/**
@@ -587,87 +668,6 @@ public class MQTTConnection {
 	 */
 	public static void setMQTTPassword(Context p_Ctx, String p_Password) {
 		Env.setContext(p_Ctx, MQTT_PASSWORD, p_Password);
-	}
-	
-	/**
-	 * Get Instance for Connection
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_Ctx
-	 * @param p_ConnectionListener
-	 * @param p_Callback
-	 * @param p_SubscribedTopics
-	 * @param reLoad Reload Instance
-	 * @return
-	 * @return MQTTConnection
-	 */
-	public static MQTTConnection getInstance(Context p_Ctx, 
-			IMqttActionListener p_ConnectionListener, MqttCallback p_Callback, 
-			String[] p_SubscribedTopics, boolean reLoad) {
-		if(m_Connection == null
-				|| reLoad) {
-			//	Instance Listener
-			if(p_ConnectionListener == null) {
-				p_ConnectionListener = new MQTTConnectionListener(p_Ctx);
-			}
-			//	Instance Callbak
-			if(p_Callback == null) {
-				p_Callback = new MQTTConnectionCallback(p_Ctx);
-			}
-			m_Connection = new MQTTConnection(p_Ctx, p_ConnectionListener, p_SubscribedTopics);
-			//	Add Callback
-			m_Connection.setCallback(p_Callback);
-			//	Set to false reload
-			if(reLoad) {
-				MQTTConnection.setIsReloadService(p_Ctx, false);
-			}
-		}
-		//	Default Return
-		return m_Connection;
-	}
-	
-	/**
-	 * Get Connection Instance without Connection Listener
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_Ctx
-	 * @param p_SubscribedTopics
-	 * @param reLoad
-	 * @return
-	 * @return MQTTConnection
-	 */
-	public static MQTTConnection getInstance(Context p_Ctx, String[] p_SubscribedTopics, boolean reLoad) {
-		return getInstance(p_Ctx, null, null, p_SubscribedTopics, reLoad);
-	}
-	
-	/**
-	 * Get Connection Instance
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_Ctx
-	 * @return
-	 * @return MQTTConnection
-	 */
-	public static MQTTConnection getInstance(Context p_Ctx) {
-		return getInstance(p_Ctx, null, false);
-	}
-	
-	/**
-	 * Create Uri for connection
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_Client_ID
-	 * @param p_Host
-	 * @param p_Port
-	 * @param p_IsSSLConnection
-	 * @return
-	 * @return String
-	 */
-	private String createURI(String p_Client_ID, String p_Host, int p_Port, boolean p_IsSSLConnection) {
-		String m_URI = null;
-		if (p_IsSSLConnection) {
-			m_URI = "ssl://" + p_Host + ":" + p_Port;
-		} else {
-			m_URI = "tcp://" + p_Host + ":" + p_Port;
-		}
-		//	Return Uri
-		return m_URI;
 	}
 	
 	/**

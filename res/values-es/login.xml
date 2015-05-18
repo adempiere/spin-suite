@@ -40,6 +40,7 @@
 	<string name="SSLFile">Archivo SSL</string>
 	<string name="MQTTHost">Servidor (MQTT)</string>
 	<string name="MQTTService">Servicio (MQTT)</string>
+	<string name="MQTTKeepAliveInverval">Intérvalo de Alivio (MQTT)</string>
 	
 	<string name="tt_TestConn">Prueba de Conexión</string>
 	<string name="tt_Conn">Conexión</string>

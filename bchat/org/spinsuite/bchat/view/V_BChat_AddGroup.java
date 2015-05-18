@@ -21,7 +21,7 @@ import java.util.logging.Level;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.adapters.BChatContactAdapter;
-import org.spinsuite.bchat.model.SPS_BC_Request;
+import org.spinsuite.bchat.util.BCMessageHandle;
 import org.spinsuite.bchat.util.DisplayBChatContactItem;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.sync.content.Invited;
@@ -195,7 +195,7 @@ public class V_BChat_AddGroup extends Activity {
         			}
         		}
     			//	Save Request
-    			SPS_BC_Request.sendRequest(this, request);
+    			BCMessageHandle.getInstance(this).sendRequest(request);
     			//	Add Param
     			Intent intent = getIntent();
     			intent.putExtra("SPS_BC_Request_UUID", request.getSPS_BC_Request_UUID());

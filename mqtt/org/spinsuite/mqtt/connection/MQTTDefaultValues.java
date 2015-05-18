@@ -34,7 +34,7 @@ public class MQTTDefaultValues {
 	/**	Password										*/
 	public static final String 	DEFAULT_MQTT_PASS 			= "";
 	/**	Keep Alive										*/
-	public static final int 	DEFAULT_MQTT_KEEP_ALIVE_INT = 60;
+	public static final int 	DEFAULT_MQTT_KEEP_ALIVE_INT = 1;
 	/**	Port											*/
 	public static final int 	DEFAULT_MQTT_PORT 			= 1883;
 	/**	Alarm Time										*/
@@ -56,7 +56,9 @@ public class MQTTDefaultValues {
 	public static final String STATUS_SENT 			= "S";
 	public static final String STATUS_REJECT 		= "J";
 	public static final String STATUS_SENDING 		= "G";
-	public static final String STATUS_NOTIFIED 		= "N";
+	/**	For Failed On Delivery							*/
+	public static final String STATUS_FN_DELIVERED 	= "I";
+	public static final String STATUS_FN_READED 	= "E";
 	
 	/**
 	 * Get Synchronization Topic

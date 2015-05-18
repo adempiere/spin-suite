@@ -15,7 +15,7 @@
  *************************************************************************************/
 package org.spinsuite.mqtt.connection;
 
-import org.spinsuite.bchat.model.BCMessageHandle;
+import org.spinsuite.bchat.util.BCMessageHandle;
 
 import android.app.Service;
 import android.content.Intent;

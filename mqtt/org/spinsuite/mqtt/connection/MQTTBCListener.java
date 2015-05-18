@@ -22,9 +22,8 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.spinsuite.bchat.model.BCMessageHandle;
-import org.spinsuite.bchat.model.SPS_BC_Message;
-import org.spinsuite.bchat.model.SPS_BC_Request;
+import org.spinsuite.bchat.util.BCMessageHandle;
+import org.spinsuite.bchat.util.BCNotificationHandle;
 import org.spinsuite.sync.content.SyncAcknowledgment;
 import org.spinsuite.sync.content.SyncMessage_BC;
 import org.spinsuite.sync.content.SyncParent;
@@ -65,16 +64,24 @@ public class MQTTBCListener implements IMqttActionListener {
 						//	Verify Message
 					if(parent instanceof SyncRequest_BC) {
 						SyncRequest_BC request = (SyncRequest_BC) parent;
-						SPS_BC_Request.setStatus(m_Ctx, 
+						BCMessageHandle.getInstance(m_Ctx).setRequestStatus(
 								request.getSPS_BC_Request_UUID(), MQTTDefaultValues.STATUS_CREATED);
 					} else if(parent instanceof SyncMessage_BC) {
 						SyncMessage_BC message = (SyncMessage_BC) parent;
-						SPS_BC_Message.setStatus(m_Ctx, 
+						BCMessageHandle.getInstance(m_Ctx).setMessageStatus(
 								message.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_CREATED);
 					} else if(parent instanceof SyncAcknowledgment) {
 						SyncAcknowledgment acknowledgment = (SyncAcknowledgment) parent;
-						SPS_BC_Message.setStatus(m_Ctx, 
-								acknowledgment.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_CREATED);
+						String newStatus = acknowledgment.getStatus();
+						//	Set Status
+						if(acknowledgment.equals(MQTTDefaultValues.STATUS_DELIVERED)) {
+							newStatus = MQTTDefaultValues.STATUS_FN_DELIVERED;
+						} else if(acknowledgment.equals(MQTTDefaultValues.STATUS_READED)) {
+							newStatus = MQTTDefaultValues.STATUS_FN_READED;
+						}
+						//	Set Status
+						BCMessageHandle.getInstance(m_Ctx).setMessageStatus(
+								acknowledgment.getSPS_BC_Message_UUID(), newStatus);
 					}
 				}
 			} catch (MqttException ex) {
@@ -87,7 +94,44 @@ public class MQTTBCListener implements IMqttActionListener {
 
 	@Override
 	public void onSuccess(IMqttToken token) {
-		token.getResponse();
+		//	Validate Token
+		if(token instanceof IMqttDeliveryToken) {
+			IMqttDeliveryToken deliveryToken = (IMqttDeliveryToken) token;
+			notifyDeliveryComplete(deliveryToken);
+		}
+		//	Log
 		LogM.log(m_Ctx, getClass(), Level.FINE, "Send is Ok");
+	}
+	
+	/**
+	 * Notify if delivery is complete
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param token
+	 * @return void
+	 */
+	private void notifyDeliveryComplete(IMqttDeliveryToken token) {
+		try {
+			MqttMessage msg = token.getMessage();
+			SyncParent parent = (SyncParent) SerializerUtil.deserializeObject(msg.getPayload());
+			//	Verify if is local	
+			if(parent instanceof SyncRequest_BC) {
+				;
+			} else if(parent instanceof SyncMessage_BC) {
+				//	Change Status
+				final SyncMessage_BC message = (SyncMessage_BC) parent;
+				BCMessageHandle.getInstance(m_Ctx).setMessageStatus(
+						message.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_SENT);
+				//	Change UI Status
+				BCNotificationHandle.getInstance(m_Ctx)
+					.changeUIStatus(message.getSPS_BC_Request_UUID(), 
+							message.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_SENT);
+			} else if(parent instanceof SyncAcknowledgment) {
+				SyncAcknowledgment acknowledgment = (SyncAcknowledgment) parent;
+				BCMessageHandle.getInstance(m_Ctx).setMessageStatus(
+						acknowledgment.getSPS_BC_Message_UUID(), acknowledgment.getStatus());
+			}
+		} catch (MqttException e) {
+			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error", e);
+		}
 	}
 }

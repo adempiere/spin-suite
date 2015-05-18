@@ -21,7 +21,7 @@ import java.util.Date;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.adapters.BChatThreadListAdapter;
-import org.spinsuite.bchat.model.SPS_BC_Request;
+import org.spinsuite.bchat.util.BCMessageHandle;
 import org.spinsuite.bchat.util.DisplayBChatThreadListItem;
 import org.spinsuite.interfaces.I_BC_FragmentSelect;
 import org.spinsuite.interfaces.I_FragmentSelect;
@@ -116,7 +116,7 @@ public class FV_ThreadIndex extends ListFragment
 					}
 					//	Delete Records in DB
 					if(ids.length > 0) {
-						SPS_BC_Request.deleteRequest(m_ctx, ids);
+						BCMessageHandle.getInstance(m_ctx).deleteRequest(ids);
 					}
 					mode.finish();
 					return true;

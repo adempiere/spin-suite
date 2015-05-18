@@ -23,8 +23,7 @@ import java.util.Date;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.adapters.BChatThreadAdapter;
-import org.spinsuite.bchat.model.SPS_BC_Message;
-import org.spinsuite.bchat.model.SPS_BC_Request;
+import org.spinsuite.bchat.util.BCMessageHandle;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
@@ -227,7 +226,7 @@ public class FV_Thread extends Fragment {
 						}
 						//	Delete Records in DB
 						if(inClause.length() > 0) {
-							SPS_BC_Message.deleteMessage(m_ctx, m_Request, 
+							BCMessageHandle.getInstance(m_ctx).deleteMessage(m_Request, 
 									"SPS_BC_Message_UUID IN(" + inClause.toString() + ")");
 						}
 						mode.finish();
@@ -296,7 +295,7 @@ public class FV_Thread extends Fragment {
 		//	Send Request
 		if(m_Request != null
     			&& m_Request.getSPS_BC_Request_UUID() == null) {
-			SPS_BC_Request.sendRequest(m_ctx, m_Request);
+			BCMessageHandle.getInstance(m_ctx).sendRequest(m_Request);
 		}
 		//	
 		byte[] bytes = SerializerUtil.getFromFile(
@@ -307,7 +306,7 @@ public class FV_Thread extends Fragment {
 				Env.getContext("#AD_User_Name"), 
 				et_Message.getText().toString(), p_FileName, bytes);
 		//	Send Message
-		SPS_BC_Message.sendMsg(m_ctx, message);
+		BCMessageHandle.getInstance(m_ctx).sendMsg(message);
 		//	Add Message
 		addMsg(message, MQTTDefaultValues.TYPE_OUT);
 		seekToLastMsg();
@@ -457,7 +456,7 @@ public class FV_Thread extends Fragment {
      * @return void
      */
     public void selectConversation(String p_SPS_BC_Request_UUID) {
-    	m_Request = SPS_BC_Request.getRequest(m_ctx, p_SPS_BC_Request_UUID);
+    	m_Request = BCMessageHandle.getInstance(m_ctx).getRequest(p_SPS_BC_Request_UUID);
     	//	Set Reload Data
     	m_Reload = true;
     	if(m_view != null
@@ -546,7 +545,7 @@ public class FV_Thread extends Fragment {
 					+ "WHERE r.Name = ?", new String[]{p_Name});
 			//	
 			if(m_TopicName != null) {
-				m_Request = SPS_BC_Request.getRequest(m_ctx, m_TopicName);
+				m_Request = BCMessageHandle.getInstance(m_ctx).getRequest(m_TopicName);
 			} else {
 				m_Request = new SyncRequest_BC(null, 
     					String.valueOf(Env.getAD_User_ID()), 

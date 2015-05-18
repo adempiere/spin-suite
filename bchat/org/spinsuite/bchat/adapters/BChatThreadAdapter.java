@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.spinsuite.base.R;
-import org.spinsuite.bchat.model.SPS_BC_Message;
+import org.spinsuite.bchat.util.BCMessageHandle;
 import org.spinsuite.bchat.util.BC_ThreadHolder;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
@@ -223,8 +223,9 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		params.gravity = gravity;
 		//	Send Status
 		if(diti.getType().equals(MQTTDefaultValues.TYPE_IN)
-				&& !diti.getStatus().equals(MQTTDefaultValues.STATUS_READED)) {
-			SPS_BC_Message.sendStatusAcknowledgment(ctx, 
+				&& !diti.getStatus().equals(MQTTDefaultValues.STATUS_READED)
+				&& !diti.getStatus().equals(MQTTDefaultValues.STATUS_FN_READED)) {
+			BCMessageHandle.getInstance(ctx).sendStatusAcknowledgment(
 					diti.getSPS_BC_Request_UUID(), diti.getSPS_BC_Message_UUID(), 
 					null, MQTTDefaultValues.STATUS_READED);
 		}
