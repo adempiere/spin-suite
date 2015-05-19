@@ -22,7 +22,9 @@ package org.spinsuite.mqtt.connection;
 public class MQTTDefaultValues {
 	
 	/**	Initial Load Topic								*/
-	private static final String INITIAL_LOAD_TOPIC 			= "Public-Initial-Load";
+	private static final String INITIAL_LOAD_TOPIC 			= "Public-InitialLoad";
+	/**	Initial Load Topic								*/
+	private static final String STATUS_TOPIC 				= "Public-UserStatus";
 	/**	Default Prefix for ADempiere Synchronization	*/
 	private static final String PRE_SYNC_TOPIC 				= "AD-Synchronization-";
 	/**	Default Prefix for Request						*/
@@ -90,6 +92,16 @@ public class MQTTDefaultValues {
 	 */
 	public static String getInitialLoadTopic() {
 		return INITIAL_LOAD_TOPIC;
+	}
+	
+	/**
+	 * Get User Status
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return String
+	 */
+	public static String getUserStatusTopic() {
+		return STATUS_TOPIC;
 	}
 	
 	/**

@@ -123,7 +123,7 @@ public class MQTTBCListener implements IMqttActionListener {
 						message.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_SENT);
 				//	Change UI Status
 				BCNotificationHandle.getInstance(m_Ctx)
-					.changeUIStatus(message.getSPS_BC_Request_UUID(), 
+					.changeUIMsgStatus(message.getSPS_BC_Request_UUID(), 
 							message.getSPS_BC_Message_UUID(), MQTTDefaultValues.STATUS_SENT);
 			} else if(parent instanceof SyncAcknowledgment) {
 				SyncAcknowledgment acknowledgment = (SyncAcknowledgment) parent;

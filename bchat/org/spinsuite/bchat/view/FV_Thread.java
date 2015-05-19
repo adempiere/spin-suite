@@ -30,10 +30,13 @@ import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.sync.content.Invited;
 import org.spinsuite.sync.content.SyncMessage_BC;
 import org.spinsuite.sync.content.SyncRequest_BC;
+import org.spinsuite.sync.content.SyncStatus;
 import org.spinsuite.util.AttachmentHandler;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.SerializerUtil;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -109,9 +112,11 @@ public class FV_Thread extends Fragment {
 	/**	Reload Data					*/
 	private boolean						m_Reload			= true;
 	/**	Context						*/
-	private Context						m_ctx 				= null;
+	private static Context				m_ctx 				= null;
 	/**	Attach Handler				*/
 	private AttachmentHandler			m_AttHandler		= null;
+	/**	Action Bar					*/
+	private static ActionBar			m_ActionBar			= null;
 	
 	/**	Conversation Type Constants	*/
 	public static final int				CT_REQUEST			= 0;
@@ -140,6 +145,12 @@ public class FV_Thread extends Fragment {
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		m_ActionBar = activity.getActionBar();
 	}
     
     @Override
@@ -345,10 +356,13 @@ public class FV_Thread extends Fragment {
     		m_ThreadAdapter = new BChatThreadAdapter(getActivity(), 
     				new ArrayList<DisplayBChatThreadItem>(), m_Request.isGroup());
     		//	
-    	} else {
+    	} else if(m_Request != null) {
     		//	Get Data
     		m_ThreadAdapter = new BChatThreadAdapter(getActivity(), 
-    				getData(), (m_Request != null && m_Request.isGroup()));
+    				getData(), m_Request.isGroup());
+    		//	Send New Status
+    		BCMessageHandle.getInstance(m_ctx)
+    			.sendStatus(m_Request.getSPS_BC_Request_UUID(), SyncStatus.STATUS_IN_CHAT);
     	}
     	//	
     	lv_Thread.setAdapter(m_ThreadAdapter);
@@ -506,6 +520,43 @@ public class FV_Thread extends Fragment {
     }
     
     /**
+     * Change Connection Status, Optional Request for when is typing
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_Status
+     * @return void
+     */
+    public static void changeConnectionStatus(SyncStatus p_Status) {
+		//	Validate Request
+		if(isOpened(p_Status.getSPS_BC_Request_UUID())
+				|| existsUser(p_Status.getAD_User_ID())) {
+			changeStatus(p_Status.getStatus());
+		}
+    }
+    
+    /**
+     * Change Status
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_Status
+     * @return void
+     */
+    private static void changeStatus(String p_Status) {
+    	if(m_ActionBar != null
+    			&& p_Status != null) {
+    		int message = R.string.BChat_StatusDisconnected;
+    		//	
+    		if(p_Status.equals(SyncStatus.STATUS_CONNECTED)) {
+    			message = R.string.BChat_StatusConnected;
+    		} else if(p_Status.equals(SyncStatus.STATUS_TYPING)) {
+    			message = R.string.BChat_StatusTyping;
+    		} else if(p_Status.equals(SyncStatus.STATUS_IN_CHAT)) {
+    			message = R.string.BChat_StatusInChat;
+    		}
+    		//	Set Message
+    		m_ActionBar.setSubtitle(m_ctx.getString(message));
+    	}
+    }
+    
+    /**
      * Verify if is open thread
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @param p_SPS_BC_Request_UUID
@@ -521,13 +572,34 @@ public class FV_Thread extends Fragment {
     	//	Valid Null Request
     	if(m_Request.getSPS_BC_Request_UUID() == null)
     		return false;
-    	//	Valid Internal Request
-    	if(m_Request.getSPS_BC_Request_UUID() == null)
-    		return false;
     	//	Valid Opened
     	return (m_Request.getSPS_BC_Request_UUID().equals(p_SPS_BC_Request_UUID)
     			&& m_IsActive);
     }
+    
+    /**
+     * Validate if Exists User
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_AD_User_ID
+     * @return
+     * @return boolean
+     */
+    public static boolean existsUser(int p_AD_User_ID) {
+    	if(m_Request == null)
+    		return false;
+    	//	Valid Request Parameter
+    	if(p_AD_User_ID == -1)
+    		return false;
+    	//	Valid Opened
+    	for(Invited invited : m_Request.getUsers()) {
+    		if(invited.getAD_User_ID() == p_AD_User_ID) {
+    			return true;
+    		}
+    	}
+    	//	Default Return
+    	return false;
+    }
+    
     
     /**
      * Select a User for request

@@ -228,6 +228,10 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 			BCMessageHandle.getInstance(ctx).sendStatusAcknowledgment(
 					diti.getSPS_BC_Request_UUID(), diti.getSPS_BC_Message_UUID(), 
 					null, MQTTDefaultValues.STATUS_READED);
+			//	Change Status for Data
+			diti.setStatus(MQTTDefaultValues.STATUS_FN_READED);
+			//	Change Data
+			data.set(position, diti);
 		}
 		//	Return
 		return view;

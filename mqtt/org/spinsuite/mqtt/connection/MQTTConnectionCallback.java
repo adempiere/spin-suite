@@ -33,6 +33,7 @@ import org.spinsuite.sync.content.SyncAcknowledgment;
 import org.spinsuite.sync.content.SyncMessage_BC;
 import org.spinsuite.sync.content.SyncParent;
 import org.spinsuite.sync.content.SyncRequest_BC;
+import org.spinsuite.sync.content.SyncStatus;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.SerializerUtil;
@@ -102,8 +103,12 @@ public class MQTTConnectionCallback implements MqttCallback {
 						acknowledgment.getSPS_BC_Message_UUID(), acknowledgment.getStatus());
 				//	Possible Change UI Status
 				BCNotificationHandle.getInstance(m_Ctx)
-					.changeUIStatus(acknowledgment.getSPS_BC_Request_UUID(), 
+					.changeUIMsgStatus(acknowledgment.getSPS_BC_Request_UUID(), 
 						acknowledgment.getSPS_BC_Message_UUID(), acknowledgment.getStatus());
+			} else if(parent instanceof SyncStatus) {
+				SyncStatus status = (SyncStatus) parent;
+				BCNotificationHandle.getInstance(m_Ctx)
+					.changeUIConnectionStatus(status);
 			}
 		}
 	}

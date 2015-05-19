@@ -31,6 +31,7 @@ import org.spinsuite.sync.content.Invited;
 import org.spinsuite.sync.content.SyncAcknowledgment;
 import org.spinsuite.sync.content.SyncMessage_BC;
 import org.spinsuite.sync.content.SyncRequest_BC;
+import org.spinsuite.sync.content.SyncStatus;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.SerializerUtil;
@@ -374,7 +375,7 @@ public class BCMessageHandle {
 					conn.addInt(m_AD_User_ID);
 					conn.addBoolean(true);
 					conn.addString(request.getSPS_BC_Request_UUID());
-					conn.addInt(invited.getAD_USer_ID());
+					conn.addInt(invited.getAD_User_ID());
 					conn.addString(MQTTDefaultValues.STATUS_CREATED);
 					conn.executeSQL();
 					conn.clearParameters();
@@ -485,10 +486,10 @@ public class BCMessageHandle {
 						MqttMessage message = new MqttMessage(msg);
 						message.setQos(MQTTConnection.EXACTLY_ONCE_2);
 						message.setRetained(true);
-						m_Connection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(invited.getAD_USer_ID())), message);
+						m_Connection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(invited.getAD_User_ID())), message);
 						//	Change Status
 						setUserStatus(request.getSPS_BC_Request_UUID(), 
-								invited.getAD_USer_ID(), MQTTDefaultValues.STATUS_SENT);
+								invited.getAD_User_ID(), MQTTDefaultValues.STATUS_SENT);
 					} catch (Exception e) {
 						LogM.log(m_Ctx, BCMessageHandle.class, Level.SEVERE, "Error", e);
 					}
@@ -953,6 +954,51 @@ public class BCMessageHandle {
     }
     
     /**
+     * 
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_SPS_BC_Request_UUID
+     * @param p_Status
+     * @return void
+     */
+    public void sendStatus(String p_SPS_BC_Request_UUID, String p_Status) {
+    	//	Valid Message
+    	if(p_Status == null) {
+    		return;
+    	}
+		//	Send
+		MQTTConnection m_Connection = MQTTConnection.getInstance(m_Ctx);
+		boolean sent = false;
+		if(m_Connection.connect()) {
+			try {
+				//	Set Client ID
+				SyncStatus status = new SyncStatus(MQTTConnection.getClient_ID(m_Ctx));
+				//	Get Request for Topic
+				status.setSPS_BC_Request_UUID(p_SPS_BC_Request_UUID);
+				//	Status
+				status.setStatus(p_Status);
+				status.setAD_User_ID(Env.getAD_User_ID(m_Ctx));
+				//	
+				byte[] payload = SerializerUtil.serializeObjectEx(status);
+				MqttMessage msg = new MqttMessage(payload);
+				msg.setQos(MQTTConnection.EXACTLY_ONCE_2);
+				msg.setRetained(true);
+				m_Connection.publishEx(MQTTDefaultValues.getUserStatusTopic(), msg);
+				sent = true;
+			} catch (Exception e) {
+				LogM.log(m_Ctx, BCMessageHandle.class, Level.SEVERE, "Error", e);
+				//	Try Send
+				processMessageThread();
+			}
+		} else {
+			LogM.log(m_Ctx, BCMessageHandle.class, Level.SEVERE, "Error (No Connected)");
+		}
+		//	
+		if(!sent) {
+			
+		}
+    }
+    
+    /**
      * Send Acknowledgement
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @param p_SPS_BC_Request_UUID
@@ -1183,10 +1229,10 @@ public class BCMessageHandle {
 							MqttMessage message = new MqttMessage(msg);
 							message.setQos(MQTTConnection.EXACTLY_ONCE_2);
 							message.setRetained(true);
-							m_Connection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(invited.getAD_USer_ID())), message);
+							m_Connection.publish(MQTTDefaultValues.getRequestTopic(String.valueOf(invited.getAD_User_ID())), message);
 							//	Change Status
 							setUserStatus(request.getSPS_BC_Request_UUID(), 
-									invited.getAD_USer_ID(), MQTTDefaultValues.STATUS_SENT);
+									invited.getAD_User_ID(), MQTTDefaultValues.STATUS_SENT);
 						} catch (Exception e) {
 							LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error", e);
 						}

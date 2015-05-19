@@ -27,8 +27,10 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
+import org.spinsuite.sync.content.SyncStatus;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.SerializerUtil;
 
 import android.content.Context;
 
@@ -135,6 +137,9 @@ public class MQTTConnection {
 	    //	Keep Alive Interval
 	    m_ConnectionOption.setKeepAliveInterval(getKeepAliveInverval(p_Ctx));
 	    m_ConnectionOption.setCleanSession(false);
+	    //	Add Will Testament
+	    m_ConnectionOption.setWill(MQTTDefaultValues.getUserStatusTopic(), 
+	    		getWill(), EXACTLY_ONCE_2, true);
 	    //	
 	    m_MessageListener = new MQTTBCListener(m_Ctx);
 	    //	
@@ -145,6 +150,29 @@ public class MQTTConnection {
 	    	addTopic(p_SubscribedTopics);
 	    	setIsSubscribed(false);
 	    }
+	}
+	
+	/**
+	 * Get Will Testament
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return byte[]
+	 */
+	private byte[] getWill() {
+		byte[] will = null;
+		//	Create Will
+		try {
+			String m_LocalClient_ID = getClient_ID(m_Ctx);
+			SyncStatus willStatus = new SyncStatus(m_LocalClient_ID);
+			willStatus.setAD_User_ID(Env.getAD_User_ID(m_Ctx));
+			willStatus.setStatus(SyncStatus.STATUS_DISCONNECTED);
+			//	
+			will = SerializerUtil.serializeObjectEx(willStatus);
+		} catch (Exception e) {
+			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error getWill()", e);
+		}
+		//	Return
+		return will;
 	}
 	
 	/**

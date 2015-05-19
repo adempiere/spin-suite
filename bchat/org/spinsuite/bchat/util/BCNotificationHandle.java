@@ -23,6 +23,7 @@ import org.spinsuite.bchat.view.V_BChat;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.sync.content.SyncMessage_BC;
 import org.spinsuite.sync.content.SyncRequest_BC;
+import org.spinsuite.sync.content.SyncStatus;
 import org.spinsuite.util.LogM;
 
 import android.app.NotificationManager;
@@ -76,7 +77,7 @@ public class BCNotificationHandle {
 	 * @param p_Status
 	 * @return void
 	 */
-	public void changeUIStatus(final String p_SPS_BC_Request_UUID, 
+	public void changeUIMsgStatus(final String p_SPS_BC_Request_UUID, 
 			final String p_SPS_BC_Message_UUID, final String p_Status) {
 		FV_Thread.runOnUI(new Runnable() {
 			public void run() {
@@ -85,6 +86,24 @@ public class BCNotificationHandle {
 						FV_Thread.changeMsgStatus(p_SPS_BC_Message_UUID, 
 								p_Status);
 					}
+				} catch (Exception e) { 
+					LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error", e);
+				}
+			}
+		});
+	}
+	
+	/**
+	 * Change Connection Status
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Status
+	 * @return void
+	 */
+	public void changeUIConnectionStatus(final SyncStatus p_Status) {
+		FV_Thread.runOnUI(new Runnable() {
+			public void run() {
+				try {
+					FV_Thread.changeConnectionStatus(p_Status);
 				} catch (Exception e) { 
 					LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error", e);
 				}

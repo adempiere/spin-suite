@@ -26,4 +26,8 @@
 	<string name="BChat_AddGroup">Add Group</string>
 	<string name="BChat_MustFillGroupName">Must Fill Group Name</string>
 	<string name="BChat_MustSelectContact">Must Select Contact</string>
+	<string name="BChat_StatusConnected">Connected</string>
+	<string name="BChat_StatusDisconnected">Disconnected</string>
+	<string name="BChat_StatusTyping">Typing</string>
+	<string name="BChat_StatusInChat">In Conversation</string>
 </resources>
