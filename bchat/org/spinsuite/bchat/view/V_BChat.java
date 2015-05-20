@@ -21,8 +21,10 @@ import java.util.logging.Level;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.adapters.BChatContactAdapter;
+import org.spinsuite.bchat.util.BCMessageHandle;
 import org.spinsuite.bchat.util.DisplayBChatContactItem;
 import org.spinsuite.interfaces.I_BC_FragmentSelect;
+import org.spinsuite.sync.content.SyncStatus;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
@@ -359,6 +361,13 @@ public class V_BChat extends FragmentActivity
     	return ok;
     }
     
+    @Override
+    public void onDestroy() {
+    	super.onDestroy();
+		//	Send New Status
+		BCMessageHandle.getInstance(this)
+			.sendStatus(null, SyncStatus.STATUS_DISCONNECTED);
+    }
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -396,8 +405,13 @@ public class V_BChat extends FragmentActivity
     		noBack = backToFragment();
 		}
     	//	No Back
-    	if(!noBack)
+    	if(!noBack) {
     		return super.onKeyDown(keyCode, event);
+    	} else {
+    		//	Send New Status
+    		BCMessageHandle.getInstance(this)
+    			.sendStatus(null, SyncStatus.STATUS_CONNECTED);
+    	}
 		//	Default Return
 		return noBack;
 	}
@@ -441,6 +455,14 @@ public class V_BChat extends FragmentActivity
     		onItemSelected(0, m_SPS_BC_Request_UUID, TYPE_SELECT_CONVERSATION);
     		m_SPS_BC_Request_UUID = null;
     	}
+    }
+    
+    @Override
+    protected void onStart() {
+    	super.onStart();
+		//	Send New Status
+		BCMessageHandle.getInstance(this)
+			.sendStatus(null, SyncStatus.STATUS_CONNECTED);
     }
     
     @Override

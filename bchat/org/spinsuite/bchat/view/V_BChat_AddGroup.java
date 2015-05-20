@@ -194,6 +194,8 @@ public class V_BChat_AddGroup extends Activity {
         								MQTTDefaultValues.STATUS_CREATED));
         			}
         		}
+    			//	Add Local User
+    			request.addUser(new Invited(Env.getAD_User_ID(), MQTTDefaultValues.STATUS_CREATED));
     			//	Save Request
     			BCMessageHandle.getInstance(this).sendRequest(request);
     			//	Add Param

@@ -141,7 +141,7 @@ public class MQTTConnection {
 	    m_ConnectionOption.setWill(MQTTDefaultValues.getUserStatusTopic(), 
 	    		getWill(), EXACTLY_ONCE_2, true);
 	    //	
-	    m_MessageListener = new MQTTBCListener(m_Ctx);
+	    m_MessageListener = new MQTTBChatListener(m_Ctx);
 	    //	
 	    m_IsSubscribe = false;
 	    m_SubscribedTopics = new ArrayList<String>();

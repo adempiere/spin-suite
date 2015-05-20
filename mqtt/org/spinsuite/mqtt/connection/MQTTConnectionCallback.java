@@ -107,6 +107,10 @@ public class MQTTConnectionCallback implements MqttCallback {
 						acknowledgment.getSPS_BC_Message_UUID(), acknowledgment.getStatus());
 			} else if(parent instanceof SyncStatus) {
 				SyncStatus status = (SyncStatus) parent;
+				//	Set status
+				BCMessageHandle.getInstance(m_Ctx).setMessageStatus(
+						status.getSPS_BC_Request_UUID(), status.getStatus());
+				//	Change Status
 				BCNotificationHandle.getInstance(m_Ctx)
 					.changeUIConnectionStatus(status);
 			}

@@ -37,19 +37,19 @@ import android.content.Context;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Apr 1, 2015, 3:36:57 AM
  *
  */
-public class MQTTBCListener implements IMqttActionListener {
+public class MQTTBChatListener implements IMqttActionListener {
 
 	/**
 	 * *** Constructor ***
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Ctx
 	 */
-	public MQTTBCListener(Context p_Ctx) {
+	public MQTTBChatListener(Context p_Ctx) {
 		m_Ctx = p_Ctx;
 	}
 
-	/**	Context					*/
-	private Context 			m_Ctx = null;
+	/**	Context				*/
+	private Context 		m_Ctx = null;
 	
 	@Override
 	public void onFailure(IMqttToken token, Throwable e) {

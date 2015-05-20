@@ -22,7 +22,6 @@ import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.spinsuite.bchat.util.BCMessageHandle;
-import org.spinsuite.sync.content.SyncStatus;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
@@ -61,9 +60,6 @@ public class MQTTConnectionListener implements IMqttActionListener {
 		LogM.log(m_Ctx, getClass(), Level.FINE, "Connection MQTT is Ok");
 		MQTTConnection.getInstance(m_Ctx).setStatus(MQTTConnection.CONNECTED);
 		subscribeToDefaultsTopics();
-		//	Send New Status
-		BCMessageHandle.getInstance(m_Ctx)
-			.sendStatus(null, SyncStatus.STATUS_CONNECTED);
 		//	Verify Messages
 		BCMessageHandle.getInstance(m_Ctx).processMessageThread();
 	}

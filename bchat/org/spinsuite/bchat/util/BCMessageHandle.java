@@ -1268,11 +1268,15 @@ public class BCMessageHandle {
 			//	Compile Query
 			conn.compileQuery("UPDATE SPS_BC_Request_User "
 					+ "SET Status = ? "
-					+ "WHERE SPS_BC_Request_UUID = ? "
-					+ "AND AD_User_ID = ?");
+					+ "WHERE AD_User_ID = ?" 
+					+ (p_SPS_BC_Request_UUID != null
+									? " AND SPS_BC_Request_UUID = ?"
+											:""));
 			//	Add Parameter
 			conn.addString(p_Status);
-			conn.addString(p_SPS_BC_Request_UUID);
+			if(p_SPS_BC_Request_UUID != null) {
+				conn.addString(p_SPS_BC_Request_UUID);
+			}
 			conn.addInt(p_AD_User_ID);
 			conn.executeSQL();
 			//	Successful

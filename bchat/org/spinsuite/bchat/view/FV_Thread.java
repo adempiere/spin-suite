@@ -626,6 +626,7 @@ public class FV_Thread extends Fragment {
     					null, null, false);
 				//	Add User to Request
 				m_Request.addUser(new Invited(p_AD_User_ID, MQTTDefaultValues.STATUS_CREATED));
+				m_Request.addUser(new Invited(Env.getAD_User_ID(), MQTTDefaultValues.STATUS_CREATED));
 			}
 		}
     	//	Set Reload Data
