@@ -564,9 +564,9 @@ public class BCMessageHandle {
 	 * @return
 	 * @return SyncMessage_BC
 	 */
-	public SyncMessage_BC getMessage(int p_SPS_BC_Message_UUID) {
+	public SyncMessage_BC getMessage(String p_SPS_BC_Message_UUID) {
 		//	Valid 0 ID
-		if(p_SPS_BC_Message_UUID <= 0)
+		if(p_SPS_BC_Message_UUID == null)
 			return null;
 		//	
 		SyncMessage_BC msg = null;
@@ -587,7 +587,7 @@ public class BCMessageHandle {
 					+ "INNER JOIN AD_User u ON(u.AD_User_ID = m.AD_User_ID) "
 					+ "WHERE m.SPS_BC_Message_UUID = ?");
 			//	Add Parameter
-			conn.addInt(p_SPS_BC_Message_UUID);
+			conn.addString(p_SPS_BC_Message_UUID);
 			//	Query Data
 			Cursor rs = conn.querySQL();
 			//	Get Header Data
