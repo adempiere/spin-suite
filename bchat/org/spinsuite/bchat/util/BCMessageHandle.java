@@ -1238,8 +1238,10 @@ public class BCMessageHandle {
 						}
 					}
 				} catch (MqttSecurityException e) {
-					LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error", e);
+					LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error MqttSecurityException", e);
 				} catch (MqttException e) {
+					LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error MqttException", e);
+				} catch (Exception e) {
 					LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error", e);
 				}
 			}

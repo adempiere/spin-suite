@@ -341,7 +341,7 @@ public class T_Connection extends Activity implements I_Login {
     		Env.setContext("#Timeout", Integer.parseInt(timeout));
     	}
 		//	Set Values for MQTT Server
-		MQTTConnection.setClient_ID(this, String.valueOf(Env.getAD_User_ID()));
+//		MQTTConnection.setClient_ID(this, String.valueOf(Env.getAD_User_ID()));
 		MQTTConnection.setHost(this, et_MQTT_ServerName.getText().toString());
 		MQTTConnection.setAlarmTime(this, MQTTDefaultValues.DEFAULT_MQTT_ALARM_TIME);
 		MQTTConnection.setMQTTUser(this, et_MQTT_ServerUser.getText().toString());
