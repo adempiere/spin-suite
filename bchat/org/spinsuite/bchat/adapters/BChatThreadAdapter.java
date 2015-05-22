@@ -71,6 +71,20 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		int maxSize = 1024 * 1024 * memClass / 8;
 		m_ImageCache = new ImageCacheLru(maxSize);
 		m_CurrentWidth = ctx.getResources().getDisplayMetrics().widthPixels;
+		//	Get Image Size
+		loadDefaultValues();
+	}
+
+	/**
+	 * Load Defaul Values for Adapter
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void loadDefaultValues() {
+		//	Get Image Size
+		m_ImageWidth = ctx.getResources().getDimensionPixelSize(R.dimen.bc_imageView_thread_layout_width);
+		m_ImageHeight = ctx.getResources().getDimensionPixelSize(R.dimen.bc_imageView_thread_layout_height);
+		m_TextViewMaxWidth = ctx.getResources().getDimensionPixelSize(R.dimen.bc_textView_thread_max_layout_width);
 	}
 
 	/**	Context						*/
@@ -94,8 +108,10 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 	/**	Current Width				*/
 	private int 									m_CurrentWidth = 0;
 	/**	Default Image Size			*/
-	private final int								IMG_W = 600;
-	private final int								IMG_H = 600;
+	private int										m_ImageWidth = 0;
+	private int										m_ImageHeight = 0;
+	/**	Max Text View Size			*/
+	private int										m_TextViewMaxWidth = 0;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -144,7 +160,7 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 			isImage = true;
 			Bitmap bmimage = m_ImageCache.get(imageKey);
 			if(bmimage == null) {
-				bmimage = AttachmentHandler.getBitmapFromFile(imageKey, IMG_W, IMG_H);
+				bmimage = AttachmentHandler.getBitmapFromFile(imageKey, m_ImageWidth, m_ImageHeight);
 				//	Re-Check
 				if(bmimage != null) {
 					m_ImageCache.put(imageKey, bmimage);
@@ -208,13 +224,13 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		//	
 		msgHolder.ll_Message.setBackgroundResource(Env.getResourceID(ctx, id_att));
 		//	Change Size
-		if(m_CurrentWidth < desiredWidth) {
-			desiredWidth = LayoutParams.WRAP_CONTENT;
+		if(m_TextViewMaxWidth < desiredWidth) {
+			desiredWidth = m_TextViewMaxWidth;
 		}
 		//	Change Width
 		if(isImage) {
-			params.width = IMG_W;
-			params.height = IMG_H;
+			params.width = m_ImageWidth;
+			params.height = m_ImageHeight;
 		} else {
 			params.width = desiredWidth;
 			params.height = LayoutParams.WRAP_CONTENT;

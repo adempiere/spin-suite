@@ -17,4 +17,7 @@
     <!-- Business Chat -->
     <dimen name="bc_button_layout_height">72dp</dimen>
     <dimen name="bc_editText_layout_height">72dp</dimen>
+    <dimen name="bc_imageView_thread_layout_width">700dp</dimen>
+   	<dimen name="bc_imageView_thread_layout_height">700dp</dimen>
+   	<dimen name="bc_textView_thread_max_layout_width">580dp</dimen>
 </resources>
