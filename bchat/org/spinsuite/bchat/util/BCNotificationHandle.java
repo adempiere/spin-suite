@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.logging.Level;
 
 import org.spinsuite.bchat.view.FV_Thread;
+import org.spinsuite.bchat.view.FV_ThreadIndex;
 import org.spinsuite.bchat.view.V_BChat;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.sync.content.SyncMessage_BC;
@@ -112,30 +113,51 @@ public class BCNotificationHandle {
 	}
 	
 	/**
+	 * Add New request
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Request
+	 * @return void
+	 */
+	public void addRequest(final SyncRequest_BC p_Request) {
+		FV_ThreadIndex.runOnUI(new Runnable() {
+			public void run() {
+				try {
+					FV_ThreadIndex.addRequest(p_Request);
+				} catch (Exception e) { 
+					LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error", e);
+				}
+			}
+		});
+	}
+	
+	/**
 	 * Add Message to List
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param message
 	 * @param p_Type
+	 * @param p_Status
+	 * @param notify
 	 * @return
 	 * @return boolean
 	 */
-	public void addMessage(final SyncMessage_BC message, final String p_Type) {
+	public void addMessage(final SyncMessage_BC message, final String p_Type, final String p_Status, final boolean notify) {
 		FV_Thread.runOnUI(new Runnable() {
 			public void run() {
 				try {
 					if(message != null
 							&& FV_Thread.isOpened(message.getSPS_BC_Request_UUID())) {
+						//	
 						FV_Thread.addMsg(new DisplayBChatThreadItem(message.getSPS_BC_Message_UUID(), message.getSPS_BC_Request_UUID(), 
 								message.getAD_User_ID(), message.getUserName(), 
 								message.getText(), 
 								p_Type, 
-								MQTTDefaultValues.STATUS_CREATED, 
+								p_Status, 
 								new Date(System.currentTimeMillis()), 
 								message.getFileName(), 
 								message.getAttachment()));
 						//	Seek To Last
 						FV_Thread.seekToLastMsg();
-					} else {
+					} else if(notify){
 						sendNotification(message);
 					}
 				} catch (Exception e) { 

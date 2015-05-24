@@ -79,10 +79,10 @@ public class BCMessageHandle {
 	 * Create a New In Request
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param request
-	 * @return void
+	 * @return boolean
 	 */
-	public void newInRequest(SyncRequest_BC request) {
-		newRequest(request, MQTTDefaultValues.TYPE_IN, null);
+	public boolean newInRequest(SyncRequest_BC request) {
+		return newRequest(request, MQTTDefaultValues.TYPE_IN, null);
 	}
 	
 	/**
@@ -90,10 +90,10 @@ public class BCMessageHandle {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param request
 	 * @param p_Status
-	 * @return void
+	 * @return boolean
 	 */
-	public void newOutRequest(SyncRequest_BC request, String p_Status) {
-		newRequest(request, MQTTDefaultValues.TYPE_OUT, p_Status);
+	public boolean newOutRequest(SyncRequest_BC request, String p_Status) {
+		return newRequest(request, MQTTDefaultValues.TYPE_OUT, p_Status);
 	}
 	
 	/**
@@ -288,12 +288,13 @@ public class BCMessageHandle {
 	 * @param request
 	 * @param p_Type
 	 * @param p_Status
-	 * @return void
+	 * @return boolean
 	 */
-	public void newRequest(SyncRequest_BC request, String p_Type, String p_Status) {
+	public boolean newRequest(SyncRequest_BC request, String p_Type, String p_Status) {
+		boolean ok = false;
 		if(request == null) {
 			LogM.log(m_Ctx, BCMessageHandle.class, Level.CONFIG, "Null request for Insert");
-			return;
+			return ok;
 		}
 		//	Connection
 		DB conn = null;
@@ -324,7 +325,13 @@ public class BCMessageHandle {
 			if(request.getTopicName() == null) {
 				request.setTopicName(UUID.randomUUID().toString());
 			}
-			int m_AD_User_ID = Env.getAD_User_ID();
+			//	Set User
+			int m_AD_User_ID = request.getAD_User_ID();
+			int m_LocalUser_ID = Env.getAD_User_ID();
+			if(m_AD_User_ID <= 0
+					&& m_AD_User_ID != m_LocalUser_ID) {
+				m_AD_User_ID = Env.getAD_User_ID();
+			}
 			//	Set ID
 			if(request.getSPS_BC_Request_UUID() == null) {
 				String m_SPS_BC_Request_UUID = UUID.randomUUID().toString();
@@ -383,12 +390,15 @@ public class BCMessageHandle {
 			}
 			//	Successful
 			conn.setTransactionSuccessful();
+			ok = true;
 		} catch (Exception e) {
 			LogM.log(m_Ctx, BCMessageHandle.class, Level.SEVERE, "Error", e);
 		} finally {
 			//	End Transaction
 			DB.closeConnection(conn);
 		}
+		//	Default Return
+		return ok;
 	}
 	
 	/**
@@ -477,6 +487,8 @@ public class BCMessageHandle {
 					try {
 						String m_LocalClient_ID = MQTTConnection.getClient_ID(m_Ctx);
 						request.setLocalClient_ID(m_LocalClient_ID);
+						//	Set User Identifier
+						request.setAD_User_ID(Env.getAD_User_ID());
 						//	Set User Name
 						if(!request.isGroup()) {
 							request.setName(Env.getContext("#AD_User_Name"));

@@ -35,7 +35,7 @@
         android:id="@+id/et_Message"
 	    style="@style/TextDynamicTabEditText"
 	    android:layout_width="match_parent"
-	    android:layout_height="@dimen/bc_editText_layout_height"
+	    android:layout_height="@dimen/bc_thread_editText_layout_height"
 	    android:hint="@string/BChat_EnterMsg"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
@@ -52,7 +52,7 @@
     <ImageButton
         android:id="@+id/ib_Send"
 		android:layout_width="wrap_content"
-	    android:layout_height="@dimen/bc_button_layout_height"
+	    android:layout_height="@dimen/bc_thread_button_layout_height"
 	    android:contentDescription="@string/None"
 	    android:src="@drawable/ic_action_send_now_light"
         android:layout_alignParentBottom="true"

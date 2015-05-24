@@ -341,7 +341,6 @@ public class T_Connection extends Activity implements I_Login {
     		Env.setContext("#Timeout", Integer.parseInt(timeout));
     	}
 		//	Set Values for MQTT Server
-//		MQTTConnection.setClient_ID(this, String.valueOf(Env.getAD_User_ID()));
 		MQTTConnection.setHost(this, et_MQTT_ServerName.getText().toString());
 		MQTTConnection.setAlarmTime(this, MQTTDefaultValues.DEFAULT_MQTT_ALARM_TIME);
 		MQTTConnection.setMQTTUser(this, et_MQTT_ServerUser.getText().toString());
@@ -365,7 +364,7 @@ public class T_Connection extends Activity implements I_Login {
 				&& bt_MQTT_SSL_File_Path.getText().toString().length() > 0) {
 			String m_SSL_File = bt_MQTT_SSL_File_Path.getText().toString();
 			//	Hardcode
-			MQTTConnection.setIsSSLConnection(this, m_SSL_File.contains(".ssl"));
+			MQTTConnection.setIsSSLConnection(this, m_SSL_File.contains(".crt"));
 			MQTTConnection.setSSLFilePath(this, m_SSL_File);
 		} else {
 			MQTTConnection.setIsSSLConnection(this, false);

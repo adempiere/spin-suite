@@ -290,12 +290,14 @@ public final class Env {
 	 * Load Role Access from Current Role
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/09/2014, 18:55:17
 	 * @param ctx
+	 * @param isForce
 	 * @return void
 	 */
-	public static void loadRoleAccess(Context ctx) {
+	public static void loadRoleAccess(Context ctx, boolean isForce) {
 		int m_AD_Role_ID = getAD_Role_ID(ctx);
-		if(m_AD_Role_ID == 0
-				|| isAccessLoaded(ctx, m_AD_Role_ID))
+		if(!isForce
+				&& (m_AD_Role_ID == 0
+					|| isAccessLoaded(ctx, m_AD_Role_ID)))
 			return;
 		//	Do it
 		loadRoleAccess(ctx, m_AD_Role_ID);
@@ -309,7 +311,7 @@ public final class Env {
 	 * @return void
 	 */
 	public static void loadRoleAccess() {
-		loadRoleAccess(getCtx());
+		loadRoleAccess(getCtx(), false);
 	}
 	
     /**

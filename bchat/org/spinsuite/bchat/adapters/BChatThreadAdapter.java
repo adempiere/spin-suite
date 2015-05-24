@@ -70,7 +70,6 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		int memClass = ((ActivityManager)ctx.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
 		int maxSize = 1024 * 1024 * memClass / 8;
 		m_ImageCache = new ImageCacheLru(maxSize);
-		m_CurrentWidth = ctx.getResources().getDisplayMetrics().widthPixels;
 		//	Get Image Size
 		loadDefaultValues();
 	}
@@ -82,9 +81,9 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 	 */
 	private void loadDefaultValues() {
 		//	Get Image Size
-		m_ImageWidth = ctx.getResources().getDimensionPixelSize(R.dimen.bc_imageView_thread_layout_width);
-		m_ImageHeight = ctx.getResources().getDimensionPixelSize(R.dimen.bc_imageView_thread_layout_height);
-		m_TextViewMaxWidth = ctx.getResources().getDimensionPixelSize(R.dimen.bc_textView_thread_max_layout_width);
+		m_ImageWidth = ctx.getResources().getDimensionPixelSize(R.dimen.bc_thread_imageView_layout_width);
+		m_ImageHeight = ctx.getResources().getDimensionPixelSize(R.dimen.bc_thread_imageView_layout_height);
+		m_TextViewMaxWidth = ctx.getResources().getDimensionPixelSize(R.dimen.bc_thread_textView_thread_max_size);
 	}
 
 	/**	Context						*/
@@ -105,8 +104,6 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 	private String									m_DirectoryApp = null;
 	/**	Images Cache				*/
 	private ImageCacheLru							m_ImageCache = null;
-	/**	Current Width				*/
-	private int 									m_CurrentWidth = 0;
 	/**	Default Image Size			*/
 	private int										m_ImageWidth = 0;
 	private int										m_ImageHeight = 0;

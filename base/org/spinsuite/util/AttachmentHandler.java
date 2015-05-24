@@ -32,6 +32,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
 
 /**
@@ -318,13 +319,24 @@ public class AttachmentHandler {
 		if(height <= 0)
 			height = 1;
 		// Get the size of the image
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
+		Options options = new Options();
 		BitmapFactory.decodeFile(fileName, options);
 		//	Set bitmap options to scale the image decode target
 		options.inJustDecodeBounds = false;
 		options.inSampleSize = calculateInSampleSize(options, width, height);
 		//	Decode the JPEG file into a Bitmap
+		return BitmapFactory.decodeFile(fileName, options);
+	}
+	
+	/**
+	 * Get a bitmap from file
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param fileName
+	 * @param options
+	 * @return
+	 * @return Bitmap
+	 */
+	public static Bitmap getBitmapFromFile(String fileName, Options options) {
 		return BitmapFactory.decodeFile(fileName, options);
 	}
 	

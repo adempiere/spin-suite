@@ -29,6 +29,7 @@ import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.spinsuite.base.DB;
 import org.spinsuite.bchat.util.BCMessageHandle;
 import org.spinsuite.bchat.util.BCNotificationHandle;
+import org.spinsuite.sync.content.Invited;
 import org.spinsuite.sync.content.SyncAcknowledgment;
 import org.spinsuite.sync.content.SyncMessage_BC;
 import org.spinsuite.sync.content.SyncParent;
@@ -89,6 +90,13 @@ public class MQTTConnectionCallback implements MqttCallback {
 				//	Valid if Exists
 				if(existsRequest(request))
 					return;
+				//	Valid Request for same user
+				if(!request.isGroup()
+						&& request.getAD_User_ID() == Env.getAD_User_ID()) {
+					request.setType(MQTTDefaultValues.TYPE_OUT);
+					String newName = getNewRequestName(request);
+					request.setName(newName);
+				}
 				//	Save request
 				requestArrived(request);
 				//	Subscribe to Topic request
@@ -118,6 +126,33 @@ public class MQTTConnectionCallback implements MqttCallback {
 	}
 	
 	/**
+	 * Get New Request Name from original Request
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param request
+	 * @return
+	 * @return String
+	 */
+	private String getNewRequestName(SyncRequest_BC request) {
+		//	Get Other User
+		int m_LocalUser_ID = Env.getAD_User_ID();
+		int m_AD_User_ID = -1;
+		for(Invited invited : request.getUsers()) {
+    		if(invited.getAD_User_ID() != m_LocalUser_ID) {
+    			m_AD_User_ID = invited.getAD_User_ID();
+    			break;
+    		}
+    	}
+		//	Get Name
+		String m_NewName = DB.getSQLValueString(m_Ctx, 
+				"SELECT u.Name "
+				+ "FROM AD_User u "
+				+ "WHERE u.AD_User_ID = " + m_AD_User_ID);
+		
+		//	Default Return
+		return m_NewName;
+	}
+	
+	/**
 	 * Verify if Exists Request
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param request
@@ -141,7 +176,12 @@ public class MQTTConnectionCallback implements MqttCallback {
 	 * @return void
 	 */
 	private void requestArrived(SyncRequest_BC request) throws Exception {
-		BCMessageHandle.getInstance(m_Ctx).newInRequest(request);
+		boolean ok = BCMessageHandle.getInstance(m_Ctx).newInRequest(request);
+		//	Add UI Request
+		if(ok) {
+			BCNotificationHandle.getInstance(m_Ctx)
+				.addRequest(request);
+		}
 	}
 	
 	/**
@@ -169,15 +209,28 @@ public class MQTTConnectionCallback implements MqttCallback {
 			}
 		}
 		//	
-		boolean ok = BCMessageHandle.getInstance(m_Ctx).newInMessage(message);
+		boolean ok = false;
+		boolean isSameUser = message.getAD_User_ID() == Env.getAD_User_ID();
+		String m_Type = MQTTDefaultValues.TYPE_IN;
+		String m_Status = MQTTDefaultValues.STATUS_CREATED;
+		//	Valid if is same user
+		if(isSameUser) {
+			ok = BCMessageHandle.getInstance(m_Ctx).newOutMessage(message, MQTTDefaultValues.STATUS_DELIVERED);
+			m_Type = MQTTDefaultValues.TYPE_OUT;
+			m_Status = MQTTDefaultValues.STATUS_SENT;
+		} else {
+			ok = BCMessageHandle.getInstance(m_Ctx).newInMessage(message);
+		}
 		//	
 		if(ok) {
-			//	Send Acknowledgment
-			BCMessageHandle.getInstance(m_Ctx)
-				.sendStatusAcknowledgment(message, p_Topic, MQTTDefaultValues.STATUS_DELIVERED);
+			if(!isSameUser) {
+				//	Send Acknowledgment
+				BCMessageHandle.getInstance(m_Ctx)
+					.sendStatusAcknowledgment(message, p_Topic, MQTTDefaultValues.STATUS_DELIVERED);
+			}
 			//	Notify
 			BCNotificationHandle.getInstance(m_Ctx)
-				.addMessage(message, MQTTDefaultValues.TYPE_IN);
+				.addMessage(message, m_Type, m_Status, !isSameUser);
 		}
 	}
 	

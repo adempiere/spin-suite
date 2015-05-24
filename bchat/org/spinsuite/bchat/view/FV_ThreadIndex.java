@@ -25,12 +25,15 @@ import org.spinsuite.bchat.util.BCMessageHandle;
 import org.spinsuite.bchat.util.DisplayBChatThreadListItem;
 import org.spinsuite.interfaces.I_BC_FragmentSelect;
 import org.spinsuite.interfaces.I_FragmentSelect;
+import org.spinsuite.sync.content.SyncRequest_BC;
 import org.spinsuite.util.Env;
 
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SearchViewCompat;
@@ -75,11 +78,21 @@ public class FV_ThreadIndex extends ListFragment
     }
     
     /**	Call Back					*/
-    private I_BC_FragmentSelect			m_Callback 	= null;
+    private I_BC_FragmentSelect				m_Callback 	= null;
     /**	Adapter						*/
-    private BChatThreadListAdapter		m_Adapter 	= null;
+    private static BChatThreadListAdapter	m_Adapter 	= null;
     /**	Context						*/
-	private Context						m_ctx 		= null;
+	private Context							m_ctx 		= null;
+	/**	Handler						*/
+	public static Handler 					UIHandler;
+	
+	static {
+        UIHandler = new Handler(Looper.getMainLooper());
+    }
+
+    public static void runOnUI(Runnable runnable) {
+        UIHandler.post(runnable); 
+    }
     
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -148,6 +161,31 @@ public class FV_ThreadIndex extends ListFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+    
+    /**
+     * Add Request
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param request
+     * @return void
+     */
+    public static void addRequest(SyncRequest_BC request) {
+    	//	Valid Adapter
+    	if(m_Adapter == null)
+    		return;
+    	//	
+    	DisplayBChatThreadListItem requestItem = new DisplayBChatThreadListItem(
+    			request.getSPS_BC_Request_UUID(), 
+    			request.getName(), 
+    			request.getType(), 
+    			request.getTopicName(), 
+    			request.getLastMsg(), 
+    			request.getLastFileName(), 
+    			new Date(System.currentTimeMillis()), 
+    			null);
+    	//	Add
+    	m_Adapter.add(requestItem);
+    	m_Adapter.notifyDataSetChanged();
     }
     
     /**

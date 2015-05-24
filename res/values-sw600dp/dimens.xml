@@ -15,9 +15,10 @@
     <dimen name="button_layout_height">72dp</dimen>
     <dimen name="checkBox_layout_height">72dp</dimen>
     <!-- Business Chat -->
-    <dimen name="bc_button_layout_height">72dp</dimen>
-    <dimen name="bc_editText_layout_height">72dp</dimen>
-    <dimen name="bc_imageView_thread_layout_width">450dp</dimen>
-   	<dimen name="bc_imageView_thread_layout_height">450dp</dimen>
-   	<dimen name="bc_textView_thread_max_layout_width">480dp</dimen>
+    <dimen name="bc_thread_button_layout_height">72dp</dimen>
+    <dimen name="bc_thread_editText_layout_height">72dp</dimen>
+    <dimen name="bc_thread_imageView_layout_width">450dp</dimen>
+   	<dimen name="bc_thread_imageView_layout_height">450dp</dimen>
+   	<dimen name="bc_thread_textView_thread_max_size">480dp</dimen>
+   	<dimen name="bc_threadlist_contact_profile_img_max_size">70dp</dimen>
 </resources>

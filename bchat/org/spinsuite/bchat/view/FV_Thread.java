@@ -590,6 +590,9 @@ public class FV_Thread extends Fragment {
     	//	Valid Request Parameter
     	if(p_AD_User_ID == -1)
     		return false;
+    	//	Valid same user
+    	if(p_AD_User_ID == Env.getAD_User_ID())
+    		return false;
     	//	Valid Opened
     	for(Invited invited : m_Request.getUsers()) {
     		if(invited.getAD_User_ID() == p_AD_User_ID) {

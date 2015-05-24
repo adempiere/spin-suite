@@ -25,7 +25,7 @@
         android:id="@+id/et_GroupName"
         style="@style/TextDynamicTabEditText"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/bc_editText_layout_height"
+        android:layout_height="@dimen/bc_thread_editText_layout_height"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:ems="10"
