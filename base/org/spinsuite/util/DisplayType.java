@@ -437,7 +437,11 @@ public final class DisplayType
 		//	Else
 		if (isText(displayType) 
 				|| displayType == LIST
-				|| displayType == BUTTON || (columnName!=null && columnName.equals("AD_Language"))) {
+				|| displayType == BUTTON || (columnName!=null && columnName.equals("AD_Language"))
+				//2015-05-18 Dixon Martinez Add Support to Column Entity Type  
+				|| (columnName!=null && columnName.equals("EntityType"))
+				//End Dixon Martinez
+				) {
 			if(String.valueOf(value).length() > 0)
 				return String.valueOf(value);
 			return null;
@@ -623,7 +627,11 @@ public final class DisplayType
 		//	
 		if (isText(displayType) 
 				|| displayType == LIST
-				|| displayType == BUTTON || (columnName!=null && columnName.equals("AD_Language"))) {
+				|| displayType == BUTTON || (columnName!=null && columnName.equals("AD_Language"))
+				//2015-05-18 Dixon Martinez Add Support to Column Entity Type  
+				|| (columnName!=null && columnName.equals("EntityType"))
+				//End Dixon Martinez
+				) {
 			return String.valueOf(value);
 		} else if (isID(displayType) || displayType == INTEGER) {
 			if(value instanceof Integer) {

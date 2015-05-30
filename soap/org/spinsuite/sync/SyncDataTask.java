@@ -222,18 +222,32 @@ public class SyncDataTask implements BackGroundProcess  {
 			}//End Query Data Web Service
 			
 			//Run Create Data Web Service
-			else if (m_MethodValue.equals(SyncValues.WSMCreateData)) {
+			else if (m_MethodValue.equals(SyncValues.WSMCreateData)
+						||m_MethodValue.equals(SyncValues.WSMUpdateData)) {
 				if (syncm.getSPS_Table_ID()!=0){
 					MSPSTable table= new MSPSTable(m_ctx, syncm.getSPS_Table_ID(), conn);
-					String whereClause = " EXISTS (SELECT 1 "
+					String whereClause = "";
+					Object[] parameters = null;
+					if (syncm.getWhereClause()!=null)
+						whereClause += syncm.getWhereClause();
+					if (!syncm.isForced()){
+						if (whereClause !=null )
+							whereClause += " AND ";
+						
+						whereClause = " EXISTS (SELECT 1 "
 													+ "FROM "
 													+ "SPS_SyncTable "
 													+ "WHERE SPS_SyncTable.SPS_Table_ID = ? AND "
 													+ "SPS_SyncTable.Record_ID = "+table.getTableName()+"."+table.getTableName()+"_ID AND "
 													+ "SPS_SyncTable.EventChangeLog = ? AND "
 													+ "SPS_SyncTable.IsSynchronized='N' )";
+						parameters = new Object[]{table.getSPS_Table_ID(),m_MethodValue};
+					}else{
+						parameters = new Object[]{};
+					}
+					
 					List<PO> rows = new Query(m_ctx, table.getTableName(), whereClause, conn)
-									.setParameters(new Object[]{table.getSPS_Table_ID(),X_SPS_SyncTable.EVENTCHANGELOG_Insert})
+									.setParameters(parameters)
 									.list();
 					for (PO row : rows) {
 						param= getSoapParam(syncm,PageNo,row);
@@ -276,14 +290,17 @@ public class SyncDataTask implements BackGroundProcess  {
 		if(m_MethodValue.equals(SyncValues.WSMQueryData)){
 			String whereClause="";
 			
-			SimpleDateFormat sdf = DisplayType.getDateFormat(m_ctx, DisplayType.DATE_TIME, "yyyy-MM-dd hh:mm:ss");
-			whereClause +=(sm.getLastSynchronized()!=null ? "(UPDATED >= '" + sdf.format(sm.getLastSynchronized()) + "')" : "");
+			if (!sm.isForced()){
+				SimpleDateFormat sdf = DisplayType.getDateFormat(m_ctx, DisplayType.DATE_TIME, "yyyy-MM-dd hh:mm:ss");
+				whereClause +=(sm.getLastSynchronized()!=null ? "(UPDATED >= '" + sdf.format(sm.getLastSynchronized()) + "')" : "");
+			}
 			if (sm.getWhereClause()!=null)
 				whereClause += (whereClause.equals("")?"":" AND ") + "(" + Env.parseContext(sm.getWhereClause(), true) + ")";
 			param = new WSModelCRUDRequest(m_ctx, m_NameSpace, wst.getWS_WebServiceType_ID(), conn, 0, null, whereClause, PageNo);
 		}
-		else if (m_MethodValue.equals(SyncValues.WSMCreateData))
-			param = new WSModelCRUDRequest(m_ctx, m_NameSpace, wst.getWS_WebServiceType_ID(), conn, 0, data);
+		else if (m_MethodValue.equals(SyncValues.WSMCreateData)
+					||m_MethodValue.equals(SyncValues.WSMUpdateData))
+			param = new WSModelCRUDRequest(m_ctx, m_NameSpace, wst.getWS_WebServiceType_ID(), conn, data.get_ID(), data);
 		//	
 		return param;
 	}
@@ -502,12 +519,13 @@ public class SyncDataTask implements BackGroundProcess  {
 					
 			}
 		}
-		else if (m_MethodValue.equals(SyncValues.WSMCreateData)){
+		else if (m_MethodValue.equals(SyncValues.WSMCreateData)
+					||m_MethodValue.equals(SyncValues.WSMUpdateData)){
 
 			if (soapResponse.hasAttribute("RecordID")){
 				String whereClause = "SPS_Table_ID = " + sm.getSPS_Table_ID() + " AND "
 						+ "Record_ID = " + p_ID + " AND "
-						+ "EventChangeLog IN ('" + X_SPS_SyncTable.EVENTCHANGELOG_Insert + "') AND IsSynchronized='N'";
+						+ "EventChangeLog IN ('" + X_SPS_SyncTable.EVENTCHANGELOG_Insert + "','" + X_SPS_SyncTable.EVENTCHANGELOG_Update + "') AND IsSynchronized='N'";
 	
 				try {
 					MSPSSyncTable synctable = MSPSSyncTable.getSyncTable(sm.getCtx(), conn, whereClause);

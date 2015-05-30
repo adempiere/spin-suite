@@ -66,6 +66,8 @@ public class SyncValues {
 	public static final String 		WSMQueryData 		= "queryData";
 	/** Web Service Method Create Data	*/
 	public static final String 		WSMCreateData 		= "createData";
+	/** Web Service Method Create Data	*/
+	public static final String 		WSMUpdateData 		= "updateData";
 	/** IS Net Web Service				*/
 	public static final boolean 	IsNetService 		= true;
 	/** Data Set						*/

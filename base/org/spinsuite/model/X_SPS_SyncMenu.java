@@ -171,6 +171,27 @@ public class X_SPS_SyncMenu extends PO implements I_SPS_SyncMenu {
 		return (String)get_Value(COLUMNNAME_ImageURL);
 	}
 
+	/** Set Forced.
+		@param IsForced Forced	  */
+	public void setIsForced (boolean IsForced)
+	{
+		set_Value (COLUMNNAME_IsForced, Boolean.valueOf(IsForced));
+	}
+
+	/** Get Forced.
+		@return Forced	  */
+	public boolean isForced () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsForced);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	/** Set Summary Level.
 		@param IsSummary 
 		This is a summary entity
