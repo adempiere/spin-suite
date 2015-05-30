@@ -21,6 +21,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
@@ -72,6 +73,38 @@ public final class Env {
 		}
 		//	Default Return
 		return m_Instance;
+	}
+	
+	/**
+	 * Set Login Date and Valid date
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param date
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean loginDate(Context ctx, Date date) {
+		Calendar currentDate = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		//	Format Date yyyy-MM-dd hh:mm:ss
+		Env.setContext("#Date", sdf.format(date.getTime()));
+		
+		sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		String curDate = sdf.format(currentDate.getTime());
+		String ctxDate = sdf.format(date.getTime());
+		
+		//	Format Date yyyy-MM-dd
+		
+		Env.setContext("#DateP", ctxDate);
+		
+		if(!(curDate.equals(ctxDate))){
+			Env.setContext("#IsCurrentDate", "N");
+			return false;
+		}
+		//	Default
+		Env.setContext("#IsCurrentDate", "Y");
+		return true;
 	}
 	
 	/**

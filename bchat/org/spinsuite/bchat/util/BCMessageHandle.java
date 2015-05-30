@@ -463,15 +463,19 @@ public class BCMessageHandle {
      * Send Message
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @param request
-     * @return void
+     * @return boolean
      */
-    public void sendRequest(SyncRequest_BC request) {
+    public boolean sendRequest(SyncRequest_BC request) {
     	//	Valid Request
     	if(request == null) {
-    		return;
+    		return false;
     	}
 		//	Save Request
-		newOutRequest(request, MQTTDefaultValues.STATUS_SENDING);
+		boolean ok = newOutRequest(request, MQTTDefaultValues.STATUS_SENDING);
+		//	Valid save
+		if(!ok) {
+			return ok;
+		}
 		//	Send
 		MQTTConnection m_Connection = MQTTConnection.getInstance(m_Ctx);
 		try {
@@ -489,12 +493,15 @@ public class BCMessageHandle {
 						request.setLocalClient_ID(m_LocalClient_ID);
 						//	Set User Identifier
 						request.setAD_User_ID(Env.getAD_User_ID());
+						String oldName = request.getName();
 						//	Set User Name
 						if(!request.isGroup()) {
 							request.setName(Env.getContext("#AD_User_Name"));
 						}
 						//	
 						byte[] msg = SerializerUtil.serializeObjectEx(request);
+						//	Set New Name
+						request.setName(oldName);
 						MqttMessage message = new MqttMessage(msg);
 						message.setQos(MQTTConnection.EXACTLY_ONCE_2);
 						message.setRetained(true);
@@ -514,6 +521,8 @@ public class BCMessageHandle {
 		} catch (MqttException e) {
 			LogM.log(m_Ctx, BCMessageHandle.class, Level.SEVERE, "Error", e);
 		}
+		//	Default Return
+		return ok;
     }
     
     /**

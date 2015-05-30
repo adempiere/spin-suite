@@ -24,6 +24,7 @@ import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.adapters.BChatThreadAdapter;
 import org.spinsuite.bchat.util.BCMessageHandle;
+import org.spinsuite.bchat.util.BCNotificationHandle;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
@@ -306,7 +307,12 @@ public class FV_Thread extends Fragment {
 		//	Send Request
 		if(m_Request != null
     			&& m_Request.getSPS_BC_Request_UUID() == null) {
-			BCMessageHandle.getInstance(m_ctx).sendRequest(m_Request);
+			boolean ok = BCMessageHandle.getInstance(m_ctx).sendRequest(m_Request);
+			//	Add UI Request
+			if(ok) {
+				BCNotificationHandle.getInstance(m_ctx)
+					.addRequest(m_Request);
+			}
 		}
 		//	
 		byte[] bytes = SerializerUtil.getFromFile(

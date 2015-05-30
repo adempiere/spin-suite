@@ -15,13 +15,13 @@
  *************************************************************************************/
 package org.spinsuite.login;
 
+import java.util.Date;
 import java.util.List;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.model.MCountry;
-import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.mqtt.connection.MQTTSyncService;
 import org.spinsuite.sync.SyncService;
 import org.spinsuite.util.Env;
@@ -125,6 +125,8 @@ public class Login extends TV_Base implements I_Login {
 						startService(service);
 					}
 //					MQTTConnection.getInstance(v_activity).connectInThread();
+					//	Set Login Date
+					Env.loginDate(v_activity, new Date());
 					//	Start Activity
 					Intent intent = new Intent(this, LV_Menu.class);
 					startActivity(intent);
