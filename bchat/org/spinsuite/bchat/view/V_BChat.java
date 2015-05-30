@@ -469,7 +469,8 @@ public class V_BChat extends FragmentActivity
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     	//	For Photo
     	if(requestCode == FV_Thread.ACTION_TAKE_PHOTO
-    			|| requestCode == FV_Thread.ACTION_TAKE_FILE) {
+    			|| requestCode == FV_Thread.ACTION_PICK_IMAGE
+    			|| requestCode == FV_Thread.ACTION_PICK_FILE) {
     		m_ThreadFragment.onActivityResult(requestCode, resultCode, data);
     	} else if (resultCode == Activity.RESULT_OK) {
 	    	if(data != null) {

@@ -124,8 +124,9 @@ public class FV_Thread extends Fragment {
 	public static final int				CT_CHAT				= 1;
 	
 	/**	Results						*/
-	public static final int 			ACTION_TAKE_FILE	= 3;
-	public static final int 			ACTION_TAKE_PHOTO	= 4;
+	public static final int 			ACTION_TAKE_PHOTO	= 3;
+	public static final int 			ACTION_PICK_IMAGE	= 4;
+	public static final int 			ACTION_PICK_FILE	= 5;
 	
 	/**	Constants Type Save			*/
 	private static final String 		PHOTO_ATTACHMENT_SAVE	= "PS";
@@ -691,7 +692,13 @@ public class FV_Thread extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch (item.getItemId()) {
 			case R.id.action_attach_photo:
-				attachPhoto();
+				attachCapture();
+				return true;
+			case R.id.action_attach_image:
+				attachFile(ACTION_PICK_IMAGE);
+				return true;
+			case R.id.action_attach_file:
+				attachFile(ACTION_PICK_FILE);
 				return true;
 			//	Default
 			default:
@@ -700,11 +707,11 @@ public class FV_Thread extends Fragment {
     }
     
     /**
-     * Attach Photo
+     * Attach Cature
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @return void
      */
-    private void attachPhoto() {
+    private void attachCapture() {
     	//	Instance Attachment
     	if(m_AttHandler == null)
     		m_AttHandler = new AttachmentHandler(getActivity());
@@ -721,11 +728,36 @@ public class FV_Thread extends Fragment {
 	    getActivity().startActivityForResult(intent, ACTION_TAKE_PHOTO);
 	}
     
+    /**
+     * Attach File
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param action
+     * @return void
+     */
+    private void attachFile(int action) {
+    	String type = null;
+    	if(action == ACTION_PICK_IMAGE) {
+    		type = "image/*";
+    	} else if(action == ACTION_PICK_FILE) {
+    		type = "file/*";
+    	} else {
+    		return;
+    	}
+    	//	
+    	Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+    	intent.setType(type);
+    	startActivityForResult(intent, action);
+    }
+    
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     	//	Valid Data
     	if(requestCode == ACTION_TAKE_PHOTO) {
     		new SaveTask().execute(PHOTO_ATTACHMENT_SAVE);
+    	} else if(requestCode == ACTION_PICK_IMAGE
+    			|| requestCode == ACTION_PICK_FILE
+    			&& data != null) {
+    		new SaveTask().execute(FILE_ATTACHMENT_SAVE, data.getData().getPath());
     	}
     }
     
@@ -761,9 +793,15 @@ public class FV_Thread extends Fragment {
 				m_IsSaved = m_AttHandler.processImgAttach(
 						Env.getBC_IMG_DirectoryPathName(getActivity()), fileName, AttachmentHandler.IMG_STD_Q);
 				m_FileName = fileName + AttachmentHandler.JPEG_FILE_SUFFIX;
-			} else if(m_Type.equals(FILE_ATTACHMENT_SAVE)) { 
-				String origFile = params[1];
-				m_AttHandler.processFileAttach(origFile);
+			} else if(m_Type.equals(FILE_ATTACHMENT_SAVE)) {
+				String fromFile = params[1];
+				if(fromFile == null) {
+					return null;
+				}
+				String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+				m_IsSaved = m_AttHandler.processFile(fromFile, 
+						Env.getBC_IMG_DirectoryPathName(getActivity()), fileName);
+				m_FileName = fileName + m_AttHandler.getExtension(fromFile);
 			}
 			//	
 			return null;
