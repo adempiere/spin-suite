@@ -16,6 +16,9 @@
 package org.spinsuite.bchat.view;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -735,18 +738,20 @@ public class FV_Thread extends Fragment {
      * @return void
      */
     private void attachFile(int action) {
-    	String type = null;
-    	if(action == ACTION_PICK_IMAGE) {
-    		type = "image/*";
-    	} else if(action == ACTION_PICK_FILE) {
-    		type = "file/*";
-    	} else {
-    		return;
-    	}
+//    	String type = null;
+//    	if(action == ACTION_PICK_IMAGE) {
+//    		type = "image/*";
+//    	} else if(action == ACTION_PICK_FILE) {
+//    		type = "file/*";
+//    	} else {
+//    		return;
+//    	}
     	//	
     	Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-    	intent.setType(type);
-    	startActivityForResult(intent, action);
+//    	intent.setType(type);
+    	intent.setType("*/*");
+    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    	getActivity().startActivityForResult(intent, action);
     }
     
     @Override
@@ -757,10 +762,11 @@ public class FV_Thread extends Fragment {
     	} else if(requestCode == ACTION_PICK_IMAGE
     			|| requestCode == ACTION_PICK_FILE
     			&& data != null) {
+    		dataUri = data.getData();
     		new SaveTask().execute(FILE_ATTACHMENT_SAVE, data.getData().getPath());
     	}
     }
-    
+    Uri dataUri = null;
     /**
      * Async Task for Save File
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Apr 16, 2015, 9:33:44 AM
@@ -797,6 +803,14 @@ public class FV_Thread extends Fragment {
 				String fromFile = params[1];
 				if(fromFile == null) {
 					return null;
+				}
+				File file = null;
+				try {
+					InputStream inStream = getActivity().getContentResolver().openInputStream(dataUri);
+					file = new File(new URI(fromFile));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 				m_IsSaved = m_AttHandler.processFile(fromFile, 
