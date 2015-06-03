@@ -239,9 +239,9 @@ public class SyncDataTask implements BackGroundProcess  {
 													+ "SPS_SyncTable "
 													+ "WHERE SPS_SyncTable.SPS_Table_ID = ? AND "
 													+ "SPS_SyncTable.Record_ID = "+table.getTableName()+"."+table.getTableName()+"_ID AND "
-													+ "SPS_SyncTable.EventChangeLog = ? AND "
+													+ "SPS_SyncTable.EventChangeLog IN (?,?) AND "
 													+ "SPS_SyncTable.IsSynchronized='N' )";
-						parameters = new Object[]{table.getSPS_Table_ID(),m_MethodValue};
+						parameters = new Object[]{table.getSPS_Table_ID(),X_SPS_SyncTable.EVENTCHANGELOG_Insert,X_SPS_SyncTable.EVENTCHANGELOG_Update};
 					}else{
 						parameters = new Object[]{};
 					}
