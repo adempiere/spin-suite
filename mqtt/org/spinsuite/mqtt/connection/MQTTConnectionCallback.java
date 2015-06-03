@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Date;
 import java.util.logging.Level;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -27,27 +26,20 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
-import org.spinsuite.bchat.model.SPS_BC_Message;
-import org.spinsuite.bchat.model.SPS_BC_Request;
-import org.spinsuite.bchat.util.DisplayBChatThreadItem;
-import org.spinsuite.bchat.view.FV_Thread;
-import org.spinsuite.bchat.view.V_BChat;
-import org.spinsuite.sync.content.SyncMessage;
+import org.spinsuite.base.DB;
+import org.spinsuite.bchat.util.BCMessageHandle;
+import org.spinsuite.bchat.util.BCNotificationHandle;
+import org.spinsuite.sync.content.Invited;
+import org.spinsuite.sync.content.SyncAcknowledgment;
+import org.spinsuite.sync.content.SyncMessage_BC;
 import org.spinsuite.sync.content.SyncParent;
-import org.spinsuite.sync.content.SyncRequest;
+import org.spinsuite.sync.content.SyncRequest_BC;
+import org.spinsuite.sync.content.SyncStatus;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.SerializerUtil;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.Builder;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Apr 19, 2015, 9:52:13 PM
@@ -67,10 +59,6 @@ public class MQTTConnectionCallback implements MqttCallback {
 
 	/**	Context						*/
 	private Context 				m_Ctx = null;
-	/**	Notification Manager		*/
-	private NotificationManager 	m_NotificationManager = null;
-	/**	Notification Builder		*/
-	private Builder 				m_Builder = null;
 	/**	Connection					*/
 	private MQTTConnection 			m_Connection = null;
 	
@@ -81,9 +69,7 @@ public class MQTTConnectionCallback implements MqttCallback {
 
 	@Override
 	public void deliveryComplete(IMqttDeliveryToken token) {
-		if(token != null) {
-			notifyDeliveryComplete(token);
-		}
+		//	
 	}
 
 	@Override
@@ -99,17 +85,87 @@ public class MQTTConnectionCallback implements MqttCallback {
 							.equals(MQTTConnection.getClient_ID(m_Ctx))) {
 				return;
 			}
-			if(parent instanceof SyncRequest) {
-				SyncRequest request = (SyncRequest) parent;
+			if(parent instanceof SyncRequest_BC) {
+				SyncRequest_BC request = (SyncRequest_BC) parent;
+				//	Valid if Exists
+				if(existsRequest(request))
+					return;
+				//	Valid Request for same user
+				if(!request.isGroup()
+						&& request.getAD_User_ID() == Env.getAD_User_ID()) {
+					request.setType(MQTTDefaultValues.TYPE_OUT);
+					String newName = getNewRequestName(request);
+					request.setName(newName);
+				}
 				//	Save request
 				requestArrived(request);
 				//	Subscribe to Topic request
 				subscribeToRequest(request);
-			} else if(parent instanceof SyncMessage) {
-				SyncMessage message = (SyncMessage) parent;
-				saveMessageArrived(message);
+			} else if(parent instanceof SyncMessage_BC) {
+				SyncMessage_BC message = (SyncMessage_BC) parent;
+				saveMessageArrived(message, topic);
+			} else if(parent instanceof SyncAcknowledgment) {
+				SyncAcknowledgment acknowledgment = (SyncAcknowledgment) parent;
+				//	Change DB Status
+				BCMessageHandle.getInstance(m_Ctx).setMessageStatus(
+						acknowledgment.getSPS_BC_Message_UUID(), acknowledgment.getStatus());
+				//	Possible Change UI Status
+				BCNotificationHandle.getInstance(m_Ctx)
+					.changeUIMsgStatus(acknowledgment.getSPS_BC_Request_UUID(), 
+						acknowledgment.getSPS_BC_Message_UUID(), acknowledgment.getStatus());
+			} else if(parent instanceof SyncStatus) {
+				SyncStatus status = (SyncStatus) parent;
+				//	Set status
+				BCMessageHandle.getInstance(m_Ctx).setMessageStatus(
+						status.getSPS_BC_Request_UUID(), status.getStatus());
+				//	Change Status
+				BCNotificationHandle.getInstance(m_Ctx)
+					.changeUIConnectionStatus(status);
 			}
 		}
+	}
+	
+	/**
+	 * Get New Request Name from original Request
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param request
+	 * @return
+	 * @return String
+	 */
+	private String getNewRequestName(SyncRequest_BC request) {
+		//	Get Other User
+		int m_LocalUser_ID = Env.getAD_User_ID();
+		int m_AD_User_ID = -1;
+		for(Invited invited : request.getUsers()) {
+    		if(invited.getAD_User_ID() != m_LocalUser_ID) {
+    			m_AD_User_ID = invited.getAD_User_ID();
+    			break;
+    		}
+    	}
+		//	Get Name
+		String m_NewName = DB.getSQLValueString(m_Ctx, 
+				"SELECT u.Name "
+				+ "FROM AD_User u "
+				+ "WHERE u.AD_User_ID = " + m_AD_User_ID);
+		
+		//	Default Return
+		return m_NewName;
+	}
+	
+	/**
+	 * Verify if Exists Request
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param request
+	 * @return
+	 * @return boolean
+	 */
+	private boolean existsRequest(SyncRequest_BC request) {
+		String topic = DB.getSQLValueString(m_Ctx, 
+				"SELECT Topic "
+				+ "FROM SPS_BC_Request "
+				+ "WHERE Topic = ?", request.getTopicName());
+		//	Verify if exists
+		return (topic != null);
 	}
 	
 	/**
@@ -119,17 +175,23 @@ public class MQTTConnectionCallback implements MqttCallback {
 	 * @throws Exception
 	 * @return void
 	 */
-	private void requestArrived(SyncRequest request) throws Exception {
-		SPS_BC_Request.newInRequest(m_Ctx, request);
+	private void requestArrived(SyncRequest_BC request) throws Exception {
+		boolean ok = BCMessageHandle.getInstance(m_Ctx).newInRequest(request);
+		//	Add UI Request
+		if(ok) {
+			BCNotificationHandle.getInstance(m_Ctx)
+				.addRequest(request);
+		}
 	}
 	
 	/**
 	 * For Message
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param message
+	 * @param p_Topic
 	 * @return void
 	 */
-	private void saveMessageArrived(final SyncMessage message) {
+	private void saveMessageArrived(SyncMessage_BC message, String p_Topic) {
 		//	Save File in Folder
 		if(message.getFileName() != null
 				&& message.getFileName().length() > 0
@@ -147,58 +209,29 @@ public class MQTTConnectionCallback implements MqttCallback {
 			}
 		}
 		//	
-		boolean ok = SPS_BC_Message.newInMessage(m_Ctx, message);
+		boolean ok = false;
+		boolean isSameUser = message.getAD_User_ID() == Env.getAD_User_ID();
+		String m_Type = MQTTDefaultValues.TYPE_IN;
+		String m_Status = MQTTDefaultValues.STATUS_CREATED;
+		//	Valid if is same user
+		if(isSameUser) {
+			ok = BCMessageHandle.getInstance(m_Ctx).newOutMessage(message, MQTTDefaultValues.STATUS_DELIVERED);
+			m_Type = MQTTDefaultValues.TYPE_OUT;
+			m_Status = MQTTDefaultValues.STATUS_SENT;
+		} else {
+			ok = BCMessageHandle.getInstance(m_Ctx).newInMessage(message);
+		}
 		//	
 		if(ok) {
-			//	Instance Notification Manager
-			instanceNM(message.getSPS_BC_Request_ID());
+			if(!isSameUser) {
+				//	Send Acknowledgment
+				BCMessageHandle.getInstance(m_Ctx)
+					.sendStatusAcknowledgment(message, p_Topic, MQTTDefaultValues.STATUS_DELIVERED);
+			}
 			//	Notify
-			addMessage(message, MQTTDefaultValues.TYPE_IN);
+			BCNotificationHandle.getInstance(m_Ctx)
+				.addMessage(message, m_Type, m_Status, !isSameUser);
 		}
-	}
-
-	/**
-	 * Send Message Notification
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param message
-	 * @return void
-	 */
-	private void sendNotification(SyncMessage message) {
-		SyncRequest request = SPS_BC_Request.getRequest(m_Ctx, message.getSPS_BC_Request_ID());
-		m_Builder.setContentTitle(request.getName())
-			.setContentText(message.getText())
-			.setSmallIcon(android.R.drawable.stat_notify_chat);
-		//	Show Notification
-		m_NotificationManager.notify(MQTTDefaultValues.NOTIFICATION_ID, m_Builder.build());
-	}
-	
-	/**
-	 * Instance Notification Manager
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return void
-	 */
-	private void instanceNM(int p_SPS_BC_Request_ID) {
-		if(m_NotificationManager == null) {
-			m_NotificationManager = (NotificationManager) m_Ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-		}
-		//	
-		m_Builder = new NotificationCompat.Builder(m_Ctx);
-        Intent intent = new Intent(m_Ctx, V_BChat.class);
-		intent.setAction(Intent.ACTION_MAIN);
-		intent.addCategory(Intent.CATEGORY_LAUNCHER);
-		//	Add Parameter Request
-		intent.putExtra("SPS_BC_Request_ID", p_SPS_BC_Request_ID);
-		//	Set Main Activity
-		PendingIntent m_PendingIntent = PendingIntent.getActivity(m_Ctx, 0, intent, 0);
-		m_Builder.setContentIntent(m_PendingIntent);
-		m_Builder.setAutoCancel(true);
-		//	Set Vibration
-		m_Builder.setVibrate(new long[] {1000, 500, 1000, 500, 1000});
-	    //	Set Light
-		m_Builder.setLights(Color.GRAY, 3000, 3000);
-		//	Set Sound
-		Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-		m_Builder.setSound(alarmSound);
 	}
 	
 	/**
@@ -211,6 +244,7 @@ public class MQTTConnectionCallback implements MqttCallback {
 		m_Connection = MQTTConnection.getInstance(m_Ctx);
 		m_Connection.setStatus(MQTTConnection.DISCONNECTED);
 		LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error Connection Lost", e);
+		MQTTConnection.getInstance(m_Ctx).tryConnect();
 	}
 	
 	/**
@@ -219,11 +253,11 @@ public class MQTTConnectionCallback implements MqttCallback {
 	 * @param request
 	 * @return void
 	 */
-	private void subscribeToRequest(SyncRequest request) {
+	private void subscribeToRequest(SyncRequest_BC request) {
 		try {
 			m_Connection = MQTTConnection.getInstance(m_Ctx);
 			//	Verify Connection
-			if(m_Connection.isConnected()) {
+			if(m_Connection.connect()) {
 				m_Connection.subscribeEx(request.getTopicName(), MQTTConnection.EXACTLY_ONCE_2);
 			}
 		} catch (MqttSecurityException e) {
@@ -231,88 +265,5 @@ public class MQTTConnectionCallback implements MqttCallback {
 		} catch (MqttException e) {
 			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error", e);
 		}
-	}
-	
-	/**
-	 * Notify if delivery is complete
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param token
-	 * @return void
-	 */
-	private void notifyDeliveryComplete(IMqttDeliveryToken token) {
-		try {
-			MqttMessage msg = token.getMessage();
-			SyncParent parent = (SyncParent) SerializerUtil.deserializeObject(msg.getPayload());
-			//	Verify if is local	
-			if(parent instanceof SyncRequest) {
-				;
-			} else if(parent instanceof SyncMessage) {
-				//	Change Status
-				final SyncMessage message = (SyncMessage) parent;
-				SPS_BC_Message.setStatus(m_Ctx, 
-						message.getSPS_BC_Message_ID(), MQTTDefaultValues.STATUS_SENT);
-				//	Change UI Status
-				changeUIStatus(message, MQTTDefaultValues.STATUS_SENT);
-			}
-		} catch (MqttException e) {
-			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error", e);
-		}
-	}
-	
-	/**
-	 * Change Status in List View
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param message
-	 * @param p_Status
-	 * @return void
-	 */
-	private void changeUIStatus(final SyncMessage message, final String p_Status) {
-		FV_Thread.runOnUI(new Runnable() {
-			public void run() {
-				try {
-					if(FV_Thread.isOpened(message.getSPS_BC_Request_ID())) {
-						FV_Thread.changeMsgStatus(message.getSPS_BC_Message_ID(), 
-								p_Status);
-					}
-				} catch (Exception e) { 
-					LogM.log(m_Ctx, MQTTSyncService.class, Level.SEVERE, "Error", e);
-				}
-			}
-		});
-	}
-	
-	/**
-	 * Add Message to List
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param message
-	 * @param p_Type
-	 * @return
-	 * @return boolean
-	 */
-	public void addMessage(final SyncMessage message, final String p_Type) {
-		FV_Thread.runOnUI(new Runnable() {
-			public void run() {
-				try {
-					if(message != null
-							&& FV_Thread.isOpened(message.getSPS_BC_Request_ID())) {
-						FV_Thread.addMsg(new DisplayBChatThreadItem(message.getSPS_BC_Message_ID(), 
-								message.getText(), message.getSPS_BC_Request_ID(), 
-								message.getAD_User_ID(), message.getUserName(), 
-								p_Type, 
-								MQTTDefaultValues.STATUS_CREATED, 
-								new Date(System.currentTimeMillis()), 
-								message.getFileName(), 
-								message.getAttachment()));
-						//	Seek To Last
-						FV_Thread.seekToLastMsg();
-					} else {
-						sendNotification(message);
-					}
-				} catch (Exception e) { 
-					LogM.log(Env.getCtx(), MQTTSyncService.class, Level.SEVERE, "Error", e);
-				}
-			}
-		});
-	}
-	
+	}	
 }

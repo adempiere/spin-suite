@@ -15,6 +15,7 @@
  *************************************************************************************/
 package org.spinsuite.login;
 
+import java.util.Date;
 import java.util.List;
 
 import org.spinsuite.base.DB;
@@ -69,8 +70,6 @@ public class Login extends TV_Base implements I_Login {
 	private Activity			v_activity		= null;
 	/**	Sync					*/
 	private T_Login_Init		m_LoginInit;
-	/**	Enable					*/
-	//private boolean				m_Enabled		= true;
 	/** Notification Manager	*/
 	private NotificationManager m_NFManager 	= null;
 	/** Max Value Progress Bar	*/
@@ -125,6 +124,9 @@ public class Login extends TV_Base implements I_Login {
 						Intent service = new Intent(this, MQTTSyncService.class);
 						startService(service);
 					}
+//					MQTTConnection.getInstance(v_activity).connectInThread();
+					//	Set Login Date
+					Env.loginDate(v_activity, new Date());
 					//	Start Activity
 					Intent intent = new Intent(this, LV_Menu.class);
 					startActivity(intent);
@@ -370,6 +372,11 @@ public class Login extends TV_Base implements I_Login {
 					m_LoadType = ROLE_ACCESS;
 					new LoadAccessTask().execute();
 				} else {
+					//	Start Service
+					if(!MQTTSyncService.isRunning()) {
+						Intent service = new Intent(this, MQTTSyncService.class);
+						startService(service);
+					}
 					//	Start Activity
 					Intent intent = new Intent(this, LV_Menu.class);
 					startActivity(intent);

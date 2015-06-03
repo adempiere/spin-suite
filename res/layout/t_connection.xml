@@ -102,6 +102,18 @@
     	    android:layout_height="wrap_content"
     	    android:inputType="numberDecimal" >
         </EditText>
+        <!-- Keep Alive Inverval -->
+    	<TextView
+        	android:id="@+id/tv_MQTT_KeepAliveInverval"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/MQTTKeepAliveInverval" />
+    	<EditText
+    	    android:id="@+id/et_MQTT_KeepAliveInverval"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:inputType="numberDecimal" >
+        </EditText>
         <!-- Automatic MQTT Service -->
     	<CheckBox
     	    android:id="@+id/ch_MQTT_AutomaticService"

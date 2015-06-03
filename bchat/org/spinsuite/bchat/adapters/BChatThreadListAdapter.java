@@ -15,13 +15,19 @@
  *************************************************************************************/
 package org.spinsuite.bchat.adapters;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.util.DisplayBChatThreadListItem;
+import org.spinsuite.util.AttachmentHandler;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.ImageCacheLru;
 
+import android.app.ActivityManager;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +58,11 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 		this.id_View = R.layout.i_bchat_thread_list;
 		this.data = data;
 		m_SelectedItems = new SparseBooleanArray();
+		m_DirectoryApp = Env.getBC_IMG_DirectoryPathName(ctx) + File.separator;
+		int memClass = ((ActivityManager)ctx.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
+		int maxSize = 1024 * 1024 * memClass / 8;
+		m_ImageCache = new ImageCacheLru(maxSize);
+		m_ContactProfileImgMaxSize = ctx.getResources().getDimensionPixelSize(R.dimen.bc_threadlist_contact_profile_img_max_size);
 	}
 
 	/**	Context						*/
@@ -64,8 +75,12 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 	private int 									id_View;
 	/**	Slected Items IDs			*/
 	private SparseBooleanArray 						m_SelectedItems;
-	/**	Max Size					*/
-	private static final int						MAX_SIZE = 100;
+	/**	Directory by Default		*/
+	private String									m_DirectoryApp = null;
+	/**	Images Cache				*/
+	private ImageCacheLru							m_ImageCache = null;
+	/**	Contact Profile Image Size	*/
+	private int 									m_ContactProfileImgMaxSize = 0;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -76,17 +91,18 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 		}
 		
 		DisplayBChatThreadListItem diti = data.get(position);
-		
+		//	Image Key
+		String imageKey = m_DirectoryApp + diti.getLastFileName();
 		//	Set Name
 		TextView tv_Name = (TextView)item.findViewById(R.id.tv_Name);
-		tv_Name.setText(diti.getValue());
+		tv_Name.setText(diti.getName());
 		
 		//	Set Description
 		TextView tv_Description = (TextView)item.findViewById(R.id.tv_Conversation);
-		tv_Description.setText(diti.getDescription());
+		tv_Description.setText(diti.getLastMsg());
 		
 		ImageView img_Item = (ImageView)item.findViewById(R.id.img_Contact);
-		img_Item.setLayoutParams(new LayoutParams(MAX_SIZE, MAX_SIZE));
+		img_Item.setLayoutParams(new LayoutParams(m_ContactProfileImgMaxSize, m_ContactProfileImgMaxSize));
 		//	Set Image
 		if(diti.getImage() != null) {
 			img_Item.setImageBitmap(diti.getImage());
@@ -96,9 +112,29 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 		//	Set Time
 		TextView tv_Time = (TextView)item.findViewById(R.id.tv_Time);
 		tv_Time.setText(diti.getTimeAsString());
+		//	For Image
+		if(diti.getLastFileName() != null
+				&& diti.getLastFileName().length() > 0) {
+			//	Set flag
+			Bitmap bmimage = m_ImageCache.get(imageKey);
+			if(bmimage == null) {
+				bmimage = AttachmentHandler.getBitmapFromFile(imageKey, m_ContactProfileImgMaxSize, m_ContactProfileImgMaxSize);
+				//	Re-Check
+				if(bmimage != null) {
+					m_ImageCache.put(imageKey, bmimage);
+					tv_Description.setBackgroundDrawable(new BitmapDrawable(ctx.getResources(), bmimage));
+				} else {
+					tv_Description.setBackgroundDrawable(null);
+				}
+			} else {
+				tv_Description.setBackgroundDrawable(new BitmapDrawable(ctx.getResources(), bmimage));
+			}
+		} else {
+			tv_Description.setBackgroundDrawable(null);
+		}
 		//	Set Status
-		TextView tv_Status = (TextView)item.findViewById(R.id.tv_Status);
-		tv_Status.setText(diti.getStatus());
+//		TextView tv_Status = (TextView)item.findViewById(R.id.tv_Status);
+//		tv_Status.setText(diti.getName());
 		//	Return
 		return item;
 	}
@@ -147,11 +183,11 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 	            	//	new Filter
 	            	ArrayList<DisplayBChatThreadListItem> filteredResult = new ArrayList<DisplayBChatThreadListItem>();
 	                for(DisplayBChatThreadListItem item : originalData) {
-	                    if((item.getValue() != null 
-	                    		&& item.getValue().toLowerCase(Env.getLocate())
+	                    if((item.getName() != null 
+	                    		&& item.getName().toLowerCase(Env.getLocate())
 	                    					.contains(constraint.toString().toLowerCase(Env.getLocate())))
-	                    	|| (item.getDescription() != null 
-		                    		&& item.getDescription().toLowerCase(Env.getLocate())
+	                    	|| (item.getLastMsg() != null 
+		                    		&& item.getLastMsg().toLowerCase(Env.getLocate())
                 					.contains(constraint.toString().toLowerCase(Env.getLocate())))) {
 	                    	filteredResult.add(item);
 	                    }

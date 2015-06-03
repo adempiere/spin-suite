@@ -21,16 +21,19 @@ import java.util.Date;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.adapters.BChatThreadListAdapter;
-import org.spinsuite.bchat.model.SPS_BC_Request;
+import org.spinsuite.bchat.util.BCMessageHandle;
 import org.spinsuite.bchat.util.DisplayBChatThreadListItem;
 import org.spinsuite.interfaces.I_BC_FragmentSelect;
 import org.spinsuite.interfaces.I_FragmentSelect;
+import org.spinsuite.sync.content.SyncRequest_BC;
 import org.spinsuite.util.Env;
 
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SearchViewCompat;
@@ -75,11 +78,21 @@ public class FV_ThreadIndex extends ListFragment
     }
     
     /**	Call Back					*/
-    private I_BC_FragmentSelect			m_Callback 	= null;
+    private I_BC_FragmentSelect				m_Callback 	= null;
     /**	Adapter						*/
-    private BChatThreadListAdapter		m_Adapter 	= null;
+    private static BChatThreadListAdapter	m_Adapter 	= null;
     /**	Context						*/
-	private Context						m_ctx 		= null;
+	private Context							m_ctx 		= null;
+	/**	Handler						*/
+	public static Handler 					UIHandler;
+	
+	static {
+        UIHandler = new Handler(Looper.getMainLooper());
+    }
+
+    public static void runOnUI(Runnable runnable) {
+        UIHandler.post(runnable); 
+    }
     
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -103,20 +116,20 @@ public class FV_ThreadIndex extends ListFragment
 				switch (item.getItemId()) {
 				case R.id.action_delete:
 					SparseBooleanArray selectedItems = m_Adapter.getSelectedItems();
-					int[] ids = new int[selectedItems.size()];
+					String[] ids = new String[selectedItems.size()];
 					for (int i = (selectedItems.size() - 1); i >= 0; i--) {
 						if (selectedItems.valueAt(i)) {
 							DisplayBChatThreadListItem selectedItem = m_Adapter
 									.getItem(selectedItems.keyAt(i));
 							//	Add Value
-							ids[i] = selectedItem.getRecord_ID();
+							ids[i] = selectedItem.getSPS_BC_Request_UUID();
 							//	Remove Item
 							m_Adapter.remove(selectedItem);
 						}
 					}
 					//	Delete Records in DB
 					if(ids.length > 0) {
-						SPS_BC_Request.deleteRequest(m_ctx, ids);
+						BCMessageHandle.getInstance(m_ctx).deleteRequest(ids);
 					}
 					mode.finish();
 					return true;
@@ -151,6 +164,31 @@ public class FV_ThreadIndex extends ListFragment
     }
     
     /**
+     * Add Request
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param request
+     * @return void
+     */
+    public static void addRequest(SyncRequest_BC request) {
+    	//	Valid Adapter
+    	if(m_Adapter == null)
+    		return;
+    	//	
+    	DisplayBChatThreadListItem requestItem = new DisplayBChatThreadListItem(
+    			request.getSPS_BC_Request_UUID(), 
+    			request.getName(), 
+    			request.getType(), 
+    			request.getTopicName(), 
+    			request.getLastMsg(), 
+    			request.getLastFileName(), 
+    			new Date(System.currentTimeMillis()), 
+    			null);
+    	//	Add
+    	m_Adapter.add(requestItem);
+    	m_Adapter.notifyDataSetChanged();
+    }
+    
+    /**
      * Load List
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/04/2014, 21:11:36
      * @return
@@ -160,11 +198,13 @@ public class FV_ThreadIndex extends ListFragment
     	//	Create Connection
     	DB conn = DB.loadConnection(getActivity(), DB.READ_ONLY);
     	conn.compileQuery("SELECT "
-    			+ "rq.SPS_BC_Request_ID, "
+    			+ "rq.SPS_BC_Request_UUID, "
     			+ "COALESCE(rq.Name, us.Name) Name, "
+    			+ "rq.Topic, "
+    			+ "rq.Type, "
     			+ "rq.LastMsg, "
-    			+ "(strftime('%s', rq.Updated)*1000) Updated, "
-    			+ "rq.Type "
+    			+ "rq.LastFileName, "
+    			+ "(strftime('%s', rq.Updated)*1000) Updated "
     			+ "FROM SPS_BC_Request rq "
     			+ "INNER JOIN AD_User us ON(us.AD_User_ID = rq.AD_User_ID) "
     			+ "WHERE rq.IsActive = 'Y' "
@@ -184,12 +224,14 @@ public class FV_ThreadIndex extends ListFragment
     		//	Loop
     		do {
     			data.add(new DisplayBChatThreadListItem(
-    					rs.getInt(col++), 
+    					rs.getString(col++), 
+    					rs.getString(col++),
     					rs.getString(col++), 
     					rs.getString(col++), 
-    					null, 
-    					new Date(rs.getLong(col++)), 
-    					rs.getString(col++)));
+    					rs.getString(col++), 
+    					rs.getString(col++), 
+    					new Date(rs.getLong(col++)),
+    					null));
     			//	Set Column
     			col = 0;
     		} while(rs.moveToNext());
@@ -232,14 +274,14 @@ public class FV_ThreadIndex extends ListFragment
     public void onListItemClick(ListView l, View v, int position, long id) {
     	//	
     	DisplayBChatThreadListItem item = m_Adapter.getItem(position);
-    	onItemSelected(item.getRecord_ID());
+    	onItemSelected(item.getSPS_BC_Request_UUID());
     	//	Change on List View
     	//getListView().setItemChecked(position, true);
     }
 
     @Override
-    public void onItemSelected(int p_Record_ID) {
-    	m_Callback.onItemSelected(p_Record_ID, null, V_BChat.TYPE_SELECT_CONVERSATION);
+    public void onItemSelected(String p_SPS_BC_Request_UUID) {
+    	m_Callback.onItemSelected(0, p_SPS_BC_Request_UUID, V_BChat.TYPE_SELECT_CONVERSATION);
     }
     
     @Override

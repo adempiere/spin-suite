@@ -36,6 +36,7 @@
 	<attr name="ic_ab_bchat" format="reference"/>
 	<attr name="ic_ab_bchat_new_group" format="reference"/>
 	<attr name="ic_ab_attach_photo" format="reference"/>
+	<attr name="ic_ab_copy" format="reference"/>
 	<!-- Drawer -->
 	<attr name="ic_dr_share" format="reference"/>
 	<attr name="ic_dr_pdf" format="reference"/>
@@ -52,6 +53,7 @@
 	<attr name="ic_bc_bubble_local" format="reference"/>
 	<attr name="ic_bc_bubble_local_sent" format="reference"/>
 	<attr name="ic_bc_bubble_local_delivered" format="reference"/>
+	<attr name="ic_bc_bubble_local_readed" format="reference"/>
 	<attr name="ic_bc_bubble_remote" format="reference"/>
 	<attr name="ic_bc_bubble_local_selected" format="reference"/>
 	<attr name="ic_bc_bubble_remote_selected" format="reference"/>

@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.spinsuite.base.R;
+import org.spinsuite.bchat.util.BCMessageHandle;
 import org.spinsuite.bchat.util.BC_ThreadHolder;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
@@ -69,7 +70,20 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		int memClass = ((ActivityManager)ctx.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
 		int maxSize = 1024 * 1024 * memClass / 8;
 		m_ImageCache = new ImageCacheLru(maxSize);
-		m_CurrentWidth = ctx.getResources().getDisplayMetrics().widthPixels;
+		//	Get Image Size
+		loadDefaultValues();
+	}
+
+	/**
+	 * Load Defaul Values for Adapter
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void loadDefaultValues() {
+		//	Get Image Size
+		m_ImageWidth = ctx.getResources().getDimensionPixelSize(R.dimen.bc_thread_imageView_layout_width);
+		m_ImageHeight = ctx.getResources().getDimensionPixelSize(R.dimen.bc_thread_imageView_layout_height);
+		m_TextViewMaxWidth = ctx.getResources().getDimensionPixelSize(R.dimen.bc_thread_textView_thread_max_size);
 	}
 
 	/**	Context						*/
@@ -90,11 +104,11 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 	private String									m_DirectoryApp = null;
 	/**	Images Cache				*/
 	private ImageCacheLru							m_ImageCache = null;
-	/**	Current Width				*/
-	private int 									m_CurrentWidth = 0;
 	/**	Default Image Size			*/
-	private final int								IMG_W = 600;
-	private final int								IMG_H = 600;
+	private int										m_ImageWidth = 0;
+	private int										m_ImageHeight = 0;
+	/**	Max Text View Size			*/
+	private int										m_TextViewMaxWidth = 0;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -126,7 +140,8 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 				(LinearLayout.LayoutParams) msgHolder.ll_Message.getLayoutParams();
 
 		//	Set Conversation
-		msgHolder.tv_Conversation.setText(diti.getValue());
+		msgHolder.tv_Conversation.setText(diti.getText());
+
 		//	Set Time
 		msgHolder.tv_Time.setText(diti.getTimeAsString());
 		msgHolder.tv_UserName.setText(diti.getUserName());
@@ -142,7 +157,7 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 			isImage = true;
 			Bitmap bmimage = m_ImageCache.get(imageKey);
 			if(bmimage == null) {
-				bmimage = AttachmentHandler.getBitmapFromFile(imageKey, IMG_W, IMG_H);
+				bmimage = AttachmentHandler.getBitmapFromFile(imageKey, m_ImageWidth, m_ImageHeight);
 				//	Re-Check
 				if(bmimage != null) {
 					m_ImageCache.put(imageKey, bmimage);
@@ -193,6 +208,8 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 				id_att = R.attr.ic_bc_bubble_local_sent;
 			} else if(diti.getStatus().equals(MQTTDefaultValues.STATUS_DELIVERED)) {
 				id_att = R.attr.ic_bc_bubble_local_delivered;
+			} else if(diti.getStatus().equals(MQTTDefaultValues.STATUS_READED)) {
+				id_att = R.attr.ic_bc_bubble_local_readed;
 			}
 			//	
 			if(m_SelectedItems.get(position)) {
@@ -204,19 +221,31 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 		//	
 		msgHolder.ll_Message.setBackgroundResource(Env.getResourceID(ctx, id_att));
 		//	Change Size
-		if(m_CurrentWidth < desiredWidth) {
-			desiredWidth = LayoutParams.WRAP_CONTENT;
+		if(m_TextViewMaxWidth < desiredWidth) {
+			desiredWidth = m_TextViewMaxWidth;
 		}
 		//	Change Width
 		if(isImage) {
-			params.width = IMG_W;
-			params.height = IMG_H;
+			params.width = m_ImageWidth;
+			params.height = m_ImageHeight;
 		} else {
 			params.width = desiredWidth;
 			params.height = LayoutParams.WRAP_CONTENT;
 		}
 		//	Change Gravity
 		params.gravity = gravity;
+		//	Send Status
+		if(diti.getType().equals(MQTTDefaultValues.TYPE_IN)
+				&& !diti.getStatus().equals(MQTTDefaultValues.STATUS_READED)
+				&& !diti.getStatus().equals(MQTTDefaultValues.STATUS_FN_READED)) {
+			BCMessageHandle.getInstance(ctx).sendStatusAcknowledgment(
+					diti.getSPS_BC_Request_UUID(), diti.getSPS_BC_Message_UUID(), 
+					null, MQTTDefaultValues.STATUS_READED);
+			//	Change Status for Data
+			diti.setStatus(MQTTDefaultValues.STATUS_FN_READED);
+			//	Change Data
+			data.set(position, diti);
+		}
 		//	Return
 		return view;
 	}
@@ -265,8 +294,8 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 	            	//	new Filter
 	            	ArrayList<DisplayBChatThreadItem> filteredResult = new ArrayList<DisplayBChatThreadItem>();
 	                for(DisplayBChatThreadItem item : originalData) {
-	                    if((item.getValue() != null 
-	                    		&& item.getValue().toLowerCase(Env.getLocate())
+	                    if((item.getText() != null 
+	                    		&& item.getText().toLowerCase(Env.getLocate())
 	                    					.contains(constraint.toString().toLowerCase(Env.getLocate())))
 	                    	|| (item.getUserName() != null 
 		                    		&& item.getUserName().toLowerCase(Env.getLocate())
@@ -357,14 +386,16 @@ public class BChatThreadAdapter extends ArrayAdapter<DisplayBChatThreadItem> {
 	/**
 	 * Change a Message
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_SPS_BC_Message_ID
+	 * @param p_SPS_BC_Message_UUID
 	 * @param p_Status
 	 * @return void
 	 */
-	public void changeMsgStatus(int p_SPS_BC_Message_ID, String p_Status) {
+	public void changeMsgStatus(String p_SPS_BC_Message_UUID, String p_Status) {
 		for(int i = 0; i < data.size(); i++) {
 			DisplayBChatThreadItem item = data.get(i);
-            if(item.getRecord_ID() == p_SPS_BC_Message_ID) {
+            if(item.getSPS_BC_Message_UUID() != null
+            		&& p_SPS_BC_Message_UUID != null
+            		&& item.getSPS_BC_Message_UUID().equals(p_SPS_BC_Message_UUID)) {
             	item.setStatus(p_Status);
             	data.set(i, item);
             	//	Break

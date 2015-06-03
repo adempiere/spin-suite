@@ -21,8 +21,10 @@ import java.util.logging.Level;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.adapters.BChatContactAdapter;
+import org.spinsuite.bchat.util.BCMessageHandle;
 import org.spinsuite.bchat.util.DisplayBChatContactItem;
 import org.spinsuite.interfaces.I_BC_FragmentSelect;
+import org.spinsuite.sync.content.SyncStatus;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
@@ -82,17 +84,14 @@ public class V_BChat extends FragmentActivity
 	/**	Is Index Fragment			*/
 	private boolean								m_IsDetailAdded	= false;
 	/**	Request						*/
-	private int									m_SPS_BC_Request_ID = 0;
+	private String								m_SPS_BC_Request_UUID = null;
     
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-    	//	
-    	Bundle bundle = getIntent().getExtras();
-		if(bundle != null) {
-			m_SPS_BC_Request_ID = bundle.getInt("SPS_BC_Request_ID");
-		}
+    	//	New Intent
+    	onNewIntent(getIntent());
     	//	Add Support to Progress Bar in Action Bar
     	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
     	//	
@@ -113,6 +112,14 @@ public class V_BChat extends FragmentActivity
     	//	
     	loadFragment();
     	//	
+    }
+    
+    @Override
+    protected void onNewIntent(Intent intent) {
+    	Bundle bundle = getIntent().getExtras();
+		if(bundle != null) {
+			m_SPS_BC_Request_UUID = bundle.getString("SPS_BC_Request_UUID");
+		}
     }
     
     /**
@@ -151,7 +158,7 @@ public class V_BChat extends FragmentActivity
 	}
     
 	@Override
-	public void onItemSelected(int p_Record_ID, String p_Name, int p_Type) {
+	public void onItemSelected(int p_AD_User_ID, String p_Name, int p_Type) {
 	       //	Instance if not exists
         instanceDetailFragment();
         //	Transaction
@@ -175,9 +182,9 @@ public class V_BChat extends FragmentActivity
         //	
         if(m_ThreadFragment != null) {
         	if(p_Type == TYPE_REQUEST_USER) {
-        		m_ThreadFragment.requestUser(p_Record_ID, p_Name);
+        		m_ThreadFragment.requestUser(p_AD_User_ID, p_Name);
         	} else if(p_Type == TYPE_SELECT_CONVERSATION) {
-        		m_ThreadFragment.selectConversation(p_Record_ID);
+        		m_ThreadFragment.selectConversation(p_Name);
         	}
         }
 	} 
@@ -354,6 +361,13 @@ public class V_BChat extends FragmentActivity
     	return ok;
     }
     
+    @Override
+    public void onDestroy() {
+    	super.onDestroy();
+		//	Send New Status
+		BCMessageHandle.getInstance(this)
+			.sendStatus(null, SyncStatus.STATUS_DISCONNECTED);
+    }
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -391,8 +405,13 @@ public class V_BChat extends FragmentActivity
     		noBack = backToFragment();
 		}
     	//	No Back
-    	if(!noBack)
+    	if(!noBack) {
     		return super.onKeyDown(keyCode, event);
+    	} else {
+    		//	Send New Status
+    		BCMessageHandle.getInstance(this)
+    			.sendStatus(null, SyncStatus.STATUS_CONNECTED);
+    	}
 		//	Default Return
 		return noBack;
 	}
@@ -432,21 +451,30 @@ public class V_BChat extends FragmentActivity
     @Override
     protected void onResume() {
     	super.onResume();
-    	if(m_SPS_BC_Request_ID != 0) {
-    		onItemSelected(m_SPS_BC_Request_ID, null, TYPE_SELECT_CONVERSATION);
-    		m_SPS_BC_Request_ID = 0;
+    	if(m_SPS_BC_Request_UUID != null) {
+    		onItemSelected(0, m_SPS_BC_Request_UUID, TYPE_SELECT_CONVERSATION);
+    		m_SPS_BC_Request_UUID = null;
     	}
+    }
+    
+    @Override
+    protected void onStart() {
+    	super.onStart();
+		//	Send New Status
+		BCMessageHandle.getInstance(this)
+			.sendStatus(null, SyncStatus.STATUS_CONNECTED);
     }
     
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     	//	For Photo
     	if(requestCode == FV_Thread.ACTION_TAKE_PHOTO
-    			|| requestCode == FV_Thread.ACTION_TAKE_FILE) {
+    			|| requestCode == FV_Thread.ACTION_PICK_IMAGE
+    			|| requestCode == FV_Thread.ACTION_PICK_FILE) {
     		m_ThreadFragment.onActivityResult(requestCode, resultCode, data);
     	} else if (resultCode == Activity.RESULT_OK) {
 	    	if(data != null) {
-	    		m_SPS_BC_Request_ID = data.getIntExtra("SPS_BC_Request_ID", 0);
+	    		m_SPS_BC_Request_UUID = data.getStringExtra("SPS_BC_Request_UUID");
 	    	}
     	}
     }

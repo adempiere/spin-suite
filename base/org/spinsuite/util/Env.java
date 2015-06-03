@@ -21,6 +21,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
@@ -72,6 +73,38 @@ public final class Env {
 		}
 		//	Default Return
 		return m_Instance;
+	}
+	
+	/**
+	 * Set Login Date and Valid date
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param date
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean loginDate(Context ctx, Date date) {
+		Calendar currentDate = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		//	Format Date yyyy-MM-dd hh:mm:ss
+		Env.setContext("#Date", sdf.format(date.getTime()));
+		
+		sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		String curDate = sdf.format(currentDate.getTime());
+		String ctxDate = sdf.format(date.getTime());
+		
+		//	Format Date yyyy-MM-dd
+		
+		Env.setContext("#DateP", ctxDate);
+		
+		if(!(curDate.equals(ctxDate))){
+			Env.setContext("#IsCurrentDate", "N");
+			return false;
+		}
+		//	Default
+		Env.setContext("#IsCurrentDate", "Y");
+		return true;
 	}
 	
 	/**
@@ -290,12 +323,14 @@ public final class Env {
 	 * Load Role Access from Current Role
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/09/2014, 18:55:17
 	 * @param ctx
+	 * @param isForce
 	 * @return void
 	 */
-	public static void loadRoleAccess(Context ctx) {
+	public static void loadRoleAccess(Context ctx, boolean isForce) {
 		int m_AD_Role_ID = getAD_Role_ID(ctx);
-		if(m_AD_Role_ID == 0
-				|| isAccessLoaded(ctx, m_AD_Role_ID))
+		if(!isForce
+				&& (m_AD_Role_ID == 0
+					|| isAccessLoaded(ctx, m_AD_Role_ID)))
 			return;
 		//	Do it
 		loadRoleAccess(ctx, m_AD_Role_ID);
@@ -309,7 +344,7 @@ public final class Env {
 	 * @return void
 	 */
 	public static void loadRoleAccess() {
-		loadRoleAccess(getCtx());
+		loadRoleAccess(getCtx(), false);
 	}
 	
     /**
@@ -3326,6 +3361,24 @@ public final class Env {
 		if (value == null)
 			return false;
 		return value.equals("Y");
+	}
+	
+	/**
+	 * Set Text to Clipboard
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_Text
+	 * @return void
+	 */
+	public static void setClipboardText(Context p_Ctx, String p_Text) {
+	    if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+	        android.text.ClipboardManager clipB = (android.text.ClipboardManager) p_Ctx.getSystemService(Context.CLIPBOARD_SERVICE);
+	        clipB.setText(p_Text);
+	    } else {
+	        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) p_Ctx.getSystemService(Context.CLIPBOARD_SERVICE);
+	        android.content.ClipData clip = android.content.ClipData.newPlainText("", p_Text);
+	        clipboard.setPrimaryClip(clip);
+	    }
 	}
 	
 	/**	Context					*/

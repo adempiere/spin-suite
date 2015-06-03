@@ -40,6 +40,7 @@
 	<string name="SSLFile">SSL File</string>
 	<string name="MQTTHost">Host (MQTT)</string>
 	<string name="MQTTService">Service (MQTT)</string>
+	<string name="MQTTKeepAliveInverval">Keep Alive Interval (MQTT)</string>
 	
 	<string name="tt_TestConn">Test Connection</string>
 	<string name="tt_Conn">Connection</string>

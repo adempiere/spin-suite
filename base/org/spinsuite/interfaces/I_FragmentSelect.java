@@ -24,8 +24,8 @@ public interface I_FragmentSelect {
 	/**
 	 * Method for selection
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_Record_ID
+	 * @param p_TopicName
 	 * @return void
 	 */
-	public void onItemSelected(int p_Record_ID);
+	public void onItemSelected(String p_TopicName);
 }

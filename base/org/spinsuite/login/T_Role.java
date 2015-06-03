@@ -15,7 +15,6 @@
  *************************************************************************************/
 package org.spinsuite.login;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import org.spinsuite.base.R;
@@ -174,31 +173,12 @@ public class T_Role extends Fragment implements I_Login {
 					Env.setContext("#AD_Org_Name", ds_Org.getValue());
 					Env.setM_Warehouse_ID(warehouse_ID);
 					//	Date
-					Calendar currentDate = Calendar.getInstance();
 					Calendar date = Calendar.getInstance();
 					date.set(Calendar.YEAR, dp_Date.getYear());
 					date.set(Calendar.MONTH, dp_Date.getMonth());
 					date.set(Calendar.DAY_OF_MONTH, dp_Date.getDayOfMonth());
-					//Locale loc = Locale.getDefault();
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-					
-					//Msg.toastMsg(this, " -- " + date.getTime());
-
-					//	Format Date yyyy-MM-dd hh:mm:ss
-					
-					Env.setContext("#Date", sdf.format(date.getTime()));
-					
-					sdf = new SimpleDateFormat("yyyy-MM-dd");
-					
-					String curDate = sdf.format(currentDate.getTime());
-					String ctxDate = sdf.format(date.getTime());
-					
-					//	Format Date yyyy-MM-dd
-					
-					Env.setContext("#DateP", ctxDate);
-					
-					if(!(curDate.equals(ctxDate))){
-						Env.setContext("#IsCurrentDate", "N");
+					//	
+					if(!Env.loginDate(getActivity(), date.getTime())) {
 						Msg.toastMsg(ctx, getResources().getString(R.string.msg_LoginOffDate) + 
 								"\n" + getResources().getString(R.string.msg_WritePermissionsBlocked));
 						//	

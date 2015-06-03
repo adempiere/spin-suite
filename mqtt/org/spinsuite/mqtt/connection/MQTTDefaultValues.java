@@ -22,7 +22,9 @@ package org.spinsuite.mqtt.connection;
 public class MQTTDefaultValues {
 	
 	/**	Initial Load Topic								*/
-	private static final String INITIAL_LOAD_TOPIC 			= "Public-Initial-Load";
+	private static final String INITIAL_LOAD_TOPIC 			= "Public-InitialLoad";
+	/**	Initial Load Topic								*/
+	private static final String STATUS_TOPIC 				= "Public-UserStatus";
 	/**	Default Prefix for ADempiere Synchronization	*/
 	private static final String PRE_SYNC_TOPIC 				= "AD-Synchronization-";
 	/**	Default Prefix for Request						*/
@@ -34,11 +36,13 @@ public class MQTTDefaultValues {
 	/**	Password										*/
 	public static final String 	DEFAULT_MQTT_PASS 			= "";
 	/**	Keep Alive										*/
-	public static final int 	DEFAULT_MQTT_KEEP_ALIVE_INT = 60;
+	public static final int 	DEFAULT_MQTT_KEEP_ALIVE_INT = 30;
 	/**	Port											*/
 	public static final int 	DEFAULT_MQTT_PORT 			= 1883;
 	/**	Alarm Time										*/
 	public static final long 	DEFAULT_MQTT_ALARM_TIME 	= 1000 * 60;
+	/**	Alarm Time										*/
+	public static final long 	DEFAULT_MQTT_TIME_RECONNECT = 1000 * 6;
 	/**	Notification ID									*/
 	public static final int		NOTIFICATION_ID 			= 777;
 	
@@ -54,6 +58,10 @@ public class MQTTDefaultValues {
 	public static final String STATUS_SENT 			= "S";
 	public static final String STATUS_REJECT 		= "J";
 	public static final String STATUS_SENDING 		= "G";
+	/**	For Failed On Delivery							*/
+	public static final String STATUS_FN_DELIVERED 	= "I";
+	public static final String STATUS_FN_READED 	= "E";
+	
 	/**
 	 * Get Synchronization Topic
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
@@ -84,6 +92,16 @@ public class MQTTDefaultValues {
 	 */
 	public static String getInitialLoadTopic() {
 		return INITIAL_LOAD_TOPIC;
+	}
+	
+	/**
+	 * Get User Status
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return String
+	 */
+	public static String getUserStatusTopic() {
+		return STATUS_TOPIC;
 	}
 	
 	/**

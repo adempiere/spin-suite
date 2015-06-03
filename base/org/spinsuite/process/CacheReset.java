@@ -32,9 +32,9 @@ public class CacheReset extends StdProcess {
 	@Override
 	protected String doIt() throws Exception {
 		//	Delete
-		int deleted = Env.cacheReset();
+		int deleted = Env.cacheReset(getCtx());
 		//	Load Role Access
-		Env.loadRoleAccess();
+		Env.loadRoleAccess(getCtx(), true);
 		//	Default
 		return "@Deleted@ = " + deleted;
 	}

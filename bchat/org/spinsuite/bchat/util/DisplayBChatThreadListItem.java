@@ -18,64 +18,82 @@ package org.spinsuite.bchat.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 
 import android.graphics.Bitmap;
-import android.os.Parcel;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
-public class DisplayBChatThreadListItem extends DisplayRecordItem {
-
-	/**
-	 * *** Constructor ***
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 09:42:02
-	 */
-	public DisplayBChatThreadListItem() {
-		super();
-	}
+public class DisplayBChatThreadListItem {
+	
 	
 	/**
-	 * With Image
-	 * *** Constructor ***
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 09:57:36
-	 * @param p_Record_ID
-	 * @param p_Value
-	 * @param p_Description
-	 * @param p_Image
+	 * Full Constructor
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_SPS_BC_Request_UUID
+	 * @param p_Name
+	 * @param p_Type
+	 * @param p_TopicName
+	 * @param p_LastMsg
+	 * @param p_LastFileName
 	 * @param p_Time
-	 * @param p_Status
+	 * @param p_Image
 	 */
-	public DisplayBChatThreadListItem(int p_Record_ID, String p_Value, String p_Description, 
-			Bitmap p_Image, Date p_Time, String p_Status) {
-		super(p_Record_ID, p_Value, null);
-		setImage(p_Image);
-		setDescription(p_Description);
+	public DisplayBChatThreadListItem(String p_SPS_BC_Request_UUID, String p_Name, 
+			String p_Type, String p_TopicName, 
+			String p_LastMsg, String p_LastFileName, 
+			Date p_Time, Bitmap p_Image) {
+		setSPS_BC_Request_UUID(p_SPS_BC_Request_UUID);
+		setName(p_Name);
+		setType(p_Type);
+		setTopicName(p_TopicName);
+		setLastMsg(p_LastMsg);
+		setLastFileName(p_LastFileName);
 		setTime(p_Time);
-		setStatus(p_Status);
-	}
-
-	/**
-	 * *** Constructor ***
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 09:42:02
-	 * @param parcel
-	 */
-	public DisplayBChatThreadListItem(Parcel parcel) {
-		super(parcel);
+		setImage(p_Image);
 	}
 	
-	/**	Image				*/
-	private Bitmap 		m_Image = null;
-	/**	Description			*/
-	private String 		m_Description = null;
+	/**	Request Identifier	*/
+	private String 		m_SPS_BC_Request_UUID 	= null;
+	/**	Name				*/
+	private String		m_Name 					= null;
+	/**	Type				*/
+	private String		m_Type 					= null;
+	/**	Topic				*/
+	private String		m_Topic 				= null;
+	/**	Last Message		*/
+	private String 		m_LastMsg 				= null;
+	/**	Last FileName		*/
+	private String 		m_LastFileName 			= null;
 	/**	Time				*/
-	private Date		m_Time = null;
-	/**	Status				*/
-	private String		m_Status = null;
+	private Date		m_Time 					= null;
+	/**	Image				*/
+	private Bitmap 		m_Image 				= null;
+	
+	
+	/**
+	 * Get Request Identifier
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return String
+	 */
+	public String getSPS_BC_Request_UUID(){
+		return m_SPS_BC_Request_UUID;
+	}
+	
+	/**
+	 * Set Request Identifier
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_SPS_BC_Request_UUID
+	 * @return void
+	 */
+	public void setSPS_BC_Request_UUID(String p_SPS_BC_Request_UUID){
+		this.m_SPS_BC_Request_UUID = p_SPS_BC_Request_UUID;
+	}
+	
 	/**
 	 * Set Image
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 08/05/2014, 09:56:51
@@ -97,23 +115,43 @@ public class DisplayBChatThreadListItem extends DisplayRecordItem {
 	}
 	
 	/**
-	 * Set Image Name
+	 * Set Last Msg
 	 * @author Yamel Senih 28/04/2012, 00:25:17
 	 * @return
 	 * @return String
 	 */
-	public String getDescription(){
-		return m_Description;
+	public String getLastMsg(){
+		return m_LastMsg;
 	}
 	
 	/**
-	 * Set Activity Description
+	 * Set Last Message
 	 * @author Yamel Senih 01/08/2012, 10:04:18
-	 * @param description
+	 * @param p_LastMsg
 	 * @return void
 	 */
-	public void setDescription(String description){
-		this.m_Description = description;
+	public void setLastMsg(String p_LastMsg){
+		this.m_LastMsg = p_LastMsg;
+	}
+	
+	/**
+	 * Get Last File Name
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return String
+	 */
+	public String getLastFileName(){
+		return m_LastFileName;
+	}
+	
+	/**
+	 * Set Last File Name
+	 * @author Yamel Senih 01/08/2012, 10:04:18
+	 * @param p_LastFileName
+	 * @return void
+	 */
+	public void setLastFileName(String p_LastFileName){
+		this.m_LastFileName = p_LastFileName;
 	}
 	
 	/**
@@ -158,8 +196,8 @@ public class DisplayBChatThreadListItem extends DisplayRecordItem {
 	 * @return
 	 * @return String
 	 */
-	public String getStatus() {
-		return m_Status;
+	public String getName() {
+		return m_Name;
 	}
 	
 	/**
@@ -168,7 +206,47 @@ public class DisplayBChatThreadListItem extends DisplayRecordItem {
 	 * @param p_Status
 	 * @return void
 	 */
-	public void setStatus(String p_Status) {
-		m_Status = p_Status;
+	public void setName(String p_Status) {
+		m_Name = p_Status;
+	}
+	
+	/**
+	 * Set Type
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return String
+	 */
+	public String getType() {
+		return m_Type;
+	}
+	
+	/**
+	 * Get Type
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Type
+	 * @return void
+	 */
+	public void setType(String p_Type) {
+		m_Type = p_Type;
+	}
+	
+	/**
+	 * Get Topic
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return String
+	 */
+	public String getTopicName() {
+		return m_Topic;
+	}
+	
+	/**
+	 * Set Topic
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_TopicName
+	 * @return void
+	 */
+	public void setTopicName(String p_TopicName) {
+		m_Topic = p_TopicName;
 	}
 }

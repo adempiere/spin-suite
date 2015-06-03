@@ -94,7 +94,7 @@ public class LoadInitData {
 		Env.setContext(ctx, KEY_POS_TAB, 1);
 		//	Set Value for Sync
 		Env.setContext(ctx, "#InitialLoadSynchronizing", false);
-		MQTTConnection.setIsAutomaticService(ctx, false);
+		MQTTConnection.setIsAutomaticService(ctx, true);
 		MQTTConnection.setNetworkOk(ctx, true);
 	}	
 }

@@ -27,4 +27,16 @@
         android:title="@string/Action_AttachPhoto"
         android:showAsAction="always|collapseActionView"
         android:icon="?attr/ic_ab_attach_photo" />
+    
+    <item android:id="@+id/action_more"
+		android:title="@string/None"
+	    android:showAsAction="always|collapseActionView"
+	    android:icon="?attr/ic_ab_overflow">
+		<menu>
+            <item android:id="@+id/action_attach_image"
+                  android:title="@string/Action_AttachImage" />
+            <item android:id="@+id/action_attach_file"
+                  android:title="@string/Action_AttachFile" />
+        </menu>    
+	</item>
 </menu>

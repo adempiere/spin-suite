@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 import java.text.DecimalFormat;
 import java.util.logging.Level;
 
@@ -32,6 +33,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
 
 /**
@@ -267,6 +269,12 @@ public class AttachmentHandler {
 		if(p_DestFolder == null) {
 			p_DestFolder = getAttDirectory() + File.separator + getAttachmentPathSnippet();
 		}
+		//	
+		if(fileName == null)
+			fileName = DEFAULT_IMG_NAME;
+		else if(!fileName.contains(JPEG_FILE_SUFFIX))
+			fileName += JPEG_FILE_SUFFIX;
+		//	
 		if(mImage != null) {
 			final File destFolder = new File(p_DestFolder);
 			if(!destFolder.exists()) {
@@ -274,11 +282,6 @@ public class AttachmentHandler {
 					LogM.log(m_ctx, getClass(), Level.SEVERE, "unable to create folder: " + destFolder.getPath());
 				}
 			}
-			//	
-			if(fileName == null)
-				fileName = DEFAULT_IMG_NAME;
-			else if(!fileName.contains(JPEG_FILE_SUFFIX))
-				fileName += JPEG_FILE_SUFFIX;
 			//	
 			final File destFile = new File(p_DestFolder + File.separator + fileName);
 			if(destFile.exists()) {
@@ -302,6 +305,95 @@ public class AttachmentHandler {
     }
 	
 	/**
+	 * Process File
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_FromFileName
+	 * @param p_DestFolder
+	 * @param p_FileName
+	 * @return true
+	 */
+	public boolean processFile(String p_FromFileName, String p_DestFolder, String p_FileName) {
+		if(p_FileName == null
+				|| p_FromFileName == null) {
+			return false;
+		}
+		//	
+		if(p_DestFolder == null) {
+			p_DestFolder = getAttDirectory() + File.separator + getAttachmentPathSnippet();
+		}
+		//	
+		String extension = getExtension(p_FromFileName);
+		//	
+		File destFolder = new File(p_DestFolder);
+		if(!destFolder.exists()) {
+			if(!destFolder.mkdirs()) {
+				LogM.log(m_ctx, getClass(), Level.SEVERE, "unable to create folder: " + destFolder.getPath());
+			}
+		}
+		//	Copy
+		return copyFile(p_FromFileName, p_DestFolder + File.separator + p_FileName + extension);
+	}
+	
+	/**
+	 * Get Extension
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_FileName
+	 * @return
+	 * @return String
+	 */
+	public String getExtension(String p_FileName) {
+		if(p_FileName == null) {
+			return null;
+		}
+		//	Get Extension
+		int i = p_FileName.indexOf('.');
+		String extension = "";
+		if (i >= 0) {
+		    extension = p_FileName.substring(i+1);
+		}
+		//	
+		return extension;
+	}
+	
+	/**
+	 * Copy File
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_FromFileName
+	 * @param p_ToFileName
+	 * @return boolean
+	 */
+	public boolean copyFile(String p_FromFileName, String p_ToFileName) {
+		if(p_FromFileName == null
+				|| p_ToFileName == null) {
+			return false;
+		}
+		//	
+		File fromFile = new File(p_FromFileName);
+		File toFile = new File(p_ToFileName);
+		//	
+		if(toFile.exists()) {
+			if(!toFile.delete()) {
+				toFile.deleteOnExit();
+			}
+		}
+		//	Write File
+		try {
+			FileInputStream inStream = new FileInputStream(fromFile);
+		    FileOutputStream outStream = new FileOutputStream(toFile);
+		    FileChannel inChannel = inStream.getChannel();
+		    FileChannel outChannel = outStream.getChannel();
+		    inChannel.transferTo(0, inChannel.size(), outChannel);
+		    inStream.close();
+		    outStream.close();
+		    return true;
+		} catch (Exception e) {
+			LogM.log(m_ctx, getClass(), Level.SEVERE, "unable to create File: " + toFile.getPath(), e);
+		}
+		//	Default
+		return false;
+	}
+	
+	/**
 	 * Get Bitmap from File
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 11/11/2014, 14:24:16
 	 * @param fileName
@@ -318,13 +410,24 @@ public class AttachmentHandler {
 		if(height <= 0)
 			height = 1;
 		// Get the size of the image
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
+		Options options = new Options();
 		BitmapFactory.decodeFile(fileName, options);
 		//	Set bitmap options to scale the image decode target
 		options.inJustDecodeBounds = false;
 		options.inSampleSize = calculateInSampleSize(options, width, height);
 		//	Decode the JPEG file into a Bitmap
+		return BitmapFactory.decodeFile(fileName, options);
+	}
+	
+	/**
+	 * Get a bitmap from file
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param fileName
+	 * @param options
+	 * @return
+	 * @return Bitmap
+	 */
+	public static Bitmap getBitmapFromFile(String fileName, Options options) {
 		return BitmapFactory.decodeFile(fileName, options);
 	}
 	

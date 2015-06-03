@@ -16,6 +16,8 @@
 package org.spinsuite.login;
 
 
+import java.util.UUID;
+
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.mqtt.connection.MQTTConnection;
@@ -149,11 +151,12 @@ public class T_Login_Init extends DialogFragment
 		Env.setContext("#SUser", et_User.getText().toString());
 		Env.setContext("#SPass", et_PassWord.getText().toString());
 		//	Set Values for MQTT Server
-		MQTTConnection.setClient_ID(getActivity(), String.valueOf(Env.getAD_User_ID()));
+		MQTTConnection.setClient_ID(getActivity(), UUID.randomUUID().toString());
 		MQTTConnection.setHost(getActivity(), et_MQTT_ServerName.getText().toString());
 		MQTTConnection.setAlarmTime(getActivity(), MQTTDefaultValues.DEFAULT_MQTT_ALARM_TIME);
 		MQTTConnection.setMQTTUser(getActivity(), et_MQTT_ServerUser.getText().toString());
 		MQTTConnection.setMQTTPassword(getActivity(), et_MQTT_ServerPass.getText().toString());
+		MQTTConnection.setTimeForReconnect(getActivity(), MQTTDefaultValues.DEFAULT_MQTT_TIME_RECONNECT);
 		//	Set Port
 		if(et_MQTT_ServerPort.getText() != null 
 				&& et_MQTT_ServerPort.getText().toString().length() > 0) {

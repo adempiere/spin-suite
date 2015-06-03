@@ -16,26 +16,31 @@
 package org.spinsuite.bchat.view;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.UUID;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.adapters.BChatThreadAdapter;
-import org.spinsuite.bchat.model.SPS_BC_Message;
-import org.spinsuite.bchat.model.SPS_BC_Request;
+import org.spinsuite.bchat.util.BCMessageHandle;
+import org.spinsuite.bchat.util.BCNotificationHandle;
 import org.spinsuite.bchat.util.DisplayBChatThreadItem;
 import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 import org.spinsuite.sync.content.Invited;
-import org.spinsuite.sync.content.SyncMessage;
-import org.spinsuite.sync.content.SyncRequest;
+import org.spinsuite.sync.content.SyncMessage_BC;
+import org.spinsuite.sync.content.SyncRequest_BC;
+import org.spinsuite.sync.content.SyncStatus;
 import org.spinsuite.util.AttachmentHandler;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.SerializerUtil;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -103,7 +108,7 @@ public class FV_Thread extends Fragment {
 	/**	Button Send					*/
 	private ImageButton					ib_Send				= null;
 	/**	Request						*/
-	private static SyncRequest 			m_Request			= null;
+	private static SyncRequest_BC 		m_Request			= null;
 	/**	Is Active					*/
 	private static boolean				m_IsActive			= false;
 	/**	Thread Adapter				*/
@@ -111,17 +116,20 @@ public class FV_Thread extends Fragment {
 	/**	Reload Data					*/
 	private boolean						m_Reload			= true;
 	/**	Context						*/
-	private Context						m_ctx 				= null;
+	private static Context				m_ctx 				= null;
 	/**	Attach Handler				*/
 	private AttachmentHandler			m_AttHandler		= null;
+	/**	Action Bar					*/
+	private static ActionBar			m_ActionBar			= null;
 	
 	/**	Conversation Type Constants	*/
 	public static final int				CT_REQUEST			= 0;
 	public static final int				CT_CHAT				= 1;
 	
 	/**	Results						*/
-	public static final int 			ACTION_TAKE_FILE	= 3;
-	public static final int 			ACTION_TAKE_PHOTO	= 4;
+	public static final int 			ACTION_TAKE_PHOTO	= 3;
+	public static final int 			ACTION_PICK_IMAGE	= 4;
+	public static final int 			ACTION_PICK_FILE	= 5;
 	
 	/**	Constants Type Save			*/
 	private static final String 		PHOTO_ATTACHMENT_SAVE	= "PS";
@@ -142,6 +150,12 @@ public class FV_Thread extends Fragment {
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		m_ActionBar = activity.getActionBar();
 	}
     
     @Override
@@ -209,32 +223,61 @@ public class FV_Thread extends Fragment {
 			@Override
 			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 				switch (item.getItemId()) {
-				case R.id.action_delete:
-					SparseBooleanArray selectedItems = m_ThreadAdapter.getSelectedItems();
-					StringBuffer inClause = new StringBuffer();
-					for (int i = (selectedItems.size() - 1); i >= 0; i--) {
-						if (selectedItems.valueAt(i)) {
-							DisplayBChatThreadItem selectedItem = m_ThreadAdapter
-									.getItem(selectedItems.keyAt(i));
-							//	Add Separator
-							if(inClause.length() > 0) {
-								inClause.append(", ");
+					case R.id.action_delete:
+						SparseBooleanArray selectedItems = m_ThreadAdapter.getSelectedItems();
+						StringBuffer inClause = new StringBuffer();
+						for (int i = (selectedItems.size() - 1); i >= 0; i--) {
+							if (selectedItems.valueAt(i)) {
+								DisplayBChatThreadItem selectedItem = m_ThreadAdapter
+										.getItem(selectedItems.keyAt(i));
+								//	Add Separator
+								if(inClause.length() > 0) {
+									inClause.append(", ");
+								}
+								//	Add Value
+								inClause.append("'").append(selectedItem.getSPS_BC_Message_UUID()).append("'");
+								//	Remove Item
+								m_ThreadAdapter.remove(selectedItem);
 							}
-							//	Add Value
-							inClause.append(selectedItem.getRecord_ID());
-							//	Remove Item
-							m_ThreadAdapter.remove(selectedItem);
 						}
-					}
-					//	Delete Records in DB
-					if(inClause.length() > 0) {
-						SPS_BC_Message.deleteMessage(m_ctx, m_Request, 
-								"SPS_BC_Message_ID IN(" + inClause.toString() + ")");
-					}
-					mode.finish();
-					return true;
-				default:
-					return false;
+						//	Delete Records in DB
+						if(inClause.length() > 0) {
+							BCMessageHandle.getInstance(m_ctx).deleteMessage(m_Request, 
+									"SPS_BC_Message_UUID IN(" + inClause.toString() + ")");
+						}
+						mode.finish();
+						return true;
+					case R.id.action_copy:
+						selectedItems = m_ThreadAdapter.getSelectedItems();
+						boolean justOne = selectedItems.size() == 1; 
+						StringBuffer text = new StringBuffer();
+						for (int i = (selectedItems.size() - 1); i >= 0; i--) {
+							if (selectedItems.valueAt(i)) {
+								DisplayBChatThreadItem selectedItem = m_ThreadAdapter
+										.getItem(selectedItems.keyAt(i));
+								//	Valid File
+								if(selectedItem.getFileName() != null)
+									continue;
+								//	Add New Line
+								if(text.length() > 0) {
+									text.append(Env.NL);
+								}
+								//	Add to Text
+								if(justOne) {
+									text.append(selectedItem.getText());
+								} else {
+									text.append(selectedItem.getCopy());
+								}
+							}
+						}
+						//	Add To Clipboard
+						if(text.length() > 0) {
+							 Env.setClipboardText(m_ctx, text.toString());
+						}
+						mode.finish();
+						return true;
+					default:
+						return false;
 				}
 			}
 
@@ -255,7 +298,7 @@ public class FV_Thread extends Fragment {
 			}
 			
 		});
-		
+		//	Return
 		return m_view;
 	}
     
@@ -267,18 +310,24 @@ public class FV_Thread extends Fragment {
     private void sendMessage(String p_FileName) {
 		//	Send Request
 		if(m_Request != null
-    			&& m_Request.getSPS_BC_Request_ID() == 0) {
-			SPS_BC_Request.sendRequest(m_ctx, m_Request);
+    			&& m_Request.getSPS_BC_Request_UUID() == null) {
+			boolean ok = BCMessageHandle.getInstance(m_ctx).sendRequest(m_Request);
+			//	Add UI Request
+			if(ok) {
+				BCNotificationHandle.getInstance(m_ctx)
+					.addRequest(m_Request);
+			}
 		}
 		//	
 		byte[] bytes = SerializerUtil.getFromFile(
 				Env.getBC_IMG_DirectoryPathName(m_ctx) + File.separator + p_FileName);
 		//	Send Message
-		SyncMessage message = new SyncMessage(MQTTConnection.getClient_ID(m_ctx), 
-				et_Message.getText().toString(), p_FileName, bytes, 
-				m_Request.getSPS_BC_Request_ID(), Env.getAD_User_ID(), Env.getContext("#AD_User_Name"));
+		SyncMessage_BC message = new SyncMessage_BC(null, MQTTConnection.getClient_ID(m_ctx), 
+				m_Request.getSPS_BC_Request_UUID(), Env.getAD_User_ID(), 
+				Env.getContext("#AD_User_Name"), 
+				et_Message.getText().toString(), p_FileName, bytes);
 		//	Send Message
-		SPS_BC_Message.sendMsg(m_ctx, message);
+		BCMessageHandle.getInstance(m_ctx).sendMsg(message);
 		//	Add Message
 		addMsg(message, MQTTDefaultValues.TYPE_OUT);
 		seekToLastMsg();
@@ -310,17 +359,20 @@ public class FV_Thread extends Fragment {
     	}
     	m_Reload = false;
     	if(m_Request != null
-    			&& m_Request.getSPS_BC_Request_ID() == 0) {
+    			&& m_Request.getSPS_BC_Request_UUID() == null) {
     		et_Message.setText(getString(R.string.BChat_Hi) + " " 
     			+ m_Request.getName() + ", " 
     			+ getString(R.string.BChat_NewRequest));
     		m_ThreadAdapter = new BChatThreadAdapter(getActivity(), 
     				new ArrayList<DisplayBChatThreadItem>(), m_Request.isGroup());
     		//	
-    	} else {
+    	} else if(m_Request != null) {
     		//	Get Data
     		m_ThreadAdapter = new BChatThreadAdapter(getActivity(), 
-    				getData(), (m_Request != null && m_Request.isGroup()));
+    				getData(), m_Request.isGroup());
+    		//	Send New Status
+    		BCMessageHandle.getInstance(m_ctx)
+    			.sendStatus(m_Request.getSPS_BC_Request_UUID(), SyncStatus.STATUS_IN_CHAT);
     	}
     	//	
     	lv_Thread.setAdapter(m_ThreadAdapter);
@@ -339,29 +391,32 @@ public class FV_Thread extends Fragment {
      * @return ArrayList<DisplayBChatThreadItem>
      */
     private ArrayList<DisplayBChatThreadItem> getData() {
+		//	Instance Data
+		ArrayList<DisplayBChatThreadItem> data = new ArrayList<DisplayBChatThreadItem>();
+		//	Valid Request
+    	if(m_Request == null)
+    		return data;
     	//	Create Connection
     	DB conn = DB.loadConnection(getActivity(), DB.READ_ONLY);
     	//	Compile Query
     	conn.compileQuery("SELECT "
-    			+ "m.SPS_BC_Message_ID, "
-    			+ "m.Text, "
-    			+ "m.SPS_BC_Request_ID, "
+    			+ "m.SPS_BC_Message_UUID, "
+    			+ "m.SPS_BC_Request_UUID, "
     			+ "m.AD_User_ID, "
     			+ "u.Name UserName, "
+    			+ "m.Text, "
     			+ "m.Type, "
     			+ "m.Status, "
     			+ "(strftime('%s', m.Updated)*1000) Updated, "
     			+ "m.FileName "
     			+ "FROM SPS_BC_Message m "
     			+ "INNER JOIN AD_User u ON(u.AD_User_ID = m.AD_User_ID) "
-    			+ "WHERE m.SPS_BC_Request_ID = ? "
+    			+ "WHERE m.SPS_BC_Request_UUID = ? "
     			+ "ORDER BY m.Updated");
     	//	Add Parameter
-    	conn.addInt(m_Request.getSPS_BC_Request_ID());
+    	conn.addString(m_Request.getSPS_BC_Request_UUID());
     	//	Load Data
     	Cursor rs = conn.querySQL();
-		//	Instance Data
-		ArrayList<DisplayBChatThreadItem> data = new ArrayList<DisplayBChatThreadItem>();
     	//	Valid Result set
     	if(rs != null 
     			&& rs.moveToFirst()) {
@@ -369,10 +424,10 @@ public class FV_Thread extends Fragment {
     		//	Loop
     		do {
     			data.add(new DisplayBChatThreadItem(
-    					rs.getInt(col++), 
+    					rs.getString(col++), 
     					rs.getString(col++), 
     					rs.getInt(col++), 
-    					rs.getInt(col++), 
+    					rs.getString(col++), 
     					rs.getString(col++), 
     					rs.getString(col++), 
     					rs.getString(col++), 
@@ -421,11 +476,11 @@ public class FV_Thread extends Fragment {
     /**
      * Select a Conversation
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-     * @param p_SPS_BC_Request_ID
+     * @param p_SPS_BC_Request_UUID
      * @return void
      */
-    public void selectConversation(int p_SPS_BC_Request_ID) {
-    	m_Request = SPS_BC_Request.getRequest(m_ctx, p_SPS_BC_Request_ID);
+    public void selectConversation(String p_SPS_BC_Request_UUID) {
+    	m_Request = BCMessageHandle.getInstance(m_ctx).getRequest(p_SPS_BC_Request_UUID);
     	//	Set Reload Data
     	m_Reload = true;
     	if(m_view != null
@@ -452,10 +507,10 @@ public class FV_Thread extends Fragment {
      * @param p_Type
      * @return void
      */
-    public static void addMsg(SyncMessage message, String p_Type) {
-    	addMsg(new DisplayBChatThreadItem(message.getSPS_BC_Message_ID(), 
-								message.getText(), message.getSPS_BC_Request_ID(), 
+    public static void addMsg(SyncMessage_BC message, String p_Type) {
+    	addMsg(new DisplayBChatThreadItem(message.getSPS_BC_Message_UUID(),  message.getSPS_BC_Request_UUID(), 
 								message.getAD_User_ID(), message.getUserName(), 
+								message.getText(),
 								p_Type, 
 								MQTTDefaultValues.STATUS_CREATED, 
 								new Date(System.currentTimeMillis()), 
@@ -469,23 +524,95 @@ public class FV_Thread extends Fragment {
      * @param p_Item
      * @return void
      */
-    public static void changeMsgStatus(int p_SPS_BC_Message_ID, String p_Status) {
-    	m_ThreadAdapter.changeMsgStatus(p_SPS_BC_Message_ID, p_Status);
+    public static void changeMsgStatus(String p_SPS_BC_Message_UUID, String p_Status) {
+    	m_ThreadAdapter.changeMsgStatus(p_SPS_BC_Message_UUID, p_Status);
     	m_ThreadAdapter.notifyDataSetChanged();
+    }
+    
+    /**
+     * Change Connection Status, Optional Request for when is typing
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_Status
+     * @return void
+     */
+    public static void changeConnectionStatus(SyncStatus p_Status) {
+		//	Validate Request
+		if(isOpened(p_Status.getSPS_BC_Request_UUID())
+				|| existsUser(p_Status.getAD_User_ID())) {
+			changeStatus(p_Status.getStatus());
+		}
+    }
+    
+    /**
+     * Change Status
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_Status
+     * @return void
+     */
+    private static void changeStatus(String p_Status) {
+    	if(m_ActionBar != null
+    			&& p_Status != null) {
+    		int message = R.string.BChat_StatusDisconnected;
+    		//	
+    		if(p_Status.equals(SyncStatus.STATUS_CONNECTED)) {
+    			message = R.string.BChat_StatusConnected;
+    		} else if(p_Status.equals(SyncStatus.STATUS_TYPING)) {
+    			message = R.string.BChat_StatusTyping;
+    		} else if(p_Status.equals(SyncStatus.STATUS_IN_CHAT)) {
+    			message = R.string.BChat_StatusInChat;
+    		}
+    		//	Set Message
+    		m_ActionBar.setSubtitle(m_ctx.getString(message));
+    	}
     }
     
     /**
      * Verify if is open thread
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-     * @param p_SPS_BC_Request_ID
+     * @param p_SPS_BC_Request_UUID
      * @return
      * @return boolean
      */
-    public static boolean isOpened(int p_SPS_BC_Request_ID) {
-    	return (m_Request != null 
-    			&& m_Request.getSPS_BC_Request_ID() == p_SPS_BC_Request_ID
+    public static boolean isOpened(String p_SPS_BC_Request_UUID) {
+    	if(m_Request == null)
+    		return false;
+    	//	Valid Request Parameter
+    	if(p_SPS_BC_Request_UUID == null)
+    		return false;
+    	//	Valid Null Request
+    	if(m_Request.getSPS_BC_Request_UUID() == null)
+    		return false;
+    	//	Valid Opened
+    	return (m_Request.getSPS_BC_Request_UUID().equals(p_SPS_BC_Request_UUID)
     			&& m_IsActive);
     }
+    
+    /**
+     * Validate if Exists User
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_AD_User_ID
+     * @return
+     * @return boolean
+     */
+    public static boolean existsUser(int p_AD_User_ID) {
+    	if(m_Request == null)
+    		return false;
+    	//	Valid Request Parameter
+    	if(p_AD_User_ID == -1)
+    		return false;
+    	//	Valid same user
+    	if(p_AD_User_ID == Env.getAD_User_ID())
+    		return false;
+    	//	Valid Opened
+    	for(Invited invited : m_Request.getUsers()) {
+    		if(invited.getAD_User_ID() == p_AD_User_ID) {
+    			return true;
+    		}
+    	}
+    	//	Default Return
+    	return false;
+    }
+    
     
     /**
      * Select a User for request
@@ -498,20 +625,21 @@ public class FV_Thread extends Fragment {
     	//	For Request
     	if(p_AD_User_ID != 0
     			&& p_AD_User_ID != -1) {
-			int m_SPS_BC_Request_ID = DB.getSQLValue(m_ctx, 
-					"SELECT r.SPS_BC_Request_ID FROM SPS_BC_Request r "
+			String m_TopicName = DB.getSQLValueString(m_ctx, 
+					"SELECT r.SPS_BC_Request_UUID FROM SPS_BC_Request r "
 					+ "WHERE r.Name = ?", new String[]{p_Name});
 			//	
-			if(m_SPS_BC_Request_ID != 0
-					&& m_SPS_BC_Request_ID != -1) {
-				m_Request = SPS_BC_Request.getRequest(m_ctx, m_SPS_BC_Request_ID);
+			if(m_TopicName != null) {
+				m_Request = BCMessageHandle.getInstance(m_ctx).getRequest(m_TopicName);
 			} else {
-				m_Request = new SyncRequest(0, 
-						String.valueOf(Env.getAD_User_ID()), 
-						SyncRequest.RT_BUSINESS_CHAT, 
-						String.valueOf(UUID.randomUUID()), p_Name, false);
+				m_Request = new SyncRequest_BC(null, 
+    					String.valueOf(Env.getAD_User_ID()), 
+    					null, 
+    					p_Name, 
+    					null, null, false);
 				//	Add User to Request
 				m_Request.addUser(new Invited(p_AD_User_ID, MQTTDefaultValues.STATUS_CREATED));
+				m_Request.addUser(new Invited(Env.getAD_User_ID(), MQTTDefaultValues.STATUS_CREATED));
 			}
 		}
     	//	Set Reload Data
@@ -567,7 +695,13 @@ public class FV_Thread extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch (item.getItemId()) {
 			case R.id.action_attach_photo:
-				attachPhoto();
+				attachCapture();
+				return true;
+			case R.id.action_attach_image:
+				attachFile(ACTION_PICK_IMAGE);
+				return true;
+			case R.id.action_attach_file:
+				attachFile(ACTION_PICK_FILE);
 				return true;
 			//	Default
 			default:
@@ -576,11 +710,11 @@ public class FV_Thread extends Fragment {
     }
     
     /**
-     * Attach Photo
+     * Attach Cature
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @return void
      */
-    private void attachPhoto() {
+    private void attachCapture() {
     	//	Instance Attachment
     	if(m_AttHandler == null)
     		m_AttHandler = new AttachmentHandler(getActivity());
@@ -597,14 +731,42 @@ public class FV_Thread extends Fragment {
 	    getActivity().startActivityForResult(intent, ACTION_TAKE_PHOTO);
 	}
     
+    /**
+     * Attach File
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param action
+     * @return void
+     */
+    private void attachFile(int action) {
+//    	String type = null;
+//    	if(action == ACTION_PICK_IMAGE) {
+//    		type = "image/*";
+//    	} else if(action == ACTION_PICK_FILE) {
+//    		type = "file/*";
+//    	} else {
+//    		return;
+//    	}
+    	//	
+    	Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//    	intent.setType(type);
+    	intent.setType("*/*");
+    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    	getActivity().startActivityForResult(intent, action);
+    }
+    
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     	//	Valid Data
     	if(requestCode == ACTION_TAKE_PHOTO) {
     		new SaveTask().execute(PHOTO_ATTACHMENT_SAVE);
+    	} else if(requestCode == ACTION_PICK_IMAGE
+    			|| requestCode == ACTION_PICK_FILE
+    			&& data != null) {
+    		dataUri = data.getData();
+    		new SaveTask().execute(FILE_ATTACHMENT_SAVE, data.getData().getPath());
     	}
     }
-    
+    Uri dataUri = null;
     /**
      * Async Task for Save File
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Apr 16, 2015, 9:33:44 AM
@@ -637,9 +799,23 @@ public class FV_Thread extends Fragment {
 				m_IsSaved = m_AttHandler.processImgAttach(
 						Env.getBC_IMG_DirectoryPathName(getActivity()), fileName, AttachmentHandler.IMG_STD_Q);
 				m_FileName = fileName + AttachmentHandler.JPEG_FILE_SUFFIX;
-			} else if(m_Type.equals(FILE_ATTACHMENT_SAVE)) { 
-				String origFile = params[1];
-				m_AttHandler.processFileAttach(origFile);
+			} else if(m_Type.equals(FILE_ATTACHMENT_SAVE)) {
+				String fromFile = params[1];
+				if(fromFile == null) {
+					return null;
+				}
+				File file = null;
+				try {
+					InputStream inStream = getActivity().getContentResolver().openInputStream(dataUri);
+					file = new File(new URI(fromFile));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+				m_IsSaved = m_AttHandler.processFile(fromFile, 
+						Env.getBC_IMG_DirectoryPathName(getActivity()), fileName);
+				m_FileName = fileName + m_AttHandler.getExtension(fromFile);
 			}
 			//	
 			return null;

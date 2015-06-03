@@ -20,14 +20,17 @@ import java.util.logging.Level;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
+import org.spinsuite.sync.content.SyncStatus;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.SerializerUtil;
 
 import android.content.Context;
 
@@ -51,6 +54,8 @@ public class MQTTConnection {
 	private boolean 				m_IsSSLConnection = false;
 	/**	Callback Event Listener		*/
 	private IMqttActionListener		m_ConnectionListener = null;
+	/**	Callback Event Listener		*/
+	private IMqttActionListener		m_MessageListener = null;
 	/**	Callback					*/
 	private MqttCallback			m_Callback = null;
 	/**	Context						*/
@@ -82,6 +87,7 @@ public class MQTTConnection {
 	private static final String		MQTT_TIMEOUT 				= "#MQTT_Timeout";
 	private static final String		MQTT_KEEP_ALIVE_INTERVAL 	= "#MQTT_KeepAliveInterval";
 	private static final String		MQTT_IS_RELOAD_SERVICE 		= "#MQTT_IsreloadService";
+	private static final String		MQTT_TIME_FOR_RECONNECT 	= "#MQTT_TimeForReConnect";
 	
 	/**	Connection Status					*/
 	public static final int			CONNECTED					= 1;
@@ -130,7 +136,12 @@ public class MQTTConnection {
 	    m_ConnectionOption.setConnectionTimeout(getTimeout(p_Ctx));
 	    //	Keep Alive Interval
 	    m_ConnectionOption.setKeepAliveInterval(getKeepAliveInverval(p_Ctx));
-	    m_ConnectionOption.setCleanSession(true);
+	    m_ConnectionOption.setCleanSession(false);
+	    //	Add Will Testament
+	    m_ConnectionOption.setWill(MQTTDefaultValues.getUserStatusTopic(), 
+	    		getWill(), EXACTLY_ONCE_2, true);
+	    //	
+	    m_MessageListener = new MQTTBChatListener(m_Ctx);
 	    //	
 	    m_IsSubscribe = false;
 	    m_SubscribedTopics = new ArrayList<String>();
@@ -139,6 +150,29 @@ public class MQTTConnection {
 	    	addTopic(p_SubscribedTopics);
 	    	setIsSubscribed(false);
 	    }
+	}
+	
+	/**
+	 * Get Will Testament
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return byte[]
+	 */
+	private byte[] getWill() {
+		byte[] will = null;
+		//	Create Will
+		try {
+			String m_LocalClient_ID = getClient_ID(m_Ctx);
+			SyncStatus willStatus = new SyncStatus(m_LocalClient_ID);
+			willStatus.setAD_User_ID(Env.getAD_User_ID(m_Ctx));
+			willStatus.setStatus(SyncStatus.STATUS_DISCONNECTED);
+			//	
+			will = SerializerUtil.serializeObjectEx(willStatus);
+		} catch (Exception e) {
+			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error getWill()", e);
+		}
+		//	Return
+		return will;
 	}
 	
 	/**
@@ -165,6 +199,130 @@ public class MQTTConnection {
 	 */
 	public MQTTConnection(Context p_Ctx, IMqttActionListener p_ConnectionListener, String[] p_SubscribedTopics) {
 		this(p_Ctx, getClient_ID(p_Ctx), getHost(p_Ctx), getPort(p_Ctx), isSSLConnection(p_Ctx), p_ConnectionListener, p_SubscribedTopics);
+	}
+	
+	/**
+	 * Get Instance for Connection
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_ConnectionListener
+	 * @param p_Callback
+	 * @param p_SubscribedTopics
+	 * @param reLoad Reload Instance
+	 * @return
+	 * @return MQTTConnection
+	 */
+	public static MQTTConnection getInstance(Context p_Ctx, 
+			IMqttActionListener p_ConnectionListener, MqttCallback p_Callback, 
+			String[] p_SubscribedTopics, boolean reLoad) {
+		if(m_Connection == null
+				|| reLoad) {
+			//	Instance Listener
+			if(p_ConnectionListener == null) {
+				p_ConnectionListener = new MQTTConnectionListener(p_Ctx);
+			}
+			//	Instance Callbak
+			if(p_Callback == null) {
+				p_Callback = new MQTTConnectionCallback(p_Ctx);
+			}
+			m_Connection = new MQTTConnection(p_Ctx, p_ConnectionListener, p_SubscribedTopics);
+			//	Add Callback
+			m_Connection.setCallback(p_Callback);
+			//	Set to false reload
+			if(reLoad) {
+				MQTTConnection.setIsReloadService(p_Ctx, false);
+			}
+		}
+		//	Default Return
+		return m_Connection;
+	}
+	
+	/**
+	 * Get Connection Instance without Connection Listener
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_SubscribedTopics
+	 * @param reLoad
+	 * @return
+	 * @return MQTTConnection
+	 */
+	public static MQTTConnection getInstance(Context p_Ctx, String[] p_SubscribedTopics, boolean reLoad) {
+		return getInstance(p_Ctx, null, null, p_SubscribedTopics, reLoad);
+	}
+	
+	/**
+	 * Get Connection Instance
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return MQTTConnection
+	 */
+	public static MQTTConnection getInstance(Context p_Ctx) {
+		return getInstance(p_Ctx, null, isReloadService(p_Ctx));
+	}
+	
+	/**
+	 * Create Uri for connection
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Client_ID
+	 * @param p_Host
+	 * @param p_Port
+	 * @param p_IsSSLConnection
+	 * @return
+	 * @return String
+	 */
+	private String createURI(String p_Client_ID, String p_Host, int p_Port, boolean p_IsSSLConnection) {
+		String m_URI = null;
+		if (p_IsSSLConnection) {
+			m_URI = "ssl://" + p_Host + ":" + p_Port;
+		} else {
+			m_URI = "tcp://" + p_Host + ":" + p_Port;
+		}
+		//	Return Uri
+		return m_URI;
+	}
+	
+	/**
+	 * Connect in Thread
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return void
+	 */
+	public void connectInThread() {
+		//	Try in other thread
+		new Thread(new Runnable() {
+			public void run() {
+				//	Connect
+				connect();
+			}
+		}).start();
+	}
+	
+	/**
+	 * Try Connect in other thread
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	public void tryConnect() {
+		if(!isNetworkOk(m_Ctx)
+				&& !isAutomaticService(m_Ctx)) {
+			return;
+		}
+		//	
+		LogM.log(m_Ctx, getClass(), Level.FINE, "Try Connecting");
+		//	Try in other thread
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					Thread.sleep(getTimeForReconnect(m_Ctx));
+				} catch (InterruptedException ex) {
+					LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error Sleep", ex);
+				}
+				LogM.log(m_Ctx, getClass(), Level.FINE, "Connecting...");
+				//	Connect
+				connect();
+			}
+		}).start();
 	}
 	
 	/**
@@ -404,6 +562,34 @@ public class MQTTConnection {
 	}
 	
 	/**
+	 * Set Time for re-connect
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_TimeInMillis
+	 * @return void
+	 */
+	public static void setTimeForReconnect(Context p_Ctx, long p_TimeInMillis) {
+		Env.setContext(p_Ctx, MQTT_TIME_FOR_RECONNECT, p_TimeInMillis);
+	}
+	
+	/**
+	 * Get Time for re-connect
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return long
+	 */
+	public static long getTimeForReconnect(Context p_Ctx) {
+		long time = Env.getContextAsLong(p_Ctx, MQTT_TIME_FOR_RECONNECT);
+		//	Time
+		if(time <= 0) {
+			time = MQTTDefaultValues.DEFAULT_MQTT_TIME_RECONNECT;
+		}
+		//	Return
+		return time;
+	}
+	
+	/**
 	 * Set the Reload property
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Ctx
@@ -513,81 +699,6 @@ public class MQTTConnection {
 	}
 	
 	/**
-	 * Get Instance for Connection
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_Ctx
-	 * @param p_ConnectionListener
-	 * @param p_Callback
-	 * @param p_SubscribedTopics
-	 * @param reLoad Reload Instance
-	 * @return
-	 * @return MQTTConnection
-	 */
-	public static MQTTConnection getInstance(Context p_Ctx, 
-			IMqttActionListener p_ConnectionListener, MqttCallback p_Callback, 
-			String[] p_SubscribedTopics, boolean reLoad) {
-		if(m_Connection == null
-				|| reLoad) {
-			m_Connection = new MQTTConnection(p_Ctx, p_ConnectionListener, p_SubscribedTopics);
-			//	Valid Callback
-			if(p_Callback != null) {
-				m_Connection.setCallback(p_Callback);
-			}
-			//	Set to false reload
-			if(reLoad) {
-				MQTTConnection.setIsReloadService(p_Ctx, false);
-			}
-		}
-		//	Default Return
-		return m_Connection;
-	}
-	
-	/**
-	 * Get Connection Instance without Connection Listener
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_Ctx
-	 * @param p_SubscribedTopics
-	 * @param reLoad
-	 * @return
-	 * @return MQTTConnection
-	 */
-	public static MQTTConnection getInstance(Context p_Ctx, String[] p_SubscribedTopics, boolean reLoad) {
-		return getInstance(p_Ctx, new MQTTListener(p_Ctx), new MQTTConnectionCallback(p_Ctx), p_SubscribedTopics, reLoad);
-	}
-	
-	/**
-	 * Get Connection Instance
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_Ctx
-	 * @return
-	 * @return MQTTConnection
-	 */
-	public static MQTTConnection getInstance(Context p_Ctx) {
-		return getInstance(p_Ctx, null, false);
-	}
-	
-	/**
-	 * Create Uri for connection
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_Client_ID
-	 * @param p_Host
-	 * @param p_Port
-	 * @param p_IsSSLConnection
-	 * @return
-	 * @return String
-	 */
-	private String createURI(String p_Client_ID, String p_Host, int p_Port, boolean p_IsSSLConnection) {
-		String m_URI = null;
-		if (p_IsSSLConnection) {
-			m_URI = "ssl://" + p_Host + ":" + p_Port;
-		} else {
-			m_URI = "tcp://" + p_Host + ":" + p_Port;
-		}
-		//	Return Uri
-		return m_URI;
-	}
-	
-	/**
 	 * Set Callback
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Callback
@@ -626,13 +737,34 @@ public class MQTTConnection {
 	}
 	
 	/**
-	 * Connect to Server without Callback
+	 * Connect with Server if it not connected
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @throws MqttException
-	 * @return void
+	 * @return boolean
 	 */
-	public void connect() throws MqttException {
-		connect(null);
+	public boolean connect() {
+		if(isConnected()) {
+			LogM.log(m_Ctx, getClass(), 
+					Level.FINE, "connect(): Already Connected");
+			return true;
+		}
+		//	
+		try {
+			//	Connect
+			if(getStatus() == MQTTConnection.TRY_CONNECTING) {
+				return false;
+			}
+			connect(null);
+			setStatus(MQTTConnection.TRY_CONNECTING);
+			LogM.log(m_Ctx, getClass(), 
+					Level.FINE, "connect(): Try Connecting");
+			//	
+			return true;
+		} catch (Exception e) {
+			LogM.log(m_Ctx, getClass(), 
+					Level.SEVERE, "connect(): Error", e);
+		}
+		//	
+		return false;
 	}
 	
 	/**
@@ -768,11 +900,17 @@ public class MQTTConnection {
 	 * @param p_IsRetained
 	 * @throws MqttPersistenceException
 	 * @throws MqttException
-	 * @return void
+	 * @return IMqttDeliveryToken
 	 */
-	public void publishEx(String p_Topic, byte[] p_PayLoad, 
+	public IMqttDeliveryToken publishEx(String p_Topic, byte[] p_PayLoad, 
 			int p_QoS, boolean p_IsRetained) throws MqttPersistenceException, MqttException {
-		m_ClientLink.publish(p_Topic, p_PayLoad, p_QoS, p_IsRetained);
+		IMqttDeliveryToken token = m_ClientLink.publish(p_Topic, p_PayLoad, p_QoS, p_IsRetained);
+		//	Callback
+		if(m_MessageListener != null) {
+			token.setActionCallback(m_MessageListener);
+		}
+		//	Default Return
+		return token;
 	}
 	
 	/**
@@ -784,8 +922,14 @@ public class MQTTConnection {
 	 * @throws MqttException
 	 * @return void
 	 */
-	public void publishEx(String p_Topic, MqttMessage p_Message) throws MqttPersistenceException, MqttException {
-		m_ClientLink.publish(p_Topic, p_Message);
+	public IMqttDeliveryToken publishEx(String p_Topic, MqttMessage p_Message) throws MqttPersistenceException, MqttException {
+		IMqttDeliveryToken token = m_ClientLink.publish(p_Topic, p_Message);
+		//	Callback
+		if(m_MessageListener != null) {
+			token.setActionCallback(m_MessageListener);
+		}
+		//	Default Return
+		return token;
 	}
 	
 	/**
@@ -794,19 +938,18 @@ public class MQTTConnection {
 	 * @param p_Topic
 	 * @param p_Message
 	 * @return
-	 * @return boolean
+	 * @return IMqttDeliveryToken
 	 */
-	public boolean publish(String p_Topic, MqttMessage p_Message) {
+	public IMqttDeliveryToken publish(String p_Topic, MqttMessage p_Message) {
 		try {
-			publishEx(p_Topic, p_Message);
-			return true;
+			return publishEx(p_Topic, p_Message);
 		} catch (MqttPersistenceException e) {
-			e.printStackTrace();
+			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error (publish) ", e);
 		} catch (MqttException e) {
-			e.printStackTrace();
+			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error (publish) ", e);
 		}
 		//	Default
-		return false;
+		return null;
 	}
 	
 	/**
@@ -817,20 +960,19 @@ public class MQTTConnection {
 	 * @param p_QoS
 	 * @param p_IsRetained
 	 * @return
-	 * @return boolean
+	 * @return IMqttDeliveryToken
 	 */
-	public boolean publish(String p_Topic, byte[] p_PayLoad, 
+	public IMqttDeliveryToken publish(String p_Topic, byte[] p_PayLoad, 
 			int p_QoS, boolean p_IsRetained) {
 		try {
-			publishEx(p_Topic, p_PayLoad, p_QoS, p_IsRetained);
-			return true;
+			return publishEx(p_Topic, p_PayLoad, p_QoS, p_IsRetained);
 		} catch (MqttPersistenceException e) {
-			e.printStackTrace();
+			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error (publish) ", e);
 		} catch (MqttException e) {
-			e.printStackTrace();
+			LogM.log(m_Ctx, getClass(), Level.SEVERE, "Error (publish) ", e);
 		}
 		//	Default
-		return false;
+		return null;
 	}
 	
 	/**
@@ -853,7 +995,7 @@ public class MQTTConnection {
 	 * @param p_Topic
 	 * @return void
 	 */
-	private void addTopic(String p_Topic) {
+	public void addTopic(String p_Topic) {
 		int currentPos = m_SubscribedTopics.indexOf(p_Topic);
 		if(currentPos > -1) {
 			m_SubscribedTopics.set(currentPos, p_Topic);
@@ -872,7 +1014,7 @@ public class MQTTConnection {
 	 * @param p_Topics
 	 * @return void
 	 */
-	private void addTopic(String[] p_Topics) {
+	public void addTopic(String[] p_Topics) {
 		//	Valid Null
 		if(p_Topics == null) {
 			return;
