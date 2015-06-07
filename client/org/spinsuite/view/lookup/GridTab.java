@@ -592,7 +592,10 @@ public class GridTab implements Evaluatee {
     	//	Get Values
     	for (GridField vField: m_fields) {
     		if((vField.isMandatory()
-    				|| vField.isParent()) && vField.isEmpty()) {
+    				|| vField.isParent()
+    				) 
+    				&& vField.isEmpty()
+    				&& !PO.isSkipColumn(vField.getColumnName())) {
     			m_ErrorMsg = "@MustFillField@ \"@" + vField.getName() + "@\"";
     			//	Set ok to false
     			ok = false;

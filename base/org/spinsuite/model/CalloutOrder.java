@@ -92,7 +92,7 @@ public class CalloutOrder extends CalloutEngine {
 			if (!newDocNo && oldC_DocType_ID.intValue() != 0) {
 				rs = conn.querySQL(sql.toString(), new String[]{String.valueOf(oldC_DocType_ID.intValue())});
 				if (rs.moveToFirst())
-					AD_Sequence_ID = rs.getInt(7);
+					AD_Sequence_ID = rs.getInt(6);
 			}
 			//	
 			String DocSubTypeSO = "";

@@ -72,7 +72,14 @@ public abstract class PO {
 	public static final String		NULL 				= "NULL";
 	/** Zero Integer				*/
 	protected static final Integer 	I_ZERO 				= Integer.valueOf(0);
+	/**	Is Synchronization			*/
 	private boolean					isSynchronization 	= false;
+	/**	For Skip Column				*/
+	private static String [] 		SKIP_COLUMN			= new String[]{"DocumentNo", "Value"};
+	/**	Prefix for Document No		*/
+	private static String 			DOCUMENT_NO_PREFIX	= "<";
+	/**	Suffix for Document No		*/
+	private static String 			DOCUMENT_NO_SUFFIX	= ">";
 	
 	/**
 	 * 
@@ -999,9 +1006,10 @@ public abstract class PO {
 					//	
 					value = parseValue(column, i, true, true);
 					
-					if(column.IsMandatory 
+					if(column.IsMandatory
+							&& !isSkipColumn(column.ColumnName)
 							&& value == null)
-						throw new Exception(Msg.getMsg(getCtx(), "MustFillField") + 
+						throw new Exception(Msg.getMsg(getCtx(), "@MustFillField@") + 
 								" \"@" + column.ColumnName + "@\"");
 					listValues.add(value);
 					LogM.log(getCtx(), getClass(), Level.FINE, column.ColumnName + "=" + value + " Mandatory=" + column.IsMandatory);
@@ -1033,7 +1041,7 @@ public abstract class PO {
 					") VALUES(" + 
 					sym.toString() + 
 					")";
-			conn.executeSQL(sql, listValues.toArray());
+			conn.executeSQLEx(sql, listValues.toArray());
 			
 			//2015-03-13 Carlos Parada Add Sync Record 
 			if (MSession.logMigration(this, m_TableInfo))
@@ -1088,6 +1096,7 @@ public abstract class PO {
 				//	
 				Object value = parseValue(column, i, false, true);
 				if(column.IsMandatory 
+						&& !isSkipColumn(column.ColumnName)
 						&& value == null)
 					throw new Exception(Msg.getMsg(getCtx(), "MustFillField") + 
 							" \"@" + column.ColumnName + "@\"");
@@ -1129,7 +1138,7 @@ public abstract class PO {
 					columns.toString() +
 					" WHERE "  + get_WhereClause(true, true);
 			
-			conn.executeSQL(sql, listValues.toArray());
+			conn.executeSQLEx(sql, listValues.toArray());
 			//	
 			//2015-03-13 Carlos Parada Add Sync Record 
 			if (MSession.logMigration(this, m_TableInfo))
@@ -1176,35 +1185,57 @@ public abstract class PO {
 	public final Object parseValue(POInfoColumn column, int index, boolean isNew, boolean toSave) throws Exception {
 		if(index >= 0) {
 			Object value = m_currentValues[index]; 
-			if(isNew
-					&& column.ColumnName.equals(m_TableInfo.getTableName() + "_ID")) {
-				Integer ID = (Integer) value;
-				if ( ID != null && ID > 0)
-					m_IDs = new Object[]{ID};
-				else
-					m_IDs = new Object[]{MSequence.getNextID(m_ctx, getAD_Client_ID(), getTableName(), conn)};
-				//	Set ID
-				set_Value(index, (m_IDs[0] != null && m_IDs[0] instanceof Integer ? ((Integer)m_IDs[0]).intValue(): m_IDs[0]));
-				return m_IDs[0];
-			} else if(isNew 
-					&& value == null
-					&& column.ColumnName.equals("DocumentNo")) {
-					//	Get Document Type
-					int m_C_DocType_ID = get_ValueAsInt("C_DocType_ID");
-					//	Target Document
-					if(m_C_DocType_ID == 0)
-						m_C_DocType_ID = get_ValueAsInt("C_DocTypeTarget_ID");
+			if(isNew) {
+				if(column.ColumnName.equals(m_TableInfo.getTableName() + "_ID")) {
+					Integer ID = (Integer) value;
+					if ( ID != null && ID > 0)
+						m_IDs = new Object[]{ID};
+					else
+						m_IDs = new Object[]{MSequence.getNextID(m_ctx, getAD_Client_ID(), getTableName(), conn)};
+					//	Set ID
+					set_Value(index, (m_IDs[0] != null && m_IDs[0] instanceof Integer ? ((Integer)m_IDs[0]).intValue(): m_IDs[0]));
+					return m_IDs[0];
+				} else if(column.ColumnName.equals("DocumentNo")
+						&& (value == null 
+								|| ((String)value).startsWith(DOCUMENT_NO_PREFIX) 
+										&& ((String)value).endsWith(DOCUMENT_NO_SUFFIX))) {
+						//	Get Document Type
+						int m_C_DocType_ID = get_ValueAsInt("C_DocType_ID");
+						//	Target Document
+						if(m_C_DocType_ID == 0)
+							m_C_DocType_ID = get_ValueAsInt("C_DocTypeTarget_ID");
 
-					//2015-05-16 Dixon Martinez Bad Code
-					//Get Document No
-					String documentNo = null; 
-					if (m_C_DocType_ID > 0)
-						documentNo = MSequence.getDocumentNo(getCtx(), m_C_DocType_ID, m_TableInfo.getTableName(), true, conn);	
-					//End Dixon Martinez
-					return documentNo;
-			} else {
-				if(value == null
-						&& column.ColumnName.equals("DocumentNo")) {
+						//2015-05-16 Dixon Martinez Bad Code
+						//Get Document No
+						String documentNo = MSequence.getDocumentNo(getCtx(), m_C_DocType_ID, m_TableInfo.getTableName(), toSave, conn);
+						//	Add Prefix
+						if(documentNo != null
+								&& !toSave) {
+							documentNo = DOCUMENT_NO_PREFIX + documentNo + DOCUMENT_NO_SUFFIX;
+						}
+						//End Dixon Martinez
+						return documentNo;
+				} else if(value != null) {
+					Object returnValue = DisplayType.getJDBC_Value(column.DisplayType, value, !toSave, !toSave
+							//2015-03-26 Carlos Parada Add ColumnName
+							,column.ColumnName
+							//End Carlos Parada
+							);
+					return returnValue;
+				} else if(column.DefaultValue != null) {
+					if(toSave)
+						return Env.parseContext((String)column.DefaultValue, false);
+					else
+						return DisplayType.parseValue(
+										Env.parseContext((String)column.DefaultValue, false)
+										, column.DisplayType);
+				} else
+					return null;
+			} else{
+				if(column.ColumnName.equals("DocumentNo")
+						&& (value == null 
+						|| ((String)value).startsWith(DOCUMENT_NO_PREFIX) 
+								&& ((String)value).endsWith(DOCUMENT_NO_SUFFIX))) {
 					//	Get Document Type
 					int m_C_DocType_ID = get_ValueAsInt("C_DocType_ID");
 					//	Target Document
@@ -1213,11 +1244,13 @@ public abstract class PO {
 					
 					//2015-05-16 Dixon Martinez Bad Code
 					//Get Document No
-					String documentNo = null; 
-					if (m_C_DocType_ID > 0)
-						documentNo = MSequence.getDocumentNo(getCtx(), m_C_DocType_ID, m_TableInfo.getTableName(), false, conn);	
+					String documentNo = MSequence.getDocumentNo(getCtx(), m_C_DocType_ID, m_TableInfo.getTableName(), toSave, conn);
+					//	Add Prefix
+					if(documentNo != null
+							&& !toSave) {
+						documentNo = DOCUMENT_NO_PREFIX + documentNo + DOCUMENT_NO_SUFFIX;
+					}
 					//End Dixon Martinez
-					
 					return documentNo;
 				} else if(value != null) {
 					Object returnValue = DisplayType.getJDBC_Value(column.DisplayType, value, !toSave, !toSave
@@ -1646,5 +1679,27 @@ public abstract class PO {
 		}
 		//	Default Result
 		return array;
+	}
+	
+	/**
+	 * Is a Skip column
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_ColumnName
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean isSkipColumn(String p_ColumnName) {
+		//	Valid Parameter
+		if(p_ColumnName == null) {
+			return false;
+		}
+		//	Verify
+		for(String skipColumn : SKIP_COLUMN) {
+			if(p_ColumnName.equals(skipColumn)) {
+				return true;
+			}
+		}
+		//	Default
+		return false;
 	}
 }

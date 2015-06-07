@@ -154,56 +154,31 @@ public class MSequence extends X_AD_Sequence {
 		try {
 			//	Result Set
 			Cursor rs = null;
-			//	By Table
-			if (C_DocType_ID == 0){
-				//	Sequence by User
-				selectSQL = "SELECT s.CurrentNext, s.AD_Sequence_ID, s.IncrementNo, s.Prefix, s.Suffix, s.DecimalPattern " +
-						"FROM AD_Sequence s " +
-						"WHERE s.Name = ? " +
-						"AND s.IsActive = ? " +
-						"AND s.IsTableID = ? ";
-				
-				LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> selectSQL:" + selectSQL);
-				//	
-				rs = conn.querySQL(selectSQL, new String[]{TableName, "Y", "N"});
-
-				//	Get Values
-				if(rs.moveToFirst()){
-					next = rs.getInt(0);
-					m_AD_Sequence_ID = rs.getInt(1);
-					incrementNo = rs.getInt(2);
-					prefix = rs.getString(3);
-					suffix = rs.getString(4);
-					decimalPattern = rs.getString(5);
-				}
-			}
 			//	Sequence by User
-			if(next < 0){
-				selectSQL = "SELECT s.CurrentNext, s.AD_Sequence_ID, s.IncrementNo, s.Prefix, s.Suffix, s.DecimalPattern " +
-						"FROM SPS_UserDocSequence uds " +
-						"INNER JOIN AD_Sequence s ON(s.AD_Sequence_ID = uds.AD_Sequence_ID) " +
-						"WHERE uds.C_DocType_ID = ? " +
-						"AND s.IsActive = ? " +
-						"AND s.IsTableID = ? ";
+			selectSQL = "SELECT s.CurrentNext, s.AD_Sequence_ID, s.IncrementNo, s.Prefix, s.Suffix, s.DecimalPattern " +
+					"FROM SPS_UserDocSequence uds " +
+					"INNER JOIN AD_Sequence s ON(s.AD_Sequence_ID = uds.AD_Sequence_ID) " +
+					"WHERE uds.C_DocType_ID = ? " +
+					"AND s.IsActive = ? " +
+					"AND s.IsTableID = ? ";
 				
-				LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> selectSQL:" + selectSQL);
-				LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> C_DocType_ID:" + C_DocType_ID);
-				//	
-				rs = conn.querySQL(selectSQL, new String[]{String.valueOf(C_DocType_ID), "Y", "N"});
-
-				//	Get Values
-				if(rs.moveToFirst()){
-					next = rs.getInt(0);
-					m_AD_Sequence_ID = rs.getInt(1);
-					incrementNo = rs.getInt(2);
-					prefix = rs.getString(3);
-					suffix = rs.getString(4);
-					decimalPattern = rs.getString(5);
-				}
+			LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> selectSQL:" + selectSQL);
+			LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> C_DocType_ID:" + C_DocType_ID);
+			//	
+			rs = conn.querySQL(selectSQL, new String[]{String.valueOf(C_DocType_ID), "Y", "N"});
+			
+			//	Get Values
+			if(rs.moveToFirst()){
+				next = rs.getInt(0);
+				m_AD_Sequence_ID = rs.getInt(1);
+				incrementNo = rs.getInt(2);
+				prefix = rs.getString(3);
+				suffix = rs.getString(4);
+				decimalPattern = rs.getString(5);
 			}
 
 			//	Sequence By Document
-			if(next < 0){
+			if(next < 0) {
 				selectSQL = "SELECT s.CurrentNext, s.AD_Sequence_ID, s.IncrementNo, s.Prefix, s.Suffix, s.DecimalPattern " +
 						"FROM C_DocType dt " +
 						"INNER JOIN AD_Sequence s ON(s.AD_Sequence_ID = dt.DocNoSequence_ID) " +
@@ -219,6 +194,28 @@ public class MSequence extends X_AD_Sequence {
 				rs = conn.querySQL(selectSQL, new String[]{String.valueOf(C_DocType_ID), "Y", "N"});
 				//	Get Values
 				
+				if(rs.moveToFirst()){
+					next = rs.getInt(0);
+					m_AD_Sequence_ID = rs.getInt(1);
+					incrementNo = rs.getInt(2);
+					prefix = rs.getString(3);
+					suffix = rs.getString(4);
+					decimalPattern = rs.getString(5);
+				}
+			}
+			//	By Table
+			if (next < 0){
+				selectSQL = "SELECT s.CurrentNext, s.AD_Sequence_ID, s.IncrementNo, s.Prefix, s.Suffix, s.DecimalPattern " +
+						"FROM AD_Sequence s " +
+						"WHERE s.Name = ? " +
+						"AND s.IsActive = ? " +
+						"AND s.IsTableID = ? ";
+				
+				LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> selectSQL:" + selectSQL);
+				//	
+				rs = conn.querySQL(selectSQL, new String[]{"DocumentNo_" + TableName, "Y", "N"});
+
+				//	Get Values
 				if(rs.moveToFirst()){
 					next = rs.getInt(0);
 					m_AD_Sequence_ID = rs.getInt(1);
