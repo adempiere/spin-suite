@@ -23,7 +23,7 @@ import org.spinsuite.base.DB;
 
 /** Generated Model for AD_User_OrgAccess
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_AD_User_OrgAccess extends PO implements I_AD_User_OrgAccess {
     /** Standard Constructor */
     public X_AD_User_OrgAccess (Context ctx, int AD_User_OrgAccess_ID, DB conn)

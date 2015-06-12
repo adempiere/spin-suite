@@ -24,7 +24,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for AD_TreeBar
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_AD_TreeBar extends PO implements I_AD_TreeBar {
     /** Standard Constructor */
     public X_AD_TreeBar (Context ctx, int AD_TreeBar_ID, DB conn)
@@ -32,7 +32,6 @@ public class X_AD_TreeBar extends PO implements I_AD_TreeBar {
       super (ctx, AD_TreeBar_ID, conn);
       /** if (AD_TreeBar_ID == 0)
         {
-			setAD_TreeBar_ID (0);
 			setAD_Tree_ID (0);
 			setAD_User_ID (0);
 			setNode_ID (0);
@@ -59,26 +58,6 @@ public class X_AD_TreeBar extends PO implements I_AD_TreeBar {
         .append(get_ID()).append("]");
       return sb.toString();
     }
-
-	/** Set AD_TreeBar ID.
-		@param AD_TreeBar_ID AD_TreeBar ID	  */
-	public void setAD_TreeBar_ID (int AD_TreeBar_ID)
-	{
-		if (AD_TreeBar_ID < 1) 
-			set_Value (COLUMNNAME_AD_TreeBar_ID, null);
-		else 
-			set_Value (COLUMNNAME_AD_TreeBar_ID, Integer.valueOf(AD_TreeBar_ID));
-	}
-
-	/** Get AD_TreeBar ID.
-		@return AD_TreeBar ID	  */
-	public int getAD_TreeBar_ID () 
-	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_AD_TreeBar_ID);
-		if (ii == null)
-			 return 0;
-		return ii.intValue();
-	}
 
 	/** Set Tree.
 		@param AD_Tree_ID 

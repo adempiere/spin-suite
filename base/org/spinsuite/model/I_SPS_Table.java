@@ -21,7 +21,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Interface for SPS_Table
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765)
+ *  @version Release 3.7.0LTS
  */
 public interface I_SPS_Table 
 {
@@ -178,6 +178,19 @@ public interface I_SPS_Table
 	  * Information maintained in System Element table
 	  */
 	public boolean isCentrallyMaintained();
+
+    /** Column name IsChangeLog */
+    public static final String COLUMNNAME_IsChangeLog = "IsChangeLog";
+
+	/** Set Maintain Change Log.
+	  * Maintain a log of changes
+	  */
+	public void setIsChangeLog (boolean IsChangeLog);
+
+	/** Get Maintain Change Log.
+	  * Maintain a log of changes
+	  */
+	public boolean isChangeLog();
 
     /** Column name IsDeleteable */
     public static final String COLUMNNAME_IsDeleteable = "IsDeleteable";

@@ -26,7 +26,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for C_Charge
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_C_Charge extends PO implements I_C_Charge {
     /** Standard Constructor */
     public X_C_Charge (Context ctx, int C_Charge_ID, DB conn)

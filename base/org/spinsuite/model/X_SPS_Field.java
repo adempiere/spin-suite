@@ -24,7 +24,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for SPS_Field
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_SPS_Field extends PO implements I_SPS_Field {
     /** Standard Constructor */
     public X_SPS_Field (Context ctx, int SPS_Field_ID, DB conn)

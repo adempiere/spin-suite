@@ -21,7 +21,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Interface for SPS_Column
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765)
+ *  @version Release 3.7.0LTS
  */
 public interface I_SPS_Column 
 {
@@ -283,6 +283,19 @@ public interface I_SPS_Column
 	  * The record is active in the system
 	  */
 	public boolean isActive();
+
+    /** Column name IsAllowLogging */
+    public static final String COLUMNNAME_IsAllowLogging = "IsAllowLogging";
+
+	/** Set Allow Logging.
+	  * Determine if a column must be recorded into the change log
+	  */
+	public void setIsAllowLogging (boolean IsAllowLogging);
+
+	/** Get Allow Logging.
+	  * Determine if a column must be recorded into the change log
+	  */
+	public boolean isAllowLogging();
 
     /** Column name IsAlwaysUpdateable */
     public static final String COLUMNNAME_IsAlwaysUpdateable = "IsAlwaysUpdateable";

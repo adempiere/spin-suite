@@ -25,7 +25,7 @@ import org.spinsuite.util.Env;
 
 /** Generated Model for C_UOM_Conversion
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_C_UOM_Conversion extends PO implements I_C_UOM_Conversion {
     /** Standard Constructor */
     public X_C_UOM_Conversion (Context ctx, int C_UOM_Conversion_ID, DB conn)

@@ -23,7 +23,7 @@ import org.spinsuite.base.DB;
 
 /** Generated Model for WS_WebServiceFieldOutput
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_WS_WebServiceFieldOutput extends PO implements I_WS_WebServiceFieldOutput {
     /** Standard Constructor */
     public X_WS_WebServiceFieldOutput (Context ctx, int WS_WebServiceFieldOutput_ID, DB conn)

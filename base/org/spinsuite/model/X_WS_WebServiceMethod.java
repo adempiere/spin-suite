@@ -24,7 +24,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for WS_WebServiceMethod
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_WS_WebServiceMethod extends PO implements I_WS_WebServiceMethod {
     /** Standard Constructor */
     public X_WS_WebServiceMethod (Context ctx, int WS_WebServiceMethod_ID, DB conn)

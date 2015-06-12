@@ -27,7 +27,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for C_BPartner
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_C_BPartner extends PO implements I_C_BPartner {
     /** Standard Constructor */
     public X_C_BPartner (Context ctx, int C_BPartner_ID, DB conn)
@@ -57,7 +57,9 @@ public class X_C_BPartner extends PO implements I_C_BPartner {
 			setSendEMail (false);
 // N
 			setSO_CreditLimit (Env.ZERO);
+// 0
 			setSO_CreditUsed (Env.ZERO);
+// 0
 			setValue (null);
         } */
     }

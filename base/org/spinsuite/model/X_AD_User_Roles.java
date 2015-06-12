@@ -23,7 +23,7 @@ import org.spinsuite.base.DB;
 
 /** Generated Model for AD_User_Roles
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_AD_User_Roles extends PO implements I_AD_User_Roles {
     /** Standard Constructor */
     public X_AD_User_Roles (Context ctx, int AD_User_Roles_ID, DB conn)

@@ -27,7 +27,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for C_OrderLine
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_C_OrderLine extends PO implements I_C_OrderLine {
     /** Standard Constructor */
     public X_C_OrderLine (Context ctx, int C_OrderLine_ID, DB conn)
@@ -45,7 +45,7 @@ public class X_C_OrderLine extends PO implements I_C_OrderLine {
 			setC_UOM_ID (0);
 // @#C_UOM_ID@
 			setDateOrdered (null);
-// @DateOrdered@
+// @#Date@
 			setFreightAmt (Env.ZERO);
 			setIsDescription (false);
 // N
@@ -64,7 +64,6 @@ public class X_C_OrderLine extends PO implements I_C_OrderLine {
 			setQtyEntered (Env.ZERO);
 // 1
 			setQtyInvoiced (Env.ZERO);
-			setQtyLostSales (Env.ZERO);
 			setQtyOrdered (Env.ZERO);
 // 1
 			setQtyReserved (Env.ZERO);

@@ -24,7 +24,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for SPS_Column
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_SPS_Column extends PO implements I_SPS_Column {
     /** Standard Constructor */
     public X_SPS_Column (Context ctx, int SPS_Column_ID, DB conn)
@@ -373,6 +373,30 @@ public class X_SPS_Column extends PO implements I_SPS_Column {
 	public String getInfoFactoryClass () 
 	{
 		return (String)get_Value(COLUMNNAME_InfoFactoryClass);
+	}
+
+	/** Set Allow Logging.
+		@param IsAllowLogging 
+		Determine if a column must be recorded into the change log
+	  */
+	public void setIsAllowLogging (boolean IsAllowLogging)
+	{
+		set_Value (COLUMNNAME_IsAllowLogging, Boolean.valueOf(IsAllowLogging));
+	}
+
+	/** Get Allow Logging.
+		@return Determine if a column must be recorded into the change log
+	  */
+	public boolean isAllowLogging () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsAllowLogging);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	/** Set Always Updateable.

@@ -1188,8 +1188,12 @@ public abstract class PO {
 			if(isNew) {
 				if(column.ColumnName.equals(m_TableInfo.getTableName() + "_ID")) {
 					Integer ID = (Integer) value;
-					if ( ID != null && ID > 0)
+					//	2015-06-12 Dixon Martinez
+					//	Check is Is Synchronization
+					if (( ID != null && ID > 0) 
+							|| isSynchronization())
 						m_IDs = new Object[]{ID};
+					//	End Dixon Martinez
 					else
 						m_IDs = new Object[]{MSequence.getNextID(m_ctx, getAD_Client_ID(), getTableName(), conn)};
 					//	Set ID

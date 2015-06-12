@@ -24,7 +24,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for AD_Org
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_AD_Org extends PO implements I_AD_Org {
     /** Standard Constructor */
     public X_AD_Org (Context ctx, int AD_Org_ID, DB conn)

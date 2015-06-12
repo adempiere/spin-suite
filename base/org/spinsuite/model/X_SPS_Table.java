@@ -24,7 +24,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for SPS_Table
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_SPS_Table extends PO implements I_SPS_Table {
     /** Standard Constructor */
     public X_SPS_Table (Context ctx, int SPS_Table_ID, DB conn)
@@ -218,6 +218,30 @@ public class X_SPS_Table extends PO implements I_SPS_Table {
 	public boolean isCentrallyMaintained () 
 	{
 		Object oo = get_Value(COLUMNNAME_IsCentrallyMaintained);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Maintain Change Log.
+		@param IsChangeLog 
+		Maintain a log of changes
+	  */
+	public void setIsChangeLog (boolean IsChangeLog)
+	{
+		set_Value (COLUMNNAME_IsChangeLog, Boolean.valueOf(IsChangeLog));
+	}
+
+	/** Get Maintain Change Log.
+		@return Maintain a log of changes
+	  */
+	public boolean isChangeLog () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsChangeLog);
 		if (oo != null) 
 		{
 			 if (oo instanceof Boolean) 

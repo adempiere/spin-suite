@@ -24,7 +24,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for AD_Rule
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_AD_Rule extends PO implements I_AD_Rule {
     /** Standard Constructor */
     public X_AD_Rule (Context ctx, int AD_Rule_ID, DB conn)

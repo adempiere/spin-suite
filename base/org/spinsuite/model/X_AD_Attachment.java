@@ -24,7 +24,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for AD_Attachment
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_AD_Attachment extends PO implements I_AD_Attachment {
     /** Standard Constructor */
     public X_AD_Attachment (Context ctx, int AD_Attachment_ID, DB conn)

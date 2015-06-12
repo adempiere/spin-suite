@@ -25,7 +25,7 @@ import org.spinsuite.util.Env;
 
 /** Generated Model for C_OrderTax
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_C_OrderTax extends PO implements I_C_OrderTax {
     /** Standard Constructor */
     public X_C_OrderTax (Context ctx, int C_OrderTax_ID, DB conn)
@@ -38,6 +38,7 @@ public class X_C_OrderTax extends PO implements I_C_OrderTax {
 			setC_Tax_ID (0);
 			setIsTaxIncluded (false);
 			setProcessed (false);
+// N
 			setTaxAmt (Env.ZERO);
 			setTaxBaseAmt (Env.ZERO);
         } */
