@@ -158,7 +158,7 @@ public class LV_Menu extends Activity {
 	}
 	
 	@Override
-	 public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 	     switch (item.getItemId()) {
 	        case android.R.id.home:
 	    		//	Auto Login
@@ -172,5 +172,5 @@ public class LV_Menu extends Activity {
 	        default:
 	        	return super.onOptionsItemSelected(item);
 	     }
-	}	
+	}
 }

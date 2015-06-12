@@ -105,6 +105,10 @@
 		<item name="ic_payment_rule_direct_deposit">@drawable/direct_deposit_m</item>
 		<item name="ic_payment_rule_mixed">@drawable/payment_mixed_m</item>
 		<item name="ic_payment_rule_on_credit">@drawable/oncredit_m</item>
+		<!-- For Preferences -->
+		<item name="ic_pr_general">@drawable/configuration_h</item>
+		<item name="ic_pr_ws">@drawable/download_h</item>
+		<item name="ic_pr_mqtt">@drawable/mqtt_h</item>
 		<!-- Text Color -->
     </style>
     

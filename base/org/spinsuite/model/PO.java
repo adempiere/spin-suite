@@ -283,10 +283,17 @@ public abstract class PO {
 		boolean ok = false;
 		LogM.log(getCtx(), getClass(), Level.FINE, "loadData=" + String.valueOf(ID));
 		if(ID != null
-				&& ID[0]>0)  {//&& Integer.parseInt(ID[0].toString()) > 0)) {
-			for(int i = 0; i< ID.length;i++)
+				&& ID[0] > 0)  {//&& Integer.parseInt(ID[0].toString()) > 0)) {
+			//	Verify Inconsistent
+			if(m_IDs == null 
+					|| m_IDs.length != ID.length) {
+				m_IDs = new Object[ID.length];
+			}
+			//	Copy
+			for(int i = 0; i < ID.length; i++) {
 				m_IDs[i] = ID[i];
-			
+			}
+			//	
 			m_KeyColumns = KeyColumns;
 			if(m_KeyColumns == null
 					|| m_KeyColumns.length == 0)

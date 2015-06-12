@@ -46,5 +46,13 @@
 	<string name="tt_Conn">Connection</string>
 	<string name="tt_LoginRole">Login Role</string>
 	<string name="LoadTestData">Load Test Data</string>
+	<!-- Preferences -->
+	<string name="PR_Preferences">Preferences</string>
+	<string name="PR_General">General</string>
+	<string name="PR_D_General">General Preferences (Language, Login andother)</string>
+	<string name="PR_WS">Web-Services</string>
+	<string name="PR_D_WS">Web-Services Preferences (Connection, Timeout)</string>
+	<string name="PR_MQTT">MQTT Protcol</string>
+	<string name="PR_D_MQTT">MQTT Protocol Preferences (Use for Async Connection)</string>
 	
 </resources>

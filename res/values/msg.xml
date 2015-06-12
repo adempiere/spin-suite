@@ -67,7 +67,7 @@
 	<string name="msg_FailedConnection">Failed Connection</string>
 	<string name="msg_Billing">Billing</string>
 	<string name="msg_Shipment">Shipment</string>
-	<string name="msg_AutoLogin">Auto Login</string>
+	<string name="msg_RequestLogin">Request Login</string>
 	<string name="msg_ReadOnly">Read Only</string>
 	<string name="msg_LoginOffDate">Login Off Date</string>
 	<string name="msg_WritePermissionsBlocked">Write Permissions Blocked</string>

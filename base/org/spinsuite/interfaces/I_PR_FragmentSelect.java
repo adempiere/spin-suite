@@ -19,13 +19,20 @@ package org.spinsuite.interfaces;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
-public interface I_FragmentSelect {
+public interface I_PR_FragmentSelect {
+	
+	/**	General Preferences		*/
+	public static final int GENERAL = 0;
+	/**	General Preferences		*/
+	public static final int MQTT = 1;
+	/**	General Preferences		*/
+	public static final int WEB_SERVICES = 2;
 	
 	/**
-	 * Method for selection
+	 * For Select a item
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_TopicName
+	 * @param p_Item_ID
 	 * @return void
 	 */
-	public void onItemSelected(String p_TopicName);
+	public void onItemSelected(int p_Item_ID);
 }

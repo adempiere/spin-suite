@@ -29,6 +29,9 @@ import org.spinsuite.util.Msg;
 import org.spinsuite.util.SyncValues;
 import org.spinsuite.view.LV_Menu;
 import org.spinsuite.view.TV_Base;
+import org.spinsuite.view.T_Pref_MQTT;
+import org.spinsuite.view.T_Role;
+import org.spinsuite.view.V_Preferences;
 
 import test.LoadInitData;
 import android.app.Activity;
@@ -310,7 +313,7 @@ public class Login extends TV_Base implements I_Login {
 				aceptAction();
 				return true;
 			} else if (itemId == R.id.action_config) {
-				Intent intent = new Intent(this, T_Connection.class);
+				Intent intent = new Intent(this, V_Preferences.class);
 				startActivity(intent);
 				return true;
 			}
@@ -332,7 +335,7 @@ public class Login extends TV_Base implements I_Login {
 		if(fr instanceof T_Login){
 			if(ret){
 				if(!Env.isEnvLoad()){
-					Intent intent = new Intent(this, T_Connection.class);
+					Intent intent = new Intent(this, T_Pref_MQTT.class);
 					startActivity(intent);
 				} else {
 					//	Is Logged

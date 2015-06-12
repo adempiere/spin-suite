@@ -171,7 +171,7 @@ public class LV_AttachView extends Activity {
 	 * @return void
 	 */
 	private void showView() {
-		ImageTextAdapter mi_adapter = new ImageTextAdapter(v_activity, R.layout.i_image_text, data);
+		ImageTextAdapter mi_adapter = new ImageTextAdapter(v_activity, data);
 		mi_adapter.setDropDownViewResource(R.layout.i_image_text);
 		//	
 		lv_AttachmentList.setAdapter(mi_adapter);

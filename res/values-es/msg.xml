@@ -67,7 +67,7 @@
 	<string name="msg_FailedConnection">Conexión Fallida</string>
 	<string name="msg_Billing">Facturación</string>
 	<string name="msg_Shipment">Entrega</string>
-	<string name="msg_AutoLogin">Entrada Automática</string>
+	<string name="msg_RequestLogin">Solicitar Usuario</string>
 	<string name="msg_ReadOnly">Registro de Sólo Lectura</string>
 	<string name="msg_LoginOffDate">Inicio de Sesión Fuera de Fecha</string>
 	<string name="msg_WritePermissionsBlocked">Permisos de Escritura Bloqueados</string>

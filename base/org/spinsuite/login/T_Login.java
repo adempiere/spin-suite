@@ -16,27 +16,21 @@
 package org.spinsuite.login;
 
 
-import java.util.ArrayList;
-import java.util.Locale;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
-import org.spinsuite.util.DisplaySpinner;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
-import org.spinsuite.view.custom.Cust_Spinner;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.EditText;
 
 /**
@@ -50,12 +44,6 @@ public class T_Login extends Fragment implements I_Login {
 	private EditText 		et_User;
 	/**	Login Pass					*/
 	private EditText 		et_Pass;
-	/**	Save Pass					*/
-	private CheckBox 		ch_SavePass;
-	/**	Auto Login					*/
-	private CheckBox 		ch_AutoLogin;
-	/**	Language					*/
-	private Cust_Spinner	sp_Language;
 	/**	Current View				*/
 	private View 			m_View = null;
 	/**	Is Load Ok					*/
@@ -79,29 +67,7 @@ public class T_Login extends Fragment implements I_Login {
     	//	
     	et_User = (EditText) 			m_View.findViewById(R.id.et_User);
     	et_Pass = (EditText) 			m_View.findViewById(R.id.et_Pass);
-    	ch_SavePass = (CheckBox) 		m_View.findViewById(R.id.ch_SavePass);
-    	ch_AutoLogin = (CheckBox) 		m_View.findViewById(R.id.ch_AutoLogin);
-    	sp_Language = (Cust_Spinner) 	m_View.findViewById(R.id.sp_Language);
-    	
-    	ArrayList <DisplaySpinner> data = new ArrayList<DisplaySpinner>();
-    	for(Locale loc : Locale.getAvailableLocales()){
-    		data.add(new DisplaySpinner(0, loc.getDisplayName(), loc.toString()));
-    	}
-		sp_Language.load(data);
 		m_IsLoadOk = true;
-    }
-    
-    /**
-     * Reload Activity
-     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-     * @param language
-     * @return void
-     */
-    private void reloadLanguage(String language){
-    	Env.changeLanguage(language);
-    	Intent refresh = new Intent(getActivity(), Login.class);
-		startActivity(refresh);
-		getActivity().finish();
     }
     
     /**
@@ -118,13 +84,6 @@ public class T_Login extends Fragment implements I_Login {
     			Env.setContext("#SUser", user);
     			Env.setContext("#AD_User_Name", user);
     			Env.setContext("#SPass", pass);
-    			Env.setSavePass(ch_SavePass.isChecked());
-    			Env.setAutoLogin(ch_AutoLogin.isChecked());
-    			String language = (String)((DisplaySpinner)sp_Language.getSelectedItem()).getHiddenValue();
-    			if(!language.equals(Env.getAD_Language())){
-    				Env.setAD_Language(language);
-    				reloadLanguage(language);
-    			}
     			if(!Env.isEnvLoad())
     				return true;
     			else if(findUser(user, pass)) {
@@ -211,25 +170,12 @@ public class T_Login extends Fragment implements I_Login {
      		if(user != null)
      			et_User.setText(user);
      	}
-     	
-     	//	Save Pass Check
-     	ch_SavePass.setChecked(Env.isSavePass());
-     	//	Auto Login Check
-     	ch_AutoLogin.setChecked(Env.isAutoLogin());
-     	
      	//	Save Pass
      	if(Env.isSavePass()){
      		pass = Env.getContext("#SPass");
      		if(pass != null)
      			et_Pass.setText(pass);
 		}
- 		//	Select Language
- 		String language = Env.getAD_Language();
- 		if(language != null
- 				&& language.length() != 0){
- 			sp_Language.setSelectedHiddenValue(language);
- 		} else
- 			sp_Language.setSelectedHiddenValue(Env.BASE_LANGUAGE);
  		//	
 		return true;
 	}
@@ -240,10 +186,5 @@ public class T_Login extends Fragment implements I_Login {
 			return;
 		et_User.setEnabled(enabled);
     	et_Pass.setEnabled(enabled);
-    	ch_SavePass.setEnabled(enabled);
-    	ch_SavePass.setClickable(enabled);
-    	ch_AutoLogin.setEnabled(enabled);
-    	ch_AutoLogin.setClickable(enabled);
-    	sp_Language.setEnabled(enabled);
 	}
 }

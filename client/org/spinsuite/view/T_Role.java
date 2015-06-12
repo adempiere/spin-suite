@@ -13,7 +13,7 @@
  * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
-package org.spinsuite.login;
+package org.spinsuite.view;
 
 import java.util.Calendar;
 
