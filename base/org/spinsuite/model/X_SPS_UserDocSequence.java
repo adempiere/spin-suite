@@ -23,7 +23,7 @@ import org.spinsuite.base.DB;
 
 /** Generated Model for SPS_UserDocSequence
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_SPS_UserDocSequence extends PO implements I_SPS_UserDocSequence {
     /** Standard Constructor */
     public X_SPS_UserDocSequence (Context ctx, int SPS_UserDocSequence_ID, DB conn)

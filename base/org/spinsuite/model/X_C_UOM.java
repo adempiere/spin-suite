@@ -24,7 +24,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for C_UOM
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_C_UOM extends PO implements I_C_UOM {
     /** Standard Constructor */
     public X_C_UOM (Context ctx, int C_UOM_ID, DB conn)

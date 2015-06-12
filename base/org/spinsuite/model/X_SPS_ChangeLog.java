@@ -34,8 +34,11 @@ public class X_SPS_ChangeLog extends PO implements I_SPS_ChangeLog {
         {
 			setAD_Session_ID (0);
 			setIsCustomization (false);
+// N
 			setRecord_ID (0);
 			setSPS_ChangeLog_ID (0);
+			setSPS_Column_ID (0);
+			setSPS_Table_ID (0);
         } */
     }
 

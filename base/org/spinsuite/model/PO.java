@@ -1179,7 +1179,11 @@ public abstract class PO {
 			if(isNew
 					&& column.ColumnName.equals(m_TableInfo.getTableName() + "_ID")) {
 				Integer ID = (Integer) value;
-				if ( ID != null && ID > 0)
+				if ( (ID != null && ID > 0)
+						//2015-05-11 Dixon Martinez Add Validation for Synchronising Records
+						|| isSynchronization()
+						//End Dixon Martinez
+						)
 					m_IDs = new Object[]{ID};
 				else
 					m_IDs = new Object[]{MSequence.getNextID(m_ctx, getAD_Client_ID(), getTableName(), conn)};

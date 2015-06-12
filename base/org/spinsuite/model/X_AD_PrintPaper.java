@@ -26,7 +26,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for AD_PrintPaper
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_AD_PrintPaper extends PO implements I_AD_PrintPaper {
     /** Standard Constructor */
     public X_AD_PrintPaper (Context ctx, int AD_PrintPaper_ID, DB conn)

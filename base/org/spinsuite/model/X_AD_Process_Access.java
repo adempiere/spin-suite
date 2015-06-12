@@ -23,7 +23,7 @@ import org.spinsuite.base.DB;
 
 /** Generated Model for AD_Process_Access
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_AD_Process_Access extends PO implements I_AD_Process_Access {
     /** Standard Constructor */
     public X_AD_Process_Access (Context ctx, int AD_Process_Access_ID, DB conn)

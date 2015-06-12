@@ -614,14 +614,16 @@ public class CalloutOrder extends CalloutEngine {
 			//	
 			if (rs.moveToFirst()) {
 				//	Tax Included
-				mTab.setValue("IsTaxIncluded", "Y".equals(rs.getString(1)));
+				//2015-05-11 Dixon Martinez Change Position of Columns 
+				mTab.setValue("IsTaxIncluded", "Y".equals(rs.getString(0))); //1
 				//	Price Limit Enforce
-				Env.setContext(WindowNo, "EnforcePriceLimit", rs.getString(2));
+				Env.setContext(WindowNo, "EnforcePriceLimit", rs.getString(1)); //2
 				//	Currency
-				int ii = rs.getInt(3);
+				int ii = rs.getInt(2); //3
 				mTab.setValue("C_Currency_ID", ii);
 				//	PriceList Version
-				Env.setContext(WindowNo, "M_PriceList_Version_ID", rs.getInt(5));
+				Env.setContext(WindowNo, "M_PriceList_Version_ID", rs.getInt(4)); //5
+				//End Dixon Martinez
 			}
 		} catch (Exception e) {
 			LogM.log(ctx, getClass(), Level.SEVERE, "priceList (" + sql + ")", e);

@@ -25,7 +25,7 @@ import org.spinsuite.util.Env;
 
 /** Generated Model for M_ProductPrice
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_M_ProductPrice extends PO implements I_M_ProductPrice {
     /** Standard Constructor */
     public X_M_ProductPrice (Context ctx, int M_ProductPrice_ID, DB conn)

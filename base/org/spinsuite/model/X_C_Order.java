@@ -27,7 +27,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for C_Order
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_C_Order extends PO implements I_C_Order {
     /** Standard Constructor */
     public X_C_Order (Context ctx, int C_Order_ID, DB conn)

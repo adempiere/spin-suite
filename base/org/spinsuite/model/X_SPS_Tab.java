@@ -24,7 +24,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for SPS_Tab
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_SPS_Tab extends PO implements I_SPS_Tab {
     /** Standard Constructor */
     public X_SPS_Tab (Context ctx, int SPS_Tab_ID, DB conn)
