@@ -24,7 +24,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for C_BPartner_Location
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_C_BPartner_Location extends PO implements I_C_BPartner_Location {
     /** Standard Constructor */
     public X_C_BPartner_Location (Context ctx, int C_BPartner_Location_ID, DB conn)

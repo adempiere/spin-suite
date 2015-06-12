@@ -27,7 +27,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for C_Currency
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_C_Currency extends PO implements I_C_Currency {
     /** Standard Constructor */
     public X_C_Currency (Context ctx, int C_Currency_ID, DB conn)

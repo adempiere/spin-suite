@@ -24,7 +24,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for AD_PrintFormatItem
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_AD_PrintFormatItem extends PO implements I_AD_PrintFormatItem {
     /** Standard Constructor */
     public X_AD_PrintFormatItem (Context ctx, int AD_PrintFormatItem_ID, DB conn)
@@ -32,7 +32,6 @@ public class X_AD_PrintFormatItem extends PO implements I_AD_PrintFormatItem {
       super (ctx, AD_PrintFormatItem_ID, conn);
       /** if (AD_PrintFormatItem_ID == 0)
         {
-			setAD_PrintFormatChild_ID (0);
 			setAD_PrintFormat_ID (0);
 			setAD_PrintFormatItem_ID (0);
 			setFieldAlignmentType (null);

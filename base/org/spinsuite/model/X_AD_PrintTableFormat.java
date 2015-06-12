@@ -26,7 +26,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for AD_PrintTableFormat
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_AD_PrintTableFormat extends PO implements I_AD_PrintTableFormat {
     /** Standard Constructor */
     public X_AD_PrintTableFormat (Context ctx, int AD_PrintTableFormat_ID, DB conn)

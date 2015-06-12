@@ -23,7 +23,7 @@ import org.spinsuite.base.DB;
 
 /** Generated Model for AD_TreeNode
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_AD_TreeNode extends PO implements I_AD_TreeNode {
     /** Standard Constructor */
     public X_AD_TreeNode (Context ctx, int AD_TreeNode_ID, DB conn)

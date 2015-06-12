@@ -114,7 +114,7 @@ public class X_AD_PInstance extends PO implements I_AD_PInstance {
 		return ii.intValue();
 	}
 
-	/** Set User/Contact.
+	/** Set Usuario.
 		@param AD_User_ID 
 		User within the system - Internal or Business Partner Contact
 	  */
@@ -126,7 +126,7 @@ public class X_AD_PInstance extends PO implements I_AD_PInstance {
 			set_Value (COLUMNNAME_AD_User_ID, Integer.valueOf(AD_User_ID));
 	}
 
-	/** Get User/Contact.
+	/** Get Usuario.
 		@return User within the system - Internal or Business Partner Contact
 	  */
 	public int getAD_User_ID () 
@@ -191,23 +191,6 @@ public class X_AD_PInstance extends PO implements I_AD_PInstance {
 			return "Y".equals(oo);
 		}
 		return false;
-	}
-
-	/** Set Name.
-		@param Name 
-		Alphanumeric identifier of the entity
-	  */
-	public void setName (String Name)
-	{
-		set_Value (COLUMNNAME_Name, Name);
-	}
-
-	/** Get Name.
-		@return Alphanumeric identifier of the entity
-	  */
-	public String getName () 
-	{
-		return (String)get_Value(COLUMNNAME_Name);
 	}
 
 	/** Set Record ID.

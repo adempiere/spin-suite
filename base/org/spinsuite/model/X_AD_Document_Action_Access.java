@@ -23,7 +23,7 @@ import org.spinsuite.base.DB;
 
 /** Generated Model for AD_Document_Action_Access
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_AD_Document_Action_Access extends PO implements I_AD_Document_Action_Access {
     /** Standard Constructor */
     public X_AD_Document_Action_Access (Context ctx, int AD_Document_Action_Access_ID, DB conn)

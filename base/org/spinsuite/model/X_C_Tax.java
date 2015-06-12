@@ -27,7 +27,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for C_Tax
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_C_Tax extends PO implements I_C_Tax {
     /** Standard Constructor */
     public X_C_Tax (Context ctx, int C_Tax_ID, DB conn)

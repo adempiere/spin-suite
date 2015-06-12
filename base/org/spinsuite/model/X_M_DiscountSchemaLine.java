@@ -27,7 +27,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for M_DiscountSchemaLine
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_M_DiscountSchemaLine extends PO implements I_M_DiscountSchemaLine {
     /** Standard Constructor */
     public X_M_DiscountSchemaLine (Context ctx, int M_DiscountSchemaLine_ID, DB conn)

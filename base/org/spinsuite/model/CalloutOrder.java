@@ -613,15 +613,18 @@ public class CalloutOrder extends CalloutEngine {
 			rs = conn.querySQL();
 			//	
 			if (rs.moveToFirst()) {
+				//	2015-06-12 Dixon Martinez
+				//	Change Index values
 				//	Tax Included
-				mTab.setValue("IsTaxIncluded", "Y".equals(rs.getString(1)));
+				mTab.setValue("IsTaxIncluded", "Y".equals(rs.getString(0)));//	1
 				//	Price Limit Enforce
-				Env.setContext(WindowNo, "EnforcePriceLimit", rs.getString(2));
+				Env.setContext(WindowNo, "EnforcePriceLimit", rs.getString(1));//	2
 				//	Currency
-				int ii = rs.getInt(3);
+				int ii = rs.getInt(2);//	3
 				mTab.setValue("C_Currency_ID", ii);
 				//	PriceList Version
-				Env.setContext(WindowNo, "M_PriceList_Version_ID", rs.getInt(5));
+				Env.setContext(WindowNo, "M_PriceList_Version_ID", rs.getInt(4));//	5
+				//	End Dixon Martinez
 			}
 		} catch (Exception e) {
 			LogM.log(ctx, getClass(), Level.SEVERE, "priceList (" + sql + ")", e);

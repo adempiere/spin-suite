@@ -25,7 +25,7 @@ import org.spinsuite.util.KeyNamePair;
 
 /** Generated Model for AD_Ref_List
  *  @author Adempiere (generated) 
- *  @version Release 3.7.0LTS (1252452765) - $Id$ */
+ *  @version Release 3.7.0LTS - $Id$ */
 public class X_AD_Ref_List extends PO implements I_AD_Ref_List {
     /** Standard Constructor */
     public X_AD_Ref_List (Context ctx, int AD_Ref_List_ID, DB conn)
