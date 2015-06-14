@@ -56,5 +56,6 @@
 	<string name="PR_D_MQTT">MQTT Protocol Preferences (Use for Async Connection)</string>
 	<string name="PR_Login">Login</string>
 	<string name="PR_D_Login">Login Preferences (Security, Role Access)</string>
-	
+	<string name="PR_Login_Role">Login Role</string>
+	<string name="PR_D_Login_Role">Determinate the Role Access to System by Default</string>
 </resources>

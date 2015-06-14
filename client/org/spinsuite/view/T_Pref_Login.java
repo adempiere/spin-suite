@@ -33,7 +33,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnChildClickListener;
 
 /**
  * 
@@ -89,18 +88,9 @@ public class T_Pref_Login extends T_Pref_Parent {
     	et_User = (EditText) 			m_View.findViewById(R.id.et_User);
     	et_Pass = (EditText) 			m_View.findViewById(R.id.et_Pass);
     	ev_Role	= (ExpandableListView)	m_View.findViewById(R.id.ev_Role);
-    	
-    	final LoginRoleAdapter roleAdapter = new LoginRoleAdapter(m_ctx);
-    	ev_Role.setAdapter(roleAdapter);
-    	ev_Role.setOnChildClickListener(new OnChildClickListener() {
-			
-			@Override
-			public boolean onChildClick(ExpandableListView parent, View v,
-					int groupPosition, int childPosition, long id) {
-				roleAdapter.getChild(groupPosition, childPosition);
-				return false;
-			}
-		});
+    	ev_Role.setClickable(true);
+    	ev_Role.setGroupIndicator(null);
+    	ev_Role.setAdapter(new LoginRoleAdapter(m_ctx));
 		m_IsLoadOk = true;
     }
     
@@ -113,7 +103,7 @@ public class T_Pref_Login extends T_Pref_Parent {
     private boolean validUser() {
     	String user = et_User.getText().toString().trim();
     	String pass = et_Pass.getText().toString().trim();
-    	if(user != null && user.length() > 0){
+    	if(user != null && user.length() > 0) {
     		if(pass != null && pass.length() > 0){
     			Env.setContext("#SUser", user);
     			Env.setContext("#AD_User_Name", user);
@@ -123,14 +113,18 @@ public class T_Pref_Login extends T_Pref_Parent {
     			else if(findUser(user, pass)) {
     				return true;
     			} else {
-    				Msg.alertMsg(this.getActivity(), 
+    				Msg.toastMsg(m_ctx, 
     						getResources().getString(R.string.msg_UserPassDoNotMatch));
     			}
     		} else {
-    			Msg.alertMustFillField(this.getActivity(), R.string.Pass, et_Pass);
+    			Msg.toastMsg(m_ctx, 
+						getResources().getString(R.string.MustFillField) 
+						+ " \"" + getResources().getString(R.string.Pass) + "\"");
     		}
     	} else {
-    		Msg.alertMustFillField(this.getActivity(), R.string.User, et_User);
+    		Msg.toastMsg(m_ctx, 
+					getResources().getString(R.string.MustFillField) 
+					+ " \"" + getResources().getString(R.string.User) + "\"");
     	}
     	return false;
     }
@@ -220,5 +214,6 @@ public class T_Pref_Login extends T_Pref_Parent {
 			return;
 		et_User.setEnabled(enabled);
     	et_Pass.setEnabled(enabled);
+    	ev_Role.setEnabled(enabled);
 	}
 }

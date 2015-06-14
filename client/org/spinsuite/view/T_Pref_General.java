@@ -17,12 +17,12 @@ package org.spinsuite.view;
 
 
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.logging.Level;
 
 import org.spinsuite.base.R;
 import org.spinsuite.login.Login;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.Language;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 
@@ -103,8 +103,8 @@ public class T_Pref_General extends T_Pref_Parent {
     	butt_DropDB 	= (Button) m_View.findViewById(R.id.butt_DropDB);
     	
     	ArrayList <String> data = new ArrayList<String>();
-    	for(Locale loc : Locale.getAvailableLocales()){
-    		data.add(loc.getDisplayName());
+    	for(Language lang : Language.getAvaliableLanguages()){
+    		data.add(lang.getAD_Language());
     	}
     	
     	ArrayAdapter<String> adapter = new ArrayAdapter<String>(m_ctx, 

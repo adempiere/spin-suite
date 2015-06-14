@@ -19,12 +19,17 @@
  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="?android:attr/activatedBackgroundIndicator" >
+    android:orientation="vertical" >
 
-	   <TextView
-        	android:id="@+id/tv_Role_Header"
-        	android:text="@string/AD_Role_ID"
-        	style="@style/TextDynamicTabLabel" />
+	<TextView
+    	android:id="@+id/tv_Role_Header"
+        android:text="@string/PR_Login_Role"
+        style="@style/TextDynamicTabEditText"
+        android:layout_height="wrap_content" />
+	<TextView
+    	android:id="@+id/tv_Role_Header_Description"
+        android:text="@string/PR_D_Login_Role"
+        style="@style/TextDynamicTabLabel"
+        android:layout_height="wrap_content" />
     	
 </LinearLayout>
