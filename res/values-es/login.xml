@@ -54,5 +54,7 @@
 	<string name="PR_D_WS">Preferencias de Servicios Web (Conexión, Tiempo de Espera)</string>
 	<string name="PR_MQTT">Protocolo (MQTT)</string>
 	<string name="PR_D_MQTT">Preferencias de MQTT (Usado para conexión asincrona)</string>
+	<string name="PR_Login">Inicio de Sesión</string>
+	<string name="PR_D_Login">Preferencias de Inisio de Sesión (Seguridad, Perfil de Acceso)</string>
 	
 </resources>

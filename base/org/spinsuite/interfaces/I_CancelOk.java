@@ -36,5 +36,21 @@ public interface I_CancelOk {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean processActionCancel();	
+	public boolean processActionCancel();
+	
+	/**
+	 * Used for Load data
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return boolean
+	 */
+	public boolean loadData();
+	
+	/**
+	 * Set Enabled Fields
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param enabled
+	 * @return void
+	 */
+	public void setEnabled(boolean enabled);
 }

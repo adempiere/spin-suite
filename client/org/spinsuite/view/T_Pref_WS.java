@@ -17,13 +17,11 @@ package org.spinsuite.view;
 
 
 import org.spinsuite.base.R;
-import org.spinsuite.interfaces.I_CancelOk;
 import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.util.Env;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +33,7 @@ import android.widget.EditText;
  *	<li> Login Correct
  * 	@see https://adempiere.atlassian.net/browse/SPIN-2
  */
-public class T_Pref_WS extends Fragment implements I_CancelOk {
+public class T_Pref_WS extends T_Pref_Parent {
 	
 	/**
 	 * Default
@@ -43,7 +41,7 @@ public class T_Pref_WS extends Fragment implements I_CancelOk {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 */
 	public T_Pref_WS() {
-		
+		super();
 	}
 	
 	/**
@@ -53,19 +51,13 @@ public class T_Pref_WS extends Fragment implements I_CancelOk {
 	 * @param p_ctx
 	 */
 	public T_Pref_WS(Context p_ctx) {
-		m_ctx = p_ctx;
+		super(p_ctx);
 	}
 	
-	/**	Context					*/
-	private Context			m_ctx = null;
 	/**	URL SOAP Communication	*/
 	private EditText 		et_UrlServer;
 	/**	Timeout					*/
 	private EditText 		et_Timeout;
-	/**	Current View			*/
-	private View 			m_View = null;
-	/**	Is Load Ok				*/
-	private boolean			m_IsLoadOk = false;
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -96,7 +88,7 @@ public class T_Pref_WS extends Fragment implements I_CancelOk {
     public void setTimeOut()
     {
     	//
-		int timeoutInt = Env.getContextAsInt(m_ctx, "#Timeout");
+		int timeoutInt = Env.getContextAsInt("#Timeout");
 		String timeout = String.valueOf(timeoutInt);
 		et_Timeout.setText(timeout);
     }
@@ -104,21 +96,7 @@ public class T_Pref_WS extends Fragment implements I_CancelOk {
     @Override
     public void onStart() {
         super.onStart();
-        String url = et_UrlServer.getText().toString();
-    	String timeout = et_Timeout.getText().toString();
-    	//	Load URL SOAP or SOPA JAJAJAJAJAJAJAJ
-    	if(url == null || url.length() == 0){
-    		url = Env.getContext(m_ctx, "#SUrlSoap");
-    		if(url != null)
-    			et_UrlServer.setText(url);
-    	}
-    	//	Timeout
-    	if(timeout == null || timeout.length() == 0){
-    		int timeoutInt = Env.getContextAsInt(m_ctx, "#Timeout");
-    		timeout = String.valueOf(timeoutInt);
-    		et_Timeout.setText(timeout);
-    	}
-//    	lockFront();
+        loadData();
     }
 	
     @Override
@@ -133,19 +111,19 @@ public class T_Pref_WS extends Fragment implements I_CancelOk {
     	String url = et_UrlServer.getText().toString();
     	if(url != null 
     			&& url.length() > 0){
-    		Env.setContext(m_ctx, "#SUrlSoap", url);
+    		Env.setContext("#SUrlSoap", url);
     	}
     	//	
     	String timeout = et_Timeout.getText().toString();
     	if(timeout != null 
     			&& timeout.length() > 0){
-    		Env.setContext(m_ctx, "#Timeout", Integer.parseInt(timeout));
+    		Env.setContext("#Timeout", Integer.parseInt(timeout));
     	}
 		//	Valid Timeout
 		if(et_Timeout.getText() != null 
 				&& et_Timeout.getText().toString().length() > 0){
 			String limit = et_Timeout.getText().toString();
-			Env.setContext(m_ctx, "#Timeout", Integer.parseInt(limit));
+			Env.setContext("#Timeout", Integer.parseInt(limit));
 			MQTTConnection.setTimeout(getActivity(), Integer.parseInt(limit));
 		}
 		//	Stop Service
@@ -166,5 +144,30 @@ public class T_Pref_WS extends Fragment implements I_CancelOk {
 	@Override
 	public boolean processActionCancel() {
 		return false;
+	}
+
+	@Override
+	public boolean loadData() {
+		String url = et_UrlServer.getText().toString();
+    	String timeout = et_Timeout.getText().toString();
+    	//	Load URL SOAP or SOPA JAJAJAJAJAJAJAJ
+    	if(url == null || url.length() == 0){
+    		url = Env.getContext("#SUrlSoap");
+    		if(url != null)
+    			et_UrlServer.setText(url);
+    	}
+    	//	Timeout
+    	if(timeout == null || timeout.length() == 0){
+    		int timeoutInt = Env.getContextAsInt("#Timeout");
+    		timeout = String.valueOf(timeoutInt);
+    		et_Timeout.setText(timeout);
+    	}
+		return false;
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		et_UrlServer.setEnabled(enabled);
+    	et_Timeout.setEnabled(enabled);
 	}
 }

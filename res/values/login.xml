@@ -54,5 +54,7 @@
 	<string name="PR_D_WS">Web-Services Preferences (Connection, Timeout)</string>
 	<string name="PR_MQTT">MQTT Protcol</string>
 	<string name="PR_D_MQTT">MQTT Protocol Preferences (Use for Async Connection)</string>
+	<string name="PR_Login">Login</string>
+	<string name="PR_D_Login">Login Preferences (Security, Role Access)</string>
 	
 </resources>

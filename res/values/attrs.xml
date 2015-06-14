@@ -104,4 +104,5 @@
 	<attr name="ic_pr_general" format="reference"/>
 	<attr name="ic_pr_ws" format="reference"/>
 	<attr name="ic_pr_mqtt" format="reference"/>
+	<attr name="ic_pr_login" format="reference"/>
 </resources>

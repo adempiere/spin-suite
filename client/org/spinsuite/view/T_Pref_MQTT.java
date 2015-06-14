@@ -17,13 +17,11 @@ package org.spinsuite.view;
 
 
 import org.spinsuite.base.R;
-import org.spinsuite.interfaces.I_CancelOk;
 import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +35,7 @@ import android.widget.EditText;
  *	<li> Login Correct
  * 	@see https://adempiere.atlassian.net/browse/SPIN-2
  */
-public class T_Pref_MQTT extends Fragment implements I_CancelOk {
+public class T_Pref_MQTT extends T_Pref_Parent {
 	
 	/**
 	 * Default
@@ -45,7 +43,7 @@ public class T_Pref_MQTT extends Fragment implements I_CancelOk {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 */
 	public T_Pref_MQTT() {
-		
+		super();
 	}
 	
 	/**
@@ -55,7 +53,7 @@ public class T_Pref_MQTT extends Fragment implements I_CancelOk {
 	 * @param p_ctx
 	 */
 	public T_Pref_MQTT(Context p_ctx) {
-		m_ctx = p_ctx;
+		super(p_ctx);
 	}
 	
 	/**	For MQTT Server			*/
@@ -72,12 +70,6 @@ public class T_Pref_MQTT extends Fragment implements I_CancelOk {
 	private CheckBox 		ch_MQTT_AutomaticService;
 	/**	MQTT File Path			*/
 	private Button 			bt_MQTT_SSL_File_Path;
-	/**	Current View				*/
-	private View 			m_View = null;
-	/**	Is Load Ok					*/
-	private boolean			m_IsLoadOk = false;
-	/**	Context						*/
-	private Context			m_ctx = null;
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -108,59 +100,12 @@ public class T_Pref_MQTT extends Fragment implements I_CancelOk {
     @Override
     public void onStart() {
         super.onStart();
-    	//	For MQTT Server
-    	String m_MQTT_ServerName 			= et_MQTT_ServerName.getText().toString();
-    	String m_MQTT_ServerUser 			= et_MQTT_ServerUser.getText().toString();
-    	String m_MQTT_ServerPass 			= et_MQTT_ServerPass.getText().toString();
-    	String m_MQTT_ServerPort 			= et_MQTT_ServerPort.getText().toString();
-    	String m_MQTT_KeepAliveInverval 	= et_MQTT_KeepAliveInverval.getText().toString();
-    	String m_MQTT_SSL_File_Path 		= bt_MQTT_SSL_File_Path.getText().toString();
-    	boolean m_MQTT_AutomaticService 	= MQTTConnection.isAutomaticService(m_ctx);
-		//	For MQTT Server
-    	if(m_MQTT_ServerName == null || m_MQTT_ServerName.length() == 0){
-    		m_MQTT_ServerName = MQTTConnection.getHost(m_ctx);
-    		if(m_MQTT_ServerName != null)
-    			et_MQTT_ServerName.setText(m_MQTT_ServerName);
-    	}
-    	//	For User
-    	if(m_MQTT_ServerUser == null || m_MQTT_ServerUser.length() == 0){
-    		m_MQTT_ServerUser = MQTTConnection.getMQTTUser(m_ctx);
-    		if(m_MQTT_ServerUser != null)
-    			et_MQTT_ServerUser.setText(m_MQTT_ServerUser);
-    	}
-    	//	For Pass
-    	if(m_MQTT_ServerPass == null || m_MQTT_ServerPass.length() == 0){
-    		m_MQTT_ServerPass = MQTTConnection.getMQTTPass(m_ctx);
-    		if(m_MQTT_ServerPass != null)
-    			et_MQTT_ServerPass.setText(m_MQTT_ServerPass);
-    	}
-    	//	Enable MQTT Service
-    	ch_MQTT_AutomaticService.setChecked(m_MQTT_AutomaticService);
-       	//	Port
-    	if(m_MQTT_ServerPort == null || m_MQTT_ServerPort.length() == 0) {
-    		int port = MQTTConnection.getPort(m_ctx);
-    		m_MQTT_ServerPort = String.valueOf(port);
-    		et_MQTT_ServerPort.setText(m_MQTT_ServerPort);
-    	}
-       	//	Keep Alive Interval
-    	if(m_MQTT_KeepAliveInverval == null || m_MQTT_KeepAliveInverval.length() == 0) {
-    		int interval = MQTTConnection.getKeepAliveInverval(m_ctx);
-    		m_MQTT_KeepAliveInverval = String.valueOf(interval);
-    		et_MQTT_KeepAliveInverval.setText(m_MQTT_KeepAliveInverval);
-    	}
-    	//	For SSL
-    	if(m_MQTT_SSL_File_Path == null || m_MQTT_SSL_File_Path.length() == 0){
-    		m_MQTT_SSL_File_Path = MQTTConnection.getSSLFilePath(m_ctx);
-    		if(m_MQTT_SSL_File_Path != null)
-    			bt_MQTT_SSL_File_Path.setText(m_MQTT_SSL_File_Path);
-    	}
-//    	lockFront();
+        loadData();
     }
 	
     @Override
     public void onResume() {
         super.onResume();
-//        lockFront();
     }
 	
     @Override
@@ -213,5 +158,67 @@ public class T_Pref_MQTT extends Fragment implements I_CancelOk {
 	@Override
 	public boolean processActionCancel() {
 		return false;
+	}
+
+	@Override
+	public boolean loadData() {
+    	//	For MQTT Server
+    	String m_MQTT_ServerName 			= et_MQTT_ServerName.getText().toString();
+    	String m_MQTT_ServerUser 			= et_MQTT_ServerUser.getText().toString();
+    	String m_MQTT_ServerPass 			= et_MQTT_ServerPass.getText().toString();
+    	String m_MQTT_ServerPort 			= et_MQTT_ServerPort.getText().toString();
+    	String m_MQTT_KeepAliveInverval 	= et_MQTT_KeepAliveInverval.getText().toString();
+    	String m_MQTT_SSL_File_Path 		= bt_MQTT_SSL_File_Path.getText().toString();
+    	boolean m_MQTT_AutomaticService 	= MQTTConnection.isAutomaticService(m_ctx);
+		//	For MQTT Server
+    	if(m_MQTT_ServerName == null || m_MQTT_ServerName.length() == 0){
+    		m_MQTT_ServerName = MQTTConnection.getHost(m_ctx);
+    		if(m_MQTT_ServerName != null)
+    			et_MQTT_ServerName.setText(m_MQTT_ServerName);
+    	}
+    	//	For User
+    	if(m_MQTT_ServerUser == null || m_MQTT_ServerUser.length() == 0){
+    		m_MQTT_ServerUser = MQTTConnection.getMQTTUser(m_ctx);
+    		if(m_MQTT_ServerUser != null)
+    			et_MQTT_ServerUser.setText(m_MQTT_ServerUser);
+    	}
+    	//	For Pass
+    	if(m_MQTT_ServerPass == null || m_MQTT_ServerPass.length() == 0){
+    		m_MQTT_ServerPass = MQTTConnection.getMQTTPass(m_ctx);
+    		if(m_MQTT_ServerPass != null)
+    			et_MQTT_ServerPass.setText(m_MQTT_ServerPass);
+    	}
+    	//	Enable MQTT Service
+    	ch_MQTT_AutomaticService.setChecked(m_MQTT_AutomaticService);
+       	//	Port
+    	if(m_MQTT_ServerPort == null || m_MQTT_ServerPort.length() == 0) {
+    		int port = MQTTConnection.getPort(m_ctx);
+    		m_MQTT_ServerPort = String.valueOf(port);
+    		et_MQTT_ServerPort.setText(m_MQTT_ServerPort);
+    	}
+       	//	Keep Alive Interval
+    	if(m_MQTT_KeepAliveInverval == null || m_MQTT_KeepAliveInverval.length() == 0) {
+    		int interval = MQTTConnection.getKeepAliveInverval(m_ctx);
+    		m_MQTT_KeepAliveInverval = String.valueOf(interval);
+    		et_MQTT_KeepAliveInverval.setText(m_MQTT_KeepAliveInverval);
+    	}
+    	//	For SSL
+    	if(m_MQTT_SSL_File_Path == null || m_MQTT_SSL_File_Path.length() == 0){
+    		m_MQTT_SSL_File_Path = MQTTConnection.getSSLFilePath(m_ctx);
+    		if(m_MQTT_SSL_File_Path != null)
+    			bt_MQTT_SSL_File_Path.setText(m_MQTT_SSL_File_Path);
+    	}
+		return false;
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		et_MQTT_ServerName.setEnabled(enabled);
+    	et_MQTT_ServerUser.setEnabled(enabled);
+    	et_MQTT_ServerPass.setEnabled(enabled);
+    	et_MQTT_ServerPort.setEnabled(enabled);
+    	et_MQTT_KeepAliveInverval.setEnabled(enabled);
+    	ch_MQTT_AutomaticService.setEnabled(enabled);
+    	bt_MQTT_SSL_File_Path.setEnabled(enabled);
 	}
 }

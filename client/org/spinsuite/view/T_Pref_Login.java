@@ -13,25 +13,27 @@
  * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
-package org.spinsuite.login;
+package org.spinsuite.view;
 
 
 import java.util.logging.Level;
 
+import org.spinsuite.adapters.LoginRoleAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
-import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 
 /**
  * 
@@ -39,15 +41,34 @@ import android.widget.EditText;
  *	<li> Login Correct
  * 	@see https://adempiere.atlassian.net/browse/SPIN-2
  */
-public class T_Login extends Fragment implements I_Login {
+public class T_Pref_Login extends T_Pref_Parent {
+
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 */
+	public T_Pref_Login() {
+		super();
+	}
+	
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_ctx
+	 */
+	public T_Pref_Login(Context p_ctx) {
+		super(p_ctx);
+	}
+	
+	
 	/**	Login User					*/
-	private EditText 		et_User;
+	private EditText 			et_User;
 	/**	Login Pass					*/
-	private EditText 		et_Pass;
-	/**	Current View				*/
-	private View 			m_View = null;
-	/**	Is Load Ok					*/
-	private boolean			m_IsLoadOk = false;
+	private EditText 			et_Pass;
+	/**	Role						*/
+	private ExpandableListView 	ev_Role;
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,6 +88,19 @@ public class T_Login extends Fragment implements I_Login {
     	//	
     	et_User = (EditText) 			m_View.findViewById(R.id.et_User);
     	et_Pass = (EditText) 			m_View.findViewById(R.id.et_Pass);
+    	ev_Role	= (ExpandableListView)	m_View.findViewById(R.id.ev_Role);
+    	
+    	final LoginRoleAdapter roleAdapter = new LoginRoleAdapter(m_ctx);
+    	ev_Role.setAdapter(roleAdapter);
+    	ev_Role.setOnChildClickListener(new OnChildClickListener() {
+			
+			@Override
+			public boolean onChildClick(ExpandableListView parent, View v,
+					int groupPosition, int childPosition, long id) {
+				roleAdapter.getChild(groupPosition, childPosition);
+				return false;
+			}
+		});
 		m_IsLoadOk = true;
     }
     
@@ -151,12 +185,12 @@ public class T_Login extends Fragment implements I_Login {
     }
     
 	@Override
-	public boolean aceptAction() {
+	public boolean processActionOk() {
 		return validUser();
 	}
 
 	@Override
-	public boolean cancelAction() {
+	public boolean processActionCancel() {
 		return validExit();
 	}
 

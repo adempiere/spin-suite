@@ -21,7 +21,6 @@ import java.util.Locale;
 import java.util.logging.Level;
 
 import org.spinsuite.base.R;
-import org.spinsuite.interfaces.I_CancelOk;
 import org.spinsuite.login.Login;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
@@ -32,7 +31,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,7 +47,7 @@ import android.widget.Spinner;
  *	<li> Login Correct
  * 	@see https://adempiere.atlassian.net/browse/SPIN-2
  */
-public class T_Pref_General extends Fragment implements I_CancelOk {
+public class T_Pref_General extends T_Pref_Parent {
 	
 	/**
 	 * Default
@@ -57,7 +55,7 @@ public class T_Pref_General extends Fragment implements I_CancelOk {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 */
 	public T_Pref_General() {
-		
+		super();
 	}
 	
 	/**
@@ -67,7 +65,7 @@ public class T_Pref_General extends Fragment implements I_CancelOk {
 	 * @param p_ctx
 	 */
 	public T_Pref_General(Context p_ctx) {
-		m_ctx = p_ctx;
+		super(p_ctx);
 	}
 	
 	
@@ -80,13 +78,7 @@ public class T_Pref_General extends Fragment implements I_CancelOk {
 	/**	Save data SD				*/
 	private CheckBox 		ch_SaveSD;
 	/**	Drop Data Base				*/
-	private Button			butt_DropDB;
-	/**	Current View				*/
-	private View 			m_View = null;
-	/**	Is Load Ok					*/
-	private boolean			m_IsLoadOk = false;
-	/**	Context						*/
-	private Context			m_ctx = null;	
+	private Button			butt_DropDB;	
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -234,12 +226,7 @@ public class T_Pref_General extends Fragment implements I_CancelOk {
 		return validExit();
 	}
 	
-	/**
-	 * Load Default Data
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return
-	 * @return boolean
-	 */
+	@Override
 	public boolean loadData() {
 		//	Auto Login Check
      	ch_RequestLogin.setChecked(Env.isAutoLogin());
@@ -300,5 +287,14 @@ public class T_Pref_General extends Fragment implements I_CancelOk {
 		}
 		//	Default
 		return 0;
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		ch_RequestLogin.setEnabled(enabled);
+    	sp_Language.setEnabled(enabled);
+    	sp_LogLevel.setEnabled(enabled);
+    	ch_SaveSD.setEnabled(enabled);
+    	butt_DropDB.setEnabled(enabled);
 	}
 }
