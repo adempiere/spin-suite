@@ -21,6 +21,7 @@ import java.util.logging.Level;
 
 import org.spinsuite.base.R;
 import org.spinsuite.login.Login;
+import org.spinsuite.util.DisplaySpinner;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.Language;
 import org.spinsuite.util.LogM;
@@ -102,12 +103,13 @@ public class T_Pref_General extends T_Pref_Parent {
     	ch_SaveSD 		= (CheckBox) m_View.findViewById(R.id.ch_SaveSD);
     	butt_DropDB 	= (Button) m_View.findViewById(R.id.butt_DropDB);
     	
-    	ArrayList <String> data = new ArrayList<String>();
+    	ArrayList <DisplaySpinner> data = new ArrayList<DisplaySpinner>();
+    	int i = 0;
     	for(Language lang : Language.getAvaliableLanguages()){
-    		data.add(lang.getAD_Language());
+    		data.add(new DisplaySpinner(i++, lang.getName(), lang.getAD_Language()));
     	}
-    	
-    	ArrayAdapter<String> adapter = new ArrayAdapter<String>(m_ctx, 
+    	//	Load Adapter
+    	ArrayAdapter<DisplaySpinner> adapter = new ArrayAdapter<DisplaySpinner>(m_ctx, 
     			android.R.layout.simple_spinner_item, data);
 		sp_Language.setAdapter(adapter);
     	//	
@@ -209,7 +211,8 @@ public class T_Pref_General extends T_Pref_Parent {
     
 	@Override
 	public boolean processActionOk() {
-		String language = sp_Language.getSelectedItem().toString();
+		String language = (String) ((DisplaySpinner)sp_Language
+				.getSelectedItem()).getHiddenValue();
     	if(!language.equals(Env.getAD_Language())){
     		Env.setAD_Language(language);
     		reloadLanguage(language);
@@ -280,7 +283,8 @@ public class T_Pref_General extends T_Pref_Parent {
 	 */
 	private int getLanguagePosition(String p_Language) {
 		for(int i = 0; i < sp_Language.getAdapter().getCount(); i++) {
-			String m_Language = sp_Language.getItemAtPosition(i).toString();
+			String m_Language = (String) ((DisplaySpinner)sp_Language
+					.getItemAtPosition(i)).getHiddenValue();
 			if(m_Language.equals(p_Language)) {
 				return i;
 			}
