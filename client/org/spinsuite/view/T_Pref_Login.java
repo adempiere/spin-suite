@@ -31,7 +31,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnFocusChangeListener;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 
@@ -69,8 +68,6 @@ public class T_Pref_Login extends T_Pref_Parent {
 	private EditText 			et_Pass;
 	/**	Role						*/
 	private ExpandableListView 	ev_Role;
-	/**	Key for Valid User Flag		*/
-	public static final String	KEY_LOGIN_VALID_USER = "#PR_Login_Valid_User";
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -91,30 +88,9 @@ public class T_Pref_Login extends T_Pref_Parent {
     	et_User = (EditText) 			m_View.findViewById(R.id.et_User);
     	et_Pass = (EditText) 			m_View.findViewById(R.id.et_Pass);
     	ev_Role	= (ExpandableListView)	m_View.findViewById(R.id.ev_Role);
-    	//	
-    	et_Pass.setOnFocusChangeListener(new OnFocusChangeListener() {
-			
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-		        //	Listener
-				if(!hasFocus) {
-					boolean isValid = validUser();
-					//	Enable Role
-					ev_Role.setEnabled(isValid);
-					//	Load Role
-					if(isValid) {
-						ev_Role.expandGroup(0);
-					} else {
-						ev_Role.collapseGroup(0);
-					}
-				}
-			}
-		});
     	ev_Role.setClickable(true);
     	ev_Role.setGroupIndicator(null);
     	ev_Role.setAdapter(new LoginRoleAdapter(m_ctx));
-    	//	Enable / Disable
-    	ev_Role.setEnabled(Env.getContextAsBoolean(KEY_LOGIN_VALID_USER));
 		m_IsLoadOk = true;
     }
     
@@ -135,7 +111,6 @@ public class T_Pref_Login extends T_Pref_Parent {
     			if(!Env.isEnvLoad())
     				return true;
     			else if(findUser(user, pass)) {
-    				Env.setContext(KEY_LOGIN_VALID_USER, true);
     				return true;
     			} else {
     				Msg.toastMsg(m_ctx, 
@@ -151,8 +126,6 @@ public class T_Pref_Login extends T_Pref_Parent {
 					getResources().getString(R.string.MustFillField) 
 					+ " \"" + getResources().getString(R.string.User) + "\"");
     	}
-    	//	
-    	Env.setContext(KEY_LOGIN_VALID_USER, false);
     	return false;
     }
     

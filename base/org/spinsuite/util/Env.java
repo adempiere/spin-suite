@@ -2979,7 +2979,7 @@ public final class Env {
 	 * @return void
 	 */
 	public static void changeLanguage(Context ctx, String language, DisplayMetrics metrics) {
-		Locale locale = Language.getLocale(language);
+		Locale locale = new Locale(language);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.locale = locale;

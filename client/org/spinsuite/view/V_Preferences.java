@@ -90,11 +90,6 @@ public class V_Preferences extends FragmentActivity
         actionBar.setSubtitle(subtitle);
 	}
 	
-	@Override
-	protected void onRestart() {
-		super.onRestart();
-	}
-	
 	/**
 	 * Load Fragments
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com

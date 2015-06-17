@@ -58,6 +58,13 @@ public class T_IndexPreference
 	/**	Options						*/
 	private ArrayList<DisplayImageTextItem> 	m_Options 	= null;
     
+	@Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+    	super.onActivityCreated(savedInstanceState);
+    	//	Load Ok
+    	m_IsLoadOk = true;
+	}
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,10 +77,6 @@ public class T_IndexPreference
      * @return boolean
      */
     private boolean loadData() {
-    	//	Valid Load
-    	if(m_IsLoadOk) {
-    		return true;
-    	}
     	m_Options = new ArrayList<DisplayImageTextItem>();
     	//	For Images
     	Bitmap generalImg = BitmapFactory.decodeResource(getResources(), 
@@ -101,8 +104,6 @@ public class T_IndexPreference
     	//	End Custom preferences
     	ImageTextAdapter adapter = new ImageTextAdapter(m_ctx, m_Options);
     	setListAdapter(adapter);
-    	//	Load Ok
-    	m_IsLoadOk = true;
         return true;
     }
 
