@@ -2308,108 +2308,45 @@ public final class Env {
 	}
 	
 	/**
-	 * Set Automatic Visit Closing
+	 * Set Request Password
 	 * @author Yamel Senih 31/07/2012, 12:25:21
 	 * @param ctx
 	 * @param isSavePass
 	 * @return void
 	 */
-	public static void setAutoLogin(Context ctx, boolean isAutoLogin) {
-		setContext(ctx, "#AutoLogin", isAutoLogin);
+	public static void setRequestPass(Context ctx, boolean isAutoLogin) {
+		setContext(ctx, "#RequestPass", isAutoLogin);
 	}
 	
 	/**
-	 * Set Automatic Visit Closing
+	 * Set Request Password
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param isAutoLogin
 	 * @return void
 	 */
-	public static void setAutoLogin(boolean isAutoLogin) {
-		setAutoLogin(getCtx(), isAutoLogin);
+	public static void setRequestPass(boolean isAutoLogin) {
+		setRequestPass(getCtx(), isAutoLogin);
 	}
 	
 	/**
-	 * Set Auto Login Confirmed
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/10/2014, 1:11:40
-	 * @param ctx
-	 * @param isAutoLoginConfirmed
-	 * @return void
-	 */
-	public static void setAutoLoginComfirmed(Context ctx, boolean isAutoLoginConfirmed) {
-		setContext(ctx, "#IsAutoLoginConfirmed", isAutoLoginConfirmed);
-	}
-	
-	/**
-	 * Set Auto Login Confirmed
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param isAutoLoginConfirmed
-	 * @return void
-	 */
-	public static void setAutoLoginComfirmed(boolean isAutoLoginConfirmed) {
-		setAutoLoginComfirmed(getCtx(), isAutoLoginConfirmed);
-	}
-	
-	/**
-	 * Get Save Pass
-	 * @author Yamel Senih 26/04/2012, 17:47:21
-	 * @param ctx
-	 * @return
-	 * @return boolean
-	 */
-	public static boolean isSavePass(Context ctx) {
-		return getContextAsBoolean(ctx, "#SavePass");
-	}
-	
-	/**
-	 * Get Save Pass
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return
-	 * @return boolean
-	 */
-	public static boolean isSavePass() {
-		return isSavePass(getCtx());
-	}
-	
-	/**
-	 * get Automatic Visit Closing
+	 * Request Password on Login
 	 * @author Yamel Senih 31/07/2012, 12:27:03
 	 * @param ctx
 	 * @return
 	 * @return boolean
 	 */
-	public static boolean isAutoLogin(Context ctx) {
-		return getContextAsBoolean(ctx, "#AutoLogin");
+	public static boolean isRequestPass(Context ctx) {
+		return getContextAsBoolean(ctx, "#RequestPass");
 	}
 	
 	/**
-	 * get Automatic Visit Closing
+	 * Request Password on Login
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return
 	 * @return boolean
 	 */
-	public static boolean isAutoLogin() {
-		return isAutoLogin(getCtx());
-	}
-	
-	/**
-	 * Is Auto Login Confirmed
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/10/2014, 1:10:30
-	 * @param ctx
-	 * @return
-	 * @return boolean
-	 */
-	public static boolean isAutoLoginConfirmed(Context ctx) {
-		return getContextAsBoolean(ctx, "#IsAutoLoginConfirmed");
-	}
-	
-	/**
-	 * Is Auto Login Confirmed
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return
-	 * @return boolean
-	 */
-	public static boolean isAutoLoginConfirmed() {
-		return isAutoLoginConfirmed(getCtx());
+	public static boolean isRequestPass() {
+		return isRequestPass(getCtx());
 	}
 	
 	/**

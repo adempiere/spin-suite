@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.spinsuite.base.R;
-import org.spinsuite.login.Login;
+import org.spinsuite.login.Login2;
 import org.spinsuite.util.DisplaySpinner;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.Language;
@@ -71,7 +71,7 @@ public class T_Pref_General extends T_Pref_Parent {
 	
 	
 	/**	Request Login				*/
-	private CheckBox		ch_RequestLogin;
+	private CheckBox		ch_RequestPass;
 	/**	Language					*/
 	private Spinner			sp_Language;
 	/**	Log Level					*/
@@ -97,7 +97,7 @@ public class T_Pref_General extends T_Pref_Parent {
     	if(m_IsLoadOk)
     		return;
     	//	
-    	ch_RequestLogin = (CheckBox) m_View.findViewById(R.id.ch_RequestLogin);
+    	ch_RequestPass = (CheckBox) m_View.findViewById(R.id.ch_RequestPass);
     	sp_Language 	= (Spinner) m_View.findViewById(R.id.sp_Language);
     	sp_LogLevel 	= (Spinner) m_View.findViewById(R.id.sp_LogLevel);
     	ch_SaveSD 		= (CheckBox) m_View.findViewById(R.id.ch_SaveSD);
@@ -189,7 +189,7 @@ public class T_Pref_General extends T_Pref_Parent {
      */
     private void reloadLanguage(String language){
     	Env.changeLanguage(language);
-    	Intent refresh = new Intent(m_ctx, Login.class);
+    	Intent refresh = new Intent(m_ctx, Login2.class);
     	refresh.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(refresh);
 		getActivity().finish();
@@ -235,7 +235,7 @@ public class T_Pref_General extends T_Pref_Parent {
 	@Override
 	public boolean loadData() {
 		//	Auto Login Check
-     	ch_RequestLogin.setChecked(Env.isAutoLogin());
+     	ch_RequestPass.setChecked(Env.isRequestPass());
  		//	Select Language
  		String language = Env.getAD_Language();
  		if(language != null
@@ -298,7 +298,7 @@ public class T_Pref_General extends T_Pref_Parent {
 
 	@Override
 	public void setEnabled(boolean enabled) {
-		ch_RequestLogin.setEnabled(enabled);
+		ch_RequestPass.setEnabled(enabled);
     	sp_Language.setEnabled(enabled);
     	sp_LogLevel.setEnabled(enabled);
     	ch_SaveSD.setEnabled(enabled);

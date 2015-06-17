@@ -15,43 +15,62 @@
  *************************************************************************************/
 package org.spinsuite.view;
 
-import java.util.logging.Level;
+
+import java.util.ArrayList;
 
 import org.spinsuite.adapters.MenuAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.view.V_BChat;
-import org.spinsuite.login.Login;
+import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.model.MSession;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
-import org.spinsuite.util.Env;
 import org.spinsuite.util.LoadActionMenu;
-import org.spinsuite.util.LogM;
 import org.spinsuite.view.lookup.LookupMenu;
 
-import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
- *
+ * @contributor Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com
+ *  	<li>Add Support to Log for Mobile
+ *  	@see https://adempiere.atlassian.net/browse/SPIN-6
  */
-/**
-* @contributor Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com
-*  	<li>Add Support to Log for Mobile
-*  	@see https://adempiere.atlassian.net/browse/SPIN-6
-**/
-public class LV_Menu extends Activity {
+public class T_Menu extends Fragment implements I_Login {
+	
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 */
+	public T_Menu() {
+		super();
+	}
+	
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_ctx
+	 */
+	public T_Menu(Context p_ctx) {
+		
+	}
+	
 	
 	/**	List				*/
 	private ListView 			menu;
@@ -68,13 +87,38 @@ public class LV_Menu extends Activity {
 	/**	Lookup Menu			*/
 	private LookupMenu 			lookupMenu = null;
 	/**	Load Action Menu	*/
-	private LoadActionMenu		loadActionMenu = null;;
+	private LoadActionMenu		loadActionMenu = null;
+	/**	Current View		*/
+	private View 				m_View = null;
+	/**	Is Load Ok			*/
+	private boolean				m_IsLoadOk = false;
+	/**	Context				*/
+	private Context				m_ctx = null;
+	/**	Callback			*/
+	private Activity 			m_Callback = null;
+	/**	Array of Parent		*/
+	private ArrayList<Integer>	m_ParentArray = new ArrayList<Integer>();
+	/**	Current Parent ID	*/
+	private int 				m_CurrentParent_ID = 0;
 	
-	public void onCreate(Bundle icicle) {
-		super.onCreate(icicle);
-		super.setContentView(R.layout.v_menu);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //	Current
+    	if(m_View != null)
+        	return m_View;
+        //	RE-Load
+        m_View = inflater.inflate(R.layout.v_menu, container, false);
+    	return m_View;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+    	super.onActivityCreated(savedInstanceState);
+    	if(m_IsLoadOk)
+    		return;
+    	//	
 		//	Get Params
-		Bundle bundle = getIntent().getExtras();		
+		Bundle bundle = getActivity().getIntent().getExtras();		
     	if(bundle != null){
     		param = (ActivityParameter)bundle.getParcelable("Param");
 		}
@@ -82,21 +126,12 @@ public class LV_Menu extends Activity {
     		param = new ActivityParameter();
 		//	
     	m_ActivityNo = param.getSPS_Menu_ID();
-		ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        //	new Menu
-        lookupMenu = new LookupMenu(getApplicationContext(), LookupMenu.MAIN_MENU, conn);
+    	//	Add Context
+    	if(m_ctx == null) {
+    		m_ctx = getActivity();
+    	}
         //	
-        menu = (ListView) findViewById(R.id.lv_Menu);
-        //	Load Data
-        try {
-        	load();
-        } catch(Exception e) {
-        	LogM.log(this, getClass(), Level.SEVERE, "Error:" + e.getLocalizedMessage());
-        	finish();
-        }
-        //	Action Menu Loader
-        loadActionMenu = new LoadActionMenu(this, false);
+        menu = (ListView) m_View.findViewById(R.id.lv_Menu);
         //	
         menu.setOnItemClickListener(new ListView.OnItemClickListener() {
 
@@ -109,30 +144,52 @@ public class LV_Menu extends Activity {
 				//	Load from Action
 				currentOptionBundle = loadActionMenu.loadAction(item, param);
 				currentMenuItem = item;
+				if(item.isSummary()) {
+					m_ParentArray.add(m_CurrentParent_ID);
+					m_CurrentParent_ID = item.getSPS_Menu_ID();
+					loadData();
+				}
 			}
         });
-        
+        //	new Menu
+        lookupMenu = new LookupMenu(m_ctx, LookupMenu.MAIN_MENU, conn);
+        //	Action Menu Loader
+        loadActionMenu = new LoadActionMenu(m_Callback, false);
         //Carlos Parada Add Support to Log for Mobile
-        MSession.get (this, true);
+        MSession.get (m_ctx, true);
         //End Carlos Parada
-	}
-	
-	/**
-	 * Load Data
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 04/02/2014, 17:39:01
-	 * @return
-	 * @return boolean
-	 */
-	private boolean load(){
-		//	Load Children
-		lookupMenu.loadChildren(param.getParent_ID());
-		//	
-		MenuAdapter mi_adapter = new MenuAdapter(this, R.layout.i_image_text, true, lookupMenu.getData());
-		mi_adapter.setDropDownViewResource(R.layout.i_image_text);
-		menu.setAdapter(mi_adapter);
-		//	
-		return true;
-	}
+        //	Set Load
+        m_IsLoadOk = true;
+        //	Load Data
+        loadData();
+    }
+    
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        m_Callback = activity;
+    }
+    
+    /**
+     * Back to Parent Menu
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return
+     * @return boolean
+     */
+    public boolean backToParent() {
+    	//	Verify if is Main
+    	if(m_ParentArray.size() == 0) {
+    		return false;
+    	}
+    	//	Reload
+    	int index = m_ParentArray.size() - 1;
+    	m_CurrentParent_ID = m_ParentArray.get(index);
+    	loadData();
+    	//	Delete Parent of Array
+    	m_ParentArray.remove(index);
+    	//	Default
+    	return true;
+    }
 	
 	@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -151,10 +208,16 @@ public class LV_Menu extends Activity {
     }
 	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.main_menu, menu);
-		return true;
+    public void onCreate(Bundle savedInstanceState) {
+    	super.onCreate(savedInstanceState);
+    	setHasOptionsMenu(true);
+    }
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		menu.clear();
+        inflater.inflate(R.menu.main_menu, menu);
 	}
 	
 	@Override
@@ -162,15 +225,46 @@ public class LV_Menu extends Activity {
 	     switch (item.getItemId()) {
 	        case android.R.id.home:
 	    		//	Auto Login
-	    		Env.setAutoLoginComfirmed(false);
-	        	NavUtils.navigateUpTo(this, new Intent(this, Login.class));
+//	    		Env.setAutoLoginComfirmed(false);
+	        	m_Callback.finish();
 	        return true;
 	        case R.id.action_bchat:
-	        	Intent bChat = new Intent(this, V_BChat.class);
+	        	Intent bChat = new Intent(m_Callback, V_BChat.class);
 				startActivity(bChat);
+				return true;
+	        case R.id.action_config:
+	        	Intent preferences = new Intent(m_Callback, V_Preferences.class);
+				startActivity(preferences);
 				return true;
 	        default:
 	        	return super.onOptionsItemSelected(item);
 	     }
+	}
+
+	@Override
+	public boolean aceptAction() {
+		return false;
+	}
+
+	@Override
+	public boolean cancelAction() {
+		return false;
+	}
+
+	@Override
+	public boolean loadData() {
+		//	Load Children
+		lookupMenu.loadChildren(m_CurrentParent_ID);
+		//	
+		MenuAdapter mi_adapter = new MenuAdapter(m_Callback, R.layout.i_image_text, true, lookupMenu.getData());
+		mi_adapter.setDropDownViewResource(R.layout.i_image_text);
+		menu.setAdapter(mi_adapter);
+		//	
+		return true;
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		
 	}
 }

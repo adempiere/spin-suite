@@ -29,6 +29,7 @@ import org.spinsuite.adapters.SearchAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.OnFieldChangeListener;
+import org.spinsuite.login.Login2;
 import org.spinsuite.model.MultiMap;
 import org.spinsuite.print.ReportPrintData;
 import org.spinsuite.print.layout.ReportAdapter;
@@ -749,7 +750,7 @@ public class V_Process extends Activity {
 			showPrintFormat();
 			return true;
 		} else if(itemId == android.R.id.home) {
-			NavUtils.navigateUpTo(this, new Intent(this, LV_Menu.class));
+			NavUtils.navigateUpTo(this, new Intent(this, Login2.class));
 		}
 		return super.onOptionsItemSelected(item);
 	}

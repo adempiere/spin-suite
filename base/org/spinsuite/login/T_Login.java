@@ -171,7 +171,7 @@ public class T_Login extends Fragment implements I_Login {
      			et_User.setText(user);
      	}
      	//	Save Pass
-     	if(Env.isSavePass()){
+     	if(!Env.isRequestPass()){
      		pass = Env.getContext("#SPass");
      		if(pass != null)
      			et_Pass.setText(pass);

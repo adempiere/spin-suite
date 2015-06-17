@@ -154,7 +154,8 @@ public class LookupMenu {
 			Cursor rs = conn.querySQL(sql.toString(), null);//new String[]{menuType}
 			
 			data = new ArrayList<DisplayMenuItem>();
-			if(rs.moveToFirst()){
+			if(rs.moveToFirst()) {
+				//	
 				do {
 					int i = 0;
 					data.add(new DisplayMenuItem(
@@ -236,7 +237,8 @@ public class LookupMenu {
 			LogM.log(ctx, getClass(), Level.FINE, "MenuType=" + menuType);
 			Cursor rs = conn.querySQL(sql.toString(), new String[]{menuType});
 			data = new ArrayList<DisplayMenuItem>();
-			if(rs.moveToFirst()){
+			if(rs.moveToFirst()) {
+				//	
 				do {
 					int i = 0;
 					data.add(new DisplayMenuItem(
@@ -280,5 +282,4 @@ public class LookupMenu {
 	public ArrayList<DisplayMenuItem> getData(){
 		return data;
 	}
-
 }

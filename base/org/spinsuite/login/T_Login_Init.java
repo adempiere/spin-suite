@@ -185,7 +185,7 @@ public class T_Login_Init extends DialogFragment
 		MQTTConnection.setKeepAliveInverval(getActivity(), MQTTDefaultValues.DEFAULT_MQTT_KEEP_ALIVE_INT);
 		//	For Test Data
 		if(ch_ch_LoadTestData.isChecked()) {
-			((Login)m_Callback).loadDefaultData();
+			((Login2)m_Callback).loadDefaultData();
 			//	Default Return
 			return;
 		}

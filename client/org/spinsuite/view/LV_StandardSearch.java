@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import org.spinsuite.adapters.SearchAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
+import org.spinsuite.login.Login2;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
@@ -322,7 +323,7 @@ public class LV_StandardSearch extends Activity {
 			}
 			return true;
 		} else if (itemId == android.R.id.home) {
-			NavUtils.navigateUpTo(this, new Intent(this, LV_Menu.class));
+			NavUtils.navigateUpTo(this, new Intent(this, Login2.class));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

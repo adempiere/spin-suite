@@ -226,7 +226,7 @@ public class T_Pref_Login extends T_Pref_Parent {
      			et_User.setText(user);
      	}
      	//	Save Pass
-     	if(Env.isSavePass()){
+     	if(!Env.isRequestPass()){
      		pass = Env.getContext("#SPass");
      		if(pass != null)
      			et_Pass.setText(pass);

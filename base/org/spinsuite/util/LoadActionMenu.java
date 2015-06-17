@@ -19,9 +19,10 @@ import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
-import org.spinsuite.view.LV_Menu;
 import org.spinsuite.view.LV_MenuSync;
 import org.spinsuite.view.LV_StandardSearch;
+import org.spinsuite.view.TV_DynamicActivity;
+import org.spinsuite.view.V_Process;
 import org.spinsuite.view.lookup.InfoField;
 import org.spinsuite.view.lookup.LookupMenu;
 
@@ -96,11 +97,11 @@ public class LoadActionMenu {
 		}
 		else{
 			if(item.isSummary()) {
-				bundle.putParcelable("Param", param);
-				intent = new Intent(activity, LV_Menu.class);
-				intent.putExtras(bundle);
-				//	Show Activity
-				activity.startActivityForResult(intent, 0);
+//				bundle.putParcelable("Param", param);
+//				intent = new Intent(activity, LV_Menu.class);
+//				intent.putExtras(bundle);
+//				//	Show Activity
+//				activity.startActivityForResult(intent, 0);
 			} else {
 				//	Load Parameter
 				ActivityParameter paramAct = new ActivityParameter(item);
@@ -223,10 +224,10 @@ public class LoadActionMenu {
 				}
 			}
 		} else if(item.getAction().equals(DisplayMenuItem.ACTION_Window)) {
-			ok = loadDynamicClass("org.spinsuite.view.TV_DynamicActivity", bundle);
+			ok = loadDynamicClass(TV_DynamicActivity.class.getName(), bundle);
 		} else if(item.getAction().equals(DisplayMenuItem.ACTION_Process)
 				|| item.getAction().equals(DisplayMenuItem.ACTION_Report)) {
-			ok = loadDynamicClass("org.spinsuite.view.V_Process", bundle);
+			ok = loadDynamicClass(V_Process.class.getName(), bundle);
 		}
 		//	Show Message
 		if(!ok)

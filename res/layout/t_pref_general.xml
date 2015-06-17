@@ -24,9 +24,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
         <CheckBox
-    	    android:id="@+id/ch_RequestLogin"
+    	    android:id="@+id/ch_RequestPass"
     	    android:checked="true"
-    	    android:text="@string/msg_RequestLogin"
+    	    android:text="@string/msg_RequestPass"
     	    style="@style/TextDynamicTabCheckBox" />
     	
     	<!-- Language -->
