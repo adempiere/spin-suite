@@ -352,8 +352,8 @@ public class Login extends FragmentActivity implements I_Login {
 	
     @Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-    	boolean noBack = false;
     	if(Env.isEnvLoad()) {
+    		boolean noBack = false;
     		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
     			//	
     			if(m_Menu != null) {
@@ -366,7 +366,7 @@ public class Login extends FragmentActivity implements I_Login {
         	}
     	}
 		//	Default Return
-		return noBack;
+		return super.onKeyDown(keyCode, event);
 	}
 	
     @Override
