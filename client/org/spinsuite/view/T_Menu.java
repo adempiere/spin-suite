@@ -27,6 +27,7 @@ import org.spinsuite.model.MSession;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
+import org.spinsuite.util.KeyNamePair;
 import org.spinsuite.util.LoadActionMenu;
 import org.spinsuite.view.lookup.LookupMenu;
 
@@ -97,7 +98,7 @@ public class T_Menu extends Fragment implements I_Login {
 	/**	Callback			*/
 	private Activity 			m_Callback = null;
 	/**	Array of Parent		*/
-	private ArrayList<Integer>	m_ParentArray = new ArrayList<Integer>();
+	private ArrayList<KeyNamePair>	m_ParentArray = new ArrayList<KeyNamePair>();
 	/**	Current Parent ID	*/
 	private int 				m_CurrentParent_ID = 0;
 	
@@ -145,8 +146,13 @@ public class T_Menu extends Fragment implements I_Login {
 				currentOptionBundle = loadActionMenu.loadAction(item, param);
 				currentMenuItem = item;
 				if(item.isSummary()) {
-					m_ParentArray.add(m_CurrentParent_ID);
+					//	Get Current Menu ID and Sub Title
+					m_ParentArray.add(new KeyNamePair(m_CurrentParent_ID, 
+							m_Callback.getActionBar().getSubtitle().toString()));
 					m_CurrentParent_ID = item.getSPS_Menu_ID();
+					//	Change Title
+					m_Callback.getActionBar().setSubtitle(currentMenuItem.getName());
+					//	Load Data
 					loadData();
 				}
 			}
@@ -183,7 +189,10 @@ public class T_Menu extends Fragment implements I_Login {
     	}
     	//	Reload
     	int index = m_ParentArray.size() - 1;
-    	m_CurrentParent_ID = m_ParentArray.get(index);
+    	KeyNamePair pair = m_ParentArray.get(index);
+    	m_CurrentParent_ID = pair.getKey();
+    	//	Change Subtitle
+    	m_Callback.getActionBar().setSubtitle(pair.getName());
     	loadData();
     	//	Delete Parent of Array
     	m_ParentArray.remove(index);
