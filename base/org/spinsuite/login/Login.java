@@ -388,6 +388,8 @@ public class Login extends FragmentActivity implements I_Login {
         	//	No Back
         	if(!noBack) {
         		return super.onKeyDown(keyCode, event);
+        	} else {
+        		return noBack;
         	}
     	}
 		//	Default Return

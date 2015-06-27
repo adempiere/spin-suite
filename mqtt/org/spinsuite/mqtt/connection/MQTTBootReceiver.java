@@ -27,7 +27,9 @@ public class MQTTBootReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Intent service = new Intent(context, MQTTSyncService.class);
-        context.startService(service);
+		if(MQTTConnection.isAutomaticService(context)) {
+			Intent service = new Intent(context, MQTTSyncService.class);
+	        context.startService(service);
+		}
 	}
 }

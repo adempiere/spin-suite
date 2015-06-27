@@ -134,9 +134,9 @@ public class T_Pref_Login extends T_Pref_Parent {
     				return true;
     			}
     			//	
-    			Env.setContext("#SUser", user);
-    			Env.setContext("#AD_User_Name", user);
-    			Env.setContext("#SPass", pass);
+    			Env.setContext(m_ctx, "#SUser", user);
+    			Env.setContext(m_ctx, "#AD_User_Name", user);
+    			Env.setContext(m_ctx, "#SPass", pass);
     			if(!Env.isEnvLoad())
     				return true;
     			else if(findUser(user, pass)) {
@@ -226,7 +226,7 @@ public class T_Pref_Login extends T_Pref_Parent {
      	String pass = et_Pass.getText().toString();
      	//boolean isSavePass = ch_SavePass.isChecked();
      	if(user == null || user.length() == 0){
-     		user = Env.getContext("#SUser");
+     		user = Env.getContext(m_ctx, "#SUser");
      		if(user != null) {
      			et_User.setText(user);
      		} else if(!Env.isEnvLoad()) {
@@ -235,7 +235,7 @@ public class T_Pref_Login extends T_Pref_Parent {
      		}
      	}
      	//	Save Pass
-     	pass = Env.getContext("#SPass");
+     	pass = Env.getContext(m_ctx, "#SPass");
      	if(pass != null) {
      		et_Pass.setText(pass);
      	} else if(!Env.isEnvLoad()) {
