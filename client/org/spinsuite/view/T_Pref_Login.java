@@ -24,6 +24,7 @@ import org.spinsuite.base.R;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
+import org.spinsuite.util.SyncValues;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -128,7 +129,11 @@ public class T_Pref_Login extends T_Pref_Parent {
     	String user = et_User.getText().toString().trim();
     	String pass = et_Pass.getText().toString().trim();
     	if(user != null && user.length() > 0) {
-    		if(pass != null && pass.length() > 0){
+    		if(pass != null && pass.length() > 0) {
+    			if(!Env.isEnvLoad()) {
+    				return true;
+    			}
+    			//	
     			Env.setContext("#SUser", user);
     			Env.setContext("#AD_User_Name", user);
     			Env.setContext("#SPass", pass);
@@ -222,15 +227,21 @@ public class T_Pref_Login extends T_Pref_Parent {
      	//boolean isSavePass = ch_SavePass.isChecked();
      	if(user == null || user.length() == 0){
      		user = Env.getContext("#SUser");
-     		if(user != null)
+     		if(user != null) {
      			et_User.setText(user);
+     		} else if(!Env.isEnvLoad()) {
+     			//	Set Authentication for test
+     			et_User.setText(SyncValues.DEFAULT_AD_USER);
+     		}
      	}
      	//	Save Pass
-     	if(!Env.isRequestPass()){
-     		pass = Env.getContext("#SPass");
-     		if(pass != null)
-     			et_Pass.setText(pass);
-		}
+     	pass = Env.getContext("#SPass");
+     	if(pass != null) {
+     		et_Pass.setText(pass);
+     	} else if(!Env.isEnvLoad()) {
+     		//	Set Authentication for test
+     		et_Pass.setText(SyncValues.DEFAULT_AD_PASS);
+     	}
  		//	
 		return true;
 	}

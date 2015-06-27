@@ -19,6 +19,8 @@ package org.spinsuite.view;
 import org.spinsuite.base.R;
 import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.Msg;
+import org.spinsuite.util.SyncValues;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -137,6 +139,13 @@ public class T_Pref_WS extends T_Pref_Parent {
 //		//	
 //		MQTTConnection.getInstance(Env.getCtx()).connectInThread();
 //		finish();
+		if(et_UrlServer.getText() == null 
+    			|| et_UrlServer.getText().toString().length() == 0){
+			Msg.toastMsg(m_ctx, 
+					getResources().getString(R.string.MustFillField) 
+					+ " \"" + getResources().getString(R.string.Url_Server) + "\"");
+			return false;
+    	}
 		//	Default Return
 		return true;
 	}
@@ -153,14 +162,23 @@ public class T_Pref_WS extends T_Pref_Parent {
     	//	Load URL SOAP or SOPA JAJAJAJAJAJAJAJ
     	if(url == null || url.length() == 0){
     		url = Env.getContext("#SUrlSoap");
-    		if(url != null)
+    		if(url != null) {
     			et_UrlServer.setText(url);
+    		} else if(!Env.isEnvLoad()) {
+    			et_UrlServer.setText(SyncValues.DEFAULT_SOAP_URL);
+    		}
     	}
     	//	Timeout
     	if(timeout == null || timeout.length() == 0){
     		int timeoutInt = Env.getContextAsInt("#Timeout");
     		timeout = String.valueOf(timeoutInt);
-    		et_Timeout.setText(timeout);
+    		if(timeout != null
+    				&& timeout.length() > 0
+    				&& Integer.parseInt(timeout) > 0) {
+    			et_Timeout.setText(timeout);
+    		} else if(!Env.isEnvLoad()) {
+    			et_Timeout.setText(String.valueOf(SyncValues.DEFAULT_TIMEOUT));
+    		}
     	}
 		return false;
 	}

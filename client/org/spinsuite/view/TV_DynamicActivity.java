@@ -22,7 +22,7 @@ import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.interfaces.I_DT_FragmentSelectListener;
-import org.spinsuite.login.Login2;
+import org.spinsuite.login.Login;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.Env;
@@ -141,7 +141,7 @@ public class TV_DynamicActivity extends TV_Base
 				&& !isDrawerLoaded()) {
 			// Navigate "up" the demo structure to the launchpad activity.
 			// See http://developer.android.com/design/patterns/navigation.html for more.
-			NavUtils.navigateUpTo(this, new Intent(this, Login2.class));
+			NavUtils.navigateUpTo(this, new Intent(this, Login.class));
 			return true;
 		}
 		//	

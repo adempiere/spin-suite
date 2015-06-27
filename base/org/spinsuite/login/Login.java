@@ -22,6 +22,7 @@ import java.util.List;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
+import org.spinsuite.sync.SyncService;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LoginFragmentItem;
 import org.spinsuite.util.Msg;
@@ -65,17 +66,17 @@ import android.view.MenuItem;
 public class Login extends FragmentActivity implements I_Login {
 	
 	/**	Menu Fragment			*/
-	private T_Menu							m_Menu = null;
+	private T_Menu							m_Menu 			= null;
 	/**	Action Bar				*/
-    private ActionBar 						actionBar = null;
+    private ActionBar 						actionBar 		= null;
 	/**	Index Fragment			*/
-	public final String 					TAG_FRAGMENT = "Menu";
+	public final String 					TAG_FRAGMENT 	= "Menu";
 	/**	Current Item			*/
-	private int 							m_CurrentItem = 0;
+	private int 							m_CurrentItem 	= 0;
 	/**	Flag Fragment Added		*/
 	private boolean 						m_FragmentAdded = false;
 	/**	Preference Pane			*/
-	private ArrayList<LoginFragmentItem>	m_PrefPane = new ArrayList<LoginFragmentItem>();
+	private ArrayList<LoginFragmentItem>	m_PrefPane 		= new ArrayList<LoginFragmentItem>();
 	/**	Data Base				*/
 	private final String 					DATA_BASE 		= "D";
 	/**	Role Access				*/
@@ -84,8 +85,6 @@ public class Login extends FragmentActivity implements I_Login {
 	private String							m_LoadType 		= ROLE_ACCESS;
 	/**	Activity				*/
 	private Activity						v_activity		= null;
-	/**	Sync					*/
-	private T_Login_Init					m_LoginInit;
 	/** Notification Manager	*/
 	private NotificationManager 			m_NFManager 	= null;
 	/** Max Value Progress Bar	*/
@@ -113,6 +112,8 @@ public class Login extends FragmentActivity implements I_Login {
     	actionBar.setHomeButtonEnabled(true);
     	actionBar.setTitle(R.string.app_name);
     	actionBar.setSubtitle(Msg.getMsg(this, "SelectMenuItem"));
+    	//	
+    	v_activity = this;
     	//	
     	loadConfig();
 	}
@@ -145,20 +146,44 @@ public class Login extends FragmentActivity implements I_Login {
     	//	
     	invalidateOptionsMenu();
     }
-	
+    
     /**
-     * Load Initial Synchronization
-     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-     * @return void
-     */
-    private void loadInitSync() {
-    	//	
-    	if(m_LoginInit == null)
-    		m_LoginInit = new T_Login_Init(this);
-    	//	
-    	m_LoginInit.show(getFragmentManager(), 
-				this.getResources().getString(R.string.InitSync));
-    }
+	 * Start Synchronization for Initial Load
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> Jul 8, 2014, 11:25:21 AM
+	 * @return void
+	 */
+	private void startSynchronization() {
+		//	For Test Data
+		if(Env.getContextAsBoolean("#LoadTestData")) {
+			loadDefaultData();
+			//	Default Return
+			return;
+		}
+		//	Create Directory
+		Env.createDefaultDirectory(this);
+		//	
+		setEnabled(false);
+		//	Add Value to Web
+		String url = Env.getContext("#SUrlSoap");
+		String user = Env.getContext("#SUser");
+		String pass = Env.getContext("#SPass");
+		//	
+		//	Instance Bundle
+		Bundle bundle = new Bundle();
+		//	Add Parameters
+		bundle.putString(SyncValues.KEY_SOAP_URL, SyncValues.getInitialUrl(url));
+		bundle.putString(SyncValues.KEY_NAME_SPACE, SyncValues.DEFAULT_NAME_SPACE);
+		bundle.putString(SyncValues.KEY_METHOD, SyncValues.DEFAULT_METHOD);
+		bundle.putBoolean(SyncValues.KEY_NET_SERVICE, true);
+		bundle.putString(SyncValues.KEY_USER, user);
+		bundle.putString(SyncValues.KEY_PASS, pass);
+		bundle.putString(SyncValues.KEY_SOAP_ACTION, SyncValues.DEFAULT_NAME_SPACE + SyncValues.DEFAULT_METHOD);
+		bundle.putInt(SyncValues.KEY_TIMEOUT, Env.getContextAsInt("#Timeout"));
+		//	Instance Service
+		Intent m_Service = new Intent(this, SyncService.class);
+		m_Service.putExtras(bundle);
+		startService(m_Service);
+	}
 	
 	/**
 	 * Load Configuration
@@ -245,7 +270,7 @@ public class Login extends FragmentActivity implements I_Login {
     		ask.setPositiveButton(getResources().getString(R.string.msg_Acept), new DialogInterface.OnClickListener() {
     			public void onClick(DialogInterface dialog, int which) {
     				dialog.dismiss();
-    				loadInitSync();
+    				startSynchronization();
     			}
     		});
     		ask.setNegativeButton(getResources().getString(R.string.msg_Cancel), new DialogInterface.OnClickListener() {
@@ -410,10 +435,16 @@ public class Login extends FragmentActivity implements I_Login {
             case R.id.action_next:
                 // Advance to the next step in the wizard. If there is no next step, setCurrentItem
                 // will do nothing.
+            	//	Valid Data
+            	boolean isOk = m_PrefPane.get(m_CurrentItem).getPref().processActionOk();
+            	if(!isOk) {
+            		return false;
+            	}
+            	//	
             	if(!(m_CurrentItem == m_PrefPane.size() - 1)) {
             		loadFragment(m_PrefPane.get(++m_CurrentItem).getPref());
             	} else {
-            		loadInitSync();
+            		startSynchronization();
             	}
                 return true;
         }

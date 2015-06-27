@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.spinsuite.base.R;
-import org.spinsuite.login.Login2;
+import org.spinsuite.login.Login;
 import org.spinsuite.util.DisplaySpinner;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.Language;
@@ -78,6 +78,8 @@ public class T_Pref_General extends T_Pref_Parent {
 	private Spinner 		sp_LogLevel;
 	/**	Save data SD				*/
 	private CheckBox 		ch_SaveSD;
+	/**	Load Test Data				*/
+	private CheckBox		ch_LoadTestData;
 	/**	Drop Data Base				*/
 	private Button			butt_DropDB;	
 	
@@ -101,8 +103,12 @@ public class T_Pref_General extends T_Pref_Parent {
     	sp_Language 	= (Spinner) m_View.findViewById(R.id.sp_Language);
     	sp_LogLevel 	= (Spinner) m_View.findViewById(R.id.sp_LogLevel);
     	ch_SaveSD 		= (CheckBox) m_View.findViewById(R.id.ch_SaveSD);
+    	ch_LoadTestData	= (CheckBox) m_View.findViewById(R.id.ch_LoadTestData);
     	butt_DropDB 	= (Button) m_View.findViewById(R.id.butt_DropDB);
-    	
+    	//	Set Visibility
+    	ch_LoadTestData.setVisibility(Env.isEnvLoad()? View.GONE: View.VISIBLE);
+    	butt_DropDB.setVisibility(Env.isEnvLoad()? View.VISIBLE: View.GONE);
+    	//	
     	ArrayList <DisplaySpinner> data = new ArrayList<DisplaySpinner>();
     	int i = 0;
     	for(Language lang : Language.getAvaliableLanguages()){
@@ -189,7 +195,7 @@ public class T_Pref_General extends T_Pref_Parent {
      */
     private void reloadLanguage(String language){
     	Env.changeLanguage(language);
-    	Intent refresh = new Intent(m_ctx, Login2.class);
+    	Intent refresh = new Intent(m_ctx, Login.class);
     	refresh.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(refresh);
 		getActivity().finish();
@@ -218,11 +224,15 @@ public class T_Pref_General extends T_Pref_Parent {
 				.getSelectedItem()).getHiddenValue();
     	if(!language.equals(Env.getAD_Language())){
     		Env.setAD_Language(language);
-    		reloadLanguage(language);
+    		if(Env.isEnvLoad()) {
+    			reloadLanguage(language);
+    		}
     	}
     	//	
-    	if(!Env.isEnvLoad())
+    	if(!Env.isEnvLoad()) {
+    		Env.setContext("#LoadTestData", ch_LoadTestData.isChecked());
     		return true;
+    	}
     	//	Default
     	return false;
 	}

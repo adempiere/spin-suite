@@ -61,6 +61,14 @@
     	    android:checked="false"
     	    android:text="@string/SaveSD" />
     	
+    	<!-- Load Default Data -->
+    	<CheckBox
+    	    android:id="@+id/ch_LoadTestData"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:checked="false"
+    	    android:text="@string/LoadTestData"/>
+    	
     	<Button
     	    android:id="@+id/butt_DropDB"
     	    android:layout_width="wrap_content"
