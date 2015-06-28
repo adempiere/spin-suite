@@ -74,33 +74,33 @@ public class T_Menu extends Fragment implements I_Login {
 	
 	
 	/**	List				*/
-	private ListView 			menu;
+	private ListView 				menu;
 	/**	Database Connection	*/
-	private DB 					conn = null;
+	private DB 						conn = null;
 	/**	Parameter			*/
-	private ActivityParameter 	param = null;
+	private ActivityParameter 		param = null;
 	/**	Activity No			*/
-	protected int 				m_ActivityNo = 0;
+	protected int 					m_ActivityNo = 0;
 	/**	Current Bundle		*/
-	private Bundle 				currentOptionBundle = null;
+	private Bundle 					currentOptionBundle = null;
 	/**	Current Option Menu	*/
-	private DisplayMenuItem 	currentMenuItem = null;
+	private DisplayMenuItem 		currentMenuItem = null;
 	/**	Lookup Menu			*/
-	private LookupMenu 			lookupMenu = null;
+	private LookupMenu 				lookupMenu = null;
 	/**	Load Action Menu	*/
-	private LoadActionMenu		loadActionMenu = null;
+	private LoadActionMenu			loadActionMenu = null;
 	/**	Current View		*/
-	private View 				m_View = null;
+	private View 					m_View = null;
 	/**	Is Load Ok			*/
-	private boolean				m_IsLoadOk = false;
+	private boolean					m_IsLoadOk = false;
 	/**	Context				*/
-	private Context				m_ctx = null;
+	private Context					m_ctx = null;
 	/**	Callback			*/
-	private Activity 			m_Callback = null;
+	private Activity 				m_Callback = null;
 	/**	Array of Parent		*/
 	private ArrayList<KeyNamePair>	m_ParentArray = new ArrayList<KeyNamePair>();
 	/**	Current Parent ID	*/
-	private int 				m_CurrentParent_ID = 0;
+	private int 					m_CurrentParent_ID = 0;
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -233,8 +233,6 @@ public class T_Menu extends Fragment implements I_Login {
 	public boolean onOptionsItemSelected(MenuItem item) {
 	     switch (item.getItemId()) {
 	        case android.R.id.home:
-	    		//	Auto Login
-//	    		Env.setAutoLoginComfirmed(false);
 	        	m_Callback.finish();
 	        return true;
 	        case R.id.action_bchat:

@@ -133,4 +133,5 @@
 	<string name="msg_TableNotFound">Tabla No Encontrada</string>
 	<string name="msg_AppIsNotAssociated">No Hay Aplicación Asociada</string>
 	<string name="msg_NoRecordsPendingtoSync">No hay Registros Pendientes por Sincronizar</string>
+	<string name="msg_EnterYourPasscode">Introduzca su código de acceso</string>
 </resources>

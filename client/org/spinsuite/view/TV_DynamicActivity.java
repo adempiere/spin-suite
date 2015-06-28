@@ -64,7 +64,7 @@ public class TV_DynamicActivity extends TV_Base
     	super.onCreate(savedInstanceState);
     	//	
     	Bundle bundle = getIntent().getExtras();
-		if(bundle != null){
+		if(bundle != null) {
 			param = (ActivityParameter)bundle.getParcelable("Param");
 			m_Record_ID = bundle.getIntArray("Record_ID");
 			if(m_Record_ID == null)
@@ -79,7 +79,6 @@ public class TV_DynamicActivity extends TV_Base
         //	Option
         loadActionMenu = new LoadActionMenu(this, true);
     	//	Title
-        getActionBar().setTitle(null);
     	getActionBar().setSubtitle(param.getName());
     	//	
     	//	Load Option List

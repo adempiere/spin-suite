@@ -22,6 +22,7 @@ import java.util.List;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
+import org.spinsuite.model.MUser;
 import org.spinsuite.sync.SyncService;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LoginFragmentItem;
@@ -67,6 +68,8 @@ public class Login extends FragmentActivity implements I_Login {
 	
 	/**	Menu Fragment			*/
 	private T_Menu							m_Menu 			= null;
+	/**	Valid Login Fragment	*/
+	private T_Pref_Login					m_Login			= null;
 	/**	Action Bar				*/
     private ActionBar 						actionBar 		= null;
 	/**	Index Fragment			*/
@@ -92,7 +95,7 @@ public class Login extends FragmentActivity implements I_Login {
 	/** Builder					*/
 	private Builder 						m_Builder 		= null;
 	/** Pending Intent Fragment */ 
-	private PendingIntent 					m_PendingIntent = null; 
+	private PendingIntent 					m_PendingIntent = null;
 	/**	Notification ID			*/
 	private static final int				NOTIFICATION_ID = 1;
 	
@@ -115,8 +118,35 @@ public class Login extends FragmentActivity implements I_Login {
     	//	
     	v_activity = this;
     	//	
-    	loadConfig();
+    	if(validLogin()) {
+    		loadConfig();
+    	}
 	}
+	
+	/**
+	 * Validate Login User
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return boolean
+	 */
+	private boolean validLogin() {
+		if(Env.isEnvLoad()) {
+			String user = Env.getContext(this, "#SUser");
+	    	String pass = Env.getContext(this, "#SPass");
+	    	//	Find User by pass
+			if(MUser.findUserID(this, user, pass) >= 0) {
+				//	to be define validation login
+				loadAccess();
+				return true;
+			} else {
+				m_Login = new T_Pref_Login(this, false);
+				loadFragment(m_Login);
+			}
+		}
+		//	Default Return
+		return false;
+	}
+	
 	
 	/**
 	 * Load a Fragment
@@ -137,7 +167,7 @@ public class Login extends FragmentActivity implements I_Login {
             	transaction.replace(R.id.ll_login, p_Fragment, TAG_FRAGMENT);
             }
         }
-    	//	NTH
+    	//	Nice To Have
 //    	else if(findViewById(R.id.ll_pr_list_land) != null) {
 //        	transaction.add(R.id.ll_pr_list_pane, m_Menu, TAG_FRAGMENT);
 //        }
@@ -145,6 +175,8 @@ public class Login extends FragmentActivity implements I_Login {
     	transaction.commit();
     	//	
     	invalidateOptionsMenu();
+    	//	Hide Keyboad
+    	Env.hideKeyBoad(this);
     }
     
     /**
@@ -350,10 +382,20 @@ public class Login extends FragmentActivity implements I_Login {
 	 * @return void
 	 */
 	public void loadDefaultData() {
-//		loadTabs();
 		m_LoadType = DATA_BASE;
 		new LoadAccessTask().execute();
 	}
+	
+	/**
+	 * Load Access
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	public void loadAccess() {
+		m_LoadType = ROLE_ACCESS;
+		new LoadAccessTask().execute();
+	}
+	
 	/**
 	 * Instance Fragment for Menu
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
@@ -372,6 +414,9 @@ public class Login extends FragmentActivity implements I_Login {
 		//	Add General Preferences
 		m_PrefPane.add(new LoginFragmentItem(new T_Pref_General(this), 
 				getString(R.string.PR_General), getString(R.string.PR_D_General), false));
+    	//	Add your custom preferences panels
+    	//	***********************
+    	//	End Custom preferences
 	}
 	
 	
@@ -410,14 +455,20 @@ public class Login extends FragmentActivity implements I_Login {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.previous_next, menu);
+        //	Change Menu
+        if(!Env.isEnvLoad()) {
+        	getMenuInflater().inflate(R.menu.previous_next, menu);
 
-        menu.findItem(R.id.action_previous).setEnabled(m_CurrentItem > 0);
-        //	
-        menu.findItem(R.id.action_next).setTitle(
-        		(m_CurrentItem == m_PrefPane.size() - 1)
-                	? R.string.Action_Finish
-                			: R.string.Action_Next);
+            menu.findItem(R.id.action_previous).setEnabled(m_CurrentItem > 0);
+            //	
+            menu.findItem(R.id.action_next).setTitle(
+            		(m_CurrentItem == m_PrefPane.size() - 1)
+                    	? R.string.Action_Finish
+                    			: R.string.Action_Next);
+        } else {
+        	getMenuInflater().inflate(R.menu.cancel_ok, menu);
+        }
+        //	Default Return
         return true;
     }
 
@@ -449,6 +500,17 @@ public class Login extends FragmentActivity implements I_Login {
             		startSynchronization();
             	}
                 return true;
+            case R.id.action_ok:
+            	if(m_Login != null) {
+            		boolean ok = m_Login.processActionOk();
+            		if(ok) {
+            			loadConfig();
+            		}
+            	}
+            	return true;
+            case R.id.action_cancel:
+            	finish();
+            	return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -501,11 +563,7 @@ public class Login extends FragmentActivity implements I_Login {
 				reloadActivity();
 			} else if(m_LoadType.equals(ROLE_ACCESS)) {
 				//	Start Activity
-//				Intent intent = new Intent(v_activity, LV_Menu.class);
-//				startActivity(intent);
-				//	Valid Auto Login
-				if(Env.isRequestPass())
-					finish();
+				;
 			}
 		}
 	}

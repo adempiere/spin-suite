@@ -32,6 +32,7 @@ import java.util.logging.Level;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -41,6 +42,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.inputmethod.InputMethodManager;
 
 import com.google.gson.Gson;
 
@@ -3316,6 +3318,17 @@ public final class Env {
 	        android.content.ClipData clip = android.content.ClipData.newPlainText("", p_Text);
 	        clipboard.setPrimaryClip(clip);
 	    }
+	}
+	
+	/**
+	 * Hide Keyboard
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return void
+	 */
+	public static void hideKeyBoad(Context p_Ctx) {
+		InputMethodManager imm = (InputMethodManager) p_Ctx.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 	}
 	
 	/**	Context					*/

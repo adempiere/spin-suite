@@ -16,23 +16,21 @@
 package org.spinsuite.view;
 
 
-import java.util.logging.Level;
-
 import org.spinsuite.adapters.LoginRoleAdapter;
-import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
+import org.spinsuite.login.Login;
+import org.spinsuite.model.MUser;
 import org.spinsuite.util.Env;
-import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.SyncValues;
 
 import android.content.Context;
-import android.database.Cursor;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnFocusChangeListener;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 
@@ -63,6 +61,18 @@ public class T_Pref_Login extends T_Pref_Parent {
 		super(p_ctx);
 	}
 	
+	/**
+	 * For Login
+	 * *** Constructor ***
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_ctx
+	 * @param p_IsReloadActivity
+	 */
+	public T_Pref_Login(Context p_ctx, boolean p_IsReloadActivity) {
+		this(p_ctx);
+		m_IsReloadActivity = p_IsReloadActivity;
+	}
+	
 	
 	/**	Login User					*/
 	private EditText 			et_User;
@@ -70,6 +80,15 @@ public class T_Pref_Login extends T_Pref_Parent {
 	private EditText 			et_Pass;
 	/**	Role						*/
 	private ExpandableListView 	ev_Role;
+	/**	Old User					*/
+	private String				m_OldUser;
+	/**	Old Password				*/
+	private String				m_OldPass;
+	/**	Has Changes					*/
+	private boolean				m_IsHasChanges = false;
+	/**	Reload Activity				*/
+	private boolean 			m_IsReloadActivity = true;
+	
 	/**	Key for Valid User Flag		*/
 	public static final String	KEY_LOGIN_VALID_USER = "#PR_Login_Valid_User";
 	
@@ -128,6 +147,17 @@ public class T_Pref_Login extends T_Pref_Parent {
     private boolean validUser() {
     	String user = et_User.getText().toString().trim();
     	String pass = et_Pass.getText().toString().trim();
+    	//	Verify if has changes
+    	if((m_OldUser != null && user == null)
+    		|| (m_OldUser == null && user != null)
+    		|| (!m_OldUser.equals(user))) {
+    		m_IsHasChanges = true;
+    	} else if((m_OldPass != null && pass == null)
+        		|| (m_OldPass == null && pass != null)
+        		|| (!m_OldPass.equals(pass))) {
+        		m_IsHasChanges = true;
+        }
+    	//	
     	if(user != null && user.length() > 0) {
     		if(pass != null && pass.length() > 0) {
     			if(!Env.isEnvLoad()) {
@@ -162,6 +192,18 @@ public class T_Pref_Login extends T_Pref_Parent {
     }
     
     /**
+     * Reload Activity
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return void
+     */
+    private void reloadActivity(){
+    	Intent refresh = new Intent(m_ctx, Login.class);
+    	refresh.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(refresh);
+		getActivity().finish();
+    }
+    
+    /**
      * Find User on database
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @param user
@@ -171,24 +213,10 @@ public class T_Pref_Login extends T_Pref_Parent {
      */
     private boolean findUser(String user, String pass){
     	boolean ok = false;
-    	try {
-    		DB con = new DB(this.getActivity());
-        	con.openDB(DB.READ_ONLY);
-        	String sql = "SELECT u.AD_User_ID " +
-        			"FROM AD_User u " +
-        			"WHERE u.Name = ? AND u.PassWord = ?";
-        	Cursor rs = con.querySQL(sql, new String[]{user, pass});
-        	//
-        	if(rs.moveToFirst()){
-        		Env.setAD_User_ID(rs.getInt(0));
-        		Env.setIsLogin(true);
-        		ok = true;
-        	} else {
-        		Env.setIsLogin(false);
-        	}
-        	con.closeDB(rs);
-    	} catch(Exception e) {
-    		LogM.log(getActivity(), getClass(), Level.SEVERE, "Error", e);
+    	int m_AD_User_ID = MUser.findUserID(m_ctx, user, pass);
+    	if(m_AD_User_ID >= 0) {
+    		Env.setAD_User_ID(m_AD_User_ID);
+    		ok = true;
     	}
     	return ok;
     }
@@ -212,7 +240,12 @@ public class T_Pref_Login extends T_Pref_Parent {
     
 	@Override
 	public boolean processActionOk() {
-		return validUser();
+		boolean ok = validUser();
+		if(m_IsHasChanges
+				&& m_IsReloadActivity) {
+			reloadActivity();
+		}
+		return ok;
 	}
 
 	@Override
@@ -242,6 +275,9 @@ public class T_Pref_Login extends T_Pref_Parent {
      		//	Set Authentication for test
      		et_Pass.setText(SyncValues.DEFAULT_AD_PASS);
      	}
+     	//	
+     	m_OldUser = user;
+     	m_OldPass = pass;
  		//	
 		return true;
 	}

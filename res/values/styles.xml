@@ -231,6 +231,13 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
     
+    <!-- Text Tile -->
+    <style name="TextTitle" parent="TextStandard">
+        <item name="android:textSize">@dimen/fontSizeMedium</item>
+        <item name="android:textStyle">bold|normal</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+    
     <style name="TextTitleListWC" parent="TextStandard">
         <item name="android:textStyle">bold|normal</item>
         <item name="android:textColor">@android:color/white</item>
