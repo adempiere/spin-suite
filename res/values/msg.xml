@@ -134,4 +134,6 @@
 	<string name="msg_AppIsNotAssociated">There Is No Application Associated</string>
 	<string name="msg_NoRecordsPendingtoSync">No Records Pending to Synchronize</string>
 	<string name="msg_EnterYourPasscode">Enter your passcode</string>
+	<string name="msg_ReEnterYourPasscode">Re-Enter your passcode</string>
+	<string name="msg_PasscodeIsInvalid">Passcode is Invalid</string>
 </resources>

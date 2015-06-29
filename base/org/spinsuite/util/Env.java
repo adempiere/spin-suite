@@ -2321,6 +2321,72 @@ public final class Env {
 	}
 	
 	/**
+	 * Set Login Pass Code
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param passcode
+	 * @return void
+	 */
+	public static void setLoginPasscode(int passcode) {
+		setLoginPasscode(getCtx(), passcode);
+	}
+	
+	/**
+	 * Set Login Pass Code
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param passcode
+	 * @return void
+	 */
+	public static void setLoginPasscode(Context ctx, int passcode) {
+		setContext(ctx, "#Login_Passcode", passcode);
+	}
+	
+	/**
+	 * Valid Login Pass Code
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param passcode
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean validLoginPasscode(Context ctx, int passcode) {
+		int internalPasscode = getContextAsInt(ctx, "#Login_Passcode");
+		return internalPasscode == passcode;
+	}
+	
+	/**
+	 * Valid Login Pass code
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param passcode
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean validLoginPasscode(int passcode) {
+		return validLoginPasscode(getCtx(), passcode);
+	}
+	
+	/**
+	 * Get Login Pass Code
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @return
+	 * @return int
+	 */
+	public static int getLoginPasscode(Context ctx) {
+		return getContextAsInt(ctx, "#Login_Passcode");
+	}
+	
+	/**
+	 * Get Login Pass Code
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return int
+	 */
+	public static int getLoginPasscode() {
+		return getLoginPasscode(getCtx());
+	}
+	
+	/**
 	 * Set Request Password
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param isAutoLogin

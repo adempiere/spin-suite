@@ -28,6 +28,30 @@
     	    android:checked="true"
     	    android:text="@string/msg_RequestPass"
     	    style="@style/TextDynamicTabCheckBox" />
+        <!-- Passcode -->
+        <TextView
+        	android:id="@+id/tv_Passcode"
+        	android:text="@string/msg_EnterYourPasscode"
+        	android:textIsSelectable="true"
+        	style="@style/TextDynamicTabLabel" />
+        
+        <EditText
+    	    android:id="@+id/et_Passcode"
+    	    style="@style/TextDynamicTabEditText"
+    	    android:layout_width="match_parent"
+    	    android:inputType="numberPassword" />
+        
+		<TextView
+        	android:id="@+id/tv_Re_Passcode"
+        	android:text="@string/msg_ReEnterYourPasscode"
+        	android:textIsSelectable="true"
+        	style="@style/TextDynamicTabLabel" />
+        
+        <EditText
+    	    android:id="@+id/et_Re_Passcode"
+    	    style="@style/TextDynamicTabEditText"
+    	    android:layout_width="match_parent"
+    	    android:inputType="numberPassword" />
     	
     	<!-- Language -->
     	<TextView

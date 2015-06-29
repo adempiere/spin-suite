@@ -32,6 +32,7 @@ import org.spinsuite.view.T_Menu;
 import org.spinsuite.view.T_Pref_General;
 import org.spinsuite.view.T_Pref_Login;
 import org.spinsuite.view.T_Pref_MQTT;
+import org.spinsuite.view.T_Pref_Request_Pass;
 import org.spinsuite.view.T_Pref_WS;
 
 import test.LoadInitData;
@@ -67,37 +68,39 @@ import android.view.MenuItem;
 public class Login extends FragmentActivity implements I_Login {
 	
 	/**	Menu Fragment			*/
-	private T_Menu							m_Menu 			= null;
+	private T_Menu							m_Menu 				= null;
 	/**	Valid Login Fragment	*/
-	private T_Pref_Login					m_Login			= null;
+	private T_Pref_Login					m_Login				= null;
+	/**	Request Pass Fragment	*/
+	private T_Pref_Request_Pass				m_RequestPasscode	= null;
 	/**	Action Bar				*/
-    private ActionBar 						actionBar 		= null;
+    private ActionBar 						actionBar 			= null;
 	/**	Index Fragment			*/
-	public final String 					TAG_FRAGMENT 	= "Menu";
+	public final String 					TAG_FRAGMENT 		= "Menu";
 	/**	Current Item			*/
-	private int 							m_CurrentItem 	= 0;
+	private int 							m_CurrentItem 		= 0;
 	/**	Flag Fragment Added		*/
-	private boolean 						m_FragmentAdded = false;
+	private boolean 						m_FragmentAdded 	= false;
 	/**	Preference Pane			*/
-	private ArrayList<LoginFragmentItem>	m_PrefPane 		= new ArrayList<LoginFragmentItem>();
+	private ArrayList<LoginFragmentItem>	m_PrefPane 			= new ArrayList<LoginFragmentItem>();
 	/**	Data Base				*/
-	private final String 					DATA_BASE 		= "D";
+	private final String 					DATA_BASE 			= "D";
 	/**	Role Access				*/
-	private final String 					ROLE_ACCESS 	= "R";
+	private final String 					ROLE_ACCESS 		= "R";
 	/**	Load Access Type		*/
-	private String							m_LoadType 		= ROLE_ACCESS;
+	private String							m_LoadType 			= ROLE_ACCESS;
 	/**	Activity				*/
-	private Activity						v_activity		= null;
+	private Activity						v_activity			= null;
 	/** Notification Manager	*/
-	private NotificationManager 			m_NFManager 	= null;
+	private NotificationManager 			m_NFManager 		= null;
 	/** Max Value Progress Bar	*/
-	private int 							m_MaxPB 		= 0;
+	private int 							m_MaxPB 			= 0;
 	/** Builder					*/
-	private Builder 						m_Builder 		= null;
+	private Builder 						m_Builder 			= null;
 	/** Pending Intent Fragment */ 
-	private PendingIntent 					m_PendingIntent = null;
+	private PendingIntent 					m_PendingIntent 	= null;
 	/**	Notification ID			*/
-	private static final int				NOTIFICATION_ID = 1;
+	private static final int				NOTIFICATION_ID 	= 1;
 	
 	
 	@Override
@@ -135,9 +138,14 @@ public class Login extends FragmentActivity implements I_Login {
 	    	String pass = Env.getContext(this, "#SPass");
 	    	//	Find User by pass
 			if(MUser.findUserID(this, user, pass) >= 0) {
-				//	to be define validation login
-				loadAccess();
-				return true;
+				//	validation login
+				if(Env.isRequestPass(this)) {
+					m_RequestPasscode = new T_Pref_Request_Pass(this);
+					loadFragment(m_RequestPasscode);
+				} else {
+					loadAccess();
+					return true;
+				}
 			} else {
 				m_Login = new T_Pref_Login(this, false);
 				loadFragment(m_Login);
@@ -222,7 +230,7 @@ public class Login extends FragmentActivity implements I_Login {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return void
 	 */
-	private void loadConfig() {
+	public void loadConfig() {
         // Validate SD
     	if(Env.isEnvLoad()) {
         	//	
@@ -503,6 +511,11 @@ public class Login extends FragmentActivity implements I_Login {
             case R.id.action_ok:
             	if(m_Login != null) {
             		boolean ok = m_Login.processActionOk();
+            		if(ok) {
+            			loadConfig();
+            		}
+            	} else if(m_RequestPasscode != null) {
+            		boolean ok = m_RequestPasscode.processActionOk();
             		if(ok) {
             			loadConfig();
             		}

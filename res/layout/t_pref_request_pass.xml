@@ -42,14 +42,14 @@
         android:text="@string/msg_EnterYourPasscode" />
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/et_Passcode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:ems="10"
-        android:inputType="numberPassword" >
-
+        android:inputType="numberPassword"
+		style="@style/TextItemMenu" >
         <requestFocus />
     </EditText>
 
