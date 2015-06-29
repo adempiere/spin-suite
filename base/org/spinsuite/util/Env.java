@@ -66,15 +66,28 @@ public final class Env {
 	 * Get Instance
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Ctx
+	 * @param reload
 	 * @return
 	 * @return Env
 	 */
-	public static Env getInstance(Context p_Ctx) {
-		if(m_Instance == null) {
+	public static Env getInstance(Context p_Ctx, boolean reload) {
+		if(m_Instance == null
+				|| reload) {
 			m_Instance = new Env(p_Ctx);
 		}
 		//	Default Return
 		return m_Instance;
+	}
+	
+	/**
+	 * Get Instance
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return Env
+	 */
+	public static Env getInstance(Context p_Ctx) {
+		return getInstance(p_Ctx, false);
 	}
 	
 	/**
@@ -128,12 +141,12 @@ public final class Env {
 			String bcPathName  = basePathName + Env.BC_DIRECTORY;
 			
 			//	
-			Env.setAppBaseDirectory(basePathName);
-			Env.setDB_PathName(dbPathName);
-			Env.setDoc_DirectoryPathName(docPathName);
-			Env.setTmp_DirectoryPathName(tmpPathName);
-			Env.setAtt_DirectoryPathName(attPathName);
-			Env.setBC_DirectoryPathName(bcPathName);
+			Env.setAppBaseDirectory(ctx, basePathName);
+			Env.setDB_PathName(ctx, dbPathName);
+			Env.setDoc_DirectoryPathName(ctx, docPathName);
+			Env.setTmp_DirectoryPathName(ctx, tmpPathName);
+			Env.setAtt_DirectoryPathName(ctx, attPathName);
+			Env.setBC_DirectoryPathName(ctx, bcPathName);
 			//	Database
 			File f = new File(dbPath);
 			if(!f.exists()) {
@@ -181,7 +194,7 @@ public final class Env {
 							+ "\"" + bcPathName + "\"");
 			}
 		} else {
-			Env.setDB_PathName(DB.DB_NAME);
+			Env.setDB_PathName(ctx, DB.DB_NAME);
 		}
 	}
 	

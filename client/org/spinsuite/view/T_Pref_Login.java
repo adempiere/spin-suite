@@ -160,16 +160,15 @@ public class T_Pref_Login extends T_Pref_Parent {
     	//	
     	if(user != null && user.length() > 0) {
     		if(pass != null && pass.length() > 0) {
-    			if(!Env.isEnvLoad()) {
-    				return true;
-    			}
     			//	
     			Env.setContext(m_ctx, "#SUser", user);
     			Env.setContext(m_ctx, "#AD_User_Name", user);
     			Env.setContext(m_ctx, "#SPass", pass);
-    			if(!Env.isEnvLoad())
+    			//	Just when is Loaded Application
+    			if(!Env.isEnvLoad()) {
+    				Env.setContext(KEY_LOGIN_VALID_USER, true);
     				return true;
-    			else if(findUser(user, pass)) {
+    			} else if(findUser(user, pass)) {
     				Env.setContext(KEY_LOGIN_VALID_USER, true);
     				return true;
     			} else {

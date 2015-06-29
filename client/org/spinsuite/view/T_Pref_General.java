@@ -356,6 +356,11 @@ public class T_Pref_General extends T_Pref_Parent {
     	
     	//	Save SD
     	ch_SaveSD.setChecked(Env.getContextAsBoolean("#SaveSD"));
+    	//	
+    	if(!Env.isEnvLoad()) {
+    		ch_LoadTestData.setChecked(true);
+    	}
+    	
  		//	
 		return true;
 	}
