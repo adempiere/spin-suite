@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import org.spinsuite.adapters.SearchAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
+import org.spinsuite.login.Login;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
@@ -107,12 +108,14 @@ public class LV_StandardSearch extends Activity {
 		super.setContentView(R.layout.v_search);
     	//	Get Field
     	Bundle bundle = getIntent().getExtras();
+    	String subtitle = null;
 		if(bundle != null) {
 			m_field = (InfoField)bundle.getParcelable("Field");
 			m_SPS_Table_ID = bundle.getInt("SPS_Table_ID");
 			m_SPS_Tab_ID = bundle.getInt("SPS_Tab_ID");
 			String m_StringInsertRecord = bundle.getString("IsInsertRecord");
 			m_criteria = bundle.getParcelable("Criteria");
+			subtitle = bundle.getString("Name");
 			//	Valid Is Insert Record
 			if(m_StringInsertRecord != null)
 				m_IsInsertRecord = m_StringInsertRecord.equals("Y");
@@ -131,11 +134,16 @@ public class LV_StandardSearch extends Activity {
     	//	
 		lv_Search = (ListView) findViewById(R.id.lv_Search);
 		//	
-		if(m_SPS_Table_ID != 0)
+		if(m_SPS_Table_ID != 0) {
 			lookup = new Lookup(getApplicationContext(), m_SPS_Table_ID);
-		else if(m_field != null)
+		} else if(m_field != null) {
 			lookup = new Lookup(getApplicationContext(), m_field);
+			subtitle = m_field.Name;
+		}
 		//	
+		//	Set Subtitle
+		getActionBar().setSubtitle(subtitle);		
+		//	Set Configuration
 		loadConfig();
 		
 		//	Load
@@ -322,7 +330,7 @@ public class LV_StandardSearch extends Activity {
 			}
 			return true;
 		} else if (itemId == android.R.id.home) {
-			NavUtils.navigateUpTo(this, new Intent(this, LV_Menu.class));
+			NavUtils.navigateUpTo(this, new Intent(this, Login.class));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

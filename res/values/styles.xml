@@ -105,6 +105,11 @@
 		<item name="ic_payment_rule_direct_deposit">@drawable/direct_deposit_m</item>
 		<item name="ic_payment_rule_mixed">@drawable/payment_mixed_m</item>
 		<item name="ic_payment_rule_on_credit">@drawable/oncredit_m</item>
+		<!-- For Preferences -->
+		<item name="ic_pr_general">@drawable/configuration_h</item>
+		<item name="ic_pr_ws">@drawable/ws_h</item>
+		<item name="ic_pr_mqtt">@drawable/mqtt_h</item>
+		<item name="ic_pr_login">@drawable/login_h</item>
 		<!-- Text Color -->
     </style>
     
@@ -222,6 +227,13 @@
     
     <!-- Text Tile List -->
     <style name="TextTitleList" parent="TextStandard">
+        <item name="android:textStyle">bold|normal</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+    
+    <!-- Text Tile -->
+    <style name="TextTitle" parent="TextStandard">
+        <item name="android:textSize">@dimen/fontSizeMedium</item>
         <item name="android:textStyle">bold|normal</item>
         <item name="android:textColor">@android:color/black</item>
     </style>

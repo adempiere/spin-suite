@@ -16,6 +16,7 @@
 package org.spinsuite.util;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -31,10 +32,13 @@ import org.spinsuite.base.R;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
+import android.os.ParcelFileDescriptor;
+import android.provider.OpenableColumns;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
@@ -251,20 +255,29 @@ public class AttachmentHandler {
 	}
 	
 	/**
-	 * Save Image to Attachment
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/11/2014, 20:50:39
+	 * Save Bitmap without Quality
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Image
+	 * @param p_DestFolder
+	 * @param fileName
+	 * @return
+	 * @return boolean
+	 */
+	public boolean saveImageBitmap(Bitmap p_Image, String p_DestFolder, String fileName) {
+		return saveImageBitmap(p_Image, p_DestFolder, fileName, IMG_MAX_Q);
+	}
+	
+	/**
+	 * Save Bitmap
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Image
 	 * @param p_DestFolder
 	 * @param fileName
 	 * @param quality
 	 * @return
 	 * @return boolean
 	 */
-	public boolean processImgAttach(String p_DestFolder, String fileName, int quality) {
-    	File tmpFile = new File(getTMPImageName());
-        if(!tmpFile.exists())
-        	return false;
-        //	
-		Bitmap mImage = getBitmapFromFile(getTMPImageName(), IMG_TARGET_W, IMG_TARGET_H);
+	public boolean saveImageBitmap(Bitmap p_Image, String p_DestFolder, String fileName, int quality) {
 		//	
 		if(p_DestFolder == null) {
 			p_DestFolder = getAttDirectory() + File.separator + getAttachmentPathSnippet();
@@ -275,7 +288,7 @@ public class AttachmentHandler {
 		else if(!fileName.contains(JPEG_FILE_SUFFIX))
 			fileName += JPEG_FILE_SUFFIX;
 		//	
-		if(mImage != null) {
+		if(p_Image != null) {
 			final File destFolder = new File(p_DestFolder);
 			if(!destFolder.exists()) {
 				if(!destFolder.mkdirs()) {
@@ -292,7 +305,7 @@ public class AttachmentHandler {
 			//	Write File
 			try {
 				FileOutputStream outStream = new FileOutputStream(destFile);
-				mImage.compress(Bitmap.CompressFormat.JPEG, quality, outStream);
+				p_Image.compress(Bitmap.CompressFormat.JPEG, quality, outStream);
 				outStream.flush();
 				outStream.close();
 			} catch (Exception e) {
@@ -301,7 +314,26 @@ public class AttachmentHandler {
 			//	
 			return true;
 		}
+		//	Default
 		return false;
+	}
+	
+	/**
+	 * Save Image to Attachment
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 10/11/2014, 20:50:39
+	 * @param p_DestFolder
+	 * @param fileName
+	 * @param quality
+	 * @return
+	 * @return boolean
+	 */
+	public boolean processImgAttach(String p_DestFolder, String fileName, int quality) {
+    	File tmpFile = new File(getTMPImageName());
+        if(!tmpFile.exists())
+        	return false;
+        //	
+		Bitmap mImage = getBitmapFromFile(getTMPImageName(), IMG_TARGET_W, IMG_TARGET_H);
+		return saveImageBitmap(mImage, p_DestFolder, fileName, quality);
     }
 	
 	/**
@@ -353,6 +385,59 @@ public class AttachmentHandler {
 		}
 		//	
 		return extension;
+	}
+	
+	/**
+	 * Get Display Name
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param uri
+	 * @return
+	 * @return String
+	 */
+	public String getDisplayName(Uri uri) {
+		Cursor cursor = m_ctx.getContentResolver()
+	            .query(uri, null, null, null, null, null);
+		//	
+	    try {
+	    	if (cursor != null 
+	    			&& cursor.moveToFirst()) {
+	    		return cursor.getString(
+	                    cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+	        }
+	    } finally {
+	    	if(cursor != null) {
+	    		cursor.close();
+	    	}
+	    }
+	    //	Default
+	    return null;
+	}
+	
+	/**
+	 * Get BitMap from Uri
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param uri
+	 * @return
+	 * @throws IOException
+	 * @return Bitmap
+	 */
+	public Bitmap getBitmapFromUri(Uri uri) {
+		if(uri == null) {
+			return null;
+		}
+		//	
+		ParcelFileDescriptor parcelFileDescriptor = null;
+		Bitmap image = null;
+		try {
+			parcelFileDescriptor =
+		            m_ctx.getContentResolver().openFileDescriptor(uri, "r");
+			FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+		    image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+		    parcelFileDescriptor.close();
+		} catch (Exception e) {
+			LogM.log(m_ctx, getClass(), Level.SEVERE, "getBitmapFromUri Error", e);
+		}
+	    return image;
 	}
 	
 	/**

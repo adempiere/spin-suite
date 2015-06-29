@@ -10,27 +10,33 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, C.A. All Rights Reserved. *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.login;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_Login;
-import org.spinsuite.model.MCountry;
-import org.spinsuite.mqtt.connection.MQTTSyncService;
+import org.spinsuite.model.MUser;
 import org.spinsuite.sync.SyncService;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.LoginFragmentItem;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.SyncValues;
-import org.spinsuite.view.LV_Menu;
-import org.spinsuite.view.TV_Base;
+import org.spinsuite.view.T_Menu;
+import org.spinsuite.view.T_Pref_General;
+import org.spinsuite.view.T_Pref_Login;
+import org.spinsuite.view.T_Pref_MQTT;
+import org.spinsuite.view.T_Pref_Request_Pass;
+import org.spinsuite.view.T_Pref_WS;
 
 import test.LoadInitData;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.NotificationManager;
@@ -45,55 +51,189 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
 /**
- * 
- * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Feb 26, 2015, 11:49:41 PM
- * 	<li> Login Correct
- * 	@see https://adempiere.atlassian.net/browse/SPIN-2
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Jun 15, 2015, 1:52:50 AM
  *
  */
-public class Login extends TV_Base implements I_Login {
-    
-	/**	Data Base				*/
-	private final String 		DATA_BASE 		= "D";
-	/**	Role Access				*/
-	private final String 		ROLE_ACCESS 	= "R";
-	/**	Load Access Type		*/
-	private String				m_LoadType 		= ROLE_ACCESS;
-	/**	Activity				*/
-	private Activity			v_activity		= null;
-	/**	Sync					*/
-	private T_Login_Init		m_LoginInit;
-	/** Notification Manager	*/
-	private NotificationManager m_NFManager 	= null;
-	/** Max Value Progress Bar	*/
-	private int 				m_MaxPB 		= 0;
-	/** Builder					*/
-	private Builder 			m_Builder 		= null;
-	/** Pending Intent Fragment */ 
-	private PendingIntent 		m_PendingIntent = null; 
-	/**	Notification ID			*/
-	private static final int	NOTIFICATION_ID = 1;
+public class Login extends FragmentActivity implements I_Login {
 	
-    @Override
+	/**	Menu Fragment			*/
+	private T_Menu							m_Menu 				= null;
+	/**	Valid Login Fragment	*/
+	private T_Pref_Login					m_Login				= null;
+	/**	Request Pass Fragment	*/
+	private T_Pref_Request_Pass				m_RequestPasscode	= null;
+	/**	Action Bar				*/
+    private ActionBar 						actionBar 			= null;
+	/**	Index Fragment			*/
+	public final String 					TAG_FRAGMENT 		= "Menu";
+	/**	Current Item			*/
+	private int 							m_CurrentItem 		= 0;
+	/**	Flag Fragment Added		*/
+	private boolean 						m_FragmentAdded 	= false;
+	/**	Preference Pane			*/
+	private ArrayList<LoginFragmentItem>	m_PrefPane 			= new ArrayList<LoginFragmentItem>();
+	/**	Data Base				*/
+	private final String 					DATA_BASE 			= "D";
+	/**	Role Access				*/
+	private final String 					ROLE_ACCESS 		= "R";
+	/**	Load Access Type		*/
+	private String							m_LoadType 			= ROLE_ACCESS;
+	/**	Activity				*/
+	private Activity						v_activity			= null;
+	/** Notification Manager	*/
+	private NotificationManager 			m_NFManager 		= null;
+	/** Max Value Progress Bar	*/
+	private int 							m_MaxPB 			= 0;
+	/** Builder					*/
+	private Builder 						m_Builder 			= null;
+	/** Pending Intent Fragment */ 
+	private PendingIntent 					m_PendingIntent 	= null;
+	/**	Notification ID			*/
+	private static final int				NOTIFICATION_ID 	= 1;
+	
+	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
     	Env.getInstance(getApplicationContext());
     	//	Reset Activity No
     	Env.resetActivityNo();
     	//	
     	super.onCreate(savedInstanceState);
-    	//	Set Activity
-        v_activity = this;
+    	super.setContentView(R.layout.v_login);
+    	//	Action Bar
+    	actionBar = getActionBar();
+    	//	
+    	actionBar.setDisplayHomeAsUpEnabled(true);
+    	actionBar.setHomeButtonEnabled(true);
+    	actionBar.setTitle(R.string.app_name);
+    	actionBar.setSubtitle(Msg.getMsg(this, "SelectMenuItem"));
+    	//	
+    	v_activity = this;
+    	//	
+    	if(validLogin()) {
+    		loadConfig();
+    	}
+	}
+	
+	/**
+	 * Validate Login User
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return boolean
+	 */
+	private boolean validLogin() {
+		if(Env.isEnvLoad()) {
+			String user = Env.getContext(this, "#SUser");
+	    	String pass = Env.getContext(this, "#SPass");
+	    	//	Find User by pass
+			if(MUser.findUserID(this, user, pass) >= 0) {
+				//	validation login
+				if(Env.isRequestPass(this)) {
+					m_RequestPasscode = new T_Pref_Request_Pass(this);
+					loadFragment(m_RequestPasscode);
+				} else {
+					loadAccess();
+					return true;
+				}
+			} else {
+				m_Login = new T_Pref_Login(this, false);
+				loadFragment(m_Login);
+			}
+		}
+		//	Default Return
+		return false;
+	}
+	
+	
+	/**
+	 * Load a Fragment
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Fragment
+	 * @return void
+	 */
+	private void loadFragment(Fragment p_Fragment) {
+        //	Get Fragment Transaction
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        //	Instance if not exists
+        //	Portrait
+        if (findViewById(R.id.ll_login) != null) {
+        	if (!m_FragmentAdded) {
+        		transaction.add(R.id.ll_login, p_Fragment, TAG_FRAGMENT);
+        		m_FragmentAdded = true;
+            } else {
+            	transaction.replace(R.id.ll_login, p_Fragment, TAG_FRAGMENT);
+            }
+        }
+    	//	Nice To Have
+//    	else if(findViewById(R.id.ll_pr_list_land) != null) {
+//        	transaction.add(R.id.ll_pr_list_pane, m_Menu, TAG_FRAGMENT);
+//        }
+    	//	Commit
+    	transaction.commit();
+    	//	
+    	invalidateOptionsMenu();
+    	//	Hide Keyboad
+    	Env.hideKeyBoad(this);
+    }
+    
+    /**
+	 * Start Synchronization for Initial Load
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> Jul 8, 2014, 11:25:21 AM
+	 * @return void
+	 */
+	private void startSynchronization() {
+		//	For Test Data
+		if(Env.getContextAsBoolean("#LoadTestData")) {
+			loadDefaultData();
+			//	Default Return
+			return;
+		}
+		//	Create Directory
+		Env.createDefaultDirectory(this);
+		//	
+		setEnabled(false);
+		//	Add Value to Web
+		String url = Env.getContext("#SUrlSoap");
+		String user = Env.getContext("#SUser");
+		String pass = Env.getContext("#SPass");
+		//	
+		//	Instance Bundle
+		Bundle bundle = new Bundle();
+		//	Add Parameters
+		bundle.putString(SyncValues.KEY_SOAP_URL, SyncValues.getInitialUrl(url));
+		bundle.putString(SyncValues.KEY_NAME_SPACE, SyncValues.DEFAULT_NAME_SPACE);
+		bundle.putString(SyncValues.KEY_METHOD, SyncValues.DEFAULT_METHOD);
+		bundle.putBoolean(SyncValues.KEY_NET_SERVICE, true);
+		bundle.putString(SyncValues.KEY_USER, user);
+		bundle.putString(SyncValues.KEY_PASS, pass);
+		bundle.putString(SyncValues.KEY_SOAP_ACTION, SyncValues.DEFAULT_NAME_SPACE + SyncValues.DEFAULT_METHOD);
+		bundle.putInt(SyncValues.KEY_TIMEOUT, Env.getContextAsInt("#Timeout"));
+		//	Instance Service
+		Intent m_Service = new Intent(this, SyncService.class);
+		m_Service.putExtras(bundle);
+		startService(m_Service);
+	}
+	
+	/**
+	 * Load Configuration
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	public void loadConfig() {
         // Validate SD
     	if(Env.isEnvLoad()) {
         	//	
-        	loadTabs();
     		setEnabled(true);
     		//	
     		if(!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
@@ -112,47 +252,31 @@ public class Login extends TV_Base implements I_Login {
     			languaje = Env.getSOLanguage();
     			Env.setAD_Language(languaje);
     		}
-    		//	Auto Login
-    		if(Env.isAutoLoginConfirmed()) {
-    			if(!Env.isAccessLoaded()) {
-					//	Load Access Role
-					m_LoadType = ROLE_ACCESS;
-					new LoadAccessTask().execute();
-				} else {
-					//	Start Service
-					if(!MQTTSyncService.isRunning()) {
-						Intent service = new Intent(this, MQTTSyncService.class);
-						startService(service);
-					}
-//					MQTTConnection.getInstance(v_activity).connectInThread();
-					//	Set Login Date
-					Env.loginDate(v_activity, new Date());
-					//	Start Activity
-					Intent intent = new Intent(this, LV_Menu.class);
-					startActivity(intent);
-				}
-    			finish();
-    		}
-    	} else {
-    		setEnabled(false);
+    		//	Set Login Date
+    		Env.loginDate(this, new Date());
+    		//	Load Tree
+    		if(m_Menu == null) {
+        		m_Menu = new T_Menu(this);
+        	}
     		//	
-    		if(m_LoginInit == null
-    				&& !SyncService.isRunning())
-    			loadInitSync();
+    		loadFragment(m_Menu);
+    	} else {
+    		instanceFragment();
+    		//	Load Fragment
+    		loadFragment(m_PrefPane.get(m_CurrentItem).getPref());
+    		//	Register Receiver
+        	LocalBroadcastManager.getInstance(this).registerReceiver(
+        			new BroadcastReceiver() {
+        			    @Override
+        			    public void onReceive(Context context, Intent intent) {
+        			    	changeValues(context, intent);
+        			    }
+        			}, 
+        			new IntentFilter(SyncValues.BC_IL_FILTER));
     	}
-		//	Register Receiver
-    	LocalBroadcastManager.getInstance(this).registerReceiver(
-    			new BroadcastReceiver() {
-    			    @Override
-    			    public void onReceive(Context context, Intent intent) {
-    			    	changeValues(context, intent);
-    			    }
-    			}, 
-    			new IntentFilter(SyncValues.BC_IL_FILTER));
-    	//	
-    }
-    
-    /**
+	}
+	
+	/**
      * Change Values for Login and notifications
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @param context
@@ -186,7 +310,7 @@ public class Login extends TV_Base implements I_Login {
     		ask.setPositiveButton(getResources().getString(R.string.msg_Acept), new DialogInterface.OnClickListener() {
     			public void onClick(DialogInterface dialog, int which) {
     				dialog.dismiss();
-    				loadInitSync();
+    				startSynchronization();
     			}
     		});
     		ask.setNegativeButton(getResources().getString(R.string.msg_Cancel), new DialogInterface.OnClickListener() {
@@ -216,7 +340,7 @@ public class Login extends TV_Base implements I_Login {
         		m_Builder.setContentTitle(msg)
             								.setSmallIcon(android.R.drawable.stat_sys_download);
         		//	Load Default Tabs
-        		loadTabs();
+        		reloadActivity();
         	}
     		//	Set Sub Title
     		if(subMsg != null
@@ -226,6 +350,18 @@ public class Login extends TV_Base implements I_Login {
     		//	Notify
     		m_NFManager.notify(NOTIFICATION_ID, m_Builder.build());
     	}
+    }
+    
+    /**
+     * Re-Load Activity
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return void
+     */
+    private void reloadActivity(){
+    	Intent refresh = new Intent(this, Login.class);
+    	refresh.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(refresh);
+		finish();
     }
     
     /**
@@ -254,198 +390,145 @@ public class Login extends TV_Base implements I_Login {
 	 * @return void
 	 */
 	public void loadDefaultData() {
-		loadTabs();
 		m_LoadType = DATA_BASE;
 		new LoadAccessTask().execute();
 	}
 	
 	/**
-	 * Load Tabs for Login
+	 * Load Access
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return void
 	 */
-	private void loadTabs() {
-		addFagment(T_Login.class, "Conn", R.string.tt_Conn);
-        addFagment(T_Role.class, "LoginRole", R.string.tt_LoginRole);
+	public void loadAccess() {
+		m_LoadType = ROLE_ACCESS;
+		new LoadAccessTask().execute();
 	}
-    
-    /**
-     * Load Initial Synchronization
-     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-     * @return void
-     */
-    private void loadInitSync() {
-    	//	
-    	if(m_LoginInit == null)
-    		m_LoginInit = new T_Login_Init(this);
-    	//	
-    	m_LoginInit.show(getFragmentManager(), 
-				this.getResources().getString(R.string.InitSync));
+	
+	/**
+	 * Instance Fragment for Menu
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void instanceFragment() {
+		//	Add Login
+		m_PrefPane.add(new LoginFragmentItem(new T_Pref_Login(this), 
+				getString(R.string.PR_Login), getString(R.string.PR_D_Login), true));
+		//	Add Web-Services
+		m_PrefPane.add(new LoginFragmentItem(new T_Pref_WS(this), 
+				getString(R.string.PR_WS), getString(R.string.PR_D_WS), true));
+		//	Add MQTT Protocol
+		m_PrefPane.add(new LoginFragmentItem(new T_Pref_MQTT(this), 
+				getString(R.string.PR_MQTT), getString(R.string.PR_D_MQTT), false));
+		//	Add General Preferences
+		m_PrefPane.add(new LoginFragmentItem(new T_Pref_General(this), 
+				getString(R.string.PR_General), getString(R.string.PR_D_General), false));
+    	//	Add your custom preferences panels
+    	//	***********************
+    	//	End Custom preferences
+	}
+	
+	
+    @Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if(Env.isEnvLoad()) {
+    		boolean noBack = false;
+    		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+    			//	
+    			if(m_Menu != null) {
+    				noBack = m_Menu.backToParent();
+    			}
+    		}
+        	//	No Back
+        	if(!noBack) {
+        		return super.onKeyDown(keyCode, event);
+        	} else {
+        		return noBack;
+        	}
+    	}
+		//	Default Return
+		return super.onKeyDown(keyCode, event);
+	}
+	
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	if(Env.isEnvLoad()) {
+    		if(m_Menu != null) {
+    			m_Menu.onActivityResult(requestCode, resultCode, data);
+    		}
+    	} else {
+    		m_PrefPane.get(m_CurrentItem).getPref().onActivityResult(requestCode, resultCode, data);
+    	}
     }
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.cancel_ok, menu);
-        MenuItem item = menu.getItem(0);
-        item.setVisible(true);
-        setVisibleProgress(!Env.isEnvLoad());
+        //	Change Menu
+        if(!Env.isEnvLoad()) {
+        	getMenuInflater().inflate(R.menu.previous_next, menu);
+
+            menu.findItem(R.id.action_previous).setEnabled(m_CurrentItem > 0);
+            //	
+            menu.findItem(R.id.action_next).setTitle(
+            		(m_CurrentItem == m_PrefPane.size() - 1)
+                    	? R.string.Action_Finish
+                    			: R.string.Action_Next);
+        } else {
+        	getMenuInflater().inflate(R.menu.cancel_ok, menu);
+        }
+        //	Default Return
         return true;
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-		if (itemId == R.id.action_cancel) {
-			cancelAction();
-			return true;
-		} else {
-			//	Valid Enable
-			if(!Env.isEnvLoad()) {
-				loadInitSync();
-				return true;
-			}
-			//	
-			if (itemId == R.id.action_ok) {
-				aceptAction();
-				return true;
-			} else if (itemId == R.id.action_config) {
-				Intent intent = new Intent(this, T_Connection.class);
-				startActivity(intent);
-				return true;
-			}
-		}
-		//	
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+
+            case R.id.action_previous:
+                // Go to the previous step in the wizard. If there is no previous step,
+                // setCurrentItem will do nothing.
+                loadFragment(m_PrefPane.get(--m_CurrentItem).getPref());
+                return true;
+
+            case R.id.action_next:
+                // Advance to the next step in the wizard. If there is no next step, setCurrentItem
+                // will do nothing.
+            	//	Valid Data
+            	boolean isOk = m_PrefPane.get(m_CurrentItem).getPref().processActionOk();
+            	if(!isOk) {
+            		return false;
+            	}
+            	//	
+            	if(!(m_CurrentItem == m_PrefPane.size() - 1)) {
+            		loadFragment(m_PrefPane.get(++m_CurrentItem).getPref());
+            	} else {
+            		startSynchronization();
+            	}
+                return true;
+            case R.id.action_ok:
+            	if(m_Login != null) {
+            		boolean ok = m_Login.processActionOk();
+            		if(ok) {
+            			loadConfig();
+            		}
+            	} else if(m_RequestPasscode != null) {
+            		boolean ok = m_RequestPasscode.processActionOk();
+            		if(ok) {
+            			loadConfig();
+            		}
+            	}
+            	return true;
+            case R.id.action_cancel:
+            	finish();
+            	return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
     
-    /**
-     * Process OK Action
-     * @author Yamel Senih 24/04/2012, 18:03:59
-     * @return void
-     */
-    @Override
-    public boolean aceptAction() {
-		//	
-    	I_Login fr = (I_Login)getCurrentFragment();
-    	boolean ret = fr.aceptAction();
-		if(fr instanceof T_Login){
-			if(ret){
-				if(!Env.isEnvLoad()){
-					Intent intent = new Intent(this, T_Connection.class);
-					startActivity(intent);
-				} else {
-					//	Is Logged
-					if(Env.isLogin()){
-						setCurrentFragment(1);
-						fr = (I_Login)getCurrentFragment();	
-					} else {
-						//pager.getChildAt(2).setEnabled(true);
-					}
-				}
-			}
-		} else if(fr instanceof T_Role){
-			if(ret){
-				//	Set Confirm Login
-				Env.setAutoLoginComfirmed(Env.isAutoLogin());
-				//	Set Country Code
-				String language = Env.getAD_Language();
-				//	
-				if(language == null
-						|| language.length() < 5)
-					language = Env.BASE_LANGUAGE;
-				//	
-				String countryCode = language.substring(3);
-				//	
-				if(countryCode == null)
-					countryCode = Env.BASE_COUNTRY_CODE;
-				//	Set to Context
-				int m_C_Country_ID = MCountry.getC_Country_IDFromCode(this, countryCode);
-				//	Set Country
-				if(m_C_Country_ID < 0)
-					m_C_Country_ID = 0;
-				//	
-				Env.setContext("#C_Country_ID", m_C_Country_ID);
-				//	
-				if(!Env.isAccessLoaded(this)) {
-					//	Load Access Role
-					m_LoadType = ROLE_ACCESS;
-					new LoadAccessTask().execute();
-				} else {
-					//	Start Service
-					if(!MQTTSyncService.isRunning()) {
-						Intent service = new Intent(this, MQTTSyncService.class);
-						startService(service);
-					}
-					//	Start Activity
-					Intent intent = new Intent(this, LV_Menu.class);
-					startActivity(intent);
-					//	Valid Auto Login
-					if(Env.isAutoLogin())
-						finish();
-				}
-			}
-		}
-		return true;
-    }
-    
-    @Override
-	public void setEnabled(boolean enabled) {
-    	//m_Enabled = enabled;
-    	int size = getSize();
-    	for(int i = 0; i < size; i++) {
-    		I_Login fr = (I_Login)getFragment(i);
-    		if(fr != null){
-    			fr.setEnabled(enabled);
-    		}
-    	}
-	}
-    
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        if(!Env.isEnvLoad(this)) {
-//        	setCurrentFragment(0);
-//        }
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-    @Override
-    protected void onStop() {
-        super.onStop();
-        // The activity is no longer visible (it is now "stopped")
-    }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // The activity is about to be destroyed.
-    }
-    
-	@Override
-	public boolean cancelAction() {
-		return false;
-	}
-	
-	/**
-	 * Re-Load Data when is synchronized
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return void
-	 */
-	public boolean loadData() {
-		I_Login fr = (I_Login)getCurrentFragment();
-    	if(fr != null){
-			return fr.loadData();
-		}
-    	//	Default
-    	return false;
-	}
-	
 	/**
 	 * Load Task for access
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Feb 26, 2015, 11:50:13 PM
@@ -490,19 +573,31 @@ public class Login extends TV_Base implements I_Login {
 			v_PDialog.dismiss();
 			//	
 			if(m_LoadType.equals(DATA_BASE)) {
-				I_Login fr = (I_Login)getCurrentFragment();
-				if(fr != null) {
-					fr.loadData();
-					invalidateOptionsMenu();
-				}
+				reloadActivity();
 			} else if(m_LoadType.equals(ROLE_ACCESS)) {
 				//	Start Activity
-				Intent intent = new Intent(v_activity, LV_Menu.class);
-				startActivity(intent);
-				//	Valid Auto Login
-				if(Env.isAutoLogin())
-					finish();
+				;
 			}
 		}
+	}
+    
+	@Override
+	public boolean aceptAction() {
+		return false;
+	}
+
+	@Override
+	public boolean cancelAction() {
+		return false;
+	}
+
+	@Override
+	public boolean loadData() {
+		return false;
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		
 	}
 }

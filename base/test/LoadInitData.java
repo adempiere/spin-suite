@@ -90,7 +90,7 @@ public class LoadInitData {
 		//	Set Context Default Values for Demo
 		Env.setIsEnvLoad(ctx, true);
 		Env.setSavePass(ctx, true);
-		Env.setAutoLogin(ctx, true);
+		Env.setRequestPass(ctx, true);
 		Env.setContext(ctx, KEY_POS_TAB, 1);
 		//	Set Value for Sync
 		Env.setContext(ctx, "#InitialLoadSynchronizing", false);

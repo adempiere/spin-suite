@@ -57,7 +57,9 @@ public class X_C_BPartner extends PO implements I_C_BPartner {
 			setSendEMail (false);
 // N
 			setSO_CreditLimit (Env.ZERO);
+// 0
 			setSO_CreditUsed (Env.ZERO);
+// 0
 			setValue (null);
         } */
     }

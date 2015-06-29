@@ -46,5 +46,16 @@
 	<string name="tt_Conn">Conexión</string>
 	<string name="tt_LoginRole">Rol de Inicio</string>
 	<string name="LoadTestData">Cargar Datos de Prueba</string>
-	
+	<!-- Preferences -->
+	<string name="PR_Preferences">Preferencias</string>
+	<string name="PR_General">General</string>
+	<string name="PR_D_General">Preferencias Generales (Idioma, Inicio y Otros)</string>
+	<string name="PR_WS">Servicios Web</string>
+	<string name="PR_D_WS">Preferencias de Servicios Web (Conexión, Tiempo de Espera)</string>
+	<string name="PR_MQTT">Protocolo (MQTT)</string>
+	<string name="PR_D_MQTT">Preferencias de MQTT (Usado para conexión asincrona)</string>
+	<string name="PR_Login">Inicio de Sesión</string>
+	<string name="PR_D_Login">Preferencias de Inisio de Sesión (Seguridad, Perfil de Acceso)</string>
+	<string name="PR_Login_Role">Perfil de Inicio</string>
+	<string name="PR_D_Login_Role">Determina el perfil de Inicio por Defecto en el Sistema</string>
 </resources>

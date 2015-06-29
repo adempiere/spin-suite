@@ -33,6 +33,9 @@ public class MQTTNetworkReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		if(!MQTTConnection.isAutomaticService(context)) {
+			return;
+		}
 		Intent service = new Intent(context, MQTTSyncService.class);
 		boolean networkAvailable = isNetworkAvailable(context);
 		MQTTConnection.setNetworkOk(context, networkAvailable);

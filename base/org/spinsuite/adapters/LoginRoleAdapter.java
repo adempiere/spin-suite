@@ -13,79 +13,96 @@
  * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
-package org.spinsuite.login;
+package org.spinsuite.adapters;
 
 import java.util.Calendar;
 
 import org.spinsuite.base.R;
-import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.util.DisplaySpinner;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LoadDataSpinner;
 import org.spinsuite.util.Msg;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 
 /**
- * 
- * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
- * 	<li> Login Correct
- * 	@see https://adempiere.atlassian.net/browse/SPIN-2
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Jun 13, 2015, 6:55:37 PM
  *
  */
-public class T_Role extends Fragment implements I_Login {
-	/**	Spinners			*/
-	private Spinner sp_Role;
-	private Spinner sp_Client;
-	private Spinner sp_Org;
-	private Spinner sp_Warehouse;
-	private DatePicker dp_Date;
-	
-	/**	IDs					*/
-	private int role_ID = 0;
-	private int client_ID = 0;
-	private int org_ID = 0;
-	private int warehouse_ID = 0;
-	private String m_IsUseUserOrgAccess = "N";
-	private View m_View = null;
-	private boolean	m_IsLoadOk = false;
-	private Context ctx = null;
-	
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        if(m_View != null)
-        	return m_View;
-        //	Re-Load
-        m_View = inflater.inflate(R.layout.t_role, container, false);
-        //	
-        return m_View;
-    }
+public class LoginRoleAdapter extends BaseExpandableListAdapter {
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-    	super.onActivityCreated(savedInstanceState);
-    	if(m_IsLoadOk)
-    		return;
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_ctx
+	 */
+	public LoginRoleAdapter(Context p_ctx) {
+		m_ctx = p_ctx;
+	}
+	
+	/**	Context					*/
+	private Context 			m_ctx = null;
+	/**	Spinners				*/
+	private Spinner 			sp_Role;
+	private Spinner 			sp_Client;
+	private Spinner 			sp_Org;
+	private Spinner 			sp_Warehouse;
+	private DatePicker 			dp_Date;
+	
+	/**	IDs						*/
+	private int 				role_ID = 0;
+	private int 				client_ID = 0;
+	private int 				org_ID = 0;
+	private int 				warehouse_ID = 0;
+	private String 				m_IsUseUserOrgAccess = "N";
+	private boolean 			m_IsLoadOk = false;
+	
+	@Override
+	public Object getChild(int groupPosition, int childPosition) {
+		return null;
+	}
+
+	@Override
+	public long getChildId(int groupPosition, int childPosition) {
+		return childPosition;
+	}
+
+	@Override
+	public View getChildView(int groupPosition, int childPosition,
+			boolean isLastChild, View convertView, ViewGroup parent) {
+        //	
+        if (convertView == null) {
+        	LayoutInflater inflater = (LayoutInflater) 
+        			m_ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.i_login_role, null);
+        }
+        //	Load Data
+        sp_Role 		= (Spinner) 	convertView.findViewById(R.id.sp_Role);
+    	sp_Client 		= (Spinner) 	convertView.findViewById(R.id.sp_Client);
+    	sp_Org 			= (Spinner) 	convertView.findViewById(R.id.sp_Org);
+    	sp_Warehouse 	= (Spinner) 	convertView.findViewById(R.id.sp_Warehouse);
+    	dp_Date 		= (DatePicker) 	convertView.findViewById(R.id.dp_Date);
     	//	
-    	ctx = getActivity();
-    	
-    	sp_Role 		= (Spinner) 	m_View.findViewById(R.id.sp_Role);
-    	sp_Client 		= (Spinner) 	m_View.findViewById(R.id.sp_Client);
-    	sp_Org 			= (Spinner) 	m_View.findViewById(R.id.sp_Org);
-    	sp_Warehouse 	= (Spinner) 	m_View.findViewById(R.id.sp_Warehouse);
-    	dp_Date 		= (DatePicker) 	m_View.findViewById(R.id.dp_Date);
-    	
-    	
-    	sp_Role.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+    	addListener();
+        //	
+        return convertView;
+	}
+	
+	/**
+	 * Add Listener and Load Data
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void addListener() {
+		sp_Role.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
 
 			@Override
 			public void onItemSelected(AdapterView<?> a, View v,
@@ -151,60 +168,16 @@ public class T_Role extends Fragment implements I_Login {
 			}
     		
     	});
-    }
-    
-    @Override
-	public boolean aceptAction() {
-    	DisplaySpinner ds_Role = (DisplaySpinner) sp_Role.getSelectedItem();
-    	DisplaySpinner ds_Client = (DisplaySpinner) sp_Client.getSelectedItem();
-    	DisplaySpinner ds_Org = (DisplaySpinner) sp_Org.getSelectedItem();
-    	if(ds_Role != null
-    			&& ds_Role.getValue() != null) {
-			if(ds_Client != null
-					&& ds_Client.getValue() != null) {
-				if(ds_Org != null
-						&& ds_Org.getValue() != null) {
-						
-					Env.setAD_Role_ID(role_ID);
-					Env.setContext("#AD_Role_Name", ds_Role.getValue());
-					Env.setAD_Client_ID(client_ID);
-					Env.setContext("#AD_Client_Name", ds_Client.getValue());
-					Env.setAD_Org_ID(org_ID);
-					Env.setContext("#AD_Org_Name", ds_Org.getValue());
-					Env.setM_Warehouse_ID(warehouse_ID);
-					//	Date
-					Calendar date = Calendar.getInstance();
-					date.set(Calendar.YEAR, dp_Date.getYear());
-					date.set(Calendar.MONTH, dp_Date.getMonth());
-					date.set(Calendar.DAY_OF_MONTH, dp_Date.getDayOfMonth());
-					//	
-					if(!Env.loginDate(getActivity(), date.getTime())) {
-						Msg.toastMsg(ctx, getResources().getString(R.string.msg_LoginOffDate) + 
-								"\n" + getResources().getString(R.string.msg_WritePermissionsBlocked));
-						//	
-						Msg.toastMsg(ctx, getResources().getString(R.string.msg_LoginOffDate) + 
-								"\n" + getResources().getString(R.string.msg_WritePermissionsBlocked));
-					} else {
-						Env.setContext("#IsCurrentDate", "Y");
-					}
-					return true;
-				} else
-					Msg.alertMustFillField(getActivity(), R.string.AD_Org_ID, sp_Org);
-			} else
-				Msg.alertMustFillField(getActivity(), R.string.AD_Client_ID, sp_Client);
-		} else
-			Msg.alertMustFillField(getActivity(), R.string.AD_Role_ID, sp_Role);
-		return false;
 	}
-
-    /**
+	
+	/**
      * Load Role
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @return
      * @return int
      */
     private int loadRole(){
-		int role_ID = LoadDataSpinner.load(getActivity(), sp_Role, "SELECT r.AD_Role_ID, r.Name, r.IsUseUserOrgAccess " +
+		int role_ID = LoadDataSpinner.load(m_ctx, sp_Role, "SELECT r.AD_Role_ID, r.Name, r.IsUseUserOrgAccess " +
     			"FROM AD_Role r " +
     			"INNER JOIN AD_User_Roles ur ON(ur.AD_Role_ID = r.AD_Role_ID) " +
     			"WHERE ur.AD_User_ID = " + Env.getAD_User_ID(), true, false);
@@ -227,7 +200,7 @@ public class T_Role extends Fragment implements I_Login {
      * @return int
      */
     private int loadClient(int role_ID){
-		int client_ID = LoadDataSpinner.load(getActivity(), sp_Client, "SELECT c.AD_Client_ID, c.Name " +
+		int client_ID = LoadDataSpinner.load(m_ctx, sp_Client, "SELECT c.AD_Client_ID, c.Name " +
 				"FROM AD_Role r " +
 				"INNER JOIN AD_Client c ON(c.AD_Client_ID = r.AD_Client_ID) " +
 				"WHERE r.AD_Role_ID = " + role_ID, false, false);
@@ -263,7 +236,7 @@ public class T_Role extends Fragment implements I_Login {
 		
 		sql.append("AND o.AD_Client_ID = " + client_ID);
 		
-		int org_ID = LoadDataSpinner.load(getActivity(), sp_Org, sql.toString(), false, false);
+		int org_ID = LoadDataSpinner.load(m_ctx, sp_Org, sql.toString(), false, false);
 		
 		int id_ctx = Env.getAD_Org_ID();
 		if(id_ctx != 0){
@@ -281,7 +254,7 @@ public class T_Role extends Fragment implements I_Login {
      * @return int
      */
     private int loadWarehouse(int org_ID){
-		int warehouse_ID = LoadDataSpinner.load(getActivity(), sp_Warehouse, "SELECT w.M_Warehouse_ID, w.Name " +
+		int warehouse_ID = LoadDataSpinner.load(m_ctx, sp_Warehouse, "SELECT w.M_Warehouse_ID, w.Name " +
 				"FROM M_Warehouse w " + 
 				"WHERE w.AD_Org_ID = " + org_ID, false, false);
 		
@@ -312,18 +285,12 @@ public class T_Role extends Fragment implements I_Login {
 		return 0;
 	}
     
-    @Override
-	public void onResume() {
-        super.onResume();
-        loadData();
-    }
-
-	@Override
-	public boolean cancelAction() {
-		return false;
-	}
-
-	@Override
+    /**
+     * Load Data for Role
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return
+     * @return boolean
+     */
 	public boolean loadData() {
 		if(Env.isEnvLoad()
 				&& !m_IsLoadOk) {
@@ -333,15 +300,104 @@ public class T_Role extends Fragment implements I_Login {
 		}
 		return false;
 	}
-	
+
 	@Override
-	public void setEnabled(boolean enabled) {
-		if(!m_IsLoadOk)
-			return;
-		sp_Role.setEnabled(enabled);
-    	sp_Client.setEnabled(enabled);
-    	sp_Org.setEnabled(enabled);
-    	sp_Warehouse.setEnabled(enabled);
-    	dp_Date.setEnabled(enabled);
-	}    
+	public int getChildrenCount(int groupPosition) {
+		return 1;
+	}
+
+	@Override
+	public Object getGroup(int groupPosition) {
+		return null;
+	}
+
+	@Override
+	public int getGroupCount() {
+		return 1;
+	}
+
+	@Override
+	public long getGroupId(int groupPosition) {
+		return groupPosition;
+	}
+
+	@Override
+	public View getGroupView(int groupPosition, boolean isExpanded,
+			View convertView, ViewGroup parent) {
+		if (convertView == null) {
+            LayoutInflater infalInflater = (LayoutInflater) m_ctx
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = infalInflater.inflate(R.layout.i_login_role_header, null);
+        }
+        return convertView;
+	}
+
+	@Override
+	public boolean hasStableIds() {
+		return true;
+	}
+
+	@Override
+	public boolean isChildSelectable(int groupPosition, int childPosition) {
+		return true;
+	}
+	
+	/**
+	 * Valid Data for Login
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return boolean
+	 */
+	public boolean validData() {
+    	DisplaySpinner ds_Role = (DisplaySpinner) sp_Role.getSelectedItem();
+    	DisplaySpinner ds_Client = (DisplaySpinner) sp_Client.getSelectedItem();
+    	DisplaySpinner ds_Org = (DisplaySpinner) sp_Org.getSelectedItem();
+    	if(ds_Role != null
+    			&& ds_Role.getValue() != null) {
+			if(ds_Client != null
+					&& ds_Client.getValue() != null) {
+				if(ds_Org != null
+						&& ds_Org.getValue() != null) {
+						
+					Env.setAD_Role_ID(role_ID);
+					Env.setContext("#AD_Role_Name", ds_Role.getValue());
+					Env.setAD_Client_ID(client_ID);
+					Env.setContext("#AD_Client_Name", ds_Client.getValue());
+					Env.setAD_Org_ID(org_ID);
+					Env.setContext("#AD_Org_Name", ds_Org.getValue());
+					Env.setM_Warehouse_ID(warehouse_ID);
+					//	Date
+					Calendar date = Calendar.getInstance();
+					date.set(Calendar.YEAR, dp_Date.getYear());
+					date.set(Calendar.MONTH, dp_Date.getMonth());
+					date.set(Calendar.DAY_OF_MONTH, dp_Date.getDayOfMonth());
+					//	
+					if(!Env.loginDate(m_ctx, date.getTime())) {
+						Msg.toastMsg(m_ctx, m_ctx.getResources().getString(R.string.msg_LoginOffDate) + 
+								"\n" + m_ctx.getResources().getString(R.string.msg_WritePermissionsBlocked));
+						//	
+						Msg.toastMsg(m_ctx, m_ctx.getResources().getString(R.string.msg_LoginOffDate) + 
+								"\n" + m_ctx.getResources().getString(R.string.msg_WritePermissionsBlocked));
+					} else {
+						Env.setContext("#IsCurrentDate", "Y");
+					}
+					return true;
+				} else {
+					Msg.toastMsg(m_ctx, 
+							m_ctx.getResources().getString(R.string.MustFillField) 
+							+ " \"" + m_ctx.getResources().getString(R.string.AD_Org_ID) + "\"");
+				}
+			} else {
+				Msg.toastMsg(m_ctx, 
+						m_ctx.getResources().getString(R.string.MustFillField) 
+						+ " \"" + m_ctx.getResources().getString(R.string.AD_Client_ID) + "\"");
+			}
+		} else {
+			Msg.toastMsg(m_ctx, 
+					m_ctx.getResources().getString(R.string.MustFillField) 
+					+ " \"" + m_ctx.getResources().getString(R.string.AD_Role_ID) + "\"");
+		}
+		return false;
+	}
+
 }

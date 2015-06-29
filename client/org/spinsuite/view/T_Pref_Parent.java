@@ -13,19 +13,43 @@
  * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
-package org.spinsuite.interfaces;
+package org.spinsuite.view;
+
+import org.spinsuite.interfaces.I_CancelOk;
+
+import android.content.Context;
+import android.support.v4.app.Fragment;
+import android.view.View;
 
 /**
- * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Jun 13, 2015, 1:19:11 PM
  *
  */
-public interface I_FragmentSelect {
+public abstract class T_Pref_Parent extends Fragment implements I_CancelOk {
+
+	/**
+	 * *** Constructor ***
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 */
+	public T_Pref_Parent() {
+		
+	}
 	
 	/**
-	 * Method for selection
+	 * 
+	 * *** Constructor ***
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_TopicName
-	 * @return void
+	 * @param p_ctx
 	 */
-	public void onItemSelected(String p_TopicName);
+	public T_Pref_Parent(Context p_ctx) {
+		m_ctx = p_ctx;
+	}
+
+	/**	Current View				*/
+	protected View 			m_View = null;
+	/**	Is Load Ok					*/
+	protected boolean		m_IsLoadOk = false;
+	/**	Context						*/
+	protected Context		m_ctx = null;
+	
 }

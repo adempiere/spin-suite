@@ -25,7 +25,6 @@ import org.spinsuite.sync.SyncDataTask;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
-import org.spinsuite.util.Env;
 import org.spinsuite.util.LoadActionMenu;
 import org.spinsuite.util.LogM;
 import org.spinsuite.view.lookup.LookupMenu;
@@ -161,8 +160,7 @@ public class LV_MenuSync extends Activity {
 	     switch (item.getItemId()) {
 	        case android.R.id.home:
 	    		//	Auto Login
-	    		Env.setAutoLoginComfirmed(false);
-	        	NavUtils.navigateUpTo(this, new Intent(this, Login.class));
+	    		NavUtils.navigateUpTo(this, new Intent(this, Login.class));
 	        return true;
 	        default:
 	        	return super.onOptionsItemSelected(item);

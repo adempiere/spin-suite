@@ -41,13 +41,11 @@ public class ImageTextAdapter extends ArrayAdapter<DisplayImageTextItem> {
 	 * *** Constructor ***
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 04/02/2014, 17:06:03
 	 * @param ctx
-	 * @param id_View
 	 * @param data
 	 */
-	public ImageTextAdapter(Context ctx, int id_View, ArrayList<DisplayImageTextItem> data) {
-		super(ctx, id_View, data);
+	public ImageTextAdapter(Context ctx, ArrayList<DisplayImageTextItem> data) {
+		super(ctx, R.layout.i_image_text, data);
 		this.ctx = ctx;
-		this.id_View = id_View;
 		this.data = data;
 	}
 
@@ -55,8 +53,6 @@ public class ImageTextAdapter extends ArrayAdapter<DisplayImageTextItem> {
 	private Context 						ctx;
 	/**	Data						*/
 	private ArrayList<DisplayImageTextItem> data = new ArrayList<DisplayImageTextItem>();
-	/**	Identifier of View			*/
-	private int 							id_View;
 	/**	Max Size					*/
 	private static final int				MAX_SIZE = 200;
 	
@@ -65,7 +61,7 @@ public class ImageTextAdapter extends ArrayAdapter<DisplayImageTextItem> {
 		View item = convertView;
 		if(item == null){
 			LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			item = inflater.inflate(id_View, null);
+			item = inflater.inflate(R.layout.i_image_text, null);
 		}
 		
 		DisplayImageTextItem diti = data.get(position);

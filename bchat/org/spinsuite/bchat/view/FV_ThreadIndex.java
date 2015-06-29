@@ -24,7 +24,6 @@ import org.spinsuite.bchat.adapters.BChatThreadListAdapter;
 import org.spinsuite.bchat.util.BCMessageHandle;
 import org.spinsuite.bchat.util.DisplayBChatThreadListItem;
 import org.spinsuite.interfaces.I_BC_FragmentSelect;
-import org.spinsuite.interfaces.I_FragmentSelect;
 import org.spinsuite.sync.content.SyncRequest_BC;
 import org.spinsuite.util.Env;
 
@@ -56,7 +55,7 @@ import android.widget.ListView;
  *
  */
 public class FV_ThreadIndex extends ListFragment 
-				implements I_FragmentSelect {
+				implements I_BC_FragmentSelect {
 
 	/**
 	 * 
@@ -274,14 +273,15 @@ public class FV_ThreadIndex extends ListFragment
     public void onListItemClick(ListView l, View v, int position, long id) {
     	//	
     	DisplayBChatThreadListItem item = m_Adapter.getItem(position);
-    	onItemSelected(item.getSPS_BC_Request_UUID());
+    	onItemSelected(0, item.getSPS_BC_Request_UUID(), V_BChat.TYPE_SELECT_CONVERSATION);
     	//	Change on List View
     	//getListView().setItemChecked(position, true);
     }
 
     @Override
-    public void onItemSelected(String p_SPS_BC_Request_UUID) {
-    	m_Callback.onItemSelected(0, p_SPS_BC_Request_UUID, V_BChat.TYPE_SELECT_CONVERSATION);
+	public void onItemSelected(int p_AD_User_ID, String p_SPS_BC_Request_UUID,
+			int p_Type) {
+    	m_Callback.onItemSelected(p_AD_User_ID, p_SPS_BC_Request_UUID, p_Type);
     }
     
     @Override
@@ -335,6 +335,5 @@ public class FV_ThreadIndex extends ListFragment
 			});
 			MenuItemCompat.setActionView(item, searchView);
 		}
-    }
-    
+    }    
 }

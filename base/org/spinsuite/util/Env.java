@@ -32,6 +32,7 @@ import java.util.logging.Level;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -41,6 +42,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.inputmethod.InputMethodManager;
 
 import com.google.gson.Gson;
 
@@ -2308,108 +2310,111 @@ public final class Env {
 	}
 	
 	/**
-	 * Set Automatic Visit Closing
+	 * Set Request Password
 	 * @author Yamel Senih 31/07/2012, 12:25:21
 	 * @param ctx
 	 * @param isSavePass
 	 * @return void
 	 */
-	public static void setAutoLogin(Context ctx, boolean isAutoLogin) {
-		setContext(ctx, "#AutoLogin", isAutoLogin);
+	public static void setRequestPass(Context ctx, boolean isAutoLogin) {
+		setContext(ctx, "#RequestPass", isAutoLogin);
 	}
 	
 	/**
-	 * Set Automatic Visit Closing
+	 * Set Login Pass Code
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param passcode
+	 * @return void
+	 */
+	public static void setLoginPasscode(int passcode) {
+		setLoginPasscode(getCtx(), passcode);
+	}
+	
+	/**
+	 * Set Login Pass Code
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param passcode
+	 * @return void
+	 */
+	public static void setLoginPasscode(Context ctx, int passcode) {
+		setContext(ctx, "#Login_Passcode", passcode);
+	}
+	
+	/**
+	 * Valid Login Pass Code
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param passcode
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean validLoginPasscode(Context ctx, int passcode) {
+		int internalPasscode = getContextAsInt(ctx, "#Login_Passcode");
+		return internalPasscode == passcode;
+	}
+	
+	/**
+	 * Valid Login Pass code
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param passcode
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean validLoginPasscode(int passcode) {
+		return validLoginPasscode(getCtx(), passcode);
+	}
+	
+	/**
+	 * Get Login Pass Code
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @return
+	 * @return int
+	 */
+	public static int getLoginPasscode(Context ctx) {
+		return getContextAsInt(ctx, "#Login_Passcode");
+	}
+	
+	/**
+	 * Get Login Pass Code
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return int
+	 */
+	public static int getLoginPasscode() {
+		return getLoginPasscode(getCtx());
+	}
+	
+	/**
+	 * Set Request Password
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param isAutoLogin
 	 * @return void
 	 */
-	public static void setAutoLogin(boolean isAutoLogin) {
-		setAutoLogin(getCtx(), isAutoLogin);
+	public static void setRequestPass(boolean isAutoLogin) {
+		setRequestPass(getCtx(), isAutoLogin);
 	}
 	
 	/**
-	 * Set Auto Login Confirmed
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/10/2014, 1:11:40
-	 * @param ctx
-	 * @param isAutoLoginConfirmed
-	 * @return void
-	 */
-	public static void setAutoLoginComfirmed(Context ctx, boolean isAutoLoginConfirmed) {
-		setContext(ctx, "#IsAutoLoginConfirmed", isAutoLoginConfirmed);
-	}
-	
-	/**
-	 * Set Auto Login Confirmed
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param isAutoLoginConfirmed
-	 * @return void
-	 */
-	public static void setAutoLoginComfirmed(boolean isAutoLoginConfirmed) {
-		setAutoLoginComfirmed(getCtx(), isAutoLoginConfirmed);
-	}
-	
-	/**
-	 * Get Save Pass
-	 * @author Yamel Senih 26/04/2012, 17:47:21
-	 * @param ctx
-	 * @return
-	 * @return boolean
-	 */
-	public static boolean isSavePass(Context ctx) {
-		return getContextAsBoolean(ctx, "#SavePass");
-	}
-	
-	/**
-	 * Get Save Pass
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return
-	 * @return boolean
-	 */
-	public static boolean isSavePass() {
-		return isSavePass(getCtx());
-	}
-	
-	/**
-	 * get Automatic Visit Closing
+	 * Request Password on Login
 	 * @author Yamel Senih 31/07/2012, 12:27:03
 	 * @param ctx
 	 * @return
 	 * @return boolean
 	 */
-	public static boolean isAutoLogin(Context ctx) {
-		return getContextAsBoolean(ctx, "#AutoLogin");
+	public static boolean isRequestPass(Context ctx) {
+		return getContextAsBoolean(ctx, "#RequestPass");
 	}
 	
 	/**
-	 * get Automatic Visit Closing
+	 * Request Password on Login
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return
 	 * @return boolean
 	 */
-	public static boolean isAutoLogin() {
-		return isAutoLogin(getCtx());
-	}
-	
-	/**
-	 * Is Auto Login Confirmed
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 13/10/2014, 1:10:30
-	 * @param ctx
-	 * @return
-	 * @return boolean
-	 */
-	public static boolean isAutoLoginConfirmed(Context ctx) {
-		return getContextAsBoolean(ctx, "#IsAutoLoginConfirmed");
-	}
-	
-	/**
-	 * Is Auto Login Confirmed
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return
-	 * @return boolean
-	 */
-	public static boolean isAutoLoginConfirmed() {
-		return isAutoLoginConfirmed(getCtx());
+	public static boolean isRequestPass() {
+		return isRequestPass(getCtx());
 	}
 	
 	/**
@@ -3379,6 +3384,17 @@ public final class Env {
 	        android.content.ClipData clip = android.content.ClipData.newPlainText("", p_Text);
 	        clipboard.setPrimaryClip(clip);
 	    }
+	}
+	
+	/**
+	 * Hide Keyboard
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return void
+	 */
+	public static void hideKeyBoad(Context p_Ctx) {
+		InputMethodManager imm = (InputMethodManager) p_Ctx.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 	}
 	
 	/**	Context					*/

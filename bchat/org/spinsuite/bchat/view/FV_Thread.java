@@ -16,9 +16,6 @@
 package org.spinsuite.bchat.view;
 
 import java.io.File;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,6 +43,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -121,6 +119,8 @@ public class FV_Thread extends Fragment {
 	private AttachmentHandler			m_AttHandler		= null;
 	/**	Action Bar					*/
 	private static ActionBar			m_ActionBar			= null;
+	/**	Temp Data URI				*/
+	private Uri 						m_DataUri 			= null;
 	
 	/**	Conversation Type Constants	*/
 	public static final int				CT_REQUEST			= 0;
@@ -133,7 +133,8 @@ public class FV_Thread extends Fragment {
 	
 	/**	Constants Type Save			*/
 	private static final String 		PHOTO_ATTACHMENT_SAVE	= "PS";
-	private static final String 		FILE_ATTACHMENT_SAVE	= "FS";
+//	private static final String 		FILE_ATTACHMENT_SAVE	= "FS";
+	private static final String 		IMAGE_ATTACHMENT_SAVE	= "IS";
 	
 	/**	Handler						*/
 	public static Handler 				UIHandler;
@@ -716,8 +717,9 @@ public class FV_Thread extends Fragment {
      */
     private void attachCapture() {
     	//	Instance Attachment
-    	if(m_AttHandler == null)
+    	if(m_AttHandler == null) {
     		m_AttHandler = new AttachmentHandler(getActivity());
+    	}
     	//	
     	//	Delete Temp File
     	File tmpFile = new File(m_AttHandler.getTMPImageName());
@@ -738,18 +740,21 @@ public class FV_Thread extends Fragment {
      * @return void
      */
     private void attachFile(int action) {
-//    	String type = null;
-//    	if(action == ACTION_PICK_IMAGE) {
-//    		type = "image/*";
-//    	} else if(action == ACTION_PICK_FILE) {
-//    		type = "file/*";
-//    	} else {
-//    		return;
-//    	}
+    	//	Instance Attachment
+    	if(m_AttHandler == null) {
+    		m_AttHandler = new AttachmentHandler(getActivity());
+    	}
+    	String type = null;
+    	if(action == ACTION_PICK_IMAGE) {
+    		type = "image/*";
+    	} else if(action == ACTION_PICK_FILE) {
+    		type = "file/*";
+    	} else {
+    		return;
+    	}
     	//	
     	Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-//    	intent.setType(type);
-    	intent.setType("*/*");
+    	intent.setType(type);
     	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     	getActivity().startActivityForResult(intent, action);
     }
@@ -760,13 +765,12 @@ public class FV_Thread extends Fragment {
     	if(requestCode == ACTION_TAKE_PHOTO) {
     		new SaveTask().execute(PHOTO_ATTACHMENT_SAVE);
     	} else if(requestCode == ACTION_PICK_IMAGE
-    			|| requestCode == ACTION_PICK_FILE
     			&& data != null) {
-    		dataUri = data.getData();
-    		new SaveTask().execute(FILE_ATTACHMENT_SAVE, data.getData().getPath());
+    		m_DataUri = data.getData();
+    		new SaveTask().execute(IMAGE_ATTACHMENT_SAVE, data.getData().getPath());
     	}
     }
-    Uri dataUri = null;
+    
     /**
      * Async Task for Save File
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Apr 16, 2015, 9:33:44 AM
@@ -799,23 +803,13 @@ public class FV_Thread extends Fragment {
 				m_IsSaved = m_AttHandler.processImgAttach(
 						Env.getBC_IMG_DirectoryPathName(getActivity()), fileName, AttachmentHandler.IMG_STD_Q);
 				m_FileName = fileName + AttachmentHandler.JPEG_FILE_SUFFIX;
-			} else if(m_Type.equals(FILE_ATTACHMENT_SAVE)) {
-				String fromFile = params[1];
-				if(fromFile == null) {
-					return null;
-				}
-				File file = null;
-				try {
-					InputStream inStream = getActivity().getContentResolver().openInputStream(dataUri);
-					file = new File(new URI(fromFile));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-				m_IsSaved = m_AttHandler.processFile(fromFile, 
+			} else if(m_Type.equals(IMAGE_ATTACHMENT_SAVE)) {
+				String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss")
+											.format(new Date()) + AttachmentHandler.JPEG_FILE_SUFFIX;
+				Bitmap image = m_AttHandler.getBitmapFromUri(m_DataUri);
+				m_IsSaved = m_AttHandler.saveImageBitmap(image, 
 						Env.getBC_IMG_DirectoryPathName(getActivity()), fileName);
-				m_FileName = fileName + m_AttHandler.getExtension(fromFile);
+				m_FileName = fileName;
 			}
 			//	
 			return null;
@@ -825,7 +819,7 @@ public class FV_Thread extends Fragment {
 		protected void onProgressUpdate(Void... progress) {
 			
 		}
-
+		
 		@Override
 		protected void onPostExecute(Void result) {
 			//	Hide

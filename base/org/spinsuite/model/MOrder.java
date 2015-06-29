@@ -64,6 +64,7 @@ public class MOrder extends X_C_Order implements DocAction {
 		setPaymentRule(PAYMENTRULE_OnCredit);
 		setPriorityRule (PRIORITYRULE_Medium);
 		setDeliveryViaRule (DELIVERYVIARULE_Pickup);
+		setC_DocType_ID(0);
 		//
 		setIsDiscountPrinted (false);
 		setIsSelected (false);
