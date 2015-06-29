@@ -33,6 +33,10 @@
 	<string name="Action_ViewAttachment">Ver Adjunto</string>
 	<string name="Action_DownloadAttachment">Descargar</string>
 	<string name="Action_Copy">Copiar</string>
+	<string name="Action_Previous">Anterior</string>
+	<string name="Action_Next">Siguiente</string>
+	<string name="Action_Skip">Ignorar</string>
+	<string name="Action_Finish">Finalizar</string>
 	
 	<!-- Drawer Option -->
 	<string name="drawer_open">Abrir Caja de Navegación</string>

@@ -27,6 +27,7 @@ import org.spinsuite.model.MSession;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
+import org.spinsuite.util.KeyNamePair;
 import org.spinsuite.util.LoadActionMenu;
 import org.spinsuite.view.lookup.LookupMenu;
 
@@ -73,33 +74,33 @@ public class T_Menu extends Fragment implements I_Login {
 	
 	
 	/**	List				*/
-	private ListView 			menu;
+	private ListView 				menu;
 	/**	Database Connection	*/
-	private DB 					conn = null;
+	private DB 						conn = null;
 	/**	Parameter			*/
-	private ActivityParameter 	param = null;
+	private ActivityParameter 		param = null;
 	/**	Activity No			*/
-	protected int 				m_ActivityNo = 0;
+	protected int 					m_ActivityNo = 0;
 	/**	Current Bundle		*/
-	private Bundle 				currentOptionBundle = null;
+	private Bundle 					currentOptionBundle = null;
 	/**	Current Option Menu	*/
-	private DisplayMenuItem 	currentMenuItem = null;
+	private DisplayMenuItem 		currentMenuItem = null;
 	/**	Lookup Menu			*/
-	private LookupMenu 			lookupMenu = null;
+	private LookupMenu 				lookupMenu = null;
 	/**	Load Action Menu	*/
-	private LoadActionMenu		loadActionMenu = null;
+	private LoadActionMenu			loadActionMenu = null;
 	/**	Current View		*/
-	private View 				m_View = null;
+	private View 					m_View = null;
 	/**	Is Load Ok			*/
-	private boolean				m_IsLoadOk = false;
+	private boolean					m_IsLoadOk = false;
 	/**	Context				*/
-	private Context				m_ctx = null;
+	private Context					m_ctx = null;
 	/**	Callback			*/
-	private Activity 			m_Callback = null;
+	private Activity 				m_Callback = null;
 	/**	Array of Parent		*/
-	private ArrayList<Integer>	m_ParentArray = new ArrayList<Integer>();
+	private ArrayList<KeyNamePair>	m_ParentArray = new ArrayList<KeyNamePair>();
 	/**	Current Parent ID	*/
-	private int 				m_CurrentParent_ID = 0;
+	private int 					m_CurrentParent_ID = 0;
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -145,8 +146,13 @@ public class T_Menu extends Fragment implements I_Login {
 				currentOptionBundle = loadActionMenu.loadAction(item, param);
 				currentMenuItem = item;
 				if(item.isSummary()) {
-					m_ParentArray.add(m_CurrentParent_ID);
+					//	Get Current Menu ID and Sub Title
+					m_ParentArray.add(new KeyNamePair(m_CurrentParent_ID, 
+							m_Callback.getActionBar().getSubtitle().toString()));
 					m_CurrentParent_ID = item.getSPS_Menu_ID();
+					//	Change Title
+					m_Callback.getActionBar().setSubtitle(currentMenuItem.getName());
+					//	Load Data
 					loadData();
 				}
 			}
@@ -183,7 +189,10 @@ public class T_Menu extends Fragment implements I_Login {
     	}
     	//	Reload
     	int index = m_ParentArray.size() - 1;
-    	m_CurrentParent_ID = m_ParentArray.get(index);
+    	KeyNamePair pair = m_ParentArray.get(index);
+    	m_CurrentParent_ID = pair.getKey();
+    	//	Change Subtitle
+    	m_Callback.getActionBar().setSubtitle(pair.getName());
     	loadData();
     	//	Delete Parent of Array
     	m_ParentArray.remove(index);
@@ -224,8 +233,6 @@ public class T_Menu extends Fragment implements I_Login {
 	public boolean onOptionsItemSelected(MenuItem item) {
 	     switch (item.getItemId()) {
 	        case android.R.id.home:
-	    		//	Auto Login
-//	    		Env.setAutoLoginComfirmed(false);
 	        	m_Callback.finish();
 	        return true;
 	        case R.id.action_bchat:

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.spinsuite.base.R;
-import org.spinsuite.login.Login2;
+import org.spinsuite.login.Login;
 import org.spinsuite.util.DisplaySpinner;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.Language;
@@ -40,7 +40,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 /**
  * 
@@ -72,12 +76,22 @@ public class T_Pref_General extends T_Pref_Parent {
 	
 	/**	Request Login				*/
 	private CheckBox		ch_RequestPass;
+	/**	Pass Code					*/
+	private TextView		tv_Passcode;
+	/**	Pass Code Edit				*/
+	private EditText		et_Passcode;
+	/**	Re Pass Code				*/
+	private TextView		tv_Re_Passcode;
+	/**	Re Pass Code Edit			*/
+	private EditText		et_Re_Passcode;
 	/**	Language					*/
 	private Spinner			sp_Language;
 	/**	Log Level					*/
 	private Spinner 		sp_LogLevel;
 	/**	Save data SD				*/
 	private CheckBox 		ch_SaveSD;
+	/**	Load Test Data				*/
+	private CheckBox		ch_LoadTestData;
 	/**	Drop Data Base				*/
 	private Button			butt_DropDB;	
 	
@@ -97,12 +111,21 @@ public class T_Pref_General extends T_Pref_Parent {
     	if(m_IsLoadOk)
     		return;
     	//	
-    	ch_RequestPass = (CheckBox) m_View.findViewById(R.id.ch_RequestPass);
+    	ch_RequestPass 	= (CheckBox) m_View.findViewById(R.id.ch_RequestPass);
+    	tv_Passcode 	= (TextView) m_View.findViewById(R.id.tv_Passcode);
+    	et_Passcode 	= (EditText) m_View.findViewById(R.id.et_Passcode);
+    	tv_Re_Passcode 	= (TextView) m_View.findViewById(R.id.tv_Re_Passcode);
+    	et_Re_Passcode 	= (EditText) m_View.findViewById(R.id.et_Re_Passcode);
+    	//	
     	sp_Language 	= (Spinner) m_View.findViewById(R.id.sp_Language);
     	sp_LogLevel 	= (Spinner) m_View.findViewById(R.id.sp_LogLevel);
     	ch_SaveSD 		= (CheckBox) m_View.findViewById(R.id.ch_SaveSD);
+    	ch_LoadTestData	= (CheckBox) m_View.findViewById(R.id.ch_LoadTestData);
     	butt_DropDB 	= (Button) m_View.findViewById(R.id.butt_DropDB);
-    	
+    	//	Set Visibility
+    	ch_LoadTestData.setVisibility(Env.isEnvLoad()? View.GONE: View.VISIBLE);
+    	butt_DropDB.setVisibility(Env.isEnvLoad()? View.VISIBLE: View.GONE);
+    	//	
     	ArrayList <DisplaySpinner> data = new ArrayList<DisplaySpinner>();
     	int i = 0;
     	for(Language lang : Language.getAvaliableLanguages()){
@@ -144,6 +167,14 @@ public class T_Pref_General extends T_Pref_Parent {
 				//	
 			}
     	});
+    	//	Listener for Request
+    	ch_RequestPass.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				setVisibleRequest(isChecked);
+			}
+		});
+    	
     	//	Listener for Button
     	butt_DropDB.setOnClickListener(new OnClickListener(){
 			@Override
@@ -186,7 +217,7 @@ public class T_Pref_General extends T_Pref_Parent {
      */
     private void reloadLanguage(String language){
     	Env.changeLanguage(language);
-    	Intent refresh = new Intent(m_ctx, Login2.class);
+    	Intent refresh = new Intent(m_ctx, Login.class);
     	refresh.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(refresh);
 		getActivity().finish();
@@ -202,6 +233,20 @@ public class T_Pref_General extends T_Pref_Parent {
     	return true;
     }
     
+    /**
+     * Set Pass and Re-Pass to visible
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param visible
+     * @return void
+     */
+    private void setVisibleRequest(boolean visible) {
+    	int visibleStatus = (visible? View.VISIBLE: View.GONE);
+    	tv_Passcode.setVisibility(visibleStatus);
+    	et_Passcode.setVisibility(visibleStatus);
+    	tv_Re_Passcode.setVisibility(visibleStatus);
+    	et_Re_Passcode.setVisibility(visibleStatus);
+    }
+    
     @Override
     public void onStart() {
     	super.onStart();
@@ -211,15 +256,47 @@ public class T_Pref_General extends T_Pref_Parent {
     
 	@Override
 	public boolean processActionOk() {
+		boolean requestPass = ch_RequestPass.isChecked();
+		if(requestPass) {
+			String pass = et_Passcode.getText().toString().trim();
+	    	String rePass = et_Re_Passcode.getText().toString().trim();
+	    	//	
+	    	if(pass.length() == 0) {
+	    		pass = "0";
+	    	}
+	    	//	
+	    	if(rePass.length() == 0) {
+	    		rePass = "0";
+	    	}
+	    	int passInt = Integer.parseInt(pass);
+	    	int rePassInt = Integer.parseInt(rePass);
+	    	//	Valid Pass
+	    	if(passInt == rePassInt) {
+	    		Env.setRequestPass(requestPass);
+	    		Env.setLoginPasscode(passInt);
+	    	} else {
+	    		Msg.toastMsg(m_ctx, 
+						getResources().getString(R.string.msg_PasscodeIsInvalid));
+	    	}
+		} else {
+			Env.setRequestPass(false);
+			Env.setLoginPasscode(0);
+		}
+    	//	
 		String language = (String) ((DisplaySpinner)sp_Language
-				.getSelectedItem()).getHiddenValue();
-    	if(!language.equals(Env.getAD_Language())){
+				.getSelectedItem()).getHiddenValue();		
+    	//	Valid Language
+		if(!language.equals(Env.getAD_Language())){
     		Env.setAD_Language(language);
-    		reloadLanguage(language);
+    		if(Env.isEnvLoad()) {
+    			reloadLanguage(language);
+    		}
     	}
     	//	
-    	if(!Env.isEnvLoad())
+    	if(!Env.isEnvLoad()) {
+    		Env.setContext("#LoadTestData", ch_LoadTestData.isChecked());
     		return true;
+    	}
     	//	Default
     	return false;
 	}
@@ -232,7 +309,13 @@ public class T_Pref_General extends T_Pref_Parent {
 	@Override
 	public boolean loadData() {
 		//	Auto Login Check
-     	ch_RequestPass.setChecked(Env.isRequestPass());
+		boolean requestPass = Env.isRequestPass();
+		if(requestPass) {
+			et_Passcode.setText(String.valueOf(Env.getLoginPasscode()));
+			et_Re_Passcode.setText(String.valueOf(Env.getLoginPasscode()));
+		}
+		//	
+		ch_RequestPass.setChecked(requestPass);
  		//	Select Language
  		String language = Env.getAD_Language();
  		if(language != null

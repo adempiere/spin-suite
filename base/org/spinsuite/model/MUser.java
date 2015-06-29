@@ -48,4 +48,19 @@ public class MUser extends X_AD_User {
 		super(ctx, rs, conn);
 	}
 
+	/**
+	 * Find User Identifier from user and password
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param user
+	 * @param pass
+	 * @return
+	 * @return int
+	 */
+	public static int findUserID(Context ctx, String user, String pass) {
+		return DB.getSQLValue(ctx, "SELECT u.AD_User_ID " +
+    			"FROM AD_User u " +
+    			"WHERE u.Name = ? AND u.PassWord = ?", user, pass);
+	}
+	
 }

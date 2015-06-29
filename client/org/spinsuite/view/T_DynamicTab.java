@@ -137,6 +137,7 @@ public class T_DynamicTab extends Fragment
 	private final int O_ATTACH_PHOTO						= 4;
 	private final int O_ATTACH_FILE							= 5;
 	private final int O_VIEW_ATTACH							= 6;
+	private final int O_VIEW_PREFERENCES					= 7;
 	
 	/**	Option Menu					*/
 	private MenuItem mi_Search 								= null;
@@ -434,6 +435,9 @@ public class T_DynamicTab extends Fragment
 		//	Attach a File
 		popupMenu.getMenu().add(Menu.NONE, O_ATTACH_FILE, 
 				Menu.NONE, getString(R.string.Action_AttachFile));
+		//	Got to Setup
+		popupMenu.getMenu().add(Menu.NONE, O_VIEW_PREFERENCES, 
+				Menu.NONE, getString(R.string.Action_Config));
 		//	View Attachment
 		if(mGridTab.getPO() != null
 				&& mGridTab.getRecord_ID() > 0) {
@@ -489,6 +493,10 @@ public class T_DynamicTab extends Fragment
 	        			return true;
 	        		case O_VIEW_ATTACH:
 	        			viewAttachment();
+	        			return true;
+	        		case O_VIEW_PREFERENCES:
+	        			Intent preferences = new Intent(getActivity(), V_Preferences.class);
+	    				startActivity(preferences);
 	        			return true;
 				}
 				return false;

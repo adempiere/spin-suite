@@ -16,23 +16,22 @@
 package org.spinsuite.view;
 
 
-import java.util.logging.Level;
-
-import org.spinsuite.adapters.LoginRoleAdapter;
-import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
+import org.spinsuite.login.Login;
 import org.spinsuite.util.Env;
-import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 
+import android.app.Activity;
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 /**
  * 
@@ -40,14 +39,14 @@ import android.widget.ExpandableListView;
  *	<li> Login Correct
  * 	@see https://adempiere.atlassian.net/browse/SPIN-2
  */
-public class T_Pref_Login extends T_Pref_Parent {
+public class T_Pref_Request_Pass extends T_Pref_Parent {
 
 	/**
 	 * 
 	 * *** Constructor ***
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 */
-	public T_Pref_Login() {
+	public T_Pref_Request_Pass() {
 		super();
 	}
 	
@@ -57,17 +56,14 @@ public class T_Pref_Login extends T_Pref_Parent {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_ctx
 	 */
-	public T_Pref_Login(Context p_ctx) {
+	public T_Pref_Request_Pass(Context p_ctx) {
 		super(p_ctx);
 	}
 	
-	
-	/**	Login User					*/
-	private EditText 			et_User;
-	/**	Login Pass					*/
-	private EditText 			et_Pass;
-	/**	Role						*/
-	private ExpandableListView 	ev_Role;
+	/**	Login Pass				*/
+	private EditText 			et_Passcode;
+	/**	Callback				*/
+	private Activity 			m_Callback = null;
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,7 +71,7 @@ public class T_Pref_Login extends T_Pref_Parent {
     	if(m_View != null)
         	return m_View;
         //	RE-Load
-        m_View = inflater.inflate(R.layout.t_pref_login, container, false);
+        m_View = inflater.inflate(R.layout.t_pref_request_pass, container, false);
     	return m_View;
     }
 
@@ -85,78 +81,52 @@ public class T_Pref_Login extends T_Pref_Parent {
     	if(m_IsLoadOk)
     		return;
     	//	
-    	et_User = (EditText) 			m_View.findViewById(R.id.et_User);
-    	et_Pass = (EditText) 			m_View.findViewById(R.id.et_Pass);
-    	ev_Role	= (ExpandableListView)	m_View.findViewById(R.id.ev_Role);
-    	ev_Role.setClickable(true);
-    	ev_Role.setGroupIndicator(null);
-    	ev_Role.setAdapter(new LoginRoleAdapter(m_ctx));
+    	et_Passcode = (EditText)	m_View.findViewById(R.id.et_Passcode);
+    	//	Add Listener
+    	et_Passcode.setOnEditorActionListener(new OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            	System.err.println("Hola " + actionId);
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) 
+                		|| (actionId == EditorInfo.IME_ACTION_DONE)) {
+                	setOkPassCode();
+                }    
+                return false;
+            }
+        });
 		m_IsLoadOk = true;
     }
     
-    /**
-     * Valid User and Password
-     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-     * @return
-     * @return boolean
-     */
-    private boolean validUser() {
-    	String user = et_User.getText().toString().trim();
-    	String pass = et_Pass.getText().toString().trim();
-    	if(user != null && user.length() > 0) {
-    		if(pass != null && pass.length() > 0){
-    			Env.setContext("#SUser", user);
-    			Env.setContext("#AD_User_Name", user);
-    			Env.setContext("#SPass", pass);
-    			if(!Env.isEnvLoad())
-    				return true;
-    			else if(findUser(user, pass)) {
-    				return true;
-    			} else {
-    				Msg.toastMsg(m_ctx, 
-    						getResources().getString(R.string.msg_UserPassDoNotMatch));
-    			}
-    		} else {
-    			Msg.toastMsg(m_ctx, 
-						getResources().getString(R.string.MustFillField) 
-						+ " \"" + getResources().getString(R.string.Pass) + "\"");
-    		}
-    	} else {
-    		Msg.toastMsg(m_ctx, 
-					getResources().getString(R.string.MustFillField) 
-					+ " \"" + getResources().getString(R.string.User) + "\"");
-    	}
-    	return false;
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        m_Callback = activity;
     }
     
     /**
-     * Find User on database
+     * Load Access
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-     * @param user
-     * @param pass
+     * @return void
+     */
+    private void setOkPassCode() {
+    	if(m_Callback instanceof Login) {
+    		((Login)m_Callback).loadConfig();
+    	}
+    }
+    
+    /**
+     * Valid Pass code
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @return
      * @return boolean
      */
-    private boolean findUser(String user, String pass){
-    	boolean ok = false;
-    	try {
-    		DB con = new DB(this.getActivity());
-        	con.openDB(DB.READ_ONLY);
-        	String sql = "SELECT u.AD_User_ID " +
-        			"FROM AD_User u " +
-        			"WHERE u.Name = ? AND u.PassWord = ?";
-        	Cursor rs = con.querySQL(sql, new String[]{user, pass});
-        	//
-        	if(rs.moveToFirst()){
-        		Env.setAD_User_ID(rs.getInt(0));
-        		Env.setIsLogin(true);
-        		ok = true;
-        	} else {
-        		Env.setIsLogin(false);
-        	}
-        	con.closeDB(rs);
-    	} catch(Exception e) {
-    		LogM.log(getActivity(), getClass(), Level.SEVERE, "Error", e);
+    private boolean validPasscode() {
+    	String pass = et_Passcode.getText().toString().trim();
+    	int passcode = Integer.parseInt(pass);
+    	//	Valid passcode
+    	boolean ok = Env.validLoginPasscode(m_ctx, passcode);
+    	if(!ok) {
+    		Msg.toastMsg(m_ctx, 
+					getResources().getString(R.string.msg_PasscodeIsInvalid));
     	}
     	return ok;
     }
@@ -180,7 +150,7 @@ public class T_Pref_Login extends T_Pref_Parent {
     
 	@Override
 	public boolean processActionOk() {
-		return validUser();
+		return validPasscode();
 	}
 
 	@Override
@@ -190,21 +160,7 @@ public class T_Pref_Login extends T_Pref_Parent {
 
 	@Override
 	public boolean loadData() {
-		String user = et_User.getText().toString();
-     	String pass = et_Pass.getText().toString();
-     	//boolean isSavePass = ch_SavePass.isChecked();
-     	if(user == null || user.length() == 0){
-     		user = Env.getContext("#SUser");
-     		if(user != null)
-     			et_User.setText(user);
-     	}
-     	//	Save Pass
-     	if(!Env.isRequestPass()){
-     		pass = Env.getContext("#SPass");
-     		if(pass != null)
-     			et_Pass.setText(pass);
-		}
- 		//	
+		//	
 		return true;
 	}
 
@@ -212,8 +168,6 @@ public class T_Pref_Login extends T_Pref_Parent {
 	public void setEnabled(boolean enabled) {
 		if(!m_IsLoadOk)
 			return;
-		et_User.setEnabled(enabled);
-    	et_Pass.setEnabled(enabled);
-    	ev_Role.setEnabled(enabled);
+		et_Passcode.setEnabled(enabled);
 	}
 }

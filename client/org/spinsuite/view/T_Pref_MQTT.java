@@ -19,6 +19,7 @@ package org.spinsuite.view;
 import org.spinsuite.base.R;
 import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.mqtt.connection.MQTTDefaultValues;
+import org.spinsuite.util.Env;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -173,20 +174,29 @@ public class T_Pref_MQTT extends T_Pref_Parent {
 		//	For MQTT Server
     	if(m_MQTT_ServerName == null || m_MQTT_ServerName.length() == 0){
     		m_MQTT_ServerName = MQTTConnection.getHost(m_ctx);
-    		if(m_MQTT_ServerName != null)
+    		if(m_MQTT_ServerName != null) {
     			et_MQTT_ServerName.setText(m_MQTT_ServerName);
+    		} else if(!Env.isEnvLoad()) {
+    			et_MQTT_ServerName.setText(MQTTDefaultValues.DEFAULT_MQTT_SERVER_NAME);
+    		}
     	}
     	//	For User
     	if(m_MQTT_ServerUser == null || m_MQTT_ServerUser.length() == 0){
     		m_MQTT_ServerUser = MQTTConnection.getMQTTUser(m_ctx);
-    		if(m_MQTT_ServerUser != null)
+    		if(m_MQTT_ServerUser != null) {
     			et_MQTT_ServerUser.setText(m_MQTT_ServerUser);
+    		} else if(!Env.isEnvLoad()) {
+    			et_MQTT_ServerUser.setText(MQTTDefaultValues.DEFAULT_MQTT_USER);
+    		}
     	}
     	//	For Pass
     	if(m_MQTT_ServerPass == null || m_MQTT_ServerPass.length() == 0){
     		m_MQTT_ServerPass = MQTTConnection.getMQTTPass(m_ctx);
-    		if(m_MQTT_ServerPass != null)
+    		if(m_MQTT_ServerPass != null) {
     			et_MQTT_ServerPass.setText(m_MQTT_ServerPass);
+    		} else if(!Env.isEnvLoad()) {
+    			et_MQTT_ServerPass.setText(MQTTDefaultValues.DEFAULT_MQTT_PASS);
+    		}
     	}
     	//	Enable MQTT Service
     	ch_MQTT_AutomaticService.setChecked(m_MQTT_AutomaticService);
@@ -194,13 +204,26 @@ public class T_Pref_MQTT extends T_Pref_Parent {
     	if(m_MQTT_ServerPort == null || m_MQTT_ServerPort.length() == 0) {
     		int port = MQTTConnection.getPort(m_ctx);
     		m_MQTT_ServerPort = String.valueOf(port);
-    		et_MQTT_ServerPort.setText(m_MQTT_ServerPort);
+    		if(m_MQTT_ServerPort != null
+    				&& m_MQTT_ServerPort.length() > 0
+    				&& Integer.parseInt(m_MQTT_ServerPort) > 0) {
+    			et_MQTT_ServerPort.setText(m_MQTT_ServerPort);
+    		} else if(!Env.isEnvLoad()) {
+    			et_MQTT_ServerPort.setText(String.valueOf(MQTTDefaultValues.DEFAULT_MQTT_PORT));
+    		}
     	}
        	//	Keep Alive Interval
     	if(m_MQTT_KeepAliveInverval == null || m_MQTT_KeepAliveInverval.length() == 0) {
     		int interval = MQTTConnection.getKeepAliveInverval(m_ctx);
     		m_MQTT_KeepAliveInverval = String.valueOf(interval);
     		et_MQTT_KeepAliveInverval.setText(m_MQTT_KeepAliveInverval);
+    		if(m_MQTT_KeepAliveInverval != null
+    				&& m_MQTT_KeepAliveInverval.length() > 0
+    				&& Integer.parseInt(m_MQTT_KeepAliveInverval) > 0) {
+    			et_MQTT_KeepAliveInverval.setText(m_MQTT_KeepAliveInverval);
+    		} else if(!Env.isEnvLoad()) {
+    			et_MQTT_KeepAliveInverval.setText(String.valueOf(MQTTDefaultValues.DEFAULT_MQTT_KEEP_ALIVE_INT));
+    		}
     	}
     	//	For SSL
     	if(m_MQTT_SSL_File_Path == null || m_MQTT_SSL_File_Path.length() == 0){

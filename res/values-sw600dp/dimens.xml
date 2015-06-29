@@ -21,4 +21,6 @@
    	<dimen name="bc_thread_imageView_layout_height">450dp</dimen>
    	<dimen name="bc_thread_textView_thread_max_size">480dp</dimen>
    	<dimen name="bc_threadlist_contact_profile_img_max_size">70dp</dimen>
+   	   	<!-- Login Icon -->
+   	<dimen name="login_logo_size">120dp</dimen>
 </resources>
