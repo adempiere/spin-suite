@@ -263,10 +263,10 @@ public class SyncService extends IntentService {
 	    		//	Verify Call
 	    		if (!callIsOk) {
 	    			m_IsRunning = callIsOk;
-	    			//Dixon Martinez 2015-05-11 Change for Continue
-	    			//break;
+	    			//	2015-12-06 Dixon Martinez
+	    			//	Change break for continue 
 	    			continue;
-	    			//End Dixon Martinez
+	    			//	End Dixon Martinezs
 	    		}
 			}
 		} catch(Exception e) {

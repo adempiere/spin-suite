@@ -616,33 +616,15 @@ public class CalloutOrder extends CalloutEngine {
 				//	2015-06-12 Dixon Martinez
 				//	Change Index values
 				//	Tax Included
-<<<<<<< HEAD
 				mTab.setValue("IsTaxIncluded", "Y".equals(rs.getString(0)));//	1
-=======
-				//2015-05-11 Dixon Martinez Change Position of Columns 
-				mTab.setValue("IsTaxIncluded", "Y".equals(rs.getString(0))); //1
->>>>>>> branch 'SPIN-1-Synchronization-Server' of ssh://git@github.com/adempiere/Spin-Suite.git
 				//	Price Limit Enforce
-<<<<<<< HEAD
 				Env.setContext(WindowNo, "EnforcePriceLimit", rs.getString(1));//	2
-=======
-				Env.setContext(WindowNo, "EnforcePriceLimit", rs.getString(1)); //2
->>>>>>> branch 'SPIN-1-Synchronization-Server' of ssh://git@github.com/adempiere/Spin-Suite.git
 				//	Currency
-<<<<<<< HEAD
 				int ii = rs.getInt(2);//	3
-=======
-				int ii = rs.getInt(2); //3
->>>>>>> branch 'SPIN-1-Synchronization-Server' of ssh://git@github.com/adempiere/Spin-Suite.git
 				mTab.setValue("C_Currency_ID", ii);
 				//	PriceList Version
-<<<<<<< HEAD
 				Env.setContext(WindowNo, "M_PriceList_Version_ID", rs.getInt(4));//	5
 				//	End Dixon Martinez
-=======
-				Env.setContext(WindowNo, "M_PriceList_Version_ID", rs.getInt(4)); //5
-				//End Dixon Martinez
->>>>>>> branch 'SPIN-1-Synchronization-Server' of ssh://git@github.com/adempiere/Spin-Suite.git
 			}
 		} catch (Exception e) {
 			LogM.log(ctx, getClass(), Level.SEVERE, "priceList (" + sql + ")", e);

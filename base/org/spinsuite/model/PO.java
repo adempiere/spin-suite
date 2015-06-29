@@ -1192,7 +1192,6 @@ public abstract class PO {
 	public final Object parseValue(POInfoColumn column, int index, boolean isNew, boolean toSave) throws Exception {
 		if(index >= 0) {
 			Object value = m_currentValues[index]; 
-<<<<<<< HEAD
 			if(isNew) {
 				if(column.ColumnName.equals(m_TableInfo.getTableName() + "_ID")) {
 					Integer ID = (Integer) value;
@@ -1216,30 +1215,6 @@ public abstract class PO {
 						//	Target Document
 						if(m_C_DocType_ID == 0)
 							m_C_DocType_ID = get_ValueAsInt("C_DocTypeTarget_ID");
-=======
-			if(isNew
-					&& column.ColumnName.equals(m_TableInfo.getTableName() + "_ID")) {
-				Integer ID = (Integer) value;
-				if ( (ID != null && ID > 0)
-						//2015-05-11 Dixon Martinez Add Validation for Synchronising Records
-						|| isSynchronization()
-						//End Dixon Martinez
-						)
-					m_IDs = new Object[]{ID};
-				else
-					m_IDs = new Object[]{MSequence.getNextID(m_ctx, getAD_Client_ID(), getTableName(), conn)};
-				//	Set ID
-				set_Value(index, (m_IDs[0] != null && m_IDs[0] instanceof Integer ? ((Integer)m_IDs[0]).intValue(): m_IDs[0]));
-				return m_IDs[0];
-			} else if(isNew 
-					&& value == null
-					&& column.ColumnName.equals("DocumentNo")) {
-					//	Get Document Type
-					int m_C_DocType_ID = get_ValueAsInt("C_DocType_ID");
-					//	Target Document
-					if(m_C_DocType_ID == 0)
-						m_C_DocType_ID = get_ValueAsInt("C_DocTypeTarget_ID");
->>>>>>> branch 'SPIN-1-Synchronization-Server' of ssh://git@github.com/adempiere/Spin-Suite.git
 
 						//2015-05-16 Dixon Martinez Bad Code
 						//Get Document No
