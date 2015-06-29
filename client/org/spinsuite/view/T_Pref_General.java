@@ -263,6 +263,14 @@ public class T_Pref_General extends T_Pref_Parent {
 		if(requestPass) {
 			String pass = et_Passcode.getText().toString().trim();
 	    	String rePass = et_Re_Passcode.getText().toString().trim();
+	    	//	
+	    	if(pass.length() == 0) {
+	    		pass = "0";
+	    	}
+	    	//	
+	    	if(rePass.length() == 0) {
+	    		rePass = "0";
+	    	}
 	    	int passInt = Integer.parseInt(pass);
 	    	int rePassInt = Integer.parseInt(rePass);
 	    	//	Valid Pass
@@ -304,7 +312,7 @@ public class T_Pref_General extends T_Pref_Parent {
 	@Override
 	public boolean loadData() {
 		//	Auto Login Check
-		boolean requestPass = ch_RequestPass.isChecked();
+		boolean requestPass = Env.isRequestPass();
 		if(requestPass) {
 			et_Passcode.setText(String.valueOf(Env.getLoginPasscode()));
 			et_Re_Passcode.setText(String.valueOf(Env.getLoginPasscode()));

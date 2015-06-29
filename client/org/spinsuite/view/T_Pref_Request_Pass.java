@@ -24,10 +24,14 @@ import org.spinsuite.util.Msg;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 /**
  * 
@@ -79,20 +83,16 @@ public class T_Pref_Request_Pass extends T_Pref_Parent {
     	//	
     	et_Passcode = (EditText)	m_View.findViewById(R.id.et_Passcode);
     	//	Add Listener
-//    	et_Passcode.setOnFocusChangeListener(new OnFocusChangeListener() {
-//			
-//			@Override
-//			public void onFocusChange(View v, boolean hasFocus) {
-//		        //	Listener
-//				if(!hasFocus) {
-//					boolean isValid = validPasscode();
-//					//	Verify
-//					if(isValid) {
-//						setOkPassCode();
-//					}
-//				}
-//			}
-//		});
+    	et_Passcode.setOnEditorActionListener(new OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            	System.err.println("Hola " + actionId);
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) 
+                		|| (actionId == EditorInfo.IME_ACTION_DONE)) {
+                	setOkPassCode();
+                }    
+                return false;
+            }
+        });
 		m_IsLoadOk = true;
     }
     

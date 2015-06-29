@@ -48,7 +48,11 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:ems="10"
-        android:inputType="numberPassword"
+        android:inputType="phone"
+        android:password="true"
+        android:digits="1234567890"
+        android:maxLength="4"
+        android:imeOptions="actionDone"
 		style="@style/TextItemMenu" >
         <requestFocus />
     </EditText>

@@ -39,7 +39,10 @@
     	    android:id="@+id/et_Passcode"
     	    style="@style/TextDynamicTabEditText"
     	    android:layout_width="match_parent"
-    	    android:inputType="numberPassword" />
+    	    android:inputType="phone"
+        	android:password="true"
+        	android:digits="1234567890"
+        	android:maxLength="4" />
         
 		<TextView
         	android:id="@+id/tv_Re_Passcode"
@@ -51,7 +54,10 @@
     	    android:id="@+id/et_Re_Passcode"
     	    style="@style/TextDynamicTabEditText"
     	    android:layout_width="match_parent"
-    	    android:inputType="numberPassword" />
+    	    android:inputType="phone"
+        	android:password="true"
+        	android:digits="1234567890"
+        	android:maxLength="4" />
     	
     	<!-- Language -->
     	<TextView
