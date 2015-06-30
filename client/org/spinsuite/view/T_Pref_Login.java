@@ -88,6 +88,9 @@ public class T_Pref_Login extends T_Pref_Parent {
 	private boolean				m_IsHasChanges = false;
 	/**	Reload Activity				*/
 	private boolean 			m_IsReloadActivity = true;
+	/**	Login Role Adapter			*/
+	private LoginRoleAdapter	m_LoginRoleAdapter = null;
+	
 	
 	/**	Key for Valid User Flag		*/
 	public static final String	KEY_LOGIN_VALID_USER = "#PR_Login_Valid_User";
@@ -132,7 +135,8 @@ public class T_Pref_Login extends T_Pref_Parent {
 		});
     	ev_Role.setClickable(true);
     	ev_Role.setGroupIndicator(null);
-    	ev_Role.setAdapter(new LoginRoleAdapter(m_ctx));
+    	m_LoginRoleAdapter = new LoginRoleAdapter(m_ctx);
+    	ev_Role.setAdapter(m_LoginRoleAdapter);
     	//	Enable / Disable
     	ev_Role.setEnabled(Env.getContextAsBoolean(KEY_LOGIN_VALID_USER));
 		m_IsLoadOk = true;
