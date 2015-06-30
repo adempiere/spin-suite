@@ -127,7 +127,6 @@ public class T_Pref_Login extends T_Pref_Parent {
 					//	Load Role
 					if(isValid) {
 						ev_Role.expandGroup(0);
-						loadRole();
 					} else {
 						ev_Role.collapseGroup(0);
 					}
@@ -141,15 +140,6 @@ public class T_Pref_Login extends T_Pref_Parent {
     	//	Enable / Disable
     	ev_Role.setEnabled(Env.getContextAsBoolean(KEY_LOGIN_VALID_USER));
 		m_IsLoadOk = true;
-    }
-    
-    /**
-     * Load Default Role
-     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-     * @return void
-     */
-    private void loadRole() {
-    	m_LoginRoleAdapter.loadData();
     }
     
     /**
