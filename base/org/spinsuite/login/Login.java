@@ -117,7 +117,6 @@ public class Login extends FragmentActivity implements I_Login {
     	actionBar.setDisplayHomeAsUpEnabled(true);
     	actionBar.setHomeButtonEnabled(true);
     	actionBar.setTitle(R.string.app_name);
-    	actionBar.setSubtitle(Msg.getMsg(this, "SelectMenuItem"));
     	//	
     	v_activity = this;
     	//	
@@ -259,6 +258,8 @@ public class Login extends FragmentActivity implements I_Login {
     		if(m_Menu == null) {
         		m_Menu = new T_Menu(this);
         	}
+    		//	Set Title
+    		actionBar.setSubtitle(Msg.getMsg(this, "SelectMenuItem"));
     		//	
     		loadFragment(m_Menu);
     	} else {

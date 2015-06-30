@@ -277,6 +277,10 @@ public class T_Pref_Login extends T_Pref_Parent {
      	//	
      	m_OldUser = user;
      	m_OldPass = pass;
+     	//	Valid User
+     	if(Env.isEnvLoad()) {
+     		validUser();
+     	}
  		//	
 		return true;
 	}

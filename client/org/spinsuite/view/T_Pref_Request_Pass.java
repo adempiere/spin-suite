@@ -107,8 +107,10 @@ public class T_Pref_Request_Pass extends T_Pref_Parent {
      * @return void
      */
     private void setOkPassCode() {
-    	if(m_Callback instanceof Login) {
-    		((Login)m_Callback).loadConfig();
+    	if(validPasscode()) {
+    		if(m_Callback instanceof Login) {
+        		((Login)m_Callback).loadConfig();
+        	}
     	}
     }
     
@@ -120,6 +122,10 @@ public class T_Pref_Request_Pass extends T_Pref_Parent {
      */
     private boolean validPasscode() {
     	String pass = et_Passcode.getText().toString().trim();
+    	//	Valid Pass
+    	if(pass.length() == 0) {
+    		pass = "0";
+    	}
     	int passcode = Integer.parseInt(pass);
     	//	Valid passcode
     	boolean ok = Env.validLoginPasscode(m_ctx, passcode);
