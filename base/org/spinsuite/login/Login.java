@@ -105,7 +105,7 @@ public class Login extends FragmentActivity implements I_Login {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-    	Env.getInstance(getApplicationContext());
+    	Env.getInstance(getApplicationContext(), true);
     	//	Reset Activity No
     	Env.resetActivityNo();
     	//	
@@ -117,11 +117,11 @@ public class Login extends FragmentActivity implements I_Login {
     	actionBar.setDisplayHomeAsUpEnabled(true);
     	actionBar.setHomeButtonEnabled(true);
     	actionBar.setTitle(R.string.app_name);
-    	actionBar.setSubtitle(Msg.getMsg(this, "SelectMenuItem"));
     	//	
     	v_activity = this;
     	//	
-    	if(validLogin()) {
+    	if(validLogin()
+    			|| !Env.isEnvLoad()) {
     		loadConfig();
     	}
 	}
@@ -258,6 +258,8 @@ public class Login extends FragmentActivity implements I_Login {
     		if(m_Menu == null) {
         		m_Menu = new T_Menu(this);
         	}
+    		//	Set Title
+    		actionBar.setSubtitle(Msg.getMsg(this, "SelectMenuItem"));
     		//	
     		loadFragment(m_Menu);
     	} else {
@@ -358,7 +360,7 @@ public class Login extends FragmentActivity implements I_Login {
      * @return void
      */
     private void reloadActivity(){
-    	Intent refresh = new Intent(this, Login.class);
+    	Intent refresh = new Intent(getApplicationContext(), Login.class);
     	refresh.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(refresh);
 		finish();
@@ -411,7 +413,7 @@ public class Login extends FragmentActivity implements I_Login {
 	 */
 	private void instanceFragment() {
 		//	Add Login
-		m_PrefPane.add(new LoginFragmentItem(new T_Pref_Login(this), 
+		m_PrefPane.add(new LoginFragmentItem(new T_Pref_Login(this, false), 
 				getString(R.string.PR_Login), getString(R.string.PR_D_Login), true));
 		//	Add Web-Services
 		m_PrefPane.add(new LoginFragmentItem(new T_Pref_WS(this), 
