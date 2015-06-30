@@ -174,7 +174,6 @@
 	<string name="app_phone3_erp" >+58(412)1741773</string>
 	<string name="app_phone4_erp" >+58(424)5484908</string>
 	<string name="app_phone5_erp" >+50768437413</string>
-	<string name="M_Product_ID">Product</string>
 	
 	<!-- Synchronization -->
 	<string name="Sync_InitSyncManual">Manual Synchronization</string>
@@ -187,7 +186,5 @@
 	<string name="Sync_Records">Records</string>
 	<string name="Sync_Duration">Duration</string>
 	<string name="Url_Server">URL (Server)</string>
-	<string name="Action_OK">Ok</string>
-	<string name="UOMSymbol">UM</string>
 	
 </resources>
