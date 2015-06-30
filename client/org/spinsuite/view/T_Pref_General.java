@@ -134,7 +134,10 @@ public class T_Pref_General extends T_Pref_Parent {
     	//	Load Adapter
     	ArrayAdapter<DisplaySpinner> adapter = new ArrayAdapter<DisplaySpinner>(m_ctx, 
     			android.R.layout.simple_spinner_item, data);
-		sp_Language.setAdapter(adapter);
+    	//	Add Resource
+    	adapter.setDropDownViewResource(R.layout.v_lookup_spinner_drop_down);
+		//	
+    	sp_Language.setAdapter(adapter);
     	//	
     	sp_LogLevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
 
