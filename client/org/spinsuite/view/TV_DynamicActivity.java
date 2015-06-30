@@ -22,7 +22,7 @@ import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.interfaces.I_DT_FragmentSelectListener;
-import org.spinsuite.login.Login2;
+import org.spinsuite.login.Login;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.Env;
@@ -64,7 +64,7 @@ public class TV_DynamicActivity extends TV_Base
     	super.onCreate(savedInstanceState);
     	//	
     	Bundle bundle = getIntent().getExtras();
-		if(bundle != null){
+		if(bundle != null) {
 			param = (ActivityParameter)bundle.getParcelable("Param");
 			m_Record_ID = bundle.getIntArray("Record_ID");
 			if(m_Record_ID == null)
@@ -79,7 +79,6 @@ public class TV_DynamicActivity extends TV_Base
         //	Option
         loadActionMenu = new LoadActionMenu(this, true);
     	//	Title
-        getActionBar().setTitle(null);
     	getActionBar().setSubtitle(param.getName());
     	//	
     	//	Load Option List
@@ -141,7 +140,7 @@ public class TV_DynamicActivity extends TV_Base
 				&& !isDrawerLoaded()) {
 			// Navigate "up" the demo structure to the launchpad activity.
 			// See http://developer.android.com/design/patterns/navigation.html for more.
-			NavUtils.navigateUpTo(this, new Intent(this, Login2.class));
+			NavUtils.navigateUpTo(this, new Intent(this, Login.class));
 			return true;
 		}
 		//	

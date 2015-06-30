@@ -95,14 +95,8 @@ public class LoadActionMenu {
 				activity.startActivityForResult(intent, 0);
 			}
 		}
-		else{
-			if(item.isSummary()) {
-//				bundle.putParcelable("Param", param);
-//				intent = new Intent(activity, LV_Menu.class);
-//				intent.putExtras(bundle);
-//				//	Show Activity
-//				activity.startActivityForResult(intent, 0);
-			} else {
+		else {
+			if(!item.isSummary()) {
 				//	Load Parameter
 				ActivityParameter paramAct = new ActivityParameter(item);
 				//	Add from Parameter
@@ -135,6 +129,7 @@ public class LoadActionMenu {
 						//	Set Read Write
 						boolean m_IsReadWrite = Env.getWindowsAccess(paramAct.getSPS_Window_ID());
 						bundle.putString("IsInsertRecord", (m_IsReadWrite? "Y": "N"));
+						bundle.putString("Name", item.getName());
 						//	
 		            	intent = new Intent(activity, LV_StandardSearch.class);
 		    			intent.putExtras(bundle);

@@ -30,15 +30,27 @@ public class DB_Manager {
 	 * Create Instance from DB
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Helper
+	 * @param
 	 * @return void
 	 */
-    public static synchronized void createInstance(SQLiteOpenHelper p_Helper) {
+    public static synchronized void createInstance(SQLiteOpenHelper p_Helper, boolean reload) {
         //	Verify if instance is created
-    	if (m_Instance == null) {
+    	if (m_Instance == null
+    			|| reload) {
             m_Instance = new DB_Manager();
             m_DBH = p_Helper;
             m_Counter = new AtomicInteger();
         }
+    }
+    
+    /**
+     * Create Instance 
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_Helper
+     * @return void
+     */
+    public static synchronized void createInstance(SQLiteOpenHelper p_Helper) {
+    	createInstance(p_Helper, false);
     }
     
     /**	Database Helper					*/

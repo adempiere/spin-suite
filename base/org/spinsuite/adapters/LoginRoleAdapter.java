@@ -92,6 +92,8 @@ public class LoginRoleAdapter extends BaseExpandableListAdapter {
     	dp_Date 		= (DatePicker) 	convertView.findViewById(R.id.dp_Date);
     	//	
     	addListener();
+    	//	Load Data
+    	loadData();
         //	
         return convertView;
 	}
@@ -291,7 +293,7 @@ public class LoginRoleAdapter extends BaseExpandableListAdapter {
      * @return
      * @return boolean
      */
-	public boolean loadData() {
+	private boolean loadData() {
 		if(Env.isEnvLoad()
 				&& !m_IsLoadOk) {
 			role_ID = loadRole();

@@ -16,20 +16,20 @@
 package org.spinsuite.view;
 
 
-import java.util.logging.Level;
-
 import org.spinsuite.adapters.LoginRoleAdapter;
-import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
+import org.spinsuite.login.Login;
+import org.spinsuite.model.MUser;
 import org.spinsuite.util.Env;
-import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
+import org.spinsuite.util.SyncValues;
 
 import android.content.Context;
-import android.database.Cursor;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -61,6 +61,18 @@ public class T_Pref_Login extends T_Pref_Parent {
 		super(p_ctx);
 	}
 	
+	/**
+	 * For Login
+	 * *** Constructor ***
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_ctx
+	 * @param p_IsReloadActivity
+	 */
+	public T_Pref_Login(Context p_ctx, boolean p_IsReloadActivity) {
+		this(p_ctx);
+		m_IsReloadActivity = p_IsReloadActivity;
+	}
+	
 	
 	/**	Login User					*/
 	private EditText 			et_User;
@@ -68,6 +80,20 @@ public class T_Pref_Login extends T_Pref_Parent {
 	private EditText 			et_Pass;
 	/**	Role						*/
 	private ExpandableListView 	ev_Role;
+	/**	Old User					*/
+	private String				m_OldUser;
+	/**	Old Password				*/
+	private String				m_OldPass;
+	/**	Has Changes					*/
+	private boolean				m_IsHasChanges = false;
+	/**	Reload Activity				*/
+	private boolean 			m_IsReloadActivity = true;
+	/**	Login Role Adapter			*/
+	private LoginRoleAdapter	m_LoginRoleAdapter = null;
+	
+	
+	/**	Key for Valid User Flag		*/
+	public static final String	KEY_LOGIN_VALID_USER = "#PR_Login_Valid_User";
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -88,9 +114,31 @@ public class T_Pref_Login extends T_Pref_Parent {
     	et_User = (EditText) 			m_View.findViewById(R.id.et_User);
     	et_Pass = (EditText) 			m_View.findViewById(R.id.et_Pass);
     	ev_Role	= (ExpandableListView)	m_View.findViewById(R.id.ev_Role);
+    	//	
+    	et_Pass.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+		        //	Listener
+				if(!hasFocus) {
+					boolean isValid = validUser();
+					//	Enable Role
+					ev_Role.setEnabled(isValid);
+					//	Load Role
+					if(isValid) {
+						ev_Role.expandGroup(0);
+					} else {
+						ev_Role.collapseGroup(0);
+					}
+				}
+			}
+		});
     	ev_Role.setClickable(true);
     	ev_Role.setGroupIndicator(null);
-    	ev_Role.setAdapter(new LoginRoleAdapter(m_ctx));
+    	m_LoginRoleAdapter = new LoginRoleAdapter(m_ctx);
+    	ev_Role.setAdapter(m_LoginRoleAdapter);
+    	//	Enable / Disable
+    	ev_Role.setEnabled(Env.getContextAsBoolean(KEY_LOGIN_VALID_USER));
 		m_IsLoadOk = true;
     }
     
@@ -103,14 +151,29 @@ public class T_Pref_Login extends T_Pref_Parent {
     private boolean validUser() {
     	String user = et_User.getText().toString().trim();
     	String pass = et_Pass.getText().toString().trim();
+    	//	Verify if has changes
+    	if((m_OldUser != null && user == null)
+    		|| (m_OldUser == null && user != null)
+    		|| (!m_OldUser.equals(user))) {
+    		m_IsHasChanges = true;
+    	} else if((m_OldPass != null && pass == null)
+        		|| (m_OldPass == null && pass != null)
+        		|| (!m_OldPass.equals(pass))) {
+        		m_IsHasChanges = true;
+        }
+    	//	
     	if(user != null && user.length() > 0) {
-    		if(pass != null && pass.length() > 0){
-    			Env.setContext("#SUser", user);
-    			Env.setContext("#AD_User_Name", user);
-    			Env.setContext("#SPass", pass);
-    			if(!Env.isEnvLoad())
+    		if(pass != null && pass.length() > 0) {
+    			//	
+    			Env.setContext(m_ctx, "#SUser", user);
+    			Env.setContext(m_ctx, "#AD_User_Name", user);
+    			Env.setContext(m_ctx, "#SPass", pass);
+    			//	Just when is Loaded Application
+    			if(!Env.isEnvLoad()) {
+    				Env.setContext(KEY_LOGIN_VALID_USER, true);
     				return true;
-    			else if(findUser(user, pass)) {
+    			} else if(findUser(user, pass)) {
+    				Env.setContext(KEY_LOGIN_VALID_USER, true);
     				return true;
     			} else {
     				Msg.toastMsg(m_ctx, 
@@ -126,7 +189,21 @@ public class T_Pref_Login extends T_Pref_Parent {
 					getResources().getString(R.string.MustFillField) 
 					+ " \"" + getResources().getString(R.string.User) + "\"");
     	}
+    	//	
+    	Env.setContext(KEY_LOGIN_VALID_USER, false);
     	return false;
+    }
+    
+    /**
+     * Reload Activity
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return void
+     */
+    private void reloadActivity(){
+    	Intent refresh = new Intent(m_ctx, Login.class);
+    	refresh.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(refresh);
+		getActivity().finish();
     }
     
     /**
@@ -139,24 +216,10 @@ public class T_Pref_Login extends T_Pref_Parent {
      */
     private boolean findUser(String user, String pass){
     	boolean ok = false;
-    	try {
-    		DB con = new DB(this.getActivity());
-        	con.openDB(DB.READ_ONLY);
-        	String sql = "SELECT u.AD_User_ID " +
-        			"FROM AD_User u " +
-        			"WHERE u.Name = ? AND u.PassWord = ?";
-        	Cursor rs = con.querySQL(sql, new String[]{user, pass});
-        	//
-        	if(rs.moveToFirst()){
-        		Env.setAD_User_ID(rs.getInt(0));
-        		Env.setIsLogin(true);
-        		ok = true;
-        	} else {
-        		Env.setIsLogin(false);
-        	}
-        	con.closeDB(rs);
-    	} catch(Exception e) {
-    		LogM.log(getActivity(), getClass(), Level.SEVERE, "Error", e);
+    	int m_AD_User_ID = MUser.findUserID(m_ctx, user, pass);
+    	if(m_AD_User_ID >= 0) {
+    		Env.setAD_User_ID(m_AD_User_ID);
+    		ok = true;
     	}
     	return ok;
     }
@@ -180,7 +243,12 @@ public class T_Pref_Login extends T_Pref_Parent {
     
 	@Override
 	public boolean processActionOk() {
-		return validUser();
+		boolean ok = validUser();
+		if(m_IsHasChanges
+				&& m_IsReloadActivity) {
+			reloadActivity();
+		}
+		return ok;
 	}
 
 	@Override
@@ -194,16 +262,29 @@ public class T_Pref_Login extends T_Pref_Parent {
      	String pass = et_Pass.getText().toString();
      	//boolean isSavePass = ch_SavePass.isChecked();
      	if(user == null || user.length() == 0){
-     		user = Env.getContext("#SUser");
-     		if(user != null)
+     		user = Env.getContext(m_ctx, "#SUser");
+     		if(user != null) {
      			et_User.setText(user);
+     		} else if(!Env.isEnvLoad()) {
+     			//	Set Authentication for test
+     			et_User.setText(SyncValues.DEFAULT_AD_USER);
+     		}
      	}
      	//	Save Pass
-     	if(!Env.isRequestPass()){
-     		pass = Env.getContext("#SPass");
-     		if(pass != null)
-     			et_Pass.setText(pass);
-		}
+     	pass = Env.getContext(m_ctx, "#SPass");
+     	if(pass != null) {
+     		et_Pass.setText(pass);
+     	} else if(!Env.isEnvLoad()) {
+     		//	Set Authentication for test
+     		et_Pass.setText(SyncValues.DEFAULT_AD_PASS);
+     	}
+     	//	
+     	m_OldUser = user;
+     	m_OldPass = pass;
+     	//	Valid User
+     	if(Env.isEnvLoad()) {
+     		validUser();
+     	}
  		//	
 		return true;
 	}
