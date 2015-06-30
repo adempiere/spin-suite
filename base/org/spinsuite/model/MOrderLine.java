@@ -131,13 +131,170 @@ public class MOrderLine extends X_C_OrderLine {
 		return retValue;
 	}	//	getNotReserved
 	
+	//	Product Pricing
+	private MProductPricing	m_productPrice = null;
+	//
+	private boolean			m_IsSOTrx = true;
+
+	private int 			m_M_PriceList_ID = 0;
+	
+	/**
+	 * 	Get and calculate Product Pricing
+	 *	@param M_PriceList_ID id
+	 *	@return product pricing
+	 */
+	private MProductPricing getProductPricing (int M_PriceList_ID)
+	{
+		m_productPrice = new MProductPricing (getCtx(), getM_Product_ID(), 
+			getC_BPartner_ID(), getQtyOrdered(), m_IsSOTrx);
+		m_productPrice.setM_PriceList_ID(M_PriceList_ID);
+		m_productPrice.setPriceDate(getDateOrdered());
+		//
+		m_productPrice.calculatePrice();
+		return m_productPrice;
+	}	//	getProductPrice
+	
+	/**
+	 * 	Set Price for Product and PriceList.
+	 * 	Use only if newly created.
+	 * 	Uses standard price list of not set by order constructor
+	 */
+	public void setPrice()
+	{
+		if (getM_Product_ID() == 0)
+			return;
+		if (m_M_PriceList_ID == 0)
+			throw new IllegalStateException("PriceList unknown!");
+		setPrice (m_M_PriceList_ID);
+	}	//	setPrice
+
+	/**
+	 * 	Set Price for Product and PriceList
+	 * 	@param M_PriceList_ID price list
+	 */
+	public void setPrice (int M_PriceList_ID)
+	{
+		if (getM_Product_ID() == 0)
+			return;
+		//
+//		log.fine(toString() + " - M_PriceList_ID=" + M_PriceList_ID);
+		getProductPricing (M_PriceList_ID);
+		setPriceActual (m_productPrice.getPriceStd());
+		setPriceList (m_productPrice.getPriceList());
+		setPriceLimit (m_productPrice.getPriceLimit());
+		//
+		if (getQtyEntered().compareTo(getQtyOrdered()) == 0)
+			setPriceEntered(getPriceActual());
+		else
+			setPriceEntered(getPriceActual().multiply(getQtyOrdered()
+				.divide(getQtyEntered(), 12, BigDecimal.ROUND_HALF_UP)));	//	recision
+		
+		//	Calculate Discount
+		setDiscount(m_productPrice.getDiscount());
+		//	Set UOM
+		setC_UOM_ID(m_productPrice.getC_UOM_ID());
+	}	//	setPrice
+
+	/**
+	 * 	Get Parent
+	 *	@return parent
+	 */
+	public MOrder getParent()
+	{
+		if (m_parent == null)
+			m_parent = new MOrder(getCtx(), getC_Order_ID(), null );
+		return m_parent;
+	}	//	getParent
+
+	/**
+	 * 	Set Header Info
+	 *	@param order order
+	 */
+	public void setHeaderInfo (MOrder order)
+	{
+		m_parent = order;
+		m_precision = new Integer(order.getPrecision());
+		m_M_PriceList_ID = order.getM_PriceList_ID();
+		m_IsSOTrx = order.isSOTrx();
+	}	//	setHeaderInfo
+	
+	/**
+	 * 	Set Defaults from Order.
+	 * 	Does not set Parent !!
+	 * 	@param order order
+	 */
+	public void setOrder (MOrder order)
+	{
+		setClientOrg(order);
+		setC_BPartner_ID(order.getC_BPartner_ID());
+		setC_BPartner_Location_ID(order.getC_BPartner_Location_ID());
+		setM_Warehouse_ID(order.getM_Warehouse_ID());
+		setDateOrdered(order.getDateOrdered());
+		setDatePromised(order.getDatePromised());
+		setC_Currency_ID(order.getC_Currency_ID());
+		//
+		setHeaderInfo(order);	//	sets m_order
+		//	Don't set Activity, etc as they are overwrites
+	}	//	setOrder
+
+	
+	/** Parent					*/
+	private MOrder			m_parent = null;
+	
 	@Override
 	protected boolean beforeSave(boolean isNew) {
 		boolean ok = super.beforeSave(isNew);
 		if(!ok)
 			return ok;
-		//	Re-Calculate Amt
-		setLineNetAmt();
+		
+		//	Get Defaults from Parent
+		if (getC_BPartner_ID() == 0 || getC_BPartner_Location_ID() == 0
+			|| getM_Warehouse_ID() == 0 
+			|| getC_Currency_ID() == 0)
+			setOrder (getParent());
+		if (m_M_PriceList_ID == 0)
+			setHeaderInfo(getParent());
+		
+		//	Set Price if Actual = 0
+		if (m_productPrice == null 
+			&&  Env.ZERO.compareTo(getPriceActual()) == 0
+			&&  Env.ZERO.compareTo(getPriceList()) == 0)
+			setPrice();
+		//	Check if on Price list
+		if (m_productPrice == null)
+			getProductPricing(m_M_PriceList_ID);
+		m_productPrice.isCalculated();
+//		if (!m_productPrice.isCalculated())
+//		{
+//			throw new ProductNotOnPriceListException(m_productPrice, getLine());
+//		}
+		
+		if (getC_UOM_ID() == 0 
+				&& (getM_Product_ID() != 0 
+					|| getPriceEntered().compareTo(Env.ZERO) != 0
+					|| getC_Charge_ID() != 0))
+			{
+				int C_UOM_ID = MUOM.getDefault_UOM_ID(getCtx());
+				if (C_UOM_ID > 0)
+					setC_UOM_ID (C_UOM_ID);
+			}
+		//	Qty Precision
+		if (isNew || is_ValueChanged("QtyEntered"))
+			setQtyEntered(getQtyEntered());
+		if (isNew || is_ValueChanged("QtyOrdered"))
+			setQtyOrdered(getQtyOrdered());
+		
+		//	FreightAmt Not used
+		if (Env.ZERO.compareTo(getFreightAmt()) != 0)
+			setFreightAmt(Env.ZERO);
+
+		//	Set Tax
+		if (getC_Tax_ID() == 0)
+			setTax();
+
+		//	Calculations & Rounding
+		setLineNetAmt();	//	extended Amount with or without tax
+		setDiscount();
 		
 		//	Get Line No
 		if (getLine() == 0) {
@@ -149,12 +306,82 @@ public class MOrderLine extends X_C_OrderLine {
 		return ok;
 	}
 	
+	/**
+	 *	Set Discount
+	 */
+	public void setDiscount()
+	{
+		BigDecimal list = getPriceList();
+		//	No List Price
+		if (Env.ZERO.compareTo(list) == 0)
+			return;
+		BigDecimal discount = list.subtract(getPriceActual())
+			.multiply(new BigDecimal(100))
+			.divide(list, getPrecision(), BigDecimal.ROUND_HALF_UP);
+		setDiscount(discount);
+	}	//	setDiscount
+
+	
+	/**
+	 *	Set Tax
+	 *	@return true if tax is set
+	 */
+	public boolean setTax()
+	{
+		int ii = Tax.get(getCtx(), getM_Product_ID(), getC_Charge_ID(), getDateOrdered(), getDateOrdered(),
+			getAD_Org_ID(), getM_Warehouse_ID(),
+			getC_BPartner_Location_ID(),		//	should be bill to
+			getC_BPartner_Location_ID(), m_IsSOTrx);
+		if (ii == 0)
+		{
+//			log.log(Level.SEVERE, "No Tax found");
+			return false;
+		}
+		setC_Tax_ID (ii);
+		return true;
+	}	//	setTax
+	
 	@Override
 	protected boolean afterSave(boolean isNew) {
 		boolean ok = super.afterSave(isNew);
 		if(!ok)
 			return ok;
+		
+		if (!isNew 
+				&& is_ValueChanged("C_Tax_ID")) {
+			//	Recalculate Tax for old Tax
+			if (!getParent().isProcessed())
+				if (!updateOrderTax(true))
+					return false;
+		}
 		return updateHeaderTax();
+		
+		
+	}
+	
+	/**
+	 * Recalculate order tax
+	 * @param oldTax true if the old C_Tax_ID should be used
+	 * @return true if success, false otherwise
+	 * 
+	 * @author teo_sarca [ 1583825 ]
+	 */
+	private boolean updateOrderTax(boolean oldTax) {
+		MOrderTax tax = MOrderTax.get (getCtx(),this, getPrecision(), oldTax, null);
+		if (tax != null) {
+			if (!tax.calculateTaxFromLines())
+				return false;
+			if (tax.getTaxAmt().signum() != 0) {
+				if (!tax.save())
+					return false;
+			}
+			else {
+				if (!tax.isNew() 
+						&& !tax.delete())
+					return false;
+			}
+		}
+		return true;
 	}
 	
 	/**
