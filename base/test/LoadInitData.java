@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.spinsuite.base.R;
-import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.util.Env;
 
 import android.content.Context;
@@ -58,7 +57,7 @@ public class LoadInitData {
 			try {
 				InputStream is = ctx.getResources().openRawResource(R.raw.spin_suite);
 				
-				File f = new File(Env.getDB_PathName());
+				File f = new File(Env.getDB_PathName(ctx));
 				
 				OutputStream outputStream = new FileOutputStream(f);
 
@@ -89,12 +88,7 @@ public class LoadInitData {
 	public void setContextTest() {
 		//	Set Context Default Values for Demo
 		Env.setIsEnvLoad(ctx, true);
-		Env.setSavePass(ctx, true);
-		Env.setRequestPass(ctx, true);
 		Env.setContext(ctx, KEY_POS_TAB, 1);
 		//	Set Value for Sync
-		Env.setContext(ctx, "#InitialLoadSynchronizing", false);
-		MQTTConnection.setIsAutomaticService(ctx, true);
-		MQTTConnection.setNetworkOk(ctx, true);
 	}	
 }
