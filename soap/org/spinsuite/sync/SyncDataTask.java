@@ -154,7 +154,13 @@ public class SyncDataTask implements BackGroundProcess  {
 		try{
 			conn = new DB(m_ctx);
 			conn.openDB(DB.READ_WRITE);
-			syncData(m_SPS_SyncMenu_ID, 0);
+			//Get Child's Web Services
+			List<MSPSSyncMenu> syncms = MSPSSyncMenu.getNodesFromParent(m_ctx, Integer.valueOf(m_SPS_SyncMenu_ID).toString(), conn);
+			
+			for (MSPSSyncMenu mspsSyncMenu : syncms) {
+				syncData(mspsSyncMenu.getSPS_SyncMenu_ID(),0);
+			}
+//			syncData(m_SPS_SyncMenu_ID, 0);
 		} catch(Exception e) {
 			m_Error = true;
 			LogM.log(m_ctx, getClass(), Level.SEVERE, e.getLocalizedMessage());
@@ -216,9 +222,6 @@ public class SyncDataTask implements BackGroundProcess  {
 					}
 					currentPage++;
 				}
-				syncm.setLastSynchronized(new Timestamp(System.currentTimeMillis()));
-				syncm.setSynchronization(true);
-				syncm.save();
 			}//End Query Data Web Service
 			
 			//Run Create Data Web Service
@@ -231,8 +234,7 @@ public class SyncDataTask implements BackGroundProcess  {
 					if (syncm.getWhereClause()!=null)
 						whereClause += syncm.getWhereClause();
 					if (!syncm.isForced()){
-						if (whereClause !=null )
-							whereClause += " AND ";
+						whereClause += " AND ";
 						
 						whereClause = " EXISTS (SELECT 1 "
 													+ "FROM "
@@ -266,13 +268,6 @@ public class SyncDataTask implements BackGroundProcess  {
 		if (syncm.getAD_RuleAfter_ID()!=0){
 			X_AD_Rule rule  = new X_AD_Rule(m_ctx, syncm.getAD_RuleAfter_ID(), conn);
 			runQuery(rule.getScript(),null);
-		}
-		
-		//Get Child's Web Services
-		List<MSPSSyncMenu> syncms = MSPSSyncMenu.getNodesFromParent(m_ctx, Integer.valueOf(p_SPS_SyncMenu_ID).toString(), conn);
-		
-		for (MSPSSyncMenu mspsSyncMenu : syncms) {
-			syncData(mspsSyncMenu.getSPS_SyncMenu_ID(),0);
 		}
 	}
 	
@@ -347,7 +342,7 @@ public class SyncDataTask implements BackGroundProcess  {
 	 * @throws XmlPullParserException
 	 * @return void
 	 */
-	private void callWebService(SoapObject p_SO_Param,MSPSSyncMenu sm) {
+	private void callWebService(SoapObject p_SO_Param, MSPSSyncMenu sm) {
 		
 		m_PublicTittle = sm.getName();
 		m_PublicMsg = sm.getDescription();
@@ -395,20 +390,29 @@ public class SyncDataTask implements BackGroundProcess  {
 	 * @param sm
 	 * @return void
 	 */
-	private void writeDB(MSPSSyncMenu sm,int p_ID)
+	private void writeDB(MSPSSyncMenu sm, int p_ID)
 	{		
 		 
 		//Validate Response
 		if (soapResponse == null)
 			return;
 		
-		if (soapResponse.hasProperty("Error")){
+		if (soapResponse.hasProperty("Error")) {
+			//	Mark like Not Synchronized
+			if (m_MethodValue.equals(SyncValues.WSMQueryData)) {
+				sm.setLastSynchronized(null);
+				sm.save();
+			}
 			m_PublicMsg = soapResponse.getPropertyAsString("Error");
 			LogM.log(m_ctx, SyncDataTask.class, Level.SEVERE, m_PublicMsg);
 			publishOnRunning();
 			return;
 		}
+		//	
 		if (m_MethodValue.equals(SyncValues.WSMQueryData)){
+			//	Mark like Synchronized
+			sm.setLastSynchronized(new Timestamp(System.currentTimeMillis()));
+			sm.save();
 			//Validate Data Set
 			if (!soapResponse.hasProperty(SyncValues.WSRespDataSet))
 				return;
