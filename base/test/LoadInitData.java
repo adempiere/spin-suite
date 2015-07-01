@@ -89,6 +89,7 @@ public class LoadInitData {
 		//	Set Context Default Values for Demo
 		Env.setIsEnvLoad(ctx, true);
 		Env.setContext(ctx, KEY_POS_TAB, 1);
-		//	Set Value for Sync
-	}	
+		Env.setAD_Role_ID(ctx, -1);
+		Env.setAD_User_ID(ctx, -1);
+	}
 }
