@@ -25,6 +25,7 @@ import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.model.MUser;
 import org.spinsuite.sync.SyncService;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.KeyNamePair;
 import org.spinsuite.util.LoginFragmentItem;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.SyncValues;
@@ -137,7 +138,14 @@ public class Login extends FragmentActivity implements I_Login {
 			String user = Env.getContext(this, "#SUser");
 	    	String pass = Env.getContext(this, "#SPass");
 	    	//	Find User by pass
-			if(MUser.findUserID(this, user, pass) >= 0) {
+	    	int m_AD_User_ID = MUser.findUserID(this, user, pass);
+			if(m_AD_User_ID >= 0) {
+				//	Set User ID
+				if(Env.getAD_User_ID() == -1) {
+					Env.setAD_User_ID(m_AD_User_ID);
+				}
+				//	Valid Role
+				loadDefaultRole();
 				//	validation login
 				if(Env.isRequestPass(this)) {
 					m_RequestPasscode = new T_Pref_Request_Pass(this);
@@ -154,7 +162,6 @@ public class Login extends FragmentActivity implements I_Login {
 		//	Default Return
 		return false;
 	}
-	
 	
 	/**
 	 * Load a Fragment
@@ -365,6 +372,93 @@ public class Login extends FragmentActivity implements I_Login {
 		startActivity(refresh);
 		finish();
     }
+    
+    /**
+	 * Load Default Data Role
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void loadDefaultRole() {
+		//	Get Role
+		int m_AD_Role_ID = Env.getAD_Role_ID(this);
+		//	Valid if role is loaded
+		if(m_AD_Role_ID >= 0) {
+			return;
+		}
+		String m_RoleName = null;
+		KeyNamePair[] roles = DB.getKeyNamePairs(this, "SELECT ur.AD_Role_ID, r.Name "
+				+ "FROM AD_User_Roles ur "
+				+ "INNER JOIN AD_Role r ON(r.AD_Role_ID = ur.AD_Role_ID) "
+				+ "WHERE ur.AD_User_ID = ? "
+				+ "ORDER BY ur.AD_Role_ID DESC", Env.getAD_User_ID());
+		//	Process Role
+		if(roles != null
+				&& roles.length > 0) {
+			m_AD_Role_ID = roles[0].getKey();
+			m_RoleName = roles[0].getName();
+			//	Set To Context
+			Env.setAD_Role_ID(this, m_AD_Role_ID);
+			Env.setContext(this, "#AD_Role_Name", m_RoleName);
+		}
+		//	Get Client
+		int m_AD_Client_ID = 0;
+		String m_ClientName = null;
+		KeyNamePair[] clients = DB.getKeyNamePairs(this, "SELECT r.AD_Client_ID, c.Name "
+				+ "FROM AD_Role r "
+				+ "INNER JOIN AD_Client c ON(c.AD_Client_ID = r.AD_Client_ID) "
+				+ "WHERE r.AD_Role_ID = ? "
+				+ "ORDER BY r.AD_Client_ID DESC", m_AD_Role_ID);
+		//	Process Client
+		if(clients != null
+				&& clients.length > 0) {
+			m_AD_Client_ID = clients[0].getKey();
+			m_ClientName = clients[0].getName();
+			//	Set To Context
+			Env.setAD_Client_ID(this, m_AD_Client_ID);
+			Env.setContext(this, "#AD_Client_Name", m_ClientName);
+		}
+		//	Get Organization
+		int m_AD_Org_ID = 0;
+		String m_OrgName = null;
+		KeyNamePair[] orgs = null;
+		//	Get Access Type
+		String m_IsUseUserOrgAccess = DB.getSQLValueString(this, "SELECT r.IsUseUserOrgAccess "
+				+ "FROM AD_Role r "
+				+ "WHERE r.AD_Role_ID = ?", String.valueOf(m_AD_Role_ID));
+		//	For Role Org Access
+		StringBuffer sql = new StringBuffer("SELECT o.AD_Org_ID, o.Name ");
+		sql.append("FROM AD_Org o ");
+		if(m_IsUseUserOrgAccess != null 
+				&& m_IsUseUserOrgAccess.equals("Y")){
+			sql.append("INNER JOIN AD_User_OrgAccess uo ON(uo.AD_Org_ID = o.AD_Org_ID) ");
+			sql.append("WHERE uo.AD_User_ID = " + Env.getAD_User_ID() + " ");
+		} else {
+			sql.append("INNER JOIN AD_Role_OrgAccess orga ON(orga.AD_Org_ID = o.AD_Org_ID) " +
+					"INNER JOIN AD_User_Roles ur ON(ur.AD_Role_ID = orga.AD_Role_ID) ");
+			sql.append("WHERE ur.AD_Role_ID = " + m_AD_Role_ID + " ");
+		}
+		//	Client
+		sql.append("AND o.AD_Client_ID = ?");
+		orgs = DB.getKeyNamePairs(this, sql.toString(), m_AD_Client_ID);
+		//	Process Organization
+		if(orgs != null
+				&& orgs.length > 0) {
+			m_AD_Org_ID = orgs[0].getKey();
+			m_OrgName = orgs[0].getName();
+			//	Set To Context
+			Env.setAD_Org_ID(this, m_AD_Org_ID);
+			Env.setContext(this, "#AD_Org_Name", m_OrgName);
+		}
+		//	Get Warehouse
+		int m_M_Warehouse_ID = DB.getSQLValue(this, "SELECT w.M_Warehouse_ID "
+				+ "FROM M_Warehouse w "
+				+ "WHERE w.AD_Org_ID = ? "
+				+ "AND w.IsInTransit = 'N'");
+		//	Get Default Role
+		if(m_M_Warehouse_ID > -1) {
+			Env.setM_Warehouse_ID(this, m_M_Warehouse_ID);
+		}
+	}
     
     /**
 	 * Set Pending Item
