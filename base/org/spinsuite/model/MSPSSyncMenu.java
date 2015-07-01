@@ -3,8 +3,10 @@ package org.spinsuite.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+
 import org.spinsuite.base.DB;
 import org.spinsuite.util.LogM;
+
 import android.content.Context;
 import android.database.Cursor;
 
@@ -12,12 +14,10 @@ public class MSPSSyncMenu extends X_SPS_SyncMenu{
 
 	public MSPSSyncMenu(Context ctx, Cursor rs, DB conn) {
 		super(ctx, rs, conn);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public MSPSSyncMenu(Context ctx, int SPS_SyncMenu_ID, DB conn) {
 		super(ctx, SPS_SyncMenu_ID, conn);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -163,4 +163,10 @@ public class MSPSSyncMenu extends X_SPS_SyncMenu{
 		
 		return items;
 	}//getNodes
+	
+	@Override
+	public String toString() {
+		return "[SPS_SyncMenu_ID = " + getSPS_SyncMenu_ID() + "] "
+				+ "Name = " + getName() + "]";
+	}
 }
