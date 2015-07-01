@@ -13,7 +13,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,    		 *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                     		 *
  * For the text or an alternative of this public license, you may reach us    		 *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com				  		 *
  ************************************************************************************/
 -->
@@ -31,19 +31,20 @@
         <TextView
             android:id="@+id/tv_ProductValue"
             style="@style/TextTitleList"
-            android:layout_width="181dp"
-            android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1" />
 
         <TextView
             android:id="@+id/tv_ProductName"
             style="@style/TextTitleList"
-            android:layout_width="181dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/tv_ProductDescription"
             style="@style/TextTitleList"
-            android:layout_width="181dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
     </LinearLayout>
@@ -97,26 +98,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:hint="@string/Zero"
-                android:inputType="numberDecimal"
+                android:inputType="phone|numberDecimal"
                 android:selectAllOnFocus="true"
                 android:gravity="end"
                 android:textColor="@android:color/black" />
 
         </LinearLayout>
-
-
     </LinearLayout>
-
 </LinearLayout>
-
-
-
-
-
-
-
-
-
-
-
-

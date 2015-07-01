@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import org.spinsuite.adapters.DisplayProducts;
+import org.spinsuite.adapters.DisplayOrderLine;
 import org.spinsuite.adapters.OrderLineAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
@@ -169,14 +169,14 @@ public class LV_COrderLine extends Fragment implements I_DynamicTab {
 	 * @return void
 	 */
 	private void actionDelete(int position) {
-		final DisplayProducts item = (DisplayProducts) v_list.getAdapter().getItem(position);
+		final DisplayOrderLine item = (DisplayOrderLine) v_list.getAdapter().getItem(position);
 		String msg_Acept = this.getResources().getString(R.string.msg_Acept);
 		Builder ask = Msg.confirmMsg(getActivity(), getResources().getString(R.string.msg_AskDelete));
 		ask.setPositiveButton(msg_Acept, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.cancel();
 				//	Delete
-				MOrderLine oLine = new MOrderLine(getActivity(), item.getOrderLine_ID(), null);
+				MOrderLine oLine = new MOrderLine(getActivity(), item.getC_OrderLine_ID(), null);
 				updateHeader(oLine.getCtx(),oLine, oLine.getLineNetAmt(),null);
 				try {
 					oLine.deleteEx();
@@ -257,8 +257,9 @@ public class LV_COrderLine extends Fragment implements I_DynamicTab {
 		//
 		String sql = "SELECT "
 				+ "ol.C_OrderLine_ID, "
+				+ "pc.Name ProductCategory, "
 				+ "p.Value, "
-				+ "p.Name, "
+				+ "p.Name ProductName, "
 				+ "COALESCE(p.Description, '') Description, "
 				+ "u.UOMSymbol, "
 				+ "ol.PriceEntered, "
@@ -267,21 +268,28 @@ public class LV_COrderLine extends Fragment implements I_DynamicTab {
 				+ "FROM C_Order o "
 				+ "INNER JOIN C_OrderLine ol ON (o.C_Order_ID = ol.C_Order_ID) "
 				+ "INNER JOIN M_Product p ON (ol.M_Product_ID = p.M_Product_ID) "
-				+ "INNER JOIN C_Uom u ON (ol.C_UOM_ID = u.C_UOM_ID) "
-				+ "WHERE o.C_Order_ID = " + p_C_Order_ID;
+				+ "LEFT JOIN M_Product_Category pc ON(pc.M_Product_Category_ID = p.M_Product_Category_ID) "
+				+ "INNER JOIN C_UOM u ON (ol.C_UOM_ID = u.C_UOM_ID) "
+				+ "WHERE o.C_Order_ID = ? "
+				+ "ORDER BY ol.Line";
 		
 		
 		LogM.log(getActivity(), getClass(), Level.FINE, "SQL=" + sql);
-		Cursor rs = conn.querySQL(sql, null);
+		conn.compileQuery(sql);
+		conn.addInt(p_C_Order_ID);
+		//	Get SQL
+		Cursor rs = conn.querySQL();
 		//
-		ArrayList<DisplayProducts> data = new ArrayList<DisplayProducts>();
-		if(rs.moveToFirst()){
+		ArrayList<DisplayOrderLine> data = new ArrayList<DisplayOrderLine>();
+		if(rs != null 
+				&& rs.moveToFirst()){
 			do {
 				int index = 0;
 				//
 				data.add(
-						new DisplayProducts(
-								rs.getInt(index++),	//	Order Line
+						new DisplayOrderLine(
+								rs.getInt(index++),		//	Order Line
+								rs.getString(index++),	//	Product Category
 								rs.getString(index++),	//	Product Value
 								rs.getString(index++),	//	Product Name 
 								rs.getString(index++),	//	Product Description

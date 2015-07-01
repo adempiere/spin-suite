@@ -33,23 +33,23 @@ import android.widget.TextView;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/6/2015, 11:36:50
  *
  */
-public class OrderLineAdapter extends ArrayAdapter<DisplayProducts> {
+public class OrderLineAdapter extends ArrayAdapter<DisplayOrderLine> {
 	
 	/**	Context						*/
-	private Context 					ctx;
+	private Context 						ctx;
 	/**	Data						*/
-	private ArrayList<DisplayProducts> 	data;
+	private ArrayList<DisplayOrderLine> 	data;
 	/**	Decimal Format				*/
-	private DecimalFormat				qtyNumberFormat = null;
+	private DecimalFormat					m_QtyNumberFormat = null;
 	/**	Decimal Format				*/
-	private DecimalFormat				amtNumberFormat = null;
+	private DecimalFormat					m_AmtNumberFormat = null;
 	
-	public OrderLineAdapter(Context ctx, ArrayList<DisplayProducts> data) {
+	public OrderLineAdapter(Context ctx, ArrayList<DisplayOrderLine> data) {
 		super(ctx, R.layout.i_ol_product, data);
 		this.ctx = ctx;
 		this.data = data;
-		qtyNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY);
-		amtNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT);
+		m_QtyNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY);
+		m_AmtNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT);
 	}
 	
 	@SuppressLint("InflateParams")
@@ -62,34 +62,38 @@ public class OrderLineAdapter extends ArrayAdapter<DisplayProducts> {
 		}
 		
 		//	Get Current Data
-		DisplayProducts mi = data.get(position);
+		DisplayOrderLine mi = data.get(position);
 
 		//	Set Product Value
+		TextView tv_ProductCategory = (TextView)item.findViewById(R.id.tv_ProductCategory);
+		tv_ProductCategory.setText(mi.getProductCategory());
+		
+		//	Set Product Value
 		TextView tv_ProductValue = (TextView)item.findViewById(R.id.tv_ProductValue);
-		tv_ProductValue.setText(mi.getPrd_Value());
+		tv_ProductValue.setText(mi.getValue());
 
 		//	Set Product Name
 		TextView tv_ProductName = (TextView)item.findViewById(R.id.tv_ProductName);
-		tv_ProductName.setText(mi.getPrd_Name());
+		tv_ProductName.setText(mi.getName());
 		
 		//	Set Product Description
 		TextView tv_ProductDesc = (TextView)item.findViewById(R.id.tv_ProductDescription);
-		tv_ProductDesc.setText(mi.getPrd_Description());
+		tv_ProductDesc.setText(mi.getDescription());
 		
 		//	Set UOM Symbol
 		TextView tv_UOMSymbol = (TextView)item.findViewById(R.id.tv_UOMSymbol);
-		tv_UOMSymbol.setText(mi.getUom_Symbol());
+		tv_UOMSymbol.setText(mi.getUOM_Symbol());
 		
 		//	Set Price
 		TextView tv_Price = (TextView) item.findViewById(R.id.tv_Price);
-		tv_Price.setText(amtNumberFormat.format(mi.getPriceEntered()));
+		tv_Price.setText(m_AmtNumberFormat.format(mi.getPriceEntered()));
 		
 		//	Set Net Line Amount
 		TextView tv_LineNetAmt = (TextView) item.findViewById(R.id.tv_LineNetAmt);
-		tv_LineNetAmt.setText(amtNumberFormat.format(mi.getLineNetAmt()));
+		tv_LineNetAmt.setText(m_AmtNumberFormat.format(mi.getLineNetAmt()));
 		//	Set Qty
 		TextView tv_Qty = (TextView)item.findViewById(R.id.tv_Qty);
-		tv_Qty.setText(qtyNumberFormat.format(mi.getQtyEntered())); 
+		tv_Qty.setText(m_QtyNumberFormat.format(mi.getQtyEntered())); 
 
 		//	Return
 		return item;
