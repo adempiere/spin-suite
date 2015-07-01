@@ -98,7 +98,7 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 			
 		//	Inflate View
 		if(view == null)
-			view = inflater.inflate(R.layout.i_ol_addproduct, null);
+			view = inflater.inflate(R.layout.i_ol_add_product, null);
 
 		//	Set Quantity to Order
 		EditText et_QtyOrdered = (EditText)view.findViewById(R.id.et_Qty);

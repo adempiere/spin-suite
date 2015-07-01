@@ -56,7 +56,7 @@ import android.widget.ListView;
  * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com 12/6/2015, 0:34:00
  *
  */
-public class LV_COrderLine extends Fragment implements I_DynamicTab {
+public class LV_OrderLine extends Fragment implements I_DynamicTab {
 
 	/**	Parameters	*/
 	private 	TabParameter	 		tabParam				= null;
@@ -74,8 +74,8 @@ public class LV_COrderLine extends Fragment implements I_DynamicTab {
 	 * *** Constructor ***
 	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
 	 */
-	public LV_COrderLine() {
-		// TODO Auto-generated constructor stub
+	public LV_OrderLine() {
+		
 	}
 
 	@Override

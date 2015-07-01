@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
 /*************************************************************************************
  * Product: Spin-Suite (Making your Business Spin)                                   *
@@ -21,37 +20,51 @@
     android:id="@+id/i_OL_product"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:weightSum="4"
     android:orientation="horizontal" >
-
+	<!-- Product Descripton -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_weight="1.7"
         android:orientation="vertical" >
 
+        <TextView
+            android:id="@+id/tv_ProductCategory"
+            style="@style/TextTitleList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/M_Product_Category_ID"
+            android:maxLines="1" />
+        
         <TextView
             android:id="@+id/tv_ProductValue"
             style="@style/TextTitleList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/M_Product_ID"
             android:maxLines="1" />
 
         <TextView
             android:id="@+id/tv_ProductName"
             style="@style/TextTitleList"
+            android:text="@string/Name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/tv_ProductDescription"
-            style="@style/TextTitleList"
+            style="@style/TextItemList"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/Description"/>
 
     </LinearLayout>
-
+	<!-- Labels Qty Description -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="2.3"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -65,13 +78,15 @@
 		        android:layout_height="wrap_content"
 		        android:layout_weight="1"
 		        android:text="@string/UOMSymbol"
-		        android:textColor="@android:color/black" />
+		        style="@style/TextItemList"
+		        android:gravity="end" />
 
 		    <TextView
 		        android:id="@+id/tv_UOMSymbol"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:layout_weight="1"
+		        style="@style/TextItemList"
 		        android:hint="@string/None" />
 
 		</LinearLayout>
@@ -88,8 +103,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:text="@string/Qty"
-                android:textColor="@android:color/black" />
+                android:gravity="end"
+                style="@style/TextItemList"
+                android:text="@string/Qty" />
 
             <EditText
                 android:id="@+id/et_Qty"
@@ -100,9 +116,7 @@
                 android:hint="@string/Zero"
                 android:inputType="phone|numberDecimal"
                 android:selectAllOnFocus="true"
-                android:gravity="end"
-                android:textColor="@android:color/black" />
-
+                android:gravity="end" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
