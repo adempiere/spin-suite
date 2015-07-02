@@ -45,7 +45,7 @@ public class OrderLineAdapter extends ArrayAdapter<DisplayOrderLine> {
 	private DecimalFormat					m_AmtNumberFormat = null;
 	
 	public OrderLineAdapter(Context ctx, ArrayList<DisplayOrderLine> data) {
-		super(ctx, R.layout.i_ol_product, data);
+		super(ctx, R.layout.i_order_line, data);
 		this.ctx = ctx;
 		this.data = data;
 		m_QtyNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY);
@@ -58,7 +58,7 @@ public class OrderLineAdapter extends ArrayAdapter<DisplayOrderLine> {
 		View item = convertView;
 		if(item == null){
 			LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			item = inflater.inflate(R.layout.i_ol_product, null);
+			item = inflater.inflate(R.layout.i_order_line, null);
 		}
 		
 		//	Get Current Data

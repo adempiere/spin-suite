@@ -16,6 +16,7 @@
 package org.spinsuite.sfa.view;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -26,6 +27,7 @@ import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.model.MOrder;
 import org.spinsuite.model.MOrderLine;
+import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
@@ -43,26 +45,28 @@ import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com 12/6/2015, 0:34:00
+ * @contributor Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
-public class LV_OrderLine extends Fragment implements I_DynamicTab {
+public class T_OrderLine extends Fragment implements I_DynamicTab {
 
 	/**	Parameters	*/
 	private 	TabParameter	 		tabParam				= null;
 	private 	ListView				v_list					= null;
-	private 	Button					v_button				= null;
 	private 	View 					m_View					= null;
+	private 	TextView				tv_TotalLines			= null;
+	private 	TextView				tv_GrandTotal			= null;
 	private 	boolean					m_IsLoadOk				= false;
 	private 	boolean 				m_IsParentModifying		= false;
 	private 	boolean 				m_Processed				= false;
@@ -74,7 +78,7 @@ public class LV_OrderLine extends Fragment implements I_DynamicTab {
 	 * *** Constructor ***
 	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
 	 */
-	public LV_OrderLine() {
+	public T_OrderLine() {
 		
 	}
 
@@ -85,34 +89,74 @@ public class LV_OrderLine extends Fragment implements I_DynamicTab {
 			return m_View;
 		
 		//	Re-Load
-		m_View = inflater.inflate(R.layout.t_order_line, container, false);
-		
-		v_button = (Button) m_View.findViewById(R.id.bt_Add);
-		v_button.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				//
-				if(m_IsParentModifying) {
-	    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
-	    			return;
-	    		}
-				Bundle bundle = new Bundle();
-				bundle.putParcelable("TabParam", tabParam);
-				bundle.putInt("C_Order_ID", m_C_Order_ID);
-				
-				Intent intent = new Intent(getActivity(), V_AddOrderLine.class);
-				intent.putExtras(bundle);
-				startActivityForResult(intent, 0);
-			}
-		});
-		
-		
-		v_list = (ListView) m_View.findViewById(R.id.lv_OrderLine);
+		m_View 			= inflater.inflate(R.layout.t_order_line, container, false);
+		v_list 			= (ListView) m_View.findViewById(R.id.lv_OrderLine);
+		tv_TotalLines 	= (TextView) m_View.findViewById(R.id.tv_TotalLines);
+		tv_GrandTotal 	= (TextView) m_View.findViewById(R.id.tv_GrandTotal);
 		//	Event
 		registerForContextMenu(v_list);
 		return m_View;
 		
+	}
+	
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+    	super.onCreate(savedInstanceState);
+    	setHasOptionsMenu(true);
+    }
+	
+	@Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+	    //if(!Env.isCurrentTab(getActivity(), 
+	    	//	tabParam.getActivityNo(), tabParam.getTabNo()))
+	    	//return;
+        //	
+        menu.clear();
+        inflater.inflate(R.menu.dynamic_tab, menu);
+    	//	do it
+        //	Get Items
+        MenuItem mi_Search 	= menu.findItem(R.id.action_search);
+        MenuItem mi_Edit 	= menu.findItem(R.id.action_edit);
+        MenuItem mi_Add	 	= menu.findItem(R.id.action_more);
+        MenuItem mi_More 	= menu.findItem(R.id.action_more);
+        MenuItem mi_Cancel 	= menu.findItem(R.id.action_cancel);
+        MenuItem mi_Save 	= menu.findItem(R.id.action_save);
+        //	Hide
+        mi_Search.setVisible(false);
+        mi_Edit.setVisible(false);
+        mi_More.setVisible(false);
+        mi_Cancel.setVisible(false);
+        mi_Save.setVisible(false);
+    	//	Valid is Loaded
+    	if(!m_IsLoadOk)
+    		return;
+    	//	Visible Add
+    	mi_Add.setEnabled(
+				Env.getTabRecord_ID(getActivity(), tabParam.getActivityNo(), 0)[0] > 0
+				&& !m_Processed);
+    }
+	
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	int itemId = item.getItemId();
+    	switch (itemId) {
+		case R.id.action_add:
+			if(m_IsParentModifying) {
+    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
+    			return false;
+    		}
+			Bundle bundle = new Bundle();
+			bundle.putParcelable("TabParam", tabParam);
+			bundle.putInt("C_Order_ID", m_C_Order_ID);
+			
+			Intent intent = new Intent(getActivity(), V_AddOrderLine.class);
+			intent.putExtras(bundle);
+			startActivityForResult(intent, 0);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 	
 	@Override
@@ -130,8 +174,7 @@ public class LV_OrderLine extends Fragment implements I_DynamicTab {
 					|| !Env.getWindowsAccess(getActivity(), tabParam.getSPS_Window_ID());
 		
 		//	Load View
-		loadView();
-    	
+//		loadView();
     }
 
 	@Override
@@ -180,7 +223,9 @@ public class LV_OrderLine extends Fragment implements I_DynamicTab {
 				updateHeader(oLine.getCtx(),oLine, oLine.getLineNetAmt(),null);
 				try {
 					oLine.deleteEx();
-				} catch (Exception e) {;}
+				} catch (Exception e) {
+					
+				}
 				//	Re-Query
 				load();
 			}
@@ -212,7 +257,9 @@ public class LV_OrderLine extends Fragment implements I_DynamicTab {
 		
 		try {
 			order.saveEx();
-		} catch (Exception e) {;}
+		} catch (Exception e) {
+			
+		}
 	}
 	
 	@Override
@@ -238,7 +285,7 @@ public class LV_OrderLine extends Fragment implements I_DynamicTab {
     	if(!m_IsLoadOk)
     		load();
     	//	Load the view
-    	loadView();
+//    	loadView();
 	}
    
 	/**
@@ -256,6 +303,8 @@ public class LV_OrderLine extends Fragment implements I_DynamicTab {
 		int p_C_Order_ID = Env.getContextAsInt(getActivity(), tabParam.getActivityNo(), "C_Order_ID");
 		//
 		String sql = "SELECT "
+				+ "o.TotalLines, "
+				+ "o.GrandTotal, "
 				+ "ol.C_OrderLine_ID, "
 				+ "pc.Name ProductCategory, "
 				+ "p.Value, "
@@ -279,12 +328,18 @@ public class LV_OrderLine extends Fragment implements I_DynamicTab {
 		conn.addInt(p_C_Order_ID);
 		//	Get SQL
 		Cursor rs = conn.querySQL();
-		//
+		//	
+		BigDecimal m_TotalLines = Env.ZERO;
+		BigDecimal m_GrandTotal = Env.ZERO;
+		//	
 		ArrayList<DisplayOrderLine> data = new ArrayList<DisplayOrderLine>();
 		if(rs != null 
 				&& rs.moveToFirst()){
+			int index = 0;
+			m_TotalLines = new BigDecimal(rs.getDouble(index++));
+			m_GrandTotal = new BigDecimal(rs.getDouble(index++));
 			do {
-				int index = 0;
+				index = 2;
 				//
 				data.add(
 						new DisplayOrderLine(
@@ -301,28 +356,21 @@ public class LV_OrderLine extends Fragment implements I_DynamicTab {
 						);
 				//	
 				index = 0;
-			}while(rs.moveToNext());
+			} while(rs.moveToNext());
 			//	Set Load Ok
 			m_IsLoadOk = true;
 		}
 		//	Close Connection
 		DB.closeConnection(conn);
+		
+		DecimalFormat format = DisplayType.getNumberFormat(getActivity(), DisplayType.AMOUNT);
+		//	Set Totals
+		tv_TotalLines.setText(format.format(m_TotalLines));
+		tv_GrandTotal.setText(format.format(m_GrandTotal));
 		//	Set Adapter
 		OrderLineAdapter p_Adapter = new OrderLineAdapter(getActivity(), data);
-		p_Adapter.setDropDownViewResource(R.layout.i_ol_product);
+		p_Adapter.setDropDownViewResource(R.layout.i_ol_add_product);
 		v_list.setAdapter(p_Adapter);
-	}
-	
-	/**
-	 * Load Data
-	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return void
-	 */
-	private void loadView() {
-		//	
-		v_button.setEnabled(
-				Env.getTabRecord_ID(getActivity(), tabParam.getActivityNo(), 0)[0] > 0
-				&& !m_Processed);
 	}
 	
 	@Override

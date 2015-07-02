@@ -97,7 +97,7 @@ public class V_AddOrderLine extends Activity {
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		super.setContentView(R.layout.v_add_product);
+		super.setContentView(R.layout.v_ol_add_product);
 		//	Get Field
     	Bundle bundle = getIntent().getExtras();
 		if(bundle != null) {
@@ -537,7 +537,7 @@ public class V_AddOrderLine extends Activity {
 			//	Just delete by line
 			DB.executeUpdate(v_activity, sqlDelete.toString(), m_C_Order_ID, false);
 			//	Log
-			LogM.log(v_activity, LV_OrderLine.class, Level.FINE, 
+			LogM.log(v_activity, T_OrderLine.class, Level.FINE, 
 					"SQL Delete Order Line =" + sqlDelete.toString());
 		}
 
