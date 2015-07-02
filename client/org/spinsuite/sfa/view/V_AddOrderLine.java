@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import org.spinsuite.adapters.SP_SearchAdapter;
+import org.spinsuite.adapters.LP_SearchAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.model.I_C_OrderLine;
@@ -73,7 +73,7 @@ public class V_AddOrderLine extends Activity {
 	/**	Activity					*/
 	private Activity				v_activity = null;
 	/**	Adapter						*/
-	private SP_SearchAdapter 		m_SP_SearchAdapter = null;
+	private LP_SearchAdapter 		m_SP_SearchAdapter = null;
 	/**	Criteria					*/
 	private FilterValue				m_criteria = null;
 	/**	Parameter					*/
@@ -109,6 +109,8 @@ public class V_AddOrderLine extends Activity {
 		
 		ll_ConfigSearch = (LinearLayout) v_activity.findViewById(R.id.ll_ConfigSearch);
 		lv_Products = (ListView) v_activity.findViewById(R.id.lv_Products);
+		lv_Products.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
+		lv_Products.setStackFromBottom(true);
 		//	
 		loadConfig();
 		//
@@ -126,7 +128,7 @@ public class V_AddOrderLine extends Activity {
 			
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				lv_Products.requestFocus();
+				//	
 			}
 			
 			@Override
@@ -299,7 +301,7 @@ public class V_AddOrderLine extends Activity {
 	 */
 	private void saveResult() {
 		//	Set Result
-		SP_SearchAdapter adapter = (SP_SearchAdapter) lv_Products.getAdapter();
+		LP_SearchAdapter adapter = (LP_SearchAdapter) lv_Products.getAdapter();
 		selectedData = adapter.getSelectedData();
 		//	Load Task
 		new SaveDataTask().execute();
@@ -389,7 +391,7 @@ public class V_AddOrderLine extends Activity {
 		 */
 	    protected boolean loadView() {
 	    	//	Set Adapter
-			m_SP_SearchAdapter = new SP_SearchAdapter(getApplicationContext(), data);
+			m_SP_SearchAdapter = new LP_SearchAdapter(getApplicationContext(), data);
 			lv_Products.setAdapter(m_SP_SearchAdapter);
 			//	
 			return true;

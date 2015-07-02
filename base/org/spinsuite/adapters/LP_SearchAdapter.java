@@ -37,6 +37,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -45,7 +46,7 @@ import android.widget.TextView.OnEditorActionListener;
  * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com 15/6/2015, 15:42:32
  *
  */
-public class SP_SearchAdapter extends BaseAdapter implements Filterable {
+public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 
 	/**
 	 * 
@@ -54,7 +55,7 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 	 * @param ctx
 	 * @param data
 	 */
-	public SP_SearchAdapter(Context ctx, ArrayList<SP_DisplayRecordItem> data) {
+	public LP_SearchAdapter(Context ctx, ArrayList<SP_DisplayRecordItem> data) {
 		this.data = data;
 		inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inputMethod = ((InputMethodManager)ctx.getSystemService(Context.INPUT_METHOD_SERVICE));
@@ -68,7 +69,7 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
 	 */
-	public SP_SearchAdapter(Context ctx) {
+	public LP_SearchAdapter(Context ctx) {
 		data = new ArrayList<SP_DisplayRecordItem>();
 		inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inputMethod = ((InputMethodManager)ctx.getSystemService(Context.INPUT_METHOD_SERVICE));
@@ -84,9 +85,8 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 	private LayoutInflater 						inflater = null;
 	/**	Input Method					*/
 	private InputMethodManager					inputMethod = null;
-	
-	/**	Decimal Format				*/
-	private DecimalFormat				numberFormat = null;
+	/**	Decimal Format					*/
+	private DecimalFormat						numberFormat = null;
 	
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {		
@@ -102,6 +102,9 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 
 		//	Set Quantity to Order
 		EditText et_QtyOrdered = (EditText)view.findViewById(R.id.et_Qty);
+//		LinearLayout ll_ol_product_description = (LinearLayout) view.findViewById(R.id.ll_ol_product_description);
+		LinearLayout ll_ol_qty_description = (LinearLayout) view.findViewById(R.id.ll_ol_qty_description);
+		
 		//	Instance Holder
 		holderQtyOrdered.setText(String.valueOf(recordItem.getQty()));
 		holderQtyOrdered.setEditText(et_QtyOrdered);
@@ -115,6 +118,9 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 				} else {
 					holderQtyOrdered.getEditText().selectAll();
 				}
+				//	
+				inputMethod.toggleSoftInput(InputMethodManager.SHOW_FORCED, 
+						InputMethodManager.HIDE_IMPLICIT_ONLY);
 			}
 		});
 		
@@ -131,14 +137,11 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 		    }
 		});
 		//	Add Listener
-		view.setOnClickListener(new OnClickListener() {
+		ll_ol_qty_description.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				holderQtyOrdered.getEditText().requestFocus();
 				holderQtyOrdered.getEditText().selectAll();
-				//	Show Keyboard
-				inputMethod.toggleSoftInput(InputMethodManager.SHOW_FORCED, 
-						InputMethodManager.HIDE_IMPLICIT_ONLY);
 			}
 		});
 	

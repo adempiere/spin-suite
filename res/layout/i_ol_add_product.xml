@@ -19,20 +19,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/i_OL_product"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:weightSum="4"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:baselineAligned="false" >
 	<!-- Product Descripton -->
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll_ol_product_description"
         android:layout_weight="1.7"
         android:orientation="vertical" >
 
         <TextView
             android:id="@+id/tv_ProductCategory"
             style="@style/TextTitleList"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/M_Product_Category_ID"
             android:maxLines="1" />
@@ -40,7 +42,7 @@
         <TextView
             android:id="@+id/tv_ProductValue"
             style="@style/TextTitleList"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/M_Product_ID"
             android:maxLines="1" />
@@ -49,13 +51,13 @@
             android:id="@+id/tv_ProductName"
             style="@style/TextTitleList"
             android:text="@string/Name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/tv_ProductDescription"
             style="@style/TextItemList"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/Description"/>
 
@@ -63,13 +65,14 @@
 	<!-- Labels Qty Description -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll_ol_qty_description"
         android:layout_weight="2.3"
         android:orientation="vertical" >
 
         <LinearLayout
 		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
+		    android:layout_height="match_parent"
 		    android:orientation="horizontal" >
 
 		    <TextView
@@ -80,22 +83,22 @@
 		        android:text="@string/UOMSymbol"
 		        style="@style/TextItemList"
 		        android:gravity="end" />
-
+		    
 		    <TextView
 		        android:id="@+id/tv_UOMSymbol"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:layout_weight="1"
 		        style="@style/TextItemList"
+		        android:gravity="end"
 		        android:hint="@string/None" />
-
 		</LinearLayout>
 		
         <!-- Qty -->
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal" >
 
             <TextView
