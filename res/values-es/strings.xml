@@ -22,7 +22,7 @@
 	<string name="tt_About_Credits">Créditos</string>
 	
 	<!-- Elements  -->
-    <string name="app_name">Spin-Suite</string>
+    <string name="app_name">Spin-Suite-SFA</string>
     <string name="Value">C.I. / RIF</string>
     <string name="Name">Nombre</string>
     <string name="Name2">Razón Social</string>
@@ -142,6 +142,7 @@
 	<string name="V_DifferenceAmt">Diferencia</string>
 	<string name="V_ForDepositAmt">Pendiente (Depósito)</string>
 	<string name="C_Tax_ID">Impuesto</string>
+	<string name="Selected">Seleccionados</string>
 	
 	<string name="Language">Idioma</string>
 	
@@ -175,7 +176,7 @@
 	<string name="app_phone3_erp" >+58(412)1741773</string>
 	<string name="app_phone4_erp" >+58(424)5484908</string>
 	<string name="app_phone5_erp" >+50768437413</string>
-	
+	<string name="M_Product_ID">Producto</string>
 	<!-- Synchronization -->
 	<string name="Sync_InitSyncManual">Sincronización Manual</string>
 	<string name="Sync_SynchronzeButtom">Sincronizar</string>
