@@ -22,7 +22,7 @@
 	<string name="tt_About_Credits">Credits</string>
     
 	<!-- Elements -->
-    <string name="app_name">Spin-Suite-SFA</string>
+    <string name="app_name">Spin-Suite</string>
     <string name="None"></string>
     <string name="Value">Search Key</string>
 	<string name="Name">Name</string>
