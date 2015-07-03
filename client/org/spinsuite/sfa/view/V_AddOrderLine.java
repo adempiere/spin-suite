@@ -17,28 +17,19 @@ package org.spinsuite.sfa.view;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 
-import org.spinsuite.adapters.LP_SearchAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.model.I_C_OrderLine;
-import org.spinsuite.model.I_M_Product;
-import org.spinsuite.model.MOrder;
 import org.spinsuite.model.MOrderLine;
-import org.spinsuite.model.MOrderTax;
-import org.spinsuite.util.DisplayType;
-import org.spinsuite.util.Env;
-import org.spinsuite.util.FilterValue;
+import org.spinsuite.sfa.adapters.LP_SearchAdapter;
+import org.spinsuite.sfa.util.DisplayListProduct;
 import org.spinsuite.util.LogM;
-import org.spinsuite.util.SP_DisplayRecordItem;
-import org.spinsuite.util.TabParameter;
-import org.spinsuite.view.lookup.GridField;
-import org.spinsuite.view.lookup.InfoField;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -56,42 +47,27 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 
 /**
  * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com 12/6/2015, 12:17:53
+ * @contributor Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class V_AddOrderLine extends Activity {
-
-	/**	Main Layout					*/
-	private LinearLayout			ll_ConfigSearch = null;
+	
 	/**	List View					*/
 	private ListView				lv_Products = null;
 	/**	Activity					*/
 	private Activity				v_activity = null;
 	/**	Adapter						*/
 	private LP_SearchAdapter 		m_SP_SearchAdapter = null;
-	/**	Criteria					*/
-	private FilterValue				m_criteria = null;
-	/**	Parameter					*/
-	private LayoutParams			v_param	= null;
-	/**	View Weight					*/
-	private static final float 		WEIGHT = 1;
-	/**	Lookup of Farming Stage		*/
-	private GridField	 			lookupProductCategory = null; 
-	/**	Tab Parameter				*/
-	private TabParameter	 		tabParam = null;
-	/**	Old Value Farming Stage		*/
-	private int						m_OldValueProductCategory_ID = 0;
 	/**	View Search					*/
 	private View 					searchView = null;
 	/**	Technical Form				*/
 	private int						m_C_Order_ID = 0;
 	/**	Data Result					*/
-	private ArrayList<SP_DisplayRecordItem>	selectedData = null;
+	private ArrayList<DisplayListProduct>	selectedData = null;
 	
 	
 	@Override
@@ -101,18 +77,14 @@ public class V_AddOrderLine extends Activity {
 		//	Get Field
     	Bundle bundle = getIntent().getExtras();
 		if(bundle != null) {
-			tabParam = (TabParameter)bundle.getParcelable("TabParam");
 			m_C_Order_ID = bundle.getInt("C_Order_ID");
 		}
 		//	Set Activity
 		v_activity = this;
 		
-		ll_ConfigSearch = (LinearLayout) v_activity.findViewById(R.id.ll_ConfigSearch);
 		lv_Products = (ListView) v_activity.findViewById(R.id.lv_Products);
 		lv_Products.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
 		lv_Products.setStackFromBottom(true);
-		//	
-		loadConfig();
 		//
 		new LoadViewTask().execute();
 		//	Listener
@@ -138,83 +110,6 @@ public class V_AddOrderLine extends Activity {
 			}
 		});
 	}
-	
-
-	/**
-	 * Load Config
-	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return void
-	 */
-	private void loadConfig() {
-		//	Set Parameter
-		v_param = new LayoutParams(LayoutParams.MATCH_PARENT, 
-				LayoutParams.MATCH_PARENT, WEIGHT);
-		//	Add Fields
-		addView();
-		//	Hide
-		ll_ConfigSearch.setVisibility(LinearLayout.GONE);
-	}
-	
-	/**
-	 * Add View to Config Panel
-	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return void
-	 */
-	private void addView() {
-		//	Product Category
-		lookupProductCategory = GridField.createLookup(this,  
-					I_M_Product.Table_Name, 
-					I_M_Product.COLUMNNAME_M_Product_Category_ID,
-					tabParam);
-
-		//	is Filled
-		if(lookupProductCategory != null) {
-			ll_ConfigSearch.addView(lookupProductCategory, v_param);
-			
-		}
-    }
-	
-	/**
-	 * Add Criteria Query
-	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return void
-	 */
-	private void addCriteriaQuery() {
-		m_criteria = new FilterValue();
-    	//	Get Values
-		StringBuffer sqlWhere = new StringBuffer();
-    	//	Only Filled
-		if(!lookupProductCategory.isEmpty()) {
-			InfoField field = lookupProductCategory.getField();
-			//	Set to Model
-			if(sqlWhere.length() > 0)
-				sqlWhere.append(" AND ");
-			//	Add Criteria Column Filter
-			sqlWhere.append("p.")
-					.append(field.ColumnName)
-					.append(" = ? ");
-			//	Add Value
-			m_criteria.addValue(DisplayType.getJDBC_Value( field.DisplayType, lookupProductCategory.getValue()));
-		}
-    	//	Add SQL
-    	m_criteria.setWhereClause(sqlWhere.toString());
-	}
-	
-	/**
-	 * Search Record
-	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return void
-	 */
-	private void search() {
-		//	Add Criteria
-		addCriteriaQuery();
-		//	Load New
-		if(m_OldValueProductCategory_ID != lookupProductCategory.getValueAsInt()) {
-			//	Set New Criteria
-			new LoadViewTask().execute();
-		}
-	}
-	
 	  
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -224,6 +119,8 @@ public class V_AddOrderLine extends Activity {
 		inflater.inflate(R.menu.search_action_ok, menu);
 		//	Get Item
 		MenuItem item = menu.findItem(R.id.action_search);
+		MenuItem mi_Config = menu.findItem(R.id.action_config);
+		mi_Config.setVisible(false);
 		//	Search View
 		searchView = SearchViewCompat.newSearchView(this);
 		if (searchView != null) {
@@ -266,22 +163,12 @@ public class V_AddOrderLine extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int itemId = item.getItemId();
-		if(itemId == R.id.action_close) {
+		switch (itemId) {
+		case R.id.action_close:
 			setResult(Activity.RESULT_CANCELED, getIntent());
 			finish();
 			return true;
-		} else if (itemId == R.id.action_config) {
-			//	Show
-			if(ll_ConfigSearch.getVisibility() == LinearLayout.GONE) {
-				ll_ConfigSearch.setVisibility(LinearLayout.VISIBLE);
-				m_OldValueProductCategory_ID = lookupProductCategory.getValueAsInt();
-			} else {
-				ll_ConfigSearch.setVisibility(LinearLayout.GONE);
-				//	Search
-				search();
-			}
-			return true;
-		} else if(itemId == R.id.action_ok) {
+		case R.id.action_ok:
 			//	Hide Keyboard
 			getWindow().setSoftInputMode(
 				      WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -289,7 +176,9 @@ public class V_AddOrderLine extends Activity {
 			lv_Products.requestFocus();
 			saveResult();
 			return true;
-		} 
+		default:
+			break;
+		}
 		//	
 		return super.onOptionsItemSelected(item);
 	}	
@@ -308,32 +197,6 @@ public class V_AddOrderLine extends Activity {
 	}
 	
 	/**
-	 * Get SQL from Parameters
-	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param criteria
-	 * @return
-	 * @return String
-	 */
-	private String getSQL(FilterValue criteria) {
-		
-		StringBuffer sql = new StringBuffer();
-		
-		sql.append("SELECT p.M_Product_ID, p.Value, p.Name, COALESCE(p.Description,'') Description, uo.UOMSymbol, "
-				+ "CASE WHEN p.M_Product_ID = oll.M_Product_ID THEN oll.QtyEntered ELSE NULL END QtyEntered, oll.C_OrderLine_ID "
-				+ "FROM M_Product p "
-				+ "INNER JOIN C_UOM uo ON (p.C_UOM_ID = uo.C_UOM_ID) "
-				+ "LEFT JOIN C_OrderLine oll ON (oll.M_Product_ID = p.M_Product_ID AND oll.C_Order_ID = " + m_C_Order_ID + ")");
-		
-		//	Add Criteria
-		if(criteria != null
-				&& criteria.getWhereClause() != null
-				&& criteria.getWhereClause().length() > 0)
-			sql.append(" AND ").append(criteria.getWhereClause());
-		//	
-		return sql.toString();
-	}
-	
-	/**
 	 * Include Class Thread with load Order Line
 	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com 15/6/2015, 15:36:36
 	 *
@@ -343,7 +206,7 @@ public class V_AddOrderLine extends Activity {
 		/**	Progress Bar			*/
 		private ProgressDialog 					v_PDialog;
 		/**	Data					*/
-		private ArrayList<SP_DisplayRecordItem> data = null;
+		private ArrayList<DisplayListProduct> 	data = null;
 		
 		/**
 		 * Init Values
@@ -352,7 +215,7 @@ public class V_AddOrderLine extends Activity {
 		 */
 		private void init() {
 	    	//	Load Table Info
-			data = new ArrayList<SP_DisplayRecordItem>();
+			data = new ArrayList<DisplayListProduct>();
 			//	View
 		}
 		
@@ -409,26 +272,73 @@ public class V_AddOrderLine extends Activity {
 				DB.loadConnection(conn, DB.READ_ONLY);
 				Cursor rs = null;
 				//	Query
-				String[] values = null;
-				if(m_criteria != null) {
-					values = m_criteria.getValues();
-				}	
-				//	
-				rs = conn.querySQL(getSQL(m_criteria), values);
+				String sql = new String("SELECT pc.M_Product_Category_ID, "
+						+ "pc.Name, "
+						+ "p.M_Product_ID, "
+						+ "p.Value, "
+						+ "p.Name, "
+						+ "COALESCE(p.Description,'') Description, "
+						+ "uo.C_UOM_ID, "
+						+ "uo.UOMSymbol, "
+						+ "tc.C_TaxCategory_ID, "
+						+ "tc.Name, "
+						+ "pp.PriceList, "
+						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN ol.QtyEntered ELSE NULL END QtyEntered, "
+						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN ol.QtyOrdered ELSE NULL END QtyOrdered, "
+						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN ol.PriceEntered ELSE pp.PriceList END PriceEntered, "
+						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN ol.LineNetAmt ELSE NULL END LineNetAmt, "
+						+ "plv.M_PriceList_ID, "
+						+ "plv.M_PriceList_Version_ID, "
+						+ "MAX(plv.ValidFrom) ValidFrom, "
+						+ "pl.C_Currency_ID, "
+						+ "cu.CurSymbol, "
+						+ "ol.C_OrderLine_ID "
+						+ "FROM C_Order o "
+						+ "INNER JOIN M_PriceList pl ON(pl.M_PriceList_ID = o.M_PriceList_ID) "
+						+ "INNER JOIN M_PriceList_Version plv ON(plv.M_PriceList_ID = pl.M_PriceList_ID) "
+						+ "INNER JOIN M_ProductPrice pp ON(pp.M_PriceList_Version_ID = plv.M_PriceList_Version_ID) "
+						+ "INNER JOIN M_Product p ON(p.M_Product_ID = pp.M_Product_ID) "
+						+ "INNER JOIN M_Product_Category pc ON(pc.M_Product_Category_ID = p.M_Product_Category_ID) "
+						+ "INNER JOIN C_TaxCategory tc ON(tc.C_TaxCategory_ID = p.C_TaxCategory_ID) "
+						+ "INNER JOIN C_Currency cu ON(cu.C_Currency_ID = pl.C_Currency_ID)"
+						+ "INNER JOIN C_UOM uo ON (p.C_UOM_ID = uo.C_UOM_ID) "
+						+ "LEFT JOIN C_OrderLine ol ON (ol.C_Order_ID = o.C_Order_ID AND ol.M_Product_ID = p.M_Product_ID) "
+						+ "WHERE pl.M_PriceList_ID = ? "
+						+ "GROUP BY p.M_Product_ID, p.Value, p.Name "
+						+ "HAVING MAX(plv.ValidFrom) <= o.DateOrdered");
+				//	Compile Query
+				conn.compileQuery(sql);
+				conn.addInt(m_C_Order_ID);
+				//	Query
+				rs = conn.querySQL();
 				//	
 				if(rs.moveToFirst()) {
 					//	Loop
 					do{
 						int index = 0;
 						data.add(
-									new SP_DisplayRecordItem(
-											rs.getInt(index++),	//	Product ID
-											rs.getString(index++),	//	Product Value
-											rs.getString(index++),	//	Product Name
-											rs.getString(index++),	//	Product Description
-											rs.getString(index++),	//	UOM Symbol
-											new BigDecimal(rs.getDouble(index++)),
-											rs.getInt(index++)
+									new DisplayListProduct(
+											rs.getInt(index++),						//	Product Category ID
+											rs.getString(index++), 					//	Product Category Value
+											rs.getInt(index++),						//	Product ID
+											rs.getString(index++),					//	Product Value
+											rs.getString(index++),					//	Product Name
+											rs.getString(index++),					//	Product Description
+											rs.getInt(index++),						//	UOM ID
+											rs.getString(index++),					//	UOM Symbol
+											rs.getInt(index++),						//	Tax Category ID
+											rs.getString(index++),					//	Tax Category Value
+											new BigDecimal(rs.getDouble(index++)),	//	Price List
+											new BigDecimal(rs.getDouble(index++)),	//	Quantity Entered
+											new BigDecimal(rs.getDouble(index++)),	//	Quantity Ordered
+											new BigDecimal(rs.getDouble(index++)),	//	Price Entered
+											new BigDecimal(rs.getDouble(index++)),	//	Line Net Amount
+											rs.getInt(index++),						//	Price List ID
+											rs.getInt(index++),						//	Price List Version ID
+											new Date(rs.getLong(index++)),			//	Valid From
+											rs.getInt(index++),						//	Currency ID
+											rs.getString(index++),					//	Currency Value
+											rs.getInt(index++)						//	Order Line ID
 										)
 								);
 					}while(rs.moveToNext());
@@ -489,8 +399,8 @@ public class V_AddOrderLine extends Activity {
 		 * @throws Exception
 		 * @return void
 		 */
-		private void saveData(ArrayList<SP_DisplayRecordItem> data) throws Exception {
-			BigDecimal p_TotalLines = Env.ZERO;
+		private void saveData(ArrayList<DisplayListProduct> data) throws Exception {
+//			BigDecimal p_TotalLines = Env.ZERO;
 			//	Valid Null value
 			if(data == null)
 				return;
@@ -508,14 +418,14 @@ public class V_AddOrderLine extends Activity {
 			//	
 			boolean first = true;
 			//	
-			for(SP_DisplayRecordItem item : data) {
+			for(DisplayListProduct item : data) {
 				//	Add Items
-				p_C_OrderLine_ID = item.getP_C_OrderLine_ID();
+				p_C_OrderLine_ID = item.getC_OrderLine_ID();
 				MOrderLine oLine = new MOrderLine(v_activity, p_C_OrderLine_ID, null);
 				oLine.setC_Order_ID(m_C_Order_ID);
-				oLine.setM_Product_ID(item.getProduct_ID());
-				oLine.setQtyEntered(item.getQty());
-				oLine.setQtyOrdered(item.getQty());
+				oLine.setM_Product_ID(item.getM_Product_ID());
+				oLine.setQtyEntered(item.getQtyEntered());
+				oLine.setQtyOrdered(item.getQtyEntered());
 				oLine.saveEx();
 				//	Add IDs
 				if(!first) {
@@ -539,76 +449,6 @@ public class V_AddOrderLine extends Activity {
 			//	Log
 			LogM.log(v_activity, T_OrderLine.class, Level.FINE, 
 					"SQL Delete Order Line =" + sqlDelete.toString());
-		}
-
-		/**
-		 * Update Order Header
-		 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
-		 * @param ctx
-		 * @param oLine
-		 * @param p_TotalLines
-		 * @param conn
-		 * @return void
-		 */
-		private void updateHeader(Context ctx, MOrderLine oLine,BigDecimal p_TotalLines, DB conn) {
-			MOrder order = new MOrder(ctx, oLine.getC_Order_ID(), conn);
-			updateOrderTax(order, oLine, true);
-			order.setTotalLines(p_TotalLines);
-			if(isTaxIncluded(ctx, conn, oLine.getC_Order_ID()))
-				order.setGrandTotal(p_TotalLines);
-			else {
-				String sql = "SELECT COALESCE(SUM(it.TaxAmt),0) "
-						+ "FROM C_OrderTax it "
-						+ "WHERE it.C_Order_ID = " + order.getC_Order_ID();
-				BigDecimal taxAmt = new BigDecimal(DB.getSQLValueString(ctx, sql));
-				order.setGrandTotal(p_TotalLines.add(taxAmt));
-			}
-			
-			try {
-				order.saveEx();
-			} catch (Exception e) {;}
-		}
-		
-		/**
-		 *	Is Tax Included in Amount
-		 *  @param conn
-		 *	@return true if tax calculated
-		 */
-		public boolean isTaxIncluded(Context ctx, DB conn, int p_C_Order_ID) {
-			String m_IsTaxIncluded = DB.getSQLValueString(ctx,
-					"SELECT pl.IsTaxIncluded "
-					+ "FROM C_Order o "
-					+ "INNER JOIN M_PriceList pl ON(pl.M_PriceList_ID = o.M_PriceList_ID) "
-					+ "WHERE o.C_Order_ID = ?",
-					conn, 
-					String.valueOf(p_C_Order_ID));
-			//	Verify if Tax Include
-			return m_IsTaxIncluded != null && m_IsTaxIncluded.equals("Y");
-		}	//	isTaxIncluded
-		
-		/**
-		 * Recalculate order tax
-		 * @param oldTax true if the old C_Tax_ID should be used
-		 * @return true if success, false otherwise
-		 * 
-		 * @author teo_sarca [ 1583825 ]
-		 */
-		private boolean updateOrderTax(MOrder order, MOrderLine orderLine, boolean oldTax) {
-			MOrderTax tax = MOrderTax.get (order.getCtx(), orderLine, order.getPrecision(), oldTax, null);
-			if (tax != null) {
-				if (!tax.calculateTaxFromLines())
-					return false;
-				if (tax.getTaxAmt().signum() != 0) {
-					if (!tax.save())
-						return false;
-				}
-				else {
-					if (!tax.isNew() 
-							&& !tax.delete())
-						return false;
-				}
-			}
-			return true;
 		}
 	}
 	

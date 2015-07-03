@@ -622,7 +622,8 @@ public final class DisplayType
 	 */
 	public static Object parseValue (Object value, int displayType, String columnName) {
 		//	Valid Null
-		if(value == null)
+		if(value == null
+				|| String.valueOf(value).length() == 0)
 			return null;
 		//	
 		if (isText(displayType) 
@@ -824,6 +825,35 @@ public final class DisplayType
 	 */
 	public static BigDecimal getNumber(String value) {
 		return getNumber(null, value, AMOUNT);
+	}
+	
+	/**
+	 * Get Number As Double and valid null
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Number
+	 * @return
+	 * @return double
+	 */
+	public static double getNumberAsDouble(BigDecimal p_Number) {
+		if(p_Number == null)
+			return 0.0;
+		//	Default
+		return p_Number.doubleValue();
+	}
+	
+	
+	/**
+	 * Get Date As Long, if is null then retun (-1)
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Date
+	 * @return
+	 * @return long
+	 */
+	public static long getDataAsLong(Date p_Date) {
+		if(p_Date == null)
+			return -1;
+		//	Default
+		return p_Date.getTime();
 	}
 	
 	

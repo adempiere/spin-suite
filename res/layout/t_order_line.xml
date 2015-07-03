@@ -34,7 +34,9 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
+			android:maxLines="1"
 			android:text="@string/TotalLines"
+			android:padding="@dimen/view_generic_padding"
 			style="@style/TextItemList" />
 	
 		<TextView
@@ -42,8 +44,10 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
+			android:maxLines="1"
 			style="@style/TextItemList"
 			android:gravity="end"
+			android:padding="@dimen/view_generic_padding"
 			android:text="@string/Zero" />
 			
 		<TextView
@@ -51,7 +55,9 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
+			android:maxLines="1"
 			android:text="@string/GrandTotal"
+			android:padding="@dimen/view_generic_padding"
 			style="@style/TextItemList" />
 	
 		<TextView
@@ -59,7 +65,9 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
+			android:maxLines="1"
 			style="@style/TextItemList"
+			android:padding="@dimen/view_generic_padding"
 			android:gravity="end"
 			android:text="@string/Zero" />
 	</LinearLayout>    

@@ -13,12 +13,13 @@
  * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
-package org.spinsuite.adapters;
+package org.spinsuite.sfa.adapters;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import org.spinsuite.base.R;
+import org.spinsuite.sfa.util.DisplayOrderLine;
 import org.spinsuite.util.DisplayType;
 
 import android.annotation.SuppressLint;

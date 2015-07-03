@@ -36,12 +36,14 @@ public class TabHandler {
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 23/08/2014, 14:56:24
      * @param activity
      * @param tag
+     * @param p_Title
      * @param clz
      * @param args
      */
-    public TabHandler(FragmentActivity activity, String tag, Class<?> clz, TabParameter tabParameter, Bundle args) {
+    public TabHandler(FragmentActivity activity, String tag, String p_Title, Class<?> clz, TabParameter tabParameter, Bundle args) {
         m_Activity = activity;
         m_Tag = tag;
+        m_Title = p_Title;
         m_Class = clz;
         m_Args = args;
         m_Fragment = m_Activity.getSupportFragmentManager().findFragmentByTag(m_Tag);
@@ -56,6 +58,8 @@ public class TabHandler {
     private 		Bundle 				m_Args;
     /**	Tag					*/
     private final 	String 				m_Tag;
+    /**	Title				*/
+    private final 	String 				m_Title;
     /**	Class				*/
     private final 	Class<?> 			m_Class;
     /**	Tab Parameter		*/
@@ -89,6 +93,16 @@ public class TabHandler {
      */
     public String getTag() {
     	return m_Tag;
+    }
+    
+    /**
+     * Get Title
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return
+     * @return String
+     */
+    public String getTitle() {
+    	return m_Title;
     }
     
     /**

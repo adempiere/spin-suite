@@ -20,18 +20,19 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import org.spinsuite.adapters.DisplayOrderLine;
-import org.spinsuite.adapters.OrderLineAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.model.MOrder;
 import org.spinsuite.model.MOrderLine;
+import org.spinsuite.sfa.adapters.OrderLineAdapter;
+import org.spinsuite.sfa.util.DisplayOrderLine;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.TabParameter;
+import org.spinsuite.view.TV_DynamicActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
@@ -67,11 +68,13 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 	private 	View 					m_View					= null;
 	private 	TextView				tv_TotalLines			= null;
 	private 	TextView				tv_GrandTotal			= null;
+	private 	TextView				tv_lb_TotalLines		= null;
+	private 	TextView				tv_lb_GrandTotal		= null;
 	private 	boolean					m_IsLoadOk				= false;
 	private 	boolean 				m_IsParentModifying		= false;
 	private 	boolean 				m_Processed				= false;
 	private		int 					m_C_Order_ID			= 0;
-	
+	private		TV_DynamicActivity		m_Callback				= null;
 	private static final int 			O_DELETE 				= 1;
 	
 	/**
@@ -89,10 +92,12 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 			return m_View;
 		
 		//	Re-Load
-		m_View 			= inflater.inflate(R.layout.t_order_line, container, false);
-		v_list 			= (ListView) m_View.findViewById(R.id.lv_OrderLine);
-		tv_TotalLines 	= (TextView) m_View.findViewById(R.id.tv_TotalLines);
-		tv_GrandTotal 	= (TextView) m_View.findViewById(R.id.tv_GrandTotal);
+		m_View 				= inflater.inflate(R.layout.t_order_line, container, false);
+		v_list 				= (ListView) m_View.findViewById(R.id.lv_OrderLine);
+		tv_TotalLines 		= (TextView) m_View.findViewById(R.id.tv_TotalLines);
+		tv_GrandTotal 		= (TextView) m_View.findViewById(R.id.tv_GrandTotal);
+		tv_lb_TotalLines	= (TextView) m_View.findViewById(R.id.tv_lb_TotalLines);
+		tv_lb_GrandTotal	= (TextView) m_View.findViewById(R.id.tv_lb_GrandTotal);
 		//	Event
 		registerForContextMenu(v_list);
 		return m_View;
@@ -104,6 +109,12 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
     	super.onCreate(savedInstanceState);
     	setHasOptionsMenu(true);
     }
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		m_Callback = (TV_DynamicActivity) activity;
+	}
 	
 	@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -164,17 +175,12 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
     	super.onResume();
     	//	Get Sales Order Identifier
 		m_C_Order_ID = Env.getContextAsInt(getActivity(), tabParam.getActivityNo(), "C_Order_ID");
-
 		//	Load Data
 		load(); 
-
 		//	Set Processed
 		m_Processed = 
 				Env.getContextAsBoolean(getActivity(), tabParam.getActivityNo(), "Processed") 
 					|| !Env.getWindowsAccess(getActivity(), tabParam.getSPS_Window_ID());
-		
-		//	Load View
-//		loadView();
     }
 
 	@Override
@@ -224,7 +230,7 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 				try {
 					oLine.deleteEx();
 				} catch (Exception e) {
-					
+					LogM.log(getActivity(), getClass(), Level.SEVERE, "Delete Ordel Line Error", e);
 				}
 				//	Re-Query
 				load();
@@ -254,11 +260,11 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 			BigDecimal taxAmt = new BigDecimal(DB.getSQLValueString(ctx, sql));
 			order.setGrandTotal(order.getGrandTotal().subtract(p_TotalLines.add(taxAmt)));
 		}
-		
+		//	Save
 		try {
 			order.saveEx();
 		} catch (Exception e) {
-			
+			LogM.log(getActivity(), getClass(), Level.SEVERE, "Update Order Error", e);
 		}
 	}
 	
@@ -284,8 +290,6 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 		//	Load Data
     	if(!m_IsLoadOk)
     		load();
-    	//	Load the view
-//    	loadView();
 	}
    
 	/**
@@ -305,6 +309,7 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 		String sql = "SELECT "
 				+ "o.TotalLines, "
 				+ "o.GrandTotal, "
+				+ "c.CurSymbol, "
 				+ "ol.C_OrderLine_ID, "
 				+ "pc.Name ProductCategory, "
 				+ "p.Value, "
@@ -317,8 +322,9 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 				+ "FROM C_Order o "
 				+ "INNER JOIN C_OrderLine ol ON (o.C_Order_ID = ol.C_Order_ID) "
 				+ "INNER JOIN M_Product p ON (ol.M_Product_ID = p.M_Product_ID) "
-				+ "LEFT JOIN M_Product_Category pc ON(pc.M_Product_Category_ID = p.M_Product_Category_ID) "
 				+ "INNER JOIN C_UOM u ON (ol.C_UOM_ID = u.C_UOM_ID) "
+				+ "INNER JOIN C_Currency c ON(c.C_Currency_ID = o.C_Currency_ID) "
+				+ "LEFT JOIN M_Product_Category pc ON(pc.M_Product_Category_ID = p.M_Product_Category_ID) "
 				+ "WHERE o.C_Order_ID = ? "
 				+ "ORDER BY ol.Line";
 		
@@ -331,15 +337,20 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 		//	
 		BigDecimal m_TotalLines = Env.ZERO;
 		BigDecimal m_GrandTotal = Env.ZERO;
+		String m_CurSymbol = null;
 		//	
 		ArrayList<DisplayOrderLine> data = new ArrayList<DisplayOrderLine>();
+		int m_LinesNo = 0;
 		if(rs != null 
 				&& rs.moveToFirst()){
 			int index = 0;
-			m_TotalLines = new BigDecimal(rs.getDouble(index++));
-			m_GrandTotal = new BigDecimal(rs.getDouble(index++));
+			m_TotalLines 	= new BigDecimal(rs.getDouble(index++));
+			m_GrandTotal 	= new BigDecimal(rs.getDouble(index++));
+			m_CurSymbol		= rs.getString(index++);
+			//	
 			do {
-				index = 2;
+				index = 3;
+				m_LinesNo++;
 				//
 				data.add(
 						new DisplayOrderLine(
@@ -352,7 +363,7 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 								new BigDecimal(rs.getDouble(index++)),	//	Price Entered
 								new BigDecimal(rs.getDouble(index++)),	//	Line Net Amt
 								new BigDecimal(rs.getDouble(index++))	//	Qty Entered
-								) 
+								)
 						);
 				//	
 				index = 0;
@@ -362,11 +373,20 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 		}
 		//	Close Connection
 		DB.closeConnection(conn);
-		
+		//	
 		DecimalFormat format = DisplayType.getNumberFormat(getActivity(), DisplayType.AMOUNT);
 		//	Set Totals
 		tv_TotalLines.setText(format.format(m_TotalLines));
 		tv_GrandTotal.setText(format.format(m_GrandTotal));
+		//	Add Symbol
+		if(m_CurSymbol != null) {
+			tv_lb_TotalLines.setText(getString(R.string.TotalLines) + " (" + m_CurSymbol + ")");
+			tv_lb_GrandTotal.setText(getString(R.string.GrandTotal) + " (" + m_CurSymbol + ")");
+		}
+		//	Set Info
+		if(m_Callback != null) {
+			m_Callback.setTabSufix(" (" + m_LinesNo + ")");
+		}
 		//	Set Adapter
 		OrderLineAdapter p_Adapter = new OrderLineAdapter(getActivity(), data);
 		p_Adapter.setDropDownViewResource(R.layout.i_ol_add_product);

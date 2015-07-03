@@ -13,16 +13,16 @@
  * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com                      *
  *************************************************************************************/
-package org.spinsuite.adapters;
+package org.spinsuite.sfa.adapters;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import org.spinsuite.base.R;
+import org.spinsuite.sfa.util.DisplayListProduct;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.EditTextHolder;
 import org.spinsuite.util.Env;
-import org.spinsuite.util.SP_DisplayRecordItem;
 
 import android.content.Context;
 import android.view.KeyEvent;
@@ -44,6 +44,7 @@ import android.widget.TextView.OnEditorActionListener;
 /**
  * 
  * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com 15/6/2015, 15:42:32
+ * @contributor Dixon Martinez, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
 public class LP_SearchAdapter extends BaseAdapter implements Filterable {
@@ -51,11 +52,11 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
 	 * @param data
 	 */
-	public LP_SearchAdapter(Context ctx, ArrayList<SP_DisplayRecordItem> data) {
+	public LP_SearchAdapter(Context ctx, ArrayList<DisplayListProduct> data) {
 		this.data = data;
 		inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inputMethod = ((InputMethodManager)ctx.getSystemService(Context.INPUT_METHOD_SERVICE));
@@ -66,11 +67,11 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	/**
 	 * 
 	 * *** Constructor ***
-	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
 	 */
 	public LP_SearchAdapter(Context ctx) {
-		data = new ArrayList<SP_DisplayRecordItem>();
+		data = new ArrayList<DisplayListProduct>();
 		inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inputMethod = ((InputMethodManager)ctx.getSystemService(Context.INPUT_METHOD_SERVICE));
 		numberFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY);
@@ -78,9 +79,9 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	}
 	
 	/**	Data							*/
-	private ArrayList<SP_DisplayRecordItem> 	data;
+	private ArrayList<DisplayListProduct> 	data;
 	/**	Backup							*/
-	private ArrayList<SP_DisplayRecordItem> 	originalData;
+	private ArrayList<DisplayListProduct> 	originalData;
 	/**	Inflater						*/
 	private LayoutInflater 						inflater = null;
 	/**	Input Method					*/
@@ -92,9 +93,9 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	public View getView(final int position, View convertView, ViewGroup parent) {		
 		View view = convertView;
 		//	
-		final SP_DisplayRecordItem recordItem = data.get(position);
+		final DisplayListProduct recordItem = data.get(position);
 		//	
-		final EditTextHolder holderQtyOrdered = new EditTextHolder();
+		final EditTextHolder holderQtyEntered = new EditTextHolder();
 			
 		//	Inflate View
 		if(view == null)
@@ -106,17 +107,17 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		LinearLayout ll_ol_qty_description = (LinearLayout) view.findViewById(R.id.ll_ol_qty_description);
 		
 		//	Instance Holder
-		holderQtyOrdered.setText(String.valueOf(recordItem.getQty()));
-		holderQtyOrdered.setEditText(et_QtyOrdered);
-		holderQtyOrdered.getEditText().setOnFocusChangeListener(new OnFocusChangeListener() {
+		holderQtyEntered.setText(numberFormat.format(recordItem.getQtyEntered()));
+		holderQtyEntered.setEditText(et_QtyOrdered);
+		holderQtyEntered.getEditText().setOnFocusChangeListener(new OnFocusChangeListener() {
 			
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if(!hasFocus) {
 					//	Set Value
-					setNewValue(recordItem, holderQtyOrdered.getText(), position);
+					setNewValue(recordItem, holderQtyEntered.getText(), position);
 				} else {
-					holderQtyOrdered.getEditText().selectAll();
+					holderQtyEntered.getEditText().selectAll();
 				}
 				//	
 				inputMethod.toggleSoftInput(InputMethodManager.SHOW_FORCED, 
@@ -124,13 +125,13 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 			}
 		});
 		
-		holderQtyOrdered.getEditText().setOnEditorActionListener(new OnEditorActionListener() {
+		holderQtyEntered.getEditText().setOnEditorActionListener(new OnEditorActionListener() {
 		    @Override
 		    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 		        if (actionId == EditorInfo.IME_ACTION_DONE
 		        		|| actionId == EditorInfo.IME_ACTION_NEXT) {
 		        	//	Set Value
-		        	setNewValue(recordItem, holderQtyOrdered.getText(), position);
+		        	setNewValue(recordItem, holderQtyEntered.getText(), position);
 		        }
 		        //	
 		        return false;
@@ -140,15 +141,19 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		ll_ol_qty_description.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				holderQtyOrdered.getEditText().requestFocus();
-				holderQtyOrdered.getEditText().selectAll();
+				holderQtyEntered.getEditText().requestFocus();
+				holderQtyEntered.getEditText().selectAll();
 			}
 		});
 	
 		//	Set Quantity
-		holderQtyOrdered.setText(String.valueOf(recordItem.getQty()));
-		view.setTag(holderQtyOrdered);
+		holderQtyEntered.setText(numberFormat.format(recordItem.getQtyEntered()));
+		view.setTag(holderQtyEntered);
 
+		//	Set Product Value
+		TextView tv_ProductCategory = (TextView)view.findViewById(R.id.tv_ProductCategory);
+		tv_ProductCategory.setText(recordItem.getValue());
+		
 		//	Set Product Value
 		TextView tv_ProductValue = (TextView)view.findViewById(R.id.tv_ProductValue);
 		tv_ProductValue.setText(recordItem.getValue());
@@ -163,7 +168,7 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		
 		//	Set UOM Symbol
 		TextView tv_UOMSymbol = (TextView)view.findViewById(R.id.tv_UOMSymbol);
-		tv_UOMSymbol.setText(recordItem.getuOMSymbol());
+		tv_UOMSymbol.setText(recordItem.getUOMSymbol());
 
 		//	Return
 		return view;
@@ -171,14 +176,14 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	
 	/**
 	 * Set New Value
-	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_NewItem
 	 * @param p_Value
 	 * @param position
 	 * @return void
 	 */
-	private void setNewValue(SP_DisplayRecordItem p_NewItem, String p_Value, int position) {
-		p_NewItem.setQty(DisplayType.getNumber(p_Value));
+	private void setNewValue(DisplayListProduct p_NewItem, String p_Value, int position) {
+		p_NewItem.setQtyEntered(DisplayType.getNumber(p_Value));
 		//	Set Item
 		data.set(position, p_NewItem);
 		//	Set to Original Data
@@ -188,17 +193,17 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 
 	/**
 	 * Set To Original Data
-	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_Item
 	 * @return void
 	 */
-	private void setToOriginalData(SP_DisplayRecordItem p_Item) {
+	private void setToOriginalData(DisplayListProduct p_Item) {
 		if(p_Item == null
 				|| originalData == null)
 			return;
 		//	Search
 		for(int i = 0; i < originalData.size(); i++) {
-            if(originalData.get(i).getProduct_ID() == p_Item.getProduct_ID())
+            if(originalData.get(i).getM_Product_ID() == p_Item.getM_Product_ID())
             		originalData.set(i, p_Item);
         }
 	}
@@ -211,7 +216,7 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	        @SuppressWarnings("unchecked")
 	        @Override
 	        protected void publishResults(CharSequence constraint, FilterResults results) {
-	            data = (ArrayList<SP_DisplayRecordItem>) results.values;
+	            data = (ArrayList<DisplayListProduct>) results.values;
 	            if (results.count > 0) {
 	            	notifyDataSetChanged();
 	            } else {
@@ -225,7 +230,7 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	        	if(originalData == null)
 	            	originalData = data;
 	        	//	Get filter result
-	        	ArrayList<SP_DisplayRecordItem> filteredResults = getResults(constraint);
+	        	ArrayList<DisplayListProduct> filteredResults = getResults(constraint);
 	            //	Result
 	            FilterResults results = new FilterResults();
 	            //	
@@ -242,15 +247,21 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	         * @return
 	         * @return ArrayList<SP_DisplayRecordItem>
 	         */
-	        private ArrayList<SP_DisplayRecordItem> getResults(CharSequence constraint) {
+	        private ArrayList<DisplayListProduct> getResults(CharSequence constraint) {
 	        	//	Verify
 	            if(constraint != null
 	            		&& constraint.length() > 0) {
 	            	//	new Filter
-	            	ArrayList<SP_DisplayRecordItem> filteredResult = new ArrayList<SP_DisplayRecordItem>();
-	                for(SP_DisplayRecordItem item : originalData) {
-	                    if((item.getName()!= null 
-	                    		&& item.getName().toLowerCase().contains(constraint.toString())))
+	            	ArrayList<DisplayListProduct> filteredResult = new ArrayList<DisplayListProduct>();
+	                for(DisplayListProduct item : originalData) {
+	                    if((item.getProductCategory()!= null 
+	                    		&& item.getProductCategory().toLowerCase().contains(constraint.toString()))
+	                    		|| (item.getValue()!= null 
+	                    		&& item.getValue().toLowerCase().contains(constraint.toString()))
+	                    		|| (item.getName()!= null 
+	    	                    		&& item.getName().toLowerCase().contains(constraint.toString()))
+	    	                    || (item.getDescription()!= null 
+	    	                    		&& item.getDescription().toLowerCase().contains(constraint.toString())))
 	                        filteredResult.add(item);
 	                }
 	                return filteredResult;
@@ -269,7 +280,7 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	}
 	
 	@Override
-	public SP_DisplayRecordItem getItem(int position) {
+	public DisplayListProduct getItem(int position) {
 		return data.get(position);
 	}
 
@@ -284,7 +295,7 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	 * @return
 	 * @return ArrayList<SP_DisplayRecordItem>
 	 */
-	public ArrayList<SP_DisplayRecordItem> getData() {
+	public ArrayList<DisplayListProduct> getData() {
 		return data;
 	}
 	
@@ -295,16 +306,16 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	 * @return
 	 * @return ArrayList<SP_DisplayRecordItem>
 	 */
-	public ArrayList<SP_DisplayRecordItem> getSelectedData() {
+	public ArrayList<DisplayListProduct> getSelectedData() {
 		//	Temp Data
-		ArrayList<SP_DisplayRecordItem> tmpData = new ArrayList<SP_DisplayRecordItem>();
+		ArrayList<DisplayListProduct> tmpData = new ArrayList<DisplayListProduct>();
 		//	Save all
 		if(originalData != null)
 			data = originalData;
 		//	Get only selected
-		for(SP_DisplayRecordItem item : data) {
+		for(DisplayListProduct item : data) {
 			//	Add
-			if(item.getQty().compareTo(Env.ZERO) == 1)
+			if(item.getQtyEntered().compareTo(Env.ZERO) == 1)
 				tmpData.add(item);
 		}
 		return tmpData;
