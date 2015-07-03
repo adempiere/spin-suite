@@ -1,0 +1,30 @@
+<resources>
+    <!-- Font Size -->
+    <dimen name="fontSizeMicro">12sp</dimen>
+    <dimen name="fontSizeSmall">18sp</dimen>
+    <dimen name="fontSizeMedium">26sp</dimen>
+    <dimen name="fontSizeLarge">32sp</dimen>
+    <!-- Dynamic Tab Size -->
+    <dimen name="row_layout_height">94dp</dimen>
+    <dimen name="textView_layout_height">10dp</dimen>
+    <dimen name="editText_layout_height">72dp</dimen>
+    <dimen name="spinner_layout_height">50dp</dimen>
+    <dimen name="spinner_drop_down_layout_height">50dp</dimen>
+    <dimen name="list_layout_height">68dp</dimen>
+    <dimen name="button_layout_width">72dp</dimen>
+    <dimen name="button_layout_height">72dp</dimen>
+    <dimen name="checkBox_layout_height">72dp</dimen>
+    <!-- Business Chat -->
+    <dimen name="bc_thread_button_layout_height">72dp</dimen>
+    <dimen name="bc_thread_editText_layout_height">72dp</dimen>
+    <dimen name="bc_thread_imageView_layout_width">450dp</dimen>
+   	<dimen name="bc_thread_imageView_layout_height">450dp</dimen>
+   	<dimen name="bc_thread_textView_thread_max_size">480dp</dimen>
+   	<dimen name="bc_threadlist_contact_profile_img_max_size">70dp</dimen>
+   	<!-- Login Icon -->
+   	<dimen name="login_logo_size">120dp</dimen>
+   	<!-- Padding view -->
+   	<dimen name="view_generic_padding">2dp</dimen>
+	<!-- General -->
+   	<dimen name="list_view_img_max_size">100dp</dimen>
+</resources>
