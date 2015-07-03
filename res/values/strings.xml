@@ -141,6 +141,7 @@
 	<string name="V_EndingBalanceAmt">Ending Balance Amt</string>
 	<string name="V_DifferenceAmt">Difference Amt</string>
 	<string name="V_ForDepositAmt">For Deposit Amt</string>
+	<string name="C_Tax_ID">Tax</string>
 	
 	<string name="Language">Language</string>
 	
