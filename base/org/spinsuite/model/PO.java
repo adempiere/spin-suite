@@ -1219,6 +1219,7 @@ public abstract class PO {
 					return m_IDs[0];
 				} else if(column.ColumnName.equals("DocumentNo")
 						&& (value == null 
+								|| ((String)value).length() == 0
 								|| ((String)value).startsWith(DOCUMENT_NO_PREFIX) 
 										&& ((String)value).endsWith(DOCUMENT_NO_SUFFIX))) {
 						//	Get Document Type
@@ -1256,6 +1257,7 @@ public abstract class PO {
 			} else{
 				if(column.ColumnName.equals("DocumentNo")
 						&& (value == null 
+						|| ((String)value).length() == 0
 						|| ((String)value).startsWith(DOCUMENT_NO_PREFIX) 
 								&& ((String)value).endsWith(DOCUMENT_NO_SUFFIX))) {
 					//	Get Document Type

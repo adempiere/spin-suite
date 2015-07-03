@@ -47,6 +47,7 @@ public class ImageTextAdapter extends ArrayAdapter<DisplayImageTextItem> {
 		super(ctx, R.layout.i_image_text, data);
 		this.ctx = ctx;
 		this.data = data;
+		m_ImgMaxSize = ctx.getResources().getDimensionPixelSize(R.dimen.list_view_img_max_size);
 	}
 
 	/**	Context						*/
@@ -54,7 +55,7 @@ public class ImageTextAdapter extends ArrayAdapter<DisplayImageTextItem> {
 	/**	Data						*/
 	private ArrayList<DisplayImageTextItem> data = new ArrayList<DisplayImageTextItem>();
 	/**	Max Size					*/
-	private static final int				MAX_SIZE = 200;
+	private int 							m_ImgMaxSize = 0;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -75,7 +76,7 @@ public class ImageTextAdapter extends ArrayAdapter<DisplayImageTextItem> {
 		tv_Description.setText(diti.getDescription());
 		
 		ImageView img_Item = (ImageView)item.findViewById(R.id.img_Item);
-		img_Item.setLayoutParams(new LayoutParams(MAX_SIZE, MAX_SIZE));
+		img_Item.setLayoutParams(new LayoutParams(m_ImgMaxSize, m_ImgMaxSize));
 		//	Set Image
 		if(diti.getImage() != null) {
 			img_Item.setImageBitmap(diti.getImage());

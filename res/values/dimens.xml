@@ -23,4 +23,8 @@
    	<dimen name="bc_threadlist_contact_profile_img_max_size">50dp</dimen>
    	<!-- Login Icon -->
    	<dimen name="login_logo_size">60dp</dimen>
+   	<!-- Padding view -->
+   	<dimen name="view_generic_padding">2dp</dimen>
+   	<!-- General -->
+   	<dimen name="list_view_img_max_size">70dp</dimen>
 </resources>

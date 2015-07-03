@@ -272,9 +272,10 @@ public class TV_Base extends FragmentActivity
      */
     protected void addFagment(Class<?> clazz, String tag, int title, TabParameter tabParameter, Bundle bundle){
     	Tab tab = actionBar.newTab();
-    	m_FragmentArray.addTab(tag, clazz, tabParameter, bundle);
+    	String m_Title = getResources().getString(title);
+    	m_FragmentArray.addTab(tag, m_Title, clazz, tabParameter, bundle);
     	tab.setTabListener(this);
-        tab.setText(getResources().getString(title));
+        tab.setText(m_Title);
         actionBar.addTab(tab);
     	
     }
@@ -289,9 +290,10 @@ public class TV_Base extends FragmentActivity
      */
     protected void addFagment(Class<?> clazz, String tag, int title, TabParameter tabParameter) {
     	Tab tab = actionBar.newTab();
-    	m_FragmentArray.addTab(tag, clazz, tabParameter, null);
+    	String m_Title = getResources().getString(title);
+    	m_FragmentArray.addTab(tag, m_Title, clazz, tabParameter, null);
     	tab.setTabListener(this);
-    	tab.setText(getResources().getString(title));
+    	tab.setText(m_Title);
         actionBar.addTab(tab);
     }
     
@@ -319,7 +321,7 @@ public class TV_Base extends FragmentActivity
     protected void addFagment(Class<?> clazz, String tag, String title, TabParameter tabParameter) {
     	Tab tab = actionBar.newTab();
     	tab.setText(title);
-    	m_FragmentArray.addTab(tag, clazz, tabParameter, null);
+    	m_FragmentArray.addTab(tag, title, clazz, tabParameter, null);
     	tab.setTabListener(this);
         actionBar.addTab(tab);
     }
@@ -336,7 +338,7 @@ public class TV_Base extends FragmentActivity
      */
     protected void addFagment(Class<?> clazz, String tag, String title, TabParameter tabParameter, Bundle param){
     	Tab tab = actionBar.newTab();
-    	m_FragmentArray.addTab(tag, clazz, tabParameter, param);
+    	m_FragmentArray.addTab(tag, title, clazz, tabParameter, param);
     	tab.setTabListener(this);
     	tab.setText(title);
         actionBar.addTab(tab);
@@ -459,5 +461,23 @@ public class TV_Base extends FragmentActivity
 	 */
 	public int getSize() {
 		return m_FragmentArray.size();
+	}
+	
+	/**
+	 * Set Sufix for tab
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Sufix
+	 * @return void
+	 */
+	public void setTabSufix(String p_Sufix) {
+		if(p_Sufix == null)
+			return;
+		//	Default
+		Tab tab = actionBar.getSelectedTab();
+		if(tab != null) {
+			int index = tab.getPosition();
+			String currentTitle = m_FragmentArray.getTab(index).getTitle();
+			tab.setText(currentTitle + p_Sufix);
+		}
 	}
 }

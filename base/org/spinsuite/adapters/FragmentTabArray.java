@@ -49,12 +49,13 @@ public class FragmentTabArray {
 	 * Add Tab to Array
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 23/08/2014, 11:41:55
 	 * @param tag
+	 * @param p_Title
 	 * @param clazz
 	 * @param args
 	 * @return TabListener
 	 */
-	public void addTab(String tag, Class<?> clazz, TabParameter tabParameter, Bundle args) {
-		TabHandler tabListener = new TabHandler(activity, tag, clazz, tabParameter, args);
+	public void addTab(String tag, String p_Title, Class<?> clazz, TabParameter tabParameter, Bundle args) {
+		TabHandler tabListener = new TabHandler(activity, tag, p_Title, clazz, tabParameter, args);
 		m_Array.add(tabListener);
 	}
 	
