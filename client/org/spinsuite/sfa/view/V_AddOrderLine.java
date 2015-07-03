@@ -117,7 +117,7 @@ public class V_AddOrderLine extends Activity {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.search_action_ok, menu);
 		//	Get Item
-		MenuItem item = menu.findItem(R.id.action_search);
+		MenuItem mi_Search = menu.findItem(R.id.action_search);
 		MenuItem mi_Config = menu.findItem(R.id.action_config);
 		mi_Config.setVisible(false);
 		//	Search View
@@ -152,7 +152,7 @@ public class V_AddOrderLine extends Activity {
 				}
                     
 			});
-			MenuItemCompat.setActionView(item, searchView);
+			MenuItemCompat.setActionView(mi_Search, searchView);
 		}
 		//	Return
 		return true;
@@ -459,11 +459,3 @@ public class V_AddOrderLine extends Activity {
 	}
 	
 }
-
-
-
-
-
-
-
-

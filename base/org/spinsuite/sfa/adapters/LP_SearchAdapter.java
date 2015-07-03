@@ -84,9 +84,9 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	}
 	
 	/**	Data							*/
-	private ArrayList<DisplayListProduct> 	data;
+	private ArrayList<DisplayListProduct> 		data;
 	/**	Backup							*/
-	private ArrayList<DisplayListProduct> 	originalData;
+	private ArrayList<DisplayListProduct> 		originalData;
 	/**	Inflater						*/
 	private LayoutInflater 						inflater = null;
 	/**	Input Method					*/
@@ -95,6 +95,8 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	private DecimalFormat						m_QtyFormat = null;
 	/**	Decimal Format					*/
 	private DecimalFormat						m_AmtFormat = null;
+	/**	Is From Change					*/
+	private boolean								m_IsFromFhange = false;
 	
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {		
@@ -153,6 +155,7 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 			}
 		});
 	
+		m_IsFromFhange = false;
 		//	Set Quantity
 		holderQtyEntered.setText(m_QtyFormat.format(recordItem.getQtyEntered()));
 		view.setTag(holderQtyEntered);
@@ -209,12 +212,16 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
+				if(!m_IsFromFhange) {
+					return;
+				}
 				setNewValue(recordItem, holderQtyEntered.getText(), position);
 				recordItem.setLineNetAmt(calculateAmt(recordItem));
 				tv_LineNetAmt.setText(m_AmtFormat.format(recordItem.getLineNetAmt()));
-				
 			}
 		});
+		//	
+		m_IsFromFhange = true;
 		//	Return
 		return view;
 	}
@@ -252,7 +259,9 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	private void setNewValue(DisplayListProduct p_NewItem, String p_Value, int position) {
 		p_NewItem.setQtyEntered(DisplayType.getNumber(p_Value));
 		//	Set Item
-		data.set(position, p_NewItem);
+		if(position < data.size()) {
+			data.set(position, p_NewItem);
+		}
 		//	Set to Original Data
 		if(originalData != null)
 			setToOriginalData(p_NewItem);
