@@ -73,10 +73,11 @@
 		    android:orientation="horizontal" >
 
 		    <TextView
-		        android:id="@+id/tv_UOMSymbolLabel"
+		        android:id="@+id/tv_lb_UOMSymbol"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:layout_weight="1"
+		        android:maxLines="1"
 		        android:text="@string/UOMSymbol"
 		        style="@style/TextItemList"
 		        android:gravity="end" />
@@ -86,6 +87,7 @@
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:layout_weight="1"
+		        android:maxLines="1"
 		        style="@style/TextItemList"
 		        android:gravity="end"
 		        android:text="@string/None" />
@@ -99,10 +101,11 @@
             android:orientation="horizontal" >
 
             <TextView
-                android:id="@+id/tv_QtyLabel"
+                android:id="@+id/tv_lb_Qty"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
+                android:maxLines="1"
                 android:gravity="end"
                 style="@style/TextItemList"
                 android:text="@string/Qty" />
@@ -112,6 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
+                android:maxLines="1"
                 android:gravity="end"
                 android:text="@string/None" />
 
@@ -123,10 +127,11 @@
 		         android:orientation="horizontal" >
 		
 		         <TextView
-		             android:id="@+id/tv_PriceLabel"
+		             android:id="@+id/tv_lb_Price"
 		             android:layout_width="match_parent"
 		             android:layout_height="wrap_content"
 		             android:layout_weight="1"
+		             android:maxLines="1"
 		             android:gravity="end"
 		             android:text="@string/Price" />
 		
@@ -135,6 +140,7 @@
 		             android:layout_width="match_parent"
 		             android:layout_height="wrap_content"
 		             android:layout_weight="1"
+		             android:maxLines="1"
 		             android:gravity="end"
 		             android:text="@string/None" />
 		
@@ -150,6 +156,7 @@
 		             android:layout_width="match_parent"
 		             android:layout_height="wrap_content"
 		             android:layout_weight="1"
+		             android:maxLines="1"
 		             android:gravity="end"
 		             android:text="@string/LineNetAmt" />
 		
@@ -158,6 +165,7 @@
 		             android:layout_width="match_parent"
 		             android:layout_height="wrap_content"
 		             android:layout_weight="1"
+		             android:maxLines="1"
 		             android:gravity="end"
 		             android:text="@string/None" />
 		</LinearLayout>

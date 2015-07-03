@@ -69,7 +69,7 @@
         android:id="@+id/ll_ol_qty_description"
         android:layout_weight="2.3"
         android:orientation="vertical" >
-
+		<!-- UOM -->
         <LinearLayout
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
@@ -93,9 +93,79 @@
 		        android:gravity="end"
 		        android:hint="@string/None" />
 		</LinearLayout>
-		
-        <!-- Qty -->
+		<!-- Price -->
+        <LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="horizontal" >
 
+		    <TextView
+		        android:id="@+id/tv_lb_PriceList"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:text="@string/Price"
+		        style="@style/TextItemList"
+		        android:gravity="end" />
+		    
+		    <TextView
+		        android:id="@+id/tv_PriceList"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        style="@style/TextItemList"
+		        android:gravity="end"
+		        android:hint="@string/Zero" />
+		</LinearLayout>
+		<!-- Tax -->
+        <LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="horizontal" >
+
+		    <TextView
+		        android:id="@+id/tv_lb_Tax"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:text="@string/"
+		        style="@style/TextItemList"
+		        android:gravity="end" />
+		    
+		    <TextView
+		        android:id="@+id/tv_Tax"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        style="@style/TextItemList"
+		        android:gravity="end"
+		        android:hint="@string/Zero" />
+		</LinearLayout>
+		<!-- Line Net -->
+        <LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="horizontal" >
+
+		    <TextView
+		        android:id="@+id/tv_lb_LineNetAmt"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:text="@string/LineNetAmt"
+		        style="@style/TextItemList"
+		        android:gravity="end" />
+		    
+		    <TextView
+		        android:id="@+id/tv_LineNetAmt"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        style="@style/TextItemList"
+		        android:gravity="end"
+		        android:hint="@string/Zero" />
+		</LinearLayout>
+        <!-- Qty -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -282,6 +282,9 @@ public class V_AddOrderLine extends Activity {
 						+ "uo.UOMSymbol, "
 						+ "tc.C_TaxCategory_ID, "
 						+ "tc.Name, "
+						+ "t.C_Tax_ID, "
+						+ "MAX(t.TaxIndicator) TaxIndicator, "
+						+ "MAX(t.Rate) Rate, "
 						+ "pp.PriceList, "
 						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN ol.QtyEntered ELSE NULL END QtyEntered, "
 						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN ol.QtyOrdered ELSE NULL END QtyOrdered, "
@@ -298,12 +301,13 @@ public class V_AddOrderLine extends Activity {
 						+ "INNER JOIN M_PriceList_Version plv ON(plv.M_PriceList_ID = pl.M_PriceList_ID) "
 						+ "INNER JOIN M_ProductPrice pp ON(pp.M_PriceList_Version_ID = plv.M_PriceList_Version_ID) "
 						+ "INNER JOIN M_Product p ON(p.M_Product_ID = pp.M_Product_ID) "
-						+ "INNER JOIN M_Product_Category pc ON(pc.M_Product_Category_ID = p.M_Product_Category_ID) "
+						+ "LEFT JOIN M_Product_Category pc ON(pc.M_Product_Category_ID = p.M_Product_Category_ID) "
 						+ "INNER JOIN C_TaxCategory tc ON(tc.C_TaxCategory_ID = p.C_TaxCategory_ID) "
+						+ "INNER JOIN C_Tax t ON(t.C_TaxCategory_ID = tc.C_TaxCategory_ID) "
 						+ "INNER JOIN C_Currency cu ON(cu.C_Currency_ID = pl.C_Currency_ID)"
 						+ "INNER JOIN C_UOM uo ON (p.C_UOM_ID = uo.C_UOM_ID) "
 						+ "LEFT JOIN C_OrderLine ol ON (ol.C_Order_ID = o.C_Order_ID AND ol.M_Product_ID = p.M_Product_ID) "
-						+ "WHERE pl.M_PriceList_ID = ? "
+						+ "WHERE o.C_Order_ID = ? "
 						+ "GROUP BY p.M_Product_ID, p.Value, p.Name "
 						+ "HAVING MAX(plv.ValidFrom) <= o.DateOrdered");
 				//	Compile Query
@@ -328,6 +332,9 @@ public class V_AddOrderLine extends Activity {
 											rs.getString(index++),					//	UOM Symbol
 											rs.getInt(index++),						//	Tax Category ID
 											rs.getString(index++),					//	Tax Category Value
+											rs.getInt(index++),						//	Tax ID
+											rs.getString(index++),					//	Tax Indicator
+											new BigDecimal(rs.getDouble(index++)),	//	Tax Rate
 											new BigDecimal(rs.getDouble(index++)),	//	Price List
 											new BigDecimal(rs.getDouble(index++)),	//	Quantity Entered
 											new BigDecimal(rs.getDouble(index++)),	//	Quantity Ordered

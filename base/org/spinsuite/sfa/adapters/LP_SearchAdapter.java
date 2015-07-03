@@ -60,7 +60,8 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		this.data = data;
 		inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inputMethod = ((InputMethodManager)ctx.getSystemService(Context.INPUT_METHOD_SERVICE));
-		numberFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY);
+		m_QtyFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY);
+		m_AmtFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT);
 		notifyDataSetChanged();
 	}
 	
@@ -74,7 +75,8 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		data = new ArrayList<DisplayListProduct>();
 		inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inputMethod = ((InputMethodManager)ctx.getSystemService(Context.INPUT_METHOD_SERVICE));
-		numberFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY);
+		m_QtyFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY);
+		m_AmtFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT);
 		notifyDataSetChanged();
 	}
 	
@@ -87,7 +89,9 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	/**	Input Method					*/
 	private InputMethodManager					inputMethod = null;
 	/**	Decimal Format					*/
-	private DecimalFormat						numberFormat = null;
+	private DecimalFormat						m_QtyFormat = null;
+	/**	Decimal Format					*/
+	private DecimalFormat						m_AmtFormat = null;
 	
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {		
@@ -107,7 +111,7 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		LinearLayout ll_ol_qty_description = (LinearLayout) view.findViewById(R.id.ll_ol_qty_description);
 		
 		//	Instance Holder
-		holderQtyEntered.setText(numberFormat.format(recordItem.getQtyEntered()));
+		holderQtyEntered.setText(m_QtyFormat.format(recordItem.getQtyEntered()));
 		holderQtyEntered.setEditText(et_QtyOrdered);
 		holderQtyEntered.getEditText().setOnFocusChangeListener(new OnFocusChangeListener() {
 			
@@ -147,12 +151,12 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		});
 	
 		//	Set Quantity
-		holderQtyEntered.setText(numberFormat.format(recordItem.getQtyEntered()));
+		holderQtyEntered.setText(m_QtyFormat.format(recordItem.getQtyEntered()));
 		view.setTag(holderQtyEntered);
 
 		//	Set Product Value
 		TextView tv_ProductCategory = (TextView)view.findViewById(R.id.tv_ProductCategory);
-		tv_ProductCategory.setText(recordItem.getValue());
+		tv_ProductCategory.setText(recordItem.getProductCategory());
 		
 		//	Set Product Value
 		TextView tv_ProductValue = (TextView)view.findViewById(R.id.tv_ProductValue);
@@ -170,6 +174,10 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		TextView tv_UOMSymbol = (TextView)view.findViewById(R.id.tv_UOMSymbol);
 		tv_UOMSymbol.setText(recordItem.getUOMSymbol());
 
+		//	Set UOM Symbol
+		TextView tv_PriceList = (TextView)view.findViewById(R.id.tv_PriceList);
+		tv_PriceList.setText(m_AmtFormat.format(recordItem.getPriceList()));
+		
 		//	Return
 		return view;
 	}

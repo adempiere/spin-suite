@@ -47,8 +47,14 @@ public class DisplayListProduct implements Parcelable {
 	private String 		m_UOMSymbol;
 	/**	Tax Category ID		*/
 	private int 		m_C_TaxCategory_ID;
-	/**	Tax					*/
+	/**	Tax Category		*/
 	private String 		m_TaxName;
+	/**	Tax ID				*/
+	private int 		m_C_Tax_ID;
+	/**	Tax					*/
+	private String 		m_TaxIndicator;
+	/**	Tax Rate			*/
+	private BigDecimal 	m_TaxRate;
 	/**	Price List			*/
 	private BigDecimal 	m_PriceList;
 	/**	Qty Entered			*/
@@ -109,6 +115,9 @@ public class DisplayListProduct implements Parcelable {
 		paramParcel.writeString(m_UOMSymbol);
 		paramParcel.writeInt(m_C_TaxCategory_ID);
 		paramParcel.writeString(m_TaxName);
+		paramParcel.writeInt(m_C_Tax_ID);
+		paramParcel.writeString(m_TaxIndicator);
+		paramParcel.writeDouble(DisplayType.getNumberAsDouble(m_TaxRate));
 		paramParcel.writeDouble(DisplayType.getNumberAsDouble(m_PriceList));
 		paramParcel.writeDouble(DisplayType.getNumberAsDouble(m_QtyEntered));
 		paramParcel.writeDouble(DisplayType.getNumberAsDouble(m_QtyOrdered));
@@ -136,6 +145,9 @@ public class DisplayListProduct implements Parcelable {
 	 * @param p_UOMSymbol
 	 * @param p_C_TaxCategory_ID
 	 * @param p_TaxName
+	 * @param p_C_Tax_ID
+	 * @param p_TaxIndicator
+	 * @param p_TaxRate
 	 * @param p_PriceList
 	 * @param p_QtyEntered
 	 * @param p_QtyOrdered
@@ -151,7 +163,9 @@ public class DisplayListProduct implements Parcelable {
 	public DisplayListProduct(int p_M_Product_Category_ID, String p_ProductCategory, 
 			int p_M_Product_ID, String p_Value, String p_Name, 
 			String p_Description, int p_C_UOM_ID, String p_UOMSymbol, int p_C_TaxCategory_ID, 
-			String p_TaxName, BigDecimal p_PriceList, BigDecimal p_QtyEntered, BigDecimal p_QtyOrdered,  
+			String p_TaxName, int p_C_Tax_ID, 
+			String p_TaxIndicator, BigDecimal p_TaxRate, 
+			BigDecimal p_PriceList, BigDecimal p_QtyEntered, BigDecimal p_QtyOrdered,  
 			BigDecimal p_PriceEntered, BigDecimal p_LineNetAmt,
 			int p_M_PriceList_ID, int p_M_PriceList_Version_ID, 
 			Date p_ValidFrom, int p_C_Currency_ID, String p_CurrencyName, int p_C_OrderLine_ID){
@@ -165,6 +179,9 @@ public class DisplayListProduct implements Parcelable {
 		m_UOMSymbol = p_UOMSymbol;
 		m_C_TaxCategory_ID = p_C_TaxCategory_ID;
 		m_TaxName = p_TaxName;
+		m_C_Tax_ID = p_C_Tax_ID;
+		m_TaxName = p_TaxName;
+		m_TaxRate = p_TaxRate;
 		m_PriceList = p_PriceList;
 		m_QtyEntered = p_QtyEntered;
 		m_QtyOrdered = p_QtyOrdered;
@@ -205,6 +222,9 @@ public class DisplayListProduct implements Parcelable {
 		m_UOMSymbol = parcel.readString();
 		m_C_TaxCategory_ID = parcel.readInt();
 		m_TaxName = parcel.readString();
+		m_C_Tax_ID = parcel.readInt();
+		m_TaxIndicator = parcel.readString();
+		m_TaxRate = new BigDecimal(parcel.readDouble());
 		m_PriceList = new BigDecimal(parcel.readDouble());
 		m_QtyEntered = new BigDecimal(parcel.readDouble());
 		m_QtyOrdered = new BigDecimal(parcel.readDouble());
@@ -299,6 +319,27 @@ public class DisplayListProduct implements Parcelable {
 	 */
 	public BigDecimal getPriceList() {
 		return m_PriceList;
+	}
+	
+	/**
+	 * @return the m_C_Tax_ID
+	 */
+	public int getC_Tax_ID() {
+		return m_C_Tax_ID;
+	}
+	
+	/**
+	 * @return the m_TaxIndicator
+	 */
+	public String getTaxIndicator() {
+		return m_TaxIndicator;
+	}
+	
+	/**
+	 * @return the m_TaxRate
+	 */
+	public BigDecimal getTaxRate() {
+		return m_TaxRate;
 	}
 	
 	/**
@@ -425,6 +466,7 @@ public class DisplayListProduct implements Parcelable {
 	public void setUOMSymbol(String m_UOMSymbol) {
 		this.m_UOMSymbol = m_UOMSymbol;
 	}
+	
 	/**
 	 * @param m_C_TaxCategory_ID the m_C_TaxCategory_ID to set
 	 */
@@ -444,6 +486,28 @@ public class DisplayListProduct implements Parcelable {
 	 */
 	public void setPriceList(BigDecimal m_PriceList) {
 		this.m_PriceList = m_PriceList;
+	}
+	
+
+	/**
+	 * @param m_C_Tax_ID the m_C_Tax_ID to set
+	 */
+	public void setC_Tax_ID(int m_C_Tax_ID) {
+		this.m_C_Tax_ID = m_C_Tax_ID;
+	}
+	
+	/**
+	 * @param m_TaxIndicator the m_TaxIndicator to set
+	 */
+	public void setTaxIndicator(String m_TaxIndicator) {
+		this.m_TaxIndicator = m_TaxIndicator;
+	}
+	
+	/**
+	 * @param m_TaxRate the m_TaxRate to set
+	 */
+	public void setTaxRate(BigDecimal m_TaxRate) {
+		this.m_TaxRate = m_TaxRate;
 	}
 	
 	/**
