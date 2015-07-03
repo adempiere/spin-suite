@@ -92,7 +92,8 @@ public class SyncDataTask implements BackGroundProcess  {
 	private String 					m_PublicTittle = "";
 	/** Background Task					*/
 	private BackGroundTask 			bgTask = null;
-	
+	/**Define if is Root Node */ 
+	private boolean					IsRootNode = true;
 	
 	/**
 	 * 
@@ -154,13 +155,7 @@ public class SyncDataTask implements BackGroundProcess  {
 		try{
 			conn = new DB(m_ctx);
 			conn.openDB(DB.READ_WRITE);
-			//Get Child's Web Services
-			List<MSPSSyncMenu> syncms = MSPSSyncMenu.getNodesFromParent(m_ctx, Integer.valueOf(m_SPS_SyncMenu_ID).toString(), conn);
-			
-			for (MSPSSyncMenu mspsSyncMenu : syncms) {
-				syncData(mspsSyncMenu.getSPS_SyncMenu_ID(),0);
-			}
-//			syncData(m_SPS_SyncMenu_ID, 0);
+			syncData(m_SPS_SyncMenu_ID, 0);
 		} catch(Exception e) {
 			m_Error = true;
 			LogM.log(m_ctx, getClass(), Level.SEVERE, e.getLocalizedMessage());
@@ -311,6 +306,17 @@ public class SyncDataTask implements BackGroundProcess  {
 		if (syncm.getAD_RuleAfter_ID()!=0){
 			X_AD_Rule rule  = new X_AD_Rule(m_ctx, syncm.getAD_RuleAfter_ID(), conn);
 			runQuery(rule.getScript(),null);
+		}
+		
+		if (IsRootNode){
+			IsRootNode = false;
+			//Get Child's Web Services
+			List<MSPSSyncMenu> syncms = MSPSSyncMenu.getNodesFromParent(m_ctx, Integer.valueOf(m_SPS_SyncMenu_ID).toString(), conn);
+			
+			for (MSPSSyncMenu mspsSyncMenu : syncms) {
+				syncData(mspsSyncMenu.getSPS_SyncMenu_ID(),0);
+			}
+			
 		}
 	}
 	
