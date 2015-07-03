@@ -57,15 +57,15 @@ import android.widget.ListView;
 public class V_AddOrderLine extends Activity {
 	
 	/**	List View					*/
-	private ListView				lv_Products = null;
+	private ListView						lv_Products = null;
 	/**	Activity					*/
-	private Activity				v_activity = null;
+	private Activity						v_activity = null;
 	/**	Adapter						*/
-	private LP_SearchAdapter 		m_SP_SearchAdapter = null;
+	private LP_SearchAdapter 				m_SP_SearchAdapter = null;
 	/**	View Search					*/
-	private View 					searchView = null;
+	private View 							searchView = null;
 	/**	Technical Form				*/
-	private int						m_C_Order_ID = 0;
+	private int								m_C_Order_ID = 0;
 	/**	Data Result					*/
 	private ArrayList<DisplayListProduct>	selectedData = null;
 	
@@ -84,7 +84,6 @@ public class V_AddOrderLine extends Activity {
 		
 		lv_Products = (ListView) v_activity.findViewById(R.id.lv_Products);
 		lv_Products.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
-		lv_Products.setStackFromBottom(true);
 		//
 		new LoadViewTask().execute();
 		//	Listener
@@ -282,7 +281,7 @@ public class V_AddOrderLine extends Activity {
 						+ "uo.UOMSymbol, "
 						+ "tc.C_TaxCategory_ID, "
 						+ "tc.Name, "
-						+ "t.C_Tax_ID, "
+						+ "MAX(t.C_Tax_ID) C_Tax_ID, "
 						+ "MAX(t.TaxIndicator) TaxIndicator, "
 						+ "MAX(t.Rate) Rate, "
 						+ "pp.PriceList, "

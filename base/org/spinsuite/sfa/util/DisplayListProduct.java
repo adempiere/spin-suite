@@ -162,9 +162,8 @@ public class DisplayListProduct implements Parcelable {
 	 */
 	public DisplayListProduct(int p_M_Product_Category_ID, String p_ProductCategory, 
 			int p_M_Product_ID, String p_Value, String p_Name, 
-			String p_Description, int p_C_UOM_ID, String p_UOMSymbol, int p_C_TaxCategory_ID, 
-			String p_TaxName, int p_C_Tax_ID, 
-			String p_TaxIndicator, BigDecimal p_TaxRate, 
+			String p_Description, int p_C_UOM_ID, String p_UOMSymbol, int p_C_TaxCategory_ID, String p_TaxName, 
+			int p_C_Tax_ID, String p_TaxIndicator, BigDecimal p_TaxRate, 
 			BigDecimal p_PriceList, BigDecimal p_QtyEntered, BigDecimal p_QtyOrdered,  
 			BigDecimal p_PriceEntered, BigDecimal p_LineNetAmt,
 			int p_M_PriceList_ID, int p_M_PriceList_Version_ID, 
@@ -180,7 +179,7 @@ public class DisplayListProduct implements Parcelable {
 		m_C_TaxCategory_ID = p_C_TaxCategory_ID;
 		m_TaxName = p_TaxName;
 		m_C_Tax_ID = p_C_Tax_ID;
-		m_TaxName = p_TaxName;
+		m_TaxIndicator = p_TaxIndicator;
 		m_TaxRate = p_TaxRate;
 		m_PriceList = p_PriceList;
 		m_QtyEntered = p_QtyEntered;

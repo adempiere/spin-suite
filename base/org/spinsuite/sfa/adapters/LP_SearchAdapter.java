@@ -15,6 +15,7 @@
  *************************************************************************************/
 package org.spinsuite.sfa.adapters;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -25,6 +26,8 @@ import org.spinsuite.util.EditTextHolder;
 import org.spinsuite.util.Env;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -174,12 +177,68 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		TextView tv_UOMSymbol = (TextView)view.findViewById(R.id.tv_UOMSymbol);
 		tv_UOMSymbol.setText(recordItem.getUOMSymbol());
 
-		//	Set UOM Symbol
+		//	Set Price List
 		TextView tv_PriceList = (TextView)view.findViewById(R.id.tv_PriceList);
 		tv_PriceList.setText(m_AmtFormat.format(recordItem.getPriceList()));
 		
+		//	Set Tax Indicator
+		TextView tv_lb_TaxInicator = (TextView)view.findViewById(R.id.tv_lb_TaxIndicator);
+		tv_lb_TaxInicator.setText(recordItem.getTaxIndicator());
+		
+		//	Set Tax Amount
+		TextView tv_TaxRate = (TextView)view.findViewById(R.id.tv_TaxRate);
+		tv_TaxRate.setText(m_AmtFormat.format(recordItem.getTaxRate()));
+		
+		//	Set Line Net
+		final TextView tv_LineNetAmt = (TextView)view.findViewById(R.id.tv_LineNetAmt);
+		tv_LineNetAmt.setText(m_AmtFormat.format(recordItem.getLineNetAmt()));
+		//	For when change
+		holderQtyEntered.getEditText().addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				setNewValue(recordItem, holderQtyEntered.getText(), position);
+				recordItem.setLineNetAmt(calculateAmt(recordItem));
+				tv_LineNetAmt.setText(m_AmtFormat.format(recordItem.getLineNetAmt()));
+				
+			}
+		});
 		//	Return
 		return view;
+	}
+	
+	/**
+	 * Calculate Amount for line with tax
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param recordItem
+	 * @return BigDecimal
+	 */
+	private BigDecimal calculateAmt(DisplayListProduct recordItem) {
+		BigDecimal m_TaxRate = recordItem.getTaxRate();
+		BigDecimal m_Price = recordItem.getPriceList();
+		BigDecimal m_QtyEntered = recordItem.getQtyEntered();
+		BigDecimal m_LineNetAmt = Env.ZERO;
+		BigDecimal m_TaxAmt = Env.ZERO;
+		BigDecimal m_AmtWithoutTax = Env.ZERO;
+		//	Calculate
+		m_TaxAmt = m_TaxRate.divide(Env.ONEHUNDRED);
+		m_AmtWithoutTax = m_QtyEntered.multiply(m_Price);
+		m_TaxAmt = m_TaxAmt.multiply(m_AmtWithoutTax);
+		m_LineNetAmt = m_AmtWithoutTax.add(m_TaxAmt);
+		//	Return
+		return m_LineNetAmt;
 	}
 	
 	/**
