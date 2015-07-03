@@ -88,7 +88,7 @@ public class WSDataRow extends SoapObject{
 									"WS_WebServiceType WST " + 
 									"INNER JOIN WS_WebServiceFieldInput WSI ON (WST.WS_WebServiceType_ID = WSI.WS_WebServiceType_ID) " +
 									"INNER JOIN AD_Column AC ON (AC.AD_Column_ID = WSI.AD_Column_ID) " +
-									"WHERE WST.WS_WebServiceType_ID=?", new String[]{m_WS_WebServiceType_ID.toString()});
+									"WHERE WST.WS_WebServiceType_ID=? AND WSI.IsActive = ? ", new String[]{m_WS_WebServiceType_ID.toString(), "Y"});
 		int i;
 		WSField l_field;
 		String l_NameColumn;

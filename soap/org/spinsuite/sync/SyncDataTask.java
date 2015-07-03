@@ -92,7 +92,8 @@ public class SyncDataTask implements BackGroundProcess  {
 	private String 					m_PublicTittle = "";
 	/** Background Task					*/
 	private BackGroundTask 			bgTask = null;
-	
+	/**Define if is Root Node */ 
+	private boolean					IsRootNode = true;
 	
 	/**
 	 * 
@@ -154,13 +155,7 @@ public class SyncDataTask implements BackGroundProcess  {
 		try{
 			conn = new DB(m_ctx);
 			conn.openDB(DB.READ_WRITE);
-			//Get Child's Web Services
-			List<MSPSSyncMenu> syncms = MSPSSyncMenu.getNodesFromParent(m_ctx, Integer.valueOf(m_SPS_SyncMenu_ID).toString(), conn);
-			
-			for (MSPSSyncMenu mspsSyncMenu : syncms) {
-				syncData(mspsSyncMenu.getSPS_SyncMenu_ID(),0);
-			}
-//			syncData(m_SPS_SyncMenu_ID, 0);
+			syncData(m_SPS_SyncMenu_ID, 0);
 		} catch(Exception e) {
 			m_Error = true;
 			LogM.log(m_ctx, getClass(), Level.SEVERE, e.getLocalizedMessage());
@@ -225,8 +220,7 @@ public class SyncDataTask implements BackGroundProcess  {
 			}//End Query Data Web Service
 			
 			//Run Create Data Web Service
-			else if (m_MethodValue.equals(SyncValues.WSMCreateData)
-						||m_MethodValue.equals(SyncValues.WSMUpdateData)) {
+			else if (m_MethodValue.equals(SyncValues.WSMCreateData)) {
 				if (syncm.getSPS_Table_ID()!=0){
 					MSPSTable table= new MSPSTable(m_ctx, syncm.getSPS_Table_ID(), conn);
 					String whereClause = "";
@@ -241,9 +235,10 @@ public class SyncDataTask implements BackGroundProcess  {
 													+ "SPS_SyncTable "
 													+ "WHERE SPS_SyncTable.SPS_Table_ID = ? AND "
 													+ "SPS_SyncTable.Record_ID = "+table.getTableName()+"."+table.getTableName()+"_ID AND "
-													+ "SPS_SyncTable.EventChangeLog IN (?,?) AND "
+//													+ "SPS_SyncTable.EventChangeLog IN (?,?) AND "
+													+ "SPS_SyncTable.EventChangeLog = ? AND "
 													+ "SPS_SyncTable.IsSynchronized='N' )";
-						parameters = new Object[]{table.getSPS_Table_ID(),X_SPS_SyncTable.EVENTCHANGELOG_Insert,X_SPS_SyncTable.EVENTCHANGELOG_Update};
+						parameters = new Object[]{table.getSPS_Table_ID(),X_SPS_SyncTable.EVENTCHANGELOG_Insert};
 					}else{
 						parameters = new Object[]{};
 					}
@@ -262,12 +257,66 @@ public class SyncDataTask implements BackGroundProcess  {
 					}
 				}
 			}//End Create Data Web Service
+			
+			else if (m_MethodValue.equals(SyncValues.WSMUpdateData)) {
+			if (syncm.getSPS_Table_ID()!=0){
+				MSPSTable table= new MSPSTable(m_ctx, syncm.getSPS_Table_ID(), conn);
+				String whereClause = "";
+				Object[] parameters = null;
+				if (syncm.getWhereClause()!=null)
+					whereClause += syncm.getWhereClause();
+				if (!syncm.isForced()){
+					if (whereClause !=null )
+						whereClause += " AND ";
+					
+					whereClause = " EXISTS (SELECT 1 "
+												+ "FROM "
+												+ "SPS_SyncTable "
+												+ "WHERE SPS_SyncTable.SPS_Table_ID = ? AND "
+												+ "SPS_SyncTable.Record_ID = "+table.getTableName()+"."+table.getTableName()+"_ID AND "
+												+ "SPS_SyncTable.EventChangeLog IN (?,?) AND "
+//												+ "SPS_SyncTable.EventChangeLog = ? AND "
+												+ "SPS_SyncTable.IsSynchronized='N' )";
+					parameters = new Object[]{table.getSPS_Table_ID(),X_SPS_SyncTable.EVENTCHANGELOG_Insert, X_SPS_SyncTable.EVENTCHANGELOG_Update};
+//					parameters = new Object[]{table.getSPS_Table_ID(),X_SPS_SyncTable.EVENTCHANGELOG_Update};
+				}else{
+					parameters = new Object[]{};
+				}
+				
+				whereClause = Env.parseContext(whereClause, true);
+				
+				List<PO> rows = new Query(m_ctx, table.getTableName(), whereClause, conn)
+								.setParameters(parameters)
+								.list();
+				for (PO row : rows) {
+					param= getSoapParam(syncm,PageNo,row);
+					callWebService(param,syncm);
+					writeDB(syncm,row.get_ID());
+				}
+				if (rows.size()==0){
+					m_PublicTittle = syncm.getName();
+					m_PublicMsg = m_ctx.getString(R.string.msg_NoRecordsPendingtoSync);
+				}
+			}
+		}//End Create Data Web Service
+			
 		}
 		
 		//Run Script After Call Web Service 
 		if (syncm.getAD_RuleAfter_ID()!=0){
 			X_AD_Rule rule  = new X_AD_Rule(m_ctx, syncm.getAD_RuleAfter_ID(), conn);
 			runQuery(rule.getScript(),null);
+		}
+		
+		if (IsRootNode){
+			IsRootNode = false;
+			//Get Child's Web Services
+			List<MSPSSyncMenu> syncms = MSPSSyncMenu.getNodesFromParent(m_ctx, Integer.valueOf(m_SPS_SyncMenu_ID).toString(), conn);
+			
+			for (MSPSSyncMenu mspsSyncMenu : syncms) {
+				syncData(mspsSyncMenu.getSPS_SyncMenu_ID(),0);
+			}
+			
 		}
 	}
 	
@@ -293,9 +342,13 @@ public class SyncDataTask implements BackGroundProcess  {
 				whereClause += (whereClause.equals("")?"":" AND ") + "(" + Env.parseContext(sm.getWhereClause(), true) + ")";
 			param = new WSModelCRUDRequest(m_ctx, m_NameSpace, wst.getWS_WebServiceType_ID(), conn, 0, null, whereClause, PageNo);
 		}
-		else if (m_MethodValue.equals(SyncValues.WSMCreateData)
-					||m_MethodValue.equals(SyncValues.WSMUpdateData))
+		else if (m_MethodValue.equals(SyncValues.WSMCreateData))
 			param = new WSModelCRUDRequest(m_ctx, m_NameSpace, wst.getWS_WebServiceType_ID(), conn, data.get_ID(), data);
+		else if (m_MethodValue.equals(SyncValues.WSMUpdateData))
+			param = new WSModelCRUDRequest(m_ctx, m_NameSpace, wst.getWS_WebServiceType_ID(), conn, data.get_ID() , data);
+	//	
+	
+		
 		//	
 		return param;
 	}
@@ -523,13 +576,12 @@ public class SyncDataTask implements BackGroundProcess  {
 					
 			}
 		}
-		else if (m_MethodValue.equals(SyncValues.WSMCreateData)
-					||m_MethodValue.equals(SyncValues.WSMUpdateData)){
+		else if (m_MethodValue.equals(SyncValues.WSMCreateData)){
 
 			if (soapResponse.hasAttribute("RecordID")){
 				String whereClause = "SPS_Table_ID = " + sm.getSPS_Table_ID() + " AND "
 						+ "Record_ID = " + p_ID + " AND "
-						+ "EventChangeLog IN ('" + X_SPS_SyncTable.EVENTCHANGELOG_Insert + "','" + X_SPS_SyncTable.EVENTCHANGELOG_Update + "') AND IsSynchronized='N'";
+						+ "EventChangeLog ='" + X_SPS_SyncTable.EVENTCHANGELOG_Insert + "' AND IsSynchronized='N'";
 	
 				try {
 					MSPSSyncTable synctable = MSPSSyncTable.getSyncTable(sm.getCtx(), conn, whereClause);
@@ -547,7 +599,30 @@ public class SyncDataTask implements BackGroundProcess  {
 				}
 			}
 			
+		}else if (m_MethodValue.equals(SyncValues.WSMUpdateData)){
+
+		if (soapResponse.hasAttribute("RecordID")){
+			String whereClause = "SPS_Table_ID = " + sm.getSPS_Table_ID() + " AND "
+					+ "Record_ID = " + p_ID + " AND "
+					+ "EventChangeLog ='" + X_SPS_SyncTable.EVENTCHANGELOG_Update+ "' AND IsSynchronized='N'";
+
+			try {
+				MSPSSyncTable synctable = MSPSSyncTable.getSyncTable(sm.getCtx(), conn, whereClause);
+				if (synctable.getSPS_SyncTable_ID()>0){
+					synctable.setSyncRecord_ID(soapResponse.getAttributeAsString("RecordID"));
+					synctable.setIsSynchronized(true);
+					synctable.save();
+					sm.setLastSynchronized(new Timestamp(System.currentTimeMillis()));
+					sm.save();
+				}
+			} catch (Exception e) {
+				m_PublicMsg = e.getLocalizedMessage();
+				LogM.log(m_ctx, SyncDataTask.class, Level.SEVERE, m_PublicMsg,e.getCause());
+				publishOnRunning();
+			}
 		}
+		
+	}
 		
 		soapResponse = null;
 	}
