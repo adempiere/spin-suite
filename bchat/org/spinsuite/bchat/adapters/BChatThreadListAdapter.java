@@ -73,7 +73,7 @@ public class BChatThreadListAdapter extends ArrayAdapter<DisplayBChatThreadListI
 	private ArrayList<DisplayBChatThreadListItem> 	originalData;
 	/**	Identifier of View			*/
 	private int 									id_View;
-	/**	Slected Items IDs			*/
+	/**	Selected Items IDs			*/
 	private SparseBooleanArray 						m_SelectedItems;
 	/**	Directory by Default		*/
 	private String									m_DirectoryApp = null;

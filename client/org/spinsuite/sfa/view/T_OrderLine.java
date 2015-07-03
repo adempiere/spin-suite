@@ -42,6 +42,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.SparseBooleanArray;
+import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -51,6 +53,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -75,6 +78,7 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 	private 	boolean 				m_Processed				= false;
 	private		int 					m_C_Order_ID			= 0;
 	private		TV_DynamicActivity		m_Callback				= null;
+	private 	OrderLineAdapter 		m_Adapter 				= null;
 	private static final int 			O_DELETE 				= 1;
 	
 	/**
@@ -98,6 +102,65 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 		tv_GrandTotal 		= (TextView) m_View.findViewById(R.id.tv_GrandTotal);
 		tv_lb_TotalLines	= (TextView) m_View.findViewById(R.id.tv_lb_TotalLines);
 		tv_lb_GrandTotal	= (TextView) m_View.findViewById(R.id.tv_lb_GrandTotal);
+		//	Add Listener for List
+		v_list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		v_list.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+			@Override
+			public void onItemCheckedStateChanged(ActionMode mode,
+					int position, long id, boolean checked) {
+				// Capture total checked items
+				final int checkedCount = v_list.getCheckedItemCount();
+				// Set the CAB title according to total checked items
+				mode.setTitle(checkedCount + " " + getString(R.string.Selected));
+				// Calls toggleSelection method from ListViewAdapter Class
+				m_Adapter.toggleSelection(position);
+				
+			}
+
+			@Override
+			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+				switch (item.getItemId()) {
+				case R.id.action_delete:
+					SparseBooleanArray selectedItems = m_Adapter.getSelectedItems();
+					int[] ids = new int[selectedItems.size()];
+					for (int i = (selectedItems.size() - 1); i >= 0; i--) {
+						if (selectedItems.valueAt(i)) {
+							DisplayOrderLine selectedItem = m_Adapter
+									.getItem(selectedItems.keyAt(i));
+							//	Add Value
+							ids[i] = selectedItem.getC_OrderLine_ID();
+							//	Remove Item
+							m_Adapter.remove(selectedItem);
+						}
+					}
+					//	Delete Records in DB
+//					if(ids.length > 0) {
+//						BCMessageHandle.getInstance(getActivity()).deleteRequest(ids);
+//					}
+					mode.finish();
+					return true;
+				default:
+					return false;
+				}
+			}
+
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+				mode.getMenuInflater().inflate(R.menu.general_multi_selection, menu);
+				return true;
+			}
+
+			@Override
+			public void onDestroyActionMode(ActionMode mode) {
+				m_Adapter.removeSelection();
+			}
+
+			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+				return false;
+			}
+			
+		});
 		//	Event
 		registerForContextMenu(v_list);
 		return m_View;
@@ -388,9 +451,9 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 			m_Callback.setTabSufix(" (" + m_LinesNo + ")");
 		}
 		//	Set Adapter
-		OrderLineAdapter p_Adapter = new OrderLineAdapter(getActivity(), data);
-		p_Adapter.setDropDownViewResource(R.layout.i_ol_add_product);
-		v_list.setAdapter(p_Adapter);
+		m_Adapter = new OrderLineAdapter(getActivity(), data);
+		m_Adapter.setDropDownViewResource(R.layout.i_ol_add_product);
+		v_list.setAdapter(m_Adapter);
 	}
 	
 	@Override

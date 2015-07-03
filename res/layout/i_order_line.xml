@@ -22,7 +22,8 @@
     android:layout_height="match_parent"
     android:weightSum="4"
     android:orientation="horizontal"
-    android:baselineAligned="false" >
+    android:baselineAligned="false"
+    android:background="?android:attr/activatedBackgroundIndicator" >
 	<!-- Product Descripton -->
     <LinearLayout
         android:layout_width="match_parent"

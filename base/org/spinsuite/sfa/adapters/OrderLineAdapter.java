@@ -24,6 +24,7 @@ import org.spinsuite.util.DisplayType;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,8 @@ public class OrderLineAdapter extends ArrayAdapter<DisplayOrderLine> {
 	private DecimalFormat					m_QtyNumberFormat = null;
 	/**	Decimal Format				*/
 	private DecimalFormat					m_AmtNumberFormat = null;
+	/**	Selected Items IDs			*/
+	private SparseBooleanArray 				m_SelectedItems;
 	
 	public OrderLineAdapter(Context ctx, ArrayList<DisplayOrderLine> data) {
 		super(ctx, R.layout.i_order_line, data);
@@ -51,6 +54,7 @@ public class OrderLineAdapter extends ArrayAdapter<DisplayOrderLine> {
 		this.data = data;
 		m_QtyNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY);
 		m_AmtNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT);
+		m_SelectedItems = new SparseBooleanArray();
 	}
 	
 	@SuppressLint("InflateParams")
@@ -98,5 +102,68 @@ public class OrderLineAdapter extends ArrayAdapter<DisplayOrderLine> {
 
 		//	Return
 		return item;
+	}
+	
+	/**
+	 * Remove Selections
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	public void removeSelection() {
+		m_SelectedItems = new SparseBooleanArray();
+		notifyDataSetChanged();
+	}
+	
+	/**
+	 * Toogle Selection
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param position
+	 * @return void
+	 */
+	public void toggleSelection(int position) {
+		selectView(position, !m_SelectedItems.get(position));
+	}
+
+	/**
+	 * Select View
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param position
+	 * @param value
+	 * @return void
+	 */
+	public void selectView(int position, boolean value) {
+		if (value) {
+			m_SelectedItems.put(position, value);
+		} else {
+			m_SelectedItems.delete(position);
+		}
+		//	Is Change
+		notifyDataSetChanged();
+	}
+
+	/**
+	 * Get Selected Count
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return int
+	 */
+	public int getSelectedCount() {
+		return m_SelectedItems.size();
+	}
+
+	/**
+	 * Get Selected Items
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return SparseBooleanArray
+	 */
+	public SparseBooleanArray getSelectedItems() {
+		return m_SelectedItems;
+	}
+	
+	@Override
+	public void remove(DisplayOrderLine object) {
+		data.remove(object);
+		notifyDataSetChanged();
 	}
 }
