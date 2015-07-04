@@ -75,6 +75,7 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 	private		int 					m_C_Order_ID			= 0;
 	private		TV_DynamicActivity		m_Callback				= null;
 	private 	OrderLineAdapter 		m_Adapter 				= null;
+	private 	int						m_LinesNo				= 0;
 	
 	/**
 	 * *** Constructor ***
@@ -308,6 +309,9 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 				+ "p.Name ProductName, "
 				+ "COALESCE(p.Description, '') Description, "
 				+ "u.UOMSymbol, "
+				+ "t.C_Tax_ID, "
+				+ "t.TaxIndicator, "
+				+ "t.Rate, "
 				+ "ol.PriceEntered, "
 				+ "ol.LineNetAmt, "
 				+ "ol.QtyEntered "
@@ -316,7 +320,8 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 				+ "INNER JOIN M_Product p ON (ol.M_Product_ID = p.M_Product_ID) "
 				+ "INNER JOIN C_UOM u ON (ol.C_UOM_ID = u.C_UOM_ID) "
 				+ "INNER JOIN C_Currency c ON(c.C_Currency_ID = o.C_Currency_ID) "
-				+ "LEFT JOIN M_Product_Category pc ON(pc.M_Product_Category_ID = p.M_Product_Category_ID) "
+				+ "INNER JOIN M_Product_Category pc ON(pc.M_Product_Category_ID = p.M_Product_Category_ID) "
+				+ "INNER JOIN C_Tax t ON(t.C_Tax_ID = ol.C_Tax_ID) "
 				+ "WHERE o.C_Order_ID = ? "
 				+ "ORDER BY ol.Line";
 		
@@ -332,7 +337,7 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 		String m_CurSymbol = null;
 		//	
 		ArrayList<DisplayOrderLine> data = new ArrayList<DisplayOrderLine>();
-		int m_LinesNo = 0;
+		m_LinesNo = 0;
 		if(rs != null 
 				&& rs.moveToFirst()){
 			int index = 0;
@@ -352,6 +357,9 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 								rs.getString(index++),	//	Product Name 
 								rs.getString(index++),	//	Product Description
 								rs.getString(index++),	//	UOM Symbol
+								rs.getInt(index++),		//	Tax ID
+								rs.getString(index++),	//	Tax Indicator
+								new BigDecimal(rs.getDouble(index++)),	//	Tax Rate
 								new BigDecimal(rs.getDouble(index++)),	//	Price Entered
 								new BigDecimal(rs.getDouble(index++)),	//	Line Net Amt
 								new BigDecimal(rs.getDouble(index++))	//	Qty Entered
@@ -366,7 +374,7 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 		//	Close Connection
 		DB.closeConnection(conn);
 		//	
-		DecimalFormat format = DisplayType.getNumberFormat(getActivity(), DisplayType.AMOUNT);
+		DecimalFormat format = DisplayType.getNumberFormat(getActivity(), DisplayType.AMOUNT, "###,###,###,###.00");
 		//	Set Totals
 		tv_TotalLines.setText(format.format(m_TotalLines));
 		tv_GrandTotal.setText(format.format(m_GrandTotal));
@@ -374,10 +382,6 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 		if(m_CurSymbol != null) {
 			tv_lb_TotalLines.setText(getString(R.string.TotalLines) + " (" + m_CurSymbol + ")");
 			tv_lb_GrandTotal.setText(getString(R.string.GrandTotal) + " (" + m_CurSymbol + ")");
-		}
-		//	Set Info
-		if(m_Callback != null) {
-			m_Callback.setTabSufix(" (" + m_LinesNo + ")");
 		}
 		//	Set Adapter
 		m_Adapter = new OrderLineAdapter(getActivity(), data);
@@ -403,6 +407,9 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 	@Override
 	public boolean refreshFromChange(boolean reQuery) {
 		m_IsLoadOk = false;
+		if(reQuery) {
+			load();
+		}
 		return false;
 	}
 
@@ -426,13 +433,24 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 		//	Hide Keyboard
 		getActivity().getWindow()
 					.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		if (resultCode == Activity.RESULT_OK)
+		if (resultCode == Activity.RESULT_OK) {
+			m_Callback.requestRefreshAll(true);
 			load();
+		}
 	}
 
 	@Override
 	public void setIsParentModifying(boolean isParentModifying) {
 		m_IsParentModifying = isParentModifying;
+	}
+
+	@Override
+	public String getTabSuffix() {
+		if(m_LinesNo == 0) {
+			return null;
+		}
+		//	Return Lines
+		return "(" + m_LinesNo + ")";
 	}
 
 }

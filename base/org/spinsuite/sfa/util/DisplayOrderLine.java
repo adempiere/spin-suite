@@ -34,6 +34,12 @@ public class DisplayOrderLine {
 	private String 		m_Description;
 	/**	UOM Symbol			*/
 	private String 		m_UOMSymbol;
+	/**	Tax ID				*/
+	private int 		m_C_Tax_ID;
+	/**	Tax					*/
+	private String 		m_TaxIndicator;
+	/**	Tax Rate			*/
+	private BigDecimal 	m_TaxRate;
 	/**	Qty Entered			*/
 	private BigDecimal 	m_QtyEntered;
 	/**	Price Entered		*/
@@ -44,20 +50,26 @@ public class DisplayOrderLine {
 	private int 		m_C_OrderLine_ID;
 	
 	/**
+	 * 
 	 * *** Constructor ***
-	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_C_OrderLine_ID
 	 * @param p_ProductCategory
 	 * @param p_Value
 	 * @param p_Name
 	 * @param p_Description
 	 * @param p_UOMSymbol
+	 * @param p_C_Tax_ID
+	 * @param p_TaxIndicator
+	 * @param p_TaxRate
 	 * @param p_PriceEntered
 	 * @param p_LineNetAmt
 	 * @param p_QtyEntered
 	 */
 	public DisplayOrderLine(int p_C_OrderLine_ID, String p_ProductCategory, String p_Value, String p_Name,
-			String p_Description, String p_UOMSymbol, BigDecimal p_PriceEntered,
+			String p_Description, String p_UOMSymbol, 
+			int p_C_Tax_ID, String p_TaxIndicator, BigDecimal p_TaxRate, 
+			BigDecimal p_PriceEntered,
 			BigDecimal p_LineNetAmt, BigDecimal p_QtyEntered) {
 		super();
 		m_C_OrderLine_ID = p_C_OrderLine_ID;
@@ -66,6 +78,9 @@ public class DisplayOrderLine {
 		m_Name = p_Name;
 		m_Description = p_Description;
 		m_UOMSymbol = p_UOMSymbol;
+		m_C_Tax_ID = p_C_Tax_ID;
+		m_TaxIndicator = p_TaxIndicator;
+		m_TaxRate = p_TaxRate;
 		m_PriceEntered = p_PriceEntered;
 		m_LineNetAmt = p_LineNetAmt;
 		m_QtyEntered = p_QtyEntered;
@@ -157,6 +172,48 @@ public class DisplayOrderLine {
 	 */
 	public void setUOM_Symbol(String p_UOM_Symbol) {
 		this.m_UOMSymbol = p_UOM_Symbol;
+	}
+
+	/**
+	 * @return the m_C_Tax_ID
+	 */
+	public int getC_Tax_ID() {
+		return m_C_Tax_ID;
+	}
+
+	/**
+	 * @return the m_TaxIndicator
+	 */
+	public String getTaxIndicator() {
+		return m_TaxIndicator;
+	}
+
+	/**
+	 * @return the m_TaxRate
+	 */
+	public BigDecimal getTaxRate() {
+		return m_TaxRate;
+	}
+
+	/**
+	 * @param m_C_Tax_ID the m_C_Tax_ID to set
+	 */
+	public void setC_Tax_ID(int m_C_Tax_ID) {
+		this.m_C_Tax_ID = m_C_Tax_ID;
+	}
+
+	/**
+	 * @param m_TaxIndicator the m_TaxIndicator to set
+	 */
+	public void setTaxIndicator(String m_TaxIndicator) {
+		this.m_TaxIndicator = m_TaxIndicator;
+	}
+
+	/**
+	 * @param m_TaxRate the m_TaxRate to set
+	 */
+	public void setTaxRate(BigDecimal m_TaxRate) {
+		this.m_TaxRate = m_TaxRate;
 	}
 
 	/**

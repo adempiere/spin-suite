@@ -62,7 +62,7 @@
     </LinearLayout>
 
     <!-- Labels Qty Description -->
-    <LinearLayout
+   	<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="2.3"
@@ -118,35 +118,34 @@
                 android:layout_weight="0.5"
                 android:maxLines="1"
                 android:gravity="end"
-                android:text="@string/None" />
+                android:text="@string/Zero" />
 
         </LinearLayout>
         <!-- Price -->
 		<LinearLayout
-		         android:layout_width="match_parent"
-		         android:layout_height="match_parent"
-		         android:orientation="horizontal" >
+			android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="horizontal" >
 		
-		         <TextView
-		             android:id="@+id/tv_lb_Price"
-		             android:layout_width="match_parent"
-		             android:layout_height="wrap_content"
-		             android:layout_weight="1"
-		             android:maxLines="1"
-		             android:gravity="end"
-		             android:text="@string/Price" />
+		    <TextView
+		    	android:id="@+id/tv_lb_Price"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        android:gravity="end"
+		        android:text="@string/Price" />
 		
-		         <TextView
-		             android:id="@+id/tv_Price"
-		             android:layout_width="match_parent"
-		             android:layout_height="wrap_content"
-		             android:layout_weight="1"
-		             android:maxLines="1"
-		             android:gravity="end"
-		             android:text="@string/None" />
-		
-		     </LinearLayout>
-        <!-- Line Net Amt -->
+		    <TextView
+		    	android:id="@+id/tv_Price"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        android:gravity="end"
+		        android:text="@string/Zero" />
+		</LinearLayout>
+		<!-- Line Net Amt -->
 		<LinearLayout
 		         android:layout_width="match_parent"
 		         android:layout_height="match_parent"
@@ -168,7 +167,55 @@
 		             android:layout_weight="1"
 		             android:maxLines="1"
 		             android:gravity="end"
-		             android:text="@string/None" />
+		             android:text="@string/Zero" />
+		</LinearLayout>
+		<!-- Tax -->
+		<LinearLayout
+			android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="horizontal" >
+		
+		    <TextView
+		    	android:id="@+id/tv_lb_TaxIndicator"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        android:gravity="end"
+		        android:text="@string/C_Tax_ID" />
+		
+		    <TextView
+		    	android:id="@+id/tv_TaxAmount"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        android:gravity="end"
+		        android:text="@string/Zero" />
+		</LinearLayout>
+		<!-- Grand Total -->
+		<LinearLayout
+			android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="horizontal" >
+		
+		    <TextView
+		    	android:id="@+id/tv_lb_GrandTotal"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        android:gravity="end"
+		        android:text="@string/GrandTotal" />
+		
+		    <TextView
+		    	android:id="@+id/tv_GrandTotal"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        android:gravity="end"
+		        android:text="@string/Zero" />
 		</LinearLayout>
     </LinearLayout>
 </LinearLayout>

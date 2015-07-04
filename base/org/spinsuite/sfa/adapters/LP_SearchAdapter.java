@@ -63,8 +63,8 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		this.data = data;
 		inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inputMethod = ((InputMethodManager)ctx.getSystemService(Context.INPUT_METHOD_SERVICE));
-		m_QtyFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY);
-		m_AmtFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT);
+		m_QtyFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY, "###,###,###,###.00");
+		m_AmtFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT, "###,###,###,###.00");
 		notifyDataSetChanged();
 	}
 	
@@ -78,8 +78,8 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		data = new ArrayList<DisplayListProduct>();
 		inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inputMethod = ((InputMethodManager)ctx.getSystemService(Context.INPUT_METHOD_SERVICE));
-		m_QtyFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY);
-		m_AmtFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT);
+		m_QtyFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY, "###,###,###,###.00");
+		m_AmtFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT, "###,###,###,###.00");
 		notifyDataSetChanged();
 	}
 	

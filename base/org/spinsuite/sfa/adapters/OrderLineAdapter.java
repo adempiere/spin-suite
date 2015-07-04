@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import org.spinsuite.base.R;
 import org.spinsuite.sfa.util.DisplayOrderLine;
 import org.spinsuite.util.DisplayType;
+import org.spinsuite.util.Env;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -52,8 +53,8 @@ public class OrderLineAdapter extends ArrayAdapter<DisplayOrderLine> {
 		super(ctx, R.layout.i_order_line, data);
 		this.ctx = ctx;
 		this.data = data;
-		m_QtyNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY);
-		m_AmtNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT);
+		m_QtyNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY, "###,###,###,###.00");
+		m_AmtNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT, "###,###,###,###.00");
 		m_SelectedItems = new SparseBooleanArray();
 	}
 	
@@ -92,10 +93,31 @@ public class OrderLineAdapter extends ArrayAdapter<DisplayOrderLine> {
 		//	Set Price
 		TextView tv_Price = (TextView) item.findViewById(R.id.tv_Price);
 		tv_Price.setText(m_AmtNumberFormat.format(mi.getPriceEntered()));
-		
+
 		//	Set Net Line Amount
 		TextView tv_LineNetAmt = (TextView) item.findViewById(R.id.tv_LineNetAmt);
 		tv_LineNetAmt.setText(m_AmtNumberFormat.format(mi.getLineNetAmt()));
+		
+		//	Set Tax Indicator
+		TextView tv_lb_TaxIndicator = (TextView)item.findViewById(R.id.tv_lb_TaxIndicator);
+		tv_lb_TaxIndicator.setText(mi.getTaxIndicator());
+		
+		//	Set Net Line Amount
+		TextView tv_TaxAmount = (TextView) item.findViewById(R.id.tv_TaxAmount);
+		tv_TaxAmount.setText(
+				m_AmtNumberFormat.format(
+						mi.getLineNetAmt()
+						.multiply(mi.getTaxRate()
+								.divide(Env.ONEHUNDRED))));
+		
+		//	Set Grand Total
+		TextView tv_GrandTotal = (TextView) item.findViewById(R.id.tv_GrandTotal);
+		tv_GrandTotal.setText(
+				m_AmtNumberFormat.format(mi.getLineNetAmt()
+						.multiply(mi.getTaxRate()
+								.divide(Env.ONEHUNDRED))
+						.add(mi.getLineNetAmt())));
+		
 		//	Set Qty
 		TextView tv_Qty = (TextView)item.findViewById(R.id.tv_Qty);
 		tv_Qty.setText(m_QtyNumberFormat.format(mi.getQtyEntered())); 
