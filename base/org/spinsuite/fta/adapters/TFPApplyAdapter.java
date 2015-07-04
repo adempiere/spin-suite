@@ -23,6 +23,7 @@ import org.spinsuite.base.R;
 import org.spinsuite.util.DisplayType;
 
 import android.content.Context;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,7 @@ public class TFPApplyAdapter extends ArrayAdapter<DisplayTFPApply> {
 		this.data = data;
 		dateFormat = DisplayType.getDateFormat(ctx);
 		numberFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY);
+		m_SelectedItems = new SparseBooleanArray();
 	}
 	
 	/**	Context						*/
@@ -58,6 +60,8 @@ public class TFPApplyAdapter extends ArrayAdapter<DisplayTFPApply> {
 	private DecimalFormat				numberFormat = null;
 	/**	Decimal Format				*/
 	private SimpleDateFormat			dateFormat = null;
+	/**	Selected Items IDs			*/
+	private SparseBooleanArray 			m_SelectedItems;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -117,5 +121,68 @@ public class TFPApplyAdapter extends ArrayAdapter<DisplayTFPApply> {
 		
 		//	Return
 		return item;
+	}
+	
+	/**
+	 * Remove Selections
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	public void removeSelection() {
+		m_SelectedItems = new SparseBooleanArray();
+		notifyDataSetChanged();
+	}
+	
+	/**
+	 * Toogle Selection
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param position
+	 * @return void
+	 */
+	public void toggleSelection(int position) {
+		selectView(position, !m_SelectedItems.get(position));
+	}
+
+	/**
+	 * Select View
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param position
+	 * @param value
+	 * @return void
+	 */
+	public void selectView(int position, boolean value) {
+		if (value) {
+			m_SelectedItems.put(position, value);
+		} else {
+			m_SelectedItems.delete(position);
+		}
+		//	Is Change
+		notifyDataSetChanged();
+	}
+
+	/**
+	 * Get Selected Count
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return int
+	 */
+	public int getSelectedCount() {
+		return m_SelectedItems.size();
+	}
+
+	/**
+	 * Get Selected Items
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return SparseBooleanArray
+	 */
+	public SparseBooleanArray getSelectedItems() {
+		return m_SelectedItems;
+	}
+	
+	@Override
+	public void remove(DisplayTFPApply object) {
+		data.remove(object);
+		notifyDataSetChanged();
 	}
 }

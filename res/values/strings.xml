@@ -143,8 +143,8 @@
 	<string name="V_ForDepositAmt">For Deposit Amt</string>
 	<string name="C_Tax_ID">Tax</string>
 	<string name="Selected">Selected</string>
-	
 	<string name="Language">Language</string>
+	<string name="M_Product_ID">Product</string>
 	
 	<string name="t_SelectOne">Select One Option</string>
 	<string name="t_C_OrderLine_ID">Sales Order Lines</string>
@@ -176,7 +176,6 @@
 	<string name="app_phone3_erp" >+58(412)1741773</string>
 	<string name="app_phone4_erp" >+58(424)5484908</string>
 	<string name="app_phone5_erp" >+50768437413</string>
-	<string name="M_Product_ID">Product</string>
 	
 	<!-- Synchronization -->
 	<string name="Sync_InitSyncManual">Manual Synchronization</string>

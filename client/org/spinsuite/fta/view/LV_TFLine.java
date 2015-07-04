@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
+import org.spinsuite.base.R;
 import org.spinsuite.fta.adapters.DisplayTFLine;
 import org.spinsuite.fta.adapters.TFLineAdapter;
-import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.model.I_FTA_Farming;
 import org.spinsuite.util.Env;
@@ -40,13 +40,12 @@ import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.Button;
 import android.widget.ListView;
 
 /**
@@ -67,7 +66,6 @@ public class LV_TFLine extends Fragment
 	/**	Parameters	*/
 	private 	TabParameter	 		tabParam					= null;
 	private 	ListView				v_list						= null;
-	private 	Button					v_button					= null;
 	private 	View 					m_View						= null;
 	private 	boolean					m_IsLoadOk					= false;
 	private 	boolean 				m_Processed					= false;
@@ -88,24 +86,6 @@ public class LV_TFLine extends Fragment
 		//	Re-Load
 		m_View = inflater.inflate(R.layout.t_technical_form_line, container, false);
     	//	Scroll
-		v_button = (Button) m_View.findViewById(R.id.bt_Add);
-		v_button.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				//	
-				if(m_IsParentModifying) {
-	    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
-	    			return;
-	    		}
-				Bundle bundle = new Bundle();
-				bundle.putParcelable("TabParam", tabParam);
-				Intent intent = new Intent(getActivity(), V_AddTFLine.class);
-				intent.putExtras(bundle);
-				startActivityForResult(intent, 0);
-			}
-		});
-		//	
 		v_list = (ListView) m_View.findViewById(R.id.lv_TFLPA);
 		//	
 		v_list.setOnItemClickListener(new ListView.OnItemClickListener() {
@@ -138,6 +118,61 @@ public class LV_TFLine extends Fragment
 		registerForContextMenu(v_list);
 		return m_View;
 	}
+	
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+    	super.onCreate(savedInstanceState);
+    	setHasOptionsMenu(true);
+    }
+	
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	int itemId = item.getItemId();
+    	switch (itemId) {
+		case R.id.action_add:
+			if(m_IsParentModifying) {
+    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
+    			return false;
+    		}
+			Bundle bundle = new Bundle();
+			bundle.putParcelable("TabParam", tabParam);
+			Intent intent = new Intent(getActivity(), V_AddTFLine.class);
+			intent.putExtras(bundle);
+			startActivityForResult(intent, 0);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	@Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        //	
+        menu.clear();
+        inflater.inflate(R.menu.dynamic_tab, menu);
+    	//	do it
+        //	Get Items
+        MenuItem mi_Search 	= menu.findItem(R.id.action_search);
+        MenuItem mi_Edit 	= menu.findItem(R.id.action_edit);
+        MenuItem mi_Add	 	= menu.findItem(R.id.action_more);
+        MenuItem mi_More 	= menu.findItem(R.id.action_more);
+        MenuItem mi_Cancel 	= menu.findItem(R.id.action_cancel);
+        MenuItem mi_Save 	= menu.findItem(R.id.action_save);
+        //	Hide
+        mi_Search.setVisible(false);
+        mi_Edit.setVisible(false);
+        mi_More.setVisible(false);
+        mi_Cancel.setVisible(false);
+        mi_Save.setVisible(false);
+    	//	Valid is Loaded
+    	if(!m_IsLoadOk)
+    		return;
+    	//	Visible Add
+    	mi_Add.setEnabled(
+				Env.getTabRecord_ID(getActivity(), tabParam.getActivityNo(), 0)[0] > 0
+				&& !m_Processed);
+    }
 	
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -262,20 +297,6 @@ public class LV_TFLine extends Fragment
     	//	Load Data
     	if(!m_IsLoadOk)
     		load();
-    	//	Load the view
-    	loadView();
-	}
-	
-	/**
-	 * Load View
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/08/2014, 11:27:16
-	 * @return void
-	 */
-	private void loadView() {
-		//	
-		v_button.setEnabled(
-				Env.getTabRecord_ID(getActivity(), tabParam.getActivityNo(), 0)[0] > 0
-				&& !m_Processed);
 	}
 	
 	/**

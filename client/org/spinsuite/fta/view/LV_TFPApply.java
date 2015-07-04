@@ -20,14 +20,15 @@ import java.util.Date;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
+import org.spinsuite.base.R;
 import org.spinsuite.fta.adapters.DisplayTFPApply;
 import org.spinsuite.fta.adapters.TFPApplyAdapter;
-import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.TabParameter;
+import org.spinsuite.view.TV_DynamicActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
@@ -36,17 +37,19 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.SparseBooleanArray;
+import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.Button;
 import android.widget.ListView;
 
 /**
@@ -67,12 +70,13 @@ public class LV_TFPApply extends Fragment
 	/**	Parameters	*/
 	private 	TabParameter	 		tabParam				= null;
 	private 	ListView				v_list					= null;
-	private 	Button					v_button				= null;
 	private 	View 					m_View					= null;
 	private 	boolean					m_IsLoadOk				= false;
 	private 	boolean 				m_Processed				= false;
 	private 	int 					m_FTA_TechnicalForm_ID 	= 0;
 	private 	boolean 				m_IsParentModifying		= false;
+	private 	TFPApplyAdapter 		m_Adapter				= null;
+	private		TV_DynamicActivity		m_Callback				= null;
 	//	
 	private static final int 			O_DELETE 				= 1;
 	
@@ -83,31 +87,166 @@ public class LV_TFPApply extends Fragment
 			return m_View;
 		//	Re-Load
 		m_View = inflater.inflate(R.layout.t_technical_form_line, container, false);
-    	//	Scroll
-		v_button = (Button) m_View.findViewById(R.id.bt_Add);
-		v_button.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				//	
-				if(m_IsParentModifying) {
-	    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
-	    			return;
-	    		}
-				Bundle bundle = new Bundle();
-				bundle.putParcelable("TabParam", tabParam);
-				bundle.putInt("FTA_TechnicalForm_ID", m_FTA_TechnicalForm_ID);
-				bundle.putInt("FTA_TechnicalFormLine_ID", 0);
-				Intent intent = new Intent(getActivity(), V_AddSuggestedProduct.class);
-				intent.putExtras(bundle);
-				startActivityForResult(intent, 0);
-			}
-		});
 		//	
 		v_list = (ListView) m_View.findViewById(R.id.lv_TFLPA);
-		//	Event
-		registerForContextMenu(v_list);
+		v_list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		v_list.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+			@Override
+			public void onItemCheckedStateChanged(ActionMode mode,
+					int position, long id, boolean checked) {
+				// Capture total checked items
+				final int checkedCount = v_list.getCheckedItemCount();
+				// Set the CAB title according to total checked items
+				mode.setTitle(checkedCount + " " + getString(R.string.Selected));
+				// Calls toggleSelection method from ListViewAdapter Class
+				m_Adapter.toggleSelection(position);
+				
+			}
+
+			@Override
+			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+				switch (item.getItemId()) {
+				case R.id.action_delete:
+					if(m_IsParentModifying) {
+		    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
+		    			return false;
+		    		}
+					//	Delete
+					String msg_Acept = getResources().getString(R.string.msg_Acept);
+					Builder ask = Msg.confirmMsg(getActivity(), getResources().getString(R.string.msg_AskDelete));
+					//	Get Items
+					final SparseBooleanArray selectedItems = m_Adapter.getSelectedItems();
+					//	
+					ask.setPositiveButton(msg_Acept, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+							//	Delete
+							int[] ids = new int[selectedItems.size()];
+							boolean first = true;
+							//	Create IN
+							StringBuffer inClause = new StringBuffer("WHERE FTA_TechnicalForm_ID = ? "
+									+ "AND FTA_ProductsToApply_ID IN(");
+							for (int i = (selectedItems.size() - 1); i >= 0; i--) {
+								if (selectedItems.valueAt(i)) {
+									DisplayTFPApply selectedItem = m_Adapter
+											.getItem(selectedItems.keyAt(i));
+									//	Add Value
+									if(!first) {
+										inClause.append(", ");
+									}
+									//	Add
+									inClause.append("'").append(selectedItem.getFTA_ProductsToApply_ID()).append("'");
+									//	Change First
+									if(first) {
+										first = false;
+									}
+									ids[i] = selectedItem.getFTA_ProductsToApply_ID();
+									//	Remove Item
+									m_Adapter.remove(selectedItem);
+								}
+							}
+							//	Add Last
+							inClause.append(")");
+							//	
+							if(ids.length > 0) {
+								DB.executeUpdate(m_Callback, 
+										"DELETE FROM FTA_ProductsToApply " + inClause, m_FTA_TechnicalForm_ID);
+							}
+						}
+					});
+					//	Re-Query
+					load();
+					ask.show();
+					//	
+					mode.finish();
+					return true;
+				default:
+					return false;
+				}
+			}
+
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+				mode.getMenuInflater().inflate(R.menu.general_multi_selection, menu);
+				return true;
+			}
+
+			@Override
+			public void onDestroyActionMode(ActionMode mode) {
+				m_Adapter.removeSelection();
+			}
+
+			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+				return false;
+			}
+			
+		});
+		//	Default
 		return m_View;
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		m_Callback = (TV_DynamicActivity) activity;
+	}
+	
+	@Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        //	
+        menu.clear();
+        inflater.inflate(R.menu.dynamic_tab, menu);
+    	//	do it
+        //	Get Items
+        MenuItem mi_Search 	= menu.findItem(R.id.action_search);
+        MenuItem mi_Edit 	= menu.findItem(R.id.action_edit);
+        MenuItem mi_Add	 	= menu.findItem(R.id.action_more);
+        MenuItem mi_More 	= menu.findItem(R.id.action_more);
+        MenuItem mi_Cancel 	= menu.findItem(R.id.action_cancel);
+        MenuItem mi_Save 	= menu.findItem(R.id.action_save);
+        //	Hide
+        mi_Search.setVisible(false);
+        mi_Edit.setVisible(false);
+        mi_More.setVisible(false);
+        mi_Cancel.setVisible(false);
+        mi_Save.setVisible(false);
+    	//	Valid is Loaded
+    	if(!m_IsLoadOk)
+    		return;
+    	//	Visible Add
+    	mi_Add.setEnabled(
+				Env.getTabRecord_ID(getActivity(), tabParam.getActivityNo(), 0)[0] > 0
+				&& !m_Processed);
+    }
+	
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+    	super.onCreate(savedInstanceState);
+    	setHasOptionsMenu(true);
+    }
+	
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	int itemId = item.getItemId();
+    	switch (itemId) {
+		case R.id.action_add:
+			if(m_IsParentModifying) {
+    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
+    			return false;
+    		}
+			Bundle bundle = new Bundle();
+			bundle.putParcelable("TabParam", tabParam);
+			bundle.putInt("FTA_TechnicalForm_ID", m_FTA_TechnicalForm_ID);
+			bundle.putInt("FTA_TechnicalFormLine_ID", 0);
+			Intent intent = new Intent(getActivity(), V_AddSuggestedProduct.class);
+			intent.putExtras(bundle);
+			startActivityForResult(intent, 0);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 	
 	@Override
@@ -181,20 +320,6 @@ public class LV_TFPApply extends Fragment
     	//	Load Data
     	if(!m_IsLoadOk)
     		load();
-    	//	Load the view
-    	loadView();
-	}
-	
-	/**
-	 * Load View
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/08/2014, 11:27:16
-	 * @return void
-	 */
-	private void loadView() {
-		//	
-		v_button.setEnabled(
-				Env.getTabRecord_ID(getActivity(), tabParam.getActivityNo(), 0)[0] > 0
-				&& !m_Processed);
 	}
 	
 	/**
@@ -254,9 +379,9 @@ public class LV_TFPApply extends Fragment
 		//	Close Connection
 		DB.closeConnection(conn);
 		//	Set Adapter
-		TFPApplyAdapter mi_adapter = new TFPApplyAdapter(getActivity(), data);
-		mi_adapter.setDropDownViewResource(R.layout.i_tf_suggested_product);
-		v_list.setAdapter(mi_adapter);
+		m_Adapter = new TFPApplyAdapter(getActivity(), data);
+		m_Adapter.setDropDownViewResource(R.layout.i_tf_suggested_product);
+		v_list.setAdapter(m_Adapter);
 	}
 
 	@Override

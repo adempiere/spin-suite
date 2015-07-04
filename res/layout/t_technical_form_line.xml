@@ -21,15 +21,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-	<!-- Button Add -->
-    <Button 
-        android:id="@+id/bt_Add"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/Action_Add" >
-    
-   	</Button>
-    <!-- List -->
+	<!-- List -->
     <ListView 
         android:id="@+id/lv_TFLPA"
         android:layout_width="match_parent"
