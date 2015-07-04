@@ -64,6 +64,8 @@ public class TabHandler {
     private final 	Class<?> 			m_Class;
     /**	Tab Parameter		*/
     private 		TabParameter		m_TabParameter;
+    /**	Refresh				*/
+    private 		boolean				m_Refresh;
     
     /**
      * Get Fragment
@@ -125,6 +127,42 @@ public class TabHandler {
     	if(m_Class == null)
     		return null;
     	return m_Class.getName();
+    }
+    
+    /**
+     * Set Refresh
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param p_Refresh
+     * @return void
+     */
+    public void setRefresh(boolean p_Refresh) {
+    	m_Refresh = p_Refresh;
+    }
+    
+    /**
+     * Get if is refresh
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return
+     * @return boolean
+     */
+    public boolean isRefresh() {
+    	return m_Refresh;
+    }
+    
+    /**
+     * Get Refresh and if it is true then change to false
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @return
+     * @return boolean
+     */
+    public boolean getRefreshAndChange() {
+    	boolean refresh = isRefresh();
+    	//	Change
+    	if(m_Refresh) {
+    		setRefresh(!m_Refresh);
+    	}
+    	//	Return
+    	return refresh;
     }
     
     /**

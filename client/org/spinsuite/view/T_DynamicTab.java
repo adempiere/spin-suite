@@ -1165,6 +1165,13 @@ public class T_DynamicTab extends Fragment
 			}
 			//	Hide
 			v_PDialog.dismiss();
+			//	Hide Keyboard
+			Env.hideKeyBoad(v_activity);
 		}
+	}
+
+	@Override
+	public String getTabSuffix() {
+		return null;
 	}
 }
