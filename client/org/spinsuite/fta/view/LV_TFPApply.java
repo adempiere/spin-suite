@@ -110,6 +110,9 @@ public class LV_TFPApply extends Fragment
 					if(m_IsParentModifying) {
 		    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
 		    			return false;
+		    		} else if(m_Processed) {
+		    			Msg.toastMsg(getActivity(), "@Processed@");
+		    			return false;
 		    		}
 					//	Delete
 					String msg_Acept = getResources().getString(R.string.msg_Acept);
@@ -235,7 +238,11 @@ public class LV_TFPApply extends Fragment
 			if(m_IsParentModifying) {
     			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
     			return false;
+    		} else if(m_Processed) {
+    			Msg.toastMsg(getActivity(), "@Processed@");
+    			return false;
     		}
+			//	
 			Bundle bundle = new Bundle();
 			bundle.putParcelable("TabParam", tabParam);
 			bundle.putInt("FTA_TechnicalForm_ID", m_FTA_TechnicalForm_ID);

@@ -225,8 +225,14 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 	            	//	new Filter
 	            	ArrayList<SP_DisplayRecordItem> filteredResult = new ArrayList<SP_DisplayRecordItem>();
 	                for(SP_DisplayRecordItem item : originalData) {
-	                    if((item.getProductName() != null 
-	                    		&& item.getProductName().toLowerCase().contains(constraint.toString())))
+	                    if((item.getProductCategory() != null 
+	                    		&& item.getProductCategory().toLowerCase().contains(constraint.toString()))
+	                    	|| (item.getProductValue() != null 
+		                    		&& item.getProductValue().toLowerCase().contains(constraint.toString()))
+	                    	|| (item.getProductName() != null 
+	                    		&& item.getProductName().toLowerCase().contains(constraint.toString()))
+	                    	|| (item.getProductDescription() != null 
+		                    		&& item.getProductDescription().toLowerCase().contains(constraint.toString())))
 	                        filteredResult.add(item);
 	                }
 	                return filteredResult;
