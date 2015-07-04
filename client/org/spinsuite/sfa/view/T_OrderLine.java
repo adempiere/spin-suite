@@ -23,7 +23,6 @@ import java.util.logging.Level;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_DynamicTab;
-import org.spinsuite.model.MOrder;
 import org.spinsuite.model.MOrderLine;
 import org.spinsuite.sfa.adapters.OrderLineAdapter;
 import org.spinsuite.sfa.util.DisplayOrderLine;
@@ -36,7 +35,6 @@ import org.spinsuite.view.TV_DynamicActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -44,7 +42,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
-import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -54,7 +51,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView.MultiChoiceModeListener;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -79,7 +75,6 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 	private		int 					m_C_Order_ID			= 0;
 	private		TV_DynamicActivity		m_Callback				= null;
 	private 	OrderLineAdapter 		m_Adapter 				= null;
-	private static final int 			O_DELETE 				= 1;
 	
 	/**
 	 * *** Constructor ***
@@ -121,22 +116,44 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 				switch (item.getItemId()) {
 				case R.id.action_delete:
-					SparseBooleanArray selectedItems = m_Adapter.getSelectedItems();
-					int[] ids = new int[selectedItems.size()];
-					for (int i = (selectedItems.size() - 1); i >= 0; i--) {
-						if (selectedItems.valueAt(i)) {
-							DisplayOrderLine selectedItem = m_Adapter
-									.getItem(selectedItems.keyAt(i));
-							//	Add Value
-							ids[i] = selectedItem.getC_OrderLine_ID();
-							//	Remove Item
-							m_Adapter.remove(selectedItem);
+					if(m_IsParentModifying) {
+		    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
+		    			return false;
+		    		}
+					//	Delete
+					String msg_Acept = getResources().getString(R.string.msg_Acept);
+					Builder ask = Msg.confirmMsg(getActivity(), getResources().getString(R.string.msg_AskDelete));
+					//	Get Items
+					final SparseBooleanArray selectedItems = m_Adapter.getSelectedItems();
+					//	
+					ask.setPositiveButton(msg_Acept, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+							//	Delete
+							int[] ids = new int[selectedItems.size()];
+							for (int i = (selectedItems.size() - 1); i >= 0; i--) {
+								if (selectedItems.valueAt(i)) {
+									DisplayOrderLine selectedItem = m_Adapter
+											.getItem(selectedItems.keyAt(i));
+									//	Add Value
+									ids[i] = selectedItem.getC_OrderLine_ID();
+									MOrderLine oLine = new MOrderLine(m_Callback, selectedItem.getC_OrderLine_ID(), null);
+									try {
+										oLine.deleteEx();
+										//	Remove Item
+										m_Adapter.remove(selectedItem);
+									} catch (Exception e) {
+										LogM.log(getActivity(), getClass(), Level.SEVERE, "Delete Ordel Line Error", e);
+										Msg.toastMsg(m_Callback, e.getMessage());
+									}
+								}
+							}
 						}
-					}
-					//	Delete Records in DB
-//					if(ids.length > 0) {
-//						BCMessageHandle.getInstance(getActivity()).deleteRequest(ids);
-//					}
+					});
+					//	Re-Query
+					load();
+					ask.show();
+					//	
 					mode.finish();
 					return true;
 				default:
@@ -182,9 +199,6 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 	@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-	    //if(!Env.isCurrentTab(getActivity(), 
-	    	//	tabParam.getActivityNo(), tabParam.getTabNo()))
-	    	//return;
         //	
         menu.clear();
         inflater.inflate(R.menu.dynamic_tab, menu);
@@ -245,91 +259,6 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 				Env.getContextAsBoolean(getActivity(), tabParam.getActivityNo(), "Processed") 
 					|| !Env.getWindowsAccess(getActivity(), tabParam.getSPS_Window_ID());
     }
-
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-		if (v.getId() == R.id.lv_OrderLine
-				&& !m_Processed) {
-			//	Delete
-		    menu.add(Menu.NONE, O_DELETE, 
-					Menu.NONE, getString(R.string.Action_Delete));
-		}
-	}
-	
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
-	            .getMenuInfo();
-	    //	Options
-	    switch (item.getItemId()) {
-	    	case O_DELETE:
-	    		if(m_IsParentModifying) {
-	    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
-	    			return false;
-	    		}
-	    		actionDelete(info.position);
-	    		return true;
-		    default:
-		        return super.onContextItemSelected(item);
-	    }
-	}
-	
-	/**
-	 * Action Delete 
-	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param position
-	 * @return void
-	 */
-	private void actionDelete(int position) {
-		final DisplayOrderLine item = (DisplayOrderLine) v_list.getAdapter().getItem(position);
-		String msg_Acept = this.getResources().getString(R.string.msg_Acept);
-		Builder ask = Msg.confirmMsg(getActivity(), getResources().getString(R.string.msg_AskDelete));
-		ask.setPositiveButton(msg_Acept, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
-				//	Delete
-				MOrderLine oLine = new MOrderLine(getActivity(), item.getC_OrderLine_ID(), null);
-				updateHeader(oLine.getCtx(),oLine, oLine.getLineNetAmt(),null);
-				try {
-					oLine.deleteEx();
-				} catch (Exception e) {
-					LogM.log(getActivity(), getClass(), Level.SEVERE, "Delete Ordel Line Error", e);
-				}
-				//	Re-Query
-				load();
-			}
-		});
-		ask.show();
-	}
-	
-	/**
-	 * Update Header
-	 * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param ctx
-	 * @param oLine
-	 * @param p_TotalLines
-	 * @param conn
-	 * @return void
-	 */
-	private void updateHeader(Context ctx, MOrderLine oLine,BigDecimal p_TotalLines, DB conn) {
-		MOrder order = new MOrder(ctx, oLine.getC_Order_ID(), conn);
-		order.setTotalLines(order.getTotalLines().subtract(p_TotalLines));
-		if(order.isTaxIncluded())
-			order.setGrandTotal(order.getGrandTotal().subtract(p_TotalLines));
-		else {
-			String sql = "SELECT COALESCE(SUM(it.TaxAmt),0) "
-					+ "FROM C_OrderTax it "
-					+ "WHERE it.C_Order_ID = " + order.getC_Order_ID();
-			BigDecimal taxAmt = new BigDecimal(DB.getSQLValueString(ctx, sql));
-			order.setGrandTotal(order.getGrandTotal().subtract(p_TotalLines.add(taxAmt)));
-		}
-		//	Save
-		try {
-			order.saveEx();
-		} catch (Exception e) {
-			LogM.log(getActivity(), getClass(), Level.SEVERE, "Update Order Error", e);
-		}
-	}
 	
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {

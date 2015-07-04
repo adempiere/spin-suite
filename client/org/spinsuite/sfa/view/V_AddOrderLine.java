@@ -108,6 +108,9 @@ public class V_AddOrderLine extends Activity {
 				//	
 			}
 		});
+		
+		//	Set Subtitle
+		getActionBar().setSubtitle(getString(R.string.M_Product_ID));
 	}
 	  
 	@Override
