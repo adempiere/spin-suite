@@ -28,6 +28,7 @@ import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.TabParameter;
+import org.spinsuite.view.TV_DynamicActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
@@ -73,6 +74,7 @@ public class LV_TFLine extends Fragment
 	private 	int 					m_FTA_TechnicalForm_ID 		= 0;
 	private 	int 					m_FTA_TechnicalFormLine_ID 	= 0;
 	private 	boolean 				m_IsParentModifying			= false;
+	private		TV_DynamicActivity		m_Callback					= null;
 	//	
 	private static final int 			O_SUGGEST_PRODUCT 			= 1;
 	private static final int 			O_APPLIED_PRODUCT 			= 2;
@@ -124,6 +126,12 @@ public class LV_TFLine extends Fragment
     	super.onCreate(savedInstanceState);
     	setHasOptionsMenu(true);
     }
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		m_Callback = (TV_DynamicActivity) activity;
+	}
 	
 	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -407,6 +415,7 @@ public class LV_TFLine extends Fragment
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		//	Load when is Ok
 		if (resultCode == Activity.RESULT_OK) {
+			m_Callback.requestRefreshAll(true);
 			if(data != null){
 	    		Bundle bundle = data.getExtras();
 	    		if(bundle.getBoolean("IsTechnicalFormLine"))
@@ -423,5 +432,10 @@ public class LV_TFLine extends Fragment
 	@Override
 	public void setIsParentModifying(boolean isParentModifying) {
 		m_IsParentModifying = isParentModifying;
+	}
+
+	@Override
+	public String getTabSuffix() {
+		return null;
 	}
 }

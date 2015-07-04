@@ -335,6 +335,8 @@ public class LV_TFPApply extends Fragment
 	 * @return void
 	 */
 	private void load() {
+		if(m_Callback == null)
+    		return;
 		if(Env.getTabRecord_ID(getActivity(), tabParam.getActivityNo(), 0)[0] <= 0)
 			return;
 		//	Load DB
@@ -412,6 +414,7 @@ public class LV_TFPApply extends Fragment
 	public boolean refreshFromChange(boolean reQuery) {
 		// 
 		m_IsLoadOk = false;
+		load();
 		return false;
 	}
 
@@ -432,8 +435,10 @@ public class LV_TFPApply extends Fragment
 		//	Hide Keyboard
 		getActivity().getWindow()
 					.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		if (resultCode == Activity.RESULT_OK)
+		if (resultCode == Activity.RESULT_OK) {
+			m_Callback.requestRefreshAll(true);
 			load();
+		}
 	}
 
 	@Override
@@ -444,5 +449,10 @@ public class LV_TFPApply extends Fragment
 	@Override
 	public void setIsParentModifying(boolean isParentModifying) {
 		m_IsParentModifying = isParentModifying;
+	}
+
+	@Override
+	public String getTabSuffix() {
+		return null;
 	}
 }
