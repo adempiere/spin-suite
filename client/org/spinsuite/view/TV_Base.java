@@ -485,7 +485,7 @@ public class TV_Base extends FragmentActivity
 	 * @param p_Refresh
 	 * @return void
 	 */
-	protected void requestRefreshAll(boolean p_Refresh) {
+	public void requestRefreshAll(boolean p_Refresh) {
 		for(TabHandler tab : m_FragmentArray.getArray()) {
 			tab.setRefresh(p_Refresh);
 		}
