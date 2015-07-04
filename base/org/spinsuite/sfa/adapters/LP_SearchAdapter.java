@@ -63,8 +63,8 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		this.data = data;
 		inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inputMethod = ((InputMethodManager)ctx.getSystemService(Context.INPUT_METHOD_SERVICE));
-		m_QtyFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY, "###,###,###,###.00");
-		m_AmtFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT, "###,###,###,###.00");
+		m_QtyFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY, "###,###,###,##0.00");
+		m_AmtFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT, "###,###,###,##0.00");
 		notifyDataSetChanged();
 	}
 	
@@ -78,8 +78,8 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		data = new ArrayList<DisplayListProduct>();
 		inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inputMethod = ((InputMethodManager)ctx.getSystemService(Context.INPUT_METHOD_SERVICE));
-		m_QtyFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY, "###,###,###,###.00");
-		m_AmtFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT, "###,###,###,###.00");
+		m_QtyFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY, "###,###,###,##0.00");
+		m_AmtFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT, "###,###,###,##0.00");
 		notifyDataSetChanged();
 	}
 	
@@ -110,6 +110,7 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		if(view == null)
 			view = inflater.inflate(R.layout.i_ol_add_product, null);
 
+		m_IsFromFhange = false;
 		//	Set Quantity to Order
 		EditText et_QtyOrdered = (EditText)view.findViewById(R.id.et_Qty);
 //		LinearLayout ll_ol_product_description = (LinearLayout) view.findViewById(R.id.ll_ol_product_description);
@@ -154,8 +155,6 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 				holderQtyEntered.getEditText().selectAll();
 			}
 		});
-	
-		m_IsFromFhange = false;
 		//	Set Quantity
 		holderQtyEntered.setText(m_QtyFormat.format(recordItem.getQtyEntered()));
 		view.setTag(holderQtyEntered);
@@ -196,30 +195,30 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		final TextView tv_LineNetAmt = (TextView)view.findViewById(R.id.tv_LineNetAmt);
 		tv_LineNetAmt.setText(m_AmtFormat.format(recordItem.getLineNetAmt()));
 		//	For when change
-		holderQtyEntered.getEditText().addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-				
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				if(!m_IsFromFhange) {
-					return;
-				}
-				setNewValue(recordItem, holderQtyEntered.getText(), position);
-				recordItem.setLineNetAmt(calculateAmt(recordItem));
-				tv_LineNetAmt.setText(m_AmtFormat.format(recordItem.getLineNetAmt()));
-			}
-		});
+//		holderQtyEntered.getEditText().addTextChangedListener(new TextWatcher() {
+//			
+//			@Override
+//			public void afterTextChanged(Editable s) {
+//				
+//			}
+//
+//			@Override
+//			public void beforeTextChanged(CharSequence s, int start, int count,
+//					int after) {
+//				
+//			}
+//
+//			@Override
+//			public void onTextChanged(CharSequence s, int start, int before,
+//					int count) {
+//				if(!m_IsFromFhange) {
+//					return;
+//				}
+//				setNewValue(recordItem, holderQtyEntered.getText(), position);
+//				recordItem.setLineNetAmt(calculateAmt(recordItem));
+//				tv_LineNetAmt.setText(m_AmtFormat.format(recordItem.getLineNetAmt()));
+//			}
+//		});
 		//	
 		m_IsFromFhange = true;
 		//	Return

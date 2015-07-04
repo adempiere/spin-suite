@@ -53,8 +53,8 @@ public class OrderLineAdapter extends ArrayAdapter<DisplayOrderLine> {
 		super(ctx, R.layout.i_order_line, data);
 		this.ctx = ctx;
 		this.data = data;
-		m_QtyNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY, "###,###,###,###.00");
-		m_AmtNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT, "###,###,###,###.00");
+		m_QtyNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY, "###,###,###,##0.00");
+		m_AmtNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT, "###,###,###,##0.00");
 		m_SelectedItems = new SparseBooleanArray();
 	}
 	

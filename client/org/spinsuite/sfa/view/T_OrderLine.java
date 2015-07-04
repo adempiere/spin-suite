@@ -374,7 +374,7 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 		//	Close Connection
 		DB.closeConnection(conn);
 		//	
-		DecimalFormat format = DisplayType.getNumberFormat(getActivity(), DisplayType.AMOUNT, "###,###,###,###.00");
+		DecimalFormat format = DisplayType.getNumberFormat(getActivity(), DisplayType.AMOUNT, "###,###,###,##0.00");
 		//	Set Totals
 		tv_TotalLines.setText(format.format(m_TotalLines));
 		tv_GrandTotal.setText(format.format(m_GrandTotal));
