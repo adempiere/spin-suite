@@ -1167,4 +1167,9 @@ public class T_DynamicTab extends Fragment
 			v_PDialog.dismiss();
 		}
 	}
+
+	@Override
+	public String getTabSuffix() {
+		return null;
+	}
 }

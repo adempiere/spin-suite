@@ -460,7 +460,7 @@ public abstract class PO {
 				String value = rs.getString(index);
 				m_currentValues[i] = (value != null && value.equals("Y"));
 			} else if(DisplayType.isDate(displayType)) {
-				String date = rs.getString(i);
+				String date = rs.getString(index);
 				if(date != null) {
 					try {
 						m_currentValues[i] = sdf.parse(date);

@@ -347,4 +347,9 @@ public class T_DynamicTabDetail extends Fragment
 		if(m_detailFragment != null)
 			m_detailFragment.onActivityResult(requestCode, resultCode, data);
 	}
+
+	@Override
+	public String getTabSuffix() {
+		return null;
+	}
 }
