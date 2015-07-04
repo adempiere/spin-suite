@@ -28,6 +28,7 @@ import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LoadActionMenu;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.TabHandler;
 import org.spinsuite.util.TabParameter;
 import org.spinsuite.view.lookup.LookupMenu;
 
@@ -163,8 +164,17 @@ public class TV_DynamicActivity extends TV_Base
     		} else {
     			curFr.setIsParentModifying(isModifying());
     		}
-    		//	
-    		curFr.refreshFromChange(false);
+    		//	Get Current Position
+    		int index = tab.getPosition();
+    		TabHandler tabH = getTabHandler(index);
+    		//	Refresh
+    		curFr.refreshFromChange(tabH.getRefreshAndChange());
+        	//	Set Suffix
+    		String p_Suffix = curFr.getTabSuffix();
+    		if(p_Suffix != null) {
+    			String currentTitle = tabH.getTitle();
+    			tab.setText(currentTitle + " " + p_Suffix);
+    		}
     	}
     }
     

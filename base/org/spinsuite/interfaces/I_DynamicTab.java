@@ -88,4 +88,13 @@ public interface I_DynamicTab {
 	 * @return void
 	 */
 	public void setIsParentModifying(boolean isParentModifying);
+	
+	/**
+	 * Get Tab Suffix for change name Tab
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return String
+	 */
+	public String getTabSuffix();
+	
 }

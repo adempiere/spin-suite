@@ -378,7 +378,7 @@ public class TV_Base extends FragmentActivity
      * @return
      * @return TabListener
      */
-    private TabHandler getTabHandler(int index) {
+    protected TabHandler getTabHandler(int index) {
 		TabHandler tab = m_FragmentArray.getTab(index);
     	return tab;
 	}
@@ -464,20 +464,30 @@ public class TV_Base extends FragmentActivity
 	}
 	
 	/**
-	 * Set Sufix for tab
+	 * Get Tab Title
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_Sufix
+	 * @param index
+	 * @return
+	 * @return String
+	 */
+	protected String getTabTitle(int index) {
+		TabHandler tab = getTabHandler(index);
+		if(tab == null) {
+			return null;
+		}
+		//	Default
+		return tab.getTitle();
+	}
+	
+	/**
+	 * Request Refreh All
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Refresh
 	 * @return void
 	 */
-	public void setTabSufix(String p_Sufix) {
-		if(p_Sufix == null)
-			return;
-		//	Default
-		Tab tab = actionBar.getSelectedTab();
-		if(tab != null) {
-			int index = tab.getPosition();
-			String currentTitle = m_FragmentArray.getTab(index).getTitle();
-			tab.setText(currentTitle + p_Sufix);
+	protected void requestRefreshAll(boolean p_Refresh) {
+		for(TabHandler tab : m_FragmentArray.getArray()) {
+			tab.setRefresh(p_Refresh);
 		}
 	}
 }

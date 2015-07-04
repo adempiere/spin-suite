@@ -80,4 +80,14 @@ public class FragmentTabArray {
 		return m_Array.size();
 	}
 	
+	/**
+	 * Get Array
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return ArrayList<TabHandler>
+	 */
+	public ArrayList<TabHandler> getArray() {
+		return m_Array;
+	}
+	
 }

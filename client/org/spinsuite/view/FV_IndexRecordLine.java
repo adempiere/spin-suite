@@ -249,4 +249,9 @@ public class FV_IndexRecordLine extends ListFragment
 	public void setIsParentModifying(boolean enabled) {
 		//	
 	}
+
+	@Override
+	public String getTabSuffix() {
+		return null;
+	}
 }
