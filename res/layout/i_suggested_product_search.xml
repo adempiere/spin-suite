@@ -20,31 +20,62 @@
     android:id="@+id/i_TF_SuggestedProduct"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="2" >
+    android:layout_height="wrap_content"
+    android:weightSum="4"
+    android:baselineAligned="false" >
+	
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll_sp_description"
+        android:layout_weight="1.7"
+        android:orientation="vertical" >
 
-    <!-- Product -->
-    <TextView
-        android:id="@+id/tv_Product"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        style="@style/TextTitleList"
-        android:text="@string/None" />
-    
-    
+        <TextView
+            android:id="@+id/tv_ProductCategory"
+            style="@style/TextTitleList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/M_Product_Category_ID"
+            android:maxLines="1" />
+        
+        <TextView
+            android:id="@+id/tv_ProductValue"
+            style="@style/TextTitleList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/M_Product_ID"
+            android:maxLines="1" />
+
+        <TextView
+            android:id="@+id/tv_ProductName"
+            style="@style/TextTitleList"
+            android:text="@string/Name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_ProductDescription"
+            style="@style/TextItemList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Description"/>
+
+    </LinearLayout>
+	<!-- Line Data -->
    	<LinearLayout
+   	    android:id="@+id/ll_sp_qty"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_weight="1"
+        android:layout_weight="2.3"
         android:weightSum="6" >
         
 	    <!-- Start Date -->
 	
 	    <LinearLayout
 	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
+	        android:layout_height="match_parent"
 	        android:orientation="horizontal"
 	        android:weightSum="2" >
 		    	
@@ -60,7 +91,7 @@
 		    	android:id="@+id/tv_DayFrom"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
-		        android:gravity="right"
+		        android:gravity="end"
 		        android:layout_weight="1"
 		        android:text="@string/None"
 		        style="@style/TextItemList" />
@@ -71,7 +102,7 @@
 	
 	  	<LinearLayout
 	  	    android:layout_width="match_parent"
-	  	    android:layout_height="wrap_content"
+	  	    android:layout_height="match_parent"
 	  	    android:orientation="horizontal"
 	  	    android:weightSum="2" >
 		    	
@@ -87,7 +118,7 @@
 		    	android:id="@+id/tv_DayTo"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
-		        android:gravity="right"
+		        android:gravity="end"
 		        android:layout_weight="1"
 		        android:text="@string/None"
 		        style="@style/TextItemList" />
@@ -98,7 +129,7 @@
 	
 	    <LinearLayout
 	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
+	        android:layout_height="match_parent"
 	        android:orientation="horizontal"
 	        android:weightSum="2" >
 	        
@@ -115,7 +146,7 @@
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
 			    android:layout_weight="1"
-			    android:gravity="right"
+			    android:gravity="end"
 			    android:text="@string/None"
 			    style="@style/TextItemList" />
 		</LinearLayout>
@@ -124,7 +155,7 @@
 	
 	    <LinearLayout
 	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
+	        android:layout_height="match_parent"
 	        android:orientation="horizontal"
 	        android:weightSum="2" >
 	            
@@ -141,7 +172,7 @@
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
 			    android:layout_weight="1"
-			    android:gravity="right"
+			    android:gravity="end"
 			    android:text="@string/None"
 			    style="@style/TextItemList" />
 		</LinearLayout>
@@ -150,7 +181,7 @@
 	
 	    <LinearLayout
 	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
+	        android:layout_height="match_parent"
 	        android:orientation="horizontal"
 	        android:weightSum="2" >
 		    		
@@ -166,8 +197,8 @@
 		   	    android:id="@+id/et_QtyOrdered"
 		   	    android:layout_width="match_parent"
 		   	    android:layout_height="wrap_content"
-		   	    android:gravity="right"
-		   	    android:inputType="numberDecimal"
+		   	    android:gravity="end"
+		   	    android:inputType="phone|numberDecimal"
 		   	    android:selectAllOnFocus="true"
 		   	    android:hint="@string/Zero"
 		   	    style="@style/EditTextStandard" />

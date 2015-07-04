@@ -40,7 +40,10 @@ public class SP_DisplayRecordItem implements Parcelable {
 	 * *** Constructor ***
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/08/2014, 22:12:20
 	 * @param p_M_Product_ID
+	 * @param p_ProductCategory
+	 * @param p_ProductValue
 	 * @param p_ProductName
+	 * @param p_ProductDescription
 	 * @param p_QtySuggested
 	 * @param p_Suggested_Uom_ID
 	 * @param p_SuggestedUOMSymbol
@@ -54,13 +57,17 @@ public class SP_DisplayRecordItem implements Parcelable {
 	 * @param p_DayTo
 	 * @param p_FTA_ProductToApply_ID
 	 */
-	public SP_DisplayRecordItem(int p_M_Product_ID, String p_ProductName, 
+	public SP_DisplayRecordItem(int p_M_Product_ID, String p_ProductCategory, String p_ProductValue, 
+			String p_ProductName, String p_ProductDescription, 
 			double p_QtySuggested, int p_Suggested_Uom_ID, String p_SuggestedUOMSymbol, 
 			double p_QtyDosage, int p_Dosage_Uom_ID, String p_DosageUOMSymbol,  
 			double p_Qty, int p_C_UOID, String p_OrderUOMSymbol, 
 			int p_DayFrom, int p_DayTo, int p_FTA_ProductToApply_ID) {
 		this.m_M_Product_ID = p_M_Product_ID;
+		this.m_ProductCategory = p_ProductCategory;
+		this.m_ProductValue = p_ProductValue;
 		this.m_ProductName = p_ProductName;
+		this.m_ProductDescription = p_ProductDescription;
 		this.m_QtySuggested = p_QtySuggested;
 		this.m_Suggested_UOM_ID = p_Suggested_Uom_ID;
 		this.m_QtyDosage = p_QtyDosage; 
@@ -98,8 +105,14 @@ public class SP_DisplayRecordItem implements Parcelable {
 	
 	/**	Identifier				*/
 	private int 	m_M_Product_ID 			= 0;
+	/**	Product Value			*/
+	private String	m_ProductCategory 		= null;
+	/**	Product Value			*/
+	private String	m_ProductValue 			= null;
 	/**	Product Name			*/
 	private String	m_ProductName 			= null;
+	/**	Product Value			*/
+	private String	m_ProductDescription 	= null;
 	/**	Suggested Quantity		*/
 	private double 	m_QtySuggested 			= 0;
 	/**	Sugested UOM			*/
@@ -122,6 +135,14 @@ public class SP_DisplayRecordItem implements Parcelable {
 	private int 	m_DayFrom				= 0;
 	/**	Product to Apply ref.	*/
 	private int 	m_FTA_ProductToApply_ID = 0;
+	/**	Day To					*/
+	private int 	m_DayTo					= 0;
+	/**	Date From				*/
+	private Date	m_DateFrom				= null;
+	/**	Date To					*/
+	private Date	m_DateTo				= null;
+	/**	Image URL				*/
+	private String 	m_ImageURL 				= null;
 	
 	/**
 	 * Get Product to Apply
@@ -162,16 +183,6 @@ public class SP_DisplayRecordItem implements Parcelable {
 	public String getOrderUOMSymbol() {
 		return m_OrderUOMSymbol;
 	}
-
-	/**	Day To					*/
-	private int 	m_DayTo					= 0;
-	/**	Date From				*/
-	private Date	m_DateFrom				= null;
-	/**	Date To					*/
-	private Date	m_DateTo				= null;
-	
-	/**	Image URL				*/
-	private String 	m_ImageURL 				= null;
 	
 	/**
 	 * Get Product ID
@@ -181,6 +192,48 @@ public class SP_DisplayRecordItem implements Parcelable {
 	 */
 	public int getM_Product_ID() {
 		return m_M_Product_ID;
+	}
+
+	/**
+	 * @return the m_ProductCategory
+	 */
+	public String getProductCategory() {
+		return m_ProductCategory;
+	}
+
+	/**
+	 * @return the m_ProductValue
+	 */
+	public String getProductValue() {
+		return m_ProductValue;
+	}
+
+	/**
+	 * @return the m_ProductDescription
+	 */
+	public String getProductDescription() {
+		return m_ProductDescription;
+	}
+
+	/**
+	 * @param m_ProductCategory the m_ProductCategory to set
+	 */
+	public void setProductCategory(String m_ProductCategory) {
+		this.m_ProductCategory = m_ProductCategory;
+	}
+
+	/**
+	 * @param m_ProductValue the m_ProductValue to set
+	 */
+	public void setProductValue(String m_ProductValue) {
+		this.m_ProductValue = m_ProductValue;
+	}
+
+	/**
+	 * @param m_ProductDescription the m_ProductDescription to set
+	 */
+	public void setProductDescription(String m_ProductDescription) {
+		this.m_ProductDescription = m_ProductDescription;
 	}
 
 	/**
@@ -350,7 +403,10 @@ public class SP_DisplayRecordItem implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel parcel, int flags) {
 		parcel.writeInt(m_M_Product_ID);
+		parcel.writeString(m_ProductCategory);
+		parcel.writeString(m_ProductValue);
 		parcel.writeString(m_ProductName);
+		parcel.writeString(m_ProductDescription);
 		parcel.writeString(m_ImageURL);
 		parcel.writeDouble(m_QtySuggested);
 		parcel.writeInt(m_Suggested_UOM_ID);
@@ -376,7 +432,10 @@ public class SP_DisplayRecordItem implements Parcelable {
 	 */
 	private void readToParcel(Parcel parcel) {
 		m_M_Product_ID = parcel.readInt();
+		m_ProductCategory = parcel.readString();
+		m_ProductValue = parcel.readString();
 		m_ProductName = parcel.readString();
+		m_ProductDescription = parcel.readString();
 		m_ImageURL = parcel.readString();
 		m_QtySuggested = parcel.readDouble();
 		m_Suggested_UOM_ID = parcel.readInt();
@@ -393,12 +452,15 @@ public class SP_DisplayRecordItem implements Parcelable {
 		m_DateTo = new Date(parcel.readLong());
 		m_FTA_ProductToApply_ID = parcel.readInt();
 	}
-	
+
 	@Override
 	public String toString() {
 		return "SP_DisplayRecordItem [m_M_Product_ID=" + m_M_Product_ID
-				+ ", m_ProductName=" + m_ProductName + ", m_QtySuggested="
-				+ m_QtySuggested + ", m_Suggested_UOM_ID=" + m_Suggested_UOM_ID
+				+ ", m_ProductCategory=" + m_ProductCategory
+				+ ", m_ProductValue=" + m_ProductValue + ", m_ProductName="
+				+ m_ProductName + ", m_ProductDescription="
+				+ m_ProductDescription + ", m_QtySuggested=" + m_QtySuggested
+				+ ", m_Suggested_UOM_ID=" + m_Suggested_UOM_ID
 				+ ", m_SuggestedUOMSymbol=" + m_SuggestedUOMSymbol
 				+ ", m_QtyDosage=" + m_QtyDosage + ", m_Dosage_UOM_ID="
 				+ m_Dosage_UOM_ID + ", m_DosageUOMSymbol=" + m_DosageUOMSymbol
@@ -409,5 +471,4 @@ public class SP_DisplayRecordItem implements Parcelable {
 				+ ", m_DateFrom=" + m_DateFrom + ", m_DateTo=" + m_DateTo
 				+ ", m_ImageURL=" + m_ImageURL + "]";
 	}
-
 }

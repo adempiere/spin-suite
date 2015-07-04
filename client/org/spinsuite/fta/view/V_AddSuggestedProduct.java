@@ -121,6 +121,7 @@ public class V_AddSuggestedProduct extends Activity {
 		//	
 		ll_ConfigSearch = (LinearLayout) findViewById(R.id.ll_ConfigSearch);
 		lv_SuggestedProducts = (ListView) findViewById(R.id.lv_SuggestedProducts);
+		lv_SuggestedProducts.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
 		//	
 		loadConfig();
 		
@@ -139,7 +140,7 @@ public class V_AddSuggestedProduct extends Activity {
 			
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				lv_SuggestedProducts.requestFocus();
+				
 			}
 			
 			@Override
@@ -148,6 +149,8 @@ public class V_AddSuggestedProduct extends Activity {
 				//	
 			}
 		});
+		//	Set Subtitle
+		getActionBar().setSubtitle(getString(R.string.Suggested));
 	}
 	
 	/**
@@ -365,7 +368,11 @@ public class V_AddSuggestedProduct extends Activity {
 	private String getSQL(FilterValue criteria) {
 		StringBuffer sql = new StringBuffer();
 		if(m_FTA_Farming_ID > 0) {								//	Is Applied
-			sql.append("SELECT pa.M_Product_ID, ppa.Value || '_' || ppa.Name ProductName, " +
+			sql.append("SELECT pa.M_Product_ID, " + 
+					"ppac.Name ProductCategory, " +
+					"ppa.Value ProductValue, " +
+					"ppa.Name ProductName, " +
+					"ppa.Description ProductDescription, " +
 					"0 QtySuggested, " +
 					"0 Suggested_Uom_ID, " +
 					"'' SuggestedUOMSymbol, " +
@@ -384,16 +391,20 @@ public class V_AddSuggestedProduct extends Activity {
 					"LEFT JOIN FTA_ProductsToApply cpa ON(cpa.M_Product_ID = pa.M_Product_ID " +
 					"	AND cpa.IsApplied = 'Y' AND cpa.FTA_TechnicalForm_ID = " + m_FTA_TechnicalForm_ID + ") " +
 					"LEFT JOIN M_Product ppa ON(ppa.M_Product_ID = pa.M_Product_ID) " +
+					"LEFT JOIN M_Product_Category ppac ON(ppac.M_Product_Category_ID = ppa.M_Product_Category_ID) " +
 					"LEFT JOIN C_UOM su ON(su.C_UOM_ID = cpa.Suggested_UOM_ID) " +
 					"LEFT JOIN C_UOM du ON(du.C_UOM_ID = cpa.Dosage_UOM_ID) " +
 					"LEFT JOIN C_UOM ou ON(ou.C_UOM_ID = cpa.C_UOM_ID) " +
 					"WHERE (pa.IsApplied = 'N' OR pa.IsApplied IS NULL) " +
 					"AND tfl.FTA_Farming_ID = " + m_FTA_Farming_ID + " " +
-					"GROUP BY pa.M_Product_ID, p.M_Product_ID, ppa.Value, ppa.Name, cpa.M_Product_ID, cpa.QtyDosage, " +
+					"GROUP BY pa.M_Product_ID, p.M_Product_ID, ppa.Value, ppac.Name, ppa.Name, ppa.Description, cpa.M_Product_ID, cpa.QtyDosage, " +
 					"cpa.Dosage_UOM_ID, du.UOMSymbol, pu.UOMSymbol, cpa.FTA_TechnicalForm_ID, cpa.FTA_ProductsToApply_ID");
 		} else if(lookupSugg_Applied.getValueAsBoolean()) {		//	Is Suggested
 			sql.append("SELECT CASE WHEN pa.M_Product_ID = sp.M_Product_ID THEN pa.M_Product_ID ELSE sp.M_Product_ID END M_Product_ID,  " +
-				"CASE WHEN pa.M_Product_ID = sp.M_Product_ID THEN ppa.Value || '_' || ppa.Name ELSE sp.Value || '_' || sp.Name END ProductName, " +
+				"CASE WHEN pa.M_Product_ID = sp.M_Product_ID THEN ppac.Name ELSE spc.Name END ProductCategory, " +
+				"CASE WHEN pa.M_Product_ID = sp.M_Product_ID THEN ppa.Value ELSE sp.Value END ProductValue, " +
+				"CASE WHEN pa.M_Product_ID = sp.M_Product_ID THEN ppa.Name ELSE sp.Name END ProductName, " +
+				"CASE WHEN pa.M_Product_ID = sp.M_Product_ID THEN ppa.Description ELSE sp.Description END ProductDescription, " +
 				"CASE WHEN pa.M_Product_ID = sp.M_Product_ID THEN pa.QtySuggested ELSE fsp.QtyDosage END QtySuggested, " +
 				"CASE WHEN pa.M_Product_ID = sp.M_Product_ID THEN pa.Suggested_UOM_ID ELSE su.C_UOM_ID END Suggested_Uom_ID, " +
 				"CASE WHEN pa.M_Product_ID = sp.M_Product_ID THEN su.UOMSymbol ELSE su.UOMSymbol END SuggestedUOMSymbol, " +
@@ -410,8 +421,10 @@ public class V_AddSuggestedProduct extends Activity {
 				"INNER JOIN M_Product pc ON (pc.M_Product_ID = fm.Category_ID) " +
 				"INNER JOIN FTA_SuggestedProduct fsp ON (fsp.Category_ID = fm.Category_ID OR fsp.Category_ID IS NULL) " +
 				"LEFT JOIN M_Product sp ON (sp.M_Product_Category_ID = fsp.M_Product_Category_ID OR sp.M_Product_ID=fsp.M_Product_ID) " +
+				"LEFT JOIN M_Product_Category spc ON(spc.M_Product_Category_ID = sp.M_Product_Category_ID) " +
 				"LEFT JOIN FTA_ProductsToApply pa ON(pa.FTA_TechnicalForm_ID = tfl.FTA_TechnicalForm_ID AND pa.M_Product_ID = sp.M_Product_ID) " +
 				"LEFT JOIN M_Product ppa ON(ppa.M_Product_ID = pa.M_Product_ID) " +
+				"LEFT JOIN M_Product_Category ppac ON(ppac.M_Product_Category_ID = ppa.M_Product_Category_ID) " +
 				"LEFT JOIN C_UOM su ON(su.C_UOM_ID = COALESCE(pa.Suggested_UOM_ID, fsp.Dosage_UOM_ID)) " +
 				"LEFT JOIN C_UOM du ON(du.C_UOM_ID = pa.Dosage_UOM_ID) " +
 				"LEFT JOIN C_UOM ou ON(ou.C_UOM_ID = pa.C_UOM_ID) " +
@@ -424,7 +437,10 @@ public class V_AddSuggestedProduct extends Activity {
 			sql.append(m_FTA_TechnicalFormLine_ID);
 		} else {												//	Is not suggested
 			sql.append("SELECT CASE WHEN pa.M_Product_ID = p.M_Product_ID THEN pa.M_Product_ID ELSE p.M_Product_ID END M_Product_ID,  " +
-				"CASE WHEN pa.M_Product_ID = p.M_Product_ID THEN ppa.Value || '_' || ppa.Name ELSE p.Value || '_' || p.Name END ProductName, " +
+				"CASE WHEN pa.M_Product_ID = p.M_Product_ID THEN ppac.Name ELSE pc.Name END ProductCategory, " +
+				"CASE WHEN pa.M_Product_ID = p.M_Product_ID THEN ppa.Value ELSE p.Value END ProductValue, " +
+				"CASE WHEN pa.M_Product_ID = p.M_Product_ID THEN ppa.Name ELSE p.Name END ProductName, " +
+				"CASE WHEN pa.M_Product_ID = p.M_Product_ID THEN ppa.Description ELSE p.Description END ProductDescription, " +
 				"CASE WHEN pa.M_Product_ID = p.M_Product_ID THEN pa.QtySuggested ELSE NULL END QtySuggested, " +
 				"CASE WHEN pa.M_Product_ID = p.M_Product_ID THEN pa.Suggested_UOM_ID ELSE p.C_UOM_ID END Suggested_Uom_ID, " +
 				"CASE WHEN pa.M_Product_ID = p.M_Product_ID THEN su.UOMSymbol ELSE pu.UOMSymbol END SuggestedUOMSymbol, " +
@@ -437,9 +453,11 @@ public class V_AddSuggestedProduct extends Activity {
 				"0 DayFrom, 0 DayTo , " +
 				"CASE WHEN pa.M_Product_ID = p.M_Product_ID THEN pa.FTA_ProductsToApply_ID ELSE 0 END FTA_ProductsToApply_ID " +
 				"FROM M_Product p " +
+				"INNER JOIN M_Product_Category pc ON(pc.M_Product_Category_ID = p.M_Product_Category_ID) " +
 				"INNER JOIN C_UOM pu ON(pu.C_UOM_ID = p.C_UOM_ID) " +
 				"LEFT JOIN FTA_ProductsToApply pa ON(pa.M_Product_ID = p.M_Product_ID) " +
 				"LEFT JOIN M_Product ppa ON(ppa.M_Product_ID = pa.M_Product_ID) " +
+				"LEFT JOIN M_Product_Category ppac ON(ppac.M_Product_Category_ID = ppa.M_Product_Category_ID) " +
 				"LEFT JOIN C_UOM su ON(su.C_UOM_ID = pa.Suggested_UOM_ID) " +
 				"LEFT JOIN C_UOM du ON(du.C_UOM_ID = pa.Dosage_UOM_ID) " +
 				"LEFT JOIN C_UOM ou ON(ou.C_UOM_ID = pa.C_UOM_ID) " +
@@ -546,6 +564,9 @@ public class V_AddSuggestedProduct extends Activity {
 						int index = 0;
 						data.add(new SP_DisplayRecordItem(
 								rs.getInt(index++), 
+								rs.getString(index++), 
+								rs.getString(index++), 
+								rs.getString(index++), 
 								rs.getString(index++), 
 								rs.getDouble(index++), 
 								rs.getInt(index++), 

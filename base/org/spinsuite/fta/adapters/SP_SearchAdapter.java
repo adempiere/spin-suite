@@ -36,6 +36,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -95,7 +96,9 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 		final EditTextHolder holderQtyOrdered = new EditTextHolder();
 		//	Inflate View
 		if(view == null)
-			view = inflater.inflate(R.layout.i_suggested_product_search, null);		
+			view = inflater.inflate(R.layout.i_suggested_product_search, null);	
+//		LinearLayout ll_sp_description = (LinearLayout) view.findViewById(R.id.ll_sp_description);
+		LinearLayout ll_sp_qty = (LinearLayout) view.findViewById(R.id.ll_sp_qty);
 		//	Set Quantity to Order
 		EditText et_QtyOrdered = (EditText)view.findViewById(R.id.et_QtyOrdered);
 		//	Instance Holder
@@ -111,6 +114,9 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 				} else {
 					holderQtyOrdered.getEditText().selectAll();
 				}
+				//	
+				inputMethod.toggleSoftInput(InputMethodManager.SHOW_FORCED, 
+						InputMethodManager.HIDE_IMPLICIT_ONLY);
 			}
 		});
 		
@@ -127,24 +133,35 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 		    }
 		});
 		//	Add Listener
-		view.setOnClickListener(new OnClickListener() {
+		ll_sp_qty.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				holderQtyOrdered.getEditText().requestFocus();
 				holderQtyOrdered.getEditText().selectAll();
-				//	Show Keyboard
-				inputMethod.toggleSoftInput(InputMethodManager.SHOW_FORCED, 
-						InputMethodManager.HIDE_IMPLICIT_ONLY);
 			}
 		});
-	
 		//	Set Quantity
 		holderQtyOrdered.setText(String.valueOf(recordItem.getQty()));
 		view.setTag(holderQtyOrdered);
 		
+		//	Set Category
+		TextView tv_ProductCategory = (TextView)view.findViewById(R.id.tv_ProductCategory);
+		tv_ProductCategory.setText(recordItem.getProductCategory());
+		//	Set Value
+		TextView tv_ProductValue = (TextView)view.findViewById(R.id.tv_ProductValue);
+		tv_ProductValue.setText(recordItem.getProductValue());
 		//	Set Name
-		TextView tv_Product = (TextView)view.findViewById(R.id.tv_Product);
-		tv_Product.setText(recordItem.getProductName());
+		TextView tv_ProductName = (TextView)view.findViewById(R.id.tv_ProductName);
+		tv_ProductName.setText(recordItem.getProductName());
+		//	Set Description
+		TextView tv_ProductDescription = (TextView)view.findViewById(R.id.tv_ProductDescription);
+		if(recordItem.getProductDescription() == null) {
+			tv_ProductDescription.setVisibility(View.GONE);
+		} else {
+			tv_ProductDescription.setVisibility(View.GONE);
+		}
+		//	
+		tv_ProductDescription.setText(recordItem.getProductDescription());
 		//	Set Day From
 		TextView tv_DayFrom = (TextView)view.findViewById(R.id.tv_DayFrom);
 		tv_DayFrom.setText(numberFormat.format(recordItem.getDayFrom()));
