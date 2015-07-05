@@ -410,8 +410,6 @@ public class V_AddOrderLine extends Activity {
 		 * @return void
 		 */
 		private void saveData(ArrayList<DisplayListProduct> data) throws Exception {
-//			BigDecimal p_TotalLines = Env.ZERO;
-			//	Valid Null value
 			if(data == null)
 				return;
 			int p_C_OrderLine_ID = 0;
@@ -427,16 +425,18 @@ public class V_AddOrderLine extends Activity {
 				.append(" NOT IN(");
 			//	
 			boolean first = true;
-			//	
+			//	Cache Order Line
+			MOrderLine oLine = new MOrderLine(v_activity, p_C_OrderLine_ID, null);
 			for(DisplayListProduct item : data) {
 				//	Add Items
 				p_C_OrderLine_ID = item.getC_OrderLine_ID();
-				MOrderLine oLine = new MOrderLine(v_activity, p_C_OrderLine_ID, null);
+				oLine.clear(true);
+				oLine.loadData(p_C_OrderLine_ID);
 				oLine.setC_Order_ID(m_C_Order_ID);
 				oLine.setM_Product_ID(item.getM_Product_ID());
 				oLine.setQtyEntered(item.getQtyEntered());
 				oLine.setQtyOrdered(item.getQtyEntered());
-				oLine.saveEx();
+				oLine.save();
 				//	Add IDs
 				if(!first) {
 					sqlIn.append(", ");
@@ -445,9 +445,6 @@ public class V_AddOrderLine extends Activity {
 				}
 				//	
 				sqlIn.append(oLine.getC_OrderLine_ID());
-//				p_TotalLines = p_TotalLines.add(oLine.getLineNetAmt());
-				//	
-//				updateHeader(oLine.getCtx(),oLine,p_TotalLines, null);
 			}
 			//	Add finish
 			sqlIn.append(")");
@@ -461,5 +458,4 @@ public class V_AddOrderLine extends Activity {
 					"SQL Delete Order Line =" + sqlDelete.toString());
 		}
 	}
-	
 }
