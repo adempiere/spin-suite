@@ -578,4 +578,25 @@ public class DisplayListProduct implements Parcelable {
 	public void setC_OrderLine_ID(int m_C_OrderLine_ID) {
 		this.m_C_OrderLine_ID = m_C_OrderLine_ID;
 	}
+	
+	@Override
+	public String toString() {
+		return "DisplayListProduct [m_M_Product_Category_ID="
+				+ m_M_Product_Category_ID + ", m_ProductCategory="
+				+ m_ProductCategory + ", m_M_Product_ID=" + m_M_Product_ID
+				+ ", m_Value=" + m_Value + ", m_Name=" + m_Name
+				+ ", m_Description=" + m_Description + ", m_C_UOM_ID="
+				+ m_C_UOM_ID + ", m_UOMSymbol=" + m_UOMSymbol
+				+ ", m_C_TaxCategory_ID=" + m_C_TaxCategory_ID + ", m_TaxName="
+				+ m_TaxName + ", m_C_Tax_ID=" + m_C_Tax_ID
+				+ ", m_TaxIndicator=" + m_TaxIndicator + ", m_TaxRate="
+				+ m_TaxRate + ", m_PriceList=" + m_PriceList
+				+ ", m_QtyEntered=" + m_QtyEntered + ", m_QtyOrdered="
+				+ m_QtyOrdered + ", m_PriceEntered=" + m_PriceEntered
+				+ ", m_LineNetAmt=" + m_LineNetAmt + ", m_M_PriceList_ID="
+				+ m_M_PriceList_ID + ", m_M_PriceList_Version_ID="
+				+ m_M_PriceList_Version_ID + ", m_ValidFrom=" + m_ValidFrom
+				+ ", m_C_Currency_ID=" + m_C_Currency_ID + ", m_CurSymbol="
+				+ m_CurSymbol + ", m_C_OrderLine_ID=" + m_C_OrderLine_ID + "]";
+	}
 }

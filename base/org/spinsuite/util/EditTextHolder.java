@@ -30,11 +30,10 @@ public class EditTextHolder {
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 28/08/2014, 01:15:35
 	 */
 	public EditTextHolder() {
-		
 	}
 	
 	/**	Edit Text			*/
-	private EditText v_EditText = null;
+	private EditText 	v_EditText = null;
 	
 	/**
 	 * Set Edit Text
@@ -80,5 +79,10 @@ public class EditTextHolder {
 			return null;
 		//	
 		return v_EditText.getText().toString();
+	}
+	
+	@Override
+	public String toString() {
+		return "EditTextHolder [v_EditText=" + v_EditText.getText() + "]";
 	}
 }

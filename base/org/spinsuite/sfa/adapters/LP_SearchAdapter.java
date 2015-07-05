@@ -26,8 +26,6 @@ import org.spinsuite.util.EditTextHolder;
 import org.spinsuite.util.Env;
 
 import android.content.Context;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,8 +93,6 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	private DecimalFormat						m_QtyFormat = null;
 	/**	Decimal Format					*/
 	private DecimalFormat						m_AmtFormat = null;
-	/**	Is From Change					*/
-	private boolean								m_IsFromFhange = false;
 	
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {		
@@ -110,7 +106,6 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		if(view == null)
 			view = inflater.inflate(R.layout.i_ol_add_product, null);
 
-		m_IsFromFhange = false;
 		//	Set Quantity to Order
 		EditText et_QtyOrdered = (EditText)view.findViewById(R.id.et_Qty);
 //		LinearLayout ll_ol_product_description = (LinearLayout) view.findViewById(R.id.ll_ol_product_description);
@@ -118,35 +113,7 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		
 		//	Instance Holder
 		holderQtyEntered.setText(m_QtyFormat.format(recordItem.getQtyEntered()));
-		holderQtyEntered.setEditText(et_QtyOrdered);
-		holderQtyEntered.getEditText().setOnFocusChangeListener(new OnFocusChangeListener() {
-			
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if(!hasFocus) {
-					//	Set Value
-					setNewValue(recordItem, holderQtyEntered.getText(), position);
-				} else {
-					holderQtyEntered.getEditText().selectAll();
-				}
-				//	
-				inputMethod.toggleSoftInput(InputMethodManager.SHOW_FORCED, 
-						InputMethodManager.HIDE_IMPLICIT_ONLY);
-			}
-		});
-		
-		holderQtyEntered.getEditText().setOnEditorActionListener(new OnEditorActionListener() {
-		    @Override
-		    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-		        if (actionId == EditorInfo.IME_ACTION_DONE
-		        		|| actionId == EditorInfo.IME_ACTION_NEXT) {
-		        	//	Set Value
-		        	setNewValue(recordItem, holderQtyEntered.getText(), position);
-		        }
-		        //	
-		        return false;
-		    }
-		});
+		holderQtyEntered.setEditText(et_QtyOrdered);		
 		//	Add Listener
 		ll_ol_qty_description.setOnClickListener(new OnClickListener() {
 			@Override
@@ -157,8 +124,6 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		});
 		//	Set Quantity
 		holderQtyEntered.setText(m_QtyFormat.format(recordItem.getQtyEntered()));
-		view.setTag(holderQtyEntered);
-
 		//	Set Product Value
 		TextView tv_ProductCategory = (TextView)view.findViewById(R.id.tv_ProductCategory);
 		tv_ProductCategory.setText(recordItem.getProductCategory());
@@ -194,33 +159,40 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		//	Set Line Net
 		final TextView tv_LineNetAmt = (TextView)view.findViewById(R.id.tv_LineNetAmt);
 		tv_LineNetAmt.setText(m_AmtFormat.format(recordItem.getLineNetAmt()));
-		//	For when change
-//		holderQtyEntered.getEditText().addTextChangedListener(new TextWatcher() {
-//			
-//			@Override
-//			public void afterTextChanged(Editable s) {
-//				
-//			}
-//
-//			@Override
-//			public void beforeTextChanged(CharSequence s, int start, int count,
-//					int after) {
-//				
-//			}
-//
-//			@Override
-//			public void onTextChanged(CharSequence s, int start, int before,
-//					int count) {
-//				if(!m_IsFromFhange) {
-//					return;
-//				}
-//				setNewValue(recordItem, holderQtyEntered.getText(), position);
-//				recordItem.setLineNetAmt(calculateAmt(recordItem));
-//				tv_LineNetAmt.setText(m_AmtFormat.format(recordItem.getLineNetAmt()));
-//			}
-//		});
+		holderQtyEntered.getEditText().setOnEditorActionListener(new OnEditorActionListener() {
+		    @Override
+		    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+		        if (actionId == EditorInfo.IME_ACTION_DONE
+		        		|| actionId == EditorInfo.IME_ACTION_NEXT) {
+		        	//	Set Value
+					setNewValue(recordItem, holderQtyEntered.getText(), position);
+					recordItem.setLineNetAmt(calculateAmt(recordItem));
+					tv_LineNetAmt.setText(m_AmtFormat.format(recordItem.getLineNetAmt()));
+		        }
+		        //	
+		        return false;
+		    }
+		});
+		//	For Focus
+		holderQtyEntered.getEditText().setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if(!hasFocus) {
+					//	Set Value
+					setNewValue(recordItem, holderQtyEntered.getText(), position);
+					recordItem.setLineNetAmt(calculateAmt(recordItem));
+					tv_LineNetAmt.setText(m_AmtFormat.format(recordItem.getLineNetAmt()));
+				} else {
+					holderQtyEntered.getEditText().selectAll();
+				}
+				//	
+				inputMethod.toggleSoftInput(InputMethodManager.SHOW_FORCED, 
+						InputMethodManager.HIDE_IMPLICIT_ONLY);
+			}
+		});
 		//	
-		m_IsFromFhange = true;
+		view.setTag(holderQtyEntered);
 		//	Return
 		return view;
 	}
