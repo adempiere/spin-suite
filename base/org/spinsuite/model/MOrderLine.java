@@ -203,7 +203,7 @@ public class MOrderLine extends X_C_OrderLine {
 	public MOrder getParent()
 	{
 		if (m_parent == null)
-			m_parent = new MOrder(getCtx(), getC_Order_ID(), null);
+			m_parent = new MOrder(getCtx(), getC_Order_ID(), get_Connection());
 		return m_parent;
 	}	//	getParent
 
@@ -355,7 +355,7 @@ public class MOrderLine extends X_C_OrderLine {
 				if (!updateOrderTax(true))
 					return false;
 		}
-		return updateHeaderTax();
+		return updateHeaderTax();	
 	}
 	
 	/**
