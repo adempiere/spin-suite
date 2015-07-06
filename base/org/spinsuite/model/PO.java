@@ -130,7 +130,7 @@ public abstract class PO {
 
 		if (rs != null) {
 			loadData(rs);
-		}else{
+		} else{
 			loadData(ID);
 		}
 	} 
@@ -868,6 +868,8 @@ public abstract class PO {
 			
 			if(!fine)
 				throw new Exception("@saveEx.afterSave@: " + getError());
+			//	Change New
+			isNew = false;
 		} catch (Exception e) {
 			throw e;
 		} finally {
@@ -1070,7 +1072,6 @@ public abstract class PO {
 				conn.setTransactionSuccessful();
 			//	Reload Key
 			reloadKey();
-			isNew = false;
 		} catch (Exception e) {
 			throw e;
 		}
