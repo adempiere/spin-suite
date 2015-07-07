@@ -23,12 +23,10 @@ import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.fta.adapters.DisplayTFPApply;
 import org.spinsuite.fta.adapters.TFPApplyAdapter;
-import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
-import org.spinsuite.util.TabParameter;
-import org.spinsuite.view.TV_DynamicActivity;
+import org.spinsuite.view.T_FormTab;
 
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
@@ -36,11 +34,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.ContextMenu;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -56,8 +52,7 @@ import android.widget.ListView;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class LV_TFPApply extends Fragment 
-							implements I_DynamicTab {
+public class LV_TFPApply extends T_FormTab {
 
 	/**
 	 * *** Constructor ***
@@ -68,15 +63,10 @@ public class LV_TFPApply extends Fragment
 	}
 	
 	/**	Parameters	*/
-	private 	TabParameter	 		tabParam				= null;
 	private 	ListView				v_list					= null;
 	private 	View 					m_View					= null;
-	private 	boolean					m_IsLoadOk				= false;
-	private 	boolean 				m_Processed				= false;
 	private 	int 					m_FTA_TechnicalForm_ID 	= 0;
-	private 	boolean 				m_IsParentModifying		= false;
 	private 	TFPApplyAdapter 		m_Adapter				= null;
-	private		TV_DynamicActivity		m_Callback				= null;
 	//	
 	private static final int 			O_DELETE 				= 1;
 	
@@ -107,10 +97,10 @@ public class LV_TFPApply extends Fragment
 			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 				switch (item.getItemId()) {
 				case R.id.action_delete:
-					if(m_IsParentModifying) {
+					if(isParentModifying()) {
 		    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
 		    			return false;
-		    		} else if(m_Processed) {
+		    		} else if(isProcessed()) {
 		    			Msg.toastMsg(getActivity(), "@Processed@");
 		    			return false;
 		    		}
@@ -152,7 +142,7 @@ public class LV_TFPApply extends Fragment
 							inClause.append(")");
 							//	
 							if(ids.length > 0) {
-								DB.executeUpdate(m_Callback, 
+								DB.executeUpdate(getCallback(), 
 										"DELETE FROM FTA_ProductsToApply " + inClause, m_FTA_TechnicalForm_ID);
 							}
 						}
@@ -190,12 +180,6 @@ public class LV_TFPApply extends Fragment
 	}
 	
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		m_Callback = (TV_DynamicActivity) activity;
-	}
-	
-	@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         //	
@@ -216,12 +200,12 @@ public class LV_TFPApply extends Fragment
         mi_Cancel.setVisible(false);
         mi_Save.setVisible(false);
     	//	Valid is Loaded
-    	if(!m_IsLoadOk)
+    	if(!isLoadOk())
     		return;
     	//	Visible Add
     	mi_Add.setEnabled(
-				Env.getTabRecord_ID(getActivity(), tabParam.getActivityNo(), 0)[0] > 0
-				&& !m_Processed);
+				Env.getTabRecord_ID(getActivity(), getActivityNo(), 0)[0] > 0
+				&& !isProcessed());
     }
 	
 	@Override
@@ -235,16 +219,16 @@ public class LV_TFPApply extends Fragment
     	int itemId = item.getItemId();
     	switch (itemId) {
 		case R.id.action_add:
-			if(m_IsParentModifying) {
+			if(isParentModifying()) {
     			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
     			return false;
-    		} else if(m_Processed) {
+    		} else if(isProcessed()) {
     			Msg.toastMsg(getActivity(), "@Processed@");
     			return false;
     		}
 			//	
 			Bundle bundle = new Bundle();
-			bundle.putParcelable("TabParam", tabParam);
+			bundle.putParcelable("TabParam", getTabParameter());
 			bundle.putInt("FTA_TechnicalForm_ID", m_FTA_TechnicalForm_ID);
 			bundle.putInt("FTA_TechnicalFormLine_ID", 0);
 			Intent intent = new Intent(getActivity(), V_AddSuggestedProduct.class);
@@ -259,7 +243,7 @@ public class LV_TFPApply extends Fragment
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 		if (v.getId() == R.id.lv_TFLPA
-				&& !m_Processed) {
+				&& !isProcessed()) {
 			//	Delete
 		    menu.add(Menu.NONE, O_DELETE, 
 					Menu.NONE, getString(R.string.Action_Delete));
@@ -273,7 +257,7 @@ public class LV_TFPApply extends Fragment
 	    //	Options
 	    switch (item.getItemId()) {
 	    	case O_DELETE:
-	    		if(m_IsParentModifying) {
+	    		if(isParentModifying()) {
 	    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
 	    			return false;
 	    		}
@@ -310,22 +294,11 @@ public class LV_TFPApply extends Fragment
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
-    	//	
-    	Bundle bundle = getArguments();
-    	if(bundle != null)
-			tabParam = (TabParameter)bundle.getParcelable("TabParam");
-		//	Is Not ok Load
-    	if(tabParam == null)
-    		return;
-    	//	Set Processed
-    	m_Processed = Env.getContextAsBoolean(getActivity(), 
-    			tabParam.getActivityNo(), "Processed")
-    			|| !Env.getWindowsAccess(getActivity(), tabParam.getSPS_Window_ID());
     	//	Get Technical Form Identifier
     	m_FTA_TechnicalForm_ID = Env.getContextAsInt(getActivity(), 
-				tabParam.getActivityNo(), "FTA_TechnicalForm_ID");
+				getActivityNo(), "FTA_TechnicalForm_ID");
     	//	Load Data
-    	if(!m_IsLoadOk)
+    	if(!isLoadOk())
     		load();
 	}
 	
@@ -335,9 +308,8 @@ public class LV_TFPApply extends Fragment
 	 * @return void
 	 */
 	private void load() {
-		if(m_Callback == null)
-    		return;
-		if(Env.getTabRecord_ID(getActivity(), tabParam.getActivityNo(), 0)[0] <= 0)
+		if(getCallback() == null
+				||Env.getTabRecord_ID(getActivity(), getActivityNo(), 0)[0] <= 0)
 			return;
 		//	Load DB
 		DB conn = new DB(getActivity());
@@ -356,7 +328,7 @@ public class LV_TFPApply extends Fragment
 				"LEFT JOIN C_UOM u ON(u.C_UOM_ID = pa.C_UOM_ID) " +
 				"LEFT JOIN M_Warehouse w ON(w.M_Warehouse_ID = pa.M_Warehouse_ID) " +
 				"WHERE pa.FTA_TechnicalForm_ID = " + Env.getContextAsInt(getActivity(), 
-						tabParam.getActivityNo(), "FTA_TechnicalForm_ID"));
+						getActivityNo(), "FTA_TechnicalForm_ID"));
 		LogM.log(getActivity(), getClass(), Level.FINE, "SQL=" + sql);
 		Cursor rs = conn.querySQL(sql, null);
 		//	
@@ -381,9 +353,9 @@ public class LV_TFPApply extends Fragment
 						rs.getString(index++).equals("Y")));
 				//	
 				index = 0;
-			}while(rs.moveToNext());
+			} while(rs.moveToNext());
 			//	Set Load Ok
-			m_IsLoadOk = true;
+			setIsLoadOk(true);
 		}
 		//	Close Connection
 		DB.closeConnection(conn);
@@ -392,41 +364,12 @@ public class LV_TFPApply extends Fragment
 		m_Adapter.setDropDownViewResource(R.layout.i_tf_suggested_product);
 		v_list.setAdapter(m_Adapter);
 	}
-
-	@Override
-	public void handleMenu() {
-		// 
-
-	}
-
-	@Override
-	public TabParameter getTabParameter() {
-		// 
-		return tabParam;
-	}
-
-	@Override
-	public void setTabParameter(TabParameter tabParam) {
-		// 
-	}
-
+	
 	@Override
 	public boolean refreshFromChange(boolean reQuery) {
 		// 
-		m_IsLoadOk = false;
+		super.refreshFromChange(reQuery);
 		load();
-		return false;
-	}
-
-	@Override
-	public boolean save() {
-		// 
-		return false;
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// 
 		return false;
 	}
 	
@@ -436,7 +379,7 @@ public class LV_TFPApply extends Fragment
 		getActivity().getWindow()
 					.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		if (resultCode == Activity.RESULT_OK) {
-			m_Callback.requestRefreshAll(true);
+			getCallback().requestRefreshAll(true);
 			load();
 		}
 	}
@@ -444,15 +387,5 @@ public class LV_TFPApply extends Fragment
 	@Override
 	public boolean isModifying() {
 		return false;
-	}
-
-	@Override
-	public void setIsParentModifying(boolean isParentModifying) {
-		m_IsParentModifying = isParentModifying;
-	}
-
-	@Override
-	public String getTabSuffix() {
-		return null;
 	}
 }

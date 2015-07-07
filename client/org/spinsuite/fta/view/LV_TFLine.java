@@ -22,13 +22,11 @@ import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.fta.adapters.DisplayTFLine;
 import org.spinsuite.fta.adapters.TFLineAdapter;
-import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.model.I_FTA_Farming;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
-import org.spinsuite.util.TabParameter;
-import org.spinsuite.view.TV_DynamicActivity;
+import org.spinsuite.view.T_FormTab;
 
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
@@ -36,7 +34,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -53,8 +50,7 @@ import android.widget.ListView;
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
  *
  */
-public class LV_TFLine extends Fragment 
-							implements I_DynamicTab {
+public class LV_TFLine extends T_FormTab {
 
 	/**
 	 * *** Constructor ***
@@ -65,16 +61,11 @@ public class LV_TFLine extends Fragment
 	}
 	
 	/**	Parameters	*/
-	private 	TabParameter	 		tabParam					= null;
 	private 	ListView				v_list						= null;
 	private 	View 					m_View						= null;
-	private 	boolean					m_IsLoadOk					= false;
-	private 	boolean 				m_Processed					= false;
 	private 	int 					m_FTA_Farming_ID 			= 0;
 	private 	int 					m_FTA_TechnicalForm_ID 		= 0;
 	private 	int 					m_FTA_TechnicalFormLine_ID 	= 0;
-	private 	boolean 				m_IsParentModifying			= false;
-	private		TV_DynamicActivity		m_Callback					= null;
 	//	
 	private static final int 			O_SUGGEST_PRODUCT 			= 1;
 	private static final int 			O_APPLIED_PRODUCT 			= 2;
@@ -96,19 +87,19 @@ public class LV_TFLine extends Fragment
 			public void onItemClick(AdapterView<?> adapter, View arg1, int position,
 					long arg3) {
 				//	Valid Processed
-				if(m_Processed)
+				if(isProcessed())
 					return;
 				//	
 				DisplayTFLine item = (DisplayTFLine) v_list.getAdapter().getItem(position);
 				//	Show Record
 				if(item.getFTA_TechnicalForm_ID() != 0){
 					//	
-					if(m_IsParentModifying) {
+					if(isParentModifying()) {
 		    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
 		    			return;
 		    		}
 					Bundle bundle = new Bundle();
-					bundle.putParcelable("TabParam", tabParam);
+					bundle.putParcelable("TabParam", getTabParameter());
 					bundle.putInt("FTA_TechnicalFormLine_ID", item.getFTA_TechnicalFormLine_ID());
 					Intent intent = new Intent(getActivity(), V_AddTFLine.class);
 					intent.putExtras(bundle);
@@ -122,31 +113,19 @@ public class LV_TFLine extends Fragment
 	}
 	
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
-    	super.onCreate(savedInstanceState);
-    	setHasOptionsMenu(true);
-    }
-	
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		m_Callback = (TV_DynamicActivity) activity;
-	}
-	
-	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	int itemId = item.getItemId();
     	switch (itemId) {
 		case R.id.action_add:
-			if(m_IsParentModifying) {
+			if(isParentModifying()) {
     			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
     			return false;
-    		} else if(m_Processed) {
+    		} else if(isProcessed()) {
     			Msg.toastMsg(getActivity(), "@Processed@");
     			return false;
     		}
 			Bundle bundle = new Bundle();
-			bundle.putParcelable("TabParam", tabParam);
+			bundle.putParcelable("TabParam", getTabParameter());
 			Intent intent = new Intent(getActivity(), V_AddTFLine.class);
 			intent.putExtras(bundle);
 			startActivityForResult(intent, 0);
@@ -177,19 +156,19 @@ public class LV_TFLine extends Fragment
         mi_Cancel.setVisible(false);
         mi_Save.setVisible(false);
     	//	Valid is Loaded
-    	if(!m_IsLoadOk)
+    	if(!isLoadOk())
     		return;
     	//	Visible Add
     	mi_Add.setEnabled(
-				Env.getTabRecord_ID(getActivity(), tabParam.getActivityNo(), 0)[0] > 0
-				&& !m_Processed);
+				Env.getTabRecord_ID(getActivity(), getActivityNo(), 0)[0] > 0
+				&& !isProcessed());
     }
 	
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 		//	Add Delete Option
 		if (v.getId() == R.id.lv_TFLPA
-				&& !m_Processed) {
+				&& !isProcessed()) {
 			//	Add Suggest Option
 			menu.add(Menu.NONE, O_SUGGEST_PRODUCT, 
 					Menu.NONE, getString(R.string.Action_Suggest_Product));
@@ -209,21 +188,21 @@ public class LV_TFLine extends Fragment
 	    //	Options
 	    switch (item.getItemId()) {
 	    	case O_SUGGEST_PRODUCT:
-	    		if(m_IsParentModifying) {
+	    		if(isParentModifying()) {
 	    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
 	    			return false;
 	    		}
 	    		actionSuggestAppliedProduct(info.position, item.getItemId());
 	    		return true;
 	    	case O_APPLIED_PRODUCT:
-	    		if(m_IsParentModifying) {
+	    		if(isParentModifying()) {
 	    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
 	    			return false;
 	    		}
 	    		actionSuggestAppliedProduct(info.position, item.getItemId());
 	    		return true;
 	    	case O_DELETE:
-	    		if(m_IsParentModifying) {
+	    		if(isParentModifying()) {
 	    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
 	    			return false;
 	    		}
@@ -244,11 +223,11 @@ public class LV_TFLine extends Fragment
 	private void actionSuggestAppliedProduct(int position, int option) {
 		final DisplayTFLine item = (DisplayTFLine) v_list.getAdapter().getItem(position);
 		//	Set Category to Context
-		Env.setContext(getActivity(), tabParam.getActivityNo(), tabParam.getTabNo(), 
+		Env.setContext(getActivity(), getActivityNo(), getTabNo(), 
 				I_FTA_Farming.COLUMNNAME_Category_ID, item.getCategory_ID());
 		//	
 		Bundle bundle = new Bundle();
-		bundle.putParcelable("TabParam", tabParam);
+		bundle.putParcelable("TabParam", getTabParameter());
 		m_FTA_TechnicalForm_ID = item.getFTA_TechnicalForm_ID();
 		m_FTA_TechnicalFormLine_ID = item.getFTA_TechnicalFormLine_ID();
 		bundle.putInt("FTA_TechnicalForm_ID", m_FTA_TechnicalForm_ID);
@@ -294,19 +273,8 @@ public class LV_TFLine extends Fragment
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
-    	//	
-    	Bundle bundle = getArguments();
-    	if(bundle != null)
-			tabParam = (TabParameter)bundle.getParcelable("TabParam");
-		//	Is Not ok Load
-    	if(tabParam == null)
-    		return;
-    	//	Set Processed
-    	m_Processed = Env.getContextAsBoolean(getActivity(), 
-    			tabParam.getActivityNo(), "Processed")
-    			|| !Env.getWindowsAccess(getActivity(), tabParam.getSPS_Window_ID());
     	//	Load Data
-    	if(!m_IsLoadOk)
+    	if(!isLoadOk())
     		load();
 	}
 	
@@ -316,7 +284,8 @@ public class LV_TFLine extends Fragment
 	 * @return void
 	 */
 	private void load() {
-		if(Env.getTabRecord_ID(getActivity(), tabParam.getActivityNo(), 0)[0] <= 0)
+		if(getCallback() == null
+				|| Env.getTabRecord_ID(getActivity(), getActivityNo(), 0)[0] <= 0)
 			return;
 		//	Load DB
 		DB conn = new DB(getActivity());
@@ -337,7 +306,7 @@ public class LV_TFLine extends Fragment
 				"INNER JOIN M_Product pr ON(pr.M_Product_ID = fm.Category_ID) " +
 				"INNER JOIN FTA_FarmingStage fs ON(fs.FTA_FarmingStage_ID = tfl.FTA_FarmingStage_ID) " +
 				"INNER JOIN FTA_ObservationType ot ON(ot.FTA_ObservationType_ID = tfl.FTA_ObservationType_ID) " +
-				"WHERE tf.FTA_TechnicalForm_ID = " + Env.getContextAsInt(getActivity(), tabParam.getActivityNo(), "FTA_TechnicalForm_ID"));
+				"WHERE tf.FTA_TechnicalForm_ID = " + Env.getContextAsInt(getActivity(), getActivityNo(), "FTA_TechnicalForm_ID"));
 		LogM.log(getActivity(), getClass(), Level.FINE, "SQL=" + sql);
 		Cursor rs = conn.querySQL(sql, null);
 		//	
@@ -365,7 +334,7 @@ public class LV_TFLine extends Fragment
 				index = 0;
 			}while(rs.moveToNext());
 			//	Set Load Ok
-			m_IsLoadOk = true;
+			setIsLoadOk(true);
 		}
 		//	Close Connection
 		DB.closeConnection(conn);
@@ -373,30 +342,6 @@ public class LV_TFLine extends Fragment
 		TFLineAdapter adapter = new TFLineAdapter(getActivity(), data);
 		adapter.setDropDownViewResource(R.layout.i_tf_line);
 		v_list.setAdapter(adapter);
-	}
-
-	@Override
-	public void handleMenu() {
-		// 
-
-	}
-
-	@Override
-	public TabParameter getTabParameter() {
-		// 
-		return tabParam;
-	}
-
-	@Override
-	public void setTabParameter(TabParameter tabParam) {
-		// 
-	}
-
-	@Override
-	public boolean refreshFromChange(boolean reQuery) {
-		//	
-		m_IsLoadOk = false;
-		return false;
 	}
 
 	@Override
@@ -415,27 +360,12 @@ public class LV_TFLine extends Fragment
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		//	Load when is Ok
 		if (resultCode == Activity.RESULT_OK) {
-			m_Callback.requestRefreshAll(true);
+			getCallback().requestRefreshAll(true);
 			if(data != null){
 	    		Bundle bundle = data.getExtras();
 	    		if(bundle.getBoolean("IsTechnicalFormLine"))
 	    			load();
 			}
 		}
-	}
-
-	@Override
-	public boolean isModifying() {
-		return false;
-	}
-
-	@Override
-	public void setIsParentModifying(boolean isParentModifying) {
-		m_IsParentModifying = isParentModifying;
-	}
-
-	@Override
-	public String getTabSuffix() {
-		return null;
 	}
 }
