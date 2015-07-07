@@ -24,7 +24,6 @@ import java.util.logging.Level;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.view.V_BChat;
-import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.interfaces.I_DT_FragmentSelectListener;
 import org.spinsuite.interfaces.OnFieldChangeListener;
 import org.spinsuite.process.DocAction;
@@ -61,7 +60,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -79,8 +77,8 @@ import android.widget.TableLayout;
  * @author Yamel Senih
  *
  */
-public class T_DynamicTab extends Fragment 
-						implements I_DynamicTab, I_DT_FragmentSelectListener {
+public class T_DynamicTab extends T_FormTab 
+						implements I_DT_FragmentSelectListener {
 	
 	/**
 	 * 
@@ -97,32 +95,25 @@ public class T_DynamicTab extends Fragment
 	 * @param m_FromTab
 	 * @return void
 	 */
-	public void setFromTab(I_DynamicTab m_FromTab) {
+	public void setFromTab(T_FormTab m_FromTab) {
 		this.m_FromTab = m_FromTab; 
 	}
 
 	/**	Parameters	*/
-	private 	TabParameter	 		m_TabParam			= null;
 	private 	DB 						conn 				= null;
 	private 	GridTab 				mGridTab			= null;
 	private 	InfoTab 				tabInfo				= null;
 	private 	ScrollView 				v_scroll			= null;
-	private 	Activity				v_activity			= null;
 	private 	TableLayout 			v_tableLayout		= null;
-	private 	boolean					m_IsLoadOk			= false;
 	private 	boolean					m_IsLoadDataOk		= false;
-	private 	boolean 				m_IsModifying		= false;
-	private 	boolean 				m_IsParentModifying	= false;
-	private 	boolean 				m_IsReadWrite 		= false;
-	private 	boolean 				m_IsInsertRecord 	= false;
 	/**	From Tab					*/
-	private 	I_DynamicTab			m_FromTab			= null;
+	private 	T_FormTab				m_FromTab			= null;
 	/**	Listener					*/
 	private 	OnFieldChangeListener	m_Listener			= null;
 	/**	View 						*/
 	private 	View 					m_view 				= null;
 	/**	Attachment Handler			*/
-	private AttachmentHandler 			m_AttHandler		= null;
+	private 	AttachmentHandler 		m_AttHandler		= null;
 	
 	/**	Current Status				*/
 	protected static final int 			NEW 				= 0;
@@ -171,18 +162,7 @@ public class T_DynamicTab extends Fragment
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
-    	//	
-    	Bundle bundle = getArguments();
-    	if(bundle != null)
-			m_TabParam = (TabParameter)bundle.getParcelable("TabParam");
-		//	Is Not ok Load
-    	if(m_TabParam == null)
-    		return;
     	//	Set Is Read Write
-    	m_IsReadWrite = Env.getWindowsAccess(m_TabParam.getSPS_Window_ID()) 
-    							&& !m_TabParam.isReadOnly();
-    	//	Is Insert Record
-    	m_IsInsertRecord = m_TabParam.isInsertRecord();
     	//	Instance Listener
     	m_Listener = new OnFieldChangeListener() {
     		@Override
@@ -190,7 +170,7 @@ public class T_DynamicTab extends Fragment
     			LogM.log(getActivity(), T_DynamicTab.class, 
     					Level.FINE, "Field Event = " + mField.getColumnName());
     			//	
-    			if(m_IsModifying) {
+    			if(isModifying()) {
         			//	Process Callout
         			processCallout(mField);
         			//	Reload depending fields
@@ -216,10 +196,8 @@ public class T_DynamicTab extends Fragment
     				mGridTab.changeDisplayDepending(mField);
     		}
 		};
-		//	Get Activity
-		v_activity = getActivity();
     	//	Init Load
-		if(!m_IsLoadOk)
+		if(!isLoadOk())
 			initLoad();
 	}
 	
@@ -297,9 +275,9 @@ public class T_DynamicTab extends Fragment
 	 */
 	private void initLoad() {
 		//	
-		m_IsLoadOk = true;
+		setIsLoadOk(true);
     	//	Retain Instance
-    	if(m_TabParam.getTabLevel() == 0)
+    	if(getTabLevel() == 0)
     		setRetainInstance(true);    	
     	//	Table Layout
     	v_tableLayout = new TableLayout(getActivity());
@@ -313,17 +291,6 @@ public class T_DynamicTab extends Fragment
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
     	setHasOptionsMenu(true);
-    }
-    
-    /**
-     * Get Tab Parameter
-     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 19/03/2014, 15:49:28
-     * @return
-     * @return TabParameter
-     */
-    @Override
-    public TabParameter getTabParameter() {
-    	return m_TabParam;
     }
     
     @Override
@@ -344,7 +311,7 @@ public class T_DynamicTab extends Fragment
         mi_Cancel 	= menu.getItem(4);
         mi_Save 	= menu.getItem(5);
     	//	Valid is Loaded
-    	if(!m_IsLoadOk)
+    	if(!isLoadOk())
     		return;
         //	Lock View
     	changeMenuView();
@@ -357,10 +324,10 @@ public class T_DynamicTab extends Fragment
 			Bundle bundle = new Bundle();
 			bundle.putInt("SPS_Table_ID", tabInfo.getSPS_Table_ID());
 			bundle.putInt("SPS_Tab_ID", tabInfo.getSPS_Tab_ID());
-			bundle.putString("IsInsertRecord", (m_IsReadWrite && m_IsInsertRecord? "Y": "N"));
-			if(m_TabParam.getTabLevel() > 0) {
+			bundle.putString("IsInsertRecord", (!isReadOnly() && isInsertRecord()? "Y": "N"));
+			if(getTabLevel() > 0) {
 				FilterValue criteria = tabInfo.getCriteria(getActivity(), 
-						m_TabParam.getActivityNo(), m_TabParam.getParentTabNo());
+						getActivityNo(), getParentTabNo());
 				bundle.putParcelable("Criteria", criteria);
 			}
 			Intent intent = new Intent(getActivity(), LV_StandardSearch.class);
@@ -370,7 +337,7 @@ public class T_DynamicTab extends Fragment
 			return true;
 		} else if (itemId == R.id.action_edit) {
 			//	Verify Parent Changed
-			if(m_IsParentModifying) {
+			if(isParentModifying()) {
     			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
     			return false;
     		}
@@ -379,7 +346,7 @@ public class T_DynamicTab extends Fragment
 			return true;
 		} else if (itemId == R.id.action_add) {
 			//	Verify Parent Changed
-			if(m_IsParentModifying) {
+			if(isParentModifying()) {
     			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
     			return false;
     		}
@@ -399,7 +366,7 @@ public class T_DynamicTab extends Fragment
 			return true;
 		} else if (itemId == R.id.action_save) {
 			//	Verify Parent Changed
-			if(m_IsParentModifying) {
+			if(isParentModifying()) {
     			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
     			return false;
     		}
@@ -465,7 +432,7 @@ public class T_DynamicTab extends Fragment
 	        			return true;
 	        		case O_DELETE:
 	        			//	Verify Parent Changed
-	        			if(m_IsParentModifying) {
+	        			if(isParentModifying()) {
 	            			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
 	            			return false;
 	            		}
@@ -475,7 +442,7 @@ public class T_DynamicTab extends Fragment
 	        			return true;
 	        		case O_ATTACH_PHOTO:
 	        			//	Verify Parent Changed
-	        			if(m_IsParentModifying) {
+	        			if(isParentModifying()) {
 	            			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
 	            			return false;
 	            		}
@@ -484,7 +451,7 @@ public class T_DynamicTab extends Fragment
 	        			return true;
 	        		case O_ATTACH_FILE:
 	        			//	Verify Parent Changed
-	        			if(m_IsParentModifying) {
+	        			if(isParentModifying()) {
 	            			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
 	            			return false;
 	            		}
@@ -527,16 +494,9 @@ public class T_DynamicTab extends Fragment
      * @return void
      */
     private void deleteRecord() {
-		//	Verify Processed
-		boolean m_IsProcessed = false;
-		//	
-		if(m_TabParam.getTabLevel() > 0
-				&& getActivity() != null)
-			m_IsProcessed = Env.getContextAsBoolean(
-				m_TabParam.getActivityNo(), m_TabParam.getParentTabNo(), "Processed");
-    	//	
+		//	Verify Processed	
     	if(mGridTab.isProcessed()
-    			|| m_IsProcessed) {				//	Valid Processed
+    			|| isProcessed()) {				//	Valid Processed
     		Msg.alertMsg(getActivity(), "@CannotDeleteTrx@");
     		return;
     	} else if(!mGridTab.isDeleteable()) {	//	Valid Deleteable
@@ -596,7 +556,7 @@ public class T_DynamicTab extends Fragment
 		intent.setType("*/*");
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		//	Start Activity
-		v_activity.startActivityForResult(intent, ACTION_TAKE_FILE);
+		getCallback().startActivityForResult(intent, ACTION_TAKE_FILE);
     }
     
     /**
@@ -608,6 +568,10 @@ public class T_DynamicTab extends Fragment
     	//	Refresh
     	if(m_FromTab != null)
     		m_FromTab.refreshFromChange(true);
+    	//	Refresh
+    	if(getCallback() != null) {
+    		getCallback().requestRefreshAll(true);
+    	}
     }
     
     /**
@@ -621,43 +585,43 @@ public class T_DynamicTab extends Fragment
     	if(mode == NEW
     			|| mode == MODIFY) {
     		mi_Cancel.setVisible(true);
-    		mi_Save.setVisible(m_IsReadWrite 
-    				&& ((m_IsInsertRecord && mode == NEW) 
+    		mi_Save.setVisible(!isReadOnly() 
+    				&& ((isInsertRecord() && mode == NEW) 
     						|| mode == MODIFY));
     		mi_More.setVisible(false);
     		mi_Add.setVisible(false);
     		mi_Edit.setVisible(false);
     		mi_Search.setVisible(false);
-    		m_IsModifying = true;
+    		setIsModifying(true);
     	} else if(mode == DELETED) {
     		mi_Cancel.setVisible(false);
     		mi_Save.setVisible(false);
     		mi_More.setVisible(false);
-    		mi_Add.setVisible(m_IsReadWrite && m_IsInsertRecord);
+    		mi_Add.setVisible(!isReadOnly() && isInsertRecord());
     		mi_Edit.setVisible(false);
     		mi_Search.setVisible(true);
-    		m_IsModifying = false;
+    		setIsModifying(false);
     	} else if(mode == SEE) {
     		mi_Cancel.setVisible(false);
     		mi_Save.setVisible(false);
     		mi_More.setVisible(mGridTab!= null 
     				&& mGridTab.getRecord_ID() > 0);
     		//	Verify Processed
-    		boolean m_IsProcessed = false;
+    		boolean m_IsProcessed = isProcessed();
     		//	
-    		if(m_TabParam.getTabLevel() > 0
-    				&& getActivity() != null)
-    			m_IsProcessed = Env.getContextAsBoolean(
-    				m_TabParam.getActivityNo(), m_TabParam.getParentTabNo(), "Processed");
+//    		if(m_TabParam.getTabLevel() > 0
+//    				&& getActivity() != null)
+//    			m_IsProcessed = Env.getContextAsBoolean(
+//    				m_TabParam.getActivityNo(), m_TabParam.getParentTabNo(), "Processed");
     		//	
-    		mi_Add.setVisible(m_IsReadWrite 
-    				&& m_IsInsertRecord 
+    		mi_Add.setVisible(!isReadOnly() 
+    				&& isInsertRecord() 
     				&& !m_IsProcessed);
     		mi_Edit.setVisible(mGridTab != null 
     				&& mGridTab.getRecord_ID() > 0
-    				&& m_IsReadWrite);
+    				&& !isReadOnly());
     		mi_Search.setVisible(true);
-    		m_IsModifying = false;
+    		setIsModifying(false);
     	}
 		//	Enabled
     	//	
@@ -680,7 +644,7 @@ public class T_DynamicTab extends Fragment
 		} else if(mode == DELETED) {
 			mGridTab.dataDeleted();
 		} else if(mode == SEE) {
-			mGridTab.dataSee(m_IsReadWrite);
+			mGridTab.dataSee(!isReadOnly());
 		}
 	}
     
@@ -741,7 +705,7 @@ public class T_DynamicTab extends Fragment
     @Override
     public void handleMenu() {
     	//	Valid is Loaded
-    	if(!m_IsLoadOk)
+    	if(!isLoadOk())
     		return;
     	//	do it
     	changeMenuView();
@@ -755,7 +719,7 @@ public class T_DynamicTab extends Fragment
     private void changeMenuView() {
     	if(mi_Search != null) {
             //	Lock View
-    		if(m_IsModifying) {
+    		if(isModifying()) {
     			if(mGridTab != null
     					&& mGridTab.getRecord_ID() <= 0)
     				lockView(NEW);
@@ -774,14 +738,14 @@ public class T_DynamicTab extends Fragment
     public boolean refreshFromChange(boolean reQuery) {
     	//	Valid is Loaded
     	boolean ok = false;
-    	if(!m_IsLoadOk)
+    	if(!isLoadOk())
     		return false;
     	//	do it
     	if(reQuery) {
     		refresh(mGridTab.getKeys(), mGridTab.getKeyColumns(), true);
-    	} else if(m_TabParam.getTabLevel() > 0) {
+    	} else if(getTabLevel() > 0) {
     		int[] currentParent_Record_ID = Env.getTabRecord_ID(
-        			m_TabParam.getActivityNo(), m_TabParam.getParentTabNo());
+        			getActivityNo(), getParentTabNo());
         	if(mGridTab.getParent_Record_ID() != currentParent_Record_ID[0]) {
         		refresh(0, true);
         	}
@@ -797,7 +761,7 @@ public class T_DynamicTab extends Fragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     	//	Valid is Loaded
-    	if(!m_IsLoadOk)
+    	if(!isLoadOk())
     		return;
     	//	
     	if(requestCode == ACTION_TAKE_PHOTO) {
@@ -876,44 +840,41 @@ public class T_DynamicTab extends Fragment
 	@Override
 	public void onItemSelected(int [] record_ID, String [] keyColumns) {
 		//	refresh
-		if(m_IsLoadOk)
+		if(isLoadOk())
 			refresh(record_ID, keyColumns, false);	
 	}
 
 	@Override
 	public void setTabParameter(TabParameter tabParam) {
-		if(tabParam == null)
-			return;
-		//	Set Parameter
-		this.m_TabParam = tabParam;
+		super.setTabParameter(tabParam);
 		//	Initial Load
-		if(!m_IsLoadOk)
+		if(!isLoadOk())
 			initLoad();
 	}
 	
 	@Override
 	public boolean isModifying() {
 		//	Initial Load
-		if(!m_IsLoadOk)
+		if(!isLoadOk())
 			return false;
 		//	
-		if(m_TabParam.getTabLevel() > 0) {
+		if(getTabLevel() > 0) {
 			return false;
 		}
 		//	Default
-		return m_IsModifying;
+		return super.isModifying();
 	}
 
 	@Override
 	public void setIsParentModifying(boolean isParentModifying) {
 		//	Initial Load
-		if(!m_IsLoadOk)
+		if(!isLoadOk())
 			return;
 		//	
-		if(m_TabParam.getTabLevel() > 0) {
-			m_IsParentModifying = isParentModifying;
+		if(getTabLevel() > 0) {
+			setIsParentModifying(isParentModifying);
 		} else {
-			m_IsParentModifying = false;
+			setIsParentModifying(false);
 		}
 	}
 	
@@ -953,9 +914,9 @@ public class T_DynamicTab extends Fragment
 	    	v_rowParam = new LayoutParams(LayoutParams.MATCH_PARENT, 
 	    			(int)getResources().getDimension(R.dimen.row_layout_height));
 	    	//	Load Table Info
-	    	tabInfo = new InfoTab(getActivity(), m_TabParam.getSPS_Tab_ID(), conn);
+	    	tabInfo = new InfoTab(getActivity(), getSPS_Tab_ID(), conn);
 	    	//	View
-	    	mGridTab = new GridTab(getActivity(), m_TabParam, tabInfo, conn);
+	    	mGridTab = new GridTab(getActivity(), getTabParameter(), tabInfo, conn);
 	    	//	
 	    	v_PDialog.setMax(tabInfo.getLength());
 	    	m_Lookup = new ArrayList<Lookup>();
@@ -997,7 +958,7 @@ public class T_DynamicTab extends Fragment
 			m_IsLoadDataOk = mGridTab.loadData();
 			//	Modifying
 			if(mGridTab.getRecord_ID() <= 0)
-				m_IsModifying = true;
+				setIsModifying(true);
 			//	
 			changeMenuView();
 			v_PDialog.dismiss();
@@ -1046,26 +1007,26 @@ public class T_DynamicTab extends Fragment
 			isFirst = (v_row == null);
 			//	Add
 			if(DisplayType.isDate(field.DisplayType)) {
-				lookup = new VLookupDateBox(getActivity(), field, m_TabParam);
+				lookup = new VLookupDateBox(getActivity(), field, getTabParameter());
 			} else if(DisplayType.isText(field.DisplayType)) {
-				VLookupString lookupString = new VLookupString(getActivity(), field, m_TabParam);
+				VLookupString lookupString = new VLookupString(getActivity(), field, getTabParameter());
 				lookup = lookupString;
 			} else if(DisplayType.isNumeric(field.DisplayType)) {
-				VLookupNumber lookupNumber = new VLookupNumber(getActivity(), field, m_TabParam);
+				VLookupNumber lookupNumber = new VLookupNumber(getActivity(), field, getTabParameter());
 				lookup = lookupNumber;
 			} else if(DisplayType.isBoolean(field.DisplayType)) {
-				lookup = new VLookupCheckBox(getActivity(), field, m_TabParam);
+				lookup = new VLookupCheckBox(getActivity(), field, getTabParameter());
 			} else if(DisplayType.isLookup(field.DisplayType)) {
 				//	Table Direct
 				if(field.DisplayType == DisplayType.TABLE_DIR
 						|| field.DisplayType == DisplayType.LIST
 						|| field.DisplayType == DisplayType.TABLE) {
-					lookup = new VLookupSpinner(getActivity(), field, m_TabParam, m_Lookup.get(m_currentLookup++));
+					lookup = new VLookupSpinner(getActivity(), field, getTabParameter(), m_Lookup.get(m_currentLookup++));
 				} else if(field.DisplayType == DisplayType.SEARCH 
 						|| field.DisplayType == DisplayType.LOCATION
 						|| field.DisplayType == DisplayType.LOCATOR
 						|| field.DisplayType == DisplayType.ACCOUNT) {
-					lookup = new VLookupSearch(getActivity(), field, m_TabParam);
+					lookup = new VLookupSearch(getActivity(), field, getTabParameter());
 				}
 			} else if(field.DisplayType == DisplayType.BUTTON) {
 				VLookupButton lookupButton = null;
@@ -1073,12 +1034,12 @@ public class T_DynamicTab extends Fragment
 					lookupButton = new VLookupButtonDocAction(getActivity(), field, (DocAction) mGridTab.getPO());
 				} else if(field.ColumnName.equals("PaymentRule")) {
 					//	Payment Rule Button
-					lookupButton = new VLookupButtonPaymentRule(getActivity(), field, m_TabParam);
+					lookupButton = new VLookupButtonPaymentRule(getActivity(), field, getTabParameter());
 				} else {
-					lookupButton = new VLookupButton(getActivity(), field, m_TabParam);
+					lookupButton = new VLookupButton(getActivity(), field, getTabParameter());
 				}
 				//	Set Parameters
-				lookupButton.setTabParameter(m_TabParam);
+				lookupButton.setTabParameter(getTabParameter());
 				lookup = lookupButton;
 			}
 			//	is Filled
@@ -1121,7 +1082,7 @@ public class T_DynamicTab extends Fragment
 		@Override
 		protected void onPreExecute() {
 			v_tableLayout.requestFocus();
-			v_PDialog = ProgressDialog.show(v_activity, null, 
+			v_PDialog = ProgressDialog.show(getCallback(), null, 
 					getString(R.string.msg_Saving), false, false);
 			//	Set Max
 		}

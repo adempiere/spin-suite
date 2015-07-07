@@ -17,7 +17,6 @@ package org.spinsuite.view;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
-import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.interfaces.I_DT_FragmentSelectListener;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
@@ -29,14 +28,14 @@ import org.spinsuite.view.lookup.Lookup;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
-import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class FV_IndexRecordLine extends ListFragment 
-									implements I_DynamicTab {
+public class FV_IndexRecordLine extends T_FormTab {
     
 	/**	Fragment Listener Call Back	*/
 	private I_DT_FragmentSelectListener 	m_Callback 			= null;
@@ -47,7 +46,11 @@ public class FV_IndexRecordLine extends ListFragment
 	/**	Lookup 						*/
 	private Lookup 							lookup 				= null;
 	/**	Adapter						*/
-	private ArrayAdapter<MultiKeyNamePair> 	adapter				= null;
+	private ArrayAdapter<MultiKeyNamePair> 	m_Adapter			= null;
+	/**	View						*/
+	private View 							m_View				= null;
+	/**	List View					*/
+	private ListView						lv_index_records 	= null;
 	/**	Parent Tab Record ID		*/
 	private int 							m_Parent_Record_ID 	= 0;
 	/**	Is Load Ok					*/
@@ -61,6 +64,40 @@ public class FV_IndexRecordLine extends ListFragment
 	 */
     public FV_IndexRecordLine(){
     	
+    }
+    
+    @Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		//	Current
+		if(m_View != null)
+			return m_View;
+		
+		//	Re-Load
+		m_View 				= inflater.inflate(R.layout.t_index_record, container, false);
+		lv_index_records 	= (ListView) m_View.findViewById(R.id.lv_Index_Records);
+		lv_index_records.setOnItemClickListener(new ListView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> adapter, View arg1, int position,
+					long arg3) {
+				selectItem(position);
+			}
+        });
+		//	Add Listener for List
+		return m_View;
+	}
+    
+    /**
+     * Select a Item
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param position
+     * @return void
+     */
+    private void selectItem(int position) {
+        //	Set Selected
+    	MultiKeyNamePair pair = m_Adapter.getItem(position);
+    	selectIndex(pair.getMultiKey(), lookup.getInfoLookup().KeyColumn);
+    	//	Change on List View
+    	lv_index_records.setItemChecked(position, true);
     }
     
 	@Override
@@ -118,9 +155,9 @@ public class FV_IndexRecordLine extends ListFragment
     		values = new MultiKeyNamePair[]{voidRecord};
     	}
     	//	Instance Adapter
-    	adapter = new ArrayAdapter<MultiKeyNamePair>(getActivity(), R.layout.v_lookup_list, values);
+    	m_Adapter = new ArrayAdapter<MultiKeyNamePair>(getActivity(), R.layout.v_lookup_list, values);
     	//	Set Adapter List
-    	setListAdapter(adapter);
+    	lv_index_records.setAdapter(m_Adapter);
     	//	Return
         return isLoaded;
     }
@@ -132,7 +169,7 @@ public class FV_IndexRecordLine extends ListFragment
         //	Choice Mode
         if (getFragmentManager()
         		.findFragmentByTag(T_DynamicTabDetail.INDEX_FRAGMENT) != null) {
-            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        	lv_index_records.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         }
     }
 
@@ -147,15 +184,6 @@ public class FV_IndexRecordLine extends ListFragment
         }
     }
     
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        //	Set Selected
-    	MultiKeyNamePair pair = adapter.getItem(position);
-    	selectIndex(pair.getMultiKey(), lookup.getInfoLookup().KeyColumn);
-    	//	Change on List View
-    	getListView().setItemChecked(position, true);
-    }
-    
     /**
      * Select first record
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 12/10/2014, 17:56:40
@@ -163,10 +191,10 @@ public class FV_IndexRecordLine extends ListFragment
      */
     public void selectFirst() {
     	//	Select first record
-    	if(adapter != null
-    			&& !adapter.isEmpty()) {
+    	if(m_Adapter != null
+    			&& !m_Adapter.isEmpty()) {
             //	Set Selected
-    		MultiKeyNamePair pair = adapter.getItem(0);
+    		MultiKeyNamePair pair = m_Adapter.getItem(0);
             //	
             Env.setTabRecord_ID(
     				tabParam.getActivityNo(), tabParam.getTabNo(), pair.getMultiKey());
@@ -189,16 +217,6 @@ public class FV_IndexRecordLine extends ListFragment
     	m_Callback.onItemSelected(record_ID, keyColumns);
 
     }
-
-	@Override
-	public void handleMenu() {
-		
-	}
-
-	@Override
-	public TabParameter getTabParameter() {
-		return null;
-	}
 
 	@Override
 	public boolean refreshFromChange(boolean reQuery) {
@@ -225,33 +243,8 @@ public class FV_IndexRecordLine extends ListFragment
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		return false;
-	}
-
-	@Override
 	public void setTabParameter(TabParameter tabParam) {
-		this.tabParam = tabParam;
+		super.setTabParameter(tabParam);
 		loadData();
-	}
-
-	@Override
-	public boolean save() {
-		return false;
-	}
-
-	@Override
-	public boolean isModifying() {
-		return false;
-	}
-
-	@Override
-	public void setIsParentModifying(boolean enabled) {
-		//	
-	}
-
-	@Override
-	public String getTabSuffix() {
-		return null;
 	}
 }
