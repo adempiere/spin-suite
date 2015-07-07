@@ -602,7 +602,7 @@ public class GridTab implements Evaluatee {
     			break;
     		}
     		//	Changed
-    		if(!vField.isChanged()
+    		if(!vField.isChanged(model.isNew())
     				&& !(vField instanceof VLookupSpinner))
     			continue;
     		//	Set to model

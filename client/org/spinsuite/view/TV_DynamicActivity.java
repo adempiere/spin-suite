@@ -20,7 +20,6 @@ import java.util.logging.Level;
 import org.spinsuite.adapters.MenuAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
-import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.interfaces.I_DT_FragmentSelectListener;
 import org.spinsuite.login.Login;
 import org.spinsuite.util.ActivityParameter;
@@ -114,7 +113,7 @@ public class TV_DynamicActivity extends TV_Base
     protected void onSelectedDrawerOption(DisplayMenuItem item) {
     	super.onSelectedDrawerOption(item);
     	//	Load Menu
-    	I_DynamicTab curFr = (I_DynamicTab) getCurrentFragment();
+    	T_FormTab curFr = (T_FormTab) getCurrentFragment();
     	if(curFr != null){
     		ActivityParameter actParam = param;
     		TabParameter tabParam = curFr.getTabParameter();
@@ -153,7 +152,7 @@ public class TV_DynamicActivity extends TV_Base
     	super.onTabSelected(tab, ft);
     	//	
     	invalidateOptionsMenu();
-    	I_DynamicTab curFr = (I_DynamicTab) getCurrentFragment();
+    	T_FormTab curFr = (T_FormTab) getCurrentFragment();
     	if(curFr != null) {
     		TabParameter tabParam = getCurrentTabParameter();
     		if(tabParam != null) {
@@ -180,7 +179,7 @@ public class TV_DynamicActivity extends TV_Base
     
     @Override
     public void onTabUnselected(Tab tab, android.app.FragmentTransaction ft) {
-    	I_DynamicTab curFr = (I_DynamicTab) getCurrentFragment();
+    	T_FormTab curFr = (T_FormTab) getCurrentFragment();
     	if(curFr != null) {
     		TabParameter tabParam = getCurrentTabParameter();
     		if(tabParam != null
@@ -319,12 +318,22 @@ public class TV_DynamicActivity extends TV_Base
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		//	
 		boolean ok = false;
-		I_DynamicTab curFr = (I_DynamicTab) getCurrentFragment();
+		T_FormTab curFr = (T_FormTab) getCurrentFragment();
     	if(curFr != null)
     		ok = curFr.onKeyDown(keyCode, event);
     	//	
     	if(!ok)
     		ok = super.onKeyDown(keyCode, event);
 		return ok;
+	}
+	
+	/**
+	 * Get Activity No
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return int
+	 */
+	protected int getActivityNo() {
+		return m_ActivityNo;
 	}
 }
