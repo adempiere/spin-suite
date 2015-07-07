@@ -237,13 +237,10 @@ public abstract class GridField extends LinearLayout {
 	 * @return View
 	 */
 	public abstract View getChildView();
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	
 	@Override
 	public String toString() {
-		return "VLookup [Value = " + getValue() + ", m_field=" + m_field + "]";
+		return "VLookup [Name = " + m_field.ColumnName + ", Value = " + getValue() + ", m_field=" + m_field + "]";
 	}
 	
 	/**
@@ -566,9 +563,22 @@ public abstract class GridField extends LinearLayout {
 	 * @return boolean
 	 */
 	public boolean isChanged() {
+		return isChanged(false);
+	}
+	
+	/**
+	 * Verify if is changed for when is new or not flag
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param isNew
+	 * @return
+	 * @return boolean
+	 */
+	public boolean isChanged(boolean isNew) {
 		return (getValue() != null && getOldValue() == null) 
 				|| (getValue() == null && getOldValue() != null) 
-				|| (getValue() != null && getOldValue() != null && !getValue().equals(getOldValue()));
+				|| (getValue() != null && getOldValue() != null 
+						&& (!getValue().equals(getOldValue())
+								|| isNew));
 	}
 	
 	/**

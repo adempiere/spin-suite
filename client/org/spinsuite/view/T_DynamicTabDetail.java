@@ -16,7 +16,6 @@
 package org.spinsuite.view;
 
 import org.spinsuite.base.R;
-import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.interfaces.I_DT_FragmentSelectListener;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.TabParameter;
@@ -35,8 +34,8 @@ import android.view.ViewGroup;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
-public class T_DynamicTabDetail extends Fragment 
-		implements I_DynamicTab, I_DT_FragmentSelectListener {
+public class T_DynamicTabDetail extends T_FormTab 
+		implements I_DT_FragmentSelectListener {
 	
 	/**	Parameters				*/
 	private TabParameter		tabParam 			= null;
@@ -238,7 +237,7 @@ public class T_DynamicTabDetail extends Fragment
     		return false;
     	//	
     	boolean loaded = false;
-    	I_DynamicTab indexRecordLine = (I_DynamicTab) 
+    	T_FormTab indexRecordLine = (T_FormTab) 
 				getChildFragmentManager().findFragmentByTag(INDEX_FRAGMENT);
 		if(indexRecordLine != null) {
 			if(reQuery) {
