@@ -22,7 +22,6 @@ import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
-import org.spinsuite.interfaces.I_DynamicTab;
 import org.spinsuite.model.MOrderLine;
 import org.spinsuite.sfa.adapters.OrderLineAdapter;
 import org.spinsuite.sfa.util.DisplayOrderLine;
@@ -30,8 +29,7 @@ import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
-import org.spinsuite.util.TabParameter;
-import org.spinsuite.view.TV_DynamicActivity;
+import org.spinsuite.view.T_FormTab;
 
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
@@ -39,10 +37,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -59,21 +55,15 @@ import android.widget.TextView;
  * @contributor Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
-public class T_OrderLine extends Fragment implements I_DynamicTab {
-
-	/**	Parameters	*/
-	private 	TabParameter	 		tabParam				= null;
+public class T_OrderLine extends T_FormTab {
+	
 	private 	ListView				v_list					= null;
 	private 	View 					m_View					= null;
 	private 	TextView				tv_TotalLines			= null;
 	private 	TextView				tv_GrandTotal			= null;
 	private 	TextView				tv_lb_TotalLines		= null;
 	private 	TextView				tv_lb_GrandTotal		= null;
-	private 	boolean					m_IsLoadOk				= false;
-	private 	boolean 				m_IsParentModifying		= false;
-	private 	boolean 				m_Processed				= false;
 	private		int 					m_C_Order_ID			= 0;
-	private		TV_DynamicActivity		m_Callback				= null;
 	private 	OrderLineAdapter 		m_Adapter 				= null;
 	private 	int						m_LinesNo				= 0;
 	
@@ -117,7 +107,7 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 				switch (item.getItemId()) {
 				case R.id.action_delete:
-					if(m_IsParentModifying) {
+					if(isParentModifying()) {
 		    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
 		    			return false;
 		    		}
@@ -138,14 +128,14 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 											.getItem(selectedItems.keyAt(i));
 									//	Add Value
 									ids[i] = selectedItem.getC_OrderLine_ID();
-									MOrderLine oLine = new MOrderLine(m_Callback, selectedItem.getC_OrderLine_ID(), null);
+									MOrderLine oLine = new MOrderLine(getCallback(), selectedItem.getC_OrderLine_ID(), null);
 									try {
 										oLine.deleteEx();
 										//	Remove Item
 										m_Adapter.remove(selectedItem);
 									} catch (Exception e) {
 										LogM.log(getActivity(), getClass(), Level.SEVERE, "Delete Ordel Line Error", e);
-										Msg.toastMsg(m_Callback, e.getMessage());
+										Msg.toastMsg(getCallback(), e.getMessage());
 									}
 								}
 							}
@@ -186,18 +176,6 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 	}
 	
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
-    	super.onCreate(savedInstanceState);
-    	setHasOptionsMenu(true);
-    }
-	
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		m_Callback = (TV_DynamicActivity) activity;
-	}
-	
-	@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         //	
@@ -218,12 +196,12 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
         mi_Cancel.setVisible(false);
         mi_Save.setVisible(false);
     	//	Valid is Loaded
-    	if(!m_IsLoadOk)
+    	if(!isLoadOk())
     		return;
     	//	Visible Add
     	mi_Add.setEnabled(
-				Env.getTabRecord_ID(getActivity(), tabParam.getActivityNo(), 0)[0] > 0
-				&& !m_Processed);
+				Env.getTabRecord_ID(getActivity(), getActivityNo(), 0)[0] > 0
+				&& !isProcessed());
     }
 	
 	@Override
@@ -231,12 +209,11 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
     	int itemId = item.getItemId();
     	switch (itemId) {
 		case R.id.action_add:
-			if(m_IsParentModifying) {
+			if(isParentModifying()) {
     			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
     			return false;
     		}
 			Bundle bundle = new Bundle();
-			bundle.putParcelable("TabParam", tabParam);
 			bundle.putInt("C_Order_ID", m_C_Order_ID);
 			
 			Intent intent = new Intent(getActivity(), V_AddOrderLine.class);
@@ -252,37 +229,17 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 	public void onResume() {
     	super.onResume();
     	//	Get Sales Order Identifier
-		m_C_Order_ID = Env.getContextAsInt(getActivity(), tabParam.getActivityNo(), "C_Order_ID");
+		m_C_Order_ID = Env.getContextAsInt(getActivity(), getActivityNo(), "C_Order_ID");
 		//	Load Data
 		load(); 
 		//	Set Processed
-		m_Processed = 
-				Env.getContextAsBoolean(getActivity(), tabParam.getActivityNo(), "Processed") 
-					|| !Env.getWindowsAccess(getActivity(), tabParam.getSPS_Window_ID());
+
     }
 	
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
-		//	
-		Bundle bundle = getArguments();
-		if(bundle != null)
-			tabParam = bundle.getParcelable("TabParam");
-		//	Is Not ok Load
-		if(tabParam == null)
-			return;
-		//	Set Processed
-		m_Processed = 
-				Env.getContextAsBoolean(getActivity(), tabParam.getActivityNo(), "Processed") 
-					|| !Env.getWindowsAccess(getActivity(), tabParam.getSPS_Window_ID());
-		
-		//	Get Sales Order Identifier
-		m_C_Order_ID = Env.getContextAsInt(getActivity(), tabParam.getActivityNo(), "C_Order_ID");
-
-		//	Load Data
-    	if(!m_IsLoadOk)
-    		load();
+		load();
 	}
    
 	/**
@@ -291,13 +248,14 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 	 * @return void
 	 */
 	private void load() {
-		if(Env.getTabRecord_ID(getActivity(), tabParam.getActivityNo(), 0)[0] <= 0)
+		if(getCallback() == null
+				 || Env.getTabRecord_ID(getActivity(), getActivityNo(), 0)[0] <= 0)
 			return;
 		//	Load DB
 		DB conn = new DB(getActivity());
 		DB.loadConnection(conn, DB.READ_ONLY);
 		
-		int p_C_Order_ID = Env.getContextAsInt(getActivity(), tabParam.getActivityNo(), "C_Order_ID");
+		int p_C_Order_ID = Env.getContextAsInt(getActivity(), getActivityNo(), "C_Order_ID");
 		//
 		String sql = "SELECT "
 				+ "o.TotalLines, "
@@ -368,8 +326,6 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 				//	
 				index = 0;
 			} while(rs.moveToNext());
-			//	Set Load Ok
-			m_IsLoadOk = true;
 		}
 		//	Close Connection
 		DB.closeConnection(conn);
@@ -395,36 +351,10 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 	}
 
 	@Override
-	public TabParameter getTabParameter() {
-		return tabParam;
-	}
-
-	@Override
-	public void setTabParameter(TabParameter tabParam) {
-
-	}
-
-	@Override
 	public boolean refreshFromChange(boolean reQuery) {
-		m_IsLoadOk = false;
 		if(reQuery) {
 			load();
 		}
-		return false;
-	}
-
-	@Override
-	public boolean save() {
-		return false;
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		return false;
-	}
-
-	@Override
-	public boolean isModifying() {
 		return false;
 	}
 	
@@ -434,14 +364,9 @@ public class T_OrderLine extends Fragment implements I_DynamicTab {
 		getActivity().getWindow()
 					.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		if (resultCode == Activity.RESULT_OK) {
-			m_Callback.requestRefreshAll(true);
+			getCallback().requestRefreshAll(true);
 			load();
 		}
-	}
-
-	@Override
-	public void setIsParentModifying(boolean isParentModifying) {
-		m_IsParentModifying = isParentModifying;
 	}
 
 	@Override
