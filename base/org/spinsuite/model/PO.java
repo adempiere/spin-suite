@@ -1231,7 +1231,7 @@ public abstract class PO {
 
 						//2015-05-16 Dixon Martinez Bad Code
 						//Get Document No
-						String documentNo = MSequence.getDocumentNo(getCtx(), m_C_DocType_ID, m_TableInfo.getTableName(), toSave, conn);
+						String documentNo = MSequence.getDocumentNo(getCtx(), m_C_DocType_ID, Env.getAD_User_ID(getCtx()), m_TableInfo.getTableName(), toSave, conn);
 						//	Add Prefix
 						if(documentNo != null
 								&& !toSave) {
@@ -1269,7 +1269,7 @@ public abstract class PO {
 					
 					//2015-05-16 Dixon Martinez Bad Code
 					//Get Document No
-					String documentNo = MSequence.getDocumentNo(getCtx(), m_C_DocType_ID, m_TableInfo.getTableName(), toSave, conn);
+					String documentNo = MSequence.getDocumentNo(getCtx(), m_C_DocType_ID, Env.getAD_User_ID(getCtx()), m_TableInfo.getTableName(), toSave, conn);
 					//	Add Prefix
 					if(documentNo != null
 							&& !toSave) {
