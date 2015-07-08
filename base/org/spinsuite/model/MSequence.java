@@ -162,7 +162,7 @@ public class MSequence extends X_AD_Sequence {
 					"WHERE uds.C_DocType_ID = ? " +
 					"AND s.IsActive = ? " +
 					"AND s.IsTableID = ? " +
-					"AND s.AD_User_ID = ?";
+					"AND uds.AD_User_ID = ?";
 				
 			LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> selectSQL:" + selectSQL);
 			LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> C_DocType_ID:" + p_C_DocType_ID);
