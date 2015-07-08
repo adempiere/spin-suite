@@ -872,9 +872,9 @@ public class T_DynamicTab extends T_FormTab
 			return;
 		//	
 		if(getTabLevel() > 0) {
-			setIsParentModifying(isParentModifying);
+			super.setIsParentModifying(isParentModifying);
 		} else {
-			setIsParentModifying(false);
+			super.setIsParentModifying(false);
 		}
 	}
 	
