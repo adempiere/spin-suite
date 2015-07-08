@@ -98,10 +98,21 @@ public class T_FormTab extends Fragment implements I_DynamicTab {
 			setTabParameter((TabParameter) bundle.getParcelable("TabParam"));
 		}
 		//	
-		setIsReadOnly(!Env.getWindowsAccess(m_TabParam.getSPS_Window_ID()) 
-				|| m_TabParam.isReadOnly());
-		//	Is Insert Record
-		setIsInsertRecord(m_TabParam.isInsertRecord());
+		setReadOnly();
+	}
+	
+	/**
+	 * Set Read Only Parameter
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void setReadOnly() {
+		if(m_TabParam !=null) {
+			setIsReadOnly(!Env.getWindowsAccess(m_TabParam.getSPS_Window_ID()) 
+					|| m_TabParam.isReadOnly());
+			//	Is Insert Record
+			setIsInsertRecord(m_TabParam.isInsertRecord());
+		}
 	}
 	
 	@Override
@@ -138,6 +149,8 @@ public class T_FormTab extends Fragment implements I_DynamicTab {
 		setSPS_Window_ID(tabParam.getSPS_Window_ID());
 		setWhereClause(tabParam.getWhereClause());
 		setClassname(tabParam.getClassname());
+		//	
+		setReadOnly();
 	}
 	
 	@Override
