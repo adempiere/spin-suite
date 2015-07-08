@@ -40,8 +40,6 @@ public class FV_IndexRecordLine extends T_FormTab {
 	/**	Fragment Listener Call Back	*/
 	private I_DT_FragmentSelectListener 	m_Callback 			= null;
 	/**	Parameters					*/
-	private TabParameter					tabParam 			= null;
-	/**	Tab Info					*/
 	private InfoTab 						tabInfo				= null;
 	/**	Lookup 						*/
 	private Lookup 							lookup 				= null;
@@ -53,8 +51,6 @@ public class FV_IndexRecordLine extends T_FormTab {
 	private ListView						lv_index_records 	= null;
 	/**	Parent Tab Record ID		*/
 	private int 							m_Parent_Record_ID 	= 0;
-	/**	Is Load Ok					*/
-	private boolean							m_IsLoadOk			= false;
 	
 
 	/**
@@ -103,21 +99,15 @@ public class FV_IndexRecordLine extends T_FormTab {
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
-        //	Get Arguments
-        Bundle bundle = getArguments();
-    	if(bundle != null)
-			tabParam = (TabParameter)bundle.getParcelable("TabParam");
     	//	
-    	if(tabParam != null
-    			&& tabParam.getTabLevel() > 0){
+    	if(getTabParameter() != null
+    			&& getTabLevel() > 0){
     		int[] currentParent_Record_ID = Env.getTabRecord_ID(
-        			tabParam.getActivityNo(), tabParam.getParentTabNo());
+        			getActivityNo(), getParentTabNo());
         	if(m_Parent_Record_ID != currentParent_Record_ID[0]){
         		m_Parent_Record_ID = currentParent_Record_ID[0];
         	}
     	}
-    	//	Load Ok
-    	m_IsLoadOk = true;
 	}
     
     @Override
@@ -132,13 +122,15 @@ public class FV_IndexRecordLine extends T_FormTab {
      * @return boolean
      */
     private boolean loadData(){
+    	if(getCallback() == null)
+    		return false;
     	//	Instance Tab Information
-    	tabInfo = new InfoTab(getActivity(), tabParam.getSPS_Tab_ID(), null);
+    	tabInfo = new InfoTab(getActivity(), getSPS_Tab_ID(), null);
     	FilterValue criteria = tabInfo.getCriteria(getActivity(), 
-				tabParam.getActivityNo(), tabParam.getParentTabNo());
+				getActivityNo(), getParentTabNo());
     	//	Load SQL
     	if(lookup == null){
-    		lookup = new Lookup(getActivity(), tabParam.getSPS_Table_ID());
+    		lookup = new Lookup(getActivity(), getSPS_Table_ID());
     		//	Get Where Clause
     		lookup.setCriteria(criteria.getWhereClause());
     	}
@@ -197,7 +189,7 @@ public class FV_IndexRecordLine extends T_FormTab {
     		MultiKeyNamePair pair = m_Adapter.getItem(0);
             //	
             Env.setTabRecord_ID(
-    				tabParam.getActivityNo(), tabParam.getTabNo(), pair.getMultiKey());
+    				getActivityNo(), getTabNo(), pair.getMultiKey());
     	}
     }
     
@@ -210,9 +202,9 @@ public class FV_IndexRecordLine extends T_FormTab {
     private void selectIndex(int [] record_ID, String [] keyColumns){
     	//	Set Record Identifier
     	Env.setTabRecord_ID(
-				tabParam.getActivityNo(), tabParam.getTabNo(), record_ID);
+				getActivityNo(), getTabNo(), record_ID);
     	Env.setTabKeyColumns(
-				tabParam.getActivityNo(), tabParam.getTabNo(), keyColumns);
+				getActivityNo(), getTabNo(), keyColumns);
     	//	
     	m_Callback.onItemSelected(record_ID, keyColumns);
 
@@ -221,16 +213,16 @@ public class FV_IndexRecordLine extends T_FormTab {
 	@Override
 	public boolean refreshFromChange(boolean reQuery) {
 	   	//	Valid is Loaded
-    	if(!m_IsLoadOk)
+    	if(!isLoadOk())
     		return false;
  		//	Load Data
 		boolean loaded = true;
 		if(reQuery){
 			loaded = loadData();
 			selectFirst();
-		} else if(tabParam.getTabLevel() > 0){
+		} else if(getTabLevel() > 0){
     		int[] currentParent_Record_ID = Env.getTabRecord_ID(
-        			tabParam.getActivityNo(), tabParam.getParentTabNo());
+        			getActivityNo(), getParentTabNo());
         	if(m_Parent_Record_ID != currentParent_Record_ID[0]){
         		m_Parent_Record_ID = currentParent_Record_ID[0];
         		loaded = loadData();
