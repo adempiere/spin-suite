@@ -120,16 +120,17 @@ public class MSequence extends X_AD_Sequence {
 	
 	/**
 	 * Get Document No
-	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 12/05/2014, 22:03:16
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
-	 * @param C_DocType_ID
-	 * @param TableName
-	 * @param definite
+	 * @param p_C_DocType_ID
+	 * @param p_AD_User_ID
+	 * @param p_TableName
+	 * @param p_Definite
 	 * @param conn
 	 * @return
 	 * @return String
 	 */
-	public static String getDocumentNo (Context ctx, int C_DocType_ID, String TableName, boolean definite, DB conn){
+	public static String getDocumentNo (Context ctx, int p_C_DocType_ID, int p_AD_User_ID, String p_TableName, boolean p_Definite, DB conn){
 		//	
 		boolean handleConnection = false;
 		int m_AD_Sequence_ID = 0;
@@ -160,12 +161,20 @@ public class MSequence extends X_AD_Sequence {
 					"INNER JOIN AD_Sequence s ON(s.AD_Sequence_ID = uds.AD_Sequence_ID) " +
 					"WHERE uds.C_DocType_ID = ? " +
 					"AND s.IsActive = ? " +
-					"AND s.IsTableID = ? ";
+					"AND s.IsTableID = ? " +
+					"AND uds.AD_User_ID = ?";
 				
 			LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> selectSQL:" + selectSQL);
-			LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> C_DocType_ID:" + C_DocType_ID);
+			LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> C_DocType_ID:" + p_C_DocType_ID);
+			LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> AD_User_ID:" + p_AD_User_ID);
+			//	Compile
+			conn.compileQuery(selectSQL);
+			conn.addInt(p_C_DocType_ID);
+			conn.addBoolean(true);
+			conn.addBoolean(false);
+			conn.addInt(p_AD_User_ID);
 			//	
-			rs = conn.querySQL(selectSQL, new String[]{String.valueOf(C_DocType_ID), "Y", "N"});
+			rs = conn.querySQL();
 			
 			//	Get Values
 			if(rs.moveToFirst()){
@@ -187,11 +196,14 @@ public class MSequence extends X_AD_Sequence {
 						"AND s.IsTableID = ? ";
 				
 				LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> selectSQL:" + selectSQL);
-				LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> C_DocType_ID:" + C_DocType_ID);
-				
-				//	Result Set
-				rs = null;
-				rs = conn.querySQL(selectSQL, new String[]{String.valueOf(C_DocType_ID), "Y", "N"});
+				LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> C_DocType_ID:" + p_C_DocType_ID);
+				//	Compile
+				conn.compileQuery(selectSQL);
+				conn.addInt(p_C_DocType_ID);
+				conn.addBoolean(true);
+				conn.addBoolean(false);
+				//	
+				rs = conn.querySQL();
 				//	Get Values
 				
 				if(rs.moveToFirst()){
@@ -212,8 +224,13 @@ public class MSequence extends X_AD_Sequence {
 						"AND s.IsTableID = ? ";
 				
 				LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> selectSQL:" + selectSQL);
+				//	Compile
+				conn.compileQuery(selectSQL);
+				conn.addString("DocumentNo_" + p_TableName);
+				conn.addBoolean(true);
+				conn.addBoolean(false);
 				//	
-				rs = conn.querySQL(selectSQL, new String[]{"DocumentNo_" + TableName, "Y", "N"});
+				rs = conn.querySQL();
 
 				//	Get Values
 				if(rs.moveToFirst()){
@@ -258,10 +275,10 @@ public class MSequence extends X_AD_Sequence {
 		String documentNo = doc.toString();
 		//	Log
 		LogM.log(ctx, MSequence.class, Level.FINE, documentNo + " (" + incrementNo + ")"
-				+ " - C_DocType_ID=" + C_DocType_ID);
+				+ " - C_DocType_ID=" + p_C_DocType_ID);
 		
 		//	Update Sequence
-		if(definite){
+		if(p_Definite){
 			//	Update Sequence
 			String updateSQL = "UPDATE AD_Sequence SET CurrentNext = CurrentNext + IncrementNo " +
 					"WHERE AD_Sequence_ID = ?";
