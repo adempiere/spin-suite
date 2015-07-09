@@ -196,12 +196,15 @@ public class T_OrderLine extends T_FormTab {
         mi_Cancel.setVisible(false);
         mi_Save.setVisible(false);
     	//	Valid is Loaded
-    	if(!isLoadOk())
-    		return;
+    	if(!isLoadOk()) {
+    		setIsLoadOk(true);
+    	}
     	//	Visible Add
     	mi_Add.setEnabled(
 				Env.getTabRecord_ID(getActivity(), getActivityNo(), 0)[0] > 0
 				&& !isProcessed());
+    	//	Load Parent Data
+    	loadParent();
     }
 	
 	@Override
@@ -228,13 +231,24 @@ public class T_OrderLine extends T_FormTab {
 	@Override
 	public void onResume() {
     	super.onResume();
-    	//	Get Sales Order Identifier
-		m_C_Order_ID = Env.getContextAsInt(getActivity(), getActivityNo(), "C_Order_ID");
-		//	Load Data
+    	loadParent();
+    	//	Load Data
 		load(); 
 		//	Set Processed
 
     }
+	
+	/**
+	 * Load Parent
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void loadParent() {
+		if(getCallback() != null) {
+	    	//	Get Sales Order Identifier
+			m_C_Order_ID = Env.getContextAsInt(getActivity(), getActivityNo(), "C_Order_ID");
+		}
+	}
 	
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -272,6 +286,7 @@ public class T_OrderLine extends T_FormTab {
 				+ "t.Rate, "
 				+ "ol.PriceEntered, "
 				+ "ol.LineNetAmt, "
+				+ "ol.Discount, "
 				+ "ol.QtyEntered "
 				+ "FROM C_Order o "
 				+ "INNER JOIN C_OrderLine ol ON (o.C_Order_ID = ol.C_Order_ID) "
@@ -320,6 +335,7 @@ public class T_OrderLine extends T_FormTab {
 								new BigDecimal(rs.getDouble(index++)),	//	Tax Rate
 								new BigDecimal(rs.getDouble(index++)),	//	Price Entered
 								new BigDecimal(rs.getDouble(index++)),	//	Line Net Amt
+								new BigDecimal(rs.getDouble(index++)),	//	Line Discount
 								new BigDecimal(rs.getDouble(index++))	//	Qty Entered
 								)
 						);

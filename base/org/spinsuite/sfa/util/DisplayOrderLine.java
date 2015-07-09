@@ -46,6 +46,8 @@ public class DisplayOrderLine {
 	private BigDecimal 	m_PriceEntered;
 	/**	Line Net Amount		*/
 	private BigDecimal 	m_LineNetAmt;
+	/**	Line Discount		*/
+	private BigDecimal 	m_Discount;
 	/**	Order Identifier	*/
 	private int 		m_C_OrderLine_ID;
 	
@@ -64,13 +66,14 @@ public class DisplayOrderLine {
 	 * @param p_TaxRate
 	 * @param p_PriceEntered
 	 * @param p_LineNetAmt
+	 * @param p_Discount
 	 * @param p_QtyEntered
 	 */
 	public DisplayOrderLine(int p_C_OrderLine_ID, String p_ProductCategory, String p_Value, String p_Name,
 			String p_Description, String p_UOMSymbol, 
 			int p_C_Tax_ID, String p_TaxIndicator, BigDecimal p_TaxRate, 
 			BigDecimal p_PriceEntered,
-			BigDecimal p_LineNetAmt, BigDecimal p_QtyEntered) {
+			BigDecimal p_LineNetAmt, BigDecimal p_Discount, BigDecimal p_QtyEntered) {
 		super();
 		m_C_OrderLine_ID = p_C_OrderLine_ID;
 		m_ProductCategory = p_ProductCategory;
@@ -83,6 +86,7 @@ public class DisplayOrderLine {
 		m_TaxRate = p_TaxRate;
 		m_PriceEntered = p_PriceEntered;
 		m_LineNetAmt = p_LineNetAmt;
+		m_Discount = p_Discount;
 		m_QtyEntered = p_QtyEntered;
 	}
 		
@@ -256,5 +260,32 @@ public class DisplayOrderLine {
 	 */
 	public void setQtyEntered(BigDecimal p_QtyEntered) {
 		this.m_QtyEntered = p_QtyEntered;
+	}
+
+	/**
+	 * @return the m_Discount
+	 */
+	public BigDecimal getDiscount() {
+		return m_Discount;
+	}
+
+	/**
+	 * @param m_Discount the m_Discount to set
+	 */
+	public void setDiscount(BigDecimal m_Discount) {
+		this.m_Discount = m_Discount;
+	}
+
+	@Override
+	public String toString() {
+		return "DisplayOrderLine [m_ProductCategory=" + m_ProductCategory
+				+ ", m_Value=" + m_Value + ", m_Name=" + m_Name
+				+ ", m_Description=" + m_Description + ", m_UOMSymbol="
+				+ m_UOMSymbol + ", m_C_Tax_ID=" + m_C_Tax_ID
+				+ ", m_TaxIndicator=" + m_TaxIndicator + ", m_TaxRate="
+				+ m_TaxRate + ", m_QtyEntered=" + m_QtyEntered
+				+ ", m_PriceEntered=" + m_PriceEntered + ", m_LineNetAmt="
+				+ m_LineNetAmt + ", m_Discount=" + m_Discount
+				+ ", m_C_OrderLine_ID=" + m_C_OrderLine_ID + "]";
 	}
 }

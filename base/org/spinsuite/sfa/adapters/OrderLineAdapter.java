@@ -46,6 +46,8 @@ public class OrderLineAdapter extends ArrayAdapter<DisplayOrderLine> {
 	private DecimalFormat					m_QtyNumberFormat = null;
 	/**	Decimal Format				*/
 	private DecimalFormat					m_AmtNumberFormat = null;
+	/**	Decimal Format				*/
+	private DecimalFormat					m_AmtDiscountFormat = null;
 	/**	Selected Items IDs			*/
 	private SparseBooleanArray 				m_SelectedItems;
 	
@@ -55,6 +57,7 @@ public class OrderLineAdapter extends ArrayAdapter<DisplayOrderLine> {
 		this.data = data;
 		m_QtyNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY, "###,###,###,##0.00");
 		m_AmtNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT, "###,###,###,##0.00");
+		m_AmtDiscountFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT, "###,###,###,##0.##");
 		m_SelectedItems = new SparseBooleanArray();
 	}
 	
@@ -97,6 +100,10 @@ public class OrderLineAdapter extends ArrayAdapter<DisplayOrderLine> {
 		//	Set Net Line Amount
 		TextView tv_LineNetAmt = (TextView) item.findViewById(R.id.tv_LineNetAmt);
 		tv_LineNetAmt.setText(m_AmtNumberFormat.format(mi.getLineNetAmt()));
+		
+		//	Set Discount
+		TextView tv_Discount = (TextView) item.findViewById(R.id.tv_Discount);
+		tv_Discount.setText(m_AmtDiscountFormat.format(mi.getDiscount()) + "%");
 		
 		//	Set Tax Indicator
 		TextView tv_lb_TaxIndicator = (TextView)item.findViewById(R.id.tv_lb_TaxIndicator);

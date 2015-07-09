@@ -26,6 +26,8 @@ import org.spinsuite.util.EditTextHolder;
 import org.spinsuite.util.Env;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,6 +95,14 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	private DecimalFormat						m_QtyFormat = null;
 	/**	Decimal Format					*/
 	private DecimalFormat						m_AmtFormat = null;
+	/**	Current Item					*/
+	private DisplayListProduct					m_CurrentRecordItem = null;
+	/**	Current Quantity Ordered		*/
+	private String								m_CurrentValue = null;
+	/**	Current Position				*/
+	private int									m_CurrentPosition = 0;
+	/**	Current Text View Amount		*/
+	private TextView							m_CurrentLineNetAmt = null;
 	
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {		
@@ -191,10 +201,48 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 						InputMethodManager.HIDE_IMPLICIT_ONLY);
 			}
 		});
+		//	For Changes in Key
+		holderQtyEntered.getEditText().addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				m_CurrentValue = holderQtyEntered.getText();
+				m_CurrentPosition = position;
+				m_CurrentLineNetAmt = tv_LineNetAmt;
+				m_CurrentRecordItem = recordItem;
+			}
+		});
 		//	
 		view.setTag(holderQtyEntered);
 		//	Return
 		return view;
+	}
+	
+	/**
+	 * Set Current Value
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	public void setCurrentValue() {
+		if(m_CurrentRecordItem == null) {
+			return;
+		}
+		//	
+		setNewValue(m_CurrentRecordItem, m_CurrentValue, m_CurrentPosition);
+		m_CurrentRecordItem.setLineNetAmt(calculateAmt(m_CurrentRecordItem));
+		m_CurrentLineNetAmt.setText(m_AmtFormat.format(m_CurrentRecordItem.getLineNetAmt()));
+		m_CurrentRecordItem = null;
 	}
 	
 	/**

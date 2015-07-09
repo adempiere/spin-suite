@@ -100,6 +100,9 @@ public class V_AddOrderLine extends Activity {
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
 				//	
+				if(scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+					m_SP_SearchAdapter.setCurrentValue();
+				}
 			}
 			
 			@Override

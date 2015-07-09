@@ -145,6 +145,30 @@
 		        android:gravity="end"
 		        android:text="@string/Zero" />
 		</LinearLayout>
+        <!-- Discount -->
+		<LinearLayout
+			android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="horizontal" >
+		
+		    <TextView
+		    	android:id="@+id/tv_lb_Discount"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        android:gravity="end"
+		        android:text="@string/Price" />
+		
+		    <TextView
+		    	android:id="@+id/tv_Discount"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        android:gravity="end"
+		        android:text="@string/Zero" />
+		</LinearLayout>
 		<!-- Line Net Amt -->
 		<LinearLayout
 		         android:layout_width="match_parent"
