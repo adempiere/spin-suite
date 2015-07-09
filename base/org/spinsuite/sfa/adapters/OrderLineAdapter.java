@@ -50,6 +50,8 @@ public class OrderLineAdapter extends ArrayAdapter<DisplayOrderLine> {
 	private DecimalFormat					m_AmtDiscountFormat = null;
 	/**	Selected Items IDs			*/
 	private SparseBooleanArray 				m_SelectedItems;
+	/**	Percentage Label			*/
+	private String							m_PercentageLabel = null;
 	
 	public OrderLineAdapter(Context ctx, ArrayList<DisplayOrderLine> data) {
 		super(ctx, R.layout.i_order_line, data);
@@ -59,6 +61,11 @@ public class OrderLineAdapter extends ArrayAdapter<DisplayOrderLine> {
 		m_AmtNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT, "###,###,###,##0.00");
 		m_AmtDiscountFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT, "###,###,###,##0.##");
 		m_SelectedItems = new SparseBooleanArray();
+		m_PercentageLabel = ctx.getString(R.string.Percentage);
+		//	
+		if(m_PercentageLabel == null) {
+			m_PercentageLabel = "";
+		}
 	}
 	
 	@SuppressLint("InflateParams")
@@ -103,7 +110,7 @@ public class OrderLineAdapter extends ArrayAdapter<DisplayOrderLine> {
 		
 		//	Set Discount
 		TextView tv_Discount = (TextView) item.findViewById(R.id.tv_Discount);
-		tv_Discount.setText(m_AmtDiscountFormat.format(mi.getDiscount()) + "%");
+		tv_Discount.setText(m_AmtDiscountFormat.format(mi.getDiscount()) + m_PercentageLabel);
 		
 		//	Set Tax Indicator
 		TextView tv_lb_TaxIndicator = (TextView)item.findViewById(R.id.tv_lb_TaxIndicator);

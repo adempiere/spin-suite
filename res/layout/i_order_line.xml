@@ -158,7 +158,7 @@
 		        android:layout_weight="1"
 		        android:maxLines="1"
 		        android:gravity="end"
-		        android:text="@string/Price" />
+		        android:text="@string/Discount" />
 		
 		    <TextView
 		    	android:id="@+id/tv_Discount"
