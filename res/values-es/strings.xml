@@ -143,7 +143,8 @@
 	<string name="V_ForDepositAmt">Pendiente (Depósito)</string>
 	<string name="C_Tax_ID">Impuesto</string>
 	<string name="Selected">Seleccionados</string>
-	
+	<string name="Discount">Descuento</string>
+	<string name="Percentage">%</string>
 	<string name="Language">Idioma</string>
 	
 	<string name="START_Sales_Order">Orden de Venta</string>

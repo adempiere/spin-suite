@@ -143,7 +143,8 @@
 	<string name="V_ForDepositAmt">For Deposit Amt</string>
 	<string name="C_Tax_ID">Tax</string>
 	<string name="Selected">Selected</string>
-	
+	<string name="Discount">Discount</string>
+	<string name="Percentage">%</string>
 	<string name="Language">Language</string>
 	
 	<string name="t_SelectOne">Select One Option</string>
