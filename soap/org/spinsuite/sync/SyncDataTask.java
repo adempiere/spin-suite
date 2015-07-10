@@ -169,7 +169,9 @@ public class SyncDataTask implements BackGroundProcess  {
 			if(!m_Error) {
 				long afterMillis = System.currentTimeMillis();
 				long duration = afterMillis - previousMillis;
-				m_PublicMsg = (m_PublicMsg== null ?"":m_PublicMsg + " ") +m_ctx.getString(R.string.DownloadEnding) + " " 
+				m_PublicMsg = (m_PublicMsg == null 
+									? ""
+											: m_PublicMsg + " ") + m_ctx.getString(R.string.SynchronizingEnding) + " " 
 						+ m_ctx.getString(R.string.Sync_Duration) 
 						+ ": " + SyncValues.getDifferenceValue(duration);
 			}
@@ -266,10 +268,7 @@ public class SyncDataTask implements BackGroundProcess  {
 				if (syncm.getWhereClause()!=null)
 					whereClause += syncm.getWhereClause();
 				if (!syncm.isForced()){
-					if (whereClause !=null )
-						whereClause += " AND ";
-					
-					whereClause = " EXISTS (SELECT 1 "
+					whereClause = " AND EXISTS (SELECT 1 "
 												+ "FROM "
 												+ "SPS_SyncTable "
 												+ "WHERE SPS_SyncTable.SPS_Table_ID = ? AND "

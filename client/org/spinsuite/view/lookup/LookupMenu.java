@@ -130,7 +130,7 @@ public class LookupMenu {
 							"INNER JOIN WS_WebService ws ON(ws.WS_WebService_ID = m.WS_WebService_ID) " +
 							"INNER JOIN AD_Tree t ON(t.AD_Table_ID = 53501) " + 
 							"LEFT JOIN SPS_SyncMenu_Trl mt ON (m.SPS_SyncMenu_ID = mt.SPS_SyncMenu_ID AND mt.AD_Language = '").append(language).append("') " +
-							"LEFT  JOIN AD_TreeNode tn ON(tn.AD_Tree_ID = t.AD_Tree_ID AND tn.Node_ID = m.SPS_SyncMenu_ID)  ");
+							"LEFT JOIN AD_TreeNode tn ON(tn.AD_Tree_ID = t.AD_Tree_ID AND tn.Node_ID = m.SPS_SyncMenu_ID)  ");
 			}
 			//	Where Clause
 			//	Access Role

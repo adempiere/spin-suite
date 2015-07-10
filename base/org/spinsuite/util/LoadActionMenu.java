@@ -19,7 +19,7 @@ import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
-import org.spinsuite.view.LV_MenuSync;
+import org.spinsuite.view.V_Synchronization;
 import org.spinsuite.view.LV_StandardSearch;
 import org.spinsuite.view.TV_DynamicActivity;
 import org.spinsuite.view.V_Process;
@@ -87,13 +87,13 @@ public class LoadActionMenu {
 		//	Intent Activity
 		Intent intent = null;
 		if (item.getM_MenuType().equals(LookupMenu.SYNCHRONIZATION_MENU)){
-			if(item.isSummary()) {
-				bundle.putParcelable("ParamSync", param);
-				intent = new Intent(activity, LV_MenuSync.class);
-				intent.putExtras(bundle);
-				//	Show Activity
-				activity.startActivityForResult(intent, 0);
-			}
+//			if(item.isSummary()) {
+//				bundle.putParcelable("ParamSync", param);
+//				intent = new Intent(activity, V_Synchronization.class);
+//				intent.putExtras(bundle);
+//				//	Show Activity
+//				activity.startActivityForResult(intent, 0);
+//			}
 		}
 		else {
 			if(!item.isSummary()) {
