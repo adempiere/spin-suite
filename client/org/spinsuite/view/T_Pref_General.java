@@ -124,7 +124,9 @@ public class T_Pref_General extends T_Pref_Parent {
     	butt_DropDB 	= (Button) m_View.findViewById(R.id.butt_DropDB);
     	//	Set Visibility
     	ch_LoadTestData.setVisibility(Env.isEnvLoad()? View.GONE: View.VISIBLE);
-    	butt_DropDB.setVisibility(Env.isEnvLoad()? View.VISIBLE: View.GONE);
+    	butt_DropDB.setVisibility(Env.isEnvLoad() && Env.getAD_Role_ID() == 0
+    										? View.VISIBLE
+    												: View.GONE);
     	//	
     	ArrayList <DisplaySpinner> data = new ArrayList<DisplaySpinner>();
     	int i = 0;

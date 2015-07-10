@@ -42,6 +42,7 @@ import android.support.v4.widget.SearchViewCompat;
 import android.support.v4.widget.SearchViewCompat.OnCloseListenerCompat;
 import android.support.v4.widget.SearchViewCompat.OnQueryTextListenerCompat;
 import android.text.TextUtils;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,6 +50,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -115,6 +117,10 @@ public class T_Menu extends Fragment implements I_Login {
 	private String					m_MenuType = "M";
 	/**	Menu Adapter		*/
 	private MenuAdapter 			m_Adapter = null;
+	/**	No Forced Option	*/
+	private final int 				O_NO_FORCED = 0;
+	/**	Forced Option		*/
+	private final int 				O_FORCED = 1;
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -176,26 +182,8 @@ public class T_Menu extends Fragment implements I_Login {
 				}
 			}
         });
-        //	Sync Data
-   	 	menu.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-     	public boolean onItemLongClick(AdapterView<?> view, View v,
-                 int index, long arg3) {
-     		//	Just for Synchronization
-     		if(!m_MenuType.equals(LookupMenu.SYNCHRONIZATION_MENU)) {
-     			return false;
-     		}
-     		//	
-     		DisplayMenuItem item = null;
-     		if (view.getItemAtPosition(index) instanceof DisplayMenuItem) {
-     			item = (DisplayMenuItem) view.getItemAtPosition(index); 
-     		}
-     		//	Valid null
-     		if(item != null) {
-     			new SyncDataTask(item.getSPS_SyncMenu_ID(),v.getContext());
-     		}
-     		return true;
-     	}
-		});
+        //	Add Context Menu
+        registerForContextMenu(menu);
         //	new Menu
         lookupMenu = new LookupMenu(m_ctx, m_MenuType, conn);
         //	Action Menu Loader
@@ -209,6 +197,54 @@ public class T_Menu extends Fragment implements I_Login {
         m_IsLoadOk = true;
         //	Load Data
         loadData();
+    }
+    
+    @Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+		//	Standard Option
+    	menu.add(Menu.NONE, O_NO_FORCED, 
+    			Menu.NONE, getString(R.string.Action_SyncNoForced));
+    	//	Forced Option
+    	menu.add(Menu.NONE, O_FORCED, 
+    			Menu.NONE, getString(R.string.Action_SyncForced));
+	}
+    
+    @Override
+	public boolean onContextItemSelected(MenuItem item) {
+	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+	            .getMenuInfo();
+	    //	Options
+	    switch (item.getItemId()) {
+	    	case O_NO_FORCED:
+	    		synchronizeData(info.position, false);
+    		return true;
+	    	case O_FORCED:
+	    		synchronizeData(info.position, true);
+	    		return true;
+	    	default:
+		        return super.onContextItemSelected(item);
+	    }
+	}
+    
+    /**
+     * Synchronize Data
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param position
+     * @param p_IsForced
+     * @return void
+     */
+    private void synchronizeData(int position, boolean p_IsForced) {
+ 		//	Just for Synchronization
+ 		if(!m_MenuType.equals(LookupMenu.SYNCHRONIZATION_MENU)) {
+ 			return;
+ 		}
+ 		//	
+ 		DisplayMenuItem item = null;
+ 		item = m_Adapter.getItem(position);
+ 		//	Valid null
+ 		if(item != null) {
+ 			new SyncDataTask(m_Callback, item.getSPS_SyncMenu_ID(), p_IsForced);
+ 		}
     }
     
     @Override
