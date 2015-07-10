@@ -38,6 +38,8 @@
 	<string name="Action_Skip">Ignorar</string>
 	<string name="Action_Finish">Finalizar</string>
 	<string name="Action_Syncronization">Sincronización</string>
+	<string name="Action_SyncNoForced">Sincronización Normal</string>
+	<string name="Action_SyncForced">Sincronización Forzada</string>
 	
 	<!-- Drawer Option -->
 	<string name="drawer_open">Abrir Caja de Navegación</string>
