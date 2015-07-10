@@ -176,26 +176,8 @@ public class T_Menu extends Fragment implements I_Login {
 				}
 			}
         });
-        //	Sync Data
-   	 	menu.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-     	public boolean onItemLongClick(AdapterView<?> view, View v,
-                 int index, long arg3) {
-     		//	Just for Synchronization
-     		if(!m_MenuType.equals(LookupMenu.SYNCHRONIZATION_MENU)) {
-     			return false;
-     		}
-     		//	
-     		DisplayMenuItem item = null;
-     		if (view.getItemAtPosition(index) instanceof DisplayMenuItem) {
-     			item = (DisplayMenuItem) view.getItemAtPosition(index); 
-     		}
-     		//	Valid null
-     		if(item != null) {
-     			new SyncDataTask(item.getSPS_SyncMenu_ID(),v.getContext());
-     		}
-     		return true;
-     	}
-		});
+        //	Add Context Menu
+        
         //	new Menu
         lookupMenu = new LookupMenu(m_ctx, m_MenuType, conn);
         //	Action Menu Loader
@@ -209,6 +191,26 @@ public class T_Menu extends Fragment implements I_Login {
         m_IsLoadOk = true;
         //	Load Data
         loadData();
+    }
+    
+    /**
+     * Synchronize Data
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param position
+     * @return void
+     */
+    private void synchronizeData(int position) {
+ 		//	Just for Synchronization
+ 		if(!m_MenuType.equals(LookupMenu.SYNCHRONIZATION_MENU)) {
+ 			return;
+ 		}
+ 		//	
+ 		DisplayMenuItem item = null;
+ 		item = m_Adapter.getItem(position);
+ 		//	Valid null
+ 		if(item != null) {
+ 			new SyncDataTask(m_Callback, item.getSPS_SyncMenu_ID(), true);
+ 		}
     }
     
     @Override

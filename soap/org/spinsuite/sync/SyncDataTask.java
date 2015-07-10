@@ -92,8 +92,11 @@ public class SyncDataTask implements BackGroundProcess  {
 	private String 					m_PublicTittle = "";
 	/** Background Task					*/
 	private BackGroundTask 			bgTask = null;
-	/**Define if is Root Node */ 
-	private boolean					IsRootNode = true;
+	/**Define if is Root Node 			*/
+	private boolean					m_IsRootNode = true;
+	/**	Is Forced						*/
+	private boolean 				m_IsForced = false;
+	
 	
 	/**
 	 * 
@@ -101,12 +104,14 @@ public class SyncDataTask implements BackGroundProcess  {
 	 * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @contributor Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * <li>Get URL SOAP from Context
-	 * @param p_SPS_SyncMenu_ID
 	 * @param p_ctx
+	 * @param p_SPS_SyncMenu_ID
+	 * @param p_IsForced
 	 */
-	public SyncDataTask(int p_SPS_SyncMenu_ID, Context p_ctx) {
-		m_SPS_SyncMenu_ID = p_SPS_SyncMenu_ID;
+	public SyncDataTask(Context p_ctx, int p_SPS_SyncMenu_ID, boolean p_IsForced) {
 		m_ctx = p_ctx;
+		m_SPS_SyncMenu_ID = p_SPS_SyncMenu_ID;
+		m_IsForced = p_IsForced;
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build(); 
         StrictMode.setThreadPolicy(policy);
         
@@ -229,7 +234,7 @@ public class SyncDataTask implements BackGroundProcess  {
 					Object[] parameters = null;
 					if (syncm.getWhereClause()!=null)
 						whereClause += syncm.getWhereClause();
-					if (!syncm.isForced()){
+					if (!syncm.isForced() && !m_IsForced){
 						whereClause += " AND ";
 						
 						whereClause = " EXISTS (SELECT 1 "
@@ -267,7 +272,7 @@ public class SyncDataTask implements BackGroundProcess  {
 				Object[] parameters = null;
 				if (syncm.getWhereClause()!=null)
 					whereClause += syncm.getWhereClause();
-				if (!syncm.isForced()){
+				if (!syncm.isForced() && !m_IsForced){
 					whereClause = " AND EXISTS (SELECT 1 "
 												+ "FROM "
 												+ "SPS_SyncTable "
@@ -307,8 +312,8 @@ public class SyncDataTask implements BackGroundProcess  {
 			runQuery(rule.getScript(),null);
 		}
 		
-		if (IsRootNode){
-			IsRootNode = false;
+		if (m_IsRootNode){
+			m_IsRootNode = false;
 			//Get Child's Web Services
 			List<MSPSSyncMenu> syncms = MSPSSyncMenu.getNodesFromParent(m_ctx, Integer.valueOf(m_SPS_SyncMenu_ID).toString(), conn);
 			
@@ -333,7 +338,7 @@ public class SyncDataTask implements BackGroundProcess  {
 		if(m_MethodValue.equals(SyncValues.WSMQueryData)){
 			String whereClause="";
 			
-			if (!sm.isForced()){
+			if (!sm.isForced() && !m_IsForced){
 				SimpleDateFormat sdf = DisplayType.getDateFormat(m_ctx, DisplayType.DATE_TIME, "yyyy-MM-dd hh:mm:ss");
 				whereClause +=(sm.getLastSynchronized()!=null ? "(UPDATED >= '" + sdf.format(sm.getLastSynchronized()) + "')" : "");
 			}

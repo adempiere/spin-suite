@@ -540,6 +540,11 @@ public abstract class PO {
 	 */
 	private void reloadKey() {
 		m_KeyColumns = m_TableInfo.getKeyColumns();
+		//	Valid Null
+		if(m_KeyColumns == null) {
+			return;
+		}
+		//	
 		m_IDs = new Object[m_KeyColumns.length];
 		//	
 		for (int i = 0; i < m_KeyColumns.length; i++) {
@@ -552,13 +557,17 @@ public abstract class PO {
 	 * 	@param withValues if true uses actual values otherwise ?
 	 *  @param reloadKey
 	 * 	@return where clause
+	 * @throws Exception 
 	 */
-	protected String get_WhereClause (boolean withValues, boolean reloadKey) {
+	protected String get_WhereClause (boolean withValues, boolean reloadKey) throws Exception {
 		StringBuffer sb = new StringBuffer();
 		//	Reload Key
 		if(reloadKey)
 			reloadKey();
 		//	
+		if(m_KeyColumns == null) {
+			throw new Exception("@IsIdentifier@ @NotFound@");
+		}
 		for (int i = 0; i < m_IDs.length; i++)
 		{
 			if (i != 0)
@@ -585,7 +594,13 @@ public abstract class PO {
 	 * @return String
 	 */
 	protected String get_WhereClause (boolean withValues) {
-		return get_WhereClause(withValues, false);
+		try {
+			return get_WhereClause(withValues, false);
+		} catch (Exception e) {
+			LogM.log(getCtx(), getClass(), Level.SEVERE, e.getLocalizedMessage());
+		}
+		//	Default
+		return "";
 	}
 	
 	/**
