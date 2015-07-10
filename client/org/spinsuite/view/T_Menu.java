@@ -24,6 +24,7 @@ import org.spinsuite.base.R;
 import org.spinsuite.bchat.view.V_BChat;
 import org.spinsuite.interfaces.I_Login;
 import org.spinsuite.model.MSession;
+import org.spinsuite.sync.SyncDataTask;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
@@ -36,6 +37,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SearchViewCompat;
+import android.support.v4.widget.SearchViewCompat.OnCloseListenerCompat;
+import android.support.v4.widget.SearchViewCompat.OnQueryTextListenerCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,6 +49,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 /**
@@ -67,9 +74,12 @@ public class T_Menu extends Fragment implements I_Login {
 	 * *** Constructor ***
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param p_ctx
+	 * @param p_MenuType
 	 */
-	public T_Menu(Context p_ctx) {
-		
+	public T_Menu(Context p_ctx, String p_MenuType) {
+		super();
+		m_ctx = p_ctx;
+		m_MenuType = p_MenuType;
 	}
 	
 	
@@ -101,6 +111,10 @@ public class T_Menu extends Fragment implements I_Login {
 	private ArrayList<KeyNamePair>	m_ParentArray = new ArrayList<KeyNamePair>();
 	/**	Current Parent ID	*/
 	private int 					m_CurrentParent_ID = 0;
+	/**	Menu Type			*/
+	private String					m_MenuType = "M";
+	/**	Menu Adapter		*/
+	private MenuAdapter 			m_Adapter = null;
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -143,26 +157,53 @@ public class T_Menu extends Fragment implements I_Login {
 				param.setParent_ID(item.getSPS_Menu_ID());
 				param.setActivityMenu_ID(item.getActivityMenu_ID());
 				//	Load from Action
-				currentOptionBundle = loadActionMenu.loadAction(item, param);
 				currentMenuItem = item;
 				if(item.isSummary()) {
 					//	Get Current Menu ID and Sub Title
 					m_ParentArray.add(new KeyNamePair(m_CurrentParent_ID, 
 							m_Callback.getActionBar().getSubtitle().toString()));
-					m_CurrentParent_ID = item.getSPS_Menu_ID();
+					if(m_MenuType.equals(LookupMenu.MAIN_MENU)) {
+						m_CurrentParent_ID = item.getSPS_Menu_ID();
+					} else if(m_MenuType.equals(LookupMenu.SYNCHRONIZATION_MENU)) {
+						m_CurrentParent_ID = item.getSPS_SyncMenu_ID();
+					}
 					//	Change Title
 					m_Callback.getActionBar().setSubtitle(currentMenuItem.getName());
 					//	Load Data
 					loadData();
+				} else {
+					currentOptionBundle = loadActionMenu.loadAction(item, param);
 				}
 			}
         });
+        //	Sync Data
+   	 	menu.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+     	public boolean onItemLongClick(AdapterView<?> view, View v,
+                 int index, long arg3) {
+     		//	Just for Synchronization
+     		if(!m_MenuType.equals(LookupMenu.SYNCHRONIZATION_MENU)) {
+     			return false;
+     		}
+     		//	
+     		DisplayMenuItem item = null;
+     		if (view.getItemAtPosition(index) instanceof DisplayMenuItem) {
+     			item = (DisplayMenuItem) view.getItemAtPosition(index); 
+     		}
+     		//	Valid null
+     		if(item != null) {
+     			new SyncDataTask(item.getSPS_SyncMenu_ID(),v.getContext());
+     		}
+     		return true;
+     	}
+		});
         //	new Menu
-        lookupMenu = new LookupMenu(m_ctx, LookupMenu.MAIN_MENU, conn);
+        lookupMenu = new LookupMenu(m_ctx, m_MenuType, conn);
         //	Action Menu Loader
         loadActionMenu = new LoadActionMenu(m_Callback, false);
         //Carlos Parada Add Support to Log for Mobile
-        MSession.get (m_ctx, true);
+        if(m_MenuType.equals(LookupMenu.MAIN_MENU)) {
+        	MSession.get (m_ctx, true);
+        }
         //End Carlos Parada
         //	Set Load
         m_IsLoadOk = true;
@@ -223,11 +264,54 @@ public class T_Menu extends Fragment implements I_Login {
     }
 	
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		menu.clear();
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    	super.onCreateOptionsMenu(menu, inflater);
+    	menu.clear();
         inflater.inflate(R.menu.main_menu, menu);
-	}
+        if(m_MenuType.equals(LookupMenu.SYNCHRONIZATION_MENU)) {
+        	MenuItem sync = menu.findItem(R.id.action_synchronization);
+        	//	Visible false for menu
+        	if(sync != null) {
+        		sync.setVisible(false);
+        	}
+        }
+		//	Get Item
+		MenuItem item = menu.findItem(R.id.action_search);
+		//	Search View
+		final View searchView = SearchViewCompat.newSearchView(m_ctx);
+		if (searchView != null) {
+			//	Set Back ground Color
+			int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+			EditText searchText = (EditText) searchView.findViewById(id);
+			//	Set Parameters
+			if(searchText != null)
+				searchText.setTextAppearance(m_ctx, R.style.TextSearch);
+			//	
+			SearchViewCompat.setOnQueryTextListener(searchView,
+					new OnQueryTextListenerCompat() {
+				@Override
+				public boolean onQueryTextChange(String newText) {
+					if(m_Adapter != null) {
+						String mFilter = !TextUtils.isEmpty(newText) ? newText : null;
+						m_Adapter.getFilter().filter(mFilter);
+					}
+					return true;
+				}
+			});
+			SearchViewCompat.setOnCloseListener(searchView,
+					new OnCloseListenerCompat() {
+				@Override
+				public boolean onClose() {
+					if (!TextUtils.isEmpty(SearchViewCompat.getQuery(searchView))) {
+						SearchViewCompat.setQuery(searchView, null, true);
+					}
+					return true;
+				}
+                    
+			});
+			MenuItemCompat.setActionView(item, searchView);
+		}
+    }
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -242,6 +326,10 @@ public class T_Menu extends Fragment implements I_Login {
 	        case R.id.action_config:
 	        	Intent preferences = new Intent(m_Callback, V_Preferences.class);
 				startActivity(preferences);
+				return true;
+	        case R.id.action_synchronization:
+	        	Intent syncMenu = new Intent(m_Callback, V_Synchronization.class);
+				startActivity(syncMenu);
 				return true;
 	        default:
 	        	return super.onOptionsItemSelected(item);
@@ -263,9 +351,9 @@ public class T_Menu extends Fragment implements I_Login {
 		//	Load Children
 		lookupMenu.loadChildren(m_CurrentParent_ID);
 		//	
-		MenuAdapter mi_adapter = new MenuAdapter(m_Callback, R.layout.i_image_text, true, lookupMenu.getData());
-		mi_adapter.setDropDownViewResource(R.layout.i_image_text);
-		menu.setAdapter(mi_adapter);
+		m_Adapter = new MenuAdapter(m_Callback, R.layout.i_image_text, true, lookupMenu.getData());
+		m_Adapter.setDropDownViewResource(R.layout.i_image_text);
+		menu.setAdapter(m_Adapter);
 		//	
 		return true;
 	}

@@ -218,7 +218,8 @@ public class FV_ThreadIndex extends ListFragment
 		//	Instance Data
 		ArrayList<DisplayBChatThreadListItem> data = new ArrayList<DisplayBChatThreadListItem>();
     	//	Valid Result set
-    	if(rs.moveToFirst()) {
+    	if(rs != null 
+    			&& rs.moveToFirst()) {
     		int col = 0;
     		//	Loop
     		do {
