@@ -37,6 +37,7 @@
 	<string name="Action_Next">Next</string>
 	<string name="Action_Skip">Skip</string>
 	<string name="Action_Finish">Finish</string>
+	<string name="Action_Syncronization">Syncronization</string>
 	
 	<!-- Drawer Option -->
 	<string name="drawer_open">Open navigation drawer</string>

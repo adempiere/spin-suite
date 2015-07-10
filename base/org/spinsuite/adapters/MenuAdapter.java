@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -90,6 +91,8 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 	private Context 					ctx;
 	/**	Data						*/
 	private ArrayList<DisplayMenuItem> 	data;
+	/**	Original Data				*/
+	private ArrayList<DisplayMenuItem> 	originalData;
 	/**	Identifier of View			*/
 	private int 						id_View;
 	/**	Is Activity Menu			*/
@@ -185,4 +188,73 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 		return item;
 	}
 	
+	@Override
+	public Filter getFilter() {
+	    return new Filter() {
+	        @SuppressWarnings("unchecked")
+	        @Override
+	        protected void publishResults(CharSequence constraint, FilterResults results) {
+	            data = (ArrayList<DisplayMenuItem>) results.values;
+	            if (results.count > 0) {
+	            	notifyDataSetChanged();
+	            } else {
+	            	notifyDataSetInvalidated();
+	            }  
+	        }
+
+	        @Override
+	        protected FilterResults performFiltering(CharSequence constraint) {
+	            //	Populate Original Data
+	        	if(originalData == null)
+	            	originalData = data;
+	        	//	Get filter result
+	        	ArrayList<DisplayMenuItem> filteredResults = getResults(constraint);
+	            //	Result
+	            FilterResults results = new FilterResults();
+	            //	
+	            results.values = filteredResults;
+	            results.count = filteredResults.size();
+	            //	
+	            return results;
+	        }
+
+	        /**
+	         * Search
+	         * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/03/2014, 03:19:33
+	         * @param constraint
+	         * @return
+	         * @return ArrayList<DisplayMenuItem>
+	         */
+	        private ArrayList<DisplayMenuItem> getResults(CharSequence constraint) {
+	        	//	Verify
+	            if(constraint != null
+	            		&& constraint.length() > 0) {
+	            	//	new Filter
+	            	ArrayList<DisplayMenuItem> filteredResult = new ArrayList<DisplayMenuItem>();
+	                for(DisplayMenuItem item : originalData) {
+	                    if((item.getName() != null 
+	                    		&& item.getName().toLowerCase(Env.getLocate())
+	                    					.contains(constraint.toString().toLowerCase(Env.getLocate())))
+	                    	|| (item.getDescription() != null 
+		                    		&& item.getDescription().toLowerCase(Env.getLocate())
+                					.contains(constraint.toString().toLowerCase(Env.getLocate()))))
+	                        filteredResult.add(item);
+	                }
+	                return filteredResult;
+	            }
+	            //	Only Data
+	            return originalData;
+	        }
+	    };
+	}
+	
+	@Override
+	public int getCount() {
+		return data.size();
+	}
+	
+	@Override
+	public DisplayMenuItem getItem(int position) {
+		return data.get(position);
+	}
 }

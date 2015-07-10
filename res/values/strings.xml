@@ -146,6 +146,7 @@
 	<string name="Discount">Discount</string>
 	<string name="Percentage">%</string>
 	<string name="Language">Language</string>
+	<string name="SynchronizingEnding">Synchronizing Ending</string>
 	
 	<string name="t_SelectOne">Select One Option</string>
 	<string name="t_C_OrderLine_ID">Sales Order Lines</string>

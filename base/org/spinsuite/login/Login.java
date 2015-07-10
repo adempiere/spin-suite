@@ -35,6 +35,7 @@ import org.spinsuite.view.T_Pref_Login;
 import org.spinsuite.view.T_Pref_MQTT;
 import org.spinsuite.view.T_Pref_Request_Pass;
 import org.spinsuite.view.T_Pref_WS;
+import org.spinsuite.view.lookup.LookupMenu;
 
 import test.LoadInitData;
 import android.app.ActionBar;
@@ -263,7 +264,7 @@ public class Login extends FragmentActivity implements I_Login {
     		Env.loginDate(this, new Date());
     		//	Load Tree
     		if(m_Menu == null) {
-        		m_Menu = new T_Menu(this);
+        		m_Menu = new T_Menu(this, LookupMenu.MAIN_MENU);
         	}
     		//	Set Title
     		actionBar.setSubtitle(Msg.getMsg(this, "SelectMenuItem"));

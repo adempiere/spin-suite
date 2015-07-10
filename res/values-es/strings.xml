@@ -146,6 +146,7 @@
 	<string name="Discount">Descuento</string>
 	<string name="Percentage">%</string>
 	<string name="Language">Idioma</string>
+	<string name="SynchronizingEnding">Sincronización Finalizada</string>
 	
 	<string name="START_Sales_Order">Orden de Venta</string>
 	<string name="START_AR_Receipt">Cobranza</string>
