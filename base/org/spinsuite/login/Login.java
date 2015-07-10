@@ -136,6 +136,9 @@ public class Login extends FragmentActivity implements I_Login {
 	 */
 	private boolean validLogin() {
 		if(Env.isEnvLoad()) {
+	    	//	Change Language
+	    	Env.changeLanguage(Env.getAD_Language());
+	    	//	
 			String user = Env.getContext(this, "#SUser");
 	    	String pass = Env.getContext(this, "#SPass");
 	    	//	Find User by pass
