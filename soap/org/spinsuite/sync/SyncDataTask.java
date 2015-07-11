@@ -235,9 +235,7 @@ public class SyncDataTask implements BackGroundProcess  {
 					if (syncm.getWhereClause()!=null)
 						whereClause += syncm.getWhereClause();
 					if (!syncm.isForced() && !m_IsForced){
-						whereClause += " AND ";
-						
-						whereClause = " EXISTS (SELECT 1 "
+						whereClause = " AND EXISTS (SELECT 1 "
 													+ "FROM "
 													+ "SPS_SyncTable "
 													+ "WHERE SPS_SyncTable.SPS_Table_ID = ? AND "
