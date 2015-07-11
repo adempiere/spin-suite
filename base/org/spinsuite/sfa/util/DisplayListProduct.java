@@ -345,28 +345,28 @@ public class DisplayListProduct implements Parcelable {
 	 * @return the m_QtyEntered
 	 */
 	public BigDecimal getQtyEntered() {
-		return m_QtyEntered;
+		return DisplayType.getValidNumber(m_QtyEntered);
 	}
 	
 	/**
 	 * @return the m_QtyOrdered
 	 */
 	public BigDecimal getQtyOrdered() {
-		return m_QtyOrdered;
+		return DisplayType.getValidNumber(m_QtyOrdered);
 	}
 	
 	/**
 	 * @return the m_PriceEntered
 	 */
 	public BigDecimal getPriceEntered() {
-		return m_PriceEntered;
+		return DisplayType.getValidNumber(m_PriceEntered);
 	}
 	
 	/**
 	 * @return the m_LineNetAmt
 	 */
 	public BigDecimal getLineNetAmt() {
-		return m_LineNetAmt;
+		return DisplayType.getValidNumber(m_LineNetAmt);
 	}
 	
 	/**

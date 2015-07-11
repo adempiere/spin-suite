@@ -235,14 +235,14 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	 * @return void
 	 */
 	public void setCurrentValue() {
-		if(m_CurrentRecordItem == null) {
-			return;
-		}
-		//	
-		setNewValue(m_CurrentRecordItem, m_CurrentValue, m_CurrentPosition);
-		m_CurrentRecordItem.setLineNetAmt(calculateAmt(m_CurrentRecordItem));
-		m_CurrentLineNetAmt.setText(m_AmtFormat.format(m_CurrentRecordItem.getLineNetAmt()));
-		m_CurrentRecordItem = null;
+//		if(m_CurrentRecordItem == null) {
+//			return;
+//		}
+//		//	
+//		setNewValue(m_CurrentRecordItem, m_CurrentValue, m_CurrentPosition);
+//		m_CurrentRecordItem.setLineNetAmt(calculateAmt(m_CurrentRecordItem));
+//		m_CurrentLineNetAmt.setText(m_AmtFormat.format(m_CurrentRecordItem.getLineNetAmt()));
+//		m_CurrentRecordItem = null;
 	}
 	
 	/**
@@ -258,6 +258,13 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		BigDecimal m_LineNetAmt = Env.ZERO;
 		BigDecimal m_TaxAmt = Env.ZERO;
 		BigDecimal m_AmtWithoutTax = Env.ZERO;
+		//	Valid Null
+		if(m_TaxRate == null)
+			m_TaxRate = Env.ZERO;
+		if(m_Price == null)
+			m_Price = Env.ZERO;
+		if(m_QtyEntered == null)
+			m_QtyEntered = Env.ZERO;
 		//	Calculate
 		m_TaxAmt = m_TaxRate.divide(Env.ONEHUNDRED);
 		m_AmtWithoutTax = m_QtyEntered.multiply(m_Price);
