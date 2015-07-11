@@ -408,11 +408,11 @@ public class T_DynamicTab extends T_FormTab
 		popupMenu.getMenu().add(Menu.NONE, O_VIEW_PREFERENCES, 
 				Menu.NONE, getString(R.string.Action_Config));
 		//	Synchronize Record
-		popupMenu.getMenu().add(Menu.NONE, O_SYNCHRONIZE, 
-				Menu.NONE, getString(R.string.Action_Syncronization));
-		//	Go to Synchronization Menu
+//		popupMenu.getMenu().add(Menu.NONE, O_SYNCHRONIZE, 
+//				Menu.NONE, getString(R.string.Action_SyncRecord));
+//		//	Go to Synchronization Menu
 		popupMenu.getMenu().add(Menu.NONE, O_VIEW_SYNCHRONIZATION, 
-				Menu.NONE, getString(R.string.Action_SyncRecord));
+				Menu.NONE, getString(R.string.Action_Syncronization));
 		//	View Attachment
 		if(mGridTab.getPO() != null
 				&& mGridTab.getRecord_ID() > 0) {
