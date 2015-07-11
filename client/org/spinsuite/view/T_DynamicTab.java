@@ -129,6 +129,8 @@ public class T_DynamicTab extends T_FormTab
 	private final int O_ATTACH_FILE							= 5;
 	private final int O_VIEW_ATTACH							= 6;
 	private final int O_VIEW_PREFERENCES					= 7;
+	private final int O_SYNCHRONIZE							= 8;
+	private final int O_VIEW_SYNCHRONIZATION				= 9;
 	
 	/**	Option Menu					*/
 	private MenuItem mi_Search 								= null;
@@ -402,9 +404,15 @@ public class T_DynamicTab extends T_FormTab
 		//	Attach a File
 		popupMenu.getMenu().add(Menu.NONE, O_ATTACH_FILE, 
 				Menu.NONE, getString(R.string.Action_AttachFile));
-		//	Got to Setup
+		//	Go to Setup
 		popupMenu.getMenu().add(Menu.NONE, O_VIEW_PREFERENCES, 
 				Menu.NONE, getString(R.string.Action_Config));
+		//	Synchronize Record
+		popupMenu.getMenu().add(Menu.NONE, O_SYNCHRONIZE, 
+				Menu.NONE, getString(R.string.Action_Syncronization));
+		//	Go to Synchronization Menu
+		popupMenu.getMenu().add(Menu.NONE, O_VIEW_SYNCHRONIZATION, 
+				Menu.NONE, getString(R.string.Action_SyncRecord));
 		//	View Attachment
 		if(mGridTab.getPO() != null
 				&& mGridTab.getRecord_ID() > 0) {
@@ -464,6 +472,12 @@ public class T_DynamicTab extends T_FormTab
 	        		case O_VIEW_PREFERENCES:
 	        			Intent preferences = new Intent(getActivity(), V_Preferences.class);
 	    				startActivity(preferences);
+	        			return true;
+	        		case O_SYNCHRONIZE:
+	        			return true;
+	        		case O_VIEW_SYNCHRONIZATION:
+	        			Intent syncMenu = new Intent(getCallback(), V_Synchronization.class);
+	    				startActivity(syncMenu);
 	        			return true;
 				}
 				return false;

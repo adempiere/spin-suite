@@ -40,6 +40,7 @@
 	<string name="Action_Syncronization">Sincronización</string>
 	<string name="Action_SyncNoForced">Sincronización Normal</string>
 	<string name="Action_SyncForced">Sincronización Forzada</string>
+	<string name="Action_SyncRecord">Sincronizar Registro</string>
 	
 	<!-- Drawer Option -->
 	<string name="drawer_open">Abrir Caja de Navegación</string>

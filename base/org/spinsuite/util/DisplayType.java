@@ -841,6 +841,20 @@ public final class DisplayType
 		return p_Number.doubleValue();
 	}
 	
+	/**
+	 * Get a valid Number
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Number
+	 * @return
+	 * @return BigDecimal
+	 */
+	public static BigDecimal getValidNumber(BigDecimal p_Number) {
+		if(p_Number == null)
+			return Env.ZERO;
+		//	Default
+		return p_Number;
+	}
+	
 	
 	/**
 	 * Get Date As Long, if is null then retun (-1)
