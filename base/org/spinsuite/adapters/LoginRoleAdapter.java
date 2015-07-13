@@ -258,8 +258,9 @@ public class LoginRoleAdapter extends BaseExpandableListAdapter {
     private int loadWarehouse(int org_ID){
 		int warehouse_ID = LoadDataSpinner.load(m_ctx, sp_Warehouse, "SELECT w.M_Warehouse_ID, w.Name " +
 				"FROM M_Warehouse w " + 
-				"WHERE w.AD_Org_ID = " + org_ID, false, false);
-		
+				"WHERE w.IsInTransit = 'N' " + 
+				"AND w.AD_Org_ID = " + org_ID, false, false);
+		//	
 		int id_ctx = Env.getM_Warehouse_ID();
 		if(id_ctx != 0){
 			warehouse_ID = setIDSpinner(sp_Warehouse, id_ctx);

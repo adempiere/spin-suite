@@ -73,7 +73,7 @@ public class FV_IndexRecordLine extends T_FormTab {
 		lv_index_records 	= (ListView) m_View.findViewById(R.id.lv_Index_Records);
 		lv_index_records.setOnItemClickListener(new ListView.OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> adapter, View arg1, int position,
+			public void onItemClick(AdapterView<?> adapter, View view, int position,
 					long arg3) {
 				selectItem(position);
 			}
@@ -121,7 +121,7 @@ public class FV_IndexRecordLine extends T_FormTab {
      * @return
      * @return boolean
      */
-    private boolean loadData(){
+    private boolean loadData() {
     	if(getCallback() == null)
     		return false;
     	//	Instance Tab Information

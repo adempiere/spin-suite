@@ -404,15 +404,6 @@ public class T_DynamicTab extends T_FormTab
 		//	Attach a File
 		popupMenu.getMenu().add(Menu.NONE, O_ATTACH_FILE, 
 				Menu.NONE, getString(R.string.Action_AttachFile));
-		//	Go to Setup
-		popupMenu.getMenu().add(Menu.NONE, O_VIEW_PREFERENCES, 
-				Menu.NONE, getString(R.string.Action_Config));
-		//	Synchronize Record
-//		popupMenu.getMenu().add(Menu.NONE, O_SYNCHRONIZE, 
-//				Menu.NONE, getString(R.string.Action_SyncRecord));
-//		//	Go to Synchronization Menu
-		popupMenu.getMenu().add(Menu.NONE, O_VIEW_SYNCHRONIZATION, 
-				Menu.NONE, getString(R.string.Action_Syncronization));
 		//	View Attachment
 		if(mGridTab.getPO() != null
 				&& mGridTab.getRecord_ID() > 0) {
@@ -426,6 +417,12 @@ public class T_DynamicTab extends T_FormTab
 				popupMenu.getMenu().add(Menu.NONE, O_VIEW_ATTACH, 
 						Menu.NONE, getString(R.string.Action_ViewAttachment));
 		}
+		//	Go to Setup
+		popupMenu.getMenu().add(Menu.NONE, O_VIEW_PREFERENCES, 
+				Menu.NONE, getString(R.string.Action_Config));
+		//	Go to Synchronization Menu
+		popupMenu.getMenu().add(Menu.NONE, O_VIEW_SYNCHRONIZATION, 
+				Menu.NONE, getString(R.string.Action_Syncronization));
 		//	Action
 		popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 			
@@ -472,8 +469,6 @@ public class T_DynamicTab extends T_FormTab
 	        		case O_VIEW_PREFERENCES:
 	        			Intent preferences = new Intent(getActivity(), V_Preferences.class);
 	    				startActivity(preferences);
-	        			return true;
-	        		case O_SYNCHRONIZE:
 	        			return true;
 	        		case O_VIEW_SYNCHRONIZATION:
 	        			Intent syncMenu = new Intent(getCallback(), V_Synchronization.class);
