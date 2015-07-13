@@ -21,7 +21,6 @@ import org.spinsuite.base.R;
 import org.spinsuite.process.DocAction;
 import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.Env;
-import org.spinsuite.view.lookup.InfoLookup;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -106,21 +105,13 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 		String description = "";
 		//	
 		if(recordItem.getValue() != null) {
-			String separator = InfoLookup.TABLE_SEARCH_SEPARATOR;
-			int indexOf = recordItem.getValue().indexOf(separator);
-			//	Verify other
-			if(indexOf == -1) {
-				separator = InfoLookup.TABLE_SEARCH_VIEW_SEPARATOR;
-				indexOf = recordItem.getValue().indexOf(separator);
-			}
-			//	
-			if(indexOf != -1) {
-				name = recordItem.getValue().substring(0, indexOf);
-				description = recordItem.getValue()
-						.substring(indexOf + separator.length())
-						.replaceAll(separator, Env.NL);
-			} else {
-				name = recordItem.getValue();
+			if(recordItem.getValue() != null) {
+				int lastIndexName = recordItem.getValue().indexOf(Env.NL);
+				int valueLength = recordItem.getValue().length();
+				name = recordItem.getValue().substring(0, lastIndexName);
+				if(lastIndexName + 1 < valueLength) {
+					description = recordItem.getValue().substring(lastIndexName + 1, valueLength);
+				}
 			}
 		}
 		//	Set Name

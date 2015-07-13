@@ -21,6 +21,7 @@ import org.spinsuite.base.DB;
 import org.spinsuite.interfaces.I_Lookup;
 import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
+import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.TabParameter;
@@ -217,7 +218,10 @@ public class VLookupSearch extends GridField
 					keys[i] = rs.getInt(i);
 				}
 				//	Add
-				setItem(new DisplayRecordItem(keys, rs.getString(keyCount++)));
+				setItem(new DisplayRecordItem(keys, 
+						Env.parseLookup(v_Activity, 
+								rs.getString(keyCount++), 
+								InfoLookup.TABLE_SEARCH_VIEW_SEPARATOR)));
 			} else {
 				setItem(new DisplayRecordItem(0, null));
 			}

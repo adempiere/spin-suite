@@ -31,6 +31,8 @@ import android.database.Cursor;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+ *   <li> Add Format Pattern to Date and Number in Lookup
+ *   @see https://adempiere.atlassian.net/browse/SPIN-19
  *
  */
 public class Lookup {
@@ -532,16 +534,20 @@ public class Lookup {
 				int m_SPS_Column_ID = rs.getInt(1);
 				int displayType = rs.getInt(2);
 				//	Is First
-				if(!isFirst)
-					longColumn.append("||'_'||");
+				if(!isFirst) {
+					longColumn.append("||");
+				}
+				//	
+				longColumn.append("'")
+					.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
+					.append(displayType)
+					.append("'||");
 				//	
 				if(DisplayType.isLookup(displayType)) {
 					Lookup lookup = new Lookup(m_ctx, m_SPS_Column_ID, aliasPrefix + aliasCount++);
 					InfoLookup infoLookup = lookup.getInfoLookup();
 					//	Add to Display Column
-					longColumn.append(infoLookup.DisplayColumn
-							.replaceAll(InfoLookup.TABLE_SEARCH_SEPARATOR, 
-									InfoLookup.TABLE_SEARCH_VIEW_SEPARATOR));
+					longColumn.append(infoLookup.DisplayColumn);
 					//	Add Join
 					addJoin(m_TableAlias, lookup.getField(), infoLookup);
 				} else {
@@ -619,7 +625,7 @@ public class Lookup {
 		Cursor rs = null;
 		//	Query
 		rs = conn.querySQL("SELECT t.TableName, ck.ColumnName, cd.ColumnName, " +
-				"rl.IsValueDisplayed, rl.WhereClause, rl.OrderByClause " +
+				"rl.IsValueDisplayed, rl.WhereClause, rl.OrderByClause, cd.AD_Reference_ID " +
 				"FROM AD_Ref_Table rl " +
 				"INNER JOIN SPS_Table t ON(t.AD_Table_ID = rl.AD_Table_ID) " +
 				"INNER JOIN SPS_Column ck ON(ck.AD_Column_ID = rl.AD_Key) " +
@@ -633,6 +639,7 @@ public class Lookup {
 			String isValueDisplayed = rs.getString(3);
 			String whereClause = rs.getString(4);
 			String orderByClause = rs.getString(5);
+			int displayType = rs.getInt(6);
 			//	Close
 			DB.closeConnection(conn);
 			//	Set Lookup Info
@@ -654,7 +661,11 @@ public class Lookup {
 				longColumn.append("COALESCE(").append(m_TableAlias).append(".")
 							.append("Value").append(", '')");
 				//	
-				longColumn.append("||'").append(InfoLookup.TABLE_SEARCH_SEPARATOR).append("'||");
+				//	Add Display Type
+				longColumn.append("'")
+					.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
+					.append(displayType)
+					.append("'||");
 			}
 			//	Display Column
 			longColumn.append("COALESCE(").append(m_TableAlias).append(".").append(dColumnName).append(",'')");
@@ -734,8 +745,14 @@ public class Lookup {
 		
 		//	Set SQL
 		StringBuffer sql = new StringBuffer("SELECT ").append(m_TableAlias).append(".").append("Value, ");
+		//	Add Display Type
+		sql.append("'")
+			.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
+			.append(DisplayType.STRING)
+			.append("'||");
 		//	Handle Language
 		if(m_IsBaseLanguage) {
+			//	Add Column
 			sql.append(m_TableAlias).append(".").append("Name ");
 			//	From
 			sql.append("FROM ").append(m_InfoLookup.TableName).append(" AS ").append(m_TableAlias).append(" ");
@@ -842,8 +859,14 @@ public class Lookup {
 					}
 				}
 				//	Is First
-				if(!isFirst)
-					longColumn.append("||'").append(InfoLookup.TABLE_SEARCH_SEPARATOR).append("'||");
+				if(!isFirst) {
+					longColumn.append("||");
+				}
+				//	
+				longColumn.append("'")
+					.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
+					.append(displayType)
+					.append("'||");
 				//	
 				if(DisplayType.isLookup(displayType)) {
 					Lookup lookup = new Lookup(m_ctx, m_SPS_Column_ID, aliasPrefix + aliasCount++);
@@ -999,9 +1022,7 @@ public class Lookup {
 			DB.loadConnection(conn, DB.READ_ONLY);
 			Cursor rs = null;
 			//	Query
-			rs = conn.querySQL(getSQL()
-					.replaceAll(InfoLookup.TABLE_SEARCH_SEPARATOR, 
-							InfoLookup.TABLE_SEARCH_VIEW_SEPARATOR), null);
+			rs = conn.querySQL(getSQL(), null);
 			data = new ArrayList<DisplayLookupSpinner>();
 			if(rs.moveToFirst()) {
 				if(!m_field.IsMandatory) {
@@ -1012,10 +1033,13 @@ public class Lookup {
 				}
 				//	Loop
 				do{
+					String value = Env.parseLookup(m_ctx, 
+							rs.getString(1), 
+							InfoLookup.TABLE_SEARCH_VIEW_SEPARATOR);
 					if(m_field.DisplayType == DisplayType.LIST)
-						data.add(new DisplayLookupSpinner(rs.getString(0), rs.getString(1)));
+						data.add(new DisplayLookupSpinner(rs.getString(0), value));
 					else
-						data.add(new DisplayLookupSpinner(rs.getInt(0), rs.getString(1)));
+						data.add(new DisplayLookupSpinner(rs.getInt(0), value));
 				}while(rs.moveToNext());
 			}
 			//	Close

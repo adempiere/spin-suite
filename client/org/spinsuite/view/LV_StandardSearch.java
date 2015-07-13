@@ -25,6 +25,7 @@ import org.spinsuite.login.Login;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
+import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
@@ -514,7 +515,7 @@ public class LV_StandardSearch extends Activity {
 						data.add(new DisplayRecordItem(
 								keys, 
 								keyColumns, 
-								rs.getString(keyCountAdd++), 
+								Env.parseLookup(v_activity, rs.getString(keyCountAdd++), Env.NL), 
 								rs.getString(keyCountAdd++), 
 								null));
 					}while(rs.moveToNext());
