@@ -17,7 +17,7 @@ package org.spinsuite.view.lookup;
 
 import java.util.logging.Level;
 
-import org.spinsuite.base.R;
+import org.spinsuite.adapters.SpinnerLookupAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.interfaces.I_Lookup;
 import org.spinsuite.util.DisplayLookupSpinner;
@@ -29,7 +29,6 @@ import org.spinsuite.util.TabParameter;
 import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 /**
@@ -140,6 +139,8 @@ public class VLookupSpinner extends GridField
 			}
     	});
 		//	
+		v_Spinner.setClickable(true);
+		v_Spinner.setLongClickable(true);
 		v_Spinner.setOnLongClickListener(new OnLongClickListener() {
 			
 			@Override
@@ -150,7 +151,6 @@ public class VLookupSpinner extends GridField
 				return false;
 			}
 		});
-		
 	}
 	
 	/**
@@ -385,10 +385,8 @@ public class VLookupSpinner extends GridField
 	 */
 	private void populate(){
 		//	Set Adapter
-		ArrayAdapter<DisplayLookupSpinner> sp_adapter = 
-    			new ArrayAdapter<DisplayLookupSpinner>(getContext(), R.layout.v_lookup_spinner, m_Lookup.getData());
-		//	
-		sp_adapter.setDropDownViewResource(R.layout.v_lookup_spinner_drop_down);
+		SpinnerLookupAdapter sp_adapter = 
+    			new SpinnerLookupAdapter(getContext(), m_Lookup.getData());
 		//	
 		v_Spinner.setAdapter(sp_adapter);
 	}

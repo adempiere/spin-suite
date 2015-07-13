@@ -79,7 +79,7 @@ public class LoadDataSpinner {
 			} while(rs.moveToNext());
 			ArrayAdapter<DisplaySpinner> sp_adapter = 
 	    			new ArrayAdapter<DisplaySpinner>(ctx, R.layout.v_lookup_spinner, data);
-			sp_adapter.setDropDownViewResource(R.layout.v_lookup_spinner);
+			sp_adapter.setDropDownViewResource(R.layout.v_lookup_spinner_drop_down);
 			sp.setAdapter(sp_adapter);
 			//	Position
 			sp.setSelection(0);
@@ -88,7 +88,7 @@ public class LoadDataSpinner {
 			data.add(new DisplaySpinner(0, ""));
 			ArrayAdapter<DisplaySpinner> sp_adapter = 
 	    			new ArrayAdapter<DisplaySpinner>(ctx, R.layout.v_lookup_spinner, data);
-			sp_adapter.setDropDownViewResource(R.layout.v_lookup_spinner);
+			sp_adapter.setDropDownViewResource(R.layout.v_lookup_spinner_drop_down);
 			sp.setAdapter(sp_adapter);
 		}
 		rs.close();
