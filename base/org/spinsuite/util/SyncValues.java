@@ -80,6 +80,8 @@ public class SyncValues {
 	public static final String 		WSValue 			= "val";
 	/** Quantity of Pages 				*/
 	public static final String 		WSQtyPages 			= "QtyPages";
+	/**	Error Property					*/
+	public static final String		WSRespError			= "Error";
 	
 	/**
 	 * Get Valid Url
