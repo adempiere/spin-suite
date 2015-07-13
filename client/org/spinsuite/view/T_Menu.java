@@ -121,6 +121,9 @@ public class T_Menu extends Fragment implements I_Login {
 	private final int 				O_NO_FORCED = 0;
 	/**	Forced Option		*/
 	private final int 				O_FORCED = 1;
+	/**	Delete Before		*/
+	private final int 				O_DELETE_BEFORE = 2;
+	
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -207,6 +210,9 @@ public class T_Menu extends Fragment implements I_Login {
     	//	Forced Option
     	menu.add(Menu.NONE, O_FORCED, 
     			Menu.NONE, getString(R.string.Action_SyncForced));
+    	//	Delete Before
+    	menu.add(Menu.NONE, O_DELETE_BEFORE, 
+    			Menu.NONE, getString(R.string.Action_SyncDeleteBefore));
 	}
     
     @Override
@@ -216,10 +222,13 @@ public class T_Menu extends Fragment implements I_Login {
 	    //	Options
 	    switch (item.getItemId()) {
 	    	case O_NO_FORCED:
-	    		synchronizeData(info.position, false);
+	    		synchronizeData(info.position, false, false);
     		return true;
 	    	case O_FORCED:
-	    		synchronizeData(info.position, true);
+	    		synchronizeData(info.position, true, false);
+	    		return true;
+	    	case O_DELETE_BEFORE:
+	    		synchronizeData(info.position, true, true);
 	    		return true;
 	    	default:
 		        return super.onContextItemSelected(item);
@@ -231,9 +240,10 @@ public class T_Menu extends Fragment implements I_Login {
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
      * @param position
      * @param p_IsForced
+     * @param p_IsDeleteBefore
      * @return void
      */
-    private void synchronizeData(int position, boolean p_IsForced) {
+    private void synchronizeData(int position, boolean p_IsForced, boolean p_IsDeleteBefore) {
  		//	Just for Synchronization
  		if(!m_MenuType.equals(LookupMenu.SYNCHRONIZATION_MENU)) {
  			return;
@@ -243,7 +253,7 @@ public class T_Menu extends Fragment implements I_Login {
  		item = m_Adapter.getItem(position);
  		//	Valid null
  		if(item != null) {
- 			new SyncDataTask(m_Callback, item.getSPS_SyncMenu_ID(), p_IsForced);
+ 			new SyncDataTask(m_Callback, item.getSPS_SyncMenu_ID(), p_IsForced, p_IsDeleteBefore);
  		}
     }
     
