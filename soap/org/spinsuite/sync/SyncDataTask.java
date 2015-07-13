@@ -55,6 +55,14 @@ import android.os.StrictMode;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 
+/**
+ * 
+ * @author Carlos Parada, cparada@erpcya.com, ERPCyA http://www.erpcya.com
+ * @contributor Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+ * <li> Add Delete Before Pull option
+ * @see https://adempiere.atlassian.net/browse/SPIN-20
+ *
+ */
 public class SyncDataTask implements BackGroundProcess  {
 	/** Sync Menu ID					*/ 
 	private int 					m_SPS_SyncMenu_ID = 0;
@@ -96,6 +104,8 @@ public class SyncDataTask implements BackGroundProcess  {
 	private boolean					m_IsRootNode = true;
 	/**	Is Forced						*/
 	private boolean 				m_IsForced = false;
+	/**	Delete Before					*/
+	private boolean					m_IsDeleteBefore = false;
 	
 	
 	/**
@@ -107,11 +117,16 @@ public class SyncDataTask implements BackGroundProcess  {
 	 * @param p_ctx
 	 * @param p_SPS_SyncMenu_ID
 	 * @param p_IsForced
+	 * @param p_IsDeleteBefore
 	 */
-	public SyncDataTask(Context p_ctx, int p_SPS_SyncMenu_ID, boolean p_IsForced) {
+	public SyncDataTask(Context p_ctx, int p_SPS_SyncMenu_ID, boolean p_IsForced, boolean p_IsDeleteBefore) {
 		m_ctx = p_ctx;
 		m_SPS_SyncMenu_ID = p_SPS_SyncMenu_ID;
 		m_IsForced = p_IsForced;
+		m_IsDeleteBefore = p_IsDeleteBefore;
+		if(m_IsDeleteBefore) {
+			m_IsForced = m_IsDeleteBefore;
+		}
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build(); 
         StrictMode.setThreadPolicy(policy);
         
@@ -216,7 +231,21 @@ public class SyncDataTask implements BackGroundProcess  {
 				if (soapResponse != null && soapResponse.hasAttribute(SyncValues.WSQtyPages))
 					qtyPages = Integer.parseInt(soapResponse.getAttributeAsString(SyncValues.WSQtyPages));
 				
-				while (currentPage <= qtyPages){
+				//	Delete All Records
+				if(soapResponse != null
+						&& !soapResponse.hasProperty(SyncValues.WSRespError)
+						&& m_IsDeleteBefore) {
+					//	Delete Old Data
+					if(syncm.getSPS_Table_ID() != 0) {
+						MSPSTable m_Table = new MSPSTable(m_ctx, syncm.getSPS_Table_ID(), conn);
+						//	Execute
+						DB.executeUpdate(m_ctx, 
+								"DELETE FROM " + m_Table.getTableName() + " WHERE AD_Client_ID = ?", 
+								Env.getAD_Client_ID(m_ctx), conn);
+					}
+				}
+				//	Write Data
+				while (currentPage <= qtyPages) {
 					writeDB(syncm,0);
 					if (currentPage != qtyPages){
 						param = getSoapParam(syncm, currentPage);
@@ -244,7 +273,7 @@ public class SyncDataTask implements BackGroundProcess  {
 													+ "SPS_SyncTable.EventChangeLog = ? AND "
 													+ "SPS_SyncTable.IsSynchronized='N' )";
 						parameters = new Object[]{table.getSPS_Table_ID(),X_SPS_SyncTable.EVENTCHANGELOG_Insert};
-					}else{
+					} else {
 						parameters = new Object[]{};
 					}
 					
@@ -452,7 +481,7 @@ public class SyncDataTask implements BackGroundProcess  {
 		if (soapResponse == null)
 			return;
 		
-		if (soapResponse.hasProperty("Error")) {
+		if (soapResponse.hasProperty(SyncValues.WSRespError)) {
 			//	Mark like Not Synchronized
 			if (m_MethodValue.equals(SyncValues.WSMQueryData)) {
 				sm.setLastSynchronized(null);
@@ -464,10 +493,7 @@ public class SyncDataTask implements BackGroundProcess  {
 			return;
 		}
 		//	
-		if (m_MethodValue.equals(SyncValues.WSMQueryData)){
-			//	Mark like Synchronized
-			sm.setLastSynchronized(new Timestamp(System.currentTimeMillis()));
-			sm.save();
+		if (m_MethodValue.equals(SyncValues.WSMQueryData)) {
 			//Validate Data Set
 			if (!soapResponse.hasProperty(SyncValues.WSRespDataSet))
 				return;
@@ -505,10 +531,11 @@ public class SyncDataTask implements BackGroundProcess  {
 			
 			Arrays.sort(keyColumns);
 			
-			for (int i = 0 ;i<keyColumns.length;i++)
+			for (int i = 0; i < keyColumns.length; i++) {
 				whereClause += (whereClause.equals("") ? " ": " AND ") + keyColumns[i] + "=?";
+			}
 				
-			for (int i=0; i< countDataSet;i++){
+			for (int i = 0; i < countDataSet; i++) {
 				m_Progress = i+1;
 				//Soap Data Row
 				soapDataRow = (SoapObject)  soapDataSet.getProperty(i);
@@ -516,10 +543,10 @@ public class SyncDataTask implements BackGroundProcess  {
 
 				try {
 					data = new Query(m_ctx, info.getTableName(), whereClause, conn)
-					.setParameters(keyValues)
-					.first();
+						.setParameters(keyValues)
+						.first();
 					
-					if(data == null){
+					if(data == null) {
 						whereClause = "EXISTS (SELECT 1 FROM SPS_SyncTable st WHERE st.SPS_Table_ID = " + info.getSPS_Table_ID();
 						for (int j = 0 ;j<keyColumns.length;j++)
 							whereClause += (j==0 ? " AND (" : " OR ") + " st.SyncRecord_ID = ? ";
@@ -536,8 +563,8 @@ public class SyncDataTask implements BackGroundProcess  {
 						whereClause += " AND IsSynchronized='Y')";
 						
 						data = new Query(m_ctx, info.getTableName(), whereClause, conn)
-						.setParameters(keyValues)
-						.first();
+							.setParameters(keyValues)
+							.first();
 
 					}
 
@@ -577,6 +604,9 @@ public class SyncDataTask implements BackGroundProcess  {
 				} 
 					
 			}
+			//	Mark like Synchronized
+			sm.setLastSynchronized(new Timestamp(System.currentTimeMillis()));
+			sm.save();
 		}
 		else if (m_MethodValue.equals(SyncValues.WSMCreateData)){
 

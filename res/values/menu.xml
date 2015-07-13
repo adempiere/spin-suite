@@ -41,6 +41,7 @@
 	<string name="Action_SyncNoForced">Standard Synchronization</string>
 	<string name="Action_SyncForced">Forced Synchronization</string>
 	<string name="Action_SyncRecord">Synchronize Record</string>
+	<string name="Action_SyncDeleteBefore">Delete Before Synchronize</string>
 	
 	<!-- Drawer Option -->
 	<string name="drawer_open">Open navigation drawer</string>
