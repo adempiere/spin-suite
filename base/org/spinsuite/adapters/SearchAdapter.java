@@ -108,6 +108,9 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 			if(recordItem.getValue() != null) {
 				int lastIndexName = recordItem.getValue().indexOf(Env.NL);
 				int valueLength = recordItem.getValue().length();
+				if(lastIndexName == -1) {
+					lastIndexName = valueLength;
+				}
 				name = recordItem.getValue().substring(0, lastIndexName);
 				if(lastIndexName + 1 < valueLength) {
 					description = recordItem.getValue().substring(lastIndexName + 1, valueLength);

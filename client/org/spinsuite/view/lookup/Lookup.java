@@ -662,7 +662,7 @@ public class Lookup {
 							.append("Value").append(", '')");
 				//	
 				//	Add Display Type
-				longColumn.append("'")
+				longColumn.append("||'")
 					.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
 					.append(displayType)
 					.append("'||");
