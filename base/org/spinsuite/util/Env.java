@@ -21,6 +21,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -2950,13 +2951,13 @@ public final class Env {
 		return outStr.toString();
 	}	//	parseContext
 	
-	
 	/**
 	 * Parse Lookup Value
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
 	 * @param p_Value
 	 * @param p_Separator
+	 * @param p_ArrayValues
 	 * @return
 	 * @return String
 	 */
@@ -2966,8 +2967,10 @@ public final class Env {
 			return null;
 		}
 		//	
+		ArrayList<KeyNamePair> list = new ArrayList<KeyNamePair>();
 		String prevSeparator = InfoLookup.TABLE_SEARCH_SEPARATOR;
 		int tokenIndex = p_Value.indexOf(prevSeparator);
+		KeyNamePair [] p_ArrayValues = null;
 		//	Valid Not Token
 		if(tokenIndex == -1) {
 			return p_Value;
@@ -3031,10 +3034,150 @@ public final class Env {
 			}
 			//	Add Value
 			valueBuffer.append(value);
+			//	
+			list.add(new KeyNamePair(displayType, value));
+			//	
 		} while (tokenIndex != -1);
+		//	Convert to Array
+		p_ArrayValues = new KeyNamePair[list.size()];
+		list.toArray(p_ArrayValues);
 		//	Return
 		return valueBuffer.toString();
 	}
+	
+	/**
+	 * Parse Lookup to array
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param p_Value
+	 * @param p_Separator
+	 * @return
+	 * @return KeyNamePair[]
+	 */
+	public static KeyNamePair[] parseLookupArray(Context ctx, String p_Value, String p_Separator) {
+		//	Valid Null
+		if(p_Value == null) {
+			return null;
+		}
+		//	
+		ArrayList<KeyNamePair> list = new ArrayList<KeyNamePair>();
+		String prevSeparator = InfoLookup.TABLE_SEARCH_SEPARATOR;
+		int tokenIndex = p_Value.indexOf(prevSeparator);
+		KeyNamePair [] p_ArrayValues = null;
+		//	Valid Not Token
+		if(tokenIndex == -1) {
+			return null;
+		}
+		int dixplayTypeIndex = 0;
+		int displayTypeLength = 2;
+		int indexColumn = 0;
+		int displayType = 0;
+		int lastIndexColumn = 0;
+		String value = null;
+		StringBuffer valueBuffer = new StringBuffer();
+		boolean isFirst = true;
+		do {
+			tokenIndex = p_Value.indexOf(prevSeparator);
+			dixplayTypeIndex = tokenIndex + prevSeparator.length();
+			indexColumn = dixplayTypeIndex + displayTypeLength;
+			lastIndexColumn = p_Value.substring(indexColumn).indexOf(prevSeparator);
+			//	Valid Last Index Column
+			if(lastIndexColumn != -1) {
+				lastIndexColumn += indexColumn;
+			} else {
+				lastIndexColumn = p_Value.length();
+			}
+			//	Get Values
+			displayType = Integer.parseInt(p_Value.substring(dixplayTypeIndex, dixplayTypeIndex + displayTypeLength));
+			value = p_Value.substring(indexColumn, lastIndexColumn);
+			
+			if(DisplayType.isDate(displayType)) {
+				if(value != null) {
+					//	For Parse Date
+					SimpleDateFormat sdf = DisplayType.getTimestampFormat_Default();
+					try {
+						Date date = sdf.parse(value);
+						SimpleDateFormat dateFormat = DisplayType.getDateFormat(ctx, displayType);
+						//	Set TimeZone
+						dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+						value = dateFormat.format(date);
+					} catch (ParseException e) {
+						LogM.log(ctx, Env.class, Level.SEVERE, "Parse Error", e);
+					}
+				}
+			} else if(DisplayType.isBigDecimal(displayType)){
+				BigDecimal number = DisplayType.getNumber(value, displayType);
+				//	Set Format
+				DecimalFormat m_DecimalFormat = DisplayType.getNumberFormat(ctx, displayType);
+				value = m_DecimalFormat.format(number);
+			}
+			//	Refresh Index
+			p_Value = p_Value.substring(lastIndexColumn);
+			tokenIndex = p_Value.indexOf(prevSeparator);
+			dixplayTypeIndex = 0;
+			indexColumn = 0;
+			displayType = 0;
+			lastIndexColumn = 0;
+			//	
+			if(isFirst) {
+				isFirst = false;
+			} else {
+				valueBuffer
+					.append(p_Separator);
+			}
+			//	Add Value
+			valueBuffer.append(value);
+			//	
+			list.add(new KeyNamePair(displayType, value));
+			//	
+		} while (tokenIndex != -1);
+		//	Convert to Array
+		p_ArrayValues = new KeyNamePair[list.size()];
+		list.toArray(p_ArrayValues);
+		//	Return
+		return p_ArrayValues;
+	}
+	
+	/**
+	 * Get Array from string
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Value
+	 * @param p_Separator
+	 * @return
+	 * @return String[]
+	 */
+	public static String[] getArrayFromString(String p_Value, String p_Separator) {
+		if (p_Value == null || p_Value.length() == 0)
+			return null;
+
+		String token;
+		String inStr = new String(p_Value);
+		ArrayList<String> list = new ArrayList<String>();
+		//	
+		int i = inStr.indexOf(p_Separator);
+		while (i != -1) {
+			inStr = inStr.substring(i+1, inStr.length());	// from first @
+			
+			int j = inStr.indexOf(p_Separator);				// next @
+			if (j < 0) {
+				LogM.log(getCtx(), "Env", Level.INFO, "No second tag: " + inStr);
+				return null;								//	no second tag
+			}
+			//	
+			token = inStr.substring(0, j);
+			//	
+			list.add(token);
+
+			inStr = inStr.substring(j+1, inStr.length());	// from second @
+			i = inStr.indexOf(p_Separator);
+		}
+		//	
+		LogM.log(getCtx(), "Env", Level.FINE, "getArrayFromString(" + inStr + ")");
+		//	
+		String array[] = new String[list.size()];
+		list.toArray(array);
+		return array;
+	}	//	parseContext
 	
 	/**
 	 *	Parse Context replaces global or Window context @tag@ with actual value.

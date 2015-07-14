@@ -147,7 +147,7 @@ public class ReportAdapter extends BaseAdapter implements Filterable {
 	 * @param index
 	 * @return void
 	 */
-	private void formatField(TextView tv_column, int index){
+	private void formatField(TextView tv_column, int index) {
 		//	Valid Columns
 		if(m_columns != null){
 			InfoReportField column = m_columns[index];
