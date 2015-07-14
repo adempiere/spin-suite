@@ -3114,10 +3114,6 @@ public final class Env {
 			//	Refresh Index
 			p_Value = p_Value.substring(lastIndexColumn);
 			tokenIndex = p_Value.indexOf(prevSeparator);
-			dixplayTypeIndex = 0;
-			indexColumn = 0;
-			displayType = 0;
-			lastIndexColumn = 0;
 			//	
 			if(isFirst) {
 				isFirst = false;
@@ -3129,6 +3125,11 @@ public final class Env {
 			valueBuffer.append(value);
 			//	
 			list.add(new KeyNamePair(displayType, value));
+			//	Clear Values
+			dixplayTypeIndex = 0;
+			indexColumn = 0;
+			displayType = 0;
+			lastIndexColumn = 0;
 			//	
 		} while (tokenIndex != -1);
 		//	Convert to Array
