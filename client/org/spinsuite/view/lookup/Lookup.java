@@ -23,6 +23,7 @@ import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayLookupSpinner;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.IdentifierWrapper;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.TabParameter;
 
@@ -516,9 +517,10 @@ public class Lookup {
 		DB.loadConnection(conn, DB.READ_ONLY);
 		Cursor rs = null;
 		//	Query
-		rs = conn.querySQL("SELECT c.ColumnName, c.SPS_Column_ID, c.AD_Reference_ID " +
+		rs = conn.querySQL("SELECT c.ColumnName, COALESCE(ct.Name, c.Name) Name, c.SPS_Column_ID, c.AD_Reference_ID " +
 				"FROM SPS_Table t " +
 				"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) " +
+				"LEFT JOIN SPS_Column_Trl ct ON(ct.SPS_Column_ID = c.SPS_Column_ID AND ct.AD_Language = '" + m_Language + "') " +
 				"WHERE t.TableName = ? " +
 				"AND c.IsIdentifier = ? ORDER BY SeqNo", new String[]{tableName, "Y"});
 		//	First
@@ -531,8 +533,9 @@ public class Lookup {
 			StringBuffer longColumn = new StringBuffer();
 			do {
 				String columnName = rs.getString(0);
-				int m_SPS_Column_ID = rs.getInt(1);
-				int displayType = rs.getInt(2);
+				String name = rs.getString(1);
+				int m_SPS_Column_ID = rs.getInt(2);
+				int displayType = rs.getInt(3);
 				//	Is First
 				if(!isFirst) {
 					longColumn.append("||");
@@ -551,6 +554,7 @@ public class Lookup {
 					//	Add Join
 					addJoin(m_TableAlias, lookup.getField(), infoLookup);
 				} else {
+					m_InfoLookup.IdentifiesColumn.add(new IdentifierWrapper(displayType, name));
 					longColumn.append("COALESCE(").append(m_TableAlias).append(".").append(columnName).append(",'')");
 				}
 				//	Set false
@@ -815,18 +819,20 @@ public class Lookup {
 		Cursor rs = null;
 		boolean isParent = false;
 		//	Query
-		rs = conn.querySQL("SELECT t.TableName, c.ColumnName, c.SPS_Column_ID, c.AD_Reference_ID " +
+		rs = conn.querySQL("SELECT t.TableName, c.ColumnName, COALESCE(ct.Name, c.Name) Name, c.SPS_Column_ID, c.AD_Reference_ID " +
 				"FROM SPS_Table t " +
-				"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) " +
+				"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) " + 
+				"LEFT JOIN SPS_Column_Trl ct ON(ct.SPS_Column_ID = c.SPS_Column_ID AND ct.AD_Language = '" + m_Language + "') " +
 				"WHERE t.SPS_Table_ID = ? " +
 				"AND c.IsIdentifier = ? " +
 				"ORDER BY SeqNo", new String[]{String.valueOf(m_SPS_Table_ID), "Y"});
 		//	Is Parent
 		if(!rs.moveToFirst()) {
 			isParent = true;
-			rs = conn.querySQL("SELECT t.TableName, c.ColumnName, c.SPS_Column_ID, c.AD_Reference_ID " +
+			rs = conn.querySQL("SELECT t.TableName, c.ColumnName, COALESCE(ct.Name, c.Name) Name, c.SPS_Column_ID, c.AD_Reference_ID " +
 					"FROM SPS_Table t " +
 					"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) " +
+					"LEFT JOIN SPS_Column_Trl ct ON(ct.SPS_Column_ID = c.SPS_Column_ID AND ct.AD_Language = '" + m_Language + "') " +
 					"WHERE t.SPS_Table_ID = ? " +
 					"AND (c.IsKey = ? OR c.IsParent = ?) " +
 					"ORDER BY c.IsKey DESC", new String[]{String.valueOf(m_SPS_Table_ID), "Y", "Y"});
@@ -847,8 +853,9 @@ public class Lookup {
 			StringBuffer longColumn = new StringBuffer();
 			do {
 				String columnName = rs.getString(1);
-				int m_SPS_Column_ID = rs.getInt(2);
-				int displayType = rs.getInt(3);
+				String name = rs.getString(2);
+				int m_SPS_Column_ID = rs.getInt(3);
+				int displayType = rs.getInt(4);
 				//	
 				if(isParent) {
 					//	Add Key
@@ -876,6 +883,7 @@ public class Lookup {
 					//	Add Join
 					addJoin(tableName, lookup.getField(), infoLookup);
 				} else {
+					m_InfoLookup.IdentifiesColumn.add(new IdentifierWrapper(displayType, name));
 					longColumn.append("COALESCE(").append(tableName).append(".").append(columnName).append(",'')");
 				}
 				//	Set false

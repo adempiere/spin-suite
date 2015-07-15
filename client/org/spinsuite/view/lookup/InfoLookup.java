@@ -15,6 +15,11 @@
  *************************************************************************************/
 package org.spinsuite.view.lookup;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import org.spinsuite.util.IdentifierWrapper;
+
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
@@ -28,20 +33,23 @@ public class InfoLookup {
 	 */
 	public InfoLookup(){
 		//	
+		IdentifiesColumn = new ArrayList<IdentifierWrapper>();
 	}
 
 	/**	Table Name					*/
-	public String 			TableName 				= null;
+	public String 							TableName 				= null;
 	/**	Key Column					*/
-	public String[] 		KeyColumn 				= null;
+	public String[] 						KeyColumn 				= null;
 	/**	Display Column				*/
-	public String 			DisplayColumn 			= null;
+	public String 							DisplayColumn 			= null;
 	/**	Where Clause				*/
-	public String			WhereClause 			= null;
+	public String							WhereClause 			= null;
 	/**	Table Alias					*/
-	public String 			TableAlias				= null;
+	public String 							TableAlias				= null;
 	/**	Join with Tables			*/
-	public String 			TableJoin				= null;
+	public String 							TableJoin				= null;
+	/**	Identifies Columns			*/
+	public ArrayList<IdentifierWrapper>		IdentifiesColumn		= null;
 	
 	
 	/**	Reference (Table Name)		*/
@@ -61,9 +69,10 @@ public class InfoLookup {
 	
 	@Override
 	public String toString() {
-		return "InfoLookup [TableName=" + TableName 
-				+ ", DisplayColumn=" + DisplayColumn
-				+ ", WhereClause=" + WhereClause + ", TableAlias=" + TableAlias
-				+ ", TableJoin=" + TableJoin + "]";
+		return "InfoLookup [TableName=" + TableName + ", KeyColumn="
+				+ Arrays.toString(KeyColumn) + ", DisplayColumn="
+				+ DisplayColumn + ", WhereClause=" + WhereClause
+				+ ", TableAlias=" + TableAlias + ", TableJoin=" + TableJoin
+				+ ", IdentifiesColumn=" + IdentifiesColumn + "]";
 	}
 }
