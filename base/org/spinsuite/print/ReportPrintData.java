@@ -423,7 +423,7 @@ public class ReportPrintData {
 		for (int i = 0; i < m_columns.length; i++) {
 			//	Current Column
 			InfoReportField column = m_columns[i];
-			String value = Env.parseLookup(ctx, 
+			String value = Env.parseLookup(ctx, null,
 					rs.getString(i), 
 					InfoLookup.TABLE_SEARCH_VIEW_SEPARATOR);
 			//	Add Data

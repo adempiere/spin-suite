@@ -2955,38 +2955,37 @@ public final class Env {
 	 * Parse Lookup Value
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
+	 * @param p_InfoLookup
 	 * @param p_Value
 	 * @param p_Separator
 	 * @param p_ArrayValues
 	 * @return
 	 * @return String
 	 */
-	public static String parseLookup(Context ctx, String p_Value, String p_Separator) {
+	public static String parseLookup(Context ctx, InfoLookup p_InfoLookup, String p_Value, String p_Separator) {
 		//	Valid Null
 		if(p_Value == null) {
 			return null;
 		}
 		//	
-		ArrayList<KeyNamePair> list = new ArrayList<KeyNamePair>();
+		ArrayList<IdentifierValueWrapper> list = new ArrayList<IdentifierValueWrapper>();
 		String prevSeparator = InfoLookup.TABLE_SEARCH_SEPARATOR;
 		int tokenIndex = p_Value.indexOf(prevSeparator);
-		KeyNamePair [] p_ArrayValues = null;
+		IdentifierValueWrapper [] p_ArrayValues = null;
 		//	Valid Not Token
 		if(tokenIndex == -1) {
-			return p_Value;
+			return null;
 		}
-		int dixplayTypeIndex = 0;
-		int displayTypeLength = 2;
 		int indexColumn = 0;
-		int displayType = 0;
+		//int displayType = 0;
 		int lastIndexColumn = 0;
 		String value = null;
 		StringBuffer valueBuffer = new StringBuffer();
+		int position = 0;
 		boolean isFirst = true;
 		do {
 			tokenIndex = p_Value.indexOf(prevSeparator);
-			dixplayTypeIndex = tokenIndex + prevSeparator.length();
-			indexColumn = dixplayTypeIndex + displayTypeLength;
+			indexColumn += prevSeparator.length();
 			lastIndexColumn = p_Value.substring(indexColumn).indexOf(prevSeparator);
 			//	Valid Last Index Column
 			if(lastIndexColumn != -1) {
@@ -2994,10 +2993,12 @@ public final class Env {
 			} else {
 				lastIndexColumn = p_Value.length();
 			}
+			//	
+			int displayType = p_InfoLookup.IdentifiesColumn.get(position).getDisplayType();
+			String name = p_InfoLookup.IdentifiesColumn.get(position).getName();
 			//	Get Values
-			displayType = Integer.parseInt(p_Value.substring(dixplayTypeIndex, dixplayTypeIndex + displayTypeLength));
 			value = p_Value.substring(indexColumn, lastIndexColumn);
-			
+			//	
 			if(DisplayType.isDate(displayType)) {
 				if(value != null) {
 					//	For Parse Date
@@ -3021,10 +3022,13 @@ public final class Env {
 			//	Refresh Index
 			p_Value = p_Value.substring(lastIndexColumn);
 			tokenIndex = p_Value.indexOf(prevSeparator);
-			dixplayTypeIndex = 0;
+			//	Add Value
+			list.add(new IdentifierValueWrapper(displayType, name, value));
+			//	Clear Values
 			indexColumn = 0;
 			displayType = 0;
 			lastIndexColumn = 0;
+			position++;
 			//	
 			if(isFirst) {
 				isFirst = false;
@@ -3035,11 +3039,9 @@ public final class Env {
 			//	Add Value
 			valueBuffer.append(value);
 			//	
-			list.add(new KeyNamePair(displayType, value));
-			//	
 		} while (tokenIndex != -1);
 		//	Convert to Array
-		p_ArrayValues = new KeyNamePair[list.size()];
+		p_ArrayValues = new IdentifierValueWrapper[list.size()];
 		list.toArray(p_ArrayValues);
 		//	Return
 		return valueBuffer.toString();
@@ -3050,36 +3052,31 @@ public final class Env {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
 	 * @param p_Value
-	 * @param p_Separator
 	 * @return
-	 * @return KeyNamePair[]
+	 * @return IdentifierValueWrapper[]
 	 */
-	public static KeyNamePair[] parseLookupArray(Context ctx, String p_Value, String p_Separator) {
+	public static IdentifierValueWrapper[] parseLookupArray(Context ctx, InfoLookup p_InfoLookup, String p_Value) {
 		//	Valid Null
 		if(p_Value == null) {
 			return null;
 		}
 		//	
-		ArrayList<KeyNamePair> list = new ArrayList<KeyNamePair>();
+		ArrayList<IdentifierValueWrapper> list = new ArrayList<IdentifierValueWrapper>();
 		String prevSeparator = InfoLookup.TABLE_SEARCH_SEPARATOR;
 		int tokenIndex = p_Value.indexOf(prevSeparator);
-		KeyNamePair [] p_ArrayValues = null;
+		IdentifierValueWrapper [] p_ArrayValues = null;
 		//	Valid Not Token
 		if(tokenIndex == -1) {
 			return null;
 		}
-		int dixplayTypeIndex = 0;
-		int displayTypeLength = 2;
 		int indexColumn = 0;
-		int displayType = 0;
+		//int displayType = 0;
 		int lastIndexColumn = 0;
 		String value = null;
-		StringBuffer valueBuffer = new StringBuffer();
-		boolean isFirst = true;
+		int position = 0;
 		do {
 			tokenIndex = p_Value.indexOf(prevSeparator);
-			dixplayTypeIndex = tokenIndex + prevSeparator.length();
-			indexColumn = dixplayTypeIndex + displayTypeLength;
+			indexColumn += prevSeparator.length();
 			lastIndexColumn = p_Value.substring(indexColumn).indexOf(prevSeparator);
 			//	Valid Last Index Column
 			if(lastIndexColumn != -1) {
@@ -3087,10 +3084,12 @@ public final class Env {
 			} else {
 				lastIndexColumn = p_Value.length();
 			}
+			//	
+			int displayType = p_InfoLookup.IdentifiesColumn.get(position).getDisplayType();
+			String name = p_InfoLookup.IdentifiesColumn.get(position).getName();
 			//	Get Values
-			displayType = Integer.parseInt(p_Value.substring(dixplayTypeIndex, dixplayTypeIndex + displayTypeLength));
 			value = p_Value.substring(indexColumn, lastIndexColumn);
-			
+			//	
 			if(DisplayType.isDate(displayType)) {
 				if(value != null) {
 					//	For Parse Date
@@ -3114,26 +3113,17 @@ public final class Env {
 			//	Refresh Index
 			p_Value = p_Value.substring(lastIndexColumn);
 			tokenIndex = p_Value.indexOf(prevSeparator);
-			//	
-			if(isFirst) {
-				isFirst = false;
-			} else {
-				valueBuffer
-					.append(p_Separator);
-			}
 			//	Add Value
-			valueBuffer.append(value);
-			//	
-			list.add(new KeyNamePair(displayType, value));
+			list.add(new IdentifierValueWrapper(displayType, name, value));
 			//	Clear Values
-			dixplayTypeIndex = 0;
 			indexColumn = 0;
 			displayType = 0;
 			lastIndexColumn = 0;
+			position++;
 			//	
 		} while (tokenIndex != -1);
 		//	Convert to Array
-		p_ArrayValues = new KeyNamePair[list.size()];
+		p_ArrayValues = new IdentifierValueWrapper[list.size()];
 		list.toArray(p_ArrayValues);
 		//	Return
 		return p_ArrayValues;

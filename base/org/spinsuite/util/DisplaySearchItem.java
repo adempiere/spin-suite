@@ -74,7 +74,7 @@ public class DisplaySearchItem extends DisplayRecordItem {
 	 * @param m_DocStatus
 	 */
 	public DisplaySearchItem(int[] p_Record_ID, String[] p_KeyColumns,
-			String pValue, String m_DocStatus, KeyNamePair[] p_DisplayValues) {
+			String pValue, String m_DocStatus, IdentifierValueWrapper[] p_DisplayValues) {
 		super(p_Record_ID, p_KeyColumns, pValue, m_DocStatus, null);
 		m_DisplayValues = p_DisplayValues;
 	}
@@ -89,19 +89,19 @@ public class DisplaySearchItem extends DisplayRecordItem {
 	}
 	
 	/**	Key Name Pair		*/
-	private KeyNamePair[] 	m_DisplayValues = null;
+	private IdentifierValueWrapper[] 	m_DisplayValues = null;
 
 	/**
 	 * @return the m_DisplayValues
 	 */
-	public KeyNamePair[] getDisplayValues() {
+	public IdentifierValueWrapper[] getDisplayValues() {
 		return m_DisplayValues;
 	}
 
 	/**
 	 * @param m_DisplayValues the m_DisplayValues to set
 	 */
-	public void setDisplayValues(KeyNamePair[] m_DisplayValues) {
+	public void setDisplayValues(IdentifierValueWrapper[] m_DisplayValues) {
 		this.m_DisplayValues = m_DisplayValues;
 	}
 }

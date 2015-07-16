@@ -22,7 +22,7 @@ import org.spinsuite.process.DocAction;
 import org.spinsuite.util.DisplaySearchItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
-import org.spinsuite.util.KeyNamePair;
+import org.spinsuite.util.IdentifierValueWrapper;
 import org.spinsuite.util.TextViewArrayHolder;
 
 import android.content.Context;
@@ -106,24 +106,24 @@ public class SearchAdapter extends ArrayAdapter<DisplaySearchItem> {
 			//	
 			if(recordItem.getDisplayValues() != null) {
 				//	Get Array
-				KeyNamePair m_DisplayValues[] = recordItem.getDisplayValues();
+				IdentifierValueWrapper m_DisplayValues[] = recordItem.getDisplayValues();
 				//	Extract name from value
 				if(m_DisplayValues != null) {
 					boolean isFirst = true;
 					//	Get Values
-					for(KeyNamePair value : m_DisplayValues) {
+					for(IdentifierValueWrapper value : m_DisplayValues) {
 						//	Valid Null
-						if(value.getName() == null
-							|| value.getName().length() == 0)
+						if(value.getValue() == null
+							|| value.getValue().length() == 0)
 							continue;
 						//	
 						if(isFirst) {
-							tv_Name.setText(value.getName());
+							tv_Name.setText(value.getValue());
 							holder.addTextView(tv_Name);
 							isFirst = false;
 						} else {
-							TextView tv_ValueAdded = loadDescriptionTextView(value.getName(), false);
-							if(DisplayType.isNumeric(value.getKey())) {
+							TextView tv_ValueAdded = loadDescriptionTextView(value.getName() + ": " + value.getValue() , false);
+							if(DisplayType.isNumeric(value.getDisplayType())) {
 								tv_ValueAdded.setGravity(Gravity.END);
 							}
 							holder.addTextView(tv_ValueAdded);

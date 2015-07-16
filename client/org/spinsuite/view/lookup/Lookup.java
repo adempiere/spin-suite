@@ -23,6 +23,7 @@ import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayLookupSpinner;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.IdentifierValueWrapper;
 import org.spinsuite.util.IdentifierWrapper;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.TabParameter;
@@ -543,7 +544,6 @@ public class Lookup {
 				//	
 				longColumn.append("'")
 					.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
-					.append(displayType)
 					.append("'||");
 				//	
 				if(DisplayType.isLookup(displayType)) {
@@ -629,11 +629,12 @@ public class Lookup {
 		Cursor rs = null;
 		//	Query
 		rs = conn.querySQL("SELECT t.TableName, ck.ColumnName, cd.ColumnName, " +
-				"rl.IsValueDisplayed, rl.WhereClause, rl.OrderByClause, cd.AD_Reference_ID " +
+				"rl.IsValueDisplayed, rl.WhereClause, rl.OrderByClause, cd.AD_Reference_ID, COALESCE(ct.Name, cd.Name) Name " +
 				"FROM AD_Ref_Table rl " +
 				"INNER JOIN SPS_Table t ON(t.AD_Table_ID = rl.AD_Table_ID) " +
 				"INNER JOIN SPS_Column ck ON(ck.AD_Column_ID = rl.AD_Key) " +
 				"INNER JOIN SPS_Column cd ON(cd.AD_Column_ID = rl.AD_Display) " +
+				"LEFT JOIN SPS_Column_Trl ct ON(ct.SPS_Column_ID = cd.SPS_Column_ID AND ct.AD_Language = '" + m_Language + "') " +
 				"WHERE rl.AD_Reference_ID = " + m_field.AD_Reference_Value_ID, null);
 		//	
 		if(rs.moveToFirst()) {
@@ -644,6 +645,7 @@ public class Lookup {
 			String whereClause = rs.getString(4);
 			String orderByClause = rs.getString(5);
 			int displayType = rs.getInt(6);
+			String name = rs.getString(7);
 			//	Close
 			DB.closeConnection(conn);
 			//	Set Lookup Info
@@ -665,12 +667,12 @@ public class Lookup {
 				longColumn.append("COALESCE(").append(m_TableAlias).append(".")
 							.append("Value").append(", '')");
 				//	
-				//	Add Display Type
-				longColumn.append("||'")
-					.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
-					.append(displayType)
-					.append("'||");
+				longColumn.append("||");
 			}
+			//	Add Display Type
+			longColumn.append("'")
+				.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
+				.append("'||");
 			//	Display Column
 			longColumn.append("COALESCE(").append(m_TableAlias).append(".").append(dColumnName).append(",'')");
 			sql.append(longColumn);
@@ -689,6 +691,8 @@ public class Lookup {
 			sql.append(", ").append(tableName).append(".").append(lastColumn);
 			//	Set Info Lookup
 			m_InfoLookup.DisplayColumn = longColumn.toString();
+			//	Add To Meta-Data
+			m_InfoLookup.IdentifiesColumn.add(new IdentifierWrapper(displayType, name));
 			//	Separator
 			sql.append(" FROM ").append(tableName)
 					.append(" AS ").append(m_TableAlias);
@@ -745,14 +749,11 @@ public class Lookup {
 		m_InfoLookup.KeyColumn = new String[]{"Value"};
 		m_InfoLookup.TableName = InfoLookup.REF_LIST_TN;
 		m_InfoLookup.TableAlias = m_TableAlias;
-		
-		
 		//	Set SQL
 		StringBuffer sql = new StringBuffer("SELECT ").append(m_TableAlias).append(".").append("Value, ");
 		//	Add Display Type
 		sql.append("'")
 			.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
-			.append(DisplayType.STRING)
 			.append("'||");
 		//	Handle Language
 		if(m_IsBaseLanguage) {
@@ -791,6 +792,14 @@ public class Lookup {
 			//	Set Where
 			m_InfoLookup.WhereClause = getValRule();
 		}
+		//	Add Display Type
+		String name = DB.getSQLValueString(m_ctx, "SELECT COALESCE(rlt.Name, rl.Name) Name "
+				+ "FROM AD_Ref_List rl "
+				+ "LEFT JOIN AD_Ref_List_Trl rlt ON(rlt.AD_Ref_List_ID = rl.AD_Ref_List_ID AND rlt.AD_Language = ?) "
+				+ "WHERE rl.AD_Ref_List_ID = ?"
+				, m_Language, String.valueOf(m_field.AD_Reference_Value_ID));
+		//	Add
+		m_InfoLookup.IdentifiesColumn.add(new IdentifierWrapper(DisplayType.STRING, name));
 		//	Add Mark
 		m_IsHasWhere = true;
 		sql.append(MARK_WHERE);
@@ -872,7 +881,6 @@ public class Lookup {
 				//	
 				longColumn.append("'")
 					.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
-					.append(displayType)
 					.append("'||");
 				//	
 				if(DisplayType.isLookup(displayType)) {
@@ -1041,7 +1049,7 @@ public class Lookup {
 				}
 				//	Loop
 				do{
-					String value = Env.parseLookup(m_ctx, 
+					String value = Env.parseLookup(m_ctx, m_InfoLookup, 
 							rs.getString(1), 
 							InfoLookup.TABLE_SEARCH_VIEW_SEPARATOR);
 					if(m_field.DisplayType == DisplayType.LIST)

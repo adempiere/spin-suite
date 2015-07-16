@@ -28,6 +28,7 @@ import org.spinsuite.util.DisplaySearchItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
+import org.spinsuite.util.IdentifierValueWrapper;
 import org.spinsuite.util.KeyNamePair;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
@@ -514,11 +515,11 @@ public class LV_StandardSearch extends Activity {
 						int keyCountAdd = keyCount;
 						//	
 						String value = rs.getString(keyCountAdd++);
-						KeyNamePair[] columnValues = Env.parseLookupArray(v_activity, value, Env.NL);
+						IdentifierValueWrapper[] columnValues = Env.parseLookupArray(v_activity, lookup.getInfoLookup(), value);
 						data.add(new DisplaySearchItem (
 								keys, 
 								keyColumns, 
-								Env.parseLookup(v_activity, value, Env.NL), 
+								Env.parseLookup(v_activity, lookup.getInfoLookup(), value, Env.NL), 
 								rs.getString(keyCountAdd++), 
 								columnValues));
 					}while(rs.moveToNext());
