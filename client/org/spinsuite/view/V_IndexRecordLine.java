@@ -35,7 +35,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class FV_IndexRecordLine extends T_FormTab {
+public class V_IndexRecordLine extends T_FormTab {
     
 	/**	Fragment Listener Call Back	*/
 	private I_DT_FragmentSelectListener 	m_Callback 			= null;
@@ -58,7 +58,7 @@ public class FV_IndexRecordLine extends T_FormTab {
 	 * *** Constructor ***
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/04/2014, 17:42:27
 	 */
-    public FV_IndexRecordLine(){
+    public V_IndexRecordLine(){
     	
     }
     

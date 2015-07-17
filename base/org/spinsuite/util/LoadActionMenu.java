@@ -20,7 +20,7 @@ import java.util.logging.Level;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.view.V_Synchronization;
-import org.spinsuite.view.LV_StandardSearch;
+import org.spinsuite.view.V_StandardSearch;
 import org.spinsuite.view.TV_DynamicActivity;
 import org.spinsuite.view.V_Process;
 import org.spinsuite.view.lookup.InfoField;
@@ -131,7 +131,7 @@ public class LoadActionMenu {
 						bundle.putString("IsInsertRecord", (m_IsReadWrite? "Y": "N"));
 						bundle.putString("Name", item.getName());
 						//	
-		            	intent = new Intent(activity, LV_StandardSearch.class);
+		            	intent = new Intent(activity, V_StandardSearch.class);
 		    			intent.putExtras(bundle);
 		    			//	Start with result
 		    			activity.startActivityForResult(intent, 0);

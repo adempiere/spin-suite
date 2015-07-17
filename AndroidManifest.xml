@@ -63,9 +63,9 @@
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateHidden"> 
         </activity>
-        <activity android:name="org.spinsuite.view.LV_StandardSearch" android:label="@string/app_name" android:configChanges="orientation|screenSize"> </activity>
+        <activity android:name="org.spinsuite.view.V_StandardSearch" android:label="@string/app_name" android:configChanges="orientation|screenSize"> </activity>
         <activity android:name="org.spinsuite.view.V_Process" android:label="@string/app_name" android:configChanges="orientation|screenSize"> </activity>
-        <activity android:name="org.spinsuite.view.LV_AttachView" android:label="@string/app_name" android:configChanges="orientation|screenSize"> </activity>
+        <activity android:name="org.spinsuite.view.V_AttachView" android:label="@string/app_name" android:configChanges="orientation|screenSize"> </activity>
         <activity android:name="org.spinsuite.bchat.view.V_BChat" android:label="@string/app_name" android:configChanges="orientation|screenSize"> </activity>
         <activity android:name="org.spinsuite.bchat.view.V_BChat_AddGroup" android:label="@string/app_name" android:configChanges="orientation|screenSize"> </activity>
         <activity android:name="org.spinsuite.sfa.view.V_AddOrderLine" 
