@@ -19,14 +19,18 @@ import java.util.ArrayList;
 
 import org.spinsuite.base.R;
 import org.spinsuite.process.DocAction;
-import org.spinsuite.util.DisplayRecordItem;
+import org.spinsuite.util.DisplaySearchItem;
+import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.IdentifierValueWrapper;
+import org.spinsuite.util.TextViewArrayHolder;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,26 +38,28 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.LinearLayout.LayoutParams;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
-public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
+public class SearchAdapter extends ArrayAdapter<DisplaySearchItem> {
 
 	/**
 	 * 
 	 * *** Constructor ***
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/03/2014, 13:02:43
 	 * @param ctx
-	 * @param view_ID
 	 * @param data
 	 */
-	public SearchAdapter(Context ctx, int view_ID, ArrayList<DisplayRecordItem> data) {
-		super(ctx, view_ID, data);
+	public SearchAdapter(Context ctx, ArrayList<DisplaySearchItem> data) {
+		super(ctx, R.layout.i_search, data);
 		this.ctx = ctx;
-		this.view_ID = view_ID;
+		this.view_ID = R.layout.i_search;
+		setDropDownViewResource(R.layout.i_search);
 		this.data = data;
 		//	Get Preferred Height
 		TypedValue value = Env.getResource(ctx, android.R.attr.listPreferredItemHeight);
@@ -61,66 +67,77 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 		((WindowManager)(ctx.getSystemService(Context.WINDOW_SERVICE)))
 				.getDefaultDisplay().getMetrics(displayMetrics);
 		height = value.getDimension(displayMetrics);
-	}
-	
-	/**
-	 * 
-	 * *** Constructor ***
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 22/03/2014, 09:22:14
-	 * @param ctx
-	 * @param view_ID
-	 */
-	public SearchAdapter(Context ctx, int view_ID) {
-		super(ctx, view_ID);
-		this.ctx = ctx;
-		this.view_ID = view_ID;
-		data = new ArrayList<DisplayRecordItem>();
+		//	Set Parameter
+    	v_param = new LayoutParams(LayoutParams.MATCH_PARENT, 
+    			LayoutParams.WRAP_CONTENT);
 	}
 
 	/**	Context							*/
 	private Context 						ctx;
 	/**	Data							*/
-	private ArrayList<DisplayRecordItem> 	data;
+	private ArrayList<DisplaySearchItem> 	data;
 	/**	Backup							*/
-	private ArrayList<DisplayRecordItem> 	originalData;
+	private ArrayList<DisplaySearchItem> 	originalData;
 	/**	View Identifier					*/
 	private int 							view_ID;
 	/**	Preferred Item Height			*/
 	private float							height = 0;
+	/**	Column Parameter				*/
+	private LayoutParams					v_param	= null;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {		
 		View item = convertView;
-		if(item == null){
+		TextViewArrayHolder holder = new TextViewArrayHolder();
+		//	Get Current Item
+		DisplaySearchItem recordItem = data.get(position);
+		//		
+		if(item == null) {
 			LayoutInflater inflater = (LayoutInflater) ctx
 			        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			item = inflater.inflate(view_ID, null);
 			//	Set Height
 			item.setMinimumHeight((int)height);
-		}
-		//	Get Current Item
-		DisplayRecordItem recordItem = data.get(position);
-		//	Process Text
-		String name = "";
-		String description = "";
-		//	
-		if(recordItem.getValue() != null) {
-			if(recordItem.getValue() != null) {
-				int lastIndexName = recordItem.getValue().indexOf(Env.NL);
-				int valueLength = recordItem.getValue().length();
-				name = recordItem.getValue().substring(0, lastIndexName);
-				if(lastIndexName + 1 < valueLength) {
-					description = recordItem.getValue().substring(lastIndexName + 1, valueLength);
+			//	Get Linear Layout
+			LinearLayout ll_Text = (LinearLayout) item.findViewById(R.id.ll_Text);
+			//	Set Name
+			TextView tv_Name = (TextView)item.findViewById(R.id.tv_Name);
+			tv_Name.setTextAppearance(ctx, R.style.TextTitleList);
+			//	
+			if(recordItem.getDisplayValues() != null) {
+				//	Get Array
+				IdentifierValueWrapper m_DisplayValues[] = recordItem.getDisplayValues();
+				//	Extract name from value
+				if(m_DisplayValues != null) {
+					boolean isFirst = true;
+					//	Get Values
+					for(IdentifierValueWrapper value : m_DisplayValues) {
+						//	Valid Null
+						if(value.getValue() == null
+							|| value.getValue().length() == 0)
+							continue;
+						//	
+						if(isFirst) {
+							tv_Name.setText(value.getValue());
+							holder.addTextView(tv_Name);
+							isFirst = false;
+						} else {
+							TextView tv_ValueAdded = loadDescriptionTextView(value.getName() + ": " + value.getValue() , false);
+							if(DisplayType.isNumeric(value.getDisplayType())) {
+								tv_ValueAdded.setGravity(Gravity.END);
+							}
+							holder.addTextView(tv_ValueAdded);
+							ll_Text.addView(tv_ValueAdded);
+						}
+					}
 				}
 			}
+			//	
+			item.setTag(holder);
+		} else {
+			//	Holder
+			holder = (TextViewArrayHolder) item.getTag();
 		}
-		//	Set Name
-		TextView tv_Name = (TextView)item.findViewById(R.id.tv_Name);
-		tv_Name.setTextAppearance(ctx, R.style.TextTitleList);
-		tv_Name.setText(name);
-		//	Set Description
-		TextView tv_Description = (TextView)item.findViewById(R.id.tv_Description);
-		tv_Description.setText(description);
 		//	Set Image
 		ImageView img_Item = (ImageView)item.findViewById(R.id.img_Item);
 		if(recordItem.getImageURL() != null 
@@ -161,13 +178,37 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 		return item;
 	}
 	
+	/**
+	 * Load Description Text view for list
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param text
+	 * @param isBold
+	 * @return
+	 * @return TextView
+	 */
+	private TextView loadDescriptionTextView(String text, boolean isBold){
+    	//	New Text Field
+		TextView tv_column = new TextView(ctx);
+		//	Set Parameters
+		tv_column.setLayoutParams(v_param);
+		//	
+		if(isBold)
+			tv_column.setTextAppearance(ctx, R.style.TextItemMenu);
+		else
+			tv_column.setTextAppearance(ctx, R.style.TextItemSmallMenu);
+		//	Set Text
+		tv_column.setText(text);
+		//	Return
+		return tv_column;
+	}
+	
 	@Override
 	public Filter getFilter() {
 	    return new Filter() {
 	        @SuppressWarnings("unchecked")
 	        @Override
 	        protected void publishResults(CharSequence constraint, FilterResults results) {
-	            data = (ArrayList<DisplayRecordItem>) results.values;
+	            data = (ArrayList<DisplaySearchItem>) results.values;
 	            if (results.count > 0) {
 	            	notifyDataSetChanged();
 	            } else {
@@ -181,7 +222,7 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 	        	if(originalData == null)
 	            	originalData = data;
 	        	//	Get filter result
-	        	ArrayList<DisplayRecordItem> filteredResults = getResults(constraint);
+	        	ArrayList<DisplaySearchItem> filteredResults = getResults(constraint);
 	            //	Result
 	            FilterResults results = new FilterResults();
 	            //	
@@ -196,15 +237,15 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 	         * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/03/2014, 03:19:33
 	         * @param constraint
 	         * @return
-	         * @return ArrayList<DisplayRecordItem>
+	         * @return ArrayList<DisplaySearchItem>
 	         */
-	        private ArrayList<DisplayRecordItem> getResults(CharSequence constraint) {
+	        private ArrayList<DisplaySearchItem> getResults(CharSequence constraint) {
 	        	//	Verify
 	            if(constraint != null
 	            		&& constraint.length() > 0) {
 	            	//	new Filter
-	            	ArrayList<DisplayRecordItem> filteredResult = new ArrayList<DisplayRecordItem>();
-	                for(DisplayRecordItem item : originalData) {
+	            	ArrayList<DisplaySearchItem> filteredResult = new ArrayList<DisplaySearchItem>();
+	                for(DisplaySearchItem item : originalData) {
 	                    if((item.getValue() != null 
 	                    		&& item.getValue().toLowerCase(Env.getLocate())
 	                    					.contains(constraint.toString().toLowerCase(Env.getLocate()))))
@@ -224,7 +265,7 @@ public class SearchAdapter extends ArrayAdapter<DisplayRecordItem> {
 	}
 	
 	@Override
-	public DisplayRecordItem getItem(int position) {
+	public DisplaySearchItem getItem(int position) {
 		return data.get(position);
 	}
 	

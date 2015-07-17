@@ -282,7 +282,7 @@ public final class DisplayType
 		if(ctx != null)
 			language = Env.getAD_Language();
 		//	
-		Locale locale = new Locale(language);
+		Locale locale = Language.getLocale(language);
 		DecimalFormat format = null;
 		format = (DecimalFormat)NumberFormat.getNumberInstance(locale);
 		//
