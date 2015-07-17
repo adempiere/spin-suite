@@ -29,7 +29,6 @@ import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
 import org.spinsuite.util.IdentifierValueWrapper;
-import org.spinsuite.util.KeyNamePair;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 import org.spinsuite.view.lookup.GridField;
@@ -67,7 +66,7 @@ import android.widget.TextView;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  *
  */
-public class LV_StandardSearch extends Activity {
+public class V_StandardSearch extends Activity {
 	
 	/**	Adapter					*/
 	private SearchAdapter 			m_SearchAdapter 	= null;

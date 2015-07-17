@@ -23,7 +23,7 @@ import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
-import org.spinsuite.view.LV_StandardSearch;
+import org.spinsuite.view.V_StandardSearch;
 
 import android.app.Activity;
 import android.content.Context;
@@ -189,7 +189,7 @@ public class VSearch extends LinearLayout
 		if(m_field != null){
     		Bundle bundle = new Bundle();
     		bundle.putParcelable("Field", m_field);
-    		Class<?> clazz = LV_StandardSearch.class;
+    		Class<?> clazz = V_StandardSearch.class;
     		//	Intent from Info Factory Class
     		if(m_field.InfoFactoryClass != null
     				&& m_field.InfoFactoryClass.length() > 0) {
