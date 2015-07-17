@@ -23,7 +23,6 @@ import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayLookupSpinner;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
-import org.spinsuite.util.IdentifierValueWrapper;
 import org.spinsuite.util.IdentifierWrapper;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.TabParameter;
@@ -542,18 +541,28 @@ public class Lookup {
 					longColumn.append("||");
 				}
 				//	
-				longColumn.append("'")
-					.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
-					.append("'||");
-				//	
 				if(DisplayType.isLookup(displayType)) {
 					Lookup lookup = new Lookup(m_ctx, m_SPS_Column_ID, aliasPrefix + aliasCount++);
 					InfoLookup infoLookup = lookup.getInfoLookup();
 					//	Add to Display Column
 					longColumn.append(infoLookup.DisplayColumn);
+					//	Add Identifies Values
+					ArrayList<IdentifierWrapper> includeIdentifier = infoLookup.IdentifiesColumn;
+					//	Change first Value
+					if(includeIdentifier.size() > 0) {
+						IdentifierWrapper iWrapper = includeIdentifier.get(0);
+						iWrapper.setName(lookup.getField().Name);
+						includeIdentifier.set(0, iWrapper);
+					}
+					m_InfoLookup.IdentifiesColumn.addAll(infoLookup.IdentifiesColumn);
 					//	Add Join
 					addJoin(m_TableAlias, lookup.getField(), infoLookup);
 				} else {
+					//	
+					longColumn.append("'")
+						.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
+						.append("'||");
+					//	
 					m_InfoLookup.IdentifiesColumn.add(new IdentifierWrapper(displayType, name));
 					longColumn.append("COALESCE(").append(m_TableAlias).append(".").append(columnName).append(",'')");
 				}
@@ -762,7 +771,7 @@ public class Lookup {
 			//	From
 			sql.append("FROM ").append(m_InfoLookup.TableName).append(" AS ").append(m_TableAlias).append(" ");
 			//	Set Lookup Info
-			m_InfoLookup.DisplayColumn = "COALESCE(" + m_TableAlias + ".Name,'')";
+			m_InfoLookup.DisplayColumn = "'" + InfoLookup.TABLE_SEARCH_SEPARATOR + "'||COALESCE(" + m_TableAlias + ".Name,'')";
 		} else {
 			sql.append("COALESCE(").append(m_TableAlias).append(InfoLookup.TR_TABLE_SUFFIX).append(".").append("Name")
 						.append(", ").append(m_TableAlias).append(".").append("Name").append(") Name ");
@@ -776,7 +785,7 @@ public class Lookup {
 							.append(" AND ").append(m_TableAlias).append(InfoLookup.TR_TABLE_SUFFIX)
 							.append(".").append("AD_Language = '").append(m_Language).append("') ");
 			//	Set Lookup Info
-			m_InfoLookup.DisplayColumn = "COALESCE(" + 
+			m_InfoLookup.DisplayColumn = "'" + InfoLookup.TABLE_SEARCH_SEPARATOR + "'||COALESCE(" + 
 											m_TableAlias + 
 											InfoLookup.TR_TABLE_SUFFIX + 
 											".Name,'')";
@@ -793,13 +802,13 @@ public class Lookup {
 			m_InfoLookup.WhereClause = getValRule();
 		}
 		//	Add Display Type
-		String name = DB.getSQLValueString(m_ctx, "SELECT COALESCE(rlt.Name, rl.Name) Name "
-				+ "FROM AD_Ref_List rl "
-				+ "LEFT JOIN AD_Ref_List_Trl rlt ON(rlt.AD_Ref_List_ID = rl.AD_Ref_List_ID AND rlt.AD_Language = ?) "
-				+ "WHERE rl.AD_Ref_List_ID = ?"
-				, m_Language, String.valueOf(m_field.AD_Reference_Value_ID));
+//		String name = DB.getSQLValueString(m_ctx, "SELECT COALESCE(rlt.Name, rl.Name) Name "
+//				+ "FROM AD_Ref_List rl "
+//				+ "LEFT JOIN AD_Ref_List_Trl rlt ON(rlt.AD_Ref_List_ID = rl.AD_Ref_List_ID AND rlt.AD_Language = ?) "
+//				+ "WHERE rl.AD_Ref_List_ID = ?"
+//				, m_Language, String.valueOf(m_field.AD_Reference_Value_ID));
 		//	Add
-		m_InfoLookup.IdentifiesColumn.add(new IdentifierWrapper(DisplayType.STRING, name));
+		m_InfoLookup.IdentifiesColumn.add(new IdentifierWrapper(DisplayType.STRING, m_field.Name));
 		//	Add Mark
 		m_IsHasWhere = true;
 		sql.append(MARK_WHERE);
@@ -865,6 +874,10 @@ public class Lookup {
 				String name = rs.getString(2);
 				int m_SPS_Column_ID = rs.getInt(3);
 				int displayType = rs.getInt(4);
+				//	Is First
+				if(!isFirst) {
+					longColumn.append("||");
+				}
 				//	
 				if(isParent) {
 					//	Add Key
@@ -874,23 +887,30 @@ public class Lookup {
 						m_InfoLookup.KeyColumn = new String[]{columnName};
 					}
 				}
-				//	Is First
-				if(!isFirst) {
-					longColumn.append("||");
-				}
-				//	
-				longColumn.append("'")
-					.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
-					.append("'||");
 				//	
 				if(DisplayType.isLookup(displayType)) {
 					Lookup lookup = new Lookup(m_ctx, m_SPS_Column_ID, aliasPrefix + aliasCount++);
 					InfoLookup infoLookup = lookup.getInfoLookup();
 					//	Add to Display Column
 					longColumn.append(infoLookup.DisplayColumn);
+					//	Add Identifies Values
+					ArrayList<IdentifierWrapper> includeIdentifier = infoLookup.IdentifiesColumn;
+					//	Change first Value
+					if(includeIdentifier.size() > 0) {
+						IdentifierWrapper iWrapper = includeIdentifier.get(0);
+						iWrapper.setName(lookup.getField().Name);
+						includeIdentifier.set(0, iWrapper);
+					}
+					//	Add Identifies Values
+					m_InfoLookup.IdentifiesColumn.addAll(infoLookup.IdentifiesColumn);
 					//	Add Join
 					addJoin(tableName, lookup.getField(), infoLookup);
 				} else {
+					//	
+					longColumn.append("'")
+						.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
+						.append("'||");
+					//	
 					m_InfoLookup.IdentifiesColumn.add(new IdentifierWrapper(displayType, name));
 					longColumn.append("COALESCE(").append(tableName).append(".").append(columnName).append(",'')");
 				}

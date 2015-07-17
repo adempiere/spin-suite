@@ -3014,7 +3014,7 @@ public final class Env {
 					}
 				}
 			} else if(DisplayType.isBigDecimal(displayType)){
-				BigDecimal number = DisplayType.getNumber(value, displayType);
+				BigDecimal number = DisplayType.getValidNumber(DisplayType.getNumber(value, displayType));
 				//	Set Format
 				DecimalFormat m_DecimalFormat = DisplayType.getNumberFormat(ctx, displayType);
 				value = m_DecimalFormat.format(number);
@@ -3089,9 +3089,10 @@ public final class Env {
 			String name = p_InfoLookup.IdentifiesColumn.get(position).getName();
 			//	Get Values
 			value = p_Value.substring(indexColumn, lastIndexColumn);
-			//	
-			if(DisplayType.isDate(displayType)) {
-				if(value != null) {
+			if(value != null
+					&& value.trim().length() > 0) {
+				//	
+				if(DisplayType.isDate(displayType)) {
 					//	For Parse Date
 					SimpleDateFormat sdf = DisplayType.getTimestampFormat_Default();
 					try {
@@ -3103,12 +3104,12 @@ public final class Env {
 					} catch (ParseException e) {
 						LogM.log(ctx, Env.class, Level.SEVERE, "Parse Error", e);
 					}
+				} else if(DisplayType.isBigDecimal(displayType)){
+					BigDecimal number = DisplayType.getValidNumber(DisplayType.getNumber(value, displayType));
+					//	Set Format
+					DecimalFormat m_DecimalFormat = DisplayType.getNumberFormat(ctx, displayType);
+					value = m_DecimalFormat.format(number);
 				}
-			} else if(DisplayType.isBigDecimal(displayType)){
-				BigDecimal number = DisplayType.getNumber(value, displayType);
-				//	Set Format
-				DecimalFormat m_DecimalFormat = DisplayType.getNumberFormat(ctx, displayType);
-				value = m_DecimalFormat.format(number);
 			}
 			//	Refresh Index
 			p_Value = p_Value.substring(lastIndexColumn);
@@ -3283,7 +3284,7 @@ public final class Env {
 	 * @return void
 	 */
 	public static void changeLanguage(Context ctx, String language, DisplayMetrics metrics) {
-		Locale locale = new Locale(language);
+		Locale locale = Language.getLocale(language);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.locale = locale;
@@ -3312,7 +3313,7 @@ public final class Env {
 		String language = getAD_Language(ctx);
 		if(language == null)
 			language = BASE_LANGUAGE;
-		return new Locale(language);
+		return Language.getLocale(language);
 	}
 	
 	/**
