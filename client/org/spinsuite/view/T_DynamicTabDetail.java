@@ -52,7 +52,7 @@ public class T_DynamicTabDetail extends T_FormTab
 	/**	Cache Detail Fragment	*/
 	private T_DynamicTab		m_detailFragment	= null;
 	/**	List Fragment Cache		*/
-	private FV_IndexRecordLine 	m_listFragment		= null;
+	private V_IndexRecordLine 	m_listFragment		= null;
 	/**	Is Same Table			*/
 	private boolean				m_IsSameTable		= false;
 	/**	Parent Tab Record ID	*/
@@ -121,7 +121,7 @@ public class T_DynamicTabDetail extends T_FormTab
     	}
     	//	
     	if(m_listFragment == null) {
-    		m_listFragment = new FV_IndexRecordLine();
+    		m_listFragment = new V_IndexRecordLine();
             //	Set Parameters
         	m_listFragment.setArguments(bundle);
     	}

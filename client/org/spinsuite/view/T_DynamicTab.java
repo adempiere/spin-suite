@@ -326,13 +326,14 @@ public class T_DynamicTab extends T_FormTab
 			Bundle bundle = new Bundle();
 			bundle.putInt("SPS_Table_ID", tabInfo.getSPS_Table_ID());
 			bundle.putInt("SPS_Tab_ID", tabInfo.getSPS_Tab_ID());
+			bundle.putString("Name", getName());
 			bundle.putString("IsInsertRecord", (!isReadOnly() && isInsertRecord()? "Y": "N"));
 			if(getTabLevel() > 0) {
 				FilterValue criteria = tabInfo.getCriteria(getActivity(), 
 						getActivityNo(), getParentTabNo());
 				bundle.putParcelable("Criteria", criteria);
 			}
-			Intent intent = new Intent(getActivity(), LV_StandardSearch.class);
+			Intent intent = new Intent(getActivity(), V_StandardSearch.class);
 			intent.putExtras(bundle);
 			//	Start with result
 			startActivityForResult(intent, 0);
@@ -492,7 +493,7 @@ public class T_DynamicTab extends T_FormTab
     	if(m_AttHandler == null)
     		return;
     	//	
-    	Intent intent = new Intent(getActivity(), LV_AttachView.class);
+    	Intent intent = new Intent(getActivity(), V_AttachView.class);
     	intent.putExtra("FilePath", m_AttHandler.getAttDirectoryRecord());
     	startActivity(intent);
     }    

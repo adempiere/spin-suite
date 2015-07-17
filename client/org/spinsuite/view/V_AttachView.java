@@ -46,7 +46,7 @@ import android.widget.ListView;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Feb 28, 2015, 12:47:08 AM
  *
  */
-public class LV_AttachView extends Activity {
+public class V_AttachView extends Activity {
 	
 	/**	List View				*/
 	private ListView 							lv_AttachmentList 	= null;
