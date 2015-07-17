@@ -21,13 +21,13 @@ package org.spinsuite.util;
  */
 public class SyncValues {
 	/**	Default Values for Web Services	*/
-	public static final String 		DEFAULT_SOAP_URL 	= "http://vmadempiereprod.iancarina.com.ve:8081";
+	public static final String 		DEFAULT_SOAP_URL 	= "http://test-spinsuite.erpcya.com";
 	public static final String 		DEFAULT_URL_PATH	= "ADInterface/services/";
 	public static final String 		DEFAULT_IL_VALUE	= "SpinSuiteService";
 	public static final String 		DEFAULT_NAME_SPACE 	= "http://www.erpcya.com/";
 	public static final String 		DEFAULT_METHOD 		= "InitialLoad";
-	public static final String 		DEFAULT_AD_USER 	= "pNelson";
-	public static final String 		DEFAULT_AD_PASS 	= "12345";
+	public static final String 		DEFAULT_AD_USER 	= "SuperUser";
+	public static final String 		DEFAULT_AD_PASS 	= "System";
 	public static final int 		DEFAULT_TIMEOUT 	= 60;
 	/**	Key For Map						*/
 	public static final String 		KEY_SOAP_URL 		= "Sync_SoapURL";
