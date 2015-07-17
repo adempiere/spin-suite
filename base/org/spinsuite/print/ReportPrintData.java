@@ -48,6 +48,9 @@ import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.TabParameter;
+import org.spinsuite.view.lookup.InfoLookup;
+import org.spinsuite.view.lookup.Lookup;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -422,7 +425,13 @@ public class ReportPrintData {
 		for (int i = 0; i < m_columns.length; i++) {
 			//	Current Column
 			InfoReportField column = m_columns[i];
-			String value = rs.getString(i);
+			//	Get Lookup
+			Lookup m_Lookup = new Lookup(ctx, column.SPS_Column_ID, (TabParameter)null);
+			InfoLookup m_InfoLookup = m_Lookup.getInfoLookup();
+			//	Parse Value
+			String value = Env.parseLookup(ctx, m_InfoLookup,
+					rs.getString(i), 
+					InfoLookup.TABLE_SEARCH_VIEW_SEPARATOR);
 			//	Add Data
 			if(!isChanged(m_currentRow[i].getValue(), value)
 					&& column.IsSuppressRepeats)

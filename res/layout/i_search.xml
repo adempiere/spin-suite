@@ -16,13 +16,31 @@
  * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com				  		 *
  ************************************************************************************/
 -->
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tv_Value"
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:drawableLeft="@drawable/contruction_h"
-    android:maxLines="2"
-    android:minHeight="?android:attr/listPreferredItemHeight"
-    style="@style/TextTitleList" >
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
 
-</TextView>
+    <ImageView
+        android:id="@+id/img_Item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:contentDescription="@string/None"
+        android:src="@drawable/contruction_h" />
+
+    <LinearLayout
+        android:id="@+id/ll_Text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+	        android:id="@+id/tv_Name"
+	        android:gravity="center_vertical"
+	        style="@style/TextItemMenu"
+	        android:text="@string/None"
+	        android:maxLines="1" />
+    </LinearLayout>
+
+</LinearLayout>

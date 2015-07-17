@@ -219,7 +219,7 @@ public class VLookupSearch extends GridField
 				}
 				//	Add
 				setItem(new DisplayRecordItem(keys, 
-						Env.parseLookup(v_Activity, 
+						Env.parseLookup(v_Activity, m_Lookup.getInfoLookup(), 
 								rs.getString(keyCount++), 
 								InfoLookup.TABLE_SEARCH_VIEW_SEPARATOR)));
 			} else {

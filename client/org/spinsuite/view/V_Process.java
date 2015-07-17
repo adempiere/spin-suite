@@ -42,6 +42,7 @@ import org.spinsuite.process.ProcessInfoParameter;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
+import org.spinsuite.util.DisplaySearchItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.KeyNamePair;
@@ -809,7 +810,7 @@ public class V_Process extends Activity {
 	 * @return void
 	 */
 	private void showLog(){
-		ArrayList<DisplayRecordItem> data = new ArrayList<DisplayRecordItem>();
+		ArrayList<DisplaySearchItem> data = new ArrayList<DisplaySearchItem>();
 		SimpleDateFormat formatDate = DisplayType.getDateFormat(getApplicationContext());
 		//	Get Logs
 		ProcessInfoLog[] logs = m_pInfo.getLogs();
@@ -823,12 +824,11 @@ public class V_Process extends Activity {
 				if(log.getP_Number() != null)
 					strLog += " | " + log.getP_Number().doubleValue();
 				//	Add to array
-				data.add(new DisplayRecordItem(log.getLog_ID(), strLog.toString()));
+				data.add(new DisplaySearchItem(log.getLog_ID(), strLog.toString()));
 			}
 		}
 		//	Set Adapter
-		logAdapter = new SearchAdapter(this, R.layout.i_search, data);
-		logAdapter.setDropDownViewResource(R.layout.i_search);
+		logAdapter = new SearchAdapter(this, data);
 		lv_LogReport.setAdapter(logAdapter);
 	}
 	

@@ -20,17 +20,17 @@
     <group android:id="@+id/group_process">
 	    <item android:id="@+id/action_search"
 	        android:title="@string/Action_Search"
-	        android:showAsAction="always|collapseActionView"
+	        android:showAsAction="always"
 	        android:icon="?attr/ic_ab_search" />
 	    
 	    <item android:id="@+id/action_print_format"
 	        android:title="@string/Action_PrintFormat"
-	        android:showAsAction="ifRoom"
+	        android:showAsAction="always"
 	        android:icon="?attr/ic_ab_report" />
 	    
 	    <item android:id="@+id/action_process"
 	        android:title="@string/Action_Process"
-	        android:showAsAction="ifRoom"
+	        android:showAsAction="always"
 	        android:icon="?attr/ic_ab_process" />
 	</group>	    
 </menu>

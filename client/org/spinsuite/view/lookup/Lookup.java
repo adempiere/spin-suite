@@ -23,6 +23,7 @@ import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayLookupSpinner;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.IdentifierWrapper;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.TabParameter;
 
@@ -516,9 +517,10 @@ public class Lookup {
 		DB.loadConnection(conn, DB.READ_ONLY);
 		Cursor rs = null;
 		//	Query
-		rs = conn.querySQL("SELECT c.ColumnName, c.SPS_Column_ID, c.AD_Reference_ID " +
+		rs = conn.querySQL("SELECT c.ColumnName, COALESCE(ct.Name, c.Name) Name, c.SPS_Column_ID, c.AD_Reference_ID " +
 				"FROM SPS_Table t " +
 				"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) " +
+				"LEFT JOIN SPS_Column_Trl ct ON(ct.SPS_Column_ID = c.SPS_Column_ID AND ct.AD_Language = '" + m_Language + "') " +
 				"WHERE t.TableName = ? " +
 				"AND c.IsIdentifier = ? ORDER BY SeqNo", new String[]{tableName, "Y"});
 		//	First
@@ -531,26 +533,37 @@ public class Lookup {
 			StringBuffer longColumn = new StringBuffer();
 			do {
 				String columnName = rs.getString(0);
-				int m_SPS_Column_ID = rs.getInt(1);
-				int displayType = rs.getInt(2);
+				String name = rs.getString(1);
+				int m_SPS_Column_ID = rs.getInt(2);
+				int displayType = rs.getInt(3);
 				//	Is First
 				if(!isFirst) {
 					longColumn.append("||");
 				}
-				//	
-				longColumn.append("'")
-					.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
-					.append(displayType)
-					.append("'||");
 				//	
 				if(DisplayType.isLookup(displayType)) {
 					Lookup lookup = new Lookup(m_ctx, m_SPS_Column_ID, aliasPrefix + aliasCount++);
 					InfoLookup infoLookup = lookup.getInfoLookup();
 					//	Add to Display Column
 					longColumn.append(infoLookup.DisplayColumn);
+					//	Add Identifies Values
+					ArrayList<IdentifierWrapper> includeIdentifier = infoLookup.IdentifiesColumn;
+					//	Change first Value
+					if(includeIdentifier.size() > 0) {
+						IdentifierWrapper iWrapper = includeIdentifier.get(0);
+						iWrapper.setName(lookup.getField().Name);
+						includeIdentifier.set(0, iWrapper);
+					}
+					m_InfoLookup.IdentifiesColumn.addAll(infoLookup.IdentifiesColumn);
 					//	Add Join
 					addJoin(m_TableAlias, lookup.getField(), infoLookup);
 				} else {
+					//	
+					longColumn.append("'")
+						.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
+						.append("'||");
+					//	
+					m_InfoLookup.IdentifiesColumn.add(new IdentifierWrapper(displayType, name));
 					longColumn.append("COALESCE(").append(m_TableAlias).append(".").append(columnName).append(",'')");
 				}
 				//	Set false
@@ -625,11 +638,12 @@ public class Lookup {
 		Cursor rs = null;
 		//	Query
 		rs = conn.querySQL("SELECT t.TableName, ck.ColumnName, cd.ColumnName, " +
-				"rl.IsValueDisplayed, rl.WhereClause, rl.OrderByClause, cd.AD_Reference_ID " +
+				"rl.IsValueDisplayed, rl.WhereClause, rl.OrderByClause, cd.AD_Reference_ID, COALESCE(ct.Name, cd.Name) Name " +
 				"FROM AD_Ref_Table rl " +
 				"INNER JOIN SPS_Table t ON(t.AD_Table_ID = rl.AD_Table_ID) " +
 				"INNER JOIN SPS_Column ck ON(ck.AD_Column_ID = rl.AD_Key) " +
 				"INNER JOIN SPS_Column cd ON(cd.AD_Column_ID = rl.AD_Display) " +
+				"LEFT JOIN SPS_Column_Trl ct ON(ct.SPS_Column_ID = cd.SPS_Column_ID AND ct.AD_Language = '" + m_Language + "') " +
 				"WHERE rl.AD_Reference_ID = " + m_field.AD_Reference_Value_ID, null);
 		//	
 		if(rs.moveToFirst()) {
@@ -640,6 +654,7 @@ public class Lookup {
 			String whereClause = rs.getString(4);
 			String orderByClause = rs.getString(5);
 			int displayType = rs.getInt(6);
+			String name = rs.getString(7);
 			//	Close
 			DB.closeConnection(conn);
 			//	Set Lookup Info
@@ -661,12 +676,12 @@ public class Lookup {
 				longColumn.append("COALESCE(").append(m_TableAlias).append(".")
 							.append("Value").append(", '')");
 				//	
-				//	Add Display Type
-				longColumn.append("'")
-					.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
-					.append(displayType)
-					.append("'||");
+				longColumn.append("||");
 			}
+			//	Add Display Type
+			longColumn.append("'")
+				.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
+				.append("'||");
 			//	Display Column
 			longColumn.append("COALESCE(").append(m_TableAlias).append(".").append(dColumnName).append(",'')");
 			sql.append(longColumn);
@@ -685,6 +700,8 @@ public class Lookup {
 			sql.append(", ").append(tableName).append(".").append(lastColumn);
 			//	Set Info Lookup
 			m_InfoLookup.DisplayColumn = longColumn.toString();
+			//	Add To Meta-Data
+			m_InfoLookup.IdentifiesColumn.add(new IdentifierWrapper(displayType, name));
 			//	Separator
 			sql.append(" FROM ").append(tableName)
 					.append(" AS ").append(m_TableAlias);
@@ -741,14 +758,11 @@ public class Lookup {
 		m_InfoLookup.KeyColumn = new String[]{"Value"};
 		m_InfoLookup.TableName = InfoLookup.REF_LIST_TN;
 		m_InfoLookup.TableAlias = m_TableAlias;
-		
-		
 		//	Set SQL
 		StringBuffer sql = new StringBuffer("SELECT ").append(m_TableAlias).append(".").append("Value, ");
 		//	Add Display Type
 		sql.append("'")
 			.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
-			.append(DisplayType.STRING)
 			.append("'||");
 		//	Handle Language
 		if(m_IsBaseLanguage) {
@@ -757,7 +771,7 @@ public class Lookup {
 			//	From
 			sql.append("FROM ").append(m_InfoLookup.TableName).append(" AS ").append(m_TableAlias).append(" ");
 			//	Set Lookup Info
-			m_InfoLookup.DisplayColumn = "COALESCE(" + m_TableAlias + ".Name,'')";
+			m_InfoLookup.DisplayColumn = "'" + InfoLookup.TABLE_SEARCH_SEPARATOR + "'||COALESCE(" + m_TableAlias + ".Name,'')";
 		} else {
 			sql.append("COALESCE(").append(m_TableAlias).append(InfoLookup.TR_TABLE_SUFFIX).append(".").append("Name")
 						.append(", ").append(m_TableAlias).append(".").append("Name").append(") Name ");
@@ -771,7 +785,7 @@ public class Lookup {
 							.append(" AND ").append(m_TableAlias).append(InfoLookup.TR_TABLE_SUFFIX)
 							.append(".").append("AD_Language = '").append(m_Language).append("') ");
 			//	Set Lookup Info
-			m_InfoLookup.DisplayColumn = "COALESCE(" + 
+			m_InfoLookup.DisplayColumn = "'" + InfoLookup.TABLE_SEARCH_SEPARATOR + "'||COALESCE(" + 
 											m_TableAlias + 
 											InfoLookup.TR_TABLE_SUFFIX + 
 											".Name,'')";
@@ -787,6 +801,14 @@ public class Lookup {
 			//	Set Where
 			m_InfoLookup.WhereClause = getValRule();
 		}
+		//	Add Display Type
+//		String name = DB.getSQLValueString(m_ctx, "SELECT COALESCE(rlt.Name, rl.Name) Name "
+//				+ "FROM AD_Ref_List rl "
+//				+ "LEFT JOIN AD_Ref_List_Trl rlt ON(rlt.AD_Ref_List_ID = rl.AD_Ref_List_ID AND rlt.AD_Language = ?) "
+//				+ "WHERE rl.AD_Ref_List_ID = ?"
+//				, m_Language, String.valueOf(m_field.AD_Reference_Value_ID));
+		//	Add
+		m_InfoLookup.IdentifiesColumn.add(new IdentifierWrapper(DisplayType.STRING, m_field.Name));
 		//	Add Mark
 		m_IsHasWhere = true;
 		sql.append(MARK_WHERE);
@@ -815,18 +837,20 @@ public class Lookup {
 		Cursor rs = null;
 		boolean isParent = false;
 		//	Query
-		rs = conn.querySQL("SELECT t.TableName, c.ColumnName, c.SPS_Column_ID, c.AD_Reference_ID " +
+		rs = conn.querySQL("SELECT t.TableName, c.ColumnName, COALESCE(ct.Name, c.Name) Name, c.SPS_Column_ID, c.AD_Reference_ID " +
 				"FROM SPS_Table t " +
-				"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) " +
+				"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) " + 
+				"LEFT JOIN SPS_Column_Trl ct ON(ct.SPS_Column_ID = c.SPS_Column_ID AND ct.AD_Language = '" + m_Language + "') " +
 				"WHERE t.SPS_Table_ID = ? " +
 				"AND c.IsIdentifier = ? " +
 				"ORDER BY SeqNo", new String[]{String.valueOf(m_SPS_Table_ID), "Y"});
 		//	Is Parent
 		if(!rs.moveToFirst()) {
 			isParent = true;
-			rs = conn.querySQL("SELECT t.TableName, c.ColumnName, c.SPS_Column_ID, c.AD_Reference_ID " +
+			rs = conn.querySQL("SELECT t.TableName, c.ColumnName, COALESCE(ct.Name, c.Name) Name, c.SPS_Column_ID, c.AD_Reference_ID " +
 					"FROM SPS_Table t " +
 					"INNER JOIN SPS_Column c ON(c.SPS_Table_ID = t.SPS_Table_ID) " +
+					"LEFT JOIN SPS_Column_Trl ct ON(ct.SPS_Column_ID = c.SPS_Column_ID AND ct.AD_Language = '" + m_Language + "') " +
 					"WHERE t.SPS_Table_ID = ? " +
 					"AND (c.IsKey = ? OR c.IsParent = ?) " +
 					"ORDER BY c.IsKey DESC", new String[]{String.valueOf(m_SPS_Table_ID), "Y", "Y"});
@@ -847,8 +871,13 @@ public class Lookup {
 			StringBuffer longColumn = new StringBuffer();
 			do {
 				String columnName = rs.getString(1);
-				int m_SPS_Column_ID = rs.getInt(2);
-				int displayType = rs.getInt(3);
+				String name = rs.getString(2);
+				int m_SPS_Column_ID = rs.getInt(3);
+				int displayType = rs.getInt(4);
+				//	Is First
+				if(!isFirst) {
+					longColumn.append("||");
+				}
 				//	
 				if(isParent) {
 					//	Add Key
@@ -858,24 +887,31 @@ public class Lookup {
 						m_InfoLookup.KeyColumn = new String[]{columnName};
 					}
 				}
-				//	Is First
-				if(!isFirst) {
-					longColumn.append("||");
-				}
-				//	
-				longColumn.append("'")
-					.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
-					.append(displayType)
-					.append("'||");
 				//	
 				if(DisplayType.isLookup(displayType)) {
 					Lookup lookup = new Lookup(m_ctx, m_SPS_Column_ID, aliasPrefix + aliasCount++);
 					InfoLookup infoLookup = lookup.getInfoLookup();
 					//	Add to Display Column
 					longColumn.append(infoLookup.DisplayColumn);
+					//	Add Identifies Values
+					ArrayList<IdentifierWrapper> includeIdentifier = infoLookup.IdentifiesColumn;
+					//	Change first Value
+					if(includeIdentifier.size() > 0) {
+						IdentifierWrapper iWrapper = includeIdentifier.get(0);
+						iWrapper.setName(lookup.getField().Name);
+						includeIdentifier.set(0, iWrapper);
+					}
+					//	Add Identifies Values
+					m_InfoLookup.IdentifiesColumn.addAll(infoLookup.IdentifiesColumn);
 					//	Add Join
 					addJoin(tableName, lookup.getField(), infoLookup);
 				} else {
+					//	
+					longColumn.append("'")
+						.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
+						.append("'||");
+					//	
+					m_InfoLookup.IdentifiesColumn.add(new IdentifierWrapper(displayType, name));
 					longColumn.append("COALESCE(").append(tableName).append(".").append(columnName).append(",'')");
 				}
 				//	Set false
@@ -1033,7 +1069,7 @@ public class Lookup {
 				}
 				//	Loop
 				do{
-					String value = Env.parseLookup(m_ctx, 
+					String value = Env.parseLookup(m_ctx, m_InfoLookup, 
 							rs.getString(1), 
 							InfoLookup.TABLE_SEARCH_VIEW_SEPARATOR);
 					if(m_field.DisplayType == DisplayType.LIST)

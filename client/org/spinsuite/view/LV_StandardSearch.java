@@ -24,9 +24,12 @@ import org.spinsuite.base.R;
 import org.spinsuite.login.Login;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
+import org.spinsuite.util.DisplaySearchItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
+import org.spinsuite.util.IdentifierValueWrapper;
+import org.spinsuite.util.KeyNamePair;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 import org.spinsuite.view.lookup.GridField;
@@ -418,7 +421,7 @@ public class LV_StandardSearch extends Activity {
 		/**	Progress Bar			*/
 		private ProgressDialog 			v_PDialog;
 		/**	Data					*/
-		ArrayList<DisplayRecordItem> 	data = null;
+		ArrayList<DisplaySearchItem> 	data = null;
 		
 		/**
 		 * Init Values
@@ -427,7 +430,7 @@ public class LV_StandardSearch extends Activity {
 		 */
 		private void init() {
 	    	//	Load Table Info
-			data = new ArrayList<DisplayRecordItem>();
+			data = new ArrayList<DisplaySearchItem>();
 			//	View
 		}
 		
@@ -466,8 +469,7 @@ public class LV_StandardSearch extends Activity {
 	     */
 	    protected boolean loadView() {
 	    	//	Set Adapter
-			m_SearchAdapter = new SearchAdapter(v_activity, R.layout.i_image_text, data);
-			m_SearchAdapter.setDropDownViewResource(R.layout.i_image_text);
+			m_SearchAdapter = new SearchAdapter(v_activity, data);
 			lv_Search.setAdapter(m_SearchAdapter);
 			//	
 			tv_RecordCount.setText(Msg.getMsg(v_activity, "record.found") 
@@ -512,12 +514,14 @@ public class LV_StandardSearch extends Activity {
 						//	Tmp Key count
 						int keyCountAdd = keyCount;
 						//	
-						data.add(new DisplayRecordItem(
+						String value = rs.getString(keyCountAdd++);
+						IdentifierValueWrapper[] columnValues = Env.parseLookupArray(v_activity, lookup.getInfoLookup(), value);
+						data.add(new DisplaySearchItem (
 								keys, 
 								keyColumns, 
-								Env.parseLookup(v_activity, rs.getString(keyCountAdd++), Env.NL), 
+								Env.parseLookup(v_activity, lookup.getInfoLookup(), value, Env.NL), 
 								rs.getString(keyCountAdd++), 
-								null));
+								columnValues));
 					}while(rs.moveToNext());
 				}
 				//	Close

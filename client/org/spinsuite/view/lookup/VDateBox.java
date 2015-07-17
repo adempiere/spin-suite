@@ -73,7 +73,7 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 		ctx = context;
 		LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutInflater.inflate(R.layout.v_lookup_date, this);
-        formatFront = format;
+        frontFormat = format;
         this.m_Field = m_Field;
         init();
 	}
@@ -96,8 +96,8 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	private ImageButton 			ib_Date;
 	private EditText 				et_Date;
     private Context 				ctx;
-    private SimpleDateFormat 		formatFront = null;
-    private SimpleDateFormat 		formatBack = null;
+    private SimpleDateFormat 		frontFormat = null;
+    private SimpleDateFormat 		backFormat = null;
     private Calendar 				cal;
     private OnFieldChangeListener 	m_Listener = null;
     private GridField				m_Field = null;
@@ -127,8 +127,8 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 		//	
 		ib_Date.setOnClickListener(this);
 		
-		formatFront = DisplayType.getDateFormat(getContext(), DisplayType.DATE);
-		formatBack = DisplayType.getDateFormat_JDBC();
+		frontFormat = DisplayType.getDateFormat(getContext(), DisplayType.DATE);
+		backFormat = DisplayType.getDateFormat_JDBC();
 		
         // display the current date (this method is below)
         updateDisplay();
@@ -198,7 +198,7 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 		//	Get Date
         Date date = getDate();
         if(date != null)
-        	return formatBack.format(date);
+        	return backFormat.format(date);
 		return null;
 	}
 	
@@ -226,7 +226,7 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 			return null;
 		//	do it
         try {
-			return formatFront.parse(date);
+			return frontFormat.parse(date);
 		} catch (ParseException e) {
 			LogM.log(getContext(), getClass(), Level.SEVERE, "getDateAsString()", e);
 		}
@@ -244,7 +244,7 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
         String date = et_Date.getText().toString();
         //Date date;
 		try {
-			return formatFront.parse(date);
+			return frontFormat.parse(date);
 		} catch (ParseException e) {
 			LogM.log(getContext(), getClass(), Level.SEVERE, "getDate(String)", e);
 		}       
@@ -259,7 +259,7 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	 * @return String
 	 */
 	private String formatDate(Date date){
-		return formatFront.format(date);
+		return frontFormat.format(date);
 	}
 	
 	/**
@@ -291,7 +291,7 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	 * @return void
 	 */
 	public void setFormat(SimpleDateFormat format){
-		this.formatFront = format;
+		this.frontFormat = format;
 		updateDisplay();
 	}
 	
@@ -304,7 +304,7 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	public void setFormat(String format){
 		if(format == null)
 			return;
-		formatFront = new SimpleDateFormat(format);
+		frontFormat = new SimpleDateFormat(format);
 		updateDisplay();
 	}
 	
@@ -315,7 +315,7 @@ public class VDateBox extends LinearLayout implements OnClickListener, OnDateSet
 	 * @return SimpleDateFormat
 	 */
 	public SimpleDateFormat getFormat(){
-		return formatFront;
+		return frontFormat;
 	}
 	
 	@Override
