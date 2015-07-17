@@ -114,7 +114,7 @@ public class T_Menu extends Fragment implements I_Login {
 	/**	Current Parent ID	*/
 	private int 					m_CurrentParent_ID = 0;
 	/**	Menu Type			*/
-	private String					m_MenuType = "M";
+	private String					m_MenuType = LookupMenu.MAIN_MENU;
 	/**	Menu Adapter		*/
 	private MenuAdapter 			m_Adapter = null;
 	/**	No Forced Option	*/
@@ -204,6 +204,9 @@ public class T_Menu extends Fragment implements I_Login {
     
     @Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    	if(m_MenuType.equals(LookupMenu.MAIN_MENU)) {
+    		return;
+    	}
 		//	Standard Option
     	menu.add(Menu.NONE, O_NO_FORCED, 
     			Menu.NONE, getString(R.string.Action_SyncNoForced));
