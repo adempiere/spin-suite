@@ -177,6 +177,7 @@ public class T_DynamicTab extends T_FormTab
         			processCallout(mField);
         			//	Reload depending fields
         			changeDepending(mField);
+        			
     			} else if(mField.getColumnName().equals("DocAction")) {
     				//	Valid Ok
     				VLookupButtonDocAction docAction = (VLookupButtonDocAction) mField;

@@ -393,7 +393,7 @@ public class Login extends FragmentActivity implements I_Login {
 		KeyNamePair[] roles = DB.getKeyNamePairs(this, "SELECT ur.AD_Role_ID, r.Name "
 				+ "FROM AD_User_Roles ur "
 				+ "INNER JOIN AD_Role r ON(r.AD_Role_ID = ur.AD_Role_ID) "
-				+ "WHERE ur.AD_User_ID = ? "
+				+ "WHERE ur.IsActive = 'Y' AND ur.AD_User_ID = ? "
 				+ "ORDER BY ur.AD_Role_ID DESC", Env.getAD_User_ID());
 		//	Process Role
 		if(roles != null
@@ -511,7 +511,7 @@ public class Login extends FragmentActivity implements I_Login {
 	 */
 	private void instanceFragment() {
 		//	Add Login
-		m_PrefPane.add(new LoginFragmentItem(new T_Pref_Login(this, false), 
+		m_PrefPane.add(new LoginFragmentItem(new T_Pref_Login(this, true), 
 				getString(R.string.PR_Login), getString(R.string.PR_D_Login), true));
 		//	Add Web-Services
 		m_PrefPane.add(new LoginFragmentItem(new T_Pref_WS(this), 

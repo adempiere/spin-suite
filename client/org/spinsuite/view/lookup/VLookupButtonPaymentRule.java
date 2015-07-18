@@ -153,8 +153,7 @@ public class VLookupButtonPaymentRule extends VLookupButton {
 			public void onItemClick(QuickAction quickAction, int pos, int actionId) {
 				ActionItemList actionItem = (ActionItemList) quickAction.getActionItem(pos);
 				updateDisplay(actionItem);
-				paymentRule = actionItem.getValue();
-				setValue(paymentRule);
+				setValue(actionItem.getValue());
 			}
 		});
 				

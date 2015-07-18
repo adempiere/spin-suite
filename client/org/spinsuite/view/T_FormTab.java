@@ -47,7 +47,7 @@ public class T_FormTab extends Fragment implements I_DynamicTab {
 	/**	Is PArent Modify	*/
 	private boolean 				m_IsParentModifying		= false;
 	/**	Is Processed		*/
-	private boolean 				m_Processed				= false;
+//	private boolean 				m_Processed				= false;
 	/**	Record Identifier	*/
 	private int 					m_Record_ID 			= 0;
 	/**	Activity No			*/
@@ -210,7 +210,12 @@ public class T_FormTab extends Fragment implements I_DynamicTab {
 	 * @return boolean
 	 */
 	protected boolean isProcessed() {
-		return m_Processed;
+		boolean processed = false;
+		if(m_TabParam != null) {
+			processed = Env.getContextAsBoolean(m_Callback, getActivityNo(), "Processed");
+		}
+		//	Default
+		return processed;
 	}
 	
 	/**
