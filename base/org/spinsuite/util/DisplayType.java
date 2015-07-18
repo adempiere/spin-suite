@@ -760,11 +760,13 @@ public final class DisplayType
 			if(displayType == TEXT
 					|| displayType == TEXT_LONG
 					|| displayType == MEMO)
-				inputType = InputType.TYPE_TEXT_FLAG_MULTI_LINE;
+				inputType = InputType.TYPE_TEXT_FLAG_MULTI_LINE 
+								| InputType.TYPE_TEXT_FLAG_CAP_SENTENCES;
 			else if(displayType == URL)
 				inputType = InputType.TYPE_TEXT_VARIATION_URI;
 			else
-				inputType = InputType.TYPE_CLASS_TEXT;
+				inputType = InputType.TYPE_CLASS_TEXT 
+								| InputType.TYPE_TEXT_FLAG_CAP_SENTENCES;
 		}
     	else if(displayType == INTEGER)
     		inputType = InputType.TYPE_CLASS_NUMBER | InputType.TYPE_CLASS_PHONE;

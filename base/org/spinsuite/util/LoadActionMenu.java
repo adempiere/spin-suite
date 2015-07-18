@@ -118,8 +118,15 @@ public class LoadActionMenu {
 						|| item.getDeploymentType().equals(DisplayMenuItem.DEPLOYMENTTYPE_ListWithQuickAction)) {
 					//	Start Search
 					int m_SPS_Table_ID = item.getSPS_Table_ID();
+					if(m_SPS_Table_ID <= 0) {
+						m_SPS_Table_ID = DB.getSQLValue(activity, "SELECT t.SPS_Table_ID "
+								+ "FROM SPS_Window w "
+								+ "INNER JOIN SPS_Tab t ON(t.SPS_Window_ID = w.SPS_Window_ID) "
+								+ "WHERE w.SPS_Window_ID = " + item.getSPS_Window_ID() + " "
+								+ "ORDER BY t.SeqNo");
+					}
 					//	Valid Table
-					if(m_SPS_Table_ID == 0) {
+					if(m_SPS_Table_ID <= 0) {
 						Msg.toastMsg(activity, activity.getString(R.string.msg_LoadError) 
 								+ ": " + activity.getString(R.string.msg_TableNotFound));
 						loadActivityWithAction(item, bundle);
