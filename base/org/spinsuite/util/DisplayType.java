@@ -767,11 +767,12 @@ public final class DisplayType
 				inputType = InputType.TYPE_CLASS_TEXT;
 		}
     	else if(displayType == INTEGER)
-    		inputType = InputType.TYPE_CLASS_NUMBER;
+    		inputType = InputType.TYPE_CLASS_NUMBER | InputType.TYPE_CLASS_PHONE;
     	else if(isNumeric(displayType))
     		inputType = InputType.TYPE_CLASS_NUMBER 
     									| InputType.TYPE_NUMBER_FLAG_DECIMAL 
-    									| InputType.TYPE_NUMBER_FLAG_SIGNED;
+    									| InputType.TYPE_NUMBER_FLAG_SIGNED
+    									| InputType.TYPE_CLASS_PHONE;
     	else if(isDate(displayType))
     		inputType = InputType.TYPE_CLASS_DATETIME;
     	//	Default

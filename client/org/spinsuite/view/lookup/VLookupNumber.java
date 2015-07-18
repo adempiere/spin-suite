@@ -172,6 +172,10 @@ public class VLookupNumber extends GridField {
 	@Override
 	public Object getValue() {
 		BigDecimal m_Value = DisplayType.getNumber(getContext(), v_Number.getText().toString(), m_field.DisplayType);
+		//	Valid Null Value
+		if(m_Value == null) {
+			m_Value = Env.ZERO;
+		}
 		if(m_field.DisplayType == DisplayType.INTEGER)
 			return m_Value.intValue();
 		//	Default

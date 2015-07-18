@@ -245,7 +245,8 @@ public class T_Pref_Login extends T_Pref_Parent {
 	public boolean processActionOk() {
 		boolean ok = validUser();
 		if(m_IsHasChanges
-				&& m_IsReloadActivity) {
+				&& m_IsReloadActivity
+				&& Env.isEnvLoad()) {
 			reloadActivity();
 		}
 		return ok;
