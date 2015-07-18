@@ -182,7 +182,7 @@ public class LoginRoleAdapter extends BaseExpandableListAdapter {
 		int role_ID = LoadDataSpinner.load(m_ctx, sp_Role, "SELECT r.AD_Role_ID, r.Name, r.IsUseUserOrgAccess " +
     			"FROM AD_Role r " +
     			"INNER JOIN AD_User_Roles ur ON(ur.AD_Role_ID = r.AD_Role_ID) " +
-    			"WHERE ur.AD_User_ID = " + Env.getAD_User_ID(), true, false);
+    			"WHERE ur.IsActive = 'Y' AND ur.AD_User_ID = " + Env.getAD_User_ID(), true, false);
 		
 		int id_ctx = Env.getAD_Role_ID();
 		if(id_ctx != 0){
