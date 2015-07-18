@@ -129,7 +129,7 @@ public class T_DynamicTab extends T_FormTab
 	private final int O_ATTACH_FILE							= 5;
 	private final int O_VIEW_ATTACH							= 6;
 	private final int O_VIEW_PREFERENCES					= 7;
-	private final int O_SYNCHRONIZE							= 8;
+//	private final int O_SYNCHRONIZE							= 8;
 	private final int O_VIEW_SYNCHRONIZATION				= 9;
 	
 	/**	Option Menu					*/
@@ -618,7 +618,7 @@ public class T_DynamicTab extends T_FormTab
     		mi_More.setVisible(mGridTab!= null 
     				&& mGridTab.getRecord_ID() > 0);
     		//	Verify Processed
-    		boolean m_IsProcessed = isProcessed();
+//    		boolean m_IsProcessed = isProcessed();
     		//	
 //    		if(m_TabParam.getTabLevel() > 0
 //    				&& getActivity() != null)
@@ -626,8 +626,7 @@ public class T_DynamicTab extends T_FormTab
 //    				m_TabParam.getActivityNo(), m_TabParam.getParentTabNo(), "Processed");
     		//	
     		mi_Add.setVisible(!isReadOnly() 
-    				&& isInsertRecord() 
-    				&& !m_IsProcessed);
+    				&& isInsertRecord());
     		mi_Edit.setVisible(mGridTab != null 
     				&& mGridTab.getRecord_ID() > 0
     				&& !isReadOnly());
