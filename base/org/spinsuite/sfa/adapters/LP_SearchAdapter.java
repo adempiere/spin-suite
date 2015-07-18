@@ -47,7 +47,9 @@ import android.widget.TextView.OnEditorActionListener;
 /**
  * 
  * @author Dixon Martinez, dmartinez@erpcya.com, ERPCyA http://www.erpcya.com 15/6/2015, 15:42:32
- * @contributor Dixon Martinez, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+ * @contributor Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+ * <li> Bad result when get product
+ * @see https://adempiere.atlassian.net/browse/SPIN-21 
  *
  */
 public class LP_SearchAdapter extends BaseAdapter implements Filterable {
@@ -217,7 +219,7 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				m_CurrentValue = holderQtyEntered.getText();
+				m_CurrentValue = s.toString();
 				m_CurrentPosition = position;
 				m_CurrentLineNetAmt = tv_LineNetAmt;
 				m_CurrentRecordItem = recordItem;
@@ -235,14 +237,14 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	 * @return void
 	 */
 	public void setCurrentValue() {
-//		if(m_CurrentRecordItem == null) {
-//			return;
-//		}
-//		//	
-//		setNewValue(m_CurrentRecordItem, m_CurrentValue, m_CurrentPosition);
-//		m_CurrentRecordItem.setLineNetAmt(calculateAmt(m_CurrentRecordItem));
-//		m_CurrentLineNetAmt.setText(m_AmtFormat.format(m_CurrentRecordItem.getLineNetAmt()));
-//		m_CurrentRecordItem = null;
+		if(m_CurrentRecordItem == null) {
+			return;
+		}
+		//	
+		setNewValue(m_CurrentRecordItem, m_CurrentValue, m_CurrentPosition);
+		m_CurrentRecordItem.setLineNetAmt(calculateAmt(m_CurrentRecordItem));
+		m_CurrentLineNetAmt.setText(m_AmtFormat.format(m_CurrentRecordItem.getLineNetAmt()));
+		m_CurrentRecordItem = null;
 	}
 	
 	/**

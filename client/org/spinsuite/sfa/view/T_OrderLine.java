@@ -110,6 +110,9 @@ public class T_OrderLine extends T_FormTab {
 					if(isParentModifying()) {
 		    			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
 		    			return false;
+		    		} else if(isProcessed()) {
+		    			Msg.toastMsg(getActivity(), "@Record@ @Processed@");
+		    			return false;
 		    		}
 					//	Delete
 					String msg_Acept = getResources().getString(R.string.msg_Acept);
@@ -214,6 +217,9 @@ public class T_OrderLine extends T_FormTab {
 		case R.id.action_add:
 			if(isParentModifying()) {
     			Msg.toastMsg(getActivity(), "@ParentRecordModified@");
+    			return false;
+    		} else if(isProcessed()) {
+    			Msg.toastMsg(getActivity(), "@Record@ @Processed@");
     			return false;
     		}
 			Bundle bundle = new Bundle();
