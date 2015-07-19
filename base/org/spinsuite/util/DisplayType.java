@@ -886,9 +886,8 @@ public final class DisplayType
 			SimpleDateFormat format = getTimestampFormat_Default();
 			return format.parse(date);
 		} catch (ParseException e) {
-			;
+			LogM.log(Env.getCtx(), DisplayType.class, Level.SEVERE, "Error Parsing", e);
 		}
 		return null;
 	}
-	
 }	//	DisplayType

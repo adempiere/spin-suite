@@ -303,7 +303,7 @@ public class T_DynamicTabDetail extends T_FormTab
 		//	
 		if(m_listFragment.isHidden()) {
     		transaction.show(m_listFragment);
-    	} else {
+    	} else if(!m_listFragment.isAdded()){
     		transaction.add(R.id.ll_List, m_listFragment, INDEX_FRAGMENT);
     	}
 		//	Commit
