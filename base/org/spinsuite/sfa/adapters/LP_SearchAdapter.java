@@ -288,7 +288,13 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		p_NewItem.setQtyEntered(DisplayType.getNumber(p_Value));
 		//	Set Item
 		if(position < data.size()) {
-			data.set(position, p_NewItem);
+			DisplayListProduct m_OldItem = data.get(position);
+			//	Validate Product
+			if(m_OldItem.getM_Product_ID() == p_NewItem.getM_Product_ID()) {
+				data.set(position, p_NewItem);
+			} else {
+				return;
+			}
 		}
 		//	Set to Original Data
 		if(originalData != null)

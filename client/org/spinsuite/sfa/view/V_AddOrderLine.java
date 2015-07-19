@@ -16,6 +16,7 @@
 package org.spinsuite.sfa.view;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -26,6 +27,8 @@ import org.spinsuite.model.I_C_OrderLine;
 import org.spinsuite.model.MOrderLine;
 import org.spinsuite.sfa.adapters.LP_SearchAdapter;
 import org.spinsuite.sfa.util.DisplayListProduct;
+import org.spinsuite.util.DisplayType;
+import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
 import android.app.Activity;
@@ -68,6 +71,8 @@ public class V_AddOrderLine extends Activity {
 	private int								m_C_Order_ID = 0;
 	/**	Data Result					*/
 	private ArrayList<DisplayListProduct>	selectedData = null;
+	/**	Valid From					*/
+	private String 							m_ValidFrom = null;
 	
 	
 	@Override
@@ -258,6 +263,12 @@ public class V_AddOrderLine extends Activity {
 		 * @return boolean
 		 */
 	    protected boolean loadView() {
+			//	Set Subtitle
+	    	if(m_ValidFrom == null) {
+	    		m_ValidFrom = getString(R.string.M_Product_ID);
+	    	}
+	    	//	
+			getActionBar().setSubtitle(m_ValidFrom);
 	    	//	Set Adapter
 			m_SP_SearchAdapter = new LP_SearchAdapter(getApplicationContext(), data);
 			lv_Products.setAdapter(m_SP_SearchAdapter);
@@ -323,35 +334,38 @@ public class V_AddOrderLine extends Activity {
 				rs = conn.querySQL();
 				//	
 				if(rs.moveToFirst()) {
+					Date validFrom = DisplayType.getDate(rs.getString(20));
+					SimpleDateFormat format = Env.getDateFormat(v_activity);
+					m_ValidFrom = format.format(validFrom);
 					//	Loop
 					do{
 						int index = 0;
 						data.add(
-									new DisplayListProduct(
-											rs.getInt(index++),						//	Product Category ID
-											rs.getString(index++), 					//	Product Category Value
-											rs.getInt(index++),						//	Product ID
-											rs.getString(index++),					//	Product Value
-											rs.getString(index++),					//	Product Name
-											rs.getString(index++),					//	Product Description
-											rs.getInt(index++),						//	UOM ID
-											rs.getString(index++),					//	UOM Symbol
-											rs.getInt(index++),						//	Tax Category ID
-											rs.getString(index++),					//	Tax Category Value
-											rs.getInt(index++),						//	Tax ID
-											rs.getString(index++),					//	Tax Indicator
-											new BigDecimal(rs.getDouble(index++)),	//	Tax Rate
-											new BigDecimal(rs.getDouble(index++)),	//	Price List
-											new BigDecimal(rs.getDouble(index++)),	//	Quantity Entered
-											new BigDecimal(rs.getDouble(index++)),	//	Quantity Ordered
-											new BigDecimal(rs.getDouble(index++)),	//	Price Entered
-											new BigDecimal(rs.getDouble(index++)),	//	Line Net Amount
-											rs.getInt(index++),						//	Price List ID
-											rs.getInt(index++),						//	Price List Version ID
-											new Date(rs.getLong(index++)),			//	Valid From
-											rs.getInt(index++),						//	Currency ID
-											rs.getString(index++),					//	Currency Value
-											rs.getInt(index++)						//	Order Line ID
+								new DisplayListProduct(
+										rs.getInt(index++),						//	Product Category ID
+										rs.getString(index++), 					//	Product Category Value
+										rs.getInt(index++),						//	Product ID
+										rs.getString(index++),					//	Product Value
+										rs.getString(index++),					//	Product Name
+										rs.getString(index++),					//	Product Description
+										rs.getInt(index++),						//	UOM ID
+										rs.getString(index++),					//	UOM Symbol
+										rs.getInt(index++),						//	Tax Category ID
+										rs.getString(index++),					//	Tax Category Value
+										rs.getInt(index++),						//	Tax ID
+										rs.getString(index++),					//	Tax Indicator
+										new BigDecimal(rs.getDouble(index++)),	//	Tax Rate
+										new BigDecimal(rs.getDouble(index++)),	//	Price List
+										new BigDecimal(rs.getDouble(index++)),	//	Quantity Entered
+										new BigDecimal(rs.getDouble(index++)),	//	Quantity Ordered
+										new BigDecimal(rs.getDouble(index++)),	//	Price Entered
+										new BigDecimal(rs.getDouble(index++)),	//	Line Net Amount
+										rs.getInt(index++),						//	Price List ID
+										rs.getInt(index++),						//	Price List Version ID
+										DisplayType.getDate(rs.getString(index++)),			//	Valid From
+										rs.getInt(index++),						//	Currency ID
+										rs.getString(index++),					//	Currency Value
+										rs.getInt(index++)						//	Order Line ID
 										)
 								);
 					}while(rs.moveToNext());
