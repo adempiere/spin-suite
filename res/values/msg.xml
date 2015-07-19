@@ -20,7 +20,7 @@
     <string name="msg_ValidError">Valid Error</string>
     <string name="msg_Ok">OK</string>
 	<string name="msg_Ask">Ask</string>
-	<string name="msg_Acept">Acept</string>
+	<string name="msg_Acept">Accept</string>
 	<string name="msg_Cancel">Cancel</string>
 	<string name="msg_Save">Save</string>
 	<string name="msg_UserPassDoNotMatch">User / Pass do not Match</string>
