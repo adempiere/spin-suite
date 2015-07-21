@@ -66,6 +66,8 @@ public class T_OrderLine extends T_FormTab {
 	private		int 					m_C_Order_ID			= 0;
 	private 	OrderLineAdapter 		m_Adapter 				= null;
 	private 	int						m_LinesNo				= 0;
+	private 	BigDecimal 				m_TotalLines			= Env.ZERO;
+	private 	BigDecimal 				m_GrandTotal 			= Env.ZERO;
 	
 	/**
 	 * *** Constructor ***
@@ -136,12 +138,15 @@ public class T_OrderLine extends T_FormTab {
 										oLine.deleteEx();
 										//	Remove Item
 										m_Adapter.remove(selectedItem);
+										
 									} catch (Exception e) {
 										LogM.log(getActivity(), getClass(), Level.SEVERE, "Delete Ordel Line Error", e);
 										Msg.toastMsg(getCallback(), e.getMessage());
 									}
 								}
 							}
+							//	Refresh
+							refreshAmt();
 						}
 					});
 					//	Re-Query
@@ -176,6 +181,55 @@ public class T_OrderLine extends T_FormTab {
 		registerForContextMenu(v_list);
 		return m_View;
 		
+	}
+	
+	/**
+	 * Refresh Amount
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void refreshAmt() {
+		//	Load DB
+		DB conn = new DB(getActivity());
+		DB.loadConnection(conn, DB.READ_ONLY);
+		
+		int p_C_Order_ID = Env.getContextAsInt(getActivity(), getActivityNo(), "C_Order_ID");
+		//
+		String sql = "SELECT "
+				+ "o.TotalLines, "
+				+ "o.GrandTotal, "
+				+ "c.CurSymbol "
+				+ "FROM C_Order o "
+				+ "INNER JOIN C_Currency c ON(c.C_Currency_ID = o.C_Currency_ID) "
+				+ "WHERE o.C_Order_ID = ? ";
+		//	Log
+		LogM.log(getActivity(), getClass(), Level.FINE, "SQL=" + sql);
+		conn.compileQuery(sql);
+		conn.addInt(p_C_Order_ID);
+		//	Get SQL
+		Cursor rs = conn.querySQL();
+		//	
+		m_TotalLines = Env.ZERO;
+		m_GrandTotal = Env.ZERO;
+		//	
+		if(rs != null 
+				&& rs.moveToFirst()){
+			int index = 0;
+			m_TotalLines 	= new BigDecimal(rs.getDouble(index++));
+			m_GrandTotal 	= new BigDecimal(rs.getDouble(index++));
+			String m_CurSymbol		= rs.getString(index++);
+			//	Add Symbol
+			if(m_CurSymbol != null) {
+				tv_lb_TotalLines.setText(getString(R.string.TotalLines) + " (" + m_CurSymbol + ")");
+				tv_lb_GrandTotal.setText(getString(R.string.GrandTotal) + " (" + m_CurSymbol + ")");
+			}
+		}
+		DecimalFormat format = DisplayType
+				.getNumberFormat(getActivity(), DisplayType.AMOUNT, "###,###,###,##0.00");
+		//	Set Totals
+		tv_TotalLines.setText(format.format(m_TotalLines));
+		tv_GrandTotal.setText(format.format(m_GrandTotal));
+		//	
 	}
 	
 	@Override
@@ -240,8 +294,6 @@ public class T_OrderLine extends T_FormTab {
     	loadParent();
     	//	Load Data
 		load(); 
-		//	Set Processed
-
     }
 	
 	/**
@@ -311,8 +363,6 @@ public class T_OrderLine extends T_FormTab {
 		//	Get SQL
 		Cursor rs = conn.querySQL();
 		//	
-		BigDecimal m_TotalLines = Env.ZERO;
-		BigDecimal m_GrandTotal = Env.ZERO;
 		String m_CurSymbol = null;
 		//	
 		ArrayList<DisplayOrderLine> data = new ArrayList<DisplayOrderLine>();
@@ -366,11 +416,6 @@ public class T_OrderLine extends T_FormTab {
 		m_Adapter.setDropDownViewResource(R.layout.i_ol_add_product);
 		v_list.setAdapter(m_Adapter);
 	}
-	
-	@Override
-	public void handleMenu() {
-
-	}
 
 	@Override
 	public boolean refreshFromChange(boolean reQuery) {
@@ -399,5 +444,4 @@ public class T_OrderLine extends T_FormTab {
 		//	Return Lines
 		return "(" + m_LinesNo + ")";
 	}
-
 }

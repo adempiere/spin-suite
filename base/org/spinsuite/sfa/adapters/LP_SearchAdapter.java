@@ -105,6 +105,8 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	private int									m_CurrentPosition = 0;
 	/**	Current Text View Amount		*/
 	private TextView							m_CurrentLineNetAmt = null;
+	/**	Has Focus						*/
+	private boolean 							m_HasFocus = false;
 	
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {		
@@ -198,6 +200,8 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 				} else {
 					holderQtyEntered.getEditText().selectAll();
 				}
+				//	Set Has Focus
+				m_HasFocus = hasFocus;
 				//	
 				inputMethod.toggleSoftInput(InputMethodManager.SHOW_FORCED, 
 						InputMethodManager.HIDE_IMPLICIT_ONLY);
@@ -219,6 +223,10 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
+				//	Valid Focus
+				if(!m_HasFocus)
+					return;
+				//	
 				m_CurrentValue = s.toString();
 				m_CurrentPosition = position;
 				m_CurrentLineNetAmt = tv_LineNetAmt;
@@ -245,6 +253,7 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		m_CurrentRecordItem.setLineNetAmt(calculateAmt(m_CurrentRecordItem));
 		m_CurrentLineNetAmt.setText(m_AmtFormat.format(m_CurrentRecordItem.getLineNetAmt()));
 		m_CurrentRecordItem = null;
+		m_HasFocus = false;
 	}
 	
 	/**
