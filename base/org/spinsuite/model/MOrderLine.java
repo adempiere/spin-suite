@@ -214,7 +214,7 @@ public class MOrderLine extends X_C_OrderLine {
 	public void setHeaderInfo (MOrder order)
 	{
 		m_parent = order;
-		m_precision = new Integer(order.getPrecision());
+		m_precision = Integer.valueOf(order.getPrecision());
 		m_M_PriceList_ID = order.getM_PriceList_ID();
 		m_IsSOTrx = order.isSOTrx();
 	}	//	setHeaderInfo
