@@ -214,7 +214,7 @@ public class MOrderLine extends X_C_OrderLine {
 	public void setHeaderInfo (MOrder order)
 	{
 		m_parent = order;
-		m_precision = new Integer(order.getPrecision());
+		m_precision = Integer.valueOf(order.getPrecision());
 		m_M_PriceList_ID = order.getM_PriceList_ID();
 		m_IsSOTrx = order.isSOTrx();
 	}	//	setHeaderInfo
@@ -355,7 +355,7 @@ public class MOrderLine extends X_C_OrderLine {
 				if (!updateOrderTax(true))
 					return false;
 		}
-		return updateHeaderTax();	
+		return updateHeaderTax();
 	}
 	
 	/**
@@ -398,7 +398,7 @@ public class MOrderLine extends X_C_OrderLine {
 				+ "FROM C_OrderLine il "
 				+ "WHERE C_Order.C_Order_ID = il.C_Order_ID) "
 			+ "WHERE C_Order_ID= ?";
-		int no = DB.executeUpdate(getCtx(), sql, getC_Order_ID());
+		int no = DB.executeUpdate(getCtx(), sql, getC_Order_ID(), get_Connection());
 		if (no != 1)
 			LogM.log(getCtx(), getClass(), Level.WARNING, "(1) #" + no);
 		//	Is Tax Include
@@ -411,7 +411,7 @@ public class MOrderLine extends X_C_OrderLine {
 				+ " SET GrandTotal=TotalLines+"
 					+ "(SELECT COALESCE(SUM(it.TaxAmt),0) FROM C_OrderTax it WHERE C_Order.C_Order_ID = it.C_Order_ID) "
 					+ "WHERE C_Order_ID = ?";
-		no = DB.executeUpdate(getCtx(), sql, getC_Order_ID());
+		no = DB.executeUpdate(getCtx(), sql, getC_Order_ID(), get_Connection());
 		if (no != 1)
 			LogM.log(getCtx(), getClass(), Level.WARNING, "(2) #" + no);
 		return no == 1;

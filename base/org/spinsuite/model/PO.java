@@ -917,7 +917,7 @@ public abstract class PO {
 	 * @return void
 	 */
 	public void deleteEx() throws Exception {
-		try{
+		try {
 			//	Valid Is Deleteable
 			if(!isDeleteable())
 				throw new Exception("Cannot Delete Record (Is Not Deleteable)");
@@ -979,8 +979,14 @@ public abstract class PO {
 				conn.setTransactionSuccessful();
 			
 			//	
-			clear(true);
 			LogM.log(getCtx(), getClass(), Level.FINE, (String)m_OldValues[0]);
+			//	Valid After Delete
+			fine = afterDelete();
+			//	Valid After Delete
+			if(!fine)
+				throw new Exception("@Error@: " + getError());
+			//	Clear
+			clear(true);
 		} catch (Exception e) {
 			throw e;
 		} finally {
