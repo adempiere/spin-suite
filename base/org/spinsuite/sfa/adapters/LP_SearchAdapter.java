@@ -249,11 +249,20 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 			return;
 		}
 		//	
+		changeValue();
+		m_CurrentRecordItem = null;
+		m_HasFocus = false;
+	}
+	
+	/**
+	 * Change Values in Array and calculate Amount
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void changeValue() {
 		setNewValue(m_CurrentRecordItem, m_CurrentValue, m_CurrentPosition);
 		m_CurrentRecordItem.setLineNetAmt(calculateAmt(m_CurrentRecordItem));
 		m_CurrentLineNetAmt.setText(m_AmtFormat.format(m_CurrentRecordItem.getLineNetAmt()));
-		m_CurrentRecordItem = null;
-		m_HasFocus = false;
 	}
 	
 	/**
