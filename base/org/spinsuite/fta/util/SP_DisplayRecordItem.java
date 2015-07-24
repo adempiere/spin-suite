@@ -15,7 +15,10 @@
  *************************************************************************************/
 package org.spinsuite.fta.util;
 
+import java.math.BigDecimal;
 import java.util.Date;
+
+import org.spinsuite.util.DisplayType;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -59,9 +62,9 @@ public class SP_DisplayRecordItem implements Parcelable {
 	 */
 	public SP_DisplayRecordItem(int p_M_Product_ID, String p_ProductCategory, String p_ProductValue, 
 			String p_ProductName, String p_ProductDescription, 
-			double p_QtySuggested, int p_Suggested_Uom_ID, String p_SuggestedUOMSymbol, 
-			double p_QtyDosage, int p_Dosage_Uom_ID, String p_DosageUOMSymbol,  
-			double p_Qty, int p_C_UOID, String p_OrderUOMSymbol, 
+			BigDecimal p_QtySuggested, int p_Suggested_Uom_ID, String p_SuggestedUOMSymbol, 
+			BigDecimal p_QtyDosage, int p_Dosage_Uom_ID, String p_DosageUOMSymbol,  
+			BigDecimal p_Qty, int p_C_UOID, String p_OrderUOMSymbol, 
 			int p_DayFrom, int p_DayTo, int p_FTA_ProductToApply_ID) {
 		this.m_M_Product_ID = p_M_Product_ID;
 		this.m_ProductCategory = p_ProductCategory;
@@ -104,46 +107,45 @@ public class SP_DisplayRecordItem implements Parcelable {
 	}
 	
 	/**	Identifier				*/
-	private int 	m_M_Product_ID 			= 0;
+	private int 		m_M_Product_ID 			= 0;
 	/**	Product Value			*/
-	private String	m_ProductCategory 		= null;
+	private String		m_ProductCategory 		= null;
 	/**	Product Value			*/
-	private String	m_ProductValue 			= null;
+	private String		m_ProductValue 			= null;
 	/**	Product Name			*/
-	private String	m_ProductName 			= null;
+	private String		m_ProductName 			= null;
 	/**	Product Value			*/
-	private String	m_ProductDescription 	= null;
+	private String		m_ProductDescription 	= null;
 	/**	Suggested Quantity		*/
-	private double 	m_QtySuggested 			= 0;
+	private BigDecimal 	m_QtySuggested 			= null;
 	/**	Sugested UOM			*/
-	private int 	m_Suggested_UOM_ID 		= 0;
+	private int 		m_Suggested_UOM_ID 		= 0;
 	/**	Sugested UOM Symbol		*/
-	private String 	m_SuggestedUOMSymbol 	= null;
+	private String 		m_SuggestedUOMSymbol 	= null;
 	/**	Dosage Quantity			*/
-	private double 	m_QtyDosage 			= 0;
+	private BigDecimal 	m_QtyDosage 			= null;
 	/**	Dosage UOM				*/
-	private int 	m_Dosage_UOM_ID			= 0;
+	private int 		m_Dosage_UOM_ID			= 0;
 	/**	Dosage UOM Symbol		*/
-	private String 	m_DosageUOMSymbol	 	= null;
+	private String 		m_DosageUOMSymbol	 	= null;
 	/**	Order Quantity			*/
-	private double 	m_Qty 					= 0;
+	private BigDecimal 	m_Qty 					= null;
 	/**	Order UOM				*/
-	private int 	m_C_UOM_ID 				= 0;
+	private int 		m_C_UOM_ID 				= 0;
 	/**	Order UOM Symbol		*/
-	private String 	m_OrderUOMSymbol		= null;
+	private String 		m_OrderUOMSymbol		= null;
 	/**	Day From				*/
-	private int 	m_DayFrom				= 0;
+	private int 		m_DayFrom				= 0;
 	/**	Product to Apply ref.	*/
-	private int 	m_FTA_ProductToApply_ID = 0;
+	private int 		m_FTA_ProductToApply_ID = 0;
 	/**	Day To					*/
-	private int 	m_DayTo					= 0;
+	private int 		m_DayTo					= 0;
 	/**	Date From				*/
-	private Date	m_DateFrom				= null;
+	private Date		m_DateFrom				= null;
 	/**	Date To					*/
-	private Date	m_DateTo				= null;
+	private Date		m_DateTo				= null;
 	/**	Image URL				*/
-	private String 	m_ImageURL 				= null;
-	
+	private String 		m_ImageURL 				= null;
 	/**
 	 * Get Product to Apply
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 31/08/2014, 03:47:01
@@ -240,10 +242,10 @@ public class SP_DisplayRecordItem implements Parcelable {
 	 * Get Suggested Quantity
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/08/2014, 20:17:03
 	 * @return
-	 * @return double
+	 * @return BigDecimal
 	 */
-	public double getQtySuggested() {
-		return m_QtySuggested;
+	public BigDecimal getQtySuggested() {
+		return DisplayType.getValidNumber(m_QtySuggested);
 	}
 
 	/**
@@ -260,10 +262,10 @@ public class SP_DisplayRecordItem implements Parcelable {
 	 * Get Quantity Dosage
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/08/2014, 20:16:27
 	 * @return
-	 * @return double
+	 * @return BigDecimal
 	 */
-	public double getQtyDosage() {
-		return m_QtyDosage;
+	public BigDecimal getQtyDosage() {
+		return DisplayType.getValidNumber(m_QtyDosage);
 	}
 
 	/**
@@ -280,10 +282,10 @@ public class SP_DisplayRecordItem implements Parcelable {
 	 * Get Quantity
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 27/08/2014, 20:16:00
 	 * @return
-	 * @return double
+	 * @return BigDecimal
 	 */
-	public double getQty() {
-		return m_Qty;
+	public BigDecimal getQty() {
+		return DisplayType.getValidNumber(m_Qty);
 	}
 	
 	/**
@@ -292,7 +294,7 @@ public class SP_DisplayRecordItem implements Parcelable {
 	 * @param p_Qty
 	 * @return void
 	 */
-	public void setQty(double p_Qty) {
+	public void setQty(BigDecimal p_Qty) {
 		m_Qty = p_Qty;
 	}
 
@@ -408,13 +410,13 @@ public class SP_DisplayRecordItem implements Parcelable {
 		parcel.writeString(m_ProductName);
 		parcel.writeString(m_ProductDescription);
 		parcel.writeString(m_ImageURL);
-		parcel.writeDouble(m_QtySuggested);
+		parcel.writeDouble(DisplayType.getNumberAsDouble(m_QtySuggested));
 		parcel.writeInt(m_Suggested_UOM_ID);
 		parcel.writeString(m_SuggestedUOMSymbol);
-		parcel.writeDouble(m_QtyDosage);
+		parcel.writeDouble(DisplayType.getNumberAsDouble(m_QtyDosage));
 		parcel.writeInt(m_Dosage_UOM_ID);
 		parcel.writeString(m_DosageUOMSymbol);
-		parcel.writeDouble(m_Qty);
+		parcel.writeDouble(DisplayType.getNumberAsDouble(m_Qty));
 		parcel.writeInt(m_C_UOM_ID);
 		parcel.writeString(m_OrderUOMSymbol);
 		parcel.writeInt(m_DayFrom);
@@ -437,13 +439,13 @@ public class SP_DisplayRecordItem implements Parcelable {
 		m_ProductName = parcel.readString();
 		m_ProductDescription = parcel.readString();
 		m_ImageURL = parcel.readString();
-		m_QtySuggested = parcel.readDouble();
+		m_QtySuggested = new BigDecimal(parcel.readDouble());
 		m_Suggested_UOM_ID = parcel.readInt();
 		m_SuggestedUOMSymbol = parcel.readString();
-		m_QtyDosage = parcel.readDouble();
+		m_QtyDosage = new BigDecimal(parcel.readDouble());
 		m_Dosage_UOM_ID = parcel.readInt();
 		m_DosageUOMSymbol = parcel.readString();
-		m_Qty = parcel.readDouble();
+		m_Qty = new BigDecimal(parcel.readDouble());
 		m_C_UOM_ID = parcel.readInt();
 		m_OrderUOMSymbol = parcel.readString();
 		m_DayFrom = parcel.readInt();

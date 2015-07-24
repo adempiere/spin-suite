@@ -140,7 +140,9 @@ public class V_AddSuggestedProduct extends Activity {
 			
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				
+				if(scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+					m_SP_SearchAdapter.setCurrentValue();
+				}
 			}
 			
 			@Override
@@ -568,13 +570,13 @@ public class V_AddSuggestedProduct extends Activity {
 								rs.getString(index++), 
 								rs.getString(index++), 
 								rs.getString(index++), 
-								rs.getDouble(index++), 
+								new BigDecimal(rs.getDouble(index++)), 
 								rs.getInt(index++), 
 								rs.getString(index++), 
-								rs.getDouble(index++), 
+								new BigDecimal(rs.getDouble(index++)), 
 								rs.getInt(index++), 
 								rs.getString(index++), 
-								rs.getDouble(index++), 
+								new BigDecimal(rs.getDouble(index++)), 
 								rs.getInt(index++), 
 								rs.getString(index++), 
 								rs.getInt(index++), 
@@ -665,19 +667,19 @@ public class V_AddSuggestedProduct extends Activity {
 				pApply.setM_Product_ID(item.getM_Product_ID());
 				
 				if(m_FTA_Farming_ID > 0) {
-					pApply.setQtySuggested(new BigDecimal(item.getQtySuggested()));
+					pApply.setQtySuggested(item.getQtySuggested());
 					pApply.setSuggested_Uom_ID(item.getSuggested_UOM_ID());
-					pApply.setQtyDosage(new BigDecimal(item.getQty()));
+					pApply.setQtyDosage(item.getQty());
 					pApply.setDosage_Uom_ID(item.getC_UOM_ID());
 					pApply.setQty(Env.ZERO);
 					pApply.setC_UOM_ID(item.getC_UOM_ID());
 					pApply.setIsApplied(true);
 				} else {
-					pApply.setQtySuggested(new BigDecimal(item.getQtySuggested()));
+					pApply.setQtySuggested(item.getQtySuggested());
 					pApply.setSuggested_Uom_ID(item.getSuggested_UOM_ID());
-					pApply.setQtyDosage(new BigDecimal(item.getQtyDosage()));
+					pApply.setQtyDosage(item.getQtyDosage());
 					pApply.setDosage_Uom_ID(item.getDosage_UOM_ID());
-					pApply.setQty(new BigDecimal(item.getQty()));
+					pApply.setQty(item.getQty());
 					pApply.setC_UOM_ID(item.getC_UOM_ID());
 					pApply.setIsApplied(false);
 				}

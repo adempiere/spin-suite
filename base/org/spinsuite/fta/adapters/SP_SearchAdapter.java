@@ -22,6 +22,7 @@ import org.spinsuite.base.R;
 import org.spinsuite.fta.util.EditTextHolder;
 import org.spinsuite.fta.util.SP_DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
+import org.spinsuite.util.Env;
 
 import android.content.Context;
 import android.view.KeyEvent;
@@ -39,6 +40,8 @@ import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.text.Editable;
+import android.text.TextWatcher;
 
 /**
  * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a>
@@ -58,6 +61,7 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 		numberFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY);
 		inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inputMethod = ((InputMethodManager)ctx.getSystemService(Context.INPUT_METHOD_SERVICE));
+		m_QtyFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY, "###,###,###,##0.00");
 		notifyDataSetChanged();
 	}
 	
@@ -73,6 +77,7 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 		numberFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY);
 		inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inputMethod = ((InputMethodManager)ctx.getSystemService(Context.INPUT_METHOD_SERVICE));
+		m_QtyFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY, "###,###,###,##0.00");
 		notifyDataSetChanged();
 	}
 	
@@ -86,6 +91,16 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 	private LayoutInflater 						inflater = null;
 	/**	Input Method					*/
 	private InputMethodManager					inputMethod = null;
+	/**	Decimal Format					*/
+	private DecimalFormat						m_QtyFormat = null;
+	/**	Has Focus						*/
+	private boolean 							m_HasFocus = false;
+	/**	Current Item					*/
+	private SP_DisplayRecordItem				m_CurrentRecordItem = null;
+	/**	Current Quantity				*/
+	private String								m_CurrentValue = null;
+	/**	Current Position				*/
+	private int									m_CurrentPosition = 0;
 	
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {		
@@ -102,8 +117,8 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 		//	Set Quantity to Order
 		EditText et_QtyOrdered = (EditText)view.findViewById(R.id.et_QtyOrdered);
 		//	Instance Holder
-		holderQtyOrdered.setText(String.valueOf(recordItem.getQty()));
 		holderQtyOrdered.setEditText(et_QtyOrdered);
+		holderQtyOrdered.setText(m_QtyFormat.format(recordItem.getQty()));
 		holderQtyOrdered.getEditText().setOnFocusChangeListener(new OnFocusChangeListener() {
 			
 			@Override
@@ -114,6 +129,8 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 				} else {
 					holderQtyOrdered.getEditText().selectAll();
 				}
+				//	Set Has Focus
+				m_HasFocus = hasFocus;
 				//	
 				inputMethod.toggleSoftInput(InputMethodManager.SHOW_FORCED, 
 						InputMethodManager.HIDE_IMPLICIT_ONLY);
@@ -140,8 +157,31 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 				holderQtyOrdered.getEditText().selectAll();
 			}
 		});
-		//	Set Quantity
-		holderQtyOrdered.setText(String.valueOf(recordItem.getQty()));
+		//	For Changes in Key
+		holderQtyOrdered.getEditText().addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				//	Valid Focus
+				if(!m_HasFocus)
+					return;
+				//	
+				m_CurrentValue = s.toString();
+				m_CurrentPosition = position;
+				m_CurrentRecordItem = recordItem;
+			}
+		});
 		view.setTag(holderQtyOrdered);
 		
 		//	Set Category
@@ -245,6 +285,21 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 	}
 	
 	/**
+	 * Set Current Value
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	public void setCurrentValue() {
+		if(m_CurrentRecordItem == null) {
+			return;
+		}
+		//	
+		setNewValue(m_CurrentRecordItem, m_CurrentValue, m_CurrentPosition);
+		m_CurrentRecordItem = null;
+		m_HasFocus = false;
+	}
+	
+	/**
 	 * Set New Value
 	 * @author <a href="mailto:yamelsenih@gmail.com">Yamel Senih</a> 29/08/2014, 21:10:27
 	 * @param p_NewItem
@@ -253,9 +308,17 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 	 * @return void
 	 */
 	private void setNewValue(SP_DisplayRecordItem p_NewItem, String p_Value, int position) {
-		p_NewItem.setQty(DisplayType.getNumber(p_Value).doubleValue());
-		//	Set Item
-		data.set(position, p_NewItem);
+		p_NewItem.setQty(DisplayType.getNumber(p_Value));
+		//	Valid same Product
+		if(position < data.size()) {
+			SP_DisplayRecordItem m_OldItem = data.get(position);
+			//	Validate Product
+			if(m_OldItem.getM_Product_ID() == p_NewItem.getM_Product_ID()) {
+				data.set(position, p_NewItem);
+			} else {
+				return;
+			}
+		}
 		//	Set to Original Data
 		if(originalData != null)
 			setToOriginalData(p_NewItem);
@@ -318,7 +381,7 @@ public class SP_SearchAdapter extends BaseAdapter implements Filterable {
 		//	Get only selected
 		for(SP_DisplayRecordItem item : data) {
 			//	Add
-			if(item.getQty() > 0)
+			if(item.getQty().compareTo(Env.ZERO) == 1)
 				tmpData.add(item);
 		}
 		return tmpData;
