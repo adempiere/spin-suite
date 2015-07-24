@@ -69,6 +69,8 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+ * <li> Bug in Standard Search
+ * @see https://adempiere.atlassian.net/browse/SPIN-23
  *
  */
 public class ReportPrintData {
@@ -429,9 +431,14 @@ public class ReportPrintData {
 			Lookup m_Lookup = new Lookup(ctx, column.SPS_Column_ID, (TabParameter)null);
 			InfoLookup m_InfoLookup = m_Lookup.getInfoLookup();
 			//	Parse Value
+			String unparsedValue = rs.getString(i);
 			String value = Env.parseLookup(ctx, m_InfoLookup,
-					rs.getString(i), 
+					unparsedValue, 
 					InfoLookup.TABLE_SEARCH_VIEW_SEPARATOR);
+			//	Unparsed Value
+			if(value == null) {
+				value = unparsedValue;
+			}
 			//	Add Data
 			if(!isChanged(m_currentRow[i].getValue(), value)
 					&& column.IsSuppressRepeats)
