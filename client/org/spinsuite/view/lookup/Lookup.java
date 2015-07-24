@@ -25,6 +25,7 @@ import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.IdentifierWrapper;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.Msg;
 import org.spinsuite.util.TabParameter;
 
 import android.content.Context;
@@ -673,10 +674,16 @@ public class Lookup {
 			//	Display Value
 			if(isValueDisplayed != null
 					&& isValueDisplayed.equals("Y")) {
+				//	Add Search Separator
+				longColumn.append("'")
+					.append(InfoLookup.TABLE_SEARCH_SEPARATOR)
+					.append("'||");
 				longColumn.append("COALESCE(").append(m_TableAlias).append(".")
 							.append("Value").append(", '')");
 				//	
 				longColumn.append("||");
+				//	Add To Meta-Data
+				m_InfoLookup.IdentifiesColumn.add(new IdentifierWrapper(displayType, Msg.translate(m_ctx, "Value")));
 			}
 			//	Add Display Type
 			longColumn.append("'")
