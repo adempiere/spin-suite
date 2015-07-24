@@ -23,7 +23,6 @@ import org.spinsuite.util.DisplaySearchItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.IdentifierValueWrapper;
-import org.spinsuite.util.TextViewArrayHolder;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -44,7 +43,8 @@ import android.widget.LinearLayout.LayoutParams;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
- *
+ * <li> Bug in Standard Search
+ * @see https://adempiere.atlassian.net/browse/SPIN-23
  */
 public class SearchAdapter extends ArrayAdapter<DisplaySearchItem> {
 
@@ -88,7 +88,6 @@ public class SearchAdapter extends ArrayAdapter<DisplaySearchItem> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {		
 		View item = convertView;
-		TextViewArrayHolder holder = new TextViewArrayHolder();
 		//	Get Current Item
 		DisplaySearchItem recordItem = data.get(position);
 		//		
@@ -98,45 +97,51 @@ public class SearchAdapter extends ArrayAdapter<DisplaySearchItem> {
 			item = inflater.inflate(view_ID, null);
 			//	Set Height
 			item.setMinimumHeight((int)height);
-			//	Get Linear Layout
-			LinearLayout ll_Text = (LinearLayout) item.findViewById(R.id.ll_Text);
-			//	Set Name
-			TextView tv_Name = (TextView)item.findViewById(R.id.tv_Name);
-			tv_Name.setTextAppearance(ctx, R.style.TextTitleList);
-			//	
-			if(recordItem.getDisplayValues() != null) {
-				//	Get Array
-				IdentifierValueWrapper m_DisplayValues[] = recordItem.getDisplayValues();
-				//	Extract name from value
-				if(m_DisplayValues != null) {
-					boolean isFirst = true;
-					//	Get Values
-					for(IdentifierValueWrapper value : m_DisplayValues) {
-						//	Valid Null
-						if(value.getValue() == null
-							|| value.getValue().length() == 0)
-							continue;
-						//	
-						if(isFirst) {
-							tv_Name.setText(value.getValue());
-							holder.addTextView(tv_Name);
-							isFirst = false;
+		}
+		//	Set Values
+		//	Get Linear Layout
+		LinearLayout ll_Text = (LinearLayout) item.findViewById(R.id.ll_Text);
+		//	Set Name
+		TextView tv_Name = (TextView)item.findViewById(R.id.tv_Name);
+		tv_Name.setTextAppearance(ctx, R.style.TextTitleList);
+		//	
+		if(recordItem.getDisplayValues() != null) {
+			//	Get Array
+			IdentifierValueWrapper m_DisplayValues[] = recordItem.getDisplayValues();
+			//	Extract name from value
+			if(m_DisplayValues != null) {
+				boolean isFirst = true;
+				//	
+				if((ll_Text.getChildCount() - 1) > 0) {
+					ll_Text.removeViews(1, ll_Text.getChildCount() - 1);
+				}
+				//	Get Values
+				for(int i = 0; i < m_DisplayValues.length; i++) {
+					IdentifierValueWrapper value = m_DisplayValues[i];
+					//	Valid Null
+					if(value.getValue() == null
+						|| value.getValue().length() == 0)
+						continue;
+					//	
+					if(isFirst) {
+						tv_Name.setText(value.getValue());
+						isFirst = false;
+					} else {
+						TextView tv_ValueAdded = null;
+						if(ll_Text.getChildCount() > i) {
+							tv_ValueAdded = (TextView) ll_Text.getChildAt(i);
+							tv_ValueAdded.setText(value.getName() + ": " + value.getValue());
 						} else {
-							TextView tv_ValueAdded = loadDescriptionTextView(value.getName() + ": " + value.getValue() , false);
-							if(DisplayType.isNumeric(value.getDisplayType())) {
-								tv_ValueAdded.setGravity(Gravity.END);
-							}
-							holder.addTextView(tv_ValueAdded);
+							tv_ValueAdded = loadDescriptionTextView(value.getName() + ": " + value.getValue() , false);
 							ll_Text.addView(tv_ValueAdded);
+						}
+						//	
+						if(DisplayType.isNumeric(value.getDisplayType())) {
+							tv_ValueAdded.setGravity(Gravity.END);
 						}
 					}
 				}
 			}
-			//	
-			item.setTag(holder);
-		} else {
-			//	Holder
-			holder = (TextViewArrayHolder) item.getTag();
 		}
 		//	Set Image
 		ImageView img_Item = (ImageView)item.findViewById(R.id.img_Item);
