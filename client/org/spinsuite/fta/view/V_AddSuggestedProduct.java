@@ -30,6 +30,7 @@ import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.Msg;
 import org.spinsuite.util.TabParameter;
 import org.spinsuite.view.lookup.GridField;
 import org.spinsuite.view.lookup.InfoField;
@@ -601,6 +602,8 @@ public class V_AddSuggestedProduct extends Activity {
 
 		/**	Progress Bar			*/
 		private ProgressDialog 		v_PDialog;
+		/**	Error Message			*/
+		private String 				m_ErrorMsg = null;
 		
 		@Override
 		protected void onPreExecute() {
@@ -615,6 +618,7 @@ public class V_AddSuggestedProduct extends Activity {
 				saveData(selectedData);
 			} catch (Exception e) {
 				LogM.log(v_activity, V_AddSuggestedProduct.class, Level.SEVERE, "Error", e);
+				m_ErrorMsg = e.getLocalizedMessage();
 			}
 			//	
 			return null;
@@ -629,6 +633,9 @@ public class V_AddSuggestedProduct extends Activity {
 		protected void onPostExecute(Void result) {
 			v_PDialog.dismiss();
 			v_activity.setResult(Activity.RESULT_OK, getIntent());
+			if(m_ErrorMsg != null) {
+				Msg.toastMsg(v_activity, m_ErrorMsg);
+			}
 			//	Exit
 			v_activity.finish();
 		}
@@ -709,7 +716,7 @@ public class V_AddSuggestedProduct extends Activity {
 					.append(I_FTA_ProductsToApply.COLUMNNAME_FTA_TechnicalFormLine_ID)
 					.append(" IS NULL ");
 			//	Delete Applied
-			sqlDelete.append("AND ").append(I_FTA_ProductsToApply.COLUMNNAME_FTA_TechnicalFormLine_ID)
+			sqlDelete.append("AND ").append(I_FTA_ProductsToApply.COLUMNNAME_IsApplied)
 				.append(" = ")
 				.append("'").append((m_FTA_Farming_ID > 0? "Y": "N")).append("'");
 			
