@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*************************************************************************************
+ * Product: Spin-Suite (Making your Business Spin)                                   *
+ * This program is free software; you can redistribute it and/or modify it    		 *
+ * under the terms version 2 of the GNU General Public License as published   		 *
+ * by the Free Software Foundation. This program is distributed in the hope   		 *
+ * that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 		 *
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.           		 *
+ * See the GNU General Public License for more details.                       		 *
+ * You should have received a copy of the GNU General Public License along    		 *
+ * with this program; if not, write to the Free Software Foundation, Inc.,    		 *
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                     		 *
+ * For the text or an alternative of this public license, you may reach us    		 *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com				  		                 *
+ ************************************************************************************/
+ -->
+<resources>
+	<!-- Tabs Titles -->
+    <string name="About">About</string>
+	<string name="About_Credits">Credits</string>
+    
+	<!-- Elements -->
+    <string name="app_name">Spin-Suite</string>
+    <string name="Save">Save</string>
+    <string name="Zero">0</string>
+	<string name="Calling">Calling</string>
+	<string name="DownloadEnding">Download Ending</string>
+	<string name="Stop">Stop</string>
+	<string name="Hide">Hide</string>
+	<string name="Upload">Upload</string>
+	<string name="Download">Download</string>
+	<string name="Changes">Changes</string>
+	<string name="Latitude">Latitude</string>
+	<string name="Longitude">Longitude</string>
+	<string name="None"></string>
+	<string name="Selected">Selected</string>
+	<string name="Language">Language</string>
+	<string name="Name">Name</string>
+	<string name="Description">Description</string>
+	<string name="Help">Help</string>
+	<string name="TimeOfEvent">Time of Event</string>
+	<string name="Text">Text</string>
+	<string name="SynchronizingEnding">Synchronizing Ending</string>
+	<!-- Synchronization -->
+	<string name="Sync_InitSyncManual">Manual Synchronization</string>
+	<string name="Sync_SynchronzeButtom">Synchronize</string>
+	<string name="Sync_Synchronzing">Synchronzing</string>
+	<string name="Sync_StartingDownload">Starting Download</string>
+	<string name="Sync_WebServiceDefinition">Web Service Definition</string>
+	<string name="Sync_WebService">Web Service</string>
+	<string name="Sync_Pages">Pages</string>
+	<string name="Sync_Records">Records</string>
+	<string name="Sync_Duration">Duration</string>
+	<string name="Url_Server">URL (Server)</string>
+	<string name="Action_OK">OK</string>
+	<string name="UOMSymbol">UM</string>
+	<!-- About -->
+	<string name="app_description" >Spin-Suite is a Application for connection with ADempiere ERP, based in GNU/GPL License</string>
+	<string name="app_version_name" >Version Name</string>
+	<string name="app_version_code" >Version Code</string>
+	<string name="app_permissions" >Permission</string>
+	<string name="app_web_erp">Visit Us <a href="http://www.erpcya.com">http://www.erpcya.com</a></string>
+	<string name="app_adempiere_spin_suite">ADempiere <a href="http://www.adempiere.com/Spin-Suite">http://www.adempiere.com/Spin-Suite</a></string>
+	<string name="app_adempiere_spin_suite_project">Spin-Suite <a href="https://github.com/adempiere/spin-suite">https://github.com/adempiere/spin-suite</a></string>
+	<string name="app_mail_contact">Contact Us <a href="mailto:info@erpcya.com">info@erpcya.com</a></string>
+	<string name="app_web_lubo" >http://www.lubosistemas.com.ve</string>
+</resources>
