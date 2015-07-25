@@ -18,4 +18,14 @@
  -->
 <resources>
     <string name="SuggestedSO">Suggested Order</string>
+    <string name="M_Product_Category_ID">Product Category</string>
+    <string name="M_Product_ID">Product</string>
+    <string name="Price">Price</string>
+    <string name="C_Tax_ID">Tax</string>
+    <string name="LineNetAmt">Line Net Amount</string>
+    <string name="Qty">Quantity</string>
+    <string name="TotalLines">Total Lines</string>
+    <string name="GrandTotal">Grand Total</string>
+    <string name="Discount">Discount</string>
+    <string name="Percentage">%</string>
 </resources>

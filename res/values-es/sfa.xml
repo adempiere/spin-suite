@@ -18,4 +18,14 @@
  -->
 <resources>
     <string name="SuggestedSO">Pedido Sugerido</string>
+    <string name="M_Product_Category_ID">Categoría de Producto</string>
+    <string name="M_Product_ID">Producto</string>
+    <string name="Price">Precio</string>
+    <string name="C_Tax_ID">Impuesto</string>
+    <string name="LineNetAmt">Neto Línea</string>
+    <string name="Qty">Cantidad</string>
+    <string name="TotalLines">Total Líneas</string>
+    <string name="GrandTotal">Total General</string>
+    <string name="Discount">Descuento</string>
+    <string name="Percentage">%</string>
 </resources>
