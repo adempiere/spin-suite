@@ -37,6 +37,7 @@ import org.spinsuite.model.POInfo;
 import org.spinsuite.model.Query;
 import org.spinsuite.model.X_AD_Rule;
 import org.spinsuite.model.X_SPS_SyncTable;
+import org.spinsuite.model.X_SPS_Table;
 import org.spinsuite.model.X_WS_WebService;
 import org.spinsuite.model.X_WS_WebServiceMethod;
 import org.spinsuite.util.BackGroundTask;
@@ -238,10 +239,16 @@ public class SyncDataTask implements BackGroundProcess  {
 					//	Delete Old Data
 					if(syncm.getSPS_Table_ID() != 0) {
 						MSPSTable m_Table = new MSPSTable(m_ctx, syncm.getSPS_Table_ID(), conn);
+						int m_AD_Client_ID = Env.getAD_Client_ID(m_ctx);
+						//	For System
+						if(m_Table.getAccessLevel() != null
+								&& m_Table.getAccessLevel().equals(X_SPS_Table.ACCESSLEVEL_SystemOnly)) {
+							m_AD_Client_ID = 0;
+						}
 						//	Execute
 						DB.executeUpdate(m_ctx, 
 								"DELETE FROM " + m_Table.getTableName() + " WHERE AD_Client_ID = ?", 
-								Env.getAD_Client_ID(m_ctx), conn);
+								m_AD_Client_ID, conn);
 					}
 				}
 				//	Write Data
