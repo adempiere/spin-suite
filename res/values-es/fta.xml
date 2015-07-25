@@ -24,4 +24,6 @@
 	<string name="FarmerInfo">Información del Productor</string>
 	<string name="Farmer">Productor</string>
 	<string name="Applied">Aplicado</string>
+	<string name="M_Product_Category_ID">Categoría de Producto</string>
+	<string name="Qty">Cantidad</string>
 </resources>

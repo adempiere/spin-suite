@@ -36,6 +36,8 @@
                   android:title="@string/Action_Config" />
             <item android:id="@+id/action_synchronization"
                   android:title="@string/Action_Syncronization" />
+            <item android:id="@+id/action_about"
+                  android:title="@string/Action_About" />
         </menu>
 	</item>
 </menu>

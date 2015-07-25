@@ -24,4 +24,6 @@
 	<string name="FarmerInfo">Farmer Information</string>
 	<string name="Farmer">Farmer</string>
 	<string name="Applied">Applied</string>
+	<string name="M_Product_Category_ID">Product Category</string>
+	<string name="Qty">Quantity</string>
 </resources>
