@@ -51,7 +51,7 @@ public class V_About extends Activity {
     	getActionBar().setDisplayHomeAsUpEnabled(true);
     	getActionBar().setHomeButtonEnabled(true);
     	getActionBar().setTitle(R.string.app_name);
-    	getActionBar().setSubtitle(R.string.tt_About_Credits);
+    	getActionBar().setSubtitle(R.string.About_Credits);
     	//	Inflate Values
     	tv_AppVersionName = (TextView) findViewById(R.id.tv_AppVersionName);
 	    tv_AppVersionCode = (TextView) findViewById(R.id.tv_AppVersionCode);

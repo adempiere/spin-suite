@@ -18,8 +18,8 @@
  -->
 <resources>
 	<!-- Tabs Titles -->
-    <string name="tt_About">About</string>
-	<string name="tt_About_Credits">Credits</string>
+    <string name="About">About</string>
+	<string name="About_Credits">Credits</string>
     
 	<!-- Elements -->
     <string name="app_name">Spin-Suite</string>
