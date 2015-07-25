@@ -380,6 +380,10 @@ public class T_Menu extends Fragment implements I_Login {
 	        	Intent syncMenu = new Intent(m_Callback, V_Synchronization.class);
 				startActivity(syncMenu);
 				return true;
+	        case R.id.action_about:
+	        	Intent about = new Intent(m_Callback, V_About.class);
+				startActivity(about);
+				return true;
 	        default:
 	        	return super.onOptionsItemSelected(item);
 	     }

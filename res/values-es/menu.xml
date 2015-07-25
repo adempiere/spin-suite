@@ -42,6 +42,7 @@
 	<string name="Action_SyncForced">Sincronización Forzada</string>
 	<string name="Action_SyncRecord">Sincronizar Registro</string>
 	<string name="Action_SyncDeleteBefore">Eliminar Antes de Sincronizar</string>
+	<string name="Action_About">Acerca De</string>
 	
 	<!-- Drawer Option -->
 	<string name="drawer_open">Abrir Caja de Navegación</string>
