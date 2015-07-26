@@ -273,5 +273,4 @@ public class SearchAdapter extends ArrayAdapter<DisplaySearchItem> {
 	public DisplaySearchItem getItem(int position) {
 		return data.get(position);
 	}
-	
 }
