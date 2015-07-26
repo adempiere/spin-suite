@@ -32,7 +32,8 @@ import android.view.ViewGroup;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
- *
+ * <li> Better view in child tab records
+ * @see https://adempiere.atlassian.net/browse/SPIN-24
  */
 public class T_DynamicTabDetail extends T_FormTab 
 		implements I_DT_FragmentSelectListener {
@@ -52,7 +53,7 @@ public class T_DynamicTabDetail extends T_FormTab
 	/**	Cache Detail Fragment	*/
 	private T_DynamicTab		m_detailFragment	= null;
 	/**	List Fragment Cache		*/
-	private V_IndexRecordLine 	m_listFragment		= null;
+	private T_IndexRecordLine 	m_listFragment		= null;
 	/**	Is Same Table			*/
 	private boolean				m_IsSameTable		= false;
 	/**	Parent Tab Record ID	*/
@@ -121,7 +122,7 @@ public class T_DynamicTabDetail extends T_FormTab
     	}
     	//	
     	if(m_listFragment == null) {
-    		m_listFragment = new V_IndexRecordLine();
+    		m_listFragment = new T_IndexRecordLine();
             //	Set Parameters
         	m_listFragment.setArguments(bundle);
     	}
