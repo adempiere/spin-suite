@@ -15,27 +15,47 @@
  *************************************************************************************/
 package org.spinsuite.view;
 
+import java.util.ArrayList;
+import java.util.logging.Level;
+
+import org.spinsuite.adapters.SearchAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_DT_FragmentSelectListener;
+import org.spinsuite.util.DisplaySearchItem;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.FilterValue;
-import org.spinsuite.util.MultiKeyNamePair;
+import org.spinsuite.util.IdentifierValueWrapper;
+import org.spinsuite.util.LogM;
 import org.spinsuite.util.TabParameter;
-import org.spinsuite.view.lookup.InfoLookup;
 import org.spinsuite.view.lookup.InfoTab;
 import org.spinsuite.view.lookup.Lookup;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SearchViewCompat;
+import android.support.v4.widget.SearchViewCompat.OnCloseListenerCompat;
+import android.support.v4.widget.SearchViewCompat.OnQueryTextListenerCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
-public class V_IndexRecordLine extends T_FormTab {
+/**
+ * 
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Jul 26, 2015, 2:14:25 AM
+ * <li> Better view in child tab records
+ * @see https://adempiere.atlassian.net/browse/SPIN-24
+ */
+public class T_IndexRecordLine extends T_FormTab {
     
 	/**	Fragment Listener Call Back	*/
 	private I_DT_FragmentSelectListener 	m_Callback 			= null;
@@ -44,13 +64,15 @@ public class V_IndexRecordLine extends T_FormTab {
 	/**	Lookup 						*/
 	private Lookup 							lookup 				= null;
 	/**	Adapter						*/
-	private ArrayAdapter<MultiKeyNamePair> 	m_Adapter			= null;
+	private SearchAdapter 					m_SearchAdapter 	= null;
 	/**	View						*/
 	private View 							m_View				= null;
 	/**	List View					*/
 	private ListView						lv_index_records 	= null;
 	/**	Parent Tab Record ID		*/
 	private int 							m_Parent_Record_ID 	= 0;
+	/**	New Item					*/
+	private MenuItem 						mi_Add 				= null;
 	
 
 	/**
@@ -58,8 +80,61 @@ public class V_IndexRecordLine extends T_FormTab {
 	 * *** Constructor ***
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/04/2014, 17:42:27
 	 */
-    public V_IndexRecordLine(){
+    public T_IndexRecordLine(){
     	
+    }
+    
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        //	
+        menu.clear();
+        inflater.inflate(R.menu.search, menu);
+    	//	do it
+        //	Get Items
+        menu.findItem(R.id.action_config).setVisible(false);
+        menu.findItem(R.id.action_close).setVisible(false);
+        mi_Add = menu.findItem(R.id.action_add);
+    	//	Set Visible New
+    	mi_Add.setVisible(isInsertRecord() && !isReadOnly());
+		//	Get Item
+		MenuItem item = menu.findItem(R.id.action_search);
+		//	Search View
+		final View searchView = SearchViewCompat.newSearchView(getActivity());
+		if (searchView != null) {
+			//	Set Back ground Color
+			int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+			EditText searchText = (EditText) searchView.findViewById(id);
+			//	Set Parameters
+			if(searchText != null)
+				searchText.setTextAppearance(getActivity(), R.style.TextSearch);
+			//	
+			SearchViewCompat.setOnQueryTextListener(searchView,
+					new OnQueryTextListenerCompat() {
+				@Override
+				public boolean onQueryTextChange(String newText) {
+					if(m_SearchAdapter != null) {
+						String mFilter = !TextUtils.isEmpty(newText) ? newText : null;
+						m_SearchAdapter.getFilter().filter(mFilter);
+					}
+					return true;
+				}
+			});
+			SearchViewCompat.setOnCloseListener(searchView,
+					new OnCloseListenerCompat() {
+				@Override
+				public boolean onClose() {
+					if (!TextUtils.isEmpty(SearchViewCompat.getQuery(searchView))) {
+						SearchViewCompat.setQuery(searchView, null, true);
+					}
+					return true;
+				}
+                    
+			});
+			MenuItemCompat.setActionView(item, searchView);
+		}
+		//	Load Ok
+		setIsLoadOk(true);
     }
     
     @Override
@@ -90,8 +165,8 @@ public class V_IndexRecordLine extends T_FormTab {
      */
     private void selectItem(int position) {
         //	Set Selected
-    	MultiKeyNamePair pair = m_Adapter.getItem(position);
-    	selectIndex(pair.getMultiKey(), lookup.getInfoLookup().KeyColumn);
+    	DisplaySearchItem pair = m_SearchAdapter.getItem(position);
+    	selectIndex(pair.getKeys(), lookup.getInfoLookup().KeyColumn);
     	//	Change on List View
     	lv_index_records.setItemChecked(position, true);
     }
@@ -135,23 +210,63 @@ public class V_IndexRecordLine extends T_FormTab {
     		lookup.setCriteria(criteria.getWhereClause());
     	}
     	//	Get Values
-    	MultiKeyNamePair[] values = DB.getMultiKeyNamePairs(getActivity(), 
-    			lookup.getSQL().replaceAll(InfoLookup.TABLE_SEARCH_SEPARATOR, 
-    					InfoLookup.TABLE_SEARCH_VIEW_SEPARATOR), 
-    					lookup.getInfoLookup().KeyColumn.length, criteria.getValues());
-        //	Is Loaded
-    	boolean isLoaded = (values != null && values.length != 0);
-    	//	Set Adapter
-    	if(!isLoaded){
-    		MultiKeyNamePair voidRecord = new MultiKeyNamePair(new int[]{0}, getActivity().getString(R.string.msg_NewRecord));
-    		values = new MultiKeyNamePair[]{voidRecord};
-    	}
+    	ArrayList<DisplaySearchItem> data = new ArrayList<DisplaySearchItem>();
+    	//	Get values from DB
+    	try{
+			//	
+			DB conn = new DB(getActivity());
+			DB.loadConnection(conn, DB.READ_ONLY);
+			Cursor rs = null;
+			//	Query
+			rs = conn.querySQL(lookup.getSQL(), criteria.getValues());
+			//	
+			String[] keyColumns = lookup.getInfoLookup().KeyColumn;
+			int keyCount = keyColumns.length;
+			if(rs.moveToFirst()) {
+				//	Loop
+				do{
+					//	Declare Keys
+					int[] keys = new int[keyCount];
+					//	Get Keys
+					for(int i = 0; i < keyCount; i++) {
+						keys[i] = rs.getInt(i);
+					}
+					//	Tmp Key count
+					int keyCountAdd = keyCount;
+					//	
+					String value = rs.getString(keyCountAdd++);
+					IdentifierValueWrapper[] columnValues = Env.parseLookupArray(getActivity(), lookup.getInfoLookup(), value);
+					data.add(new DisplaySearchItem (
+							keys, 
+							keyColumns, 
+							Env.parseLookup(getActivity(), lookup.getInfoLookup(), value, Env.NL), 
+							rs.getString(keyCountAdd++), 
+							columnValues));
+				} while(rs.moveToNext());
+			}
+			//	Close
+			DB.closeConnection(conn);
+		} catch(Exception e) {
+			LogM.log(getActivity(), getClass(), Level.SEVERE, "Error in Load", e);
+		}
+    	//	Is Loaded
+    	boolean m_IsLoadedData = (data.size() != 0);
     	//	Instance Adapter
-    	m_Adapter = new ArrayAdapter<MultiKeyNamePair>(getActivity(), R.layout.v_lookup_list, values);
+    	m_SearchAdapter = new SearchAdapter(getActivity(), data);
     	//	Set Adapter List
-    	lv_index_records.setAdapter(m_Adapter);
+    	lv_index_records.setAdapter(m_SearchAdapter);
     	//	Return
-        return isLoaded;
+        return m_IsLoadedData;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	int itemId = item.getItemId();
+    	if(itemId == R.id.action_add) {
+    		selectIndex(new int[]{-1}, null);
+    	}
+		//	
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -183,13 +298,13 @@ public class V_IndexRecordLine extends T_FormTab {
      */
     public void selectFirst() {
     	//	Select first record
-    	if(m_Adapter != null
-    			&& !m_Adapter.isEmpty()) {
+    	if(m_SearchAdapter != null
+    			&& !m_SearchAdapter.isEmpty()) {
             //	Set Selected
-    		MultiKeyNamePair pair = m_Adapter.getItem(0);
+    		DisplaySearchItem pair = m_SearchAdapter.getItem(0);
             //	
             Env.setTabRecord_ID(
-    				getActivityNo(), getTabNo(), pair.getMultiKey());
+    				getActivityNo(), getTabNo(), pair.getKeys());
     	}
     }
     

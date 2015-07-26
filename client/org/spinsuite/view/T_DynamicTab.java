@@ -10,7 +10,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,           *
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                            *
  * For the text or an alternative of this public license, you may reach us           *
- * Copyright (C) 2012-2014 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
 package org.spinsuite.view;
@@ -74,8 +74,9 @@ import android.widget.ScrollView;
 import android.widget.TableLayout;
 
 /**
- * @author Yamel Senih
- *
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+ * <li> Better view in child tab records
+ * @see https://adempiere.atlassian.net/browse/SPIN-24
  */
 public class T_DynamicTab extends T_FormTab 
 						implements I_DT_FragmentSelectListener {
@@ -233,28 +234,6 @@ public class T_DynamicTab extends T_FormTab
 				&& retValue.length() != 0)
 			Msg.toastMsg(getActivity(), getString(R.string.msg_Error) + ": " + retValue);
 	}
-	
-	/**
-	 * Process Document No
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 23/10/2014, 10:22:37
-	 * @param mField
-	 * @return void
-	 */
-	/*private void processDocumentNo(GridField mField) {
-		//	Verify Value
-		int m_C_DocType_ID = mField.getValueAsInt();
-		if(m_C_DocType_ID <= 0)
-			return;
-		//	Verify if Exists Column
-		GridField fieldDocument = mGridTab.getField("DocumentNo");
-		if(fieldDocument == null)
-			return;
-		//	Get New Document No
-		String seqNo = MSequence.getDocumentNo(getActivity(), 
-				m_C_DocType_ID, tabInfo.getTableName(), true, null);
-		//	
-		mGridTab.setValue("DocumentNo", seqNo);
-	}*/
 	
 	/**
 	 * Reload depending field
@@ -850,8 +829,13 @@ public class T_DynamicTab extends T_FormTab
 	@Override
 	public void onItemSelected(int [] record_ID, String [] keyColumns) {
 		//	refresh
-		if(isLoadOk())
-			refresh(record_ID, keyColumns, false);	
+		if(isLoadOk()) {
+			if(record_ID[0] <= 0) {
+				newOption();
+			} else {
+				refresh(record_ID, keyColumns, false);
+			}
+		}
 	}
 
 	@Override
@@ -868,9 +852,9 @@ public class T_DynamicTab extends T_FormTab
 		if(!isLoadOk())
 			return false;
 		//	
-		if(getTabLevel() > 0) {
-			return false;
-		}
+//		if(getTabLevel() > 0) {
+//			return false;
+//		}
 		//	Default
 		return super.isModifying();
 	}
