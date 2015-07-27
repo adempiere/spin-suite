@@ -24,6 +24,7 @@ import android.app.Activity;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 /**
@@ -84,4 +85,15 @@ public class V_About extends Activity {
         	LogM.log(getApplicationContext(), getClass(), Level.SEVERE, e.getLocalizedMessage());
         }
     }
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	     switch (item.getItemId()) {
+	        case android.R.id.home:
+	    		finish();
+	        return true;
+	        default:
+	        	return super.onOptionsItemSelected(item);
+	     }
+	}
 }
