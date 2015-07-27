@@ -57,7 +57,7 @@
 	<string name="Action_OK">OK</string>
 	<string name="UOMSymbol">UM</string>
 	<!-- About -->
-	<string name="app_description" >Spin-Suite es una aplicación cuidadosamente diseñada como una solución de offline "100%" Android. La misma hereda del Diccionario de Aplicación de ADempiere su forma dinámica, Ventanas, Procesos, Roles y accesos.</string>
+	<string name="app_description" >Spin-Suite es una aplicación cuidadosamente diseñada como una solución offline "100%" Android. La misma hereda del Diccionario de Aplicación de ADempiere su forma dinámica, Ventanas, Procesos, Roles y Accesos.</string>
 	<string name="app_version_name" >Nombre de Versión</string>
 	<string name="app_version_code" >Código de Version</string>
 	<string name="app_permissions" >Permisos</string>
