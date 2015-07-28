@@ -112,8 +112,8 @@ public class Language
 //			AD_Language_en_GB,  Locale.UK,      null, null),
 //		new Language ("English (CA)",
 //	        AD_Language_en_CA,  new Locale("en","CA"),      null, "MM/dd/yyyy"),     //  Canadian English	
-		new Language ("Espa\u00f1ol",
-			AD_Language_es_ES,  new Locale("es","ES"), false, "dd/MM/yyyy"),
+//		new Language ("Espa\u00f1ol",
+//			AD_Language_es_ES,  new Locale("es","ES"), false, "dd/MM/yyyy"),
 		new Language ("Espa\u00f1ol (VE)",
 			AD_Language_es_VE,  new Locale("es","VE"), true, "dd/MM/yyyy"),
 //		new Language ("Espa\u00f1ol (MX)",
