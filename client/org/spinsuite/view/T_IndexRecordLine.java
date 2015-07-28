@@ -252,7 +252,7 @@ public class T_IndexRecordLine extends T_FormTab {
     	//	Is Loaded
     	boolean m_IsLoadedData = (data.size() != 0);
     	//	Instance Adapter
-    	m_SearchAdapter = new SearchAdapter(getActivity(), data);
+    	m_SearchAdapter = new SearchAdapter(getActivity(), data, lookup.getInfoLookup().TableName);
     	//	Set Adapter List
     	lv_index_records.setAdapter(m_SearchAdapter);
     	//	Return

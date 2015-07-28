@@ -85,6 +85,10 @@ public class V_BChat extends FragmentActivity
 	private boolean								m_IsDetailAdded	= false;
 	/**	Request						*/
 	private String								m_SPS_BC_Request_UUID = null;
+	/**	User Identifier				*/
+	private int									m_AD_User_ID = 0;
+	/**	User Name					*/
+	private String 								m_UserName = null;
     
     /** Called when the activity is first created. */
     @Override
@@ -119,6 +123,8 @@ public class V_BChat extends FragmentActivity
     	Bundle bundle = getIntent().getExtras();
 		if(bundle != null) {
 			m_SPS_BC_Request_UUID = bundle.getString("SPS_BC_Request_UUID");
+			m_AD_User_ID = bundle.getInt("AD_User_ID");
+			m_UserName = bundle.getString("UserName");
 		}
     }
     
@@ -454,6 +460,9 @@ public class V_BChat extends FragmentActivity
     	if(m_SPS_BC_Request_UUID != null) {
     		onItemSelected(0, m_SPS_BC_Request_UUID, TYPE_SELECT_CONVERSATION);
     		m_SPS_BC_Request_UUID = null;
+    	} else if(m_AD_User_ID >= 0
+    			&& m_UserName != null) {
+    		onItemSelected(m_AD_User_ID, m_UserName, TYPE_REQUEST_USER);
     	}
     }
     

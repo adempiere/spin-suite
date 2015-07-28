@@ -828,7 +828,7 @@ public class V_Process extends Activity {
 			}
 		}
 		//	Set Adapter
-		logAdapter = new SearchAdapter(this, data);
+		logAdapter = new SearchAdapter(this, data, null);
 		lv_LogReport.setAdapter(logAdapter);
 	}
 	

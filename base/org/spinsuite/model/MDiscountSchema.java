@@ -190,9 +190,15 @@ public class MDiscountSchema extends X_M_DiscountSchema {
 			loadConnection(DB.READ_ONLY);
 			Cursor rs = conn.querySQL(sql.toString(), new String[]{String.valueOf(getM_DiscountSchema_ID())});
 			if(rs.moveToFirst()) {
-				while (rs.moveToNext()) {
+//				2015-07-24 Dixon Martinez
+//				Correct error in accordance travel from position 0 + 1 to position 0
+//				while (rs.moveToNext()) {
+//					list.add(new MDiscountSchemaBreak(getCtx(), rs, get_Connection()));
+//				}
+				do {
 					list.add(new MDiscountSchemaBreak(getCtx(), rs, get_Connection()));
-				}
+				}while (rs.moveToNext());
+//				End Dixon Martinez
 			}
 		} catch (Exception e) {
 			LogM.log(getCtx(), getClass(), Level.SEVERE, sql, e);
