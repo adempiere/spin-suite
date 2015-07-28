@@ -21,7 +21,6 @@ import java.util.logging.Level;
 import org.spinsuite.adapters.SearchAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
-import org.spinsuite.login.Login;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplaySearchItem;
@@ -43,7 +42,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SearchViewCompat;
 import android.support.v4.widget.SearchViewCompat.OnCloseListenerCompat;
@@ -146,7 +144,10 @@ public class V_StandardSearch extends Activity {
 		}
 		//	
 		//	Set Subtitle
-		getActionBar().setSubtitle(subtitle);		
+		getActionBar().setSubtitle(subtitle);
+		//	Set Home
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
 		//	Set Configuration
 		loadConfig();
 		
@@ -334,7 +335,7 @@ public class V_StandardSearch extends Activity {
 			}
 			return true;
 		} else if (itemId == android.R.id.home) {
-			NavUtils.navigateUpTo(this, new Intent(this, Login.class));
+			finish();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
