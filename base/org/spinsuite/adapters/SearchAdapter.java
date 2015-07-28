@@ -32,6 +32,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -45,6 +46,8 @@ import android.widget.LinearLayout.LayoutParams;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  * <li> Bug in Standard Search
  * @see https://adempiere.atlassian.net/browse/SPIN-23
+ * <li> Add Suport to Menu in Standard Search
+ * @see https://adempiere.atlassian.net/browse/SPIN-26
  */
 public class SearchAdapter extends ArrayAdapter<DisplaySearchItem> {
 
@@ -101,6 +104,15 @@ public class SearchAdapter extends ArrayAdapter<DisplaySearchItem> {
 		//	Set Values
 		//	Get Linear Layout
 		LinearLayout ll_Text = (LinearLayout) item.findViewById(R.id.ll_Text);
+		ImageView img_Menu = (ImageView) item.findViewById(R.id.img_Menu);
+		img_Menu.setImageResource(Env.getResourceID(ctx, R.attr.ic_st_menu));
+		img_Menu.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});
 		//	Set Name
 		TextView tv_Name = (TextView)item.findViewById(R.id.tv_Name);
 		tv_Name.setTextAppearance(ctx, R.style.TextTitleList);

@@ -105,4 +105,6 @@
 	<attr name="ic_pr_ws" format="reference"/>
 	<attr name="ic_pr_mqtt" format="reference"/>
 	<attr name="ic_pr_login" format="reference"/>
+	<!-- Standard Seach -->
+	<attr name="ic_st_menu" format="reference"/>
 </resources>

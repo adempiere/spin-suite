@@ -572,8 +572,12 @@ public class MOrder extends X_C_Order implements DocAction {
 	 */
 	public boolean calculateTaxTotal() {
 		//	Delete Taxes
-		DB.executeUpdate(getCtx(), "DELETE C_OrderTax "
+//		2015-07-24 Dixon Martinez
+//		Correct error deleting records C_OrderTax
+//		DB.executeUpdate(getCtx(), "DELETE C_OrderTax "
+		DB.executeUpdate(getCtx(), "DELETE FROM C_OrderTax "
 				+ "WHERE C_Order_ID=" + getC_Order_ID(), get_Connection());
+//		End Dixon Martinez
 		m_taxes = null;
 		
 		//	Lines

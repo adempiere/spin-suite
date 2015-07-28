@@ -16,31 +16,46 @@
  * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com				  		 *
  ************************************************************************************/
 -->
- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal" >
+    android:layout_height="match_parent" >
 
     <ImageView
         android:id="@+id/img_Item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:contentDescription="@string/None"
         android:src="@drawable/contruction_h" />
 
     <LinearLayout
         android:id="@+id/ll_Text"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/img_Menu"
+        android:layout_toRightOf="@+id/img_Item"
         android:orientation="vertical" >
-
-        <TextView
-	        android:id="@+id/tv_Name"
-	        android:gravity="center_vertical"
-	        style="@style/TextItemMenu"
-	        android:text="@string/None"
-	        android:maxLines="1" />
+		
+       <TextView
+           android:id="@+id/tv_Name"
+           style="@style/TextItemMenu"
+           android:layout_width="wrap_content"
+           android:gravity="center_vertical"
+           android:maxLines="1"
+           android:text="@string/Name" />
+       
     </LinearLayout>
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/img_Menu"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_action_next_item_light" />
+
+</RelativeLayout>

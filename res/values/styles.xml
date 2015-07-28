@@ -111,6 +111,8 @@
 		<item name="ic_pr_mqtt">@drawable/mqtt_h</item>
 		<item name="ic_pr_login">@drawable/login_h</item>
 		<!-- Text Color -->
+		<!-- Standard Search -->
+		<item name="ic_st_menu">@drawable/ic_action_next_item_light</item>
     </style>
     
     <!-- Color -->
