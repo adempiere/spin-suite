@@ -64,6 +64,8 @@ import android.widget.TextView;
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  * <li> Better view in child tab records
  * @see https://adempiere.atlassian.net/browse/SPIN-24
+ * <li> Add Support to Menu in Standard Search
+ * @see https://adempiere.atlassian.net/browse/SPIN-26
  */
 public class V_StandardSearch extends Activity {
 	
@@ -470,7 +472,7 @@ public class V_StandardSearch extends Activity {
 	     */
 	    protected boolean loadView() {
 	    	//	Set Adapter
-			m_SearchAdapter = new SearchAdapter(v_activity, data);
+			m_SearchAdapter = new SearchAdapter(v_activity, data, lookup.getInfoLookup().TableName);
 			lv_Search.setAdapter(m_SearchAdapter);
 			//	
 			tv_RecordCount.setText(Msg.getMsg(v_activity, "record.found") 
