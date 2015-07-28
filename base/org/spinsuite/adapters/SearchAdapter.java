@@ -23,14 +23,18 @@ import org.spinsuite.util.DisplaySearchItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.IdentifierValueWrapper;
+import org.spinsuite.util.option.I_SS_MenuOption;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -39,14 +43,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.PopupMenu;
+import android.widget.TextView;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
  * <li> Bug in Standard Search
  * @see https://adempiere.atlassian.net/browse/SPIN-23
- * <li> Add Suport to Menu in Standard Search
+ * <li> Add Support to Menu in Standard Search
  * @see https://adempiere.atlassian.net/browse/SPIN-26
  */
 public class SearchAdapter extends ArrayAdapter<DisplaySearchItem> {
@@ -57,8 +62,9 @@ public class SearchAdapter extends ArrayAdapter<DisplaySearchItem> {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/03/2014, 13:02:43
 	 * @param ctx
 	 * @param data
+	 * @param p_TableName
 	 */
-	public SearchAdapter(Context ctx, ArrayList<DisplaySearchItem> data) {
+	public SearchAdapter(Context ctx, ArrayList<DisplaySearchItem> data, String p_TableName) {
 		super(ctx, R.layout.i_search, data);
 		this.ctx = ctx;
 		this.view_ID = R.layout.i_search;
@@ -73,6 +79,8 @@ public class SearchAdapter extends ArrayAdapter<DisplaySearchItem> {
 		//	Set Parameter
     	v_param = new LayoutParams(LayoutParams.MATCH_PARENT, 
     			LayoutParams.WRAP_CONTENT);
+    	//	Instance Option Menu for table
+    	instanceOptions(p_TableName);
 	}
 
 	/**	Context							*/
@@ -87,9 +95,11 @@ public class SearchAdapter extends ArrayAdapter<DisplaySearchItem> {
 	private float							height = 0;
 	/**	Column Parameter				*/
 	private LayoutParams					v_param	= null;
+	/**	Menu Option						*/
+	private I_SS_MenuOption 				m_MenuOption = null;
 	
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {		
+	public View getView(final int position, View convertView, ViewGroup parent) {		
 		View item = convertView;
 		//	Get Current Item
 		DisplaySearchItem recordItem = data.get(position);
@@ -105,14 +115,18 @@ public class SearchAdapter extends ArrayAdapter<DisplaySearchItem> {
 		//	Get Linear Layout
 		LinearLayout ll_Text = (LinearLayout) item.findViewById(R.id.ll_Text);
 		ImageView img_Menu = (ImageView) item.findViewById(R.id.img_Menu);
-		img_Menu.setImageResource(Env.getResourceID(ctx, R.attr.ic_st_menu));
-		img_Menu.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
+		if(m_MenuOption != null) {
+			img_Menu.setImageResource(Env.getResourceID(ctx, R.attr.ic_st_menu));
+			img_Menu.setOnClickListener(new OnClickListener() {
 				
-			}
-		});
+				@Override
+				public void onClick(View v) {
+					showPopupForTab(v, position);
+				}
+			});
+		} else {
+			img_Menu.setVisibility(View.GONE);
+		}
 		//	Set Name
 		TextView tv_Name = (TextView)item.findViewById(R.id.tv_Name);
 		tv_Name.setTextAppearance(ctx, R.style.TextTitleList);
@@ -193,6 +207,66 @@ public class SearchAdapter extends ArrayAdapter<DisplaySearchItem> {
 		}
 		//	Return
 		return item;
+	}
+	
+	/**
+	 * Try Instance Option Menu
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_TableName
+	 * @return void
+	 */
+	private void instanceOptions(String p_TableName) {
+		if(p_TableName == null
+				|| p_TableName.length() == 0)
+			return;
+		//	Try to find Class
+		String className = "org.spinsuite.util.option.SS_MenuItem_";
+		try {
+			className += p_TableName;
+			Class<?> clazz = Class.forName(className);
+			m_MenuOption = (I_SS_MenuOption)clazz.newInstance();
+		} catch (ClassNotFoundException e) {
+			Log.d("Msg", "Class not found: " + className);
+		} catch (Exception e) {
+			Log.e("Msg", "Class not found: " + className, e);
+		}
+	}
+	
+	/**
+	 * Show Popup for each table
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param v
+	 * @param position
+	 * @return void
+	 */
+	private void showPopupForTab(View v, final int position) {
+	    if(m_MenuOption == null)
+	    	return;
+		PopupMenu popup = new PopupMenu(ctx, v);
+	    Menu menu = popup.getMenu();
+	    //	Add Option Menu
+	    int [] options = m_MenuOption.getMenuOption();
+	    for(int i = 0; i < options.length; i++) {
+	    	menu.add(Menu.NONE, options[i], 
+					Menu.NONE, ctx.getString(options[i]));
+	    }
+	    //	Add Listener
+	    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+			
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				//	Valid Null
+				if(m_MenuOption == null)
+					return false;
+				//	Process
+				m_MenuOption.actionMenu(getContext(), 
+						item.getItemId(), data.get(position));
+				//	Default
+				return false;
+			}
+		});
+	    //	Show
+	    popup.show();
 	}
 	
 	/**

@@ -275,8 +275,6 @@ public class FV_ThreadIndex extends ListFragment
     	//	
     	DisplayBChatThreadListItem item = m_Adapter.getItem(position);
     	onItemSelected(0, item.getSPS_BC_Request_UUID(), V_BChat.TYPE_SELECT_CONVERSATION);
-    	//	Change on List View
-    	//getListView().setItemChecked(position, true);
     }
 
     @Override

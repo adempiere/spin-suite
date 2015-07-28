@@ -44,6 +44,12 @@
 	<string name="Action_SyncDeleteBefore">Delete Before Synchronize</string>
 	<string name="Action_About">About</string>
 	
+	<!-- For Standard Search -->
+	<string name="Action_Call">Call</string>
+	<string name="Action_Add_To_Contact">Add To Contact</string>
+	<string name="Action_Send_Mail">Send a Mail</string>
+	<string name="Action_Send_BChat">Send a BChat</string>
+	
 	<!-- Drawer Option -->
 	<string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
