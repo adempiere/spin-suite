@@ -42,7 +42,10 @@
 	<string name="Help">Ayuda</string>
 	<string name="TimeOfEvent">Hora de Evento</string>
 	<string name="Text">Texto</string>
-	<string name="SynchronizingEnding">Sincronización Finalizada</string>
+	<string name="UOMSymbol">UM</string>
+	<string name="PickNumber">Seleccione un Número</string>
+	<string name="PickContact">Seleccione un Contacto</string>
+	<string name="PickMails">Seleccione los Correos</string>
 	<!-- Synchronization -->
 	<string name="Sync_InitSyncManual">Sincronización Manual</string>
 	<string name="Sync_SynchronzeButtom">Sincronizar</string>
@@ -54,8 +57,7 @@
 	<string name="Sync_Records">Registros</string>
 	<string name="Sync_Duration">Duración</string>
 	<string name="Url_Server">URL (Servidor)</string>
-	<string name="Action_OK">OK</string>
-	<string name="UOMSymbol">UM</string>
+	<string name="SynchronizingEnding">Sincronización Finalizada</string>
 	<!-- About -->
 	<string name="app_description" >Spin-Suite es una aplicación cuidadosamente diseñada como una solución offline "100%" Android. La misma hereda del Diccionario de Aplicación de ADempiere su forma dinámica, Ventanas, Procesos, Roles y Accesos.</string>
 	<string name="app_version_name" >Nombre de Versión</string>

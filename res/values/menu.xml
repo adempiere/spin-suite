@@ -43,6 +43,7 @@
 	<string name="Action_SyncRecord">Synchronize Record</string>
 	<string name="Action_SyncDeleteBefore">Delete Before Synchronize</string>
 	<string name="Action_About">About</string>
+	<string name="Action_OK">OK</string>
 	
 	<!-- For Standard Search -->
 	<string name="Action_Call">Call</string>
