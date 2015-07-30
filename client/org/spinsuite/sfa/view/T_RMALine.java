@@ -23,9 +23,7 @@ import java.util.logging.Level;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.model.MOrderLine;
-import org.spinsuite.sfa.adapters.OrderLineAdapter;
 import org.spinsuite.sfa.adapters.RMALineAdapter;
-import org.spinsuite.sfa.util.DisplayOrderLine;
 import org.spinsuite.sfa.util.DisplayRMALine;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
@@ -66,7 +64,7 @@ public class T_RMALine extends T_FormTab {
 	private 	TextView				tv_lb_Amt				= null;
 	private 	TextView				tv_lb_LineNetAmt		= null;
 	private		int 					m_M_RMA_ID				= 0;
-	private 	DisplayRMALine 			m_Adapter 				= null;
+	private 	RMALineAdapter 			m_Adapter 				= null;
 	private 	int						m_LinesNo				= 0;
 	private 	BigDecimal 				m_Amt					= Env.ZERO;
 	private 	BigDecimal 				m_LineNetAmt 			= Env.ZERO;
@@ -131,7 +129,7 @@ public class T_RMALine extends T_FormTab {
 							int[] ids = new int[selectedItems.size()];
 							for (int i = (selectedItems.size() - 1); i >= 0; i--) {
 								if (selectedItems.valueAt(i)) {
-									DisplayOrderLine selectedItem = m_Adapter
+									DisplayRMALine selectedItem = m_Adapter
 											.getItem(selectedItems.keyAt(i));
 									//	Add Value
 									ids[i] = selectedItem.getC_OrderLine_ID();
