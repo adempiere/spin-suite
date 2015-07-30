@@ -117,7 +117,7 @@
 	<string name="msg_Path">Ruta</string>
 	<string name="msg_Report">Reporte</string>
 	<string name="msg_Image">Imagen</string>
-	<string name="msg_SharedFromSFAndroid">Compartido desde Aplicación Spin-Suite</string>
+	<string name="msg_SharedFromSpinSuite">Compartido desde Aplicación Spin-Suite</string>
 	<string name="msg_ReportParameters">Parámetros de Reporte</string>
 	<string name="msg_SendAsXLS">Enviar como XLS</string>
 	<string name="msg_SendAsPDF">Enviar como PDF</string>
@@ -136,4 +136,5 @@
 	<string name="msg_EnterYourPasscode">Introduzca su código de acceso</string>
 	<string name="msg_ReEnterYourPasscode">Introduzca Nuevamente su código de acceso</string>
 	<string name="msg_PasscodeIsInvalid">El código de acceso es inválido</string>
+	<string name="msg_CreatedFromSpinSuite">Creado desde Aplicación Spin-Suite</string>
 </resources>

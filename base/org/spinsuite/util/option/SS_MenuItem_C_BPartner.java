@@ -28,16 +28,13 @@ import org.spinsuite.util.Msg;
 import org.spinsuite.util.StringNamePair;
 
 import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
-import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.Intents;
 
 /**
@@ -198,7 +195,7 @@ public class SS_MenuItem_C_BPartner implements I_SS_MenuOption {
 			Intent address = new Intent(Intents.Insert.ACTION);
 			address.setType(ContactsContract.RawContacts.CONTENT_TYPE);
 			address.putExtra(Intents.Insert.NAME, m_Name);
-			address.putExtra(Intents.Insert.NOTES, m_Name);
+			address.putExtra(Intents.Insert.NOTES, ctx.getString(R.string.msg_CreatedFromSpinSuite));
 			//	For Phone
 			if(m_Phone.size() > 0) {
 				for(int i = 0; i< m_Phone.size(); i++) {
@@ -399,7 +396,7 @@ public class SS_MenuItem_C_BPartner implements I_SS_MenuOption {
 			           			String m_EMail[] = new String[m_SelectedItems.size()];
 			           			m_SelectedItems.toArray(m_EMail);
 			           			sendMail.putExtra(Intent.EXTRA_EMAIL, m_EMail);
-			           			sendMail.putExtra(Intent.EXTRA_SUBJECT, ctx.getResources().getText(R.string.msg_SharedFromSFAndroid));
+			           			sendMail.putExtra(Intent.EXTRA_SUBJECT, ctx.getResources().getText(R.string.msg_SharedFromSpinSuite));
 			           			//	
 			           			ctx.startActivity(Intent.createChooser(sendMail, 
 			           					ctx.getResources().getText(R.string.Action_Send_Mail)));

@@ -299,7 +299,7 @@ public class Lookup {
 	/**	SQL						*/
 	private String 								m_SQL					= null;
 	/**	SQL Join				*/
-	private StringBuffer						m_From					= null;
+	private StringBuffer						m_Join					= null;
 	/**	Language				*/
 	private String 								m_Language 				= null;
 	/**	Is Base Language		*/
@@ -497,7 +497,7 @@ public class Lookup {
 		//	Instance Lookup
 		m_InfoLookup = new InfoLookup();
 		//	Instance join
-		m_From = new StringBuffer();
+		m_Join = new StringBuffer();
 		//	
 		StringBuffer sql = new StringBuffer();
 		StringBuffer where = new StringBuffer();
@@ -588,7 +588,7 @@ public class Lookup {
 			sql.append(", ").append(tableName).append(".").append(lastColumn);
 			//	Set Info Lookup
 			m_InfoLookup.DisplayColumn = longColumn.toString();
-			m_InfoLookup.TableJoin = m_From.toString();
+			m_InfoLookup.TableJoin = m_Join.toString();
 			//	
 			//	Separator
 		} else {
@@ -600,8 +600,8 @@ public class Lookup {
 		sql.append(" FROM ").append(tableName)
 				.append(" AS ").append(m_TableAlias);
 		//	Add Joins
-		if(m_From.length() > 0)
-			sql.append(" ").append(m_From);
+		if(m_Join.length() > 0)
+			sql.append(" ").append(m_Join);
 		
 		//	Validation Rule
 		if(getValRule() != null
@@ -835,7 +835,7 @@ public class Lookup {
 		//	Instance Lookup
 		m_InfoLookup = new InfoLookup();
 		//	Instance join
-		m_From = new StringBuffer();
+		m_Join = new StringBuffer();
 		//	
 		StringBuffer sql = new StringBuffer();
 		String tableName = null;
@@ -958,15 +958,15 @@ public class Lookup {
 			sql.append(", ").append(tableName).append(".").append(lastColumn);
 			//	Set Info Lookup
 			m_InfoLookup.DisplayColumn = longColumn.toString();
-			m_InfoLookup.TableJoin = m_From.toString();
+			m_InfoLookup.TableJoin = m_Join.toString();
 			//	Separator
 		}
 		//	Close
 		DB.closeConnection(conn);
 		sql.append(" FROM ").append(tableName);
 		//	Add Joins
-		if(m_From.length() > 0)
-			sql.append(" ").append(m_From);
+		if(m_Join.length() > 0)
+			sql.append(" ").append(m_Join);
 		//	Optional Where
 		m_IsHasWhere = false;
 		m_InfoLookup.WhereClause = null;
@@ -986,30 +986,30 @@ public class Lookup {
 	 */
 	private void addJoin(String tableName, InfoField linkColumn, InfoLookup lookup) {
 		//	Is Mandatory
-		m_From.append(LEFT_JOIN).append(" ");
+		m_Join.append(LEFT_JOIN).append(" ");
 		//	Table Name
-		m_From.append(lookup.TableName).append(" ").append(AS).append(" ").append(lookup.TableAlias).append(" ");
+		m_Join.append(lookup.TableName).append(" ").append(AS).append(" ").append(lookup.TableAlias).append(" ");
 		//	On
-		m_From.append(ON).append("(")
+		m_Join.append(ON).append("(")
 							.append(lookup.TableAlias).append(POINT).append(lookup.KeyColumn[0])
 							.append(EQUAL).append(tableName).append(POINT).append(linkColumn.ColumnName);
 		if(linkColumn.DisplayType == DisplayType.LIST) {
-			m_From.append(" ").append(AND).append(" ")
+			m_Join.append(" ").append(AND).append(" ")
 								.append(lookup.TableAlias).append(POINT)
 								.append(InfoLookup.REFERENCE_TN).append("_ID")
 								.append(EQUAL).append(linkColumn.AD_Reference_Value_ID);
 		}
 		//	Add finish
-		m_From.append(")").append(" ");
+		m_Join.append(")").append(" ");
 		//	Add Translation to List
 		if(linkColumn.DisplayType == DisplayType.LIST
 				&& !m_IsBaseLanguage) {
-			m_From.append(LEFT_JOIN).append(" ");
+			m_Join.append(LEFT_JOIN).append(" ");
 			//	Table Name
-			m_From.append(lookup.TableName).append(InfoLookup.TR_TABLE_SUFFIX).append(" ")
+			m_Join.append(lookup.TableName).append(InfoLookup.TR_TABLE_SUFFIX).append(" ")
 								.append(AS).append(" ").append(lookup.TableAlias).append(InfoLookup.TR_TABLE_SUFFIX).append(" ");
 			//	On
-			m_From.append(ON).append("(")
+			m_Join.append(ON).append("(")
 								.append(lookup.TableAlias).append(InfoLookup.TR_TABLE_SUFFIX)
 								.append(POINT).append(InfoLookup.REF_LIST_TN).append("_ID")
 								.append(EQUAL).append(lookup.TableAlias)
@@ -1017,6 +1017,11 @@ public class Lookup {
 								.append(AND).append(" ").append(lookup.TableAlias).append(InfoLookup.TR_TABLE_SUFFIX)
 								.append(POINT).append(InfoLookup.AD_LANGUAGE_CN)
 								.append(EQUAL).append("'").append(m_Language).append("'").append(")").append(" ");
+		}
+		//	Add Include Join
+		if(lookup.TableJoin != null
+				&& lookup.TableJoin.trim().length() > 0) {
+			m_Join.append(lookup.TableJoin);
 		}
 	}
 	
