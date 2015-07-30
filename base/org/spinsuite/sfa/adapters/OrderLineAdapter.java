@@ -55,6 +55,7 @@ public class OrderLineAdapter extends ArrayAdapter<DisplayOrderLine> {
 	
 	public OrderLineAdapter(Context ctx, ArrayList<DisplayOrderLine> data) {
 		super(ctx, R.layout.i_order_line, data);
+		setDropDownViewResource(R.layout.i_ol_add_product);
 		this.ctx = ctx;
 		this.data = data;
 		m_QtyNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY, "###,###,###,##0.00");

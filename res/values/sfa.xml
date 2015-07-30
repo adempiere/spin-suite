@@ -28,4 +28,6 @@
     <string name="GrandTotal">Grand Total</string>
     <string name="Discount">Discount</string>
     <string name="Percentage">%</string>
+    <string name="Amt">Amount</string>
+    <string name="QtyReturn">Qty to Return</string>
 </resources>
