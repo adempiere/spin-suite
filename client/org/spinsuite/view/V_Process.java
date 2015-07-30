@@ -1124,7 +1124,7 @@ public class V_Process extends Activity {
 	    			shareIntent.putExtra(Intent.EXTRA_STREAM, sourceUri);
 	    			shareIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getText(R.string.msg_Report) 
 	    					+ " \"" + printData.getInfoReport().getName() + "\"");
-	    			shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_SharedFromSFAndroid));
+	    			shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_SharedFromSpinSuite));
 	    			//	
 	    			shareIntent.setType("application/" + type);
 	    			//	

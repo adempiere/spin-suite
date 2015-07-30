@@ -3000,7 +3000,8 @@ public final class Env {
 			value = p_Value.substring(indexColumn, lastIndexColumn);
 			//	
 			if(DisplayType.isDate(displayType)) {
-				if(value != null) {
+				if(value != null
+						&& value.trim().length() > 0) {
 					//	For Parse Date
 					SimpleDateFormat sdf = DisplayType.getTimestampFormat_Default();
 					try {

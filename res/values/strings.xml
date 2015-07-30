@@ -42,7 +42,11 @@
 	<string name="Help">Help</string>
 	<string name="TimeOfEvent">Time of Event</string>
 	<string name="Text">Text</string>
-	<string name="SynchronizingEnding">Synchronizing Ending</string>
+	<string name="UOMSymbol">UM</string>
+	<string name="PickNumber">Pick a Number</string>
+	<string name="PickContact">Pick a Contact</string>
+	<string name="PickMails">Pick the Mails</string>
+	
 	<!-- Synchronization -->
 	<string name="Sync_InitSyncManual">Manual Synchronization</string>
 	<string name="Sync_SynchronzeButtom">Synchronize</string>
@@ -54,8 +58,7 @@
 	<string name="Sync_Records">Records</string>
 	<string name="Sync_Duration">Duration</string>
 	<string name="Url_Server">URL (Server)</string>
-	<string name="Action_OK">OK</string>
-	<string name="UOMSymbol">UM</string>
+	<string name="SynchronizingEnding">Synchronizing Ending</string>
 	<!-- About -->
 	<string name="app_description" >Spin-Suite is a Application for connection with ADempiere ERP, based in GNU/GPL License</string>
 	<string name="app_version_name" >Version Name</string>
@@ -65,5 +68,5 @@
 	<string name="app_adempiere_spin_suite">ADempiere <a href="http://www.adempiere.com/Spin-Suite">http://www.adempiere.com/Spin-Suite</a></string>
 	<string name="app_adempiere_spin_suite_project">Spin-Suite <a href="https://github.com/adempiere/spin-suite">https://github.com/adempiere/spin-suite</a></string>
 	<string name="app_mail_contact">Contact Us <a href="mailto:info@erpcya.com">info@erpcya.com</a></string>
-	<string name="app_web_lubo" >http://www.lubosistemas.com.ve</string>
+	<string name="app_web_lubo">http://www.lubosistemas.com.ve</string>
 </resources>
