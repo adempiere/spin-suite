@@ -350,7 +350,7 @@ public class ReportPrintQuery {
 		}
 		//	Add external Join
 		if(lookup.TableJoin != null
-				&& lookup.TableJoin.length() >0) {
+				&& lookup.TableJoin.length() > 0) {
 			m_from.append(" ").append(lookup.TableJoin);
 		}
 	}
