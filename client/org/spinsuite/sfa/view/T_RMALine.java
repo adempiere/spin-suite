@@ -85,11 +85,11 @@ public class T_RMALine extends T_FormTab {
 		
 		//	Re-Load
 		m_View 				= inflater.inflate(R.layout.t_rma_line, container, false);
-		v_list 				= (ListView) m_View.findViewById(R.id.lv_OrderLine);
-		tv_Amt 		= (TextView) m_View.findViewById(R.id.tv_TotalLines);
-		tv_LineNetAmt 		= (TextView) m_View.findViewById(R.id.tv_GrandTotal);
-		tv_lb_Amt	= (TextView) m_View.findViewById(R.id.tv_lb_TotalLines);
-		tv_lb_LineNetAmt	= (TextView) m_View.findViewById(R.id.tv_lb_GrandTotal);
+		v_list 				= (ListView) m_View.findViewById(R.id.lv_RMALine);
+		tv_Amt 				= (TextView) m_View.findViewById(R.id.tv_Amt);
+		tv_LineNetAmt 		= (TextView) m_View.findViewById(R.id.tv_LineNetAmt);
+		tv_lb_Amt			= (TextView) m_View.findViewById(R.id.tv_lb_Amt);
+		tv_lb_LineNetAmt	= (TextView) m_View.findViewById(R.id.tv_lb_LineNetAmt);
 		//	Add Listener for List
 		v_list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		v_list.setMultiChoiceModeListener(new MultiChoiceModeListener() {
