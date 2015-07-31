@@ -356,9 +356,15 @@ public class SS_MenuItem_C_BPartner implements I_SS_MenuOption {
 		ArrayList<StringNamePair> m_EMail = getEMail(ctx, item);
 		//	Do It
 		if(m_EMail.size() == 1) {
-			Intent callIntent = new Intent(Intent.ACTION_CALL);
-			callIntent.setData(Uri.parse("tel:" + m_EMail.get(0).getName()));
-			ctx.startActivity(callIntent);
+			Intent sendMail = new Intent();
+				sendMail.setAction(Intent.ACTION_SEND);
+   			sendMail.setData(Uri.parse("mailto:"));
+   			sendMail.setType("message/rfc822");
+   			sendMail.putExtra(Intent.EXTRA_EMAIL, new String[]{m_EMail.get(0).getName()});
+   			sendMail.putExtra(Intent.EXTRA_SUBJECT, ctx.getResources().getText(R.string.msg_SharedFromSpinSuite));
+   			//	
+   			ctx.startActivity(Intent.createChooser(sendMail, 
+   					ctx.getResources().getText(R.string.Action_Send_Mail)));
 		} else if(m_EMail.size() > 1){
 			final String m_EMailArray[] = new String[m_EMail.size()];
 			//	Load Items for views
