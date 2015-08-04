@@ -50,9 +50,16 @@ public class RMALineAdapter extends ArrayAdapter<DisplayRMALine> {
 	/**	Selected Items IDs			*/
 	private SparseBooleanArray 				m_SelectedItems;
 	
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param data
+	 */
 	public RMALineAdapter(Context ctx, ArrayList<DisplayRMALine> data) {
 		super(ctx, R.layout.i_rma_line, data);
-		setDropDownViewResource(R.layout.i_rma_line_add_product);
+		setDropDownViewResource(R.layout.i_rma_line);
 		this.ctx = ctx;
 		this.data = data;
 		m_QtyNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY, "###,###,###,##0.00");
@@ -122,8 +129,8 @@ public class RMALineAdapter extends ArrayAdapter<DisplayRMALine> {
 						.add(m_Amt)));
 		
 		//	Set Qty
-		TextView tv_Qty = (TextView)item.findViewById(R.id.tv_Qty);
-		tv_Qty.setText(m_QtyNumberFormat.format(mi.getQtyReturn())); 
+		TextView tv_QtyReturn = (TextView)item.findViewById(R.id.tv_QtyReturn);
+		tv_QtyReturn.setText(m_QtyNumberFormat.format(mi.getQtyReturn())); 
 
 		//	Return
 		return item;

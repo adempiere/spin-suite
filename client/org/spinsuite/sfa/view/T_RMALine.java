@@ -196,14 +196,15 @@ public class T_RMALine extends T_FormTab {
 		int p_M_RMA_ID = Env.getContextAsInt(getActivity(), getActivityNo(), "M_RMA_ID");
 		//
 		String sql = "SELECT "
-				+ "r.Amt, "
-				+ "r.LineNetAmt, "
+				+ "SUM(rl.Amt) Amt, "
+				+ "SUM(rl.LineNetAmt) LineNetAmt, "
 				+ "c.CurSymbol "
 				+ "FROM M_RMA r "
-				+ "INNER JOIN M_InOut i ON(i.M_InOut_ID = r.M_InOut_ID) "
+				+ "INNER JOIN M_RMALine rl ON(rl.M_RMA_ID = r.M_RMA_ID) "
+				+ "INNER JOIN M_InOut i ON(i.M_InOut_ID = r.InOut_ID) "
 				+ "INNER JOIN C_Order o ON(o.C_Order_ID = i.C_Order_ID) "
 				+ "INNER JOIN C_Currency c ON(c.C_Currency_ID = o.C_Currency_ID) "
-				+ "WHERE r.p_M_RMA_ID = ? ";
+				+ "WHERE r.M_RMA_ID = ? ";
 		//	Log
 		LogM.log(getActivity(), getClass(), Level.FINE, "SQL=" + sql);
 		conn.compileQuery(sql);
@@ -281,7 +282,7 @@ public class T_RMALine extends T_FormTab {
 			Bundle bundle = new Bundle();
 			bundle.putInt("M_RMA_ID", m_M_RMA_ID);
 			
-			Intent intent = new Intent(getActivity(), V_AddOrderLine.class);
+			Intent intent = new Intent(getActivity(), V_AddRMALine.class);
 			intent.putExtras(bundle);
 			startActivityForResult(intent, 0);
 			return true;
@@ -332,10 +333,7 @@ public class T_RMALine extends T_FormTab {
 		int p_M_RMA_ID = Env.getContextAsInt(getActivity(), getActivityNo(), "M_RMA_ID");
 		//
 		String sql = "SELECT "
-				+ "SUM(rl.Amt) Amt, "
-				+ "SUM(rl.LineNetAmt) LineNetAmt, "
-				+ "c.CurSymbol, "
-				+ "rl.M_RMA_ID, "
+				+ "rl.M_RMALine_ID, "
 				+ "pc.Name ProductCategory, "
 				+ "p.Value, "
 				+ "p.Name ProductName, "
@@ -350,14 +348,14 @@ public class T_RMALine extends T_FormTab {
 				+ "INNER JOIN M_RMALine rl ON(rl.M_RMA_ID = r.M_RMA_ID) "
 				+ "INNER JOIN M_InOutLine il ON(il.M_InOutLine_ID = rl.M_InOutLine_ID) "
 				+ "INNER JOIN C_OrderLine ol ON (il.C_OrderLine_ID = ol.C_OrderLine_ID) "
-				+ "INNER JOIN C_Order o ON(o.C_Order_ID = ol.C_Order_ID) "
-				+ "INNER JOIN M_Product p ON (ol.M_Product_ID = p.M_Product_ID) "
-				+ "INNER JOIN C_UOM u ON (ol.C_UOM_ID = u.C_UOM_ID) "
+				+ "INNER JOIN M_InOut io ON(io.M_InOut_ID = r.InOut_ID) "
+				+ "INNER JOIN C_Order o ON(o.C_Order_ID = io.C_Order_ID) "
+				+ "INNER JOIN M_Product p ON (il.M_Product_ID = p.M_Product_ID) "
+				+ "INNER JOIN C_UOM u ON (il.C_UOM_ID = u.C_UOM_ID) "
 				+ "INNER JOIN C_Currency c ON(c.C_Currency_ID = o.C_Currency_ID) "
 				+ "INNER JOIN M_Product_Category pc ON(pc.M_Product_Category_ID = p.M_Product_Category_ID) "
 				+ "INNER JOIN C_Tax t ON(t.C_Tax_ID = ol.C_Tax_ID) "
 				+ "WHERE r.M_RMA_ID = ? "
-				+ "GROUP BY r.M_RMA_ID "
 				+ "ORDER BY rl.Line";
 		
 		
@@ -367,31 +365,25 @@ public class T_RMALine extends T_FormTab {
 		//	Get SQL
 		Cursor rs = conn.querySQL();
 		//	
-		String m_CurSymbol = null;
-		//	
 		ArrayList<DisplayRMALine> data = new ArrayList<DisplayRMALine>();
 		m_LinesNo = 0;
 		if(rs != null 
 				&& rs.moveToFirst()){
 			int index = 0;
-			m_Amt 			= new BigDecimal(rs.getDouble(index++));
-			m_LineNetAmt 	= new BigDecimal(rs.getDouble(index++));
-			m_CurSymbol		= rs.getString(index++);
 			//	
 			do {
-				index = 3;
 				m_LinesNo++;
 				//
 				data.add(
 						new DisplayRMALine(
-								rs.getInt(index++),		//	RMA Line
-								rs.getString(index++),	//	Product Category
-								rs.getString(index++),	//	Product Value
-								rs.getString(index++),	//	Product Name 
-								rs.getString(index++),	//	Product Description
-								rs.getString(index++),	//	UOM Symbol
-								rs.getInt(index++),		//	Tax ID
-								rs.getString(index++),	//	Tax Indicator
+								rs.getInt(index++),						//	RMA Line
+								rs.getString(index++),					//	Product Category
+								rs.getString(index++),					//	Product Value
+								rs.getString(index++),					//	Product Name 
+								rs.getString(index++),					//	Product Description
+								rs.getString(index++),					//	UOM Symbol
+								rs.getInt(index++),						//	Tax ID
+								rs.getString(index++),					//	Tax Indicator
 								new BigDecimal(rs.getDouble(index++)),	//	Tax Rate
 								new BigDecimal(rs.getDouble(index++)),	//	Price Entered
 								new BigDecimal(rs.getDouble(index++))	//	Qty Return
@@ -401,18 +393,10 @@ public class T_RMALine extends T_FormTab {
 				index = 0;
 			} while(rs.moveToNext());
 		}
+		//	Refresh
+		refreshAmt();
 		//	Close Connection
 		DB.closeConnection(conn);
-		//	
-		DecimalFormat format = DisplayType.getNumberFormat(getActivity(), DisplayType.AMOUNT, "###,###,###,##0.00");
-		//	Set Totals
-		tv_Amt.setText(format.format(m_Amt));
-		tv_LineNetAmt.setText(format.format(m_LineNetAmt));
-		//	Add Symbol
-		if(m_CurSymbol != null) {
-			tv_lb_Amt.setText(getString(R.string.Amt) + " (" + m_CurSymbol + ")");
-			tv_lb_LineNetAmt.setText(getString(R.string.LineNetAmt) + " (" + m_CurSymbol + ")");
-		}
 		//	Set Adapter
 		m_Adapter = new RMALineAdapter(getActivity(), data);
 		v_list.setAdapter(m_Adapter);

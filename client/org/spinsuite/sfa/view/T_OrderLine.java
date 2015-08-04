@@ -64,6 +64,7 @@ public class T_OrderLine extends T_FormTab {
 	private 	TextView				tv_lb_TotalLines		= null;
 	private 	TextView				tv_lb_GrandTotal		= null;
 	private		int 					m_C_Order_ID			= 0;
+	private		int 					m_C_BPartner_Location_ID			= 0;
 	private 	OrderLineAdapter 		m_Adapter 				= null;
 	private 	int						m_LinesNo				= 0;
 	private 	BigDecimal 				m_TotalLines			= Env.ZERO;
@@ -278,6 +279,7 @@ public class T_OrderLine extends T_FormTab {
     		}
 			Bundle bundle = new Bundle();
 			bundle.putInt("C_Order_ID", m_C_Order_ID);
+			bundle.putInt("C_BPartner_Location_ID", m_C_BPartner_Location_ID);
 			
 			Intent intent = new Intent(getActivity(), V_AddOrderLine.class);
 			intent.putExtras(bundle);
@@ -305,6 +307,7 @@ public class T_OrderLine extends T_FormTab {
 		if(getCallback() != null) {
 	    	//	Get Sales Order Identifier
 			m_C_Order_ID = Env.getContextAsInt(getActivity(), getActivityNo(), "C_Order_ID");
+			m_C_BPartner_Location_ID = Env.getContextAsInt(getActivity(), getActivityNo(), "C_BPartner_Location_ID");
 		}
 	}
 	

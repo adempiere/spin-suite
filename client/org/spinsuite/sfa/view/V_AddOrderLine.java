@@ -25,7 +25,7 @@ import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.model.I_C_OrderLine;
 import org.spinsuite.model.MOrderLine;
-import org.spinsuite.sfa.adapters.LP_SearchAdapter;
+import org.spinsuite.sfa.adapters.LP_OrderLineSearchAdapter;
 import org.spinsuite.sfa.util.DisplayListProduct;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
@@ -64,11 +64,13 @@ public class V_AddOrderLine extends Activity {
 	/**	Activity					*/
 	private Activity						v_activity = null;
 	/**	Adapter						*/
-	private LP_SearchAdapter 				m_SP_SearchAdapter = null;
+	private LP_OrderLineSearchAdapter 		m_SP_SearchAdapter = null;
 	/**	View Search					*/
 	private View 							searchView = null;
-	/**	Technical Form				*/
+	/**	Sales Order					*/
 	private int								m_C_Order_ID = 0;
+	/**	Business Partner			*/
+	private int								m_C_BPartner_Location_ID = 0;
 	/**	Data Result					*/
 	private ArrayList<DisplayListProduct>	selectedData = null;
 	/**	Valid From					*/
@@ -83,6 +85,7 @@ public class V_AddOrderLine extends Activity {
     	Bundle bundle = getIntent().getExtras();
 		if(bundle != null) {
 			m_C_Order_ID = bundle.getInt("C_Order_ID");
+			m_C_BPartner_Location_ID = bundle.getInt("C_BPartner_Location_ID");
 		}
 		//	Set Activity
 		v_activity = this;
@@ -200,7 +203,7 @@ public class V_AddOrderLine extends Activity {
 	 */
 	private void saveResult() {
 		//	Set Result
-		LP_SearchAdapter adapter = (LP_SearchAdapter) lv_Products.getAdapter();
+		LP_OrderLineSearchAdapter adapter = (LP_OrderLineSearchAdapter) lv_Products.getAdapter();
 		selectedData = adapter.getSelectedData();
 		//	Load Task
 		new SaveDataTask().execute();
@@ -270,7 +273,7 @@ public class V_AddOrderLine extends Activity {
 	    	//	
 			getActionBar().setSubtitle(m_ValidFrom);
 	    	//	Set Adapter
-			m_SP_SearchAdapter = new LP_SearchAdapter(getApplicationContext(), data);
+			m_SP_SearchAdapter = new LP_OrderLineSearchAdapter(getApplicationContext(), m_C_BPartner_Location_ID, data);
 			lv_Products.setAdapter(m_SP_SearchAdapter);
 			//	
 			return true;
@@ -302,8 +305,8 @@ public class V_AddOrderLine extends Activity {
 						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN tl.TaxIndicator ELSE MAX(t.TaxIndicator) END TaxIndicator, "
 						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN tl.Rate ELSE MAX(t.Rate) END Rate, "
 						+ "pp.PriceList, "
-						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN ol.QtyEntered ELSE NULL END QtyEntered, "
 						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN ol.QtyOrdered ELSE NULL END QtyOrdered, "
+						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN ol.QtyEntered ELSE NULL END QtyEntered, "
 						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN ol.PriceEntered ELSE pp.PriceList END PriceEntered, "
 						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN ol.LineNetAmt ELSE NULL END LineNetAmt, "
 						+ "plv.M_PriceList_ID, "
@@ -342,30 +345,33 @@ public class V_AddOrderLine extends Activity {
 						int index = 0;
 						data.add(
 								new DisplayListProduct(
-										rs.getInt(index++),						//	Product Category ID
-										rs.getString(index++), 					//	Product Category Value
-										rs.getInt(index++),						//	Product ID
-										rs.getString(index++),					//	Product Value
-										rs.getString(index++),					//	Product Name
-										rs.getString(index++),					//	Product Description
-										rs.getInt(index++),						//	UOM ID
-										rs.getString(index++),					//	UOM Symbol
-										rs.getInt(index++),						//	Tax Category ID
-										rs.getString(index++),					//	Tax Category Value
-										rs.getInt(index++),						//	Tax ID
-										rs.getString(index++),					//	Tax Indicator
-										new BigDecimal(rs.getDouble(index++)),	//	Tax Rate
-										new BigDecimal(rs.getDouble(index++)),	//	Price List
-										new BigDecimal(rs.getDouble(index++)),	//	Quantity Entered
-										new BigDecimal(rs.getDouble(index++)),	//	Quantity Ordered
-										new BigDecimal(rs.getDouble(index++)),	//	Price Entered
-										new BigDecimal(rs.getDouble(index++)),	//	Line Net Amount
-										rs.getInt(index++),						//	Price List ID
-										rs.getInt(index++),						//	Price List Version ID
-										DisplayType.getDate(rs.getString(index++)),			//	Valid From
-										rs.getInt(index++),						//	Currency ID
-										rs.getString(index++),					//	Currency Value
-										rs.getInt(index++)						//	Order Line ID
+										rs.getInt(index++),							//	Product Category ID
+										rs.getString(index++), 						//	Product Category Value
+										rs.getInt(index++),							//	Product ID
+										rs.getString(index++),						//	Product Value
+										rs.getString(index++),						//	Product Name
+										rs.getString(index++),						//	Product Description
+										rs.getInt(index++),							//	UOM ID
+										rs.getString(index++),						//	UOM Symbol
+										rs.getInt(index++),							//	Tax Category ID
+										rs.getString(index++),						//	Tax Category Value
+										rs.getInt(index++),							//	Tax ID
+										rs.getString(index++),						//	Tax Indicator
+										new BigDecimal(rs.getDouble(index++)),		//	Tax Rate
+										new BigDecimal(rs.getDouble(index++)),		//	Price List
+										new BigDecimal(rs.getDouble(index++)),		//	Quantity Ordered
+										null,										//	Quantity Delivered
+										null, 										//	Quantity Available
+										new BigDecimal(rs.getDouble(index++)),		//	Quantity Entered
+										new BigDecimal(rs.getDouble(index++)),		//	Price Entered
+										new BigDecimal(rs.getDouble(index++)),		//	Line Net Amount
+										rs.getInt(index++),							//	Price List ID
+										rs.getInt(index++),							//	Price List Version ID
+										DisplayType.getDate(rs.getString(index++)),	//	Valid From
+										rs.getInt(index++),							//	Currency ID
+										rs.getString(index++),						//	Currency Value
+										rs.getInt(index++),							//	Order Line ID
+										0											//	Reference
 										)
 								);
 					}while(rs.moveToNext());
@@ -448,7 +454,7 @@ public class V_AddOrderLine extends Activity {
 			MOrderLine oLine = new MOrderLine(v_activity, p_C_OrderLine_ID, conn);
 			for(DisplayListProduct item : data) {
 				//	Add Items
-				p_C_OrderLine_ID = item.getC_OrderLine_ID();
+				p_C_OrderLine_ID = item.getRecord_ID();
 				oLine.clear(true);
 				oLine.loadData(p_C_OrderLine_ID);
 				oLine.setC_Order_ID(m_C_Order_ID);

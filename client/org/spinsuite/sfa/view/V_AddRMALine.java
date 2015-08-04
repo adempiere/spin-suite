@@ -16,19 +16,15 @@
 package org.spinsuite.sfa.view;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
-import org.spinsuite.model.I_C_OrderLine;
-import org.spinsuite.model.MOrderLine;
-import org.spinsuite.sfa.adapters.LP_SearchAdapter;
+import org.spinsuite.model.I_M_RMALine;
+import org.spinsuite.model.MRMALine;
+import org.spinsuite.sfa.adapters.LP_RMALineSearchAdapter;
 import org.spinsuite.sfa.util.DisplayListProduct;
-import org.spinsuite.util.DisplayType;
-import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
 import android.app.Activity;
@@ -64,25 +60,23 @@ public class V_AddRMALine extends Activity {
 	/**	Activity					*/
 	private Activity						v_activity = null;
 	/**	Adapter						*/
-	private LP_SearchAdapter 				m_SP_SearchAdapter = null;
+	private LP_RMALineSearchAdapter 		m_SP_SearchAdapter = null;
 	/**	View Search					*/
 	private View 							searchView = null;
 	/**	Technical Form				*/
-	private int								m_C_Order_ID = 0;
+	private int								m_M_RMA_ID = 0;
 	/**	Data Result					*/
 	private ArrayList<DisplayListProduct>	selectedData = null;
-	/**	Valid From					*/
-	private String 							m_ValidFrom = null;
 	
 	
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		super.setContentView(R.layout.v_ol_add_product);
+		super.setContentView(R.layout.v_rma_line_add_product);
 		//	Get Field
     	Bundle bundle = getIntent().getExtras();
 		if(bundle != null) {
-			m_C_Order_ID = bundle.getInt("C_Order_ID");
+			m_M_RMA_ID = bundle.getInt("M_RMA_ID");
 		}
 		//	Set Activity
 		v_activity = this;
@@ -200,7 +194,7 @@ public class V_AddRMALine extends Activity {
 	 */
 	private void saveResult() {
 		//	Set Result
-		LP_SearchAdapter adapter = (LP_SearchAdapter) lv_Products.getAdapter();
+		LP_RMALineSearchAdapter adapter = (LP_RMALineSearchAdapter) lv_Products.getAdapter();
 		selectedData = adapter.getSelectedData();
 		//	Load Task
 		new SaveDataTask().execute();
@@ -263,14 +257,10 @@ public class V_AddRMALine extends Activity {
 		 * @return boolean
 		 */
 	    protected boolean loadView() {
-			//	Set Subtitle
-	    	if(m_ValidFrom == null) {
-	    		m_ValidFrom = getString(R.string.M_Product_ID);
-	    	}
-	    	//	
-			getActionBar().setSubtitle(m_ValidFrom);
+			//	
+			getActionBar().setSubtitle(getString(R.string.M_Product_ID));
 	    	//	Set Adapter
-			m_SP_SearchAdapter = new LP_SearchAdapter(getApplicationContext(), data);
+			m_SP_SearchAdapter = new LP_RMALineSearchAdapter(getApplicationContext(), data);
 			lv_Products.setAdapter(m_SP_SearchAdapter);
 			//	
 			return true;
@@ -288,7 +278,8 @@ public class V_AddRMALine extends Activity {
 				DB.loadConnection(conn, DB.READ_ONLY);
 				Cursor rs = null;
 				//	Query
-				String sql = new String("SELECT pc.M_Product_Category_ID, "
+				String sql = new String("SELECT "
+						+ "pc.M_Product_Category_ID, "
 						+ "pc.Name, "
 						+ "p.M_Product_ID, "
 						+ "p.Value, "
@@ -298,77 +289,79 @@ public class V_AddRMALine extends Activity {
 						+ "uo.UOMSymbol, "
 						+ "tc.C_TaxCategory_ID, "
 						+ "tc.Name, "
-						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN tl.C_Tax_ID ELSE MAX(t.C_Tax_ID) END C_Tax_ID, "
-						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN tl.TaxIndicator ELSE MAX(t.TaxIndicator) END TaxIndicator, "
-						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN tl.Rate ELSE MAX(t.Rate) END Rate, "
-						+ "pp.PriceList, "
-						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN ol.QtyEntered ELSE NULL END QtyEntered, "
-						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN ol.QtyOrdered ELSE NULL END QtyOrdered, "
-						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN ol.PriceEntered ELSE pp.PriceList END PriceEntered, "
-						+ "CASE WHEN p.M_Product_ID = ol.M_Product_ID THEN ol.LineNetAmt ELSE NULL END LineNetAmt, "
-						+ "plv.M_PriceList_ID, "
-						+ "plv.M_PriceList_Version_ID, "
-						+ "MAX(plv.ValidFrom) ValidFrom, "
-						+ "pl.C_Currency_ID, "
+						+ "CASE WHEN p.M_Product_ID = iolrml.M_Product_ID THEN tl.C_Tax_ID ELSE MAX(t.C_Tax_ID) END C_Tax_ID, "
+						+ "CASE WHEN p.M_Product_ID = iolrml.M_Product_ID THEN tl.TaxIndicator ELSE MAX(t.TaxIndicator) END TaxIndicator, "
+						+ "CASE WHEN p.M_Product_ID = iolrml.M_Product_ID THEN tl.Rate ELSE MAX(t.Rate) END Rate, "
+						+ "iolo.PriceList, "
+						+ "iolo.QtyOrdered, "
+						+ "iolo.QtyDelivered, "
+						+ "(iol.MovementQty - COALESCE(SUM(rl.Qty), 0)) QtyAvailable, "
+						+ "CASE WHEN p.M_Product_ID = iolrml.M_Product_ID THEN rl.Qty ELSE NULL END QtyEntered, "
+						+ "iolo.PriceEntered, "
+						+ "o.C_Currency_ID, "
 						+ "cu.CurSymbol, "
-						+ "ol.C_OrderLine_ID "
-						+ "FROM C_Order o "
-						+ "INNER JOIN M_PriceList pl ON(pl.M_PriceList_ID = o.M_PriceList_ID) "
-						+ "INNER JOIN M_PriceList_Version plv ON(plv.M_PriceList_ID = pl.M_PriceList_ID) "
-						+ "INNER JOIN M_ProductPrice pp ON(pp.M_PriceList_Version_ID = plv.M_PriceList_Version_ID) "
-						+ "INNER JOIN M_Product p ON(p.M_Product_ID = pp.M_Product_ID) "
+						+ "rml.M_RMALine_ID, "
+						+ "iol.M_InOutLine_ID "
+						+ "FROM M_RMA rm "
+						+ "INNER JOIN M_InOut io ON(io.M_InOut_ID = rm.InOut_ID) "
+						+ "INNER JOIN C_Order o ON(o.C_Order_ID = io.C_Order_ID) "
+						+ "INNER JOIN M_InOutLine iol ON(iol.M_InOut_ID = io.M_InOut_ID) "
+						+ "INNER JOIN C_OrderLine iolo ON(iolo.C_OrderLine_ID = iol.C_OrderLine_ID) "
+						+ "INNER JOIN M_Product p ON(p.M_Product_ID = iol.M_Product_ID) "
 						+ "INNER JOIN M_Product_Category pc ON(pc.M_Product_Category_ID = p.M_Product_Category_ID) "
 						+ "INNER JOIN C_TaxCategory tc ON(tc.C_TaxCategory_ID = p.C_TaxCategory_ID) "
 						+ "INNER JOIN C_Tax t ON(t.C_TaxCategory_ID = tc.C_TaxCategory_ID) "
-						+ "INNER JOIN C_Currency cu ON(cu.C_Currency_ID = pl.C_Currency_ID)"
+						+ "INNER JOIN C_Currency cu ON(cu.C_Currency_ID = o.C_Currency_ID) "
 						+ "INNER JOIN C_UOM uo ON (p.C_UOM_ID = uo.C_UOM_ID) "
-						+ "LEFT JOIN C_OrderLine ol ON (ol.C_Order_ID = o.C_Order_ID AND ol.M_Product_ID = p.M_Product_ID) "
+						+ "LEFT JOIN M_RMALine rml ON (rml.M_RMA_ID = rm.M_RMA_ID AND rml.M_InOutLine_ID = iol.M_InOutLine_ID) "
+						+ "LEFT JOIN M_RMALine rl ON (rl.M_InOutLine_ID = iol.M_InOutLine_ID) "
+						+ "LEFT JOIN M_InOutLine iolrml ON(iolrml.M_InOutLine_ID = rml.M_InOutLine_ID) "
+						+ "LEFT JOIN C_OrderLine ol ON(ol.C_OrderLine_ID = iolrml.C_OrderLine_ID) "
 						+ "LEFT JOIN C_Tax tl ON(tl.C_Tax_ID = ol.C_Tax_ID) "
-						+ "WHERE o.C_Order_ID = ? "
-						+ "GROUP BY p.M_Product_ID, p.Value, p.Name "
-						+ "HAVING MAX(plv.ValidFrom) <= o.DateOrdered");
+						+ "WHERE rm.M_RMA_ID = ? "
+						+ "GROUP BY p.M_Product_ID, p.Value, p.Name");
 				//	Compile Query
 				conn.compileQuery(sql);
-				conn.addInt(m_C_Order_ID);
+				conn.addInt(m_M_RMA_ID);
 				//	Query
 				rs = conn.querySQL();
 				//	
 				if(rs.moveToFirst()) {
-					Date validFrom = DisplayType.getDate(rs.getString(20));
-					SimpleDateFormat format = Env.getDateFormat(v_activity);
-					m_ValidFrom = format.format(validFrom);
 					//	Loop
 					do{
 						int index = 0;
 						data.add(
 								new DisplayListProduct(
-										rs.getInt(index++),						//	Product Category ID
-										rs.getString(index++), 					//	Product Category Value
-										rs.getInt(index++),						//	Product ID
-										rs.getString(index++),					//	Product Value
-										rs.getString(index++),					//	Product Name
-										rs.getString(index++),					//	Product Description
-										rs.getInt(index++),						//	UOM ID
-										rs.getString(index++),					//	UOM Symbol
-										rs.getInt(index++),						//	Tax Category ID
-										rs.getString(index++),					//	Tax Category Value
-										rs.getInt(index++),						//	Tax ID
-										rs.getString(index++),					//	Tax Indicator
-										new BigDecimal(rs.getDouble(index++)),	//	Tax Rate
-										new BigDecimal(rs.getDouble(index++)),	//	Price List
-										new BigDecimal(rs.getDouble(index++)),	//	Quantity Entered
-										new BigDecimal(rs.getDouble(index++)),	//	Quantity Ordered
-										new BigDecimal(rs.getDouble(index++)),	//	Price Entered
-										new BigDecimal(rs.getDouble(index++)),	//	Line Net Amount
-										rs.getInt(index++),						//	Price List ID
-										rs.getInt(index++),						//	Price List Version ID
-										DisplayType.getDate(rs.getString(index++)),			//	Valid From
-										rs.getInt(index++),						//	Currency ID
-										rs.getString(index++),					//	Currency Value
-										rs.getInt(index++)						//	Order Line ID
+										rs.getInt(index++),							//	Product Category ID
+										rs.getString(index++), 						//	Product Category Value
+										rs.getInt(index++),							//	Product ID
+										rs.getString(index++),						//	Product Value
+										rs.getString(index++),						//	Product Name
+										rs.getString(index++),						//	Product Description
+										rs.getInt(index++),							//	UOM ID
+										rs.getString(index++),						//	UOM Symbol
+										rs.getInt(index++),							//	Tax Category ID
+										rs.getString(index++),						//	Tax Category Value
+										rs.getInt(index++),							//	Tax ID
+										rs.getString(index++),						//	Tax Indicator
+										new BigDecimal(rs.getDouble(index++)),		//	Tax Rate
+										new BigDecimal(rs.getDouble(index++)),		//	Price List
+										new BigDecimal(rs.getDouble(index++)),		//	Quantity Ordered
+										new BigDecimal(rs.getDouble(index++)),		//	Quantity Delivered
+										new BigDecimal(rs.getDouble(index++)),		//	Quantity Available
+										new BigDecimal(rs.getDouble(index++)),		//	Quantity Entered
+										new BigDecimal(rs.getDouble(index++)),		//	Price Entered
+										null,										//	Line Net Amount
+										0,											//	Price List ID
+										0,											//	Price List Version ID
+										null,										//	Valid From
+										rs.getInt(index++),							//	Currency ID
+										rs.getString(index++),						//	Currency Value
+										rs.getInt(index++),							//	Record ID
+										rs.getInt(index++)							//	Delivery Line
 										)
 								);
-					}while(rs.moveToNext());
+					} while(rs.moveToNext());
 				}
 				//	Close
 				DB.closeConnection(conn);
@@ -429,33 +422,33 @@ public class V_AddRMALine extends Activity {
 		private void saveData(ArrayList<DisplayListProduct> data) throws Exception {
 			if(data == null)
 				return;
-			int p_C_OrderLine_ID = 0;
+			int p_M_RMALine_ID = 0;
 			//	
 			StringBuffer sqlDelete = new StringBuffer("DELETE FROM ")
-							.append(I_C_OrderLine.Table_Name)
+							.append(I_M_RMALine.Table_Name)
 							.append(" WHERE ")
-							.append(I_C_OrderLine.COLUMNNAME_C_Order_ID)
+							.append(I_M_RMALine.COLUMNNAME_M_RMA_ID)
 							.append(" = ?");
 			//	SQL NOT IN
 			StringBuffer sqlIn = new StringBuffer(" AND ")
-				.append(I_C_OrderLine.COLUMNNAME_C_OrderLine_ID)
+				.append(I_M_RMALine.COLUMNNAME_M_RMALine_ID)
 				.append(" NOT IN(");
 			//	
 			boolean first = true;
 			//	Get Conn
 			DB conn = new DB(v_activity);
 			//	Cache Order Line
-			MOrderLine oLine = new MOrderLine(v_activity, p_C_OrderLine_ID, conn);
+			MRMALine rLine = new MRMALine(v_activity, p_M_RMALine_ID, conn);
 			for(DisplayListProduct item : data) {
 				//	Add Items
-				p_C_OrderLine_ID = item.getC_OrderLine_ID();
-				oLine.clear(true);
-				oLine.loadData(p_C_OrderLine_ID);
-				oLine.setC_Order_ID(m_C_Order_ID);
-				oLine.setM_Product_ID(item.getM_Product_ID());
-				oLine.setQtyEntered(item.getQtyEntered());
-				oLine.setQtyOrdered(item.getQtyEntered());
-				oLine.save();
+				p_M_RMALine_ID = item.getRecord_ID();
+				rLine.clear(true);
+				rLine.loadData(p_M_RMALine_ID);
+				rLine.setM_RMA_ID(m_M_RMA_ID);
+				rLine.setM_InOutLine_ID(item.getReference_ID());
+				rLine.setQty(item.getQtyEntered());
+				rLine.setProcessed(false);
+				rLine.save();
 				//	Add IDs
 				if(!first) {
 					sqlIn.append(", ");
@@ -463,7 +456,7 @@ public class V_AddRMALine extends Activity {
 					first = false;
 				}
 				//	
-				sqlIn.append(oLine.getC_OrderLine_ID());
+				sqlIn.append(rLine.getM_RMALine_ID());
 			}
 			//	Add finish
 			sqlIn.append(")");
@@ -471,10 +464,10 @@ public class V_AddRMALine extends Activity {
 			if(!first)
 				sqlDelete.append(sqlIn);
 			//	Just delete by line
-			DB.executeUpdate(v_activity, sqlDelete.toString(), m_C_Order_ID, false, conn);
+			DB.executeUpdate(v_activity, sqlDelete.toString(), m_M_RMA_ID, false, conn);
 			//	Log
 			LogM.log(v_activity, T_OrderLine.class, Level.FINE, 
-					"SQL Delete Order Line =" + sqlDelete.toString());
+					"SQL Delete RMA Line =" + sqlDelete.toString());
 		}
 	}
 }

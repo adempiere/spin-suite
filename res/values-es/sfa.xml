@@ -29,5 +29,9 @@
     <string name="Discount">Descuento</string>
     <string name="Percentage">%</string>
     <string name="Amt">Monto</string>
-    <string name="QtyReturn">Cantidad a Devolver</string>
+    <string name="QtyReturn">A Devolver</string>
+    <string name="QtyOrdered">Ordenada</string>
+    <string name="QtyDelivered">Entregada</string>
+    <string name="QtyAvailable">Disponible</string>
+    <string name="QtyReturned">Devuelto</string>
 </resources>

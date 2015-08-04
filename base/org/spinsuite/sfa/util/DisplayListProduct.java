@@ -57,10 +57,14 @@ public class DisplayListProduct implements Parcelable {
 	private BigDecimal 	m_TaxRate;
 	/**	Price List			*/
 	private BigDecimal 	m_PriceList;
-	/**	Qty Entered			*/
-	private BigDecimal 	m_QtyEntered;
 	/**	Qty Ordered			*/
 	private BigDecimal 	m_QtyOrdered;
+	/**	Qty Delivered		*/
+	private BigDecimal 	m_QtyDelivered;
+	/**	Qty Available		*/
+	private BigDecimal 	m_QtyAvailable;
+	/**	Qty Entered			*/
+	private BigDecimal 	m_QtyEntered;
 	/**	Price Entered		*/
 	private BigDecimal 	m_PriceEntered;
 	/**	Line Net Amount		*/
@@ -75,8 +79,10 @@ public class DisplayListProduct implements Parcelable {
 	private int 		m_C_Currency_ID;
 	/**	Currency Value		*/
 	private String 		m_CurSymbol;
-	/**	Order Identifier	*/
-	private int 		m_C_OrderLine_ID;
+	/**	Record Identifier	*/
+	private int 		m_Record_ID;
+	/**	Reference			*/
+	private int 		m_Reference_ID;
 	
 	
 	/**
@@ -119,8 +125,10 @@ public class DisplayListProduct implements Parcelable {
 		paramParcel.writeString(m_TaxIndicator);
 		paramParcel.writeDouble(DisplayType.getNumberAsDouble(m_TaxRate));
 		paramParcel.writeDouble(DisplayType.getNumberAsDouble(m_PriceList));
-		paramParcel.writeDouble(DisplayType.getNumberAsDouble(m_QtyEntered));
 		paramParcel.writeDouble(DisplayType.getNumberAsDouble(m_QtyOrdered));
+		paramParcel.writeDouble(DisplayType.getNumberAsDouble(m_QtyDelivered));
+		paramParcel.writeDouble(DisplayType.getNumberAsDouble(m_QtyAvailable));
+		paramParcel.writeDouble(DisplayType.getNumberAsDouble(m_QtyEntered));
 		paramParcel.writeDouble(DisplayType.getNumberAsDouble(m_PriceEntered));
 		paramParcel.writeDouble(DisplayType.getNumberAsDouble(m_LineNetAmt));
 		paramParcel.writeInt(m_M_PriceList_ID);
@@ -128,7 +136,8 @@ public class DisplayListProduct implements Parcelable {
 		paramParcel.writeLong(DisplayType.getDataAsLong(m_ValidFrom));
 		paramParcel.writeInt(m_C_Currency_ID);
 		paramParcel.writeString(m_CurSymbol);
-		paramParcel.writeInt(m_C_OrderLine_ID);
+		paramParcel.writeInt(m_Record_ID);
+		paramParcel.writeInt(m_Reference_ID);
 	}
 	
 	/**
@@ -149,8 +158,10 @@ public class DisplayListProduct implements Parcelable {
 	 * @param p_TaxIndicator
 	 * @param p_TaxRate
 	 * @param p_PriceList
-	 * @param p_QtyEntered
 	 * @param p_QtyOrdered
+	 * @param p_QtyDelivered
+	 * @param p_QtyAvailable
+	 * @param p_QtyEntered
 	 * @param p_PriceEntered
 	 * @param p_LineNetAmt
 	 * @param p_M_PriceList_ID
@@ -158,16 +169,18 @@ public class DisplayListProduct implements Parcelable {
 	 * @param p_ValidFrom
 	 * @param p_C_Currency_ID
 	 * @param p_CurrencyName
-	 * @param p_C_OrderLine_ID
+	 * @param p_Record_ID
+	 * @param p_Reference_ID
 	 */
 	public DisplayListProduct(int p_M_Product_Category_ID, String p_ProductCategory, 
 			int p_M_Product_ID, String p_Value, String p_Name, 
 			String p_Description, int p_C_UOM_ID, String p_UOMSymbol, int p_C_TaxCategory_ID, String p_TaxName, 
 			int p_C_Tax_ID, String p_TaxIndicator, BigDecimal p_TaxRate, 
-			BigDecimal p_PriceList, BigDecimal p_QtyEntered, BigDecimal p_QtyOrdered,  
+			BigDecimal p_PriceList, BigDecimal p_QtyOrdered, 
+			BigDecimal p_QtyDelivered, BigDecimal p_QtyAvailable, BigDecimal p_QtyEntered,   
 			BigDecimal p_PriceEntered, BigDecimal p_LineNetAmt,
 			int p_M_PriceList_ID, int p_M_PriceList_Version_ID, 
-			Date p_ValidFrom, int p_C_Currency_ID, String p_CurrencyName, int p_C_OrderLine_ID){
+			Date p_ValidFrom, int p_C_Currency_ID, String p_CurrencyName, int p_Record_ID, int p_Reference_ID) {
 		m_M_Product_Category_ID = p_M_Product_Category_ID;
 		m_ProductCategory = p_ProductCategory;
 		m_M_Product_ID = p_M_Product_ID;
@@ -182,8 +195,10 @@ public class DisplayListProduct implements Parcelable {
 		m_TaxIndicator = p_TaxIndicator;
 		m_TaxRate = p_TaxRate;
 		m_PriceList = p_PriceList;
-		m_QtyEntered = p_QtyEntered;
 		m_QtyOrdered = p_QtyOrdered;
+		m_QtyDelivered = p_QtyDelivered;
+		m_QtyAvailable = p_QtyAvailable;
+		m_QtyEntered = p_QtyEntered;
 		m_PriceEntered = p_PriceEntered;
 		m_LineNetAmt = p_LineNetAmt;
 		m_M_PriceList_ID = p_M_PriceList_ID;
@@ -191,7 +206,8 @@ public class DisplayListProduct implements Parcelable {
 		m_ValidFrom = p_ValidFrom;
 		m_C_Currency_ID = p_C_Currency_ID;
 		m_CurSymbol = p_CurrencyName;
-		m_C_OrderLine_ID = p_C_OrderLine_ID;
+		m_Record_ID = p_Record_ID;
+		m_Reference_ID = p_Reference_ID;
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -225,8 +241,10 @@ public class DisplayListProduct implements Parcelable {
 		m_TaxIndicator = parcel.readString();
 		m_TaxRate = new BigDecimal(parcel.readDouble());
 		m_PriceList = new BigDecimal(parcel.readDouble());
-		m_QtyEntered = new BigDecimal(parcel.readDouble());
 		m_QtyOrdered = new BigDecimal(parcel.readDouble());
+		m_QtyDelivered = new BigDecimal(parcel.readDouble());
+		m_QtyAvailable = new BigDecimal(parcel.readDouble());
+		m_QtyEntered = new BigDecimal(parcel.readDouble());
 		m_PriceEntered = new BigDecimal(parcel.readDouble());
 		m_LineNetAmt = new BigDecimal(parcel.readDouble());
 		m_M_PriceList_ID = parcel.readInt();
@@ -240,7 +258,8 @@ public class DisplayListProduct implements Parcelable {
 		}
 		m_C_Currency_ID = parcel.readInt();
 		m_CurSymbol = parcel.readString();
-		m_C_OrderLine_ID = parcel.readInt();
+		m_Record_ID = parcel.readInt();
+		m_Reference_ID = parcel.readInt();
 	}
 	
 	/**
@@ -407,8 +426,8 @@ public class DisplayListProduct implements Parcelable {
 	/**
 	 * @return the m_C_OrderLine_ID
 	 */
-	public int getC_OrderLine_ID() {
-		return m_C_OrderLine_ID;
+	public int getRecord_ID() {
+		return m_Record_ID;
 	}
 	
 	/**
@@ -576,7 +595,43 @@ public class DisplayListProduct implements Parcelable {
 	 * @param m_C_OrderLine_ID the m_C_OrderLine_ID to set
 	 */
 	public void setC_OrderLine_ID(int m_C_OrderLine_ID) {
-		this.m_C_OrderLine_ID = m_C_OrderLine_ID;
+		this.m_Record_ID = m_C_OrderLine_ID;
+	}
+	/**
+	 * @return the m_QtyDelivered
+	 */
+	public BigDecimal getQtyDelivered() {
+		return m_QtyDelivered;
+	}
+	/**
+	 * @return the m_QtyAvailable
+	 */
+	public BigDecimal getQtyAvailable() {
+		return m_QtyAvailable;
+	}
+	/**
+	 * @param m_QtyDelivered the m_QtyDelivered to set
+	 */
+	public void setQtyDelivered(BigDecimal m_QtyDelivered) {
+		this.m_QtyDelivered = m_QtyDelivered;
+	}
+	/**
+	 * @param m_QtyAvailable the m_QtyAvailable to set
+	 */
+	public void setQtyAvailable(BigDecimal m_QtyAvailable) {
+		this.m_QtyAvailable = m_QtyAvailable;
+	}
+	/**
+	 * @return the m_Reference_ID
+	 */
+	public int getReference_ID() {
+		return m_Reference_ID;
+	}
+	/**
+	 * @param m_Reference_ID the m_Reference_ID to set
+	 */
+	public void setReference_ID(int m_Reference_ID) {
+		this.m_Reference_ID = m_Reference_ID;
 	}
 	
 	@Override
@@ -591,12 +646,15 @@ public class DisplayListProduct implements Parcelable {
 				+ m_TaxName + ", m_C_Tax_ID=" + m_C_Tax_ID
 				+ ", m_TaxIndicator=" + m_TaxIndicator + ", m_TaxRate="
 				+ m_TaxRate + ", m_PriceList=" + m_PriceList
-				+ ", m_QtyEntered=" + m_QtyEntered + ", m_QtyOrdered="
-				+ m_QtyOrdered + ", m_PriceEntered=" + m_PriceEntered
-				+ ", m_LineNetAmt=" + m_LineNetAmt + ", m_M_PriceList_ID="
-				+ m_M_PriceList_ID + ", m_M_PriceList_Version_ID="
-				+ m_M_PriceList_Version_ID + ", m_ValidFrom=" + m_ValidFrom
-				+ ", m_C_Currency_ID=" + m_C_Currency_ID + ", m_CurSymbol="
-				+ m_CurSymbol + ", m_C_OrderLine_ID=" + m_C_OrderLine_ID + "]";
+				+ ", m_QtyOrdered=" + m_QtyOrdered + ", m_QtyDelivered="
+				+ m_QtyDelivered + ", m_QtyAvailable=" + m_QtyAvailable
+				+ ", m_QtyEntered=" + m_QtyEntered + ", m_PriceEntered="
+				+ m_PriceEntered + ", m_LineNetAmt=" + m_LineNetAmt
+				+ ", m_M_PriceList_ID=" + m_M_PriceList_ID
+				+ ", m_M_PriceList_Version_ID=" + m_M_PriceList_Version_ID
+				+ ", m_ValidFrom=" + m_ValidFrom + ", m_C_Currency_ID="
+				+ m_C_Currency_ID + ", m_CurSymbol=" + m_CurSymbol
+				+ ", m_Record_ID=" + m_Record_ID + ", m_Reference_ID="
+				+ m_Reference_ID + "]";
 	}
 }

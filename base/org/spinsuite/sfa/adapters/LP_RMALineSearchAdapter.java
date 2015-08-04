@@ -52,7 +52,7 @@ import android.widget.TextView.OnEditorActionListener;
  * @see https://adempiere.atlassian.net/browse/SPIN-21 
  *
  */
-public class LP_SearchAdapter extends BaseAdapter implements Filterable {
+public class LP_RMALineSearchAdapter extends BaseAdapter implements Filterable {
 
 	/**
 	 * 
@@ -61,7 +61,7 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	 * @param ctx
 	 * @param data
 	 */
-	public LP_SearchAdapter(Context ctx, ArrayList<DisplayListProduct> data) {
+	public LP_RMALineSearchAdapter(Context ctx, ArrayList<DisplayListProduct> data) {
 		this.data = data;
 		inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inputMethod = ((InputMethodManager)ctx.getSystemService(Context.INPUT_METHOD_SERVICE));
@@ -76,7 +76,7 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @param ctx
 	 */
-	public LP_SearchAdapter(Context ctx) {
+	public LP_RMALineSearchAdapter(Context ctx) {
 		data = new ArrayList<DisplayListProduct>();
 		inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inputMethod = ((InputMethodManager)ctx.getSystemService(Context.INPUT_METHOD_SERVICE));
@@ -118,12 +118,12 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 			
 		//	Inflate View
 		if(view == null)
-			view = inflater.inflate(R.layout.i_ol_add_product, null);
+			view = inflater.inflate(R.layout.i_rma_line_add_product, null);
 
 		//	Set Quantity to Order
 		EditText et_QtyOrdered = (EditText)view.findViewById(R.id.et_Qty);
 //		LinearLayout ll_ol_product_description = (LinearLayout) view.findViewById(R.id.ll_ol_product_description);
-		LinearLayout ll_ol_qty_description = (LinearLayout) view.findViewById(R.id.ll_ol_qty_description);
+		LinearLayout ll_ol_qty_description = (LinearLayout) view.findViewById(R.id.ll_rma_line_qty_description);
 		
 		//	Instance Holder
 		holderQtyEntered.setText(m_QtyFormat.format(recordItem.getQtyEntered()));
@@ -158,6 +158,18 @@ public class LP_SearchAdapter extends BaseAdapter implements Filterable {
 		TextView tv_UOMSymbol = (TextView)view.findViewById(R.id.tv_UOMSymbol);
 		tv_UOMSymbol.setText(recordItem.getUOMSymbol());
 
+		//	Set Quantity Ordered
+		TextView tv_QtyOrdered = (TextView)view.findViewById(R.id.tv_QtyOrdered);
+		tv_QtyOrdered.setText(m_QtyFormat.format(recordItem.getQtyOrdered()));
+
+		//	Set Quantity Ordered
+		TextView tv_QtyDelivered = (TextView)view.findViewById(R.id.tv_QtyDelivered);
+		tv_QtyDelivered.setText(m_QtyFormat.format(recordItem.getQtyDelivered()));
+		
+		//	Set Quantity Ordered
+		TextView tv_QtyAvailable = (TextView)view.findViewById(R.id.tv_QtyAvailable);
+		tv_QtyAvailable.setText(m_QtyFormat.format(recordItem.getQtyAvailable()));
+		
 		//	Set Price List
 		TextView tv_PriceList = (TextView)view.findViewById(R.id.tv_PriceList);
 		tv_PriceList.setText(m_AmtFormat.format(recordItem.getPriceList()));

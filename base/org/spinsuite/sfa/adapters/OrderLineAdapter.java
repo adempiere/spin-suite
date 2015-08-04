@@ -53,9 +53,16 @@ public class OrderLineAdapter extends ArrayAdapter<DisplayOrderLine> {
 	/**	Percentage Label			*/
 	private String							m_PercentageLabel = null;
 	
+	/**
+	 * 
+	 * *** Constructor ***
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param data
+	 */
 	public OrderLineAdapter(Context ctx, ArrayList<DisplayOrderLine> data) {
 		super(ctx, R.layout.i_order_line, data);
-		setDropDownViewResource(R.layout.i_ol_add_product);
+		setDropDownViewResource(R.layout.i_order_line);
 		this.ctx = ctx;
 		this.data = data;
 		m_QtyNumberFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY, "###,###,###,##0.00");
