@@ -25,6 +25,7 @@ import org.spinsuite.model.I_M_RMALine;
 import org.spinsuite.model.MRMALine;
 import org.spinsuite.sfa.adapters.LP_RMALineSearchAdapter;
 import org.spinsuite.sfa.util.DisplayListProduct;
+import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
 import android.app.Activity;
@@ -446,6 +447,12 @@ public class V_AddRMALine extends Activity {
 				rLine.loadData(p_M_RMALine_ID);
 				rLine.setM_RMA_ID(m_M_RMA_ID);
 				rLine.setM_InOutLine_ID(item.getReference_ID());
+				//	Valid Zero
+				BigDecimal m_ValidQty = item.getValidReturnQty();
+				if(m_ValidQty.compareTo(Env.ZERO) <= 0) {
+					continue;
+				}
+				//	
 				rLine.setQty(item.getQtyEntered());
 				rLine.setProcessed(false);
 				rLine.save();

@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import org.spinsuite.util.DisplayType;
+import org.spinsuite.util.Env;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -365,6 +366,22 @@ public class DisplayListProduct implements Parcelable {
 	 */
 	public BigDecimal getQtyEntered() {
 		return DisplayType.getValidNumber(m_QtyEntered);
+	}
+	
+	/**
+	 * Get Valid Quantity for Returns
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return BigDecimal
+	 */
+	public BigDecimal getValidReturnQty() {
+		BigDecimal m_ValidQty = DisplayType.getValidNumber(m_QtyAvailable)
+				.subtract(DisplayType.getValidNumber(m_QtyEntered));
+		//	Valid
+		if(m_ValidQty.compareTo(Env.ZERO) <= 0)
+			m_ValidQty = DisplayType.getValidNumber(m_QtyAvailable);
+		//	
+		return m_ValidQty;
 	}
 	
 	/**
