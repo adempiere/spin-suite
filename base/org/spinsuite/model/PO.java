@@ -28,6 +28,7 @@ import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
+import org.spinsuite.util.RSACrypt;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -1052,6 +1053,12 @@ public abstract class PO {
 							&& value == null)
 						throw new Exception(Msg.getMsg(getCtx(), "@MustFillField@") + 
 								" \"@" + column.ColumnName + "@\"");
+					//	For encrypted
+					if(column.IsEncrypted
+							&& DisplayType.isText(column.DisplayType)) {
+						value = RSACrypt.getInstance(getCtx()).encrypt((String)value);
+					}
+					//	Add to list
 					listValues.add(value);
 					LogM.log(getCtx(), getClass(), Level.FINE, column.ColumnName + "=" + value + " Mandatory=" + column.IsMandatory);
 				}
@@ -1142,6 +1149,12 @@ public abstract class PO {
 							" \"@" + column.ColumnName + "@\"");
 				if(!column.ColumnName.equals("Created")
 						&& !column.ColumnName.equals("CreatedBy")) {
+					//	For encrypted
+					if(column.IsEncrypted
+							&& DisplayType.isText(column.DisplayType)) {
+						value = RSACrypt.getInstance(getCtx()).encrypt((String)value);
+					}
+					//	Add to list
 					listValues.add(value);
 					LogM.log(getCtx(), getClass(), Level.FINE, 
 							column.ColumnName + "=" + value + " Mandatory=" + column.IsMandatory);
@@ -1150,7 +1163,7 @@ public abstract class PO {
 				//Carlos Parada Add Support to Log for Mobile
 				if (session != null
 						&& m_IDs.length == 1
-						&& column.IsAllowLogging		//	logging allowed
+						&& column.IsAllowLogging	//	logging allowed
 						&& !column.IsEncrypted		//	not encrypted
 						&& !"Password".equals(column.ColumnName)
 						&& !isSynchronization()
