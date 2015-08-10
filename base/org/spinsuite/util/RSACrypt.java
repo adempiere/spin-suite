@@ -87,6 +87,11 @@ public class RSACrypt implements SecureInterface {
 	 * @return String
 	 */
 	private String decodeText(String p_Text) {
+		if (p_Text == null || p_Text.length() == 0)
+			return p_Text;
+		boolean isEncrypted = p_Text.startsWith(ENCRYPTEDVALUE_START) && p_Text.endsWith(ENCRYPTEDVALUE_END);
+		if (isEncrypted)
+			p_Text = p_Text.substring(ENCRYPTEDVALUE_START.length(), p_Text.length()-ENCRYPTEDVALUE_END.length());
 //		byte[] decodedBytes = null;
 //		try {
 //			m_Cipher.init(Cipher.DECRYPT_MODE, m_PublicKey);
@@ -97,7 +102,7 @@ public class RSACrypt implements SecureInterface {
 //			LogM.log(Env.getCtx(), getClass(), Level.SEVERE, "Error while Decode text");
 //		}
 		//	Return
-		return null;
+		return p_Text;
 	}
 	
 	/**
@@ -109,16 +114,25 @@ public class RSACrypt implements SecureInterface {
 	 */
 	private String encodeText(String p_Text) {
 		byte[] encodedBytes = null;
+		String value = p_Text;
+		if(value == null) {
+			value = "";
+		}
+		//	Valid Encrypted
+		boolean isEncrypted = value.startsWith(ENCRYPTEDVALUE_START) && value.endsWith(ENCRYPTEDVALUE_END);
+		if(isEncrypted)
+			return value;
+		//	
 		try {
 			m_Cipher.init(Cipher.ENCRYPT_MODE, m_PublicKey);
 			encodedBytes = m_Cipher.doFinal(p_Text.getBytes());
 			//	Return
-			return Base64.encodeToString(encodedBytes, Base64.DEFAULT);
+			return ENCRYPTEDVALUE_START + Base64.encodeToString(encodedBytes, Base64.DEFAULT) + ENCRYPTEDVALUE_END;
 		} catch (Exception e) {
 			LogM.log(Env.getCtx(), getClass(), Level.SEVERE, "Error while Encode text");
 		}
 		//	Return
-		return null;
+		return CLEARVALUE_START + value + CLEARVALUE_END;
 	}
 	
 	/**
@@ -163,6 +177,9 @@ public class RSACrypt implements SecureInterface {
 
 	@Override
 	public String decrypt(String value) {
+		if (value == null)
+			return null;
+		//	
 		return decodeText(value);
 	}
 
