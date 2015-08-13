@@ -28,6 +28,7 @@ import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
+import org.spinsuite.util.RSACrypt;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -1035,30 +1036,40 @@ public abstract class PO {
 			LogM.log(getCtx(), PO.class, Level.FINE, "No Session found");
 		//	
 		try{
-			for (int i = 0; i < m_TableInfo.getColumnCount(); i++) {
-				POInfoColumn column = m_TableInfo.getPOInfoColumn(i);
-				if(!column.isColumnSQL()) {
-					if(i > 0) {
-						columns.append(",");
-						sym.append(",");
-					}
-					columns.append(column.ColumnName);
-					sym.append("?");
-					//	
-					value = parseValue(column, i, true, true);
-					
-					if(column.IsMandatory
-							&& !isSkipColumn(column.ColumnName)
-							&& value == null)
-						throw new Exception(Msg.getMsg(getCtx(), "@MustFillField@") + 
-								" \"@" + column.ColumnName + "@\"");
-					listValues.add(value);
-					LogM.log(getCtx(), getClass(), Level.FINE, column.ColumnName + "=" + value + " Mandatory=" + column.IsMandatory);
+			boolean first = true;
+			for (int index = 0; index < m_TableInfo.getColumnCount(); index++) {
+				POInfoColumn column = m_TableInfo.getPOInfoColumn(index);
+				if(column.isColumnSQL())
+					continue;
+				//	Do it
+				if(!first) {
+					columns.append(",");
+					sym.append(",");
+				} else {
+					first = false;
 				}
+				columns.append(column.ColumnName);
+				sym.append("?");
+				//	
+				value = parseValue(column, index, true, true);
+				
+				if(column.IsMandatory
+						&& !isSkipColumn(column.ColumnName)
+						&& value == null)
+					throw new Exception(Msg.getMsg(getCtx(), "@MustFillField@") + 
+							" \"@" + column.ColumnName + "@\"");
+				//	For encrypted
+				if(column.IsEncrypted
+						&& DisplayType.isText(column.DisplayType)) {
+					value = RSACrypt.getInstance(getCtx()).encrypt((String)value);
+				}
+				//	Add to list
+				listValues.add(value);
+				LogM.log(getCtx(), getClass(), Level.FINE, column.ColumnName + "=" + value + " Mandatory=" + column.IsMandatory);
 				//Carlos Parada Add Support to Log for Mobile
 				if (   session != null
 						&& m_IDs.length == 1
-						&& m_TableInfo.isAllowLogging(i)		//	logging allowed
+						&& m_TableInfo.isAllowLogging(index)		//	logging allowed
 						&& !column.IsEncrypted		//	not encrypted
 						&& !"Password".equals(column.ColumnName)
 						&& MSession.logMigration(this, m_TableInfo)
@@ -1119,22 +1130,27 @@ public abstract class PO {
 		//End Carlos Parada
 		//	
 		try{
-			for (int i = 0; i < m_TableInfo.getColumnCount(); i++) {
-				POInfoColumn column = m_TableInfo.getPOInfoColumn(i);
+			boolean first = true;
+			for (int index = 0; index < m_TableInfo.getColumnCount(); index++) {
+				POInfoColumn column = m_TableInfo.getPOInfoColumn(index);
 				//	Valid SQL or Default Columns
 				if(column.isColumnSQL()
 						|| column.ColumnName.equals("Created")
-						|| column.ColumnName.equals("CreatedBy"))
+						|| column.ColumnName.equals("CreatedBy")
+						|| !is_ValueChanged(index))
 					continue;
 				//	Do it
-				if(i > 0)
+				if(!first) {
 					columns.append(",");
+				} else {
+					first = false;
+				}
 				//	
 				columns.append(column.ColumnName)
 						.append("=")
 						.append("?");
 				//	
-				Object value = parseValue(column, i, false, true);
+				Object value = parseValue(column, index, false, true);
 				if(column.IsMandatory 
 						&& !isSkipColumn(column.ColumnName)
 						&& value == null)
@@ -1142,6 +1158,12 @@ public abstract class PO {
 							" \"@" + column.ColumnName + "@\"");
 				if(!column.ColumnName.equals("Created")
 						&& !column.ColumnName.equals("CreatedBy")) {
+					//	For encrypted
+					if(column.IsEncrypted
+							&& DisplayType.isText(column.DisplayType)) {
+						value = RSACrypt.getInstance(getCtx()).encrypt((String)value);
+					}
+					//	Add to list
 					listValues.add(value);
 					LogM.log(getCtx(), getClass(), Level.FINE, 
 							column.ColumnName + "=" + value + " Mandatory=" + column.IsMandatory);
@@ -1150,13 +1172,13 @@ public abstract class PO {
 				//Carlos Parada Add Support to Log for Mobile
 				if (session != null
 						&& m_IDs.length == 1
-						&& column.IsAllowLogging		//	logging allowed
+						&& column.IsAllowLogging	//	logging allowed
 						&& !column.IsEncrypted		//	not encrypted
 						&& !"Password".equals(column.ColumnName)
 						&& !isSynchronization()
 						)
 					{
-						Object oldV = m_OldValues[i];
+						Object oldV = m_OldValues[index];
 						Object newV = value;
 						if (oldV != null && oldV == NULL )
 							oldV = null;

@@ -748,16 +748,21 @@ public final class DisplayType
 	
 	
 	/**
-	 * Get input Type
+	 * Get input Type with is Encrypted
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 01/05/2012, 04:05:28
 	 * @param displayType
+	 * @param isEncrypted
 	 * @return
 	 * @return int
 	 */
-	public static int getInputType(int displayType) {
+	public static int getInputType(int displayType, boolean isEncrypted) {
 		int inputType = 0;
 		if(isText(displayType)) {
-			if(displayType == TEXT
+			//	Encrypted
+			if(isEncrypted) {
+				inputType = InputType.TYPE_CLASS_TEXT |
+					    InputType.TYPE_TEXT_VARIATION_PASSWORD;
+			} else if(displayType == TEXT
 					|| displayType == TEXT_LONG
 					|| displayType == MEMO)
 				inputType = InputType.TYPE_TEXT_FLAG_MULTI_LINE 
@@ -779,6 +784,17 @@ public final class DisplayType
     		inputType = InputType.TYPE_CLASS_DATETIME;
     	//	Default
 		return inputType;
+	}
+	
+	/**
+	 * Get Input Type
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param displayType
+	 * @return
+	 * @return int
+	 */
+	public static int getInputType(int displayType) {
+		return getInputType(displayType, false);
 	}
 	
 	/**
@@ -889,5 +905,18 @@ public final class DisplayType
 			LogM.log(Env.getCtx(), DisplayType.class, Level.SEVERE, "Error Parsing", e);
 		}
 		return null;
+	}
+	
+	/**
+	 * Return boolean Value for Yes/No Field
+	 * @author <a href="mailto:carlosaparadam@gmail.com">Carlos Parada</a> 27/2/2015, 0:02:31
+	 * @param value
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean booleanValue(String value){
+		if (value == null)
+			return false;
+		return value.equals("Y");
 	}
 }	//	DisplayType

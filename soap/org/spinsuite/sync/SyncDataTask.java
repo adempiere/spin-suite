@@ -142,29 +142,45 @@ public class SyncDataTask implements BackGroundProcess  {
 	
 	@Override
 	public void publishBeforeInit() {
+		int icon = android.R.drawable.stat_sys_download;
+		if(m_MethodValue != null 
+				&& !m_MethodValue.equals(SyncValues.WSMQueryData)) {
+			icon = android.R.drawable.stat_sys_upload;
+		}
+		//	
 		m_Builder.setContentTitle(m_PublicTittle)
 		.setContentText(m_PublicMsg)
 		.setProgress(m_MaxPB, m_Progress, m_Progress == -1)
-		.setSmallIcon(android.R.drawable.stat_sys_download);
+		.setSmallIcon(icon);
 		m_NFManager.notify(0, m_Builder.build());
 	}
 
 	@Override
 	public void publishOnRunning() {
+		int icon = android.R.drawable.stat_sys_download;
+		if(m_MethodValue != null 
+				&& !m_MethodValue.equals(SyncValues.WSMQueryData)) {
+			icon = android.R.drawable.stat_sys_upload;
+		}
 		m_Builder.setContentTitle(m_PublicTittle)
 			.setContentText(m_PublicMsg)
 			.setProgress(m_MaxPB, m_Progress, m_Progress == -1)
-			.setSmallIcon(android.R.drawable.stat_sys_download);
+			.setSmallIcon(icon);
 			
 		m_NFManager.notify(0, m_Builder.build());
 	}
 
 	@Override
 	public void publishAfterEnd() {
+		int icon = android.R.drawable.stat_sys_download_done;
+		if(m_MethodValue != null 
+				&& !m_MethodValue.equals(SyncValues.WSMQueryData)) {
+			icon = android.R.drawable.stat_sys_upload_done;
+		}
 		m_Builder.setContentTitle(m_PublicTittle)
 		.setContentText(m_PublicMsg)
 		.setProgress(0, 0, false)
-		.setSmallIcon(android.R.drawable.stat_sys_download_done);
+		.setSmallIcon(icon);
 		m_NFManager.notify(0, m_Builder.build());
 	}
 
@@ -276,7 +292,6 @@ public class SyncDataTask implements BackGroundProcess  {
 													+ "SPS_SyncTable "
 													+ "WHERE SPS_SyncTable.SPS_Table_ID = ? AND "
 													+ "SPS_SyncTable.Record_ID = "+table.getTableName()+"."+table.getTableName()+"_ID AND "
-//													+ "SPS_SyncTable.EventChangeLog IN (?,?) AND "
 													+ "SPS_SyncTable.EventChangeLog = ? AND "
 													+ "SPS_SyncTable.IsSynchronized='N' )";
 						parameters = new Object[]{table.getSPS_Table_ID(),X_SPS_SyncTable.EVENTCHANGELOG_Insert};
@@ -313,10 +328,8 @@ public class SyncDataTask implements BackGroundProcess  {
 												+ "WHERE SPS_SyncTable.SPS_Table_ID = ? AND "
 												+ "SPS_SyncTable.Record_ID = "+table.getTableName()+"."+table.getTableName()+"_ID AND "
 												+ "SPS_SyncTable.EventChangeLog IN (?,?) AND "
-//												+ "SPS_SyncTable.EventChangeLog = ? AND "
 												+ "SPS_SyncTable.IsSynchronized='N' )";
 					parameters = new Object[]{table.getSPS_Table_ID(),X_SPS_SyncTable.EVENTCHANGELOG_Insert, X_SPS_SyncTable.EVENTCHANGELOG_Update};
-//					parameters = new Object[]{table.getSPS_Table_ID(),X_SPS_SyncTable.EVENTCHANGELOG_Update};
 				}else{
 					parameters = new Object[]{};
 				}
@@ -536,12 +549,13 @@ public class SyncDataTask implements BackGroundProcess  {
 			else
 				keyColumns = new String[]{};
 			
+			//	Sort Array
 			Arrays.sort(keyColumns);
 			
 			for (int i = 0; i < keyColumns.length; i++) {
 				whereClause += (whereClause.equals("") ? " ": " AND ") + keyColumns[i] + "=?";
 			}
-				
+			//	Get PO
 			for (int i = 0; i < countDataSet; i++) {
 				m_Progress = i+1;
 				//Soap Data Row
@@ -640,28 +654,27 @@ public class SyncDataTask implements BackGroundProcess  {
 			
 		}else if (m_MethodValue.equals(SyncValues.WSMUpdateData)){
 
-		if (soapResponse.hasAttribute("RecordID")){
-			String whereClause = "SPS_Table_ID = " + sm.getSPS_Table_ID() + " AND "
-					+ "Record_ID = " + p_ID + " AND "
-					+ "EventChangeLog ='" + X_SPS_SyncTable.EVENTCHANGELOG_Update+ "' AND IsSynchronized='N'";
-
-			try {
-				MSPSSyncTable synctable = MSPSSyncTable.getSyncTable(sm.getCtx(), conn, whereClause);
-				if (synctable.getSPS_SyncTable_ID()>0){
-					synctable.setSyncRecord_ID(soapResponse.getAttributeAsString("RecordID"));
-					synctable.setIsSynchronized(true);
-					synctable.save();
-					sm.setLastSynchronized(new Timestamp(System.currentTimeMillis()));
-					sm.save();
+			if (soapResponse.hasAttribute("RecordID")){
+				String whereClause = "SPS_Table_ID = " + sm.getSPS_Table_ID() + " AND "
+						+ "Record_ID = " + p_ID + " AND "
+						+ "EventChangeLog ='" + X_SPS_SyncTable.EVENTCHANGELOG_Update+ "' AND IsSynchronized='N'";
+	
+				try {
+					MSPSSyncTable synctable = MSPSSyncTable.getSyncTable(sm.getCtx(), conn, whereClause);
+					if (synctable.getSPS_SyncTable_ID()>0){
+						synctable.setSyncRecord_ID(soapResponse.getAttributeAsString("RecordID"));
+						synctable.setIsSynchronized(true);
+						synctable.save();
+						sm.setLastSynchronized(new Timestamp(System.currentTimeMillis()));
+						sm.save();
+					}
+				} catch (Exception e) {
+					m_PublicMsg = e.getLocalizedMessage();
+					LogM.log(m_ctx, SyncDataTask.class, Level.SEVERE, m_PublicMsg,e.getCause());
+					publishOnRunning();
 				}
-			} catch (Exception e) {
-				m_PublicMsg = e.getLocalizedMessage();
-				LogM.log(m_ctx, SyncDataTask.class, Level.SEVERE, m_PublicMsg,e.getCause());
-				publishOnRunning();
 			}
 		}
-		
-	}
 		
 		soapResponse = null;
 	}

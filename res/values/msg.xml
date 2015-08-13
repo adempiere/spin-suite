@@ -137,4 +137,5 @@
 	<string name="msg_ReEnterYourPasscode">Re-Enter your passcode</string>
 	<string name="msg_PasscodeIsInvalid">Passcode is Invalid</string>
 	<string name="msg_CreatedFromSpinSuite">Created from Spin-Suite Application</string>
+	<string name="msg_NoChanged">No Changed</string>
 </resources>

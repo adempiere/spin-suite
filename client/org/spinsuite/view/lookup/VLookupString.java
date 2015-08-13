@@ -108,7 +108,18 @@ public class VLookupString extends GridField {
 			public void onFocusChange(View v, boolean hasFocus) {
 		        //	Listener
 				if(!hasFocus) {
+					if(m_field.IsEncrypted) {
+						if(isEmpty()
+								&& getOldValueAsString() != null
+								&& getOldValueAsString().length() > 0) {
+							setValueAndOldValue(getOldValueAsString());
+						}
+					}
 					event();
+				} else if(m_field.IsEncrypted) {
+					m_OldValue = getValueAsString();
+					v_String.setHint(getContext().getString(R.string.msg_NoChanged));
+					v_String.setText("");
 				}
 			}
 		});
@@ -116,13 +127,14 @@ public class VLookupString extends GridField {
 		v_String.setHint(m_field.Name);
 		setEnabled(!m_field.IsReadOnly);
 		//	Set Display Type
-		v_String.setInputType(DisplayType.getInputType(m_field.DisplayType));
+		v_String.setInputType(DisplayType.getInputType(m_field.DisplayType, m_field.IsEncrypted));
 		//	Selected All on Focus
 		v_String.setSelectAllOnFocus(true);
 		//	Set Multi-line
-		if(m_field.DisplayType == DisplayType.TEXT
+		if((m_field.DisplayType == DisplayType.TEXT
 				|| m_field.DisplayType == DisplayType.TEXT_LONG
 				|| m_field.DisplayType == DisplayType.MEMO)
+				&& !m_field.IsEncrypted)
 			v_String.setSingleLine(false);
 		//	Add to View
 		addView(v_String);
@@ -201,5 +213,4 @@ public class VLookupString extends GridField {
 		//	Set Old Value
 		m_OldValue = v_String.getText().toString();
 	}
-
 }

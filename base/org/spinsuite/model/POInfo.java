@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
+import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
@@ -199,8 +200,8 @@ public class POInfo {
 			int i = 0;
 			m_SPS_Table_ID 	= rs.getInt(i++);
 			m_TableName 	= rs.getString(i++);
-			m_IsDeleteable	= Env.booleanValue(rs.getString(i++));
-			m_IsChangeLog = Env.booleanValue(rs.getString(i++));
+			m_IsDeleteable	= DisplayType.booleanValue(rs.getString(i++));
+			m_IsChangeLog = DisplayType.booleanValue(rs.getString(i++));
 			do{
 				POInfoColumn iColumn = new POInfoColumn();
 				iColumn.SPS_Table_ID = m_SPS_Table_ID;
@@ -216,15 +217,15 @@ public class POInfo {
 				iColumn.EntityType = rs.getString(i++);
 				iColumn.FieldLength = rs.getInt(i++);
 				iColumn.FormatPattern = rs.getString(i++);
-				iColumn.IsAlwaysUpdateable = Env.booleanValue(rs.getString(i++));
-				iColumn.IsCentrallyMaintained = Env.booleanValue(rs.getString(i++));
-				iColumn.IsEncrypted= Env.booleanValue(rs.getString(i++));
-				iColumn.IsIdentifier= Env.booleanValue(rs.getString(i++));
-				iColumn.IsKey= Env.booleanValue(rs.getString(i++));
-				iColumn.IsMandatory= Env.booleanValue(rs.getString(i++));
-				iColumn.IsParent= Env.booleanValue(rs.getString(i++));
-				iColumn.IsSelectionColumn= Env.booleanValue(rs.getString(i++));
-				iColumn.IsUpdateable= Env.booleanValue(rs.getString(i++));
+				iColumn.IsAlwaysUpdateable = DisplayType.booleanValue(rs.getString(i++));
+				iColumn.IsCentrallyMaintained = DisplayType.booleanValue(rs.getString(i++));
+				iColumn.IsEncrypted= DisplayType.booleanValue(rs.getString(i++));
+				iColumn.IsIdentifier= DisplayType.booleanValue(rs.getString(i++));
+				iColumn.IsKey= DisplayType.booleanValue(rs.getString(i++));
+				iColumn.IsMandatory= DisplayType.booleanValue(rs.getString(i++));
+				iColumn.IsParent= DisplayType.booleanValue(rs.getString(i++));
+				iColumn.IsSelectionColumn= DisplayType.booleanValue(rs.getString(i++));
+				iColumn.IsUpdateable= DisplayType.booleanValue(rs.getString(i++));
 				iColumn.Name = rs.getString(i++);
 				iColumn.SelectionSeqNo = rs.getInt(i++);
 				iColumn.SeqNo = rs.getInt(i++);
@@ -233,14 +234,14 @@ public class POInfo {
 				iColumn.ValueMin = rs.getString(i++);
 				iColumn.VFormat = rs.getString(i++);
 				iColumn.InfoFactoryClass = rs.getString(i++);
-				iColumn.IsAllowLogging = Env.booleanValue(rs.getString(i++));
+				iColumn.IsAllowLogging = DisplayType.booleanValue(rs.getString(i++));
 				//Log.i("m_IsAlwaysUpdateable", " - " + m_ColumnName + " = " + m_IsAlwaysUpdateable);
 				columns.add(iColumn);
 				i = 4;
 				//	Seek in Column SQL
 				if(iColumn.isColumnSQL())
 					m_CountColumnSQL ++;
-			}while(rs.moveToNext());
+			} while(rs.moveToNext());
 		}
 		//	Close DB
 		if(p_Conn == null)
