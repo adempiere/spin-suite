@@ -868,9 +868,12 @@ public abstract class PO {
 	public void saveEx() throws Exception {
 		try {
 			loadConnection(DB.READ_WRITE);
-			boolean fine = beforeSave(isNew);
-			if(!fine)
-				throw new Exception("@saveEx.beforeSave@: " + getError());
+			boolean fine = true;
+			if(!isSynchronization()) {
+				fine = beforeSave(isNew);
+				if(!fine)
+					throw new Exception("@saveEx.beforeSave@: " + getError());
+			}
 			//	Set Default Values
 			setLogValues(isNew);
 			if(isNew)
@@ -880,10 +883,11 @@ public abstract class PO {
 			//	Close Connection
 			closeConnection();
 			//	
-			fine = afterSave(isNew);
-			
-			if(!fine)
-				throw new Exception("@saveEx.afterSave@: " + getError());
+			if(!isSynchronization()) {
+				fine = afterSave(isNew);
+				if(!fine)
+					throw new Exception("@saveEx.afterSave@: " + getError());
+			}
 			//	Change New
 			isNew = false;
 		} catch (Exception e) {
