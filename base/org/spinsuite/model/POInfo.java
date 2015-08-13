@@ -57,11 +57,11 @@ public class POInfo {
 	 * *** Constructor ***
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/02/2014, 22:00:32
 	 * @param ctx
-	 * @param AD_Table_ID
+	 * @param p_SPS_Table_ID
 	 * @param conn
 	 */
-	public POInfo(Context ctx, int AD_Table_ID, DB conn) {
-		loadInfoColumn(ctx, AD_Table_ID, null, conn);
+	public POInfo(Context ctx, int p_SPS_Table_ID, DB conn) {
+		loadInfoColumn(ctx, p_SPS_Table_ID, conn);
 	}
 	
 	/** Table_ID            	*/
@@ -78,20 +78,37 @@ public class POInfo {
 	private String[]			m_keyColumns 		= null;
 	/**	Has Primary Key			*/
 	private String 				hasPrimaryKey 		= null;
-	/** Change Log*/
+	/** Change Log				*/
 	private boolean 			m_IsChangeLog		= false;
+	/**	Context Value Prefix	*/
+	private final String		CTX_VALUE_PREFIX 	= "IC|T|";
+	
 	/**
 	 * Load Column Information
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 05/02/2014, 21:54:17
 	 * @param ctx
-	 * @param AD_Table_ID
-	 * @param tableName
+	 * @param p_SPS_Table_ID
 	 * @return void
 	 */
-	private void loadInfoColumn(Context ctx, int AD_Table_ID, String tableName, DB p_Conn) {
+	private void loadInfoColumn(Context ctx, int p_SPS_Table_ID, DB p_Conn) {
 		//	
 		String language = Env.getAD_Language();
 		boolean isBaseLanguage = Env.isBaseLanguage();
+		//	Create Value
+		String ctx_info_column_value = CTX_VALUE_PREFIX + language + "|" + p_SPS_Table_ID;
+		//	
+		POInfoColumnWraper wrapper = (POInfoColumnWraper) Env.getContextObject(ctx_info_column_value, POInfoColumnWraper.class);
+		//	Load from Cache
+		if(wrapper != null) {
+			m_SPS_Table_ID 	= wrapper.SPS_Table_ID;
+			m_TableName 	= wrapper.TableName;
+			m_IsDeleteable	= wrapper.IsDeleteable;
+			m_IsChangeLog	= wrapper.IsChangeLog;
+			//	For Columns
+			m_columns 		= wrapper.Columns;
+			//	Return
+			return;
+		}
 		//	
 		StringBuffer sql = new StringBuffer();
 		//	if Base Language
@@ -177,10 +194,10 @@ public class POInfo {
 					"LEFT JOIN SPS_Column_Trl ct ON(ct.SPS_Column_ID = c.SPS_Column_ID AND ct.AD_Language = '").append(language).append("') ");
 		}
 		sql.append("WHERE c.IsActive = 'Y' ");
-		if(AD_Table_ID != 0)
-			sql.append("AND t.SPS_Table_ID = ").append(AD_Table_ID).append(" ");
-		else
-			sql.append("AND t.TableName = '").append(tableName).append("' ");
+//		if(AD_Table_ID != 0)
+		sql.append("AND t.SPS_Table_ID = ").append(p_SPS_Table_ID).append(" ");
+//		else
+//			sql.append("AND t.TableName = '").append(tableName).append("' ");
 		//	Order By
 		sql.append(" ORDER BY c.Name");
 		
@@ -251,6 +268,16 @@ public class POInfo {
 		m_columns = new POInfoColumn[columns.size()];
 		columns.toArray(m_columns);
 		Log.d("Size ", "- " + m_columns.length);
+		//	Save to Cache
+		wrapper = new POInfoColumnWraper();
+		wrapper.SPS_Table_ID	= m_SPS_Table_ID;
+		wrapper.TableName 		= m_TableName;
+		wrapper.IsDeleteable	= m_IsDeleteable;
+		wrapper.IsChangeLog		= m_IsChangeLog;
+		//	For Columns
+		wrapper.Columns 		= m_columns;
+		//	Save
+		Env.setContextObject(ctx_info_column_value, wrapper);
 	}
 	
 	/**
