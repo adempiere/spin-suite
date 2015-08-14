@@ -96,13 +96,6 @@ public class DB extends SQLiteOpenHelper {
 				&& sqlCreate.length() > 0)
 			bd.execSQL(sqlCreate);
 	}
-	
-//	@Override
-//	public void onConfigure(SQLiteDatabase db) {
-//		super.onConfigure(db);
-//		//	Enable Constraints
-//		db.setForeignKeyConstraintsEnabled(true);
-//	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
@@ -129,12 +122,10 @@ public class DB extends SQLiteOpenHelper {
 	 * @return SQLiteDatabase
 	 */
 	public synchronized SQLiteDatabase openDB(int type) {
-//		if(type == READ_ONLY) {
-//			db = getReadableDatabase();
-//		}else if(type == READ_WRITE) {
-//			db = getWritableDatabase();
-//		}
-		return DB_Manager.getInstance().open();
+		SQLiteDatabase database = DB_Manager.getInstance().open();
+		database.enableWriteAheadLogging();
+		//	Return
+		return database;
 	}
 	
 	/**
@@ -168,9 +159,6 @@ public class DB extends SQLiteOpenHelper {
 	 */
 	public synchronized boolean isOpen() {
 		boolean ok = false;
-//		if(db != null) {
-//			ok = db.isOpen();
-//		}
 		ok = DB_Manager.getInstance().open().isOpen();
 		return ok;
 	}
