@@ -3636,7 +3636,19 @@ public final class Env {
 	 */
 	public static void hideKeyBoad(Context p_Ctx) {
 		InputMethodManager imm = (InputMethodManager) p_Ctx.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+		imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+	}
+	
+	/**
+	 * Show Keyboard
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return void
+	 */
+	public static void showKeyBoad(Context p_Ctx) {
+		InputMethodManager imm = (InputMethodManager) p_Ctx.getSystemService(Activity.INPUT_METHOD_SERVICE);
+		imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 
+				InputMethodManager.HIDE_IMPLICIT_ONLY);
 	}
 	
 	/**	Context					*/
