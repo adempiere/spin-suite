@@ -42,7 +42,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.Filter;
@@ -72,29 +71,11 @@ public class LP_OrderLineSearchAdapter extends BaseAdapter implements Filterable
 	public LP_OrderLineSearchAdapter(Context ctx, int p_C_BPartner_Location_ID, ArrayList<DisplayListProduct> data) {
 		this.data = data;
 		inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		inputMethod = ((InputMethodManager)ctx.getSystemService(Context.INPUT_METHOD_SERVICE));
 		m_QtyFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY, "###,###,###,##0.00");
 		m_AmtFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT, "###,###,###,##0.00");
 		m_ctx = ctx;
 		m_QAct = new QuickAction(ctx);
 		m_C_BPartner_Location_ID = p_C_BPartner_Location_ID;
-		notifyDataSetChanged();
-	}
-	
-	/**
-	 * 
-	 * *** Constructor ***
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param ctx
-	 */
-	public LP_OrderLineSearchAdapter(Context ctx) {
-		data = new ArrayList<DisplayListProduct>();
-		inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		inputMethod = ((InputMethodManager)ctx.getSystemService(Context.INPUT_METHOD_SERVICE));
-		m_QtyFormat = DisplayType.getNumberFormat(ctx, DisplayType.QUANTITY, "###,###,###,##0.00");
-		m_AmtFormat = DisplayType.getNumberFormat(ctx, DisplayType.AMOUNT, "###,###,###,##0.00");
-		m_ctx = ctx;
-		m_QAct = new QuickAction(ctx);
 		notifyDataSetChanged();
 	}
 	
@@ -104,8 +85,6 @@ public class LP_OrderLineSearchAdapter extends BaseAdapter implements Filterable
 	private ArrayList<DisplayListProduct> 		originalData;
 	/**	Inflater						*/
 	private LayoutInflater 						inflater = null;
-	/**	Input Method					*/
-	private InputMethodManager					inputMethod = null;
 	/**	Decimal Format					*/
 	private DecimalFormat						m_QtyFormat = null;
 	/**	Decimal Format					*/
@@ -128,7 +107,7 @@ public class LP_OrderLineSearchAdapter extends BaseAdapter implements Filterable
 	private int									m_C_BPartner_Location_ID = 0;
 	
 	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) {		
+	public View getView(final int position, View convertView, final ViewGroup parent) {		
 		View view = convertView;
 		//	
 		final DisplayListProduct recordItem = data.get(position);
@@ -225,12 +204,15 @@ public class LP_OrderLineSearchAdapter extends BaseAdapter implements Filterable
 					tv_LineNetAmt.setText(m_AmtFormat.format(recordItem.getLineNetAmt()));
 				} else {
 					holderQtyEntered.getEditText().selectAll();
+					//	
+					Env.showKeyBoad(m_ctx);
+					//	Test
+//					int[] location = new int[2];					
+//					v.getLocationOnScreen(location);
+//					System.err.println(" [0] = " + location[0] + " [1] = " + location[1]);
 				}
 				//	Set Has Focus
 				m_HasFocus = hasFocus;
-				//	
-				inputMethod.toggleSoftInput(InputMethodManager.SHOW_FORCED, 
-						InputMethodManager.HIDE_IMPLICIT_ONLY);
 			}
 		});
 		//	For Changes in Key
@@ -342,6 +324,8 @@ public class LP_OrderLineSearchAdapter extends BaseAdapter implements Filterable
 		changeValue();
 		m_CurrentRecordItem = null;
 		m_HasFocus = false;
+		//	Hide Keyboard
+		Env.hideKeyBoad(m_ctx);
 	}
 	
 	/**
@@ -533,7 +517,7 @@ public class LP_OrderLineSearchAdapter extends BaseAdapter implements Filterable
 		//	Get only selected
 		for(DisplayListProduct item : data) {
 			//	Add
-			if(item.getQtyEntered().compareTo(Env.ZERO) == 1)
+			if(item.getQtyEntered().compareTo(Env.ZERO) > 0)
 				tmpData.add(item);
 		}
 		return tmpData;

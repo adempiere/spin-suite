@@ -34,4 +34,5 @@
     <string name="QtyDelivered">Delivered</string>
     <string name="QtyAvailable">Available</string>
     <string name="QtyReturned">Returned</string>
+    <string name="msg_AskSkipSelection">Skip Selection?</string>
 </resources>

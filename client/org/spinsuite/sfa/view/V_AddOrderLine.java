@@ -30,9 +30,12 @@ import org.spinsuite.sfa.util.DisplayListProduct;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
+import org.spinsuite.util.Msg;
 
 import android.app.Activity;
+import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,6 +44,7 @@ import android.support.v4.widget.SearchViewCompat;
 import android.support.v4.widget.SearchViewCompat.OnCloseListenerCompat;
 import android.support.v4.widget.SearchViewCompat.OnQueryTextListenerCompat;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -91,7 +95,7 @@ public class V_AddOrderLine extends Activity {
 		v_activity = this;
 		
 		lv_Products = (ListView) v_activity.findViewById(R.id.lv_Products);
-		lv_Products.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
+		lv_Products.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
 		//
 		new LoadViewTask().execute();
 		//	Listener
@@ -119,11 +123,13 @@ public class V_AddOrderLine extends Activity {
 				//	
 			}
 		});
-		
 		//	Set Subtitle
 		getActionBar().setSubtitle(getString(R.string.M_Product_ID));
+		//	Set Home Access
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+    	getActionBar().setHomeButtonEnabled(true);
 	}
-	  
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -177,9 +183,11 @@ public class V_AddOrderLine extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int itemId = item.getItemId();
 		switch (itemId) {
+		case android.R.id.home:
+			backToFragment();
+    		return true;
 		case R.id.action_close:
-			setResult(Activity.RESULT_CANCELED, getIntent());
-			finish();
+			backToFragment();
 			return true;
 		case R.id.action_ok:
 			//	Hide Keyboard
@@ -194,7 +202,59 @@ public class V_AddOrderLine extends Activity {
 		}
 		//	
 		return super.onOptionsItemSelected(item);
-	}	
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+			//	
+			backToFragment();
+			//	
+			return true;
+		}
+		//	
+		return false;
+	}
+	
+	/**
+	 * Exit from List Product
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void backToFragment() {
+		if(isChanged()) {
+			//	Delete
+			String msg_Acept = getResources().getString(R.string.msg_Acept);
+			Builder ask = Msg.confirmMsg(v_activity, getResources().getString(R.string.msg_AskSkipSelection));
+			//	
+			ask.setPositiveButton(msg_Acept, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.cancel();
+					setResult(Activity.RESULT_CANCELED, getIntent());
+					v_activity.finish();
+				}
+			});
+			//	Show
+			ask.show();
+		} else {
+			setResult(Activity.RESULT_CANCELED, getIntent());
+			v_activity.finish();
+		}
+	}
+	
+	/**
+	 * Verify if Is Changed
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return boolean
+	 */
+	private boolean isChanged() {
+		//	Set Result
+		LP_OrderLineSearchAdapter adapter = (LP_OrderLineSearchAdapter) lv_Products.getAdapter();
+		selectedData = adapter.getSelectedData();
+		//	Verify
+		return selectedData.size() > 0;
+	}
 	
 	/**
 	 * On Selected Record
