@@ -448,10 +448,9 @@ public class V_AddOrderLine extends Activity {
 				.append(" NOT IN(");
 			//	
 			boolean first = true;
-			//	Get Conn
-			DB conn = new DB(v_activity);
 			//	Cache Order Line
-			MOrderLine oLine = new MOrderLine(v_activity, p_C_OrderLine_ID, conn);
+			MOrderLine oLine = new MOrderLine(v_activity, p_C_OrderLine_ID, null);
+			
 			for(DisplayListProduct item : data) {
 				//	Add Items
 				p_C_OrderLine_ID = item.getRecord_ID();
@@ -461,7 +460,11 @@ public class V_AddOrderLine extends Activity {
 				oLine.setM_Product_ID(item.getM_Product_ID());
 				oLine.setQtyEntered(item.getQtyEntered());
 				oLine.setQtyOrdered(item.getQtyEntered());
-				oLine.save();
+				boolean isOk = oLine.save();
+				//	Verify Ok Saving
+				if(!isOk) {
+					continue;
+				}
 				//	Add IDs
 				if(!first) {
 					sqlIn.append(", ");
@@ -477,7 +480,9 @@ public class V_AddOrderLine extends Activity {
 			if(!first)
 				sqlDelete.append(sqlIn);
 			//	Just delete by line
-			DB.executeUpdate(v_activity, sqlDelete.toString(), m_C_Order_ID, false, conn);
+			DB.executeUpdate(v_activity, sqlDelete.toString(), m_C_Order_ID, false);
+			//	Handle transaction
+			
 			//	Log
 			LogM.log(v_activity, T_OrderLine.class, Level.FINE, 
 					"SQL Delete Order Line =" + sqlDelete.toString());
