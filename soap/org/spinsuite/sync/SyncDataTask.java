@@ -142,10 +142,14 @@ public class SyncDataTask implements BackGroundProcess  {
 	
 	@Override
 	public void publishBeforeInit() {
-		int icon = android.R.drawable.stat_sys_download;
-		if(m_MethodValue != null 
-				&& !m_MethodValue.equals(SyncValues.WSMQueryData)) {
-			icon = android.R.drawable.stat_sys_upload;
+		int icon = android.R.drawable.stat_notify_sync;
+		if(m_MethodValue != null
+				&& m_Progress != -1) {
+			if(!m_MethodValue.equals(SyncValues.WSMQueryData)) {
+				icon = android.R.drawable.stat_sys_upload;
+			} else {
+				icon = android.R.drawable.stat_sys_download;
+			}
 		}
 		//	
 		m_Builder.setContentTitle(m_PublicTittle)
@@ -157,10 +161,14 @@ public class SyncDataTask implements BackGroundProcess  {
 
 	@Override
 	public void publishOnRunning() {
-		int icon = android.R.drawable.stat_sys_download;
-		if(m_MethodValue != null 
-				&& !m_MethodValue.equals(SyncValues.WSMQueryData)) {
-			icon = android.R.drawable.stat_sys_upload;
+		int icon = android.R.drawable.stat_notify_sync;
+		if(m_MethodValue != null
+				&& m_Progress != -1) {
+			if(!m_MethodValue.equals(SyncValues.WSMQueryData)) {
+				icon = android.R.drawable.stat_sys_upload;
+			} else {
+				icon = android.R.drawable.stat_sys_download;
+			}
 		}
 		m_Builder.setContentTitle(m_PublicTittle)
 			.setContentText(m_PublicMsg)
