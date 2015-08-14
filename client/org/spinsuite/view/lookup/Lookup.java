@@ -1072,7 +1072,8 @@ public class Lookup {
 			//	Query
 			rs = conn.querySQL(getSQL(), null);
 			data = new ArrayList<DisplayLookupSpinner>();
-			if(rs.moveToFirst()) {
+			if(rs != null
+					&& rs.moveToFirst()) {
 				if(!m_field.IsMandatory) {
 					if(m_field.DisplayType == DisplayType.LIST)
 						data.add(new DisplayLookupSpinner(null, null));
