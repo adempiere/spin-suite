@@ -16,7 +16,6 @@
 package org.spinsuite.model;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
@@ -29,131 +28,94 @@ import android.content.Context;
 import android.database.Cursor;
 
 /**
- * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 24/7/2015, 21:28:43
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 5/8/2015, 23:10:42
  *
  */
-public class MRMA extends X_M_RMA implements DocAction{
+public class MCash extends X_C_Cash implements DocAction{
+
+	/**	Process Message				*/
+	private String 					m_ProcessMsg 			= null;
+	/**	Order Lines					*/
+	private MCashLine[] 	mLines 		= null;
 	
-	/**
-	 * *** Constructor ***
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param ctx
-	 * @param M_RMA_ID
-	 * @param conn
-	 */
-	public MRMA(Context ctx, int M_RMA_ID, DB conn) {
-		super(ctx, M_RMA_ID, conn);
-
-		if (M_RMA_ID == 0) {
-			setDocAction (DOCACTION_Complete);	// CO
-			setDocStatus (DOCSTATUS_Drafted);	// DR
-			setIsApproved(false);
-			super.setProcessed (false);
-		}
-	}
-
-	/**
-	 * *** Constructor ***
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param ctx
-	 * @param rs
-	 * @param conn
-	 */
-	public MRMA(Context ctx, Cursor rs, DB conn) {
+	public MCash(Context ctx, Cursor rs, DB conn) {
 		super(ctx, rs, conn);
-		
-	}
-	
-	@Override
-	protected boolean loadDefaultValues() {
-		boolean ok = super.loadDefaultValues();
-		//	
-		loadDefault();
-		return ok;
+		// TODO Auto-generated constructor stub
 	}
 
-
-	/**
-	 * Load Default Values
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return void
-	 */
-	public void loadDefault() {
-		setDocStatus(DOCSTATUS_Drafted);
-		setDocAction (DOCACTION_Prepare);
-		//
-		setIsApproved(false);
-		//
-		super.setProcessed(false);
-		setProcessing(false);
-		
+	public MCash(Context ctx, int C_Cash_ID, DB conn) {
+		super (ctx, C_Cash_ID, conn);
+		if (C_Cash_ID == 0)
+		{
+		//	setC_CashBook_ID (0);		//	FK
+			setBeginningBalance (Env.ZERO);
+			setEndingBalance (Env.ZERO);
+			setStatementDifference(Env.ZERO);
+			setDocAction(DOCACTION_Complete);
+			setDocStatus(DOCSTATUS_Drafted);
+			//
+//			Timestamp today = TimeUtil.getDay(System.currentTimeMillis());
+//			setStatementDate (today);	// @#Date@
+//			setDateAcct (today);	// @#Date@
+//			String name = DisplayType.getDagetDateFormat(DisplayType.DATE).format(today)
+//				+ " " + MOrg.get(ctx, getAD_Org_ID()).getValue();
+//			setName (name);	
+			setIsApproved(false);
+			setPosted (false);	// N
+			setProcessed (false);
+		}
 	}
 
 	@Override
 	public boolean processIt(String action) throws Exception {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean unlockIt() {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean invalidateIt() {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public String prepareIt() {
 		m_ProcessMsg = null;
-		
-		MRMALine[] lines = getLines(false);
-		
 		//	Valid Lines
-		if(lines.length == 0) {
+		int lines = DB.getSQLValue(getCtx(), "SELECT COUNT(C_CashLine_ID) " +
+				"FROM C_CashLine " +
+				"WHERE C_Cash_ID = " + getC_Cash_ID());
+		if(lines == 0) {
 			m_ProcessMsg = "@NoLines@";
 			//	
 			return STATUS_Invalid;
 		}
-		
-		m_JustPrepared = true;
 		return STATUS_InProgress;
 	}
-	
-	
 
 	@Override
 	public boolean approveIt() {
-		setIsApproved(true);
-		return true;
+		// TODO Auto-generated method stub
+		return false;
 	}
-	
 
 	@Override
 	public boolean rejectIt() {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public String completeIt() {
-		//	Re-Check
-		if (!m_JustPrepared)
-		{
-			String status = prepareIt();
-			if (!DocAction.STATUS_InProgress.equals(status))
-				return status;
-		}
-		
-		//	Implicit Approval
-		if (!isApproved())
-			approveIt();
-		
 		m_ProcessMsg = null;
-		//
 		setProcessed(true);
-		setDocAction(DOCACTION_Close);
-		return DocAction.STATUS_Completed;
+		return STATUS_Completed;
 	}
 
 	@Override
@@ -167,16 +129,19 @@ public class MRMA extends X_M_RMA implements DocAction{
 
 	@Override
 	public boolean closeIt() {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean reverseCorrectIt() {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean reverseAccrualIt() {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -190,12 +155,17 @@ public class MRMA extends X_M_RMA implements DocAction{
 
 	@Override
 	public String getSummary() {
-		return getDocumentNo();
+		return m_ProcessMsg;
+	}
+
+	@Override
+	public String getDocumentNo() {
+		return m_ProcessMsg;
 	}
 
 	@Override
 	public String getDocumentInfo() {
-		return getDocumentNo();
+		return m_ProcessMsg;
 	}
 
 	@Override
@@ -205,12 +175,26 @@ public class MRMA extends X_M_RMA implements DocAction{
 
 	@Override
 	public int getDoc_User_ID() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getC_Currency_ID() {
+		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public BigDecimal getApprovalAmt() {
+		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public int getC_DocType_ID() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	@Override
@@ -230,13 +214,21 @@ public class MRMA extends X_M_RMA implements DocAction{
 			return;
 		String set = "SET Processed='"
 			+ (Processed ? "Y" : "N")
-			+ "' WHERE M_RMA_ID=" + getM_RMA_ID();
-		int noLine = DB.executeUpdate(getCtx(), "UPDATE M_RMA " + set, null);
-		m_lines = null;
+			+ "' WHERE C_Cash_ID=" + getC_Cash_ID();
+		int noLine = DB.executeUpdate(getCtx(), "UPDATE C_CashLine " + set, null);
+		mLines = null;
 		LogM.log(getCtx(), getClass(), Level.FINE, 
 				"setProcessed - " + Processed + " - Lines=" + noLine );
 	}
 
+	@Override
+	public String getError() {
+		if(m_ProcessMsg == null)
+			m_ProcessMsg = super.getError();
+		//	Return
+		return m_ProcessMsg;
+	}
+	
 	/**
 	 * 	Add to Description
 	 *	@param description text
@@ -248,58 +240,5 @@ public class MRMA extends X_M_RMA implements DocAction{
 		else
 			setDescription(desc + " | " + description);
 	}	//	addDescription
-	
-
-	/**
-	 * 	Get Lines
-	 *	@param requery requery
-	 *	@return lines
-	 */
-	public MRMALine[] getLines (boolean requery)
-	{
-		if (m_lines != null && !requery)
-		{
-			return m_lines;
-		}
-		List<MRMALine> list = new Query(getCtx(), I_M_RMALine.Table_Name, "M_RMA_ID=?", null)
-		.setParameters(getM_RMA_ID())
-		.setOrderBy(MRMALine.COLUMNNAME_Line)
-		.list();
-
-		m_lines = new MRMALine[list.size ()];
-		list.toArray (m_lines);
-		return m_lines;
-	}	//	getLines
-	
-	@Override
-	protected boolean beforeSave(boolean isNew) {
-		boolean ok = super.beforeSave(isNew);
-		if(!ok)
-			return ok;
-		
-		int p_C_DocType_ID = getC_DocType_ID();
-		
-		String sql = "SELECT d.IsSoTrx "
-	           + "FROM C_DocType d WHERE C_DocType_ID=?";
-	       
-	       String docSOTrx = DB.getSQLValueString(getCtx(), sql, String.valueOf(p_C_DocType_ID));
-	       
-	       boolean isSOTrx = "Y".equals(docSOTrx);
-	       
-	       setIsSOTrx(isSOTrx);
-	       
-		return ok;
-	}
-
-	
-	
-	/**	Just Prepared Flag			*/
-	private boolean		m_JustPrepared = false;
-	/** Lines					*/
-	private MRMALine[]		m_lines = null;
-	
-	/**	Process Message				*/
-	private String 					m_ProcessMsg 			= null;
-
 	
 }

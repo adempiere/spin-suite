@@ -132,6 +132,7 @@ public class T_DynamicTab extends T_FormTab
 	private final int O_VIEW_PREFERENCES					= 7;
 //	private final int O_SYNCHRONIZE							= 8;
 	private final int O_VIEW_SYNCHRONIZATION				= 9;
+	private final int O_VIEW_ABOUT							= 10;
 	
 	/**	Option Menu					*/
 	private MenuItem mi_Search 								= null;
@@ -404,6 +405,9 @@ public class T_DynamicTab extends T_FormTab
 		//	Go to Synchronization Menu
 		popupMenu.getMenu().add(Menu.NONE, O_VIEW_SYNCHRONIZATION, 
 				Menu.NONE, getString(R.string.Action_Syncronization));
+		//	Go to Synchronization Menu
+		popupMenu.getMenu().add(Menu.NONE, O_VIEW_ABOUT, 
+				Menu.NONE, getString(R.string.Action_About));
 		//	Action
 		popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 			
@@ -454,6 +458,10 @@ public class T_DynamicTab extends T_FormTab
 	        		case O_VIEW_SYNCHRONIZATION:
 	        			Intent syncMenu = new Intent(getCallback(), V_Synchronization.class);
 	    				startActivity(syncMenu);
+	        			return true;
+	        		case O_VIEW_ABOUT:
+	        			Intent about = new Intent(getCallback(), V_About.class);
+	    				startActivity(about);
 	        			return true;
 				}
 				return false;

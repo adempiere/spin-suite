@@ -1074,7 +1074,7 @@ public abstract class PO {
 				if (   session != null
 						&& m_IDs.length == 1
 						&& m_TableInfo.isAllowLogging(index)		//	logging allowed
-						&& !column.IsEncrypted		//	not encrypted
+						&& !column.IsEncrypted						//	not encrypted
 						&& !"Password".equals(column.ColumnName)
 						&& MSession.logMigration(this, m_TableInfo)
 						&& !isSynchronization()
@@ -1649,27 +1649,27 @@ public abstract class PO {
 	 * @return void
 	 * @throws Exception 
 	 */
-	private void createSyncRecord(String p_EventChangeLog,Object p_ID) throws Exception{
+	private void createSyncRecord(String p_EventChangeLog,Object p_ID) throws Exception {
 		//No Create Record When Synchronization
 		if (isSynchronization())
 			return;
 		
 		String whereClause = "SPS_Table_ID = " + getSPS_Table_ID() + " AND "
 							+ "Record_ID = " + p_ID + " AND "
-							+ "EventChangeLog IN ('" + X_SPS_SyncTable.EVENTCHANGELOG_Insert + "','"+X_SPS_SyncTable.EVENTCHANGELOG_Update + "') AND IsSynchronized='N'";
+							+ "EventChangeLog IN ('" + X_SPS_SyncTable.EVENTCHANGELOG_Insert 
+							+ "','"+X_SPS_SyncTable.EVENTCHANGELOG_Update + "') AND IsSynchronized='N'";
 		
 		MSPSSyncTable synctable = MSPSSyncTable.getSyncTable(getCtx(), conn, whereClause);
 		
 		if (synctable== null)
 			synctable = new MSPSSyncTable(getCtx(), 0, conn);
 		
-		if (synctable.getSPS_SyncTable_ID()==0){
-			//synctable.setRecord_ID(p_ID);
+		if (synctable.getSPS_SyncTable_ID() == 0){
 			synctable.set_Value("Record_ID", p_ID);
 			synctable.setEventChangeLog(p_EventChangeLog);
 			synctable.setSPS_Table_ID(getSPS_Table_ID());
 			synctable.setIsSynchronized(false);
-			synctable.save();
+			synctable.saveEx();
 		}
 		else{
 			if (p_EventChangeLog.equals(X_SPS_SyncTable.EVENTCHANGELOG_Delete))
