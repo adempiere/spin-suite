@@ -94,13 +94,13 @@ public abstract class PO {
 	 * @param m_AD_Table_ID
 	 * @param tableName
 	 */
-	private PO(Context ctx, String tableName, int [] ID, Cursor rs, DB pConn) {
+	private PO(Context ctx, String tableName, int [] ID, Cursor rs, DB p_Conn) {
 		//	
 		if (ctx == null)
 			throw new IllegalArgumentException ("No Context");
 		m_ctx = ctx;
-		if(pConn != null) {
-			conn = pConn;
+		if(p_Conn != null) {
+			conn = p_Conn;
 			handConnection = false;
 		} else {
 			conn = new DB(ctx);
@@ -1098,7 +1098,6 @@ public abstract class PO {
 					sym.toString() + 
 					")";
 			conn.executeSQLEx(sql, listValues.toArray());
-			
 			//2015-03-13 Carlos Parada Add Sync Record 
 			if (MSession.logMigration(this, m_TableInfo))
 				createSyncRecord(MSPSSyncTable.EVENTCHANGELOG_Insert,m_IDs[0]);
@@ -1419,6 +1418,10 @@ public abstract class PO {
 				if(type == DB.READ_WRITE)
 					conn.beginTransaction();
 			}
+		} else if(handConnection
+				&& type == DB.READ_WRITE
+				&& !conn.inTransaction()) {
+			conn.beginTransaction();
 		}
     }
 	
