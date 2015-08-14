@@ -453,6 +453,8 @@ public class V_AddOrderLine extends Activity {
 
 		/**	Progress Bar			*/
 		private ProgressDialog 		v_PDialog;
+		/**	Error Message			*/
+		private StringBuffer		m_ErrorMsg = new StringBuffer();
 		
 		@Override
 		protected void onPreExecute() {
@@ -480,6 +482,10 @@ public class V_AddOrderLine extends Activity {
 		@Override
 		protected void onPostExecute(Void result) {
 			v_PDialog.dismiss();
+			//	Show Error
+			if(m_ErrorMsg.length() > 0) {
+				Msg.toastMsg(v_activity, m_ErrorMsg.toString());
+			}
 			v_activity.setResult(Activity.RESULT_OK, getIntent());
 			//	Exit
 			v_activity.finish();
@@ -523,6 +529,11 @@ public class V_AddOrderLine extends Activity {
 				boolean isOk = oLine.save();
 				//	Verify Ok Saving
 				if(!isOk) {
+					if(m_ErrorMsg.length() > 0) {
+						m_ErrorMsg.append(Env.NL);
+					}
+					//	
+					m_ErrorMsg.append(oLine.getError());
 					continue;
 				}
 				//	Add IDs

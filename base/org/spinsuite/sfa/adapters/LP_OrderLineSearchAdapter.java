@@ -121,7 +121,7 @@ public class LP_OrderLineSearchAdapter extends BaseAdapter implements Filterable
 		//	Set Quantity to Order
 		EditText et_QtyOrdered = (EditText)view.findViewById(R.id.et_Qty);
 		LinearLayout ll_ol_product_description = (LinearLayout) view.findViewById(R.id.ll_ol_product_description);
-		LinearLayout ll_ol_qty_description = (LinearLayout) view.findViewById(R.id.ll_ol_qty_description);
+		final LinearLayout ll_ol_qty_description = (LinearLayout) view.findViewById(R.id.ll_ol_qty_description);
 		
 		//	Instance Holder
 		holderQtyEntered.setText(m_QtyFormat.format(recordItem.getQtyEntered()));
