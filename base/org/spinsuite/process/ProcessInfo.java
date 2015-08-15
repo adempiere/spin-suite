@@ -18,7 +18,6 @@ package org.spinsuite.process;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
@@ -807,16 +806,6 @@ public class ProcessInfo {
 		m_logs.toArray (logs);
 		return logs;
 	}	//	getLogs
-	
-	/**
-	 * Get Log as ArrayList
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return
-	 * @return ArrayList<ProcessInfoLog>
-	 */
-	public List<ProcessInfoLog> getLogsAsList() {
-		return m_logs;
-	}
 	
 	/**
 	 * Clear Log Msg and Summary

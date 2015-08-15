@@ -38,5 +38,4 @@ public class CacheReset extends StdProcess {
 		//	Default
 		return "@Deleted@ = " + deleted;
 	}
-
 }
