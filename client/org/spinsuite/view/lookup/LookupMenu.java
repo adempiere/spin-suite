@@ -103,13 +103,16 @@ public class LookupMenu {
 							"tn.SeqNo, " + 
 							"m.WS_WebService_ID, " +
 							"m.WS_WebServiceMethod_ID, " +
+							"wsm.Value, " +
 							"m.WS_WebServiceType_ID, " +
 							"m.AD_RuleAfter_ID, " +
 							"m.AD_RuleBefore_ID " +
 							"FROM SPS_SyncMenu m " +
 							"INNER JOIN WS_WebService ws ON(ws.WS_WebService_ID = m.WS_WebService_ID) " +
+							"LEFT JOIN WS_WebServiceType wst ON(wst.WS_WebServiceType_ID = m.WS_WebServiceType_ID) " +
+							"LEFT JOIN WS_WebServiceMethod wsm ON(wsm.WS_WebServiceMethod_ID = wst.WS_WebServiceMethod_ID) " +
 							"INNER JOIN AD_Tree t ON(t.AD_Table_ID = 53501) " + 
-							"LEFT  JOIN AD_TreeNode tn ON(tn.AD_Tree_ID = t.AD_Tree_ID AND tn.Node_ID = m.SPS_SyncMenu_ID) "); 
+							"INNER JOIN AD_TreeNode tn ON(tn.AD_Tree_ID = t.AD_Tree_ID AND tn.Node_ID = m.SPS_SyncMenu_ID) "); 
 			} else {
 				sql.append("SELECT m.SPS_SyncMenu_ID, " +
 							"COALESCE(mt.Name, m.Name) Name,  " + 
@@ -123,14 +126,17 @@ public class LookupMenu {
 							"tn.SeqNo, " + 
 							"m.WS_WebService_ID, " +
 							"m.WS_WebServiceMethod_ID, " +
+							"wsm.Value, " +
 							"m.WS_WebServiceType_ID, " +
 							"m.AD_RuleAfter_ID, " +
 							"m.AD_RuleBefore_ID " +
 							"FROM SPS_SyncMenu m " + 
 							"INNER JOIN WS_WebService ws ON(ws.WS_WebService_ID = m.WS_WebService_ID) " +
+							"LEFT JOIN WS_WebServiceType wst ON(wst.WS_WebServiceType_ID = m.WS_WebServiceType_ID) " +
+							"LEFT JOIN WS_WebServiceMethod wsm ON(wsm.WS_WebServiceMethod_ID = wst.WS_WebServiceMethod_ID) " +
 							"INNER JOIN AD_Tree t ON(t.AD_Table_ID = 53501) " + 
 							"LEFT JOIN SPS_SyncMenu_Trl mt ON (m.SPS_SyncMenu_ID = mt.SPS_SyncMenu_ID AND mt.AD_Language = '").append(language).append("') " +
-							"LEFT JOIN AD_TreeNode tn ON(tn.AD_Tree_ID = t.AD_Tree_ID AND tn.Node_ID = m.SPS_SyncMenu_ID)  ");
+							"INNER JOIN AD_TreeNode tn ON(tn.AD_Tree_ID = t.AD_Tree_ID AND tn.Node_ID = m.SPS_SyncMenu_ID)  ");
 			}
 			//	Where Clause
 			//	Access Role
@@ -171,6 +177,7 @@ public class LookupMenu {
 							rs.getInt(i++),   
 							rs.getInt(i++),  
 							rs.getInt(i++), 
+							rs.getString(i++), 
 							rs.getInt(i++),  
 							rs.getInt(i++),  
 							rs.getInt(i++),  
@@ -182,11 +189,26 @@ public class LookupMenu {
 		}else{
 			//	if Base Language
 			if(isBaseLanguage){
-				sql.append("SELECT m.SPS_Menu_ID, m.Name, m.Description, m.Action, m.ImageURL, " +
-						"m.SPS_Table_ID, m.WhereClause, m.GroupByClause, m.OrderByClause, " +
-						"tn.Parent_ID, m.IsSummary, m.DeploymentType, m.AD_Form_ID, m.SPS_Window_ID, m.AD_Process_ID, " +
-						"m.ActivityMenu_ID, COALESCE(m.IsReadWrite, pa.IsReadWrite, wa.IsReadWrite) IsReadWrite, " +
-						"m.IsInsertRecord, tn.SeqNo, COALESCE(m.IsSOTrx, 'N') IsSOTrx " +
+				sql.append("SELECT m.SPS_Menu_ID, " + 
+						"m.Name, " + 
+						"m.Description, " + 
+						"m.Action, " + 
+						"m.ImageURL, " +
+						"m.SPS_Table_ID, " + 
+						"m.WhereClause, " + 
+						"m.GroupByClause, " + 
+						"m.OrderByClause, " +
+						"tn.Parent_ID, " + 
+						"m.IsSummary, " + 
+						"m.DeploymentType, " + 
+						"m.AD_Form_ID, " + 
+						"m.SPS_Window_ID, " + 
+						"m.AD_Process_ID, " +
+						"m.ActivityMenu_ID, " + 
+						"COALESCE(m.IsReadWrite, pa.IsReadWrite, wa.IsReadWrite) IsReadWrite, " + 
+						"m.IsInsertRecord, " + 
+						"tn.SeqNo, " + 
+						"COALESCE(m.IsSOTrx, 'N') IsSOTrx " +
 						"FROM SPS_Menu m " +
 						"INNER JOIN AD_Tree t ON(t.AD_Table_ID = 53518) " +
 						"LEFT JOIN AD_TreeNode tn ON(tn.AD_Tree_ID = t.AD_Tree_ID AND tn.Node_ID = m.SPS_Menu_ID) " +
@@ -194,12 +216,26 @@ public class LookupMenu {
 						"LEFT JOIN AD_Form_Access fa ON(fa.AD_Form_ID = m.AD_Form_ID) " +
 						"LEFT JOIN SPS_Window_Access wa ON(wa.SPS_Window_ID = m.SPS_Window_ID) ");
 			} else {
-				sql.append("SELECT m.SPS_Menu_ID, COALESCE(mt.Name, m.Name) Name, " +
-						"COALESCE(COALESCE(mt.Description,''), m.Description) Description, m.Action, m.ImageURL, " +
-						"m.SPS_Table_ID, m.WhereClause, m.GroupByClause, m.OrderByClause, " +
-						"tn.Parent_ID, m.IsSummary, m.DeploymentType, m.AD_Form_ID, m.SPS_Window_ID, m.AD_Process_ID, " +
-						"m.ActivityMenu_ID, COALESCE(m.IsReadWrite, pa.IsReadWrite, wa.IsReadWrite) IsReadWrite, " +
-						"m.IsInsertRecord, tn.SeqNo, COALESCE(m.IsSOTrx, 'N') IsSOTrx " +
+				sql.append("SELECT m.SPS_Menu_ID, " + 
+						"COALESCE(mt.Name, m.Name) Name, " +
+						"COALESCE(COALESCE(mt.Description,''), m.Description) Description, " + 
+						"m.Action, " + 
+						"m.ImageURL, " +
+						"m.SPS_Table_ID, " + 
+						"m.WhereClause, " + 
+						"m.GroupByClause, " + 
+						"m.OrderByClause, " +
+						"tn.Parent_ID, " + 
+						"m.IsSummary, " + 
+						"m.DeploymentType, " + 
+						"m.AD_Form_ID, " + 
+						"m.SPS_Window_ID, " + 
+						"m.AD_Process_ID, " +
+						"m.ActivityMenu_ID, " + 
+						"COALESCE(m.IsReadWrite, pa.IsReadWrite, wa.IsReadWrite) IsReadWrite, " +
+						"m.IsInsertRecord, " + 
+						"tn.SeqNo, " + 
+						"COALESCE(m.IsSOTrx, 'N') IsSOTrx " +
 						"FROM SPS_Menu m " +
 						"INNER JOIN AD_Tree t ON(t.AD_Table_ID = 53518) " +
 						"LEFT JOIN SPS_Menu_Trl mt ON(mt.SPS_Menu_ID = m.SPS_Menu_ID AND mt.AD_Language = '").append(language).append("') " +
