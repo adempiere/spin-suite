@@ -154,6 +154,7 @@ public class DisplayMenuItem implements Parcelable {
 	 * @param m_SeqNo
 	 * @param m_WS_WebService_ID
 	 * @param m_WS_WebServiceMethod_ID
+	 * @param m_WS_MethodValue
 	 * @param m_WS_WebServiceType_ID
 	 * @param m_AD_RuleAfter_ID
 	 * @param m_AD_RuleBefore_ID
@@ -161,8 +162,8 @@ public class DisplayMenuItem implements Parcelable {
 	 */
 	public DisplayMenuItem(int m_SPS_SyncMenu_ID, String m_Name, String m_Description, String m_ImageURL, 
 			String m_ErrImgURL,int m_SPS_Table_ID, String m_WhereClause, int m_Parent_ID, boolean m_IsSummary,
-			int m_SeqNo, int m_WS_WebService_ID, int m_WS_WebServiceMethod_ID, int m_WS_WebServiceType_ID,
-			int m_AD_RuleAfter_ID, int m_AD_RuleBefore_ID,String m_MenuType){
+			int m_SeqNo, int m_WS_WebService_ID, int m_WS_WebServiceMethod_ID, String m_WS_MethodValue, int m_WS_WebServiceType_ID,
+			int m_AD_RuleAfter_ID, int m_AD_RuleBefore_ID, String m_MenuType){
 		this.m_SPS_SyncMenu_ID = m_SPS_SyncMenu_ID;
 		this.m_Name = m_Name;
 		this.m_Description = m_Description;
@@ -179,7 +180,15 @@ public class DisplayMenuItem implements Parcelable {
 		this.m_AD_RuleAfter_ID = m_AD_RuleAfter_ID;
 		this.m_AD_RuleBefore_ID = m_AD_RuleBefore_ID; 
 		this.m_MenuType = m_MenuType;
-		this.m_Action = DisplayMenuItem.ACTION_WSDownload;
+		if(m_WS_MethodValue == null
+				|| m_WS_MethodValue.equals(SyncValues.WSMQueryData)) {
+			m_Action = DisplayMenuItem.ACTION_WSDownload;
+		} else if(m_WS_MethodValue.equals(SyncValues.WSMCreateData)
+				|| m_WS_MethodValue.equals(SyncValues.WSMUpdateData)) {
+			m_Action = DisplayMenuItem.ACTION_WSUpload;
+		} else {
+			m_Action = DisplayMenuItem.ACTION_WSDownload;
+		}
 	}
 	
 	/**	Action Menu			*/
