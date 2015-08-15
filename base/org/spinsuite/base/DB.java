@@ -1106,7 +1106,8 @@ public class DB extends SQLiteOpenHelper {
 		Cursor rs = null;
 		rs = conn.querySQL(sql, params);
 		int retValue = -1;
-		if(rs.moveToFirst()) {
+		if(rs != null
+				&& rs.moveToFirst()) {
 			retValue = rs.getInt(0);
 		}
 		//	Close Connection

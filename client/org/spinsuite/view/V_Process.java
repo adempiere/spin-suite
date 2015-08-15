@@ -18,14 +18,13 @@ package org.spinsuite.view;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
-import org.spinsuite.adapters.SearchAdapter;
+import org.spinsuite.adapters.ProcessAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.interfaces.OnFieldChangeListener;
@@ -37,12 +36,10 @@ import org.spinsuite.print.layout.ReportExportMenuAdapter;
 import org.spinsuite.process.InfoPara;
 import org.spinsuite.process.ProcessCtl;
 import org.spinsuite.process.ProcessInfo;
-import org.spinsuite.process.ProcessInfoLog;
 import org.spinsuite.process.ProcessInfoParameter;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
-import org.spinsuite.util.DisplaySearchItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.KeyNamePair;
@@ -100,7 +97,7 @@ import com.itextpdf.text.DocumentException;
 public class V_Process extends Activity {
 	
 	/**	Adapter					*/
-	private SearchAdapter 			logAdapter 				= null;
+	private ProcessAdapter 			logAdapter 				= null;
 	/**	Report Adapter			*/
 	private ReportAdapter 			reportAdapter			= null;
 	/**	Field					*/
@@ -810,25 +807,8 @@ public class V_Process extends Activity {
 	 * @return void
 	 */
 	private void showLog(){
-		ArrayList<DisplaySearchItem> data = new ArrayList<DisplaySearchItem>();
-		SimpleDateFormat formatDate = DisplayType.getDateFormat(getApplicationContext());
-		//	Get Logs
-		ProcessInfoLog[] logs = m_pInfo.getLogs();
-		if(logs != null){
-			for(ProcessInfoLog log : m_pInfo.getLogs()){
-				String strLog = log.getP_Msg();
-				//	Add Date
-				if(log.getP_Date() != null)
-					strLog += " | " + formatDate.format(log.getP_Date());
-				//	Number
-				if(log.getP_Number() != null)
-					strLog += " | " + log.getP_Number().doubleValue();
-				//	Add to array
-				data.add(new DisplaySearchItem(log.getLog_ID(), strLog.toString()));
-			}
-		}
 		//	Set Adapter
-		logAdapter = new SearchAdapter(this, data, null);
+		logAdapter = new ProcessAdapter(this, m_pInfo.getLogsAsList());
 		lv_LogReport.setAdapter(logAdapter);
 	}
 	

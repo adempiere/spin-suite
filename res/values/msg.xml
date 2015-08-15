@@ -138,4 +138,6 @@
 	<string name="msg_PasscodeIsInvalid">Passcode is Invalid</string>
 	<string name="msg_CreatedFromSpinSuite">Created from Spin-Suite Application</string>
 	<string name="msg_NoChanged">No Changed</string>
+	<string name="msg_SyncSequenceCheck">Sequence Checking</string>
+	<string name="msg_SyncSequenceCheckDescription">Checking System and Document Sequences</string>
 </resources>

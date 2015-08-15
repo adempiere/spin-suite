@@ -914,7 +914,7 @@ public final class DisplayType
 	 * @return
 	 * @return boolean
 	 */
-	public static boolean booleanValue(String value){
+	public static boolean getBooleanValue(String value){
 		if (value == null)
 			return false;
 		return value.equals("Y");

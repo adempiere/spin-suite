@@ -31,6 +31,7 @@ import org.spinsuite.interfaces.BackGroundProcess;
 import org.spinsuite.model.MSPSSyncMenu;
 import org.spinsuite.model.MSPSSyncTable;
 import org.spinsuite.model.MSPSTable;
+import org.spinsuite.model.MSequence;
 import org.spinsuite.model.MWSWebServiceType;
 import org.spinsuite.model.PO;
 import org.spinsuite.model.POInfo;
@@ -185,10 +186,12 @@ public class SyncDataTask implements BackGroundProcess  {
 				&& !m_MethodValue.equals(SyncValues.WSMQueryData)) {
 			icon = android.R.drawable.stat_sys_upload_done;
 		}
+		//	
 		m_Builder.setContentTitle(m_PublicTittle)
-		.setContentText(m_PublicMsg)
-		.setProgress(0, 0, false)
-		.setSmallIcon(icon);
+			.setContentText(m_PublicMsg)
+			.setProgress(0, 0, false)
+			.setSmallIcon(icon);
+		//	
 		m_NFManager.notify(0, m_Builder.build());
 	}
 
@@ -196,13 +199,26 @@ public class SyncDataTask implements BackGroundProcess  {
 	public Object run() {
 		//	Get Previous Milliseconds
 		long previousMillis = System.currentTimeMillis();
-		boolean m_Error = false;
 		try{
 			conn = new DB(m_ctx);
 			conn.openDB(DB.READ_WRITE);
 			syncData(m_SPS_SyncMenu_ID, 0);
+			//	Sequence Check
+			m_PublicTittle = m_ctx.getString(R.string.msg_SyncSequenceCheck);
+			m_PublicMsg = m_ctx.getString(R.string.msg_SyncSequenceCheckDescription);
+			m_Progress = -1;
+			publishOnRunning();
+			//	Check Table ID
+			MSequence.checkTableID(m_ctx, null);
+			//	Last Message
+			long afterMillis = System.currentTimeMillis();
+			long duration = afterMillis - previousMillis;
+			m_PublicTittle = m_ctx.getString(R.string.SynchronizingEnding);
+			m_PublicMsg = m_ctx.getString(R.string.Sync_Duration) 
+							+ ": " + SyncValues.getDifferenceValue(duration);
+			//	Publish
+			publishAfterEnd();
 		} catch(Exception e) {
-			m_Error = true;
 			LogM.log(m_ctx, getClass(), Level.SEVERE, e.getLocalizedMessage());
 			e.printStackTrace();
 		}
@@ -210,16 +226,6 @@ public class SyncDataTask implements BackGroundProcess  {
 		finally{
 			conn.close();
 			conn = null;
-			//	Last Message
-			if(!m_Error) {
-				long afterMillis = System.currentTimeMillis();
-				long duration = afterMillis - previousMillis;
-				m_PublicMsg = (m_PublicMsg == null 
-									? ""
-											: m_PublicMsg + " ") + m_ctx.getString(R.string.SynchronizingEnding) + " " 
-						+ m_ctx.getString(R.string.Sync_Duration) 
-						+ ": " + SyncValues.getDifferenceValue(duration);
-			}
 		}
 		//	
 		return null;
@@ -647,6 +653,7 @@ public class SyncDataTask implements BackGroundProcess  {
 			}
 			//	Mark like Synchronized
 			sm.setLastSynchronized(new Timestamp(System.currentTimeMillis()));
+			sm.setSynchronization(true);
 			sm.save();
 		}
 		else if (m_MethodValue.equals(SyncValues.WSMCreateData)){
@@ -664,6 +671,7 @@ public class SyncDataTask implements BackGroundProcess  {
 						synctable.setIsSynchronized(true);
 						synctable.save();
 						sm.setLastSynchronized(new Timestamp(System.currentTimeMillis()));
+						sm.setSynchronization(true);
 						sm.save();
 					}
 				} catch (Exception e) {
@@ -688,6 +696,7 @@ public class SyncDataTask implements BackGroundProcess  {
 						synctable.setIsSynchronized(true);
 						synctable.save();
 						sm.setLastSynchronized(new Timestamp(System.currentTimeMillis()));
+						sm.setSynchronization(true);
 						sm.save();
 					}
 				} catch (Exception e) {
