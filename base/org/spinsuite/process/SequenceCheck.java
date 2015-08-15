@@ -16,29 +16,23 @@
 package org.spinsuite.process;
 
 import org.spinsuite.model.MSequence;
-import org.spinsuite.util.Env;
 
 /**
- * Reset Cache
- * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Aug 15, 2015, 1:44:07 PM
  *
  */
-public class CacheReset extends StdProcess {
+public class SequenceCheck extends StdProcess {
 
 	@Override
 	protected void prepare() {
-		//	
-	}
-	
-	@Override
-	protected String doIt() throws Exception {
-		MSequence.checkTableID(getCtx(), this);
-		//	Delete
-		int deleted = Env.cacheReset(getCtx());
-		//	Load Role Access
-		Env.loadRoleAccess(getCtx(), true);
-		//	Default
-		return "@Deleted@ = " + deleted;
+		//	Nothing
 	}
 
+	@Override
+	protected String doIt() throws Exception {
+		//	Check Sequence
+		MSequence.checkTableID(getCtx(), this);
+		//	
+		return "Ok";
+	}
 }

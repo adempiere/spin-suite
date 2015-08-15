@@ -18,9 +18,11 @@ package org.spinsuite.model;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.spinsuite.base.DB;
+import org.spinsuite.process.StdProcess;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 import org.spinsuite.view.lookup.GridTab;
@@ -55,6 +57,18 @@ public class MSequence extends X_AD_Sequence {
 	public MSequence(Context ctx, Cursor rs, DB conn) {
 		super(ctx, rs, conn);
 	}
+	
+	/**	Sequence for Table Document No's	*/
+	private static final String	PREFIX_DOCSEQ 		= "DocumentNo_";
+	/**	Prefix for Document No		*/
+	public static final String 	DOCUMENT_NO_PREFIX	= "<";
+	/**	Suffix for Document No		*/
+	public static final String 	DOCUMENT_NO_SUFFIX	= ">";
+	/**	Start Number			*/
+	public static final int		INIT_NO 			= 1000000;	//	1 Mio
+	/**	Start System Number		*/
+	// public static final int		INIT_SYS_NO = 100; // start number for Compiere
+	public static final int		INIT_SYS_NO 		= 50000;   // start number for Adempiere
 	
 	/**
 	 *
@@ -226,7 +240,7 @@ public class MSequence extends X_AD_Sequence {
 				LogM.log(ctx, MSequence.class, Level.FINE, "Msequence.getDocumentNo >> selectSQL:" + selectSQL);
 				//	Compile
 				conn.compileQuery(selectSQL);
-				conn.addString("DocumentNo_" + p_TableName);
+				conn.addString(PREFIX_DOCSEQ + p_TableName);
 				conn.addBoolean(true);
 				conn.addBoolean(false);
 				//	
@@ -308,9 +322,127 @@ public class MSequence extends X_AD_Sequence {
 			d = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
 		String calendarYear = sdf.format(d);
-		String sql = "select CurrentNext From AD_Sequence_No Where AD_Sequence_ID = ? and CalendarYear = ?";
+		String sql = "SELECT CurrentNext From AD_Sequence_No WHERE AD_Sequence_ID = ? AND CalendarYear = ?";
 
 		return DB.getSQLValueString(tab.getCtx(), sql, conn, String.valueOf(AD_Sequence_ID), String.valueOf(calendarYear));
 	}
 
+	/**
+	 * 	Validate Table Sequence Values
+	 * Copied from ADempiere
+	 *	@return true if updated
+	 */
+	public boolean validateTableIDValue() {
+		if (!isTableID())
+			return false;
+		String tableName = getName();
+		int AD_Column_ID = DB.getSQLValue(null, "SELECT MAX(c.AD_Column_ID) "
+			+ "FROM AD_Table t"
+			+ " INNER JOIN AD_Column c ON (t.AD_Table_ID=c.AD_Table_ID) "
+			+ "WHERE t.TableName='" + tableName + "'"
+			+ " AND c.ColumnName='" + tableName + "_ID'");
+		if (AD_Column_ID <= 0)
+			return false;
+		//
+//		MSystem system = MSystem.get(getCtx());
+//		int IDRangeEnd = 0;
+//		if (system.getIDRangeEnd() != null)
+//			IDRangeEnd = system.getIDRangeEnd().intValue();
+		boolean change = false;
+		String info = null;
+
+		//	Current Next
+		String sql = "SELECT MAX(" + tableName + "_ID) FROM " + tableName;
+//		if (IDRangeEnd > 0)
+//			sql += " WHERE " + tableName + "_ID < " + IDRangeEnd;
+		int maxTableID = DB.getSQLValue(null, sql);
+		if (maxTableID < INIT_NO)
+			maxTableID = INIT_NO - 1;
+		maxTableID++;		//	Next
+		if (getCurrentNext() < maxTableID) {
+			setCurrentNext(maxTableID);
+			info = "CurrentNext=" + maxTableID;
+			change = true;
+		}
+
+		//	Get Max System_ID used in Table
+		sql = "SELECT MAX(" + tableName + "_ID) FROM " + tableName
+			+ " WHERE " + tableName + "_ID < " + INIT_NO;
+		int maxTableSysID = DB.getSQLValue(null, sql);
+		if (maxTableSysID <= 0)
+			maxTableSysID = INIT_SYS_NO - 1;
+		maxTableSysID++;	//	Next
+		if (getCurrentNextSys() < maxTableSysID) {
+			setCurrentNextSys(maxTableSysID);
+			if (info == null)
+				info = "CurrentNextSys=" + maxTableSysID;
+			else
+				info += " - CurrentNextSys=" + maxTableSysID;
+			change = true;
+		}
+		if (info != null)
+			LogM.log(getCtx(), "MSequence", Level.FINE, getName() + " - " + info);
+		return change;
+	}	//	validate
+	
+	/**
+	 * Check Table Sequence ID values
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param process
+	 * @return void
+	 */
+	public static void checkTableID(Context ctx, StdProcess process) {
+		//	Make Where Clause
+		String whereClause = new String("IsTableID='Y' AND "
+				+ "EXISTS(SELECT 1 FROM SPS_Table t "
+				+ "			WHERE t.TableName = AD_Sequence.Name "
+				+ "			AND t.IsView = 'N')");
+		DB conn = null;
+		if(process != null) {
+			conn = process.getConnection();
+		}
+		//	Get Sequences
+		List<MSequence> m_SequenceList = new Query(ctx, Table_Name, whereClause, conn)
+			.setOrderBy(COLUMNNAME_Name)
+			.<MSequence>list();
+		//	Validate Sequence
+		if(m_SequenceList == null
+				|| m_SequenceList.size() == 0) {
+			LogM.log(ctx, "MSequence", Level.SEVERE, "No Sequence for Nobody tables");
+			return;
+		}
+		//	Counter
+		int counter = 0;
+		//	Iterate
+		for(MSequence m_Sequence : m_SequenceList) {
+			int old = m_Sequence.getCurrentNext();
+			int oldSys = m_Sequence.getCurrentNextSys();
+			if (m_Sequence.validateTableIDValue()) {
+				if (m_Sequence.getCurrentNext() != old) {
+					String msg = m_Sequence.getName() + " ID  " 
+						+ old + " -> " + m_Sequence.getCurrentNext();
+					if (process != null)
+						process.addLog(0, null, null, msg);
+					else
+						LogM.log(ctx, "MSequence", Level.FINE, m_Sequence.getError());
+				}
+				if (m_Sequence.getCurrentNextSys() != oldSys) {
+					String msg = m_Sequence.getName() + " Sys " 
+						+ oldSys + " -> " + m_Sequence.getCurrentNextSys();
+					if (process != null)
+						process.addLog(0, null, null, msg);
+					else
+						LogM.log(ctx, "MSequence", Level.FINE, msg);
+				}
+				//	
+				if (m_Sequence.save())
+					counter++;
+				else
+					LogM.log(ctx, "MSequence", Level.SEVERE, m_Sequence.getError());
+			}
+		}
+		//	Log
+		LogM.log(ctx, "MSequence", Level.FINE, "#" + counter);
+	}
 }
