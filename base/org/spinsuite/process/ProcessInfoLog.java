@@ -60,7 +60,7 @@ public class ProcessInfoLog {
 
 	private int 		m_Log_ID;
 	private int 		m_P_ID;
-	private Date 	m_P_Date;
+	private Date 		m_P_Date;
 	private BigDecimal	m_P_Number;
 	private String 		m_P_Msg;
 

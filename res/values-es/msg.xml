@@ -138,4 +138,6 @@
 	<string name="msg_PasscodeIsInvalid">El código de acceso es inválido</string>
 	<string name="msg_CreatedFromSpinSuite">Creado desde Aplicación Spin-Suite</string>
 	<string name="msg_NoChanged">No Cambiado</string>
+	<string name="msg_SyncSequenceCheck">Comprobando Sequencia</string>
+	<string name="msg_SyncSequenceCheckDescription">Comprueba la secuencia del sistema y del documento</string>
 </resources>

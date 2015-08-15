@@ -77,10 +77,6 @@ public abstract class PO {
 	private boolean					isSynchronization 	= false;
 	/**	For Skip Column				*/
 	private static String [] 		SKIP_COLUMN			= new String[]{"DocumentNo", "Value"};
-	/**	Prefix for Document No		*/
-	private static String 			DOCUMENT_NO_PREFIX	= "<";
-	/**	Suffix for Document No		*/
-	private static String 			DOCUMENT_NO_SUFFIX	= ">";
 	
 	/**
 	 * 
@@ -1267,8 +1263,8 @@ public abstract class PO {
 				} else if(column.ColumnName.equals("DocumentNo")
 						&& (value == null 
 								|| ((String)value).length() == 0
-								|| ((String)value).startsWith(DOCUMENT_NO_PREFIX) 
-										&& ((String)value).endsWith(DOCUMENT_NO_SUFFIX))) {
+								|| ((String)value).startsWith(MSequence.DOCUMENT_NO_PREFIX) 
+										&& ((String)value).endsWith(MSequence.DOCUMENT_NO_SUFFIX))) {
 						//	Get Document Type
 						int m_C_DocType_ID = get_ValueAsInt("C_DocType_ID");
 						//	Target Document
@@ -1281,7 +1277,7 @@ public abstract class PO {
 						//	Add Prefix
 						if(documentNo != null
 								&& !toSave) {
-							documentNo = DOCUMENT_NO_PREFIX + documentNo + DOCUMENT_NO_SUFFIX;
+							documentNo = MSequence.DOCUMENT_NO_PREFIX + documentNo + MSequence.DOCUMENT_NO_SUFFIX;
 						}
 						//End Dixon Martinez
 						return documentNo;
@@ -1305,8 +1301,8 @@ public abstract class PO {
 				if(column.ColumnName.equals("DocumentNo")
 						&& (value == null 
 						|| ((String)value).length() == 0
-						|| ((String)value).startsWith(DOCUMENT_NO_PREFIX) 
-								&& ((String)value).endsWith(DOCUMENT_NO_SUFFIX))) {
+						|| ((String)value).startsWith(MSequence.DOCUMENT_NO_PREFIX) 
+								&& ((String)value).endsWith(MSequence.DOCUMENT_NO_SUFFIX))) {
 					//	Get Document Type
 					int m_C_DocType_ID = get_ValueAsInt("C_DocType_ID");
 					//	Target Document
@@ -1319,7 +1315,7 @@ public abstract class PO {
 					//	Add Prefix
 					if(documentNo != null
 							&& !toSave) {
-						documentNo = DOCUMENT_NO_PREFIX + documentNo + DOCUMENT_NO_SUFFIX;
+						documentNo = MSequence.DOCUMENT_NO_PREFIX + documentNo + MSequence.DOCUMENT_NO_SUFFIX;
 					}
 					//End Dixon Martinez
 					return documentNo;
