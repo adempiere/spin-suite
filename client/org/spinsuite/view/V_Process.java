@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 
 import jxl.write.WriteException;
@@ -36,6 +38,7 @@ import org.spinsuite.print.layout.ReportExportMenuAdapter;
 import org.spinsuite.process.InfoPara;
 import org.spinsuite.process.ProcessCtl;
 import org.spinsuite.process.ProcessInfo;
+import org.spinsuite.process.ProcessInfoLog;
 import org.spinsuite.process.ProcessInfoParameter;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
@@ -807,9 +810,13 @@ public class V_Process extends Activity {
 	 * @return void
 	 */
 	private void showLog(){
-		//	Set Adapter
-		logAdapter = new ProcessAdapter(this, m_pInfo.getLogsAsList());
-		lv_LogReport.setAdapter(logAdapter);
+		//	Get As List
+		if(m_pInfo.getLogs() != null) {
+			List<ProcessInfoLog> data = Arrays.asList(m_pInfo.getLogs());
+			//	Set Adapter
+			logAdapter = new ProcessAdapter(this, data);
+			lv_LogReport.setAdapter(logAdapter);
+		}
 	}
 	
 	/**
