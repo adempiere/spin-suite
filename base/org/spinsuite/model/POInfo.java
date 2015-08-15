@@ -217,8 +217,8 @@ public class POInfo {
 			int i = 0;
 			m_SPS_Table_ID 	= rs.getInt(i++);
 			m_TableName 	= rs.getString(i++);
-			m_IsDeleteable	= DisplayType.booleanValue(rs.getString(i++));
-			m_IsChangeLog = DisplayType.booleanValue(rs.getString(i++));
+			m_IsDeleteable	= DisplayType.getBooleanValue(rs.getString(i++));
+			m_IsChangeLog = DisplayType.getBooleanValue(rs.getString(i++));
 			do{
 				POInfoColumn iColumn = new POInfoColumn();
 				iColumn.SPS_Table_ID = m_SPS_Table_ID;
@@ -234,15 +234,15 @@ public class POInfo {
 				iColumn.EntityType = rs.getString(i++);
 				iColumn.FieldLength = rs.getInt(i++);
 				iColumn.FormatPattern = rs.getString(i++);
-				iColumn.IsAlwaysUpdateable = DisplayType.booleanValue(rs.getString(i++));
-				iColumn.IsCentrallyMaintained = DisplayType.booleanValue(rs.getString(i++));
-				iColumn.IsEncrypted= DisplayType.booleanValue(rs.getString(i++));
-				iColumn.IsIdentifier= DisplayType.booleanValue(rs.getString(i++));
-				iColumn.IsKey= DisplayType.booleanValue(rs.getString(i++));
-				iColumn.IsMandatory= DisplayType.booleanValue(rs.getString(i++));
-				iColumn.IsParent= DisplayType.booleanValue(rs.getString(i++));
-				iColumn.IsSelectionColumn= DisplayType.booleanValue(rs.getString(i++));
-				iColumn.IsUpdateable= DisplayType.booleanValue(rs.getString(i++));
+				iColumn.IsAlwaysUpdateable = DisplayType.getBooleanValue(rs.getString(i++));
+				iColumn.IsCentrallyMaintained = DisplayType.getBooleanValue(rs.getString(i++));
+				iColumn.IsEncrypted= DisplayType.getBooleanValue(rs.getString(i++));
+				iColumn.IsIdentifier= DisplayType.getBooleanValue(rs.getString(i++));
+				iColumn.IsKey= DisplayType.getBooleanValue(rs.getString(i++));
+				iColumn.IsMandatory= DisplayType.getBooleanValue(rs.getString(i++));
+				iColumn.IsParent= DisplayType.getBooleanValue(rs.getString(i++));
+				iColumn.IsSelectionColumn= DisplayType.getBooleanValue(rs.getString(i++));
+				iColumn.IsUpdateable= DisplayType.getBooleanValue(rs.getString(i++));
 				iColumn.Name = rs.getString(i++);
 				iColumn.SelectionSeqNo = rs.getInt(i++);
 				iColumn.SeqNo = rs.getInt(i++);
@@ -251,7 +251,7 @@ public class POInfo {
 				iColumn.ValueMin = rs.getString(i++);
 				iColumn.VFormat = rs.getString(i++);
 				iColumn.InfoFactoryClass = rs.getString(i++);
-				iColumn.IsAllowLogging = DisplayType.booleanValue(rs.getString(i++));
+				iColumn.IsAllowLogging = DisplayType.getBooleanValue(rs.getString(i++));
 				//Log.i("m_IsAlwaysUpdateable", " - " + m_ColumnName + " = " + m_IsAlwaysUpdateable);
 				columns.add(iColumn);
 				i = 4;

@@ -15,7 +15,6 @@
  *************************************************************************************/
 package org.spinsuite.process;
 
-import org.spinsuite.model.MSequence;
 import org.spinsuite.util.Env;
 
 /**
@@ -32,7 +31,6 @@ public class CacheReset extends StdProcess {
 	
 	@Override
 	protected String doIt() throws Exception {
-		MSequence.checkTableID(getCtx(), this);
 		//	Delete
 		int deleted = Env.cacheReset(getCtx());
 		//	Load Role Access

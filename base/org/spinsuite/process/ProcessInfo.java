@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import org.spinsuite.base.DB;
 import org.spinsuite.process.ProcessInfoLog;
 import org.spinsuite.util.ActivityParameter;
+import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.LogM;
 
@@ -85,8 +86,10 @@ public class ProcessInfo {
 	private DB							conn = null;
 	/**	Handle Connection				*/
 	private boolean 					m_IsHandleConnection = false;
-	
-	private static final int 			HEADER_INDEX = 9;
+	/**	Context Value Prefix			*/
+	private final String				CTX_VALUE_PREFIX 	= "PI|T|";
+	/**	Header Information				*/
+	private static final int 			HEADER_INDEX = 11;
 	
 	/**	Show Help 						*/
 	public static final String SHOW_HELP_REF_SHOW_HELP 			= "Y";
@@ -166,9 +169,34 @@ public class ProcessInfo {
 	 * @return
 	 * @return boolean
 	 */
-	private boolean loadProcess(){
-		boolean loaded = false;
+	private boolean loadProcess() {
+		String language = Env.getAD_Language();
+		boolean isBaseLanguage = Env.isBaseLanguage();
+		//	Create Value
+		String ctx_info_column_value = CTX_VALUE_PREFIX + language + "|" + m_AD_Process_ID;
 		//	
+		InfoParaWraper wrapper = (InfoParaWraper) Env.getContextObject(ctx_info_column_value, InfoParaWraper.class);
+		//	For get from cache
+		if(wrapper != null) {
+			setValue(wrapper.Value);
+			setTitle(wrapper.Title);
+			setDescription(wrapper.Description);
+			setHelp(wrapper.Help);
+			setClassName(wrapper.ClassName);
+			setProcedureName(wrapper.ProcedureName);
+			setIsReport(wrapper.IsReport);
+			setShowHelp(wrapper.ShowHelp);
+			setAD_ReportView_ID(wrapper.AD_ReportView_ID);
+			setAD_PrintFormat_ID(wrapper.AD_PrintFormat_ID);
+			setIsServerProcess(wrapper.IsServerProcess);
+			//	Fields
+			m_processFields = wrapper.ProcessFields;
+			//	Return
+			return true;
+		}
+		//	
+		boolean loaded = false;
+		//	Get Connection
 		if(conn == null){
 			conn = new DB(ctx);
 			setIsHandleConnection(true);
@@ -178,15 +206,13 @@ public class ProcessInfo {
 		DB.loadConnection(conn, DB.READ_ONLY);
 		//	Open Database
 		conn.openDB(DB.READ_ONLY);
-		String language = Env.getAD_Language();
-		boolean isBaseLanguage = Env.isBaseLanguage();
 		//	SQL
 		StringBuffer sql = new StringBuffer();
 		//	if Base Language
 		if(isBaseLanguage){
-			sql.append("SELECT p.Name, " + 
+			sql.append("SELECT p.Value, p.Name, " + 
 					"p.Description, p.Help, " +
-					"p.ClassName, p.ProcedureName, p.isReport, p.ShowHelp, p.AD_ReportView_ID, p.AD_PrintFormat_ID, " +
+					"p.ClassName, p.ProcedureName, p.isReport, p.ShowHelp, p.AD_ReportView_ID, p.AD_PrintFormat_ID, p.IsServerProcess, " +
 					"pp.AD_Process_Para_ID, pp.AD_Element_ID, pp.AD_Reference_ID, " +
 					"pp.AD_Reference_Value_ID, pp.AD_Val_Rule_ID, " +
 					"pp.ColumnName, pp.Name, pp.Description, " + 
@@ -196,9 +222,9 @@ public class ProcessInfo {
 					"FROM AD_Process p " +
 					"LEFT JOIN AD_Process_Para pp ON(pp.AD_Process_ID = p.AD_Process_ID) ");
 		} else {
-			sql.append("SELECT COALESCE(pt.Name, p.Name) Name, " + 
+			sql.append("SELECT p.Value, COALESCE(pt.Name, p.Name) Name, " + 
 					"COALESCE(pt.Description, p.Description) Description, COALESCE(pt.Help, p.Help) Help, " +
-					"p.ClassName, p.ProcedureName, p.isReport, p.ShowHelp, p.AD_ReportView_ID, p.AD_PrintFormat_ID, " +
+					"p.ClassName, p.ProcedureName, p.isReport, p.ShowHelp, p.AD_ReportView_ID, p.AD_PrintFormat_ID, p.IsServerProcess, " +
 					"pp.AD_Process_Para_ID, pp.AD_Element_ID, pp.AD_Reference_ID, " +
 					"pp.AD_Reference_Value_ID, pp.AD_Val_Rule_ID, " +
 					"pp.ColumnName, COALESCE(ppt.Name, pp.Name) Name, COALESCE(ppt.Description, pp.Description) Description, " + 
@@ -227,18 +253,18 @@ public class ProcessInfo {
 		ArrayList<InfoPara> fields = new ArrayList<InfoPara>();
 		if(rs.moveToFirst()){
 			int i = 0;
-			String booleanValue = null;
 			//	New Process Info
+			setValue(rs.getString(i++));
 			setTitle(rs.getString(i++));
 			setDescription(rs.getString(i++));
 			setHelp(rs.getString(i++));
 			setClassName(rs.getString(i++));
 			setProcedureName(rs.getString(i++));
-			booleanValue = rs.getString(i++);
-			setIsReport((booleanValue != null && booleanValue.equals("Y")));
+			setIsReport(DisplayType.getBooleanValue(rs.getString(i++)));
 			setShowHelp(rs.getString(i++));
 			setAD_ReportView_ID(rs.getInt(i++));
 			setAD_PrintFormat_ID(rs.getInt(i++));
+			setIsServerProcess(DisplayType.getBooleanValue(rs.getString(i++)));
 			//	Loop for Parameters
 			do {
 				//	New Field
@@ -257,27 +283,40 @@ public class ProcessInfo {
 				iFieldPara.EntityType = rs.getString(i++);
 				iFieldPara.FieldLength = rs.getInt(i++);
 				iFieldPara.SeqNo = rs.getInt(i++);
-				booleanValue = rs.getString(i++);
-				iFieldPara.IsCentrallyMaintained = (booleanValue != null && booleanValue.equals("Y"));
-				booleanValue = rs.getString(i++);
-				iFieldPara.IsActive= (booleanValue != null && booleanValue.equals("Y"));
-				booleanValue = rs.getString(i++);
-				iFieldPara.IsMandatory= (booleanValue != null && booleanValue.equals("Y"));
-				booleanValue = rs.getString(i++);
-				iFieldPara.IsRange = (booleanValue != null && booleanValue.equals("Y"));
+				iFieldPara.IsCentrallyMaintained = DisplayType.getBooleanValue(rs.getString(i++));
+				iFieldPara.IsActive = DisplayType.getBooleanValue(rs.getString(i++));
+				iFieldPara.IsMandatory = DisplayType.getBooleanValue(rs.getString(i++));
+				iFieldPara.IsRange = DisplayType.getBooleanValue(rs.getString(i++));
 				iFieldPara.ValueMax = rs.getString(i++);
 				iFieldPara.ValueMin = rs.getString(i++);
 				iFieldPara.VFormat = rs.getString(i++);	
 				//	Add to Array
 				fields.add(iFieldPara);
 				i = HEADER_INDEX;
-			}while(rs.moveToNext());
+			} while(rs.moveToNext());
 			//	Set Fields
 			m_processFields = new InfoPara[fields.size()];
 			//	Populate Array
 			fields.toArray(m_processFields);
 			//	Is Loaded
 			loaded = true;
+			//	Save to Cache
+			wrapper = new InfoParaWraper();
+			wrapper.Value 				= getValue();
+			wrapper.Title 				= getTitle();
+			wrapper.Description 		= getDescription();
+			wrapper.Help 				= getHelp();
+			wrapper.ClassName 			= getClassName();
+			wrapper.ProcedureName 		= getProcedureName();
+			wrapper.IsReport 			= isReport();
+			wrapper.ShowHelp 			= getShowHelp();
+			wrapper.AD_ReportView_ID 	= getAD_ReportView_ID();
+			wrapper.AD_PrintFormat_ID 	= getAD_PrintFormat_ID();
+			wrapper.IsServerProcess 	= isServerProcess();
+			//	Params
+			wrapper.ProcessFields 		= m_processFields;
+			//	Save
+			Env.setContextObject(ctx_info_column_value, wrapper);
 		}
 		//	Close Connection
 		if(isHandleConnection())

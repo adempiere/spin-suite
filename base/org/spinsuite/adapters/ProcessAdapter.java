@@ -17,13 +17,13 @@ package org.spinsuite.adapters;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.spinsuite.base.R;
 import org.spinsuite.process.ProcessInfoLog;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.Msg;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
@@ -33,7 +33,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
-import android.widget.Filter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -75,8 +74,6 @@ public class ProcessAdapter extends ArrayAdapter<ProcessInfoLog> {
 	private Context 						ctx;
 	/**	Data							*/
 	private List<ProcessInfoLog> 			data;
-	/**	Backup							*/
-	private List<ProcessInfoLog> 			originalData;
 	/**	View Identifier					*/
 	private int 							view_ID;
 	/**	Preferred Item Height			*/
@@ -105,7 +102,7 @@ public class ProcessAdapter extends ArrayAdapter<ProcessInfoLog> {
 		//	Set Name
 		TextView tv_Msg = (TextView)item.findViewById(R.id.tv_Msg);
 		if(recordItem.getP_Msg() != null) {
-			tv_Msg.setText(recordItem.getP_Msg());
+			tv_Msg.setText(Msg.parseTranslation(ctx, recordItem.getP_Msg()));
 		}
 		//	For Date and Number
 		if(recordItem.getP_Date() != null
@@ -125,72 +122,5 @@ public class ProcessAdapter extends ArrayAdapter<ProcessInfoLog> {
 		}
 		//	Return
 		return item;
-	}
-	
-	@Override
-	public Filter getFilter() {
-	    return new Filter() {
-	        @SuppressWarnings("unchecked")
-	        @Override
-	        protected void publishResults(CharSequence constraint, FilterResults results) {
-	            data = (List<ProcessInfoLog>) results.values;
-	            if (results.count > 0) {
-	            	notifyDataSetChanged();
-	            } else {
-	            	notifyDataSetInvalidated();
-	            }  
-	        }
-
-	        @Override
-	        protected FilterResults performFiltering(CharSequence constraint) {
-	            //	Populate Original Data
-	        	if(originalData == null)
-	            	originalData = data;
-	        	//	Get filter result
-	        	List<ProcessInfoLog> filteredResults = getResults(constraint);
-	            //	Result
-	            FilterResults results = new FilterResults();
-	            //	
-	            results.values = filteredResults;
-	            results.count = filteredResults.size();
-	            //	
-	            return results;
-	        }
-
-	        /**
-	         * Search
-	         * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 02/03/2014, 03:19:33
-	         * @param constraint
-	         * @return
-	         * @return List<DisplaySearchItem>
-	         */
-	        private List<ProcessInfoLog> getResults(CharSequence constraint) {
-	        	//	Verify
-	            if(constraint != null
-	            		&& constraint.length() > 0) {
-	            	//	new Filter
-	            	List<ProcessInfoLog> filteredResult = new ArrayList<ProcessInfoLog>();
-	                for(ProcessInfoLog item : originalData) {
-	                    if((item.getP_Msg() != null 
-	                    		&& item.getP_Msg().toLowerCase(Env.getLocate())
-	                    					.contains(constraint.toString().toLowerCase(Env.getLocate()))))
-	                        filteredResult.add(item);
-	                }
-	                return filteredResult;
-	            }
-	            //	Only Data
-	            return originalData;
-	        }
-	    };
-	}
-	
-	@Override
-	public int getCount() {
-		return data.size();
-	}
-	
-	@Override
-	public ProcessInfoLog getItem(int position) {
-		return data.get(position);
 	}
 }
