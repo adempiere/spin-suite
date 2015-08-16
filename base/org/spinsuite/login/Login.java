@@ -17,7 +17,6 @@ package org.spinsuite.login;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
@@ -40,12 +39,10 @@ import org.spinsuite.view.lookup.LookupMenu;
 import test.LoadInitData;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -102,7 +99,7 @@ public class Login extends FragmentActivity implements I_Login {
 	/** Pending Intent Fragment */ 
 	private PendingIntent 					m_PendingIntent 	= null;
 	/**	Notification ID			*/
-	private static final int				NOTIFICATION_ID 	= 1;
+	private static final int				NOTIFICATION_ID 	= 1111111;
 	
 	
 	@Override
@@ -313,6 +310,7 @@ public class Login extends FragmentActivity implements I_Login {
     	//	Verify Status and Instance Notification
     	if(msgType != null 
     			&& msgType.equals(SyncValues.BC_MSG_TYPE_ERROR)) {
+    		m_Builder.setContentIntent(m_PendingIntent);
 			m_Builder.setContentTitle(msg)
 									.setSmallIcon(android.R.drawable.stat_sys_download);
 			//	Set To Error
@@ -470,18 +468,15 @@ public class Login extends FragmentActivity implements I_Login {
 	 * @return void
 	 */
 	private void setInstanceNotification() {
-		m_NFManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		m_Builder = new NotificationCompat.Builder(this);
-		ActivityManager m_ActivityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-		List<ActivityManager.RunningTaskInfo> tasks = m_ActivityManager.getRunningTasks(1);
-		ActivityManager.RunningTaskInfo task = tasks.get(0);
-		ComponentName mainActivity = task.baseActivity;
-		Intent intent = new Intent();
-		intent.setComponent(mainActivity);
+		Intent intent = new Intent(this, Login.class);
 		intent.setAction(Intent.ACTION_MAIN);
 		intent.addCategory(Intent.CATEGORY_LAUNCHER);
+		//	Add Parameter Request
+		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		//	Set Main Activity
-		m_PendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+		m_PendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		m_NFManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		m_Builder = new NotificationCompat.Builder(this);
 	}
     
     /**
