@@ -130,6 +130,8 @@ public class T_Pref_Login extends T_Pref_Parent {
 					} else {
 						ev_Role.collapseGroup(0);
 					}
+					//	Hide Keyboard
+					Env.hideKeyBoad(getActivity());
 				}
 			}
 		});

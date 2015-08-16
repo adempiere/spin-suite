@@ -423,9 +423,6 @@ public class SyncDataTask implements BackGroundProcess  {
 			param = new WSModelCRUDRequest(m_ctx, m_NameSpace, wst.getWS_WebServiceType_ID(), conn, data.get_ID(), data);
 		else if (m_MethodValue.equals(SyncValues.WSMUpdateData))
 			param = new WSModelCRUDRequest(m_ctx, m_NameSpace, wst.getWS_WebServiceType_ID(), conn, data.get_ID() , data);
-	//	
-	
-		
 		//	
 		return param;
 	}
