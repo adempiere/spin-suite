@@ -13,36 +13,59 @@
  * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
-package org.spinsuite.bchat.util;
-
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+package org.spinsuite.model;
 
 /**
- * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Apr 10, 2015, 8:57:57 PM
- *
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Aug 16, 2015, 4:44:46 AM
+ * <li> Add Support to Mobile
  */
-public class BC_ThreadHolder {
+public class OrgAccess {
 
 	/**
-	 * *** Constructor ***
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * 	Org Access constructor
+	 *	@param ad_Client_ID client
+	 *	@param ad_Org_ID org
+	 *	@param readonly r/o
 	 */
-	public BC_ThreadHolder() {
-		//	
+	public OrgAccess (int ad_Client_ID, int ad_Org_ID, boolean readonly) {
+		this.AD_Client_ID = ad_Client_ID;
+		this.AD_Org_ID = ad_Org_ID;
+		this.readOnly = readonly;
 	}
+	/** Client				*/
+	public int 		AD_Client_ID = 0;
+	/** Organization		*/
+	public int 		AD_Org_ID = 0;
+	/** Read Only			*/
+	public boolean 	readOnly = true;
 	
-	/**	Main Parent				*/
-	public LinearLayout 	ll_MainMessage;
-	/**	Linear Layout			*/
-	public LinearLayout 	ll_Message;
-	/**	For Background			*/
-	public RelativeLayout 	rl_Conversation;
-	/**	Text for Conversation	*/
-	public TextView 		tv_Conversation;
-	/**	Text for Time			*/
-	public TextView 		tv_Time;
-	/**	User Name				*/
-	public TextView 		tv_UserName;
+	
+	/**
+	 * 	Equals
+	 *	@param obj object to compare
+	 *	@return true if equals
+	 */
+	public boolean equals (Object obj) {
+		if (obj != null && obj instanceof OrgAccess) {
+			OrgAccess comp = (OrgAccess)obj;
+			return comp.AD_Client_ID == AD_Client_ID 
+				&& comp.AD_Org_ID == AD_Org_ID;
+		}
+		return false;
+	}	//	equals
+	
+	
+	/**
+	 * 	Hash Code
+	 *	@return hash Code
+	 */
+	public int hashCode () {
+		return (AD_Client_ID*7) + AD_Org_ID;
+	}	//	hashCode
+
+	@Override
+	public String toString() {
+		return "OrgAccess [AD_Client_ID=" + AD_Client_ID + ", AD_Org_ID="
+				+ AD_Org_ID + ", readOnly=" + readOnly + "]";
+	}
 }

@@ -63,7 +63,6 @@ public class LoginRoleAdapter extends BaseExpandableListAdapter {
 	private int 				org_ID = 0;
 	private int 				warehouse_ID = 0;
 	private String 				m_IsUseUserOrgAccess = "N";
-	private boolean 			m_IsLoadOk = false;
 	
 	@Override
 	public Object getChild(int groupPosition, int childPosition) {
@@ -294,12 +293,9 @@ public class LoginRoleAdapter extends BaseExpandableListAdapter {
      * @return
      * @return boolean
      */
-	private boolean loadData() {
-		if(Env.isEnvLoad()
-				&& !m_IsLoadOk) {
+	public boolean loadData() {
+		if(Env.isEnvLoad()) {
 			role_ID = loadRole();
-	    	//	Set Load
-	    	m_IsLoadOk = true;
 		}
 		return false;
 	}

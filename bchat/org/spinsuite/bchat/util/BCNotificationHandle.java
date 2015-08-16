@@ -214,5 +214,4 @@ public class BCNotificationHandle {
 		Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 		m_Builder.setSound(alarmSound);
 	}
-
 }

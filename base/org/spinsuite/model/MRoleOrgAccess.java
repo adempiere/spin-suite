@@ -13,36 +13,38 @@
  * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
-package org.spinsuite.bchat.util;
+package org.spinsuite.model;
 
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import org.spinsuite.base.DB;
+
+import android.content.Context;
+import android.database.Cursor;
 
 /**
- * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Apr 10, 2015, 8:57:57 PM
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Aug 16, 2015, 5:03:33 AM
  *
  */
-public class BC_ThreadHolder {
+public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
 
 	/**
 	 * *** Constructor ***
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param AD_Role_OrgAccess_ID
+	 * @param conn
 	 */
-	public BC_ThreadHolder() {
-		//	
+	public MRoleOrgAccess(Context ctx, int AD_Role_OrgAccess_ID, DB conn) {
+		super(ctx, AD_Role_OrgAccess_ID, conn);
 	}
-	
-	/**	Main Parent				*/
-	public LinearLayout 	ll_MainMessage;
-	/**	Linear Layout			*/
-	public LinearLayout 	ll_Message;
-	/**	For Background			*/
-	public RelativeLayout 	rl_Conversation;
-	/**	Text for Conversation	*/
-	public TextView 		tv_Conversation;
-	/**	Text for Time			*/
-	public TextView 		tv_Time;
-	/**	User Name				*/
-	public TextView 		tv_UserName;
+
+	/**
+	 * *** Constructor ***
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param ctx
+	 * @param rs
+	 * @param conn
+	 */
+	public MRoleOrgAccess(Context ctx, Cursor rs, DB conn) {
+		super(ctx, rs, conn);
+	}
 }
