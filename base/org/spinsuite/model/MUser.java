@@ -16,6 +16,7 @@
 package org.spinsuite.model;
 
 import org.spinsuite.base.DB;
+import org.spinsuite.util.RSACrypt;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -58,9 +59,19 @@ public class MUser extends X_AD_User {
 	 * @return int
 	 */
 	public static int findUserID(Context ctx, String user, String pass) {
+		String localPass  = pass;
+		String isEncrypted = DB.getSQLValueString(ctx, "SELECT c.IsEncrypted "
+				+ "FROM SPS_Column c "
+				+ "WHERE c.SPS_Table_ID = ? "
+				+ "AND c.ColumnName = ?", String.valueOf(SPS_Table_ID), COLUMNNAME_Password);
+		//	Encript pass
+		if(isEncrypted != null
+				&& isEncrypted.equals("Y")) {
+			localPass = RSACrypt.getInstance(ctx).encrypt((String) pass);
+		}
+		//	Find
 		return DB.getSQLValue(ctx, "SELECT u.AD_User_ID " +
     			"FROM AD_User u " +
-    			"WHERE u.Name = ? AND u.PassWord = ?", user, pass);
-	}
-	
+    			"WHERE u.Name = ? AND u.PassWord = ?", user, localPass);
+	}	
 }
