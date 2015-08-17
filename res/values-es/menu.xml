@@ -18,7 +18,7 @@
  -->
 <resources>
     <string name="Action_Cancel">Cancelar</string>
-	<string name="Action_Config">Configuración</string>
+	<string name="Action_Config">Preferencias</string>
 	<string name="Action_Search">Buscar</string>
 	<string name="Action_Edit">Editar</string>
 	<string name="Action_Add">Agregar</string>

@@ -17,6 +17,7 @@
  ************************************************************************************/
  -->
  <resources>
+    <!-- Log Level -->
     <string-array name="ArrayLogLevel">
 		<item>Info</item>
 		<item>Fine</item>
@@ -25,5 +26,10 @@
 		<item>Severe</item>
 		<item>Warning</item>
 		<item>Off</item>
+	</string-array>
+	<!-- Menu Deployment Type -->
+	<string-array name="ArrayMenuDeploymentType">
+		<item>Lista</item>
+		<item>Tabla</item>
 	</string-array>
 </resources>

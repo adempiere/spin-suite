@@ -18,12 +18,12 @@ package org.spinsuite.adapters;
 import java.util.ArrayList;
 
 import org.spinsuite.base.R;
+import org.spinsuite.interfaces.I_SS_MenuOption;
 import org.spinsuite.process.DocAction;
 import org.spinsuite.util.DisplaySearchItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.IdentifierValueWrapper;
-import org.spinsuite.util.option.I_SS_MenuOption;
 
 import android.content.Context;
 import android.content.res.Resources;

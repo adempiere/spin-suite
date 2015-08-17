@@ -58,4 +58,6 @@
 	<string name="PR_D_Login">Login Preferences (Security, Role Access)</string>
 	<string name="PR_Login_Role">Login Role</string>
 	<string name="PR_D_Login_Role">Determinate the Role Access to System by Default</string>
+	<!-- Others -->
+	<string name="MenuDeploymentType">Menu DeploymentType</string>
 </resources>
