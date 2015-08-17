@@ -82,6 +82,19 @@
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
         	android:entries="@array/ArrayLogLevel" />
+    	
+    	<!-- Menu Deployment Type -->
+    	<TextView
+        	android:id="@+id/tv_MenuDeploymentType"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/MenuDeploymentType" />
+    	
+    	<Spinner 
+    	    android:id="@+id/sp_MenuDeploymentType"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:entries="@array/ArrayMenuDeploymentType" />
     		
     	<CheckBox
     	    android:id="@+id/ch_SaveSD"

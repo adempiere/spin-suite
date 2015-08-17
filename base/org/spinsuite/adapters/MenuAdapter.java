@@ -18,22 +18,21 @@ package org.spinsuite.adapters;
 import java.util.ArrayList;
 
 import org.spinsuite.base.R;
+import org.spinsuite.interfaces.I_MM_MenuOption;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.Env;
+import org.spinsuite.view.lookup.VLookupImageText;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
@@ -53,7 +52,6 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 		super(ctx, id_View, data);
 		this.ctx = ctx;
 		this.data = data;
-		this.id_View = id_View;
 		//	Get Preferred Height
 		TypedValue value = Env.getResource(ctx, android.R.attr.listPreferredItemHeight);
 		DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -75,7 +73,6 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 		super(ctx, id_View, data);
 		this.ctx = ctx;
 		this.data = data;
-		this.id_View = id_View;
 		this.isMenu = isMenu;
 		//	Get Preferred Height
 		TypedValue value = Env.getResource(ctx, (isMenu
@@ -93,94 +90,71 @@ public class MenuAdapter extends ArrayAdapter<DisplayMenuItem> {
 	private ArrayList<DisplayMenuItem> 	data;
 	/**	Original Data				*/
 	private ArrayList<DisplayMenuItem> 	originalData;
-	/**	Identifier of View			*/
-	private int 						id_View;
 	/**	Is Activity Menu			*/
 	private boolean 					isMenu = false;
 	/**	Preferred Item Height		*/
 	private float						height = 0;
+	/**	Menu Option					*/
+	private I_MM_MenuOption				m_MenuOption;
+	
+	/**
+	 * Set Menu Option
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_MenuOption
+	 * @return void
+	 */
+	public void setMenuOption(I_MM_MenuOption p_MenuOption) {
+		m_MenuOption = p_MenuOption;
+	}
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View item = convertView;
+		VLookupImageText item = (VLookupImageText) convertView;
+		//	Valid null
 		if(item == null) {
-			LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			item = inflater.inflate(id_View, null);
+			item = new VLookupImageText(ctx);
 			item.setMinimumHeight((int)height);
 		}
 		
 		DisplayMenuItem mi = data.get(position);
-		
+		//	Set Item
+		item.setDisplayMenuItem(mi);
 		//	Set Name
-		TextView tv_Name = (TextView)item.findViewById(R.id.tv_Name);
-		tv_Name.setText(mi.getName());		
+		item.setName(mi.getName());	
+		item.setDescription(mi.getDescription());
+		item.setMenuOption(m_MenuOption);
 		//	
 		if(isMenu) {	//	Main Menu
-			//	Set Text Style
-			tv_Name.setTextAppearance(ctx, R.style.TextItemMenu);
-			//	Set Description
-			TextView tv_Description = (TextView)item.findViewById(R.id.tv_Description);
-			tv_Description.setText(mi.getDescription());
-			tv_Description.setTextAppearance(ctx, R.style.TextItemSmallMenu);
-			//	Set Image
-			ImageView img_Menu = (ImageView)item.findViewById(R.id.img_Item);
 			if(mi.getImageURL() != null 
 					&& mi.getImageURL().length() > 0) {
 				Resources res = ctx.getResources();
 				int resID = res.getIdentifier(mi.getImageURL() , "drawable", ctx.getPackageName());
 				if(resID != 0) {
 					Drawable drawable = res.getDrawable(resID);
-					img_Menu.setImageDrawable(drawable);
+					item.setItemImageDrawable(drawable);
 				}
 			} else if(mi.isSummary()) {
-				img_Menu.setImageResource(
+				item.setItemImageResource(
 						Env.getResourceID(ctx, R.attr.ic_ml_folder));
 			} else {
 				if(mi.getAction().equals(DisplayMenuItem.ACTION_Form)
 						|| mi.getAction().equals(DisplayMenuItem.ACTION_Window)) {
-					img_Menu.setImageResource(
+					item.setItemImageResource(
 							Env.getResourceID(ctx, R.attr.ic_ml_window));
 				} else if(mi.getAction().equals(DisplayMenuItem.ACTION_Process)) {
-					img_Menu.setImageResource(
+					item.setItemImageResource(
 							Env.getResourceID(ctx, R.attr.ic_ml_process));
 				} else if(mi.getAction().equals(DisplayMenuItem.ACTION_Report)) {
-					img_Menu.setImageResource(
+					item.setItemImageResource(
 							Env.getResourceID(ctx, R.attr.ic_ml_report));
 				}
 				else if(mi.getAction().equals(DisplayMenuItem.ACTION_WSDownload)) {
-					img_Menu.setImageResource(
+					item.setItemImageResource(
 							Env.getResourceID(ctx, R.attr.ic_ml_download));
 				}
 				else if(mi.getAction().equals(DisplayMenuItem.ACTION_WSUpload)) {
-					img_Menu.setImageResource(
+					item.setItemImageResource(
 							Env.getResourceID(ctx, R.attr.ic_ml_upload));
-				}
-			}
-		} else {		//	Drawer Menu
-			//	Set Text Style
-			tv_Name.setTextAppearance(ctx, R.style.TextItemDrawerMenu);
-			//	
-			if(mi.getImageURL() != null 
-					&& mi.getImageURL().length() > 0) {
-				Resources res = ctx.getResources();
-				int resID = res.getIdentifier(mi.getImageURL() , "drawable", ctx.getPackageName());
-				if(resID != 0) {
-					tv_Name.setCompoundDrawablesWithIntrinsicBounds(resID, 0, 0, 0);
-				}
-			} if(mi.isSummary()) {
-				tv_Name.setCompoundDrawablesWithIntrinsicBounds(
-						Env.getResourceID(ctx, R.attr.ic_dr_folder), 0, 0, 0);
-			} else {
-				if(mi.getAction().equals(DisplayMenuItem.ACTION_Form)
-						|| mi.getAction().equals(DisplayMenuItem.ACTION_Window)) {
-					tv_Name.setCompoundDrawablesWithIntrinsicBounds(
-							Env.getResourceID(ctx, R.attr.ic_dr_window), 0, 0, 0);
-				} else if(mi.getAction().equals(DisplayMenuItem.ACTION_Process)) {
-					tv_Name.setCompoundDrawablesWithIntrinsicBounds(
-							Env.getResourceID(ctx, R.attr.ic_dr_process), 0, 0, 0);
-				} else if(mi.getAction().equals(DisplayMenuItem.ACTION_Report)) {
-					tv_Name.setCompoundDrawablesWithIntrinsicBounds(
-							Env.getResourceID(ctx, R.attr.ic_dr_report), 0, 0, 0);
 				}
 			}
 		}

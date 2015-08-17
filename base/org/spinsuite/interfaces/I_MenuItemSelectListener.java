@@ -13,33 +13,21 @@
  * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpcya.com                                        *
  *************************************************************************************/
-package org.spinsuite.util.option;
+package org.spinsuite.interfaces;
 
-import org.spinsuite.util.DisplaySearchItem;
-
-import android.content.Context;
+import org.spinsuite.util.DisplayMenuItem;
 
 /**
- * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Jul 28, 2015, 10:54:06 AM
+ * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com Aug 17, 2015, 11:22:45 AM
  *
  */
-public interface I_SS_MenuOption {
+public interface I_MenuItemSelectListener {
 	
 	/**
-	 * Used for get Menu Option for list
+	 * Used for listener when a item is selected
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @return
-	 * @return int[]
-	 */
-	public int[] getMenuOption();
-	
-	/**
-	 * Process Action Menu
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param ctx
-	 * @param p_Menu_ID
 	 * @param item
 	 * @return void
 	 */
-	public void actionMenu(Context ctx, int p_Menu_ID, DisplaySearchItem item);
+	public void onItemClick(DisplayMenuItem item);
 }

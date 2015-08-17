@@ -18,19 +18,22 @@ package org.spinsuite.view;
 
 import java.util.ArrayList;
 
-import org.spinsuite.adapters.MenuAdapter;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.view.V_BChat;
 import org.spinsuite.interfaces.I_Login;
+import org.spinsuite.interfaces.I_MM_MenuOption;
+import org.spinsuite.interfaces.I_MenuItemSelectListener;
 import org.spinsuite.model.MSession;
 import org.spinsuite.sync.SyncDataTask;
 import org.spinsuite.util.ActivityParameter;
 import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
+import org.spinsuite.util.Env;
 import org.spinsuite.util.KeyNamePair;
 import org.spinsuite.util.LoadActionMenu;
 import org.spinsuite.view.lookup.LookupMenu;
+import org.spinsuite.view.lookup.MenuView;
 
 import android.app.Activity;
 import android.content.Context;
@@ -42,17 +45,13 @@ import android.support.v4.widget.SearchViewCompat;
 import android.support.v4.widget.SearchViewCompat.OnCloseListenerCompat;
 import android.support.v4.widget.SearchViewCompat.OnQueryTextListenerCompat;
 import android.text.TextUtils;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.EditText;
-import android.widget.ListView;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
@@ -84,9 +83,8 @@ public class T_Menu extends Fragment implements I_Login {
 		m_MenuType = p_MenuType;
 	}
 	
-	
-	/**	List				*/
-	private ListView 				menu;
+	/**	Table for Menu		*/
+	private MenuView				v_MenuView;
 	/**	Database Connection	*/
 	private DB 						conn = null;
 	/**	Parameter			*/
@@ -115,14 +113,6 @@ public class T_Menu extends Fragment implements I_Login {
 	private int 					m_CurrentParent_ID = 0;
 	/**	Menu Type			*/
 	private String					m_MenuType = LookupMenu.MAIN_MENU;
-	/**	Menu Adapter		*/
-	private MenuAdapter 			m_Adapter = null;
-	/**	No Forced Option	*/
-	private final int 				O_NO_FORCED = 0;
-	/**	Forced Option		*/
-	private final int 				O_FORCED = 1;
-	/**	Delete Before		*/
-	private final int 				O_DELETE_BEFORE = 2;
 	
 	
     @Override
@@ -155,45 +145,50 @@ public class T_Menu extends Fragment implements I_Login {
     		m_ctx = getActivity();
     	}
         //	
-        menu = (ListView) m_View.findViewById(R.id.lv_Menu);
-        //	
-        menu.setOnItemClickListener(new ListView.OnItemClickListener() {
-
+    	v_MenuView = new MenuView(m_Callback, m_View);
+    	//	Set Listener
+    	v_MenuView.setListener(new I_MenuItemSelectListener() {
+			
 			@Override
-			public void onItemClick(AdapterView<?> adapter, View arg1, int position,
-					long arg3) {
-				DisplayMenuItem item = (DisplayMenuItem) adapter.getItemAtPosition(position);
-				param.setParent_ID(item.getSPS_Menu_ID());
-				param.setActivityMenu_ID(item.getActivityMenu_ID());
-				//	Load from Action
-				currentMenuItem = item;
-				if(item.isSummary()) {
-					//	Get Current Menu ID and Sub Title
-					m_ParentArray.add(new KeyNamePair(m_CurrentParent_ID, 
-							m_Callback.getActionBar().getSubtitle().toString()));
-					if(m_MenuType.equals(LookupMenu.MAIN_MENU)) {
-						m_CurrentParent_ID = item.getSPS_Menu_ID();
-					} else if(m_MenuType.equals(LookupMenu.SYNCHRONIZATION_MENU)) {
-						m_CurrentParent_ID = item.getSPS_SyncMenu_ID();
-					}
-					//	Change Title
-					m_Callback.getActionBar().setSubtitle(currentMenuItem.getName());
-					//	Load Data
-					loadData();
-				} else {
-					currentOptionBundle = loadActionMenu.loadAction(item, param);
-				}
+			public void onItemClick(DisplayMenuItem item) {
+				selectItem(item);
 			}
-        });
-        //	Add Context Menu
-        registerForContextMenu(menu);
-        //	new Menu
+		});
+    	//	new Menu
         lookupMenu = new LookupMenu(m_ctx, m_MenuType, conn);
         //	Action Menu Loader
         loadActionMenu = new LoadActionMenu(m_Callback, false);
         //Carlos Parada Add Support to Log for Mobile
         if(m_MenuType.equals(LookupMenu.MAIN_MENU)) {
         	MSession.get (m_ctx, true);
+        } else {
+        	//	Popup Menu
+        	v_MenuView.setMenuOption(new I_MM_MenuOption() {
+    			
+    			@Override
+    			public int[] getMenuOption() {
+    				return new int[]{R.string.Action_SyncNoForced, 
+    						R.string.Action_SyncForced, 
+    						R.string.Action_SyncDeleteBefore};
+    			}
+    			
+    			@Override
+    			public void actionMenu(Context ctx, int p_Menu_ID, DisplayMenuItem item) {
+    				switch (p_Menu_ID) {
+    				case R.string.Action_SyncNoForced:
+    					synchronizeData(item, false, false);
+    					break;
+    				case R.string.Action_SyncForced:
+    					synchronizeData(item, true, false);
+    					break;
+    				case R.string.Action_SyncDeleteBefore:
+    					synchronizeData(item, true, true);
+    					break;
+    				default:
+    					break;
+    				}
+    			}
+    		});
         }
         //End Carlos Parada
         //	Set Load
@@ -202,58 +197,48 @@ public class T_Menu extends Fragment implements I_Login {
         loadData();
     }
     
-    @Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-    	if(m_MenuType.equals(LookupMenu.MAIN_MENU)) {
-    		return;
-    	}
-		//	Standard Option
-    	menu.add(Menu.NONE, O_NO_FORCED, 
-    			Menu.NONE, getString(R.string.Action_SyncNoForced));
-    	//	Forced Option
-    	menu.add(Menu.NONE, O_FORCED, 
-    			Menu.NONE, getString(R.string.Action_SyncForced));
-    	//	Delete Before
-    	menu.add(Menu.NONE, O_DELETE_BEFORE, 
-    			Menu.NONE, getString(R.string.Action_SyncDeleteBefore));
-	}
-    
-    @Override
-	public boolean onContextItemSelected(MenuItem item) {
-	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
-	            .getMenuInfo();
-	    //	Options
-	    switch (item.getItemId()) {
-	    	case O_NO_FORCED:
-	    		synchronizeData(info.position, false, false);
-    		return true;
-	    	case O_FORCED:
-	    		synchronizeData(info.position, true, false);
-	    		return true;
-	    	case O_DELETE_BEFORE:
-	    		synchronizeData(info.position, true, true);
-	    		return true;
-	    	default:
-		        return super.onContextItemSelected(item);
-	    }
-	}
+    /**
+     * Select a Item Menu
+     * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+     * @param item
+     * @return void
+     */
+    private void selectItem(DisplayMenuItem item) {
+		param.setParent_ID(item.getSPS_Menu_ID());
+		param.setActivityMenu_ID(item.getActivityMenu_ID());
+		//	Load from Action
+		currentMenuItem = item;
+		if(item.isSummary()) {
+			//	Get Current Menu ID and Sub Title
+			m_ParentArray.add(new KeyNamePair(m_CurrentParent_ID, 
+					m_Callback.getActionBar().getSubtitle().toString()));
+			if(m_MenuType.equals(LookupMenu.MAIN_MENU)) {
+				m_CurrentParent_ID = item.getSPS_Menu_ID();
+			} else if(m_MenuType.equals(LookupMenu.SYNCHRONIZATION_MENU)) {
+				m_CurrentParent_ID = item.getSPS_SyncMenu_ID();
+			}
+			//	Change Title
+			m_Callback.getActionBar().setSubtitle(currentMenuItem.getName());
+			//	Load Data
+			loadData();
+		} else {
+			currentOptionBundle = loadActionMenu.loadAction(item, param);
+		}
+    }
     
     /**
      * Synchronize Data
      * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-     * @param position
+     * @param item
      * @param p_IsForced
      * @param p_IsDeleteBefore
      * @return void
      */
-    private void synchronizeData(int position, boolean p_IsForced, boolean p_IsDeleteBefore) {
+    private void synchronizeData(DisplayMenuItem item, boolean p_IsForced, boolean p_IsDeleteBefore) {
  		//	Just for Synchronization
  		if(!m_MenuType.equals(LookupMenu.SYNCHRONIZATION_MENU)) {
  			return;
  		}
- 		//	
- 		DisplayMenuItem item = null;
- 		item = m_Adapter.getItem(position);
  		//	Valid null
  		if(item != null) {
  			new SyncDataTask(m_Callback, item.getSPS_SyncMenu_ID(), p_IsForced, p_IsDeleteBefore);
@@ -326,6 +311,11 @@ public class T_Menu extends Fragment implements I_Login {
         }
 		//	Get Item
 		MenuItem item = menu.findItem(R.id.action_search);
+		//	Valid menu
+		if(Env.getContextAsInt(m_ctx, "#MenuViewType") != MenuView.MENU_VIEW_TYPE_LIST) {
+			item.setVisible(false);
+			return;
+		}
 		//	Search View
 		final View searchView = SearchViewCompat.newSearchView(m_ctx);
 		if (searchView != null) {
@@ -340,9 +330,9 @@ public class T_Menu extends Fragment implements I_Login {
 					new OnQueryTextListenerCompat() {
 				@Override
 				public boolean onQueryTextChange(String newText) {
-					if(m_Adapter != null) {
+					if(v_MenuView.getListAdapter() != null) {
 						String mFilter = !TextUtils.isEmpty(newText) ? newText : null;
-						m_Adapter.getFilter().filter(mFilter);
+						v_MenuView.getListAdapter().getFilter().filter(mFilter);
 					}
 					return true;
 				}
@@ -403,10 +393,7 @@ public class T_Menu extends Fragment implements I_Login {
 	public boolean loadData() {
 		//	Load Children
 		lookupMenu.loadChildren(m_CurrentParent_ID);
-		//	
-		m_Adapter = new MenuAdapter(m_Callback, R.layout.i_image_text, true, lookupMenu.getData());
-		m_Adapter.setDropDownViewResource(R.layout.i_image_text);
-		menu.setAdapter(m_Adapter);
+		v_MenuView.loadView(lookupMenu.getData());
 		//	
 		return true;
 	}
