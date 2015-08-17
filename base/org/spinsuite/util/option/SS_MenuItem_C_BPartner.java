@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import org.spinsuite.base.DB;
 import org.spinsuite.base.R;
 import org.spinsuite.bchat.view.V_BChat;
+import org.spinsuite.interfaces.I_SS_MenuOption;
 import org.spinsuite.util.DisplaySearchItem;
 import org.spinsuite.util.KeyNamePair;
 import org.spinsuite.util.LogM;

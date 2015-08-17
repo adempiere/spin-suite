@@ -20,15 +20,15 @@ import java.util.ArrayList;
 import org.spinsuite.base.R;
 import org.spinsuite.util.DisplayImageTextItem;
 import org.spinsuite.util.Env;
+import org.spinsuite.view.lookup.VLookupImageText;
 
 import android.content.Context;
-import android.view.LayoutInflater;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.TextView;
 
 /**
  * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
@@ -47,49 +47,46 @@ public class ImageTextAdapter extends ArrayAdapter<DisplayImageTextItem> {
 		super(ctx, R.layout.i_image_text, data);
 		this.ctx = ctx;
 		this.data = data;
-		m_ImgMaxSize = ctx.getResources().getDimensionPixelSize(R.dimen.list_view_img_max_size);
+		//	Get Preferred Height
+		TypedValue value = Env.getResource(ctx, android.R.attr.listPreferredItemHeight);
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		((WindowManager)(ctx.getSystemService(Context.WINDOW_SERVICE)))
+				.getDefaultDisplay().getMetrics(displayMetrics);
+		height = value.getDimension(displayMetrics);
 	}
 
 	/**	Context						*/
 	private Context 						ctx;
 	/**	Data						*/
 	private ArrayList<DisplayImageTextItem> data = new ArrayList<DisplayImageTextItem>();
-	/**	Max Size					*/
-	private int 							m_ImgMaxSize = 0;
+	/**	Preferred Item Height		*/
+	private float							height = 0;
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View item = convertView;
+		VLookupImageText item = (VLookupImageText) convertView;
 		if(item == null){
-			LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			item = inflater.inflate(R.layout.i_image_text, null);
+			item = new VLookupImageText(ctx);
+			item.setMinimumHeight((int)height);
 		}
 		
 		DisplayImageTextItem diti = data.get(position);
-		
 		//	Set Name
-		TextView tv_Name = (TextView)item.findViewById(R.id.tv_Name);
-		tv_Name.setText(diti.getValue());
-		
-		//	Set Description
-		TextView tv_Description = (TextView)item.findViewById(R.id.tv_Description);
-		tv_Description.setText(diti.getDescription());
-		
-		ImageView img_Item = (ImageView)item.findViewById(R.id.img_Item);
-		img_Item.setLayoutParams(new LayoutParams(m_ImgMaxSize, m_ImgMaxSize));
+		item.setName(diti.getValue());	
+		item.setDescription(diti.getDescription());
 		//	Set Image
 		if(diti.getImage() != null) {
-			img_Item.setImageBitmap(diti.getImage());
+			item.setItemImageBitmap(diti.getImage());
 		} else if(diti.getValue() != null
 				&& diti.getValue().length() > 0) {
 			if(diti.getValue().toLowerCase(
 					Env.getLocate()).endsWith(".pdf")) {
-				img_Item.setImageResource(Env.getResourceID(ctx, R.attr.ic_ls_pdf));
+				item.setItemImageResource(Env.getResourceID(ctx, R.attr.ic_ls_pdf));
 			} else if(diti.getValue().toLowerCase(
 					Env.getLocate()).endsWith(".xls")) {
-				img_Item.setImageResource(Env.getResourceID(ctx, R.attr.ic_ls_xls));
+				item.setItemImageResource(Env.getResourceID(ctx, R.attr.ic_ls_xls));
 			} else {
-				img_Item.setImageResource(Env.getResourceID(ctx, R.attr.ic_ls_file));
+				item.setItemImageResource(Env.getResourceID(ctx, R.attr.ic_ls_file));
 			}
 		}
 		//	Return

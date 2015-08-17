@@ -88,6 +88,8 @@ public class T_Pref_General extends T_Pref_Parent {
 	private Spinner			sp_Language;
 	/**	Log Level					*/
 	private Spinner 		sp_LogLevel;
+	/**	Menu Deployment Type		*/
+	private Spinner			sp_MenuDeploymentType;
 	/**	Save data SD				*/
 	private CheckBox 		ch_SaveSD;
 	/**	Load Test Data				*/
@@ -111,17 +113,18 @@ public class T_Pref_General extends T_Pref_Parent {
     	if(m_IsLoadOk)
     		return;
     	//	
-    	ch_RequestPass 	= (CheckBox) m_View.findViewById(R.id.ch_RequestPass);
-    	tv_Passcode 	= (TextView) m_View.findViewById(R.id.tv_Passcode);
-    	et_Passcode 	= (EditText) m_View.findViewById(R.id.et_Passcode);
-    	tv_Re_Passcode 	= (TextView) m_View.findViewById(R.id.tv_Re_Passcode);
-    	et_Re_Passcode 	= (EditText) m_View.findViewById(R.id.et_Re_Passcode);
+    	ch_RequestPass 			= (CheckBox) m_View.findViewById(R.id.ch_RequestPass);
+    	tv_Passcode 			= (TextView) m_View.findViewById(R.id.tv_Passcode);
+    	et_Passcode 			= (EditText) m_View.findViewById(R.id.et_Passcode);
+    	tv_Re_Passcode 			= (TextView) m_View.findViewById(R.id.tv_Re_Passcode);
+    	et_Re_Passcode 			= (EditText) m_View.findViewById(R.id.et_Re_Passcode);
     	//	
-    	sp_Language 	= (Spinner) m_View.findViewById(R.id.sp_Language);
-    	sp_LogLevel 	= (Spinner) m_View.findViewById(R.id.sp_LogLevel);
-    	ch_SaveSD 		= (CheckBox) m_View.findViewById(R.id.ch_SaveSD);
-    	ch_LoadTestData	= (CheckBox) m_View.findViewById(R.id.ch_LoadTestData);
-    	butt_DropDB 	= (Button) m_View.findViewById(R.id.butt_DropDB);
+    	sp_Language 			= (Spinner) m_View.findViewById(R.id.sp_Language);
+    	sp_LogLevel 			= (Spinner) m_View.findViewById(R.id.sp_LogLevel);
+    	sp_MenuDeploymentType 	= (Spinner) m_View.findViewById(R.id.sp_MenuDeploymentType);
+    	ch_SaveSD 				= (CheckBox) m_View.findViewById(R.id.ch_SaveSD);
+    	ch_LoadTestData			= (CheckBox) m_View.findViewById(R.id.ch_LoadTestData);
+    	butt_DropDB 			= (Button) m_View.findViewById(R.id.butt_DropDB);
     	//	Set Visibility
     	ch_LoadTestData.setVisibility(Env.isEnvLoad()? View.GONE: View.VISIBLE);
     	butt_DropDB.setVisibility(Env.isEnvLoad() && Env.getAD_Role_ID() == 0
@@ -165,6 +168,21 @@ public class T_Pref_General extends T_Pref_Parent {
 		    	}
 		    	//	Set Level
 		    	LogM.setTraceLevel(m_ctx, level);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				//	
+			}
+    	});
+    	//	Menu Deployment Type Listener
+    	sp_MenuDeploymentType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+
+			@Override
+			public void onItemSelected(AdapterView<?> a, View v,
+					int position, long i) {
+				//	Set Value
+				Env.setContext(m_ctx, "#MenuViewType", position);
 			}
 
 			@Override
@@ -289,7 +307,7 @@ public class T_Pref_General extends T_Pref_Parent {
 		}
     	//	
 		String language = (String) ((DisplaySpinner)sp_Language
-				.getSelectedItem()).getHiddenValue();		
+				.getSelectedItem()).getHiddenValue();	
     	//	Valid Language
 		if(!language.equals(Env.getAD_Language())){
     		Env.setAD_Language(language);
@@ -297,6 +315,7 @@ public class T_Pref_General extends T_Pref_Parent {
     			reloadLanguage(language);
     		}
     	}
+		
     	//	
     	if(!Env.isEnvLoad()) {
     		Env.setContext("#LoadTestData", ch_LoadTestData.isChecked());
@@ -355,7 +374,8 @@ public class T_Pref_General extends T_Pref_Parent {
     	}
     	//	Select Log Position
     	sp_LogLevel.setSelection(position);
-    	
+    	//	For Menu Deployment Type
+    	sp_MenuDeploymentType.setSelection(Env.getContextAsInt(m_ctx, "#MenuViewType"));
     	//	Save SD
     	ch_SaveSD.setChecked(Env.getContextAsBoolean("#SaveSD"));
     	//	
