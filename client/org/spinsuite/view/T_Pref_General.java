@@ -16,22 +16,28 @@
 package org.spinsuite.view;
 
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.spinsuite.base.R;
 import org.spinsuite.login.Login;
+import org.spinsuite.util.AttachmentHandler;
 import org.spinsuite.util.DisplaySpinner;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.HandleStorageKey;
 import org.spinsuite.util.Language;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
+import org.spinsuite.util.RSACrypt;
 
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -84,6 +90,8 @@ public class T_Pref_General extends T_Pref_Parent {
 	private TextView		tv_Re_Passcode;
 	/**	Re Pass Code Edit			*/
 	private EditText		et_Re_Passcode;
+	/**	Public Key					*/
+	private Button			butt_PublicKey;
 	/**	Language					*/
 	private Spinner			sp_Language;
 	/**	Log Level					*/
@@ -95,7 +103,7 @@ public class T_Pref_General extends T_Pref_Parent {
 	/**	Load Test Data				*/
 	private CheckBox		ch_LoadTestData;
 	/**	Drop Data Base				*/
-	private Button			butt_DropDB;	
+	private Button			butt_DropDB;
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -118,7 +126,7 @@ public class T_Pref_General extends T_Pref_Parent {
     	et_Passcode 			= (EditText) m_View.findViewById(R.id.et_Passcode);
     	tv_Re_Passcode 			= (TextView) m_View.findViewById(R.id.tv_Re_Passcode);
     	et_Re_Passcode 			= (EditText) m_View.findViewById(R.id.et_Re_Passcode);
-    	//	
+    	butt_PublicKey			= (Button) m_View.findViewById(R.id.butt_PublicKey);
     	sp_Language 			= (Spinner) m_View.findViewById(R.id.sp_Language);
     	sp_LogLevel 			= (Spinner) m_View.findViewById(R.id.sp_LogLevel);
     	sp_MenuDeploymentType 	= (Spinner) m_View.findViewById(R.id.sp_MenuDeploymentType);
@@ -199,6 +207,12 @@ public class T_Pref_General extends T_Pref_Parent {
 		});
     	
     	//	Listener for Button
+    	butt_PublicKey.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				loadKeyChooser();
+			}
+		});
     	butt_DropDB.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -330,6 +344,39 @@ public class T_Pref_General extends T_Pref_Parent {
 		return validExit();
 	}
 	
+	/**
+	 * Load Key from file
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void loadKeyChooser() {
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		intent.setType("*/*");
+		intent.addCategory(Intent.CATEGORY_OPENABLE);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		getActivity().startActivityForResult(intent, 0);
+	}
+	
+	 @Override
+	 public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		 //	Valid Data
+		 if(data != null) {
+			 Uri m_DataUri = data.getData();
+			 String filePath = AttachmentHandler.getPathFromUri(m_ctx, m_DataUri);
+			 if(filePath != null) {
+				 HandleStorageKey sk = new HandleStorageKey(RSACrypt.RSA, filePath);
+				 Key publicKey = sk.loadPublicKey();
+				 byte[] keyBytes = publicKey.getEncoded();
+				 String keyForSave = Base64.encodeToString(keyBytes, Base64.DEFAULT);
+				 //	Set Key
+				 Env.setContext(m_ctx, RSACrypt.KEY_FOR_KEY, keyForSave);
+				 Env.setContext(m_ctx, "#PUBLIC_KEY_PATH", filePath);
+				 //	Change Button
+				 butt_PublicKey.setText(filePath);
+			 }
+		 }
+	 }
+	
 	@Override
 	public boolean loadData() {
 		//	Auto Login Check
@@ -340,6 +387,11 @@ public class T_Pref_General extends T_Pref_Parent {
 		}
 		//	
 		ch_RequestPass.setChecked(requestPass);
+		//	For Key
+		String keyPath = Env.getContext(m_ctx, "#PUBLIC_KEY_PATH");
+		if(keyPath != null) {
+			butt_PublicKey.setText(keyPath);
+		}
  		//	Select Language
  		String language = Env.getAD_Language();
  		if(language != null

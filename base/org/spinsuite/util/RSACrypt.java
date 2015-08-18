@@ -39,17 +39,17 @@ import android.util.Base64;
 public class RSACrypt implements SecureInterface {
 	
 	/**	Context					*/
-	private Context			m_ctx;
+	private Context				m_ctx;
 	/**	Instance				*/
-	private static RSACrypt	m_Instance = null;
+	private static RSACrypt		m_Instance = null;
 	/**	Public Key				*/
-	private Key				m_PublicKey = null;
+	private Key					m_PublicKey = null;
 	/**	Cipher					*/
-	private Cipher			m_Cipher = null;
+	private Cipher				m_Cipher = null;
 	/**	Algorithm				*/
-	private final String 	RSA = "RSA";
+	public static final String 	RSA = "RSA";
 	/** Standard Key			*/
-	private String			KEY_FOR_KEY = "#KEY_FOR_KEY";
+	public static final String	KEY_FOR_KEY = "#KEY_FOR_KEY";
 	
 	
 	/**

@@ -59,6 +59,12 @@
         	android:digits="1234567890"
         	android:maxLength="4" />
     	
+        <!-- Public Key -->
+        <Button
+    	    android:id="@+id/butt_PublicKey"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:text="@string/msg_PublicKey" />
     	<!-- Language -->
     	<TextView
         	android:id="@+id/tv_Language"

@@ -19,6 +19,7 @@ import org.spinsuite.base.R;
 import org.spinsuite.interfaces.I_PR_FragmentSelect;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -172,4 +173,12 @@ public class V_Preferences extends FragmentActivity
 	        	return super.onOptionsItemSelected(item);
 	     }
 	}
+    
+    @Override
+    protected void onActivityResult(int arg0, int arg1, Intent arg2) {
+    	T_Pref_Parent m_PreferencePane = m_PreferenceListFragment.getPrefAt(m_CurrentPreference);
+    	if(m_PreferencePane != null) {
+    		m_PreferencePane.onActivityResult(arg0, arg1, arg2);
+    	}
+    }
 }

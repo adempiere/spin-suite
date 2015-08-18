@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.spinsuite.base.R;
@@ -614,6 +615,39 @@ public class AttachmentHandler {
 	public static boolean isPDF(String fileName) {
 		return fileName.toLowerCase(Env.getLocate()).endsWith(".pdf");
 	}	//	isPDF
+	
+	
+	/**
+	 * Get Path from Uri
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @param p_Uri
+	 * @return
+	 * @return String
+	 */
+	public static String getPathFromUri(Context p_Ctx, Uri p_Uri) {
+		List<String> paths = p_Uri.getPathSegments();
+	    if(p_Uri == null)
+	    	return null;
+		if ("content".equalsIgnoreCase(p_Uri.getScheme())) {
+	        String[] projection = { "_data" };
+	        Cursor cursor = null;
+
+	        try {
+	            cursor = p_Ctx.getContentResolver().query(p_Uri, projection, null, null, null);
+	            int column_index = cursor.getColumnIndexOrThrow("_data");
+	            if (cursor.moveToFirst()) {
+	                return cursor.getString(column_index);
+	            }
+	        } catch (Exception e) {
+	            LogM.log(p_Ctx, AttachmentHandler.class, Level.SEVERE, "getPathFromUri(Context, Uri)", e);
+	        }
+	    } else if ("file".equalsIgnoreCase(p_Uri.getScheme())) {
+	        return p_Uri.getPath();
+	    }
+
+	    return null;
+	} 
 	
 	/**
 	 * 	Is attachment entry a Graphic
