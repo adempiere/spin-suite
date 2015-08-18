@@ -336,9 +336,9 @@ public class MSequence extends X_AD_Sequence {
 		if (!isTableID())
 			return false;
 		String tableName = getName();
-		int AD_Column_ID = DB.getSQLValue(null, "SELECT MAX(c.AD_Column_ID) "
-			+ "FROM AD_Table t"
-			+ " INNER JOIN AD_Column c ON (t.AD_Table_ID=c.AD_Table_ID) "
+		int AD_Column_ID = DB.getSQLValue(null, "SELECT MAX(c.SPS_Column_ID) "
+			+ "FROM SPS_Table t"
+			+ " INNER JOIN SPS_Column c ON (t.SPS_Table_ID=c.SPS_Table_ID) "
 			+ "WHERE t.TableName='" + tableName + "'"
 			+ " AND c.ColumnName='" + tableName + "_ID'");
 		if (AD_Column_ID <= 0)
