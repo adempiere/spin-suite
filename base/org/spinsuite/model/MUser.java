@@ -59,19 +59,21 @@ public class MUser extends X_AD_User {
 	 * @return int
 	 */
 	public static int findUserID(Context ctx, String user, String pass) {
-		String localPass  = pass;
-		String isEncrypted = DB.getSQLValueString(ctx, "SELECT c.IsEncrypted "
-				+ "FROM SPS_Column c "
-				+ "WHERE c.SPS_Table_ID = ? "
-				+ "AND c.ColumnName = ?", String.valueOf(SPS_Table_ID), COLUMNNAME_Password);
-		//	Encript pass
-		if(isEncrypted != null
-				&& isEncrypted.equals("Y")) {
-			localPass = RSACrypt.getInstance(ctx).encrypt((String) pass);
+		String encryptedPass  = pass;
+		encryptedPass = RSACrypt.getInstance(ctx).encrypt((String) pass);
+		//	Verify if pass is encrypted in DB
+		if(RSACrypt.isEncrypted(encryptedPass)) {
+			String storePass = DB.getSQLValueString(ctx, "SELECT u.Password " +
+	    			"FROM AD_User u " +
+	    			"WHERE u.Name = ?", user);
+			//	Now is without encrypted
+			if(!RSACrypt.isEncrypted(storePass)) {
+				encryptedPass = pass;
+			}
 		}
 		//	Find
 		return DB.getSQLValue(ctx, "SELECT u.AD_User_ID " +
     			"FROM AD_User u " +
-    			"WHERE u.Name = ? AND u.PassWord = ?", user, localPass);
+    			"WHERE u.Name = ? AND u.PassWord = ?", user, encryptedPass);
 	}	
 }

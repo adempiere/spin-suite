@@ -61,8 +61,6 @@ public class T_IndexPreference
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
-    	//	Load Ok
-    	m_IsLoadOk = true;
 	}
     
     @Override
@@ -110,12 +108,16 @@ public class T_IndexPreference
     @Override
     public void onStart() {
         super.onStart();
+        if(m_IsLoadOk)
+        	return;
         loadData();
         //	Choice Mode
         if (getFragmentManager()
         		.findFragmentByTag(T_DynamicTabDetail.INDEX_FRAGMENT) != null) {
             getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         }
+    	//	Load Ok
+    	m_IsLoadOk = true;
     }
 
     @Override
