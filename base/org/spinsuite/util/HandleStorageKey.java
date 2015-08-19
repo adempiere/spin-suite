@@ -15,10 +15,9 @@
  *************************************************************************************/
 package org.spinsuite.util;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.Key;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -32,44 +31,27 @@ import java.util.logging.Level;
  *
  */
 public class HandleStorageKey {
-
-	/**
-	 * *** Constructor ***
-	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param p_Algorithm
-	 * @param p_FilePath
-	 */
-	public HandleStorageKey(String p_Algorithm, String p_FilePath) {
-		m_Algorithm = p_Algorithm;
-		m_FilePath = p_FilePath;
-	}
-
-	/**	Algorithm			*/
-	private String 			m_Algorithm = null;
-	/**	Path				*/
-	private String 			m_FilePath = null;
 	
 	/**
 	 * Load Public Key from File
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Algorithm
+	 * @param p_Input
 	 * @return
 	 * @return Key
 	 * @throws IOException 
 	 * @throws NoSuchAlgorithmException 
 	 * @throws InvalidKeySpecException 
 	 */
-	public Key loadPublicKeyEx() throws IOException, 
+	public static Key loadPublicKeyEx(String p_Algorithm, InputStream p_Input) throws IOException, 
 						NoSuchAlgorithmException, InvalidKeySpecException {
 		//	Get Public Key from file
-		File filePKey = new File(m_FilePath);
-		FileInputStream fis;
-		fis = new FileInputStream(m_FilePath);
-		byte[] encodedPKey = new byte[(int) filePKey.length()];
-		fis.read(encodedPKey);
-		fis.close();
+		byte[] encodedPKey = new byte[(int) p_Input.available()];
+		p_Input.read(encodedPKey);
+		p_Input.close();
 			
 		// Generate KeyPair.
-		KeyFactory keyF = KeyFactory.getInstance(m_Algorithm);
+		KeyFactory keyF = KeyFactory.getInstance(p_Algorithm);
 		X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
 				encodedPKey);
 		PublicKey publicKey = keyF.generatePublic(publicKeySpec);
@@ -80,20 +62,22 @@ public class HandleStorageKey {
 	/**
 	 * Load Public Key without throws
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Algorithm
+	 * @param p_Input
 	 * @return
 	 * @return Key
 	 */
-	public Key loadPublicKey() {
+	public static Key loadPublicKey(String p_Algorithm, InputStream p_Input) {
 		try {
-			return loadPublicKeyEx();
+			return loadPublicKeyEx(p_Algorithm, p_Input);
 		} catch (IOException e) {
-			LogM.log(Env.getCtx(), getClass(), Level.SEVERE, "loadPublicKey()", e);
+			LogM.log(Env.getCtx(), HandleStorageKey.class, Level.SEVERE, "loadPublicKey()", e);
 		} catch (NoSuchAlgorithmException e) {
-			LogM.log(Env.getCtx(), getClass(), Level.SEVERE, "loadPublicKey()", e);
+			LogM.log(Env.getCtx(), HandleStorageKey.class, Level.SEVERE, "loadPublicKey()", e);
 		} catch (InvalidKeySpecException e) {
-			LogM.log(Env.getCtx(), getClass(), Level.SEVERE, "loadPublicKey()", e);
+			LogM.log(Env.getCtx(), HandleStorageKey.class, Level.SEVERE, "loadPublicKey()", e);
 		} catch (Exception e) {
-			LogM.log(Env.getCtx(), getClass(), Level.SEVERE, "loadPublicKey()", e);
+			LogM.log(Env.getCtx(), HandleStorageKey.class, Level.SEVERE, "loadPublicKey()", e);
 		}
 		//	Default
 		return null;
@@ -102,15 +86,16 @@ public class HandleStorageKey {
 	/**
 	 * Save Public Key
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param publicKey
+	 * @param p_PublicKey
+	 * @param p_FilePath
 	 * @throws IOException
 	 * @return void
 	 */
-	public void savePublicKeyEx(Key publicKey) throws IOException {
+	public static void savePublicKeyEx(Key p_PublicKey, String p_FilePath) throws IOException {
 		// Store Public Key.
 		X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
-				publicKey.getEncoded());
-		FileOutputStream fos = new FileOutputStream(m_FilePath);
+				p_PublicKey.getEncoded());
+		FileOutputStream fos = new FileOutputStream(p_FilePath);
 		fos.write(x509EncodedKeySpec.getEncoded());
 		fos.close();
 	}
@@ -118,16 +103,17 @@ public class HandleStorageKey {
 	/**
 	 * Save Public Key without throws
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
-	 * @param publicKey
+	 * @param p_PublicKey
+	 * @param p_FilePath
 	 * @return void
 	 */
-	public void savePublicKey(Key publicKey) {
+	public static void savePublicKey(Key p_PublicKey, String p_FilePath) {
 		try {
-			savePublicKeyEx(publicKey);
+			savePublicKeyEx(p_PublicKey, p_FilePath);
 		} catch (IOException e) {
-			LogM.log(Env.getCtx(), getClass(), Level.SEVERE, "savePublicKey(Key)", e);
+			LogM.log(Env.getCtx(), HandleStorageKey.class, Level.SEVERE, "savePublicKey(Key)", e);
 		} catch (Exception e) {
-			LogM.log(Env.getCtx(), getClass(), Level.SEVERE, "savePublicKey(Key)", e);
+			LogM.log(Env.getCtx(), HandleStorageKey.class, Level.SEVERE, "savePublicKey(Key)", e);
 		}
 	}
 	

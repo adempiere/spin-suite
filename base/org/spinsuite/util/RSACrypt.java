@@ -22,6 +22,7 @@ import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.sql.Timestamp;
 import java.util.logging.Level;
@@ -44,6 +45,8 @@ public class RSACrypt implements SecureInterface {
 	private static RSACrypt		m_Instance = null;
 	/**	Public Key				*/
 	private Key					m_PublicKey = null;
+	/**	String Key Saved		*/
+	private String 				m_KeySaved = null;
 	/**	Cipher					*/
 	private Cipher				m_Cipher = null;
 	/**	Algorithm				*/
@@ -76,7 +79,7 @@ public class RSACrypt implements SecureInterface {
 	 */
 	private RSACrypt(Context p_Ctx) {
 		m_ctx = p_Ctx;
-		initCipher();
+		initCipher(false);
 	}
 	
 	/**
@@ -113,13 +116,19 @@ public class RSACrypt implements SecureInterface {
 	 * @return String
 	 */
 	private String encodeText(String p_Text) {
+		//	Valid Key
+		if(m_KeySaved == null) {
+			LogM.log(m_ctx, getClass(), Level.WARNING, "Not Key for encrypte");
+			return p_Text;
+		}
+		//	
 		byte[] encodedBytes = null;
 		String value = p_Text;
 		if(value == null) {
 			value = "";
 		}
 		//	Valid Encrypted
-		boolean isEncrypted = value.startsWith(ENCRYPTEDVALUE_START) && value.endsWith(ENCRYPTEDVALUE_END);
+		boolean isEncrypted = isEncrypted(value);
 		if(isEncrypted)
 			return value;
 		//	
@@ -136,29 +145,43 @@ public class RSACrypt implements SecureInterface {
 	}
 	
 	/**
+	 * Verify if is encrypted
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param value
+	 * @return
+	 * @return boolean
+	 */
+	public static boolean isEncrypted(String value) {
+		if(value == null)
+			return false;
+		return value.startsWith(ENCRYPTEDVALUE_START) && value.endsWith(ENCRYPTEDVALUE_END);
+	}
+	
+	/**
 	 * Generate Key
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return void
 	 */
-	private void initCipher() {
+	public void initCipher(boolean force) {
 		//	
-		if(m_Cipher != null)
+		if(m_Cipher != null
+				&& !force)
 			return;
 		//	Generate
 		try {
-			String keySaved = Env.getContext(m_ctx, KEY_FOR_KEY);
+			m_KeySaved = Env.getContext(m_ctx, KEY_FOR_KEY);
 			byte[] keyBytes = null;
-			if(keySaved == null) {
+			if(m_KeySaved == null) {
 				KeyPairGenerator kpg = KeyPairGenerator.getInstance(RSA);
 				kpg.initialize(1024);
 				KeyPair kp = kpg.genKeyPair();
 				Key publicKey = kp.getPublic();
 				keyBytes = publicKey.getEncoded();
-				String keyForSave = Base64.encodeToString(keyBytes, Base64.DEFAULT);
+				//String keyForSave = Base64.encodeToString(keyBytes, Base64.DEFAULT);
 				//	Set Key
-				Env.setContext(m_ctx, KEY_FOR_KEY, keyForSave);
+				//Env.setContext(m_ctx, KEY_FOR_KEY, keyForSave);
 			} else {
-				keyBytes = Base64.decode(keySaved, Base64.DEFAULT);
+				keyBytes = Base64.decode(m_KeySaved, Base64.DEFAULT);
 			}
 			//	Decode
 		    X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
@@ -168,6 +191,46 @@ public class RSACrypt implements SecureInterface {
 		} catch (Exception e) {
 			LogM.log(Env.getCtx(), getClass(), Level.SEVERE, "Error while generate RSA Key");
 		}
+	}
+	
+	/**
+	 * Get Public Key from String
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Key
+	 * @return
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeySpecException
+	 * @return Key
+	 */
+	public static Key getPublicKeyFromStringEx(String p_Key) throws NoSuchAlgorithmException, InvalidKeySpecException {
+		//	Valid null
+		if(p_Key == null)
+			return null;
+		//	Bytes
+		byte[] keyBytes = Base64.decode(p_Key, Base64.DEFAULT);
+		X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
+	    KeyFactory keyFactory = KeyFactory.getInstance(RSA);
+	    //	Return
+	    return keyFactory.generatePublic(spec);
+	}
+	
+	/**
+	 * Get Key from String
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Key
+	 * @return
+	 * @return Key
+	 */
+	public static Key getPublicKeyFromString(String p_Key) {
+		try {
+			return getPublicKeyFromStringEx(p_Key);
+		} catch (NoSuchAlgorithmException e) {
+			LogM.log(Env.getCtx(), RSACrypt.class, Level.SEVERE, "Error while generate RSA Key", e);
+		} catch (InvalidKeySpecException e) {
+			LogM.log(Env.getCtx(), RSACrypt.class, Level.SEVERE, "Error while generate RSA Key", e);
+		}
+		//	Default
+		return null;
 	}
 
 	@Override

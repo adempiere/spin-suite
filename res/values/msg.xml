@@ -141,4 +141,5 @@
 	<string name="msg_SyncSequenceCheck">Sequence Checking</string>
 	<string name="msg_SyncSequenceCheckDescription">Checking System and Document Sequences</string>
 	<string name="msg_PublicKey">Public Key</string>
+	<string name="msg_KeyLoaded">Key Loaded</string>
 </resources>

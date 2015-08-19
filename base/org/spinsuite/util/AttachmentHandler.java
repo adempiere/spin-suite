@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.text.DecimalFormat;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.spinsuite.base.R;
@@ -626,7 +625,6 @@ public class AttachmentHandler {
 	 * @return String
 	 */
 	public static String getPathFromUri(Context p_Ctx, Uri p_Uri) {
-		List<String> paths = p_Uri.getPathSegments();
 	    if(p_Uri == null)
 	    	return null;
 		if ("content".equalsIgnoreCase(p_Uri.getScheme())) {

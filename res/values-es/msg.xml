@@ -141,4 +141,8 @@
 	<string name="msg_SyncSequenceCheck">Comprobando Sequencia</string>
 	<string name="msg_SyncSequenceCheckDescription">Comprueba la secuencia del sistema y del documento</string>
 	<string name="msg_PublicKey">Llave Pública</string>
+	<string name="msg_KeyLoaded">Clave Cargada</string>
+	<string name="msg_ExportKey">Exportar Clave</string>
+	<string name="msg_ShareKey">Compartir Clave</string>
+	<string name="msg_ReplaceKey">Reemplazar Clave</string>
 </resources>
