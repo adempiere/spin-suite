@@ -301,22 +301,19 @@ public class SyncDataTask implements BackGroundProcess  {
 					if (syncm.getWhereClause() != null
 							&& syncm.getWhereClause().trim().length() > 0)
 						whereClause.append(syncm.getWhereClause());
-					if (!syncm.isForced() && !m_IsForced){
-						if(whereClause.toString().trim().length() > 0) {
-							whereClause.append(" AND");
-						}
-						//	Add Exists
-						whereClause.append(" EXISTS (SELECT 1 "
-													+ "FROM "
-													+ "SPS_SyncTable "
-													+ "WHERE SPS_SyncTable.SPS_Table_ID = ? AND "
-													+ "SPS_SyncTable.Record_ID = "+table.getTableName()+"."+table.getTableName()+"_ID AND "
-													+ "SPS_SyncTable.EventChangeLog = ? AND "
-													+ "SPS_SyncTable.IsSynchronized='N' )");
-						parameters = new Object[]{table.getSPS_Table_ID(),X_SPS_SyncTable.EVENTCHANGELOG_Insert};
-					} else {
-						parameters = new Object[]{};
+					//	Change to Standard not forced
+					if(whereClause.toString().trim().length() > 0) {
+						whereClause.append(" AND");
 					}
+					//	Add Exists
+					whereClause.append(" EXISTS (SELECT 1 "
+							+ "FROM "
+							+ "SPS_SyncTable "
+							+ "WHERE SPS_SyncTable.SPS_Table_ID = ? AND "
+							+ "SPS_SyncTable.Record_ID = "+table.getTableName()+"."+table.getTableName()+"_ID AND "
+							+ "SPS_SyncTable.EventChangeLog = ? AND "
+							+ "SPS_SyncTable.IsSynchronized='N' )");
+					parameters = new Object[]{table.getSPS_Table_ID(),X_SPS_SyncTable.EVENTCHANGELOG_Insert};
 					//	
 					String whereClauseParsed = Env.parseContext(whereClause.toString(), true);
 					//	Search
@@ -343,22 +340,19 @@ public class SyncDataTask implements BackGroundProcess  {
 				if (syncm.getWhereClause() != null
 						&& syncm.getWhereClause().trim().length() > 0)
 					whereClause.append(syncm.getWhereClause());
-				if (!syncm.isForced() && !m_IsForced){
-					if(whereClause.toString().trim().length() > 0) {
+				//	Change to Standard not forced
+				if(whereClause.toString().trim().length() > 0) {
 						whereClause.append(" AND");
-					}
-					//	Add Exists
-					whereClause.append(" EXISTS (SELECT 1 "
-												+ "FROM "
-												+ "SPS_SyncTable "
-												+ "WHERE SPS_SyncTable.SPS_Table_ID = ? AND "
-												+ "SPS_SyncTable.Record_ID = "+table.getTableName()+"."+table.getTableName()+"_ID AND "
-												+ "SPS_SyncTable.EventChangeLog IN (?,?) AND "
-												+ "SPS_SyncTable.IsSynchronized='N' )");
-					parameters = new Object[]{table.getSPS_Table_ID(),X_SPS_SyncTable.EVENTCHANGELOG_Insert, X_SPS_SyncTable.EVENTCHANGELOG_Update};
-				}else{
-					parameters = new Object[]{};
 				}
+				//	Add Exists
+				whereClause.append(" EXISTS (SELECT 1 "
+						+ "FROM "
+						+ "SPS_SyncTable "
+						+ "WHERE SPS_SyncTable.SPS_Table_ID = ? AND "
+						+ "SPS_SyncTable.Record_ID = "+table.getTableName()+"."+table.getTableName()+"_ID AND "
+						+ "SPS_SyncTable.EventChangeLog IN (?,?) AND "
+						+ "SPS_SyncTable.IsSynchronized='N' )");
+				parameters = new Object[]{table.getSPS_Table_ID(),X_SPS_SyncTable.EVENTCHANGELOG_Insert, X_SPS_SyncTable.EVENTCHANGELOG_Update};
 				//	
 				String whereClauseParsed = Env.parseContext(whereClause.toString(), true);
 				//	Search

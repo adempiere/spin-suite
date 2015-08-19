@@ -830,5 +830,4 @@ public class FV_Thread extends Fragment {
 			}
 		}
 	}
-    
 }
