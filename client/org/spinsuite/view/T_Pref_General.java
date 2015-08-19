@@ -16,6 +16,9 @@
 package org.spinsuite.view;
 
 
+import java.io.File;
+import java.io.InputStream;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -23,24 +26,34 @@ import org.spinsuite.base.R;
 import org.spinsuite.login.Login;
 import org.spinsuite.util.DisplaySpinner;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.HandleStorageKey;
 import org.spinsuite.util.Language;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
+import org.spinsuite.util.RSACrypt;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.PopupMenu;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -84,6 +97,8 @@ public class T_Pref_General extends T_Pref_Parent {
 	private TextView		tv_Re_Passcode;
 	/**	Re Pass Code Edit			*/
 	private EditText		et_Re_Passcode;
+	/**	Public Key					*/
+	private Button			butt_PublicKey;
 	/**	Language					*/
 	private Spinner			sp_Language;
 	/**	Log Level					*/
@@ -95,7 +110,10 @@ public class T_Pref_General extends T_Pref_Parent {
 	/**	Load Test Data				*/
 	private CheckBox		ch_LoadTestData;
 	/**	Drop Data Base				*/
-	private Button			butt_DropDB;	
+	private Button			butt_DropDB;
+	/**	Menu Options				*/
+	private static final int 	O_SHARE 	= 0;
+	private static final int	O_REPLACE 	= 1;
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -118,7 +136,7 @@ public class T_Pref_General extends T_Pref_Parent {
     	et_Passcode 			= (EditText) m_View.findViewById(R.id.et_Passcode);
     	tv_Re_Passcode 			= (TextView) m_View.findViewById(R.id.tv_Re_Passcode);
     	et_Re_Passcode 			= (EditText) m_View.findViewById(R.id.et_Re_Passcode);
-    	//	
+    	butt_PublicKey			= (Button) m_View.findViewById(R.id.butt_PublicKey);
     	sp_Language 			= (Spinner) m_View.findViewById(R.id.sp_Language);
     	sp_LogLevel 			= (Spinner) m_View.findViewById(R.id.sp_LogLevel);
     	sp_MenuDeploymentType 	= (Spinner) m_View.findViewById(R.id.sp_MenuDeploymentType);
@@ -199,6 +217,17 @@ public class T_Pref_General extends T_Pref_Parent {
 		});
     	
     	//	Listener for Button
+    	butt_PublicKey.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				String publicKey = Env.getContext(m_ctx, RSACrypt.KEY_FOR_KEY);
+				if(publicKey == null) {
+					loadKeyChooser();
+				} else {
+					showPopupForTab(v);
+				}
+			}
+		});
     	butt_DropDB.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -207,6 +236,36 @@ public class T_Pref_General extends T_Pref_Parent {
 		});
 		m_IsLoadOk = true;
     }
+    
+    private void showPopupForTab(View v) {
+	    PopupMenu popup = new PopupMenu(m_ctx, v);
+	    Menu menu = popup.getMenu();
+	    //	Share
+	    menu.add(Menu.NONE, O_SHARE, 
+				Menu.NONE, m_ctx.getString(R.string.Action_Share));
+	    //	
+	    menu.add(Menu.NONE, O_REPLACE, 
+				Menu.NONE, m_ctx.getString(R.string.Action_Replace));
+	    //	Add Listener
+	    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+			
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				switch (item.getItemId()) {
+					case O_SHARE:
+						shareKey();
+						break;
+					case O_REPLACE:
+						loadKeyChooser();
+						break;
+				}
+				//	Default
+				return false;
+			}
+		});
+	    //	Show
+	    popup.show();
+	}
     
     
     /**
@@ -330,6 +389,84 @@ public class T_Pref_General extends T_Pref_Parent {
 		return validExit();
 	}
 	
+	/**
+	 * Share Key
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void shareKey() {
+		try {
+			//	First Save
+			String keySaved = Env.getContext(m_ctx, RSACrypt.KEY_FOR_KEY);
+			String path = Env.getTmp_DirectoryPathName(m_ctx) + File.separator + "Spin-Suite-PublicKey.key";
+			Key publicKey = RSACrypt.getPublicKeyFromString(keySaved);
+			HandleStorageKey.savePublicKey(publicKey, path);
+			Intent intent = new Intent(Intent.ACTION_SEND);
+			//	
+			Uri uriPath = Uri.fromFile(new File(path));
+			intent.setAction(Intent.ACTION_SEND);
+			intent.putExtra(Intent.EXTRA_STREAM, uriPath);
+			intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.msg_ExportKey));
+			intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_SharedFromSpinSuite));
+			//	Set Data and Type
+			intent.setType("application/x-pem-file");
+			//	Start Activity
+			startActivity(Intent.createChooser(intent, getResources().getText(R.string.msg_ShareKey)));
+		} catch (Exception e) {
+			LogM.log(m_ctx, getClass(), Level.SEVERE, "Error", e);
+			Msg.toastMsg(m_ctx, e.getLocalizedMessage());
+		}
+	}
+	
+	/**
+	 * Load Key from file
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	@TargetApi(Build.VERSION_CODES.KITKAT)
+	private void loadKeyChooser() {
+		MimeTypeMap mtm = MimeTypeMap.getSingleton();
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		intent.setType("application/x-pem-file");
+		//	Mime Type
+        ArrayList<String> mimeTypes = new ArrayList<String>();
+		mimeTypes.add("application/x-pem-file");
+        mimeTypes.add("application/pkcs8");
+        mimeTypes.add("application/octet-stream");
+        mimeTypes.add("application/x-iwork-keynote-sffkey");
+        //	Add Extension
+        mimeTypes.add(mtm.getMimeTypeFromExtension("key"));
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes.toArray(new String[mimeTypes.size()]));
+		intent.addCategory(Intent.CATEGORY_OPENABLE);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		//	
+		startActivityForResult(intent, 0);
+	}
+	
+	 @Override
+	 public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		 //	Valid Data
+		 if(data != null) {
+			 Uri m_DataUri = data.getData();
+			 try {
+				 InputStream input = m_ctx.getContentResolver().openInputStream(m_DataUri);
+				 if(input != null) {
+					 Key publicKey = HandleStorageKey.loadPublicKey(RSACrypt.RSA, input);
+					 byte[] keyBytes = publicKey.getEncoded();
+					 String keyForSave = Base64.encodeToString(keyBytes, Base64.DEFAULT);
+					 //	Set Key
+					 Env.setContext(m_ctx, RSACrypt.KEY_FOR_KEY, keyForSave);
+					 //	Reload Key Cipher
+					 RSACrypt.getInstance(m_ctx).initCipher(true);
+					 //	Change Button
+					 butt_PublicKey.setText(m_ctx.getString(R.string.msg_KeyLoaded));
+				 }
+			 } catch (Exception e) {
+				 LogM.log(m_ctx, getClass(), Level.SEVERE, "onActivityResult", e);
+			 }
+		 }
+	 }
+	
 	@Override
 	public boolean loadData() {
 		//	Auto Login Check
@@ -340,6 +477,11 @@ public class T_Pref_General extends T_Pref_Parent {
 		}
 		//	
 		ch_RequestPass.setChecked(requestPass);
+		//	For Key
+		String publicKey = Env.getContext(m_ctx, RSACrypt.KEY_FOR_KEY);
+		if(publicKey != null) {
+			butt_PublicKey.setText(m_ctx.getString(R.string.msg_KeyLoaded));
+		}
  		//	Select Language
  		String language = Env.getAD_Language();
  		if(language != null

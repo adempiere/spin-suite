@@ -133,11 +133,13 @@
 	<string name="msg_TableNotFound">Table Not Found</string>
 	<string name="msg_AppIsNotAssociated">There Is No Application Associated</string>
 	<string name="msg_NoRecordsPendingtoSync">No Records Pending to Synchronize</string>
-	<string name="msg_EnterYourPasscode">Enter your passcode</string>
-	<string name="msg_ReEnterYourPasscode">Re-Enter your passcode</string>
+	<string name="msg_EnterYourPasscode">Enter your Passcode</string>
+	<string name="msg_ReEnterYourPasscode">Re-Enter your Passcode</string>
 	<string name="msg_PasscodeIsInvalid">Passcode is Invalid</string>
 	<string name="msg_CreatedFromSpinSuite">Created from Spin-Suite Application</string>
 	<string name="msg_NoChanged">No Changed</string>
 	<string name="msg_SyncSequenceCheck">Sequence Checking</string>
 	<string name="msg_SyncSequenceCheckDescription">Checking System and Document Sequences</string>
+	<string name="msg_PublicKey">Public Key</string>
+	<string name="msg_KeyLoaded">Key Loaded</string>
 </resources>

@@ -62,5 +62,7 @@
     <string name="Action_Export_PDF">Exportar a PDF</string>
     <string name="Action_Export_XML">Exportar a XML</string>
     <string name="Action_Export_HTML">Exportar a HTML</string>
+    <string name="Action_Export">Exportar</string>
+	<string name="Action_Replace">Reemplazar</string>
     
 </resources>

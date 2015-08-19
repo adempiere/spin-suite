@@ -133,11 +133,16 @@
 	<string name="msg_TableNotFound">Tabla No Encontrada</string>
 	<string name="msg_AppIsNotAssociated">No Hay Aplicación Asociada</string>
 	<string name="msg_NoRecordsPendingtoSync">No hay Registros Pendientes por Sincronizar</string>
-	<string name="msg_EnterYourPasscode">Introduzca su código de acceso</string>
-	<string name="msg_ReEnterYourPasscode">Introduzca Nuevamente su código de acceso</string>
-	<string name="msg_PasscodeIsInvalid">El código de acceso es inválido</string>
+	<string name="msg_EnterYourPasscode">Introduzca su Código de Acceso</string>
+	<string name="msg_ReEnterYourPasscode">Introduzca Nuevamente su Código de Acceso</string>
+	<string name="msg_PasscodeIsInvalid">El Código de Acceso es Inválido</string>
 	<string name="msg_CreatedFromSpinSuite">Creado desde Aplicación Spin-Suite</string>
 	<string name="msg_NoChanged">No Cambiado</string>
 	<string name="msg_SyncSequenceCheck">Comprobando Sequencia</string>
 	<string name="msg_SyncSequenceCheckDescription">Comprueba la secuencia del sistema y del documento</string>
+	<string name="msg_PublicKey">Llave Pública</string>
+	<string name="msg_KeyLoaded">Clave Cargada</string>
+	<string name="msg_ExportKey">Exportar Clave</string>
+	<string name="msg_ShareKey">Compartir Clave</string>
+	<string name="msg_ReplaceKey">Reemplazar Clave</string>
 </resources>
