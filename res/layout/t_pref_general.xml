@@ -37,12 +37,12 @@
         
         <EditText
     	    android:id="@+id/et_Passcode"
-    	    style="@style/TextDynamicTabEditText"
     	    android:layout_width="match_parent"
     	    android:inputType="phone"
         	android:password="true"
         	android:digits="1234567890"
-        	android:maxLength="4" />
+        	android:maxLength="4"
+        	style="@style/TextDynamicTabEditText" />
         
 		<TextView
         	android:id="@+id/tv_Re_Passcode"
@@ -52,19 +52,18 @@
         
         <EditText
     	    android:id="@+id/et_Re_Passcode"
-    	    style="@style/TextDynamicTabEditText"
     	    android:layout_width="match_parent"
     	    android:inputType="phone"
         	android:password="true"
         	android:digits="1234567890"
-        	android:maxLength="4" />
+        	android:maxLength="4"
+        	style="@style/TextDynamicTabEditText" />
     	
         <!-- Public Key -->
         <Button
     	    android:id="@+id/butt_PublicKey"
-    	    android:layout_width="wrap_content"
-    	    android:layout_height="wrap_content"
-    	    android:text="@string/msg_PublicKey" />
+    	    android:text="@string/msg_PublicKey"
+    	    style="@style/TextDynamicTabButtonSeach" />
     	<!-- Language -->
     	<TextView
         	android:id="@+id/tv_Language"
@@ -75,39 +74,43 @@
     	<Spinner
         	android:id="@+id/sp_Language"
         	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content" />
+        	android:layout_height="wrap_content"
+        	style="@style/TextDynamicTabSpinner" />
     	<!-- Log Level -->
     	<TextView
         	android:id="@+id/tv_LogLevel"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:text="@string/LogLevel" />
+        	android:text="@string/LogLevel"
+        	style="@style/TextDynamicTabLabel" />
     		
     	<Spinner 
     	    android:id="@+id/sp_LogLevel"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:entries="@array/ArrayLogLevel" />
+        	style="@style/TextDynamicTabSpinner" />
     	
     	<!-- Menu Deployment Type -->
     	<TextView
         	android:id="@+id/tv_MenuDeploymentType"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:text="@string/MenuDeploymentType" />
+        	android:text="@string/MenuDeploymentType"
+        	style="@style/TextDynamicTabLabel" />
     	
     	<Spinner 
     	    android:id="@+id/sp_MenuDeploymentType"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:entries="@array/ArrayMenuDeploymentType" />
+        	style="@style/TextDynamicTabSpinner" />
     		
     	<CheckBox
     	    android:id="@+id/ch_SaveSD"
     	    android:layout_width="wrap_content"
     	    android:layout_height="wrap_content"
     	    android:checked="false"
-    	    android:text="@string/SaveSD" />
+    	    android:text="@string/SaveSD"
+    	    style="@style/TextDynamicTabCheckBox" />
     	
     	<!-- Load Default Data -->
     	<CheckBox
@@ -115,7 +118,8 @@
     	    android:layout_width="wrap_content"
     	    android:layout_height="wrap_content"
     	    android:checked="false"
-    	    android:text="@string/LoadTestData"/>
+    	    android:text="@string/LoadTestData"
+    	    style="@style/TextDynamicTabCheckBox" />
     	
     	<Button
     	    android:id="@+id/butt_DropDB"

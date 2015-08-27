@@ -29,63 +29,73 @@
         	android:id="@+id/tv_MQTT_ServerName"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:text="@string/MQTTHost" />	
+        	android:text="@string/MQTTHost"
+    	    style="@style/TextDynamicTabLabel" />	
 
     	<EditText
     	    android:id="@+id/et_MQTT_ServerName"
     	    android:layout_width="wrap_content"
     	    android:layout_height="wrap_content"
     	    android:inputType="text"
-    	    android:maxLength="600" >
+    	    android:maxLength="600"
+    	    style="@style/TextDynamicTabEditText" >
         </EditText>
         <!-- User -->
     	<TextView
         	android:id="@+id/tv_MQTT_ServerUser"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:text="@string/User" />	
+        	android:text="@string/User"
+        	style="@style/TextDynamicTabLabel" />	
     	<EditText
     	    android:id="@+id/et_MQTT_ServerUser"
     	    android:layout_width="wrap_content"
     	    android:layout_height="wrap_content"
     	    android:inputType="text"
-    	    android:hint="@string/User" >
+    	    android:hint="@string/User"
+    	    style="@style/TextDynamicTabEditText" >
         </EditText>
         <!-- Password -->
     	<TextView
         	android:id="@+id/tv_MQTT_ServerPass"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:text="@string/Pass" />	
+        	android:text="@string/Pass"
+        	style="@style/TextDynamicTabLabel" />	
     	<EditText
     	    android:id="@+id/et_MQTT_ServerPass"
     	    android:layout_width="wrap_content"
     	    android:layout_height="wrap_content"
-    	    android:inputType="textPassword" >
+    	    android:inputType="textPassword"
+    	    style="@style/TextDynamicTabEditText" >
         </EditText>
         <!-- Port -->
     	<TextView
         	android:id="@+id/tv_MQTT_ServerPort"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:text="@string/Port" />
+        	android:text="@string/Port"
+        	style="@style/TextDynamicTabLabel" />
     	<EditText
     	    android:id="@+id/et_MQTT_ServerPort"
     	    android:layout_width="wrap_content"
     	    android:layout_height="wrap_content"
-    	    android:inputType="numberDecimal" >
+    	    android:inputType="numberDecimal"
+    	    style="@style/TextDynamicTabEditText" >
         </EditText>
         <!-- Keep Alive Inverval -->
     	<TextView
         	android:id="@+id/tv_MQTT_KeepAliveInverval"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:text="@string/MQTTKeepAliveInverval" />
+        	android:text="@string/MQTTKeepAliveInverval"
+        	style="@style/TextDynamicTabLabel" />
     	<EditText
     	    android:id="@+id/et_MQTT_KeepAliveInverval"
     	    android:layout_width="wrap_content"
     	    android:layout_height="wrap_content"
-    	    android:inputType="numberDecimal" >
+    	    android:inputType="numberDecimal"
+    	    style="@style/TextDynamicTabEditText" >
         </EditText>
         <!-- Automatic MQTT Service -->
     	<CheckBox
@@ -93,12 +103,12 @@
     	    android:layout_width="wrap_content"
     	    android:layout_height="wrap_content"
     	    android:checked="false"
-    	    android:text="@string/MQTTService"/>
+    	    android:text="@string/MQTTService"
+    	    style="@style/TextDynamicTabCheckBox" />
         <!-- SSL File -->
     	<Button
         	android:id="@+id/bt_MQTT_SSL_File_Path"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:text="@string/SSLFile" />	
+        	android:text="@string/SSLFile"
+        	style="@style/TextDynamicTabButtonSeach" />	
     </TableLayout>
 </ScrollView>

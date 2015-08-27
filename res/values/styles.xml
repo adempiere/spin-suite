@@ -216,10 +216,16 @@
     
     <!-- Text Dynamic Tab Values for Button Search -->
     <style name="TextDynamicTabButtonSeach">
-        <item name="android:layout_width">@dimen/button_layout_width</item>
-        <item name="android:layout_height">@dimen/button_layout_height</item>
+        <item name="android:layout_width">@dimen/button_layout_search_width</item>
+        <item name="android:layout_height">@dimen/button_layout_search_height</item>
     </style>
     
+    <!-- Dynamic Tab Values for Button -->
+    <style name="TextDynamicTabButton">
+        <item name="android:layout_width">@dimen/button_layout_width</item>
+        <item name="android:layout_height">@dimen/button_layout_height</item>
+        <item name="android:textSize">@dimen/fontSizeMedium</item>
+    </style>
     
     <!-- Text Report Header -->
     <style name="TextHeaderReport" parent="TextStandard">

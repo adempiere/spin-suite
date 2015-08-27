@@ -26,19 +26,18 @@ import org.spinsuite.base.R;
 import org.spinsuite.login.Login;
 import org.spinsuite.util.DisplaySpinner;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.FileUtil;
 import org.spinsuite.util.HandleStorageKey;
 import org.spinsuite.util.Language;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.RSACrypt;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -47,15 +46,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.PopupMenu;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -156,11 +154,18 @@ public class T_Pref_General extends T_Pref_Parent {
     	}
     	//	Load Adapter
     	ArrayAdapter<DisplaySpinner> adapter = new ArrayAdapter<DisplaySpinner>(m_ctx, 
-    			android.R.layout.simple_spinner_item, data);
+    			R.layout.v_lookup_spinner, data);
     	//	Add Resource
     	adapter.setDropDownViewResource(R.layout.v_lookup_spinner_drop_down);
 		//	
     	sp_Language.setAdapter(adapter);
+    	//	Load Adapter
+    	ArrayAdapter<String> adapter_Log_Level = new ArrayAdapter<String>(m_ctx, 
+    			R.layout.v_lookup_spinner, m_ctx.getResources().getStringArray(R.array.ArrayLogLevel));
+    	//	Add Resource
+    	adapter_Log_Level.setDropDownViewResource(R.layout.v_lookup_spinner_drop_down);
+
+    	sp_LogLevel.setAdapter(adapter_Log_Level);
     	//	
     	sp_LogLevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
 
@@ -193,6 +198,13 @@ public class T_Pref_General extends T_Pref_Parent {
 				//	
 			}
     	});
+    	//	Load Adapter
+    	ArrayAdapter<String> adapter_DeploymentType = new ArrayAdapter<String>(m_ctx, 
+    			R.layout.v_lookup_spinner, m_ctx.getResources().getStringArray(R.array.ArrayMenuDeploymentType));
+    	//	Add Resource
+    	adapter_DeploymentType.setDropDownViewResource(R.layout.v_lookup_spinner_drop_down);
+    	//	Set Adapter
+    	sp_MenuDeploymentType.setAdapter(adapter_DeploymentType);
     	//	Menu Deployment Type Listener
     	sp_MenuDeploymentType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
 
@@ -423,22 +435,8 @@ public class T_Pref_General extends T_Pref_Parent {
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
 	 * @return void
 	 */
-	@TargetApi(Build.VERSION_CODES.KITKAT)
 	private void loadKeyChooser() {
-		MimeTypeMap mtm = MimeTypeMap.getSingleton();
-		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-		intent.setType("application/x-pem-file");
-		//	Mime Type
-        ArrayList<String> mimeTypes = new ArrayList<String>();
-		mimeTypes.add("application/x-pem-file");
-        mimeTypes.add("application/pkcs8");
-        mimeTypes.add("application/octet-stream");
-        mimeTypes.add("application/x-iwork-keynote-sffkey");
-        //	Add Extension
-        mimeTypes.add(mtm.getMimeTypeFromExtension("key"));
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes.toArray(new String[mimeTypes.size()]));
-		intent.addCategory(Intent.CATEGORY_OPENABLE);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		Intent intent = FileUtil.getChooser(FileUtil.TYPE_KEY);
 		//	
 		startActivityForResult(intent, 0);
 	}

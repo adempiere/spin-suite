@@ -191,6 +191,28 @@ public class AttachmentHandler {
 	}
 	
 	/**
+	 * Process a Fille like Attachment
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param origFileName
+	 * @return
+	 * @return boolean
+	 */
+	public boolean processFileAttach(String origFileName) {
+        try {
+        	File origFile = new File(origFileName);
+            if(!origFile.exists())
+            	return false;
+            //	Do it
+			return processFileAttach(new FileInputStream(origFile), origFile.getName());
+		} catch (FileNotFoundException e) {
+			LogM.log(m_ctx, getClass(), Level.SEVERE, 
+					"unable to copy file: " + origFileName, e);
+		}
+        //	Default Return
+        return false;
+	}
+	
+	/**
 	 * Process File Attachment
 	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com 11/11/2014, 20:43:37
 	 * @param origFileName
@@ -198,11 +220,11 @@ public class AttachmentHandler {
 	 * @return
 	 * @return boolean
 	 */
-	public boolean processFileAttach(String origFileName) {
-		File origFile = new File(origFileName);
-        if(!origFile.exists())
-        	return false;
-        //	
+	public boolean processFileAttach(InputStream p_File, String p_FileName) {
+		//	Valid Null
+		if(p_File == null)
+			return false;
+		//	
         final File destFolder = new File(getAttDirectory() + File.separator + getAttachmentPathSnippet());
 		if(!destFolder.exists()) {
 			if(!destFolder.mkdirs()) {
@@ -211,7 +233,7 @@ public class AttachmentHandler {
 		}
 		//	
 		final File destFile = new File(getAttDirectory() + File.separator
-				+ getAttachmentPathSnippet() + File.separator + origFile.getName());
+				+ getAttachmentPathSnippet() + File.separator + p_FileName);
 		if(destFile.exists()) {
 			if(!destFile.delete()) {
 				destFile.deleteOnExit();
@@ -219,25 +241,24 @@ public class AttachmentHandler {
 		}
 		//	Copy
 		try {
-			InputStream in = new FileInputStream(origFile);
 			OutputStream out = new FileOutputStream(destFile);
 			byte[] buf = new byte[1024];
 	        int len;
 	        //	Copy
-	        while ((len = in.read(buf)) > 0) {
+	        while ((len = p_File.read(buf)) > 0) {
 	            out.write(buf, 0, len);
 	        }
 	        //	Close
-	        in.close();
+	        p_File.close();
 	        out.close();
 	        //	
 	        return true;
 		} catch (FileNotFoundException e) {
 			LogM.log(m_ctx, getClass(), Level.SEVERE, 
-					"unable to copy file: " + origFile.getPath() + " -> " + destFile.getPath(), e);
+					"unable to copy file: " + p_FileName + " -> " + destFile.getPath(), e);
 		} catch (IOException e) {
 			LogM.log(m_ctx, getClass(), Level.SEVERE, 
-					"unable to copy file: " + origFile.getPath() + " -> " + destFile.getPath(), e);
+					"unable to copy file: " + p_FileName + " -> " + destFile.getPath(), e);
 		}
         //	Finish
         return false;
@@ -583,13 +604,26 @@ public class AttachmentHandler {
 		try {
 			//	Launch Application
 			Intent intent = new Intent(Intent.ACTION_VIEW);
+			String mimeType = null;
 			//	Set Data Type
-			if(isGraphic(uriPath.toString()))
-				intent.setDataAndType(uriPath, "image/*");
-			else if(isPDF(uriPath.toString()))
-				intent.setDataAndType(uriPath, "application/pdf");
-			else 
-				intent.setDataAndType(uriPath, "*/*");
+			if(isGraphic(uriPath.toString())) {
+				mimeType = "image/*";
+			} else if(isPDF(uriPath.toString())) {
+				mimeType = "application/pdf";
+			} else if(FileUtil.getFileExtension(uriPath.getPath()) != null
+					&& FileUtil.getFileExtension(uriPath.getPath()).equals(".txt")) {
+				mimeType = "text/plain";
+			} else {
+				mimeType = FileUtil.getMimeTypeFromExtension(FileUtil.getFileExtension(uriPath.getPath()));
+				if(mimeType == null
+						|| mimeType.length() == 0) {
+					mimeType = "text/plain";
+				} else {
+					mimeType = "*/*";
+				}
+			}
+			//	
+			intent.setDataAndType(uriPath, mimeType);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			//	Start Activity
 			ctx.startActivity(intent);

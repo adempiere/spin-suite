@@ -13,6 +13,8 @@
     <dimen name="list_layout_height">68dp</dimen>
     <dimen name="button_layout_width">72dp</dimen>
     <dimen name="button_layout_height">72dp</dimen>
+    <dimen name="button_layout_search_width">72dp</dimen>
+    <dimen name="button_layout_search_height">72dp</dimen>
     <dimen name="checkBox_layout_height">72dp</dimen>
     <!-- Business Chat -->
     <dimen name="bc_thread_button_layout_height">72dp</dimen>
@@ -25,6 +27,6 @@
    	<dimen name="login_logo_size">240dp</dimen>
    	<!-- Padding view -->
    	<dimen name="view_generic_padding">2dp</dimen>
-   	<!-- General -->
+	<!-- General -->
    	<dimen name="list_view_img_max_size">150dp</dimen>
 </resources>

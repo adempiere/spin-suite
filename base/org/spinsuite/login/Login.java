@@ -98,6 +98,8 @@ public class Login extends FragmentActivity implements I_Login {
 	private Builder 						m_Builder 			= null;
 	/** Pending Intent Fragment */ 
 	private PendingIntent 					m_PendingIntent 	= null;
+	/**	Progress Bar			*/
+	private ProgressDialog 					v_PDialog			= null;
 	/**	Notification ID			*/
 	private static final int				NOTIFICATION_ID 	= 1111111;
 	
@@ -630,9 +632,6 @@ public class Login extends FragmentActivity implements I_Login {
 	 *
 	 */
 	private class LoadAccessTask extends AsyncTask<Void, Void, Void> {
-
-		/**	Progress Bar			*/
-		private ProgressDialog 		v_PDialog;
 		
 		@Override
 		protected void onPreExecute() {
@@ -694,5 +693,13 @@ public class Login extends FragmentActivity implements I_Login {
 	@Override
 	public void setEnabled(boolean enabled) {
 		
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if(v_PDialog != null) {
+			v_PDialog.dismiss();
+		}
 	}
 }
