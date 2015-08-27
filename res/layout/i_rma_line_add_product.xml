@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*************************************************************************************
+ * Product: Spin-Suite (Making your Business Spin)                                   *
+ * This program is free software; you can redistribute it and/or modify it    		 *
+ * under the terms version 2 of the GNU General Public License as published   		 *
+ * by the Free Software Foundation. This program is distributed in the hope   		 *
+ * that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 		 *
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.           		 *
+ * See the GNU General Public License for more details.                       		 *
+ * You should have received a copy of the GNU General Public License along    		 *
+ * with this program; if not, write to the Free Software Foundation, Inc.,    		 *
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                     		 *
+ * For the text or an alternative of this public license, you may reach us    		 *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpconsultoresyasociados.com				  		 *
+ ************************************************************************************/
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/i_OL_product"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="4"
+    android:orientation="horizontal"
+    android:baselineAligned="false" >
+	<!-- Product Descripton -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll_rma_line_product_description"
+        android:layout_weight="1.7"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv_ProductCategory"
+            style="@style/TextTitleList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/M_Product_Category_ID"
+            android:maxLines="1" />
+        
+        <TextView
+            android:id="@+id/tv_ProductValue"
+            style="@style/TextTitleList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/M_Product_ID"
+            android:maxLines="1" />
+
+        <TextView
+            android:id="@+id/tv_ProductName"
+            style="@style/TextTitleList"
+            android:text="@string/Name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_ProductDescription"
+            style="@style/TextItemList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Description"/>
+
+    </LinearLayout>
+	<!-- Labels Qty Description -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll_rma_line_qty_description"
+        android:layout_weight="2.3"
+        android:orientation="vertical" >
+        		<!-- Qty Ordered -->
+        <LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="horizontal" >
+
+		    <TextView
+		        android:id="@+id/tv_lb_QtyOrdered"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        android:text="@string/QtyOrdered"
+		        style="@style/TextItemList"
+		        android:gravity="end" />
+		    
+		    <TextView
+		        android:id="@+id/tv_QtyOrdered"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        style="@style/TextItemList"
+		        android:gravity="end"
+		        android:hint="@string/Zero" />
+		</LinearLayout>
+		<!-- Qty Delivered -->
+        <LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="horizontal" >
+
+		    <TextView
+		        android:id="@+id/tv_lb_QtyDelivered"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        android:text="@string/QtyDelivered"
+		        style="@style/TextItemList"
+		        android:gravity="end" />
+		    
+		    <TextView
+		        android:id="@+id/tv_QtyDelivered"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        style="@style/TextItemList"
+		        android:gravity="end"
+		        android:hint="@string/Zero" />
+		</LinearLayout>
+		<!-- Qty Available -->
+        <LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="horizontal" >
+
+		    <TextView
+		        android:id="@+id/tv_lb_QtyAvailable"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        android:text="@string/QtyAvailable"
+		        style="@style/TextItemList"
+		        android:gravity="end" />
+		    
+		    <TextView
+		        android:id="@+id/tv_QtyAvailable"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        style="@style/TextItemList"
+		        android:gravity="end"
+		        android:hint="@string/Zero" />
+		</LinearLayout>
+		<!-- UOM -->
+        <LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="horizontal" >
+
+		    <TextView
+		        android:id="@+id/tv_UOMSymbolLabel"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        android:text="@string/UOMSymbol"
+		        style="@style/TextItemList"
+		        android:gravity="end" />
+		    
+		    <TextView
+		        android:id="@+id/tv_UOMSymbol"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        style="@style/TextItemList"
+		        android:gravity="end"
+		        android:hint="@string/None" />
+		</LinearLayout>
+		<!-- Price -->
+        <LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="horizontal" >
+
+		    <TextView
+		        android:id="@+id/tv_lb_PriceList"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        android:text="@string/Price"
+		        style="@style/TextItemList"
+		        android:gravity="end" />
+		    
+		    <TextView
+		        android:id="@+id/tv_PriceList"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        style="@style/TextItemList"
+		        android:gravity="end"
+		        android:hint="@string/Zero" />
+		</LinearLayout>
+		<!-- Tax -->
+        <LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="horizontal" >
+
+		    <TextView
+		        android:id="@+id/tv_lb_TaxIndicator"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        android:text="@string/C_Tax_ID"
+		        style="@style/TextItemList"
+		        android:gravity="end" />
+		    
+		    <TextView
+		        android:id="@+id/tv_TaxRate"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        style="@style/TextItemList"
+		        android:gravity="end"
+		        android:hint="@string/Zero" />
+		</LinearLayout>
+		<!-- Line Net -->
+        <LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="horizontal" >
+
+		    <TextView
+		        android:id="@+id/tv_lb_LineNetAmt"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        android:text="@string/LineNetAmt"
+		        style="@style/TextItemList"
+		        android:gravity="end" />
+		    
+		    <TextView
+		        android:id="@+id/tv_LineNetAmt"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:maxLines="1"
+		        style="@style/TextItemList"
+		        android:gravity="end"
+		        android:hint="@string/Zero" />
+		</LinearLayout>
+        <!-- Qty -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tv_QtyLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:maxLines="1"
+                android:gravity="end"
+                style="@style/TextItemList"
+                android:text="@string/QtyReturn" />
+
+            <EditText
+                android:id="@+id/et_Qty"
+                style="@style/EditTextStandard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:hint="@string/Zero"
+                android:inputType="phone|numberDecimal"
+                android:selectAllOnFocus="true"
+                android:gravity="end" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
