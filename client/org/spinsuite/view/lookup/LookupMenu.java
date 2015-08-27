@@ -33,13 +33,13 @@ import android.database.Cursor;
 public class LookupMenu {
 
 	/**	Main Menu Constant		*/
-	public static final String MAIN_MENU 		= "M";
+	public static final String 	MAIN_MENU 				= "M";
 	/**	Activity Menu Constant	*/
-	public static final String ACTIVITY_MENU 	= "A";
+	public static final String 	ACTIVITY_MENU 			= "A";
 	/**	Quick Action Menu		*/
-	public static final String QUICK_ACTION_MENU= "Q";
+	public static final String 	QUICK_ACTION_MENU		= "Q";
 	/**	Quick Action Menu		*/
-	public static final String SYNCHRONIZATION_MENU = "S";
+	public static final String 	SYNCHRONIZATION_MENU 	= "S";
 	/** Spin-Suite Service**/
 	public static final int 	WS_ID = 50006;
 	
