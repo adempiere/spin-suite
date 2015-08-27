@@ -35,4 +35,5 @@
     <string name="QtyAvailable">Disponible</string>
     <string name="QtyReturned">Devuelto</string>
     <string name="msg_AskSkipSelection">Ignorar Seleccion?</string>
+    
 </resources>
