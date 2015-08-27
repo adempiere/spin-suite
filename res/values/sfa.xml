@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*************************************************************************************
+ * Product: Spin-Suite (Making your Business Spin)                                   *
+ * This program is free software; you can redistribute it and/or modify it    		 *
+ * under the terms version 2 of the GNU General Public License as published   		 *
+ * by the Free Software Foundation. This program is distributed in the hope   		 *
+ * that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 		 *
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.           		 *
+ * See the GNU General Public License for more details.                       		 *
+ * You should have received a copy of the GNU General Public License along    		 *
+ * with this program; if not, write to the Free Software Foundation, Inc.,    		 *
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.                     		 *
+ * For the text or an alternative of this public license, you may reach us    		 *
+ * Copyright (C) 2012-2015 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
+ * Contributor(s): Yamel Senih www.erpcya.com				  		                 *
+ ************************************************************************************/
+ -->
+<resources>
+    <string name="SuggestedSO">Suggested Order</string>
+    <string name="M_Product_Category_ID">Product Category</string>
+    <string name="M_Product_ID">Product</string>
+    <string name="Price">Price</string>
+    <string name="C_Tax_ID">Tax</string>
+    <string name="LineNetAmt">Line Net Amount</string>
+    <string name="Qty">Quantity</string>
+    <string name="TotalLines">Total Lines</string>
+    <string name="GrandTotal">Grand Total</string>
+    <string name="Discount">Discount</string>
+    <string name="Percentage">%</string>
+    <string name="Amt">Amount</string>
+    <string name="QtyReturn">To Return</string>
+    <string name="QtyOrdered">Ordered</string>
+    <string name="QtyDelivered">Delivered</string>
+    <string name="QtyAvailable">Available</string>
+    <string name="QtyReturned">Returned</string>
+    <string name="msg_AskSkipSelection">Skip Selection?</string>
+</resources>

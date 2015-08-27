@@ -16,6 +16,8 @@
 package org.spinsuite.view;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +34,7 @@ import org.spinsuite.util.DisplayMenuItem;
 import org.spinsuite.util.DisplayRecordItem;
 import org.spinsuite.util.DisplayType;
 import org.spinsuite.util.Env;
+import org.spinsuite.util.FileUtil;
 import org.spinsuite.util.FilterValue;
 import org.spinsuite.util.LogM;
 import org.spinsuite.util.Msg;
@@ -141,6 +144,8 @@ public class T_DynamicTab extends T_FormTab
 	private MenuItem mi_More 								= null;
 	private MenuItem mi_Cancel 								= null;
 	private MenuItem mi_Save 								= null;
+	/**	Tmp Uri						*/
+	private Uri	m_Tmp_Uri									= null;
 	
 	/**	Results						*/
 	private static final int 		ACTION_TAKE_FILE		= 3;
@@ -549,11 +554,8 @@ public class T_DynamicTab extends T_FormTab
      * @return void
      */
     private void attachFile() {
-    	Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-		//	Set Data Type
-		intent.setType("*/*");
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		//	Start Activity
+    	Intent intent = FileUtil.getChooser(FileUtil.TYPE_DOCUMENT);
+    	//	Start Activity
 		getCallback().startActivityForResult(intent, ACTION_TAKE_FILE);
     }
     
@@ -768,7 +770,8 @@ public class T_DynamicTab extends T_FormTab
     		if(data == null)
     			return;
     		//	
-    		new SaveTask().execute(FILE_ATTACHMENT_SAVE, data.getData().getPath());
+    		m_Tmp_Uri = data.getData();
+    		new SaveTask().execute(FILE_ATTACHMENT_SAVE);
     	} else if (resultCode == Activity.RESULT_OK) {
 	    	if(data != null) {
 	    		Bundle bundle = data.getExtras();
@@ -1099,9 +1102,19 @@ public class T_DynamicTab extends T_FormTab
 			if(m_Type.equals(PHOTO_ATTACHMENT_SAVE)) {
 				String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 				m_AttHandler.processImgAttach(fileName);
-			} else if(m_Type.equals(FILE_ATTACHMENT_SAVE)) { 
-				String origFile = params[1];
-				m_AttHandler.processFileAttach(origFile);
+			} else if(m_Type.equals(FILE_ATTACHMENT_SAVE)) {
+				try {
+					//	Valid Null
+					if(m_Tmp_Uri == null)
+						return null;
+					String fileName = FileUtil.getNameFromUri(getCallback(), m_Tmp_Uri);
+					InputStream input = getCallback().getContentResolver().openInputStream(m_Tmp_Uri);
+					if(input != null) {
+						 m_AttHandler.processFileAttach(input, fileName);
+					}
+				} catch (FileNotFoundException e) {
+					LogM.log(getCallback(), getClass(), Level.SEVERE, "Attach Error", e);
+				}
 			} else if(m_Type.equals(RECORD_SAVE)) {
 				is_OK = save();
 			}

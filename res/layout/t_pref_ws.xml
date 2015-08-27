@@ -28,27 +28,31 @@
         	android:id="@+id/tv_UrlServer"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:text="@string/Url_Server" />	
+        	android:text="@string/Url_Server"
+    	    style="@style/TextDynamicTabLabel" />	
 
     	<EditText
     	    android:id="@+id/et_UrlServer"
     	    android:layout_width="wrap_content"
     	    android:layout_height="wrap_content"
     	    android:inputType="textUri"
-    	    android:maxLength="600" >
+    	    android:maxLength="600"
+    	    style="@style/TextDynamicTabEditText" >
         </EditText>
       	
     	<TextView
         	android:id="@+id/tv_Timeout"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:text="@string/Timeout" />
+        	android:text="@string/Timeout"
+        	style="@style/TextDynamicTabLabel" />
 
     	<EditText
         	android:id="@+id/et_Timeout"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
         	android:maxLength="10"
-        	android:inputType="numberDecimal" />
+        	android:inputType="numberDecimal"
+        	style="@style/TextDynamicTabEditText" />
     </TableLayout>
 </ScrollView>

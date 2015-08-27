@@ -13,6 +13,8 @@
     <dimen name="list_layout_height">44dp</dimen>
     <dimen name="button_layout_width">48dp</dimen>
     <dimen name="button_layout_height">48dp</dimen>
+    <dimen name="button_layout_search_width">48dp</dimen>
+    <dimen name="button_layout_search_height">48dp</dimen>
     <dimen name="checkBox_layout_height">48dp</dimen>
     <!-- Business Chat -->
     <dimen name="bc_thread_button_layout_height">48dp</dimen>
