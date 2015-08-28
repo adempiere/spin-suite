@@ -4,23 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.spinsuite.base.R;
+import org.spinsuite.util.Env;
 
 import android.content.Context;
-
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.PopupWindow.OnDismissListener;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
@@ -166,6 +163,8 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 		
 		ImageView img 	= (ImageView) container.findViewById(R.id.iv_icon);
 		TextView text 	= (TextView) container.findViewById(R.id.tv_title);
+		//	Set Style
+		text.setTextAppearance(mContext, Env.getResourceID(mContext, R.style.TextItemList));
 		
 		if (icon != null) { 
 			img.setImageDrawable(icon);
