@@ -33,31 +33,31 @@
 
         <TextView
             android:id="@+id/tv_ProductCategory"
-            style="@style/TextTitleList"
             android:text="@string/M_Product_Category_ID"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            style="@style/TextTitleList" />
 
         <TextView
             android:id="@+id/tv_ProductValue"
-            style="@style/TextTitleList"
             android:text="@string/M_Product_ID"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            style="@style/TextTitleList" />
 
         <TextView
             android:id="@+id/tv_ProductName"
-            style="@style/TextTitleList"
             android:text="@string/Name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            style="@style/TextTitleList" />
         
         <TextView
             android:id="@+id/tv_ProductDescription"
-            style="@style/TextItemList"
             android:text="@string/Description"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            style="@style/TextItemList" />
 
     </LinearLayout>
 
@@ -80,8 +80,8 @@
 		        android:layout_weight="1"
 		        android:maxLines="1"
 		        android:text="@string/UOMSymbol"
-		        style="@style/TextItemList"
-		        android:gravity="end" />
+		        android:gravity="end"
+		        style="@style/TextItemList" />
 
 		    <TextView
 		        android:id="@+id/tv_UOMSymbol"
@@ -89,9 +89,9 @@
 		        android:layout_height="wrap_content"
 		        android:layout_weight="1"
 		        android:maxLines="1"
-		        style="@style/TextItemList"
 		        android:gravity="end"
-		        android:text="@string/None" />
+		        android:text="@string/None"
+		        style="@style/TextItemList" />
 		</LinearLayout>
 		
         <!-- Qty -->
@@ -108,8 +108,8 @@
                 android:layout_weight="0.5"
                 android:maxLines="1"
                 android:gravity="end"
-                style="@style/TextItemList"
-                android:text="@string/Qty" />
+                android:text="@string/Qty"
+                style="@style/TextItemList" />
 
             <TextView
                 android:id="@+id/tv_Qty"
@@ -118,7 +118,8 @@
                 android:layout_weight="0.5"
                 android:maxLines="1"
                 android:gravity="end"
-                android:text="@string/Zero" />
+                android:text="@string/Zero"
+                style="@style/TextItemList" />
 
         </LinearLayout>
         <!-- Price -->
@@ -134,7 +135,8 @@
 		        android:layout_weight="1"
 		        android:maxLines="1"
 		        android:gravity="end"
-		        android:text="@string/Price" />
+		        android:text="@string/Price"
+		        style="@style/TextItemList" />
 		
 		    <TextView
 		    	android:id="@+id/tv_Price"
@@ -143,7 +145,8 @@
 		        android:layout_weight="1"
 		        android:maxLines="1"
 		        android:gravity="end"
-		        android:text="@string/Zero" />
+		        android:text="@string/Zero"
+		        style="@style/TextItemList" />
 		</LinearLayout>
         <!-- Discount -->
 		<LinearLayout
@@ -158,7 +161,8 @@
 		        android:layout_weight="1"
 		        android:maxLines="1"
 		        android:gravity="end"
-		        android:text="@string/Discount" />
+		        android:text="@string/Discount"
+		        style="@style/TextItemList" />
 		
 		    <TextView
 		    	android:id="@+id/tv_Discount"
@@ -167,7 +171,8 @@
 		        android:layout_weight="1"
 		        android:maxLines="1"
 		        android:gravity="end"
-		        android:text="@string/Zero" />
+		        android:text="@string/Zero"
+		        style="@style/TextItemList" />
 		</LinearLayout>
 		<!-- Line Net Amt -->
 		<LinearLayout
@@ -182,7 +187,8 @@
 		             android:layout_weight="1"
 		             android:maxLines="1"
 		             android:gravity="end"
-		             android:text="@string/LineNetAmt" />
+		             android:text="@string/LineNetAmt"
+		             style="@style/TextItemList" />
 		
 		         <TextView
 		             android:id="@+id/tv_LineNetAmt"
@@ -191,7 +197,8 @@
 		             android:layout_weight="1"
 		             android:maxLines="1"
 		             android:gravity="end"
-		             android:text="@string/Zero" />
+		             android:text="@string/Zero"
+		             style="@style/TextItemList" />
 		</LinearLayout>
 		<!-- Tax -->
 		<LinearLayout
@@ -206,7 +213,8 @@
 		        android:layout_weight="1"
 		        android:maxLines="1"
 		        android:gravity="end"
-		        android:text="@string/C_Tax_ID" />
+		        android:text="@string/C_Tax_ID"
+		        style="@style/TextItemList" />
 		
 		    <TextView
 		    	android:id="@+id/tv_TaxAmount"
@@ -215,7 +223,8 @@
 		        android:layout_weight="1"
 		        android:maxLines="1"
 		        android:gravity="end"
-		        android:text="@string/Zero" />
+		        android:text="@string/Zero"
+		        style="@style/TextItemList" />
 		</LinearLayout>
 		<!-- Grand Total -->
 		<LinearLayout
@@ -230,7 +239,8 @@
 		        android:layout_weight="1"
 		        android:maxLines="1"
 		        android:gravity="end"
-		        android:text="@string/GrandTotal" />
+		        android:text="@string/GrandTotal"
+		        style="@style/TextItemList" />
 		
 		    <TextView
 		    	android:id="@+id/tv_GrandTotal"
@@ -239,7 +249,8 @@
 		        android:layout_weight="1"
 		        android:maxLines="1"
 		        android:gravity="end"
-		        android:text="@string/Zero" />
+		        android:text="@string/Zero"
+		        style="@style/TextItemList" />
 		</LinearLayout>
     </LinearLayout>
 </LinearLayout>
