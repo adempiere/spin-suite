@@ -237,6 +237,7 @@
     <style name="TextTitleList" parent="TextStandard">
         <item name="android:textStyle">bold|normal</item>
         <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">@dimen/fontSizeMedium</item>
     </style>
     
     <!-- Text Tile -->
@@ -256,6 +257,7 @@
     <style name="TextItemList" parent="TextStandard">
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">@dimen/fontSizeSmall</item>
     </style>
     
     <!-- Text Report Header -->
