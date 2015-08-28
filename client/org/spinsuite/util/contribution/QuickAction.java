@@ -163,8 +163,6 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 		
 		ImageView img 	= (ImageView) container.findViewById(R.id.iv_icon);
 		TextView text 	= (TextView) container.findViewById(R.id.tv_title);
-		//	Set Style
-		text.setTextAppearance(mContext, Env.getResourceID(mContext, R.style.TextItemList));
 		
 		if (icon != null) { 
 			img.setImageDrawable(icon);
