@@ -255,6 +255,8 @@ public class LP_OrderLineSearchAdapter extends BaseAdapter implements Filterable
 	 * @return void
 	 */
 	public void loadLastSO(int m_M_Product_ID, View v){
+		String m_QtyOrderedLabel = m_ctx.getResources().getString(R.string.QtyOrdered);
+		String m_QtyInvoicedLabel = m_ctx.getResources().getString(R.string.QtyInvoiced);
     	String m_QtyDeliveredLabel = m_ctx.getResources().getString(R.string.QtyDelivered);
     	String m_QtyReturnLabel = m_ctx.getResources().getString(R.string.QtyReturned);
     	DB conn = new DB(m_ctx);
@@ -264,10 +266,13 @@ public class LP_OrderLineSearchAdapter extends BaseAdapter implements Filterable
 				"io.M_InOut_ID, " +
 				"io.DocumentNo, " +
 				"io.MovementDate, " +
+				"ol.QtyOrdered, " +
+				"ol.QtyInvoiced, " +
 				"iol.MovementQty, " +
 				"COALESCE(SUM(rl.Qty), 0) QtyReturn " +
 				"FROM M_InOut io " +
-				"INNER JOIN M_InOutLine iol ON(iol.M_InOut_ID = io.M_InOut_ID) " +
+				"INNER JOIN M_InOutLine iol ON(iol.M_InOut_ID = io.M_InOut_ID) " + 
+				"INNER JOIN C_OrderLine ol ON(ol.C_OrderLine_ID = iol.C_OrderLine_ID) " +
 				"LEFT JOIN M_RMALine rl ON (rl.M_InOutLine_ID = iol.M_InOutLine_ID) " +
 				"WHERE iol.M_Product_ID = ? " +
 				"AND io.C_BPartner_Location_ID = ? " + 
@@ -289,14 +294,20 @@ public class LP_OrderLineSearchAdapter extends BaseAdapter implements Filterable
 				Date validFrom = DisplayType.getDate(rs.getString(2));
 				SimpleDateFormat format = Env.getDateFormat(m_ctx);
 				String m_MovementDate = format.format(validFrom);
-				String m_QtyDelivered = m_QtyFormat.format(rs.getDouble(3));
-				String m_QtyReturn = m_QtyFormat.format(rs.getDouble(4));
+				String m_QtyOrdered = m_QtyFormat.format(rs.getDouble(3));
+				String m_QtyInvoiced = m_QtyFormat.format(rs.getDouble(4));
+				String m_QtyDelivered = m_QtyFormat.format(rs.getDouble(5));
+				String m_QtyReturn = m_QtyFormat.format(rs.getDouble(6));
 				//	
 				m_QAct.addActionItem(new ActionItem(
 						rs.getInt(0), 
 						"<" + rs.getString(1) + ">" + 
 						"\n" + 
 						"<" + m_MovementDate + ">" + 
+						"\n" + 
+						m_QtyOrderedLabel + "=<" + m_QtyOrdered + ">" +
+						"\n" + 
+						m_QtyInvoicedLabel + "=<" + m_QtyInvoiced + ">" +
 						"\n" + 
 						m_QtyDeliveredLabel + "=<" + m_QtyDelivered + ">" + 
 						"\n" + 
