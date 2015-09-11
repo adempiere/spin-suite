@@ -64,5 +64,6 @@
     <string name="Action_Export_HTML">Exportar a HTML</string>
     <string name="Action_Export">Exportar</string>
 	<string name="Action_Replace">Reemplazar</string>
-    
+    <string name="Action_Generate">Generar</string>
+	<string name="Action_Load">Cargar</string>
 </resources>

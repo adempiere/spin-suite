@@ -110,8 +110,11 @@ public class T_Pref_General extends T_Pref_Parent {
 	/**	Drop Data Base				*/
 	private Button			butt_DropDB;
 	/**	Menu Options				*/
-	private static final int 	O_SHARE 	= 0;
-	private static final int	O_REPLACE 	= 1;
+	
+	private static final int 	O_GENERATE 	= 1;
+	private static final int 	O_LOAD 		= 2;
+	private static final int 	O_SHARE 	= 3;
+	private static final int	O_REPLACE 	= 4;
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -233,11 +236,7 @@ public class T_Pref_General extends T_Pref_Parent {
 			@Override
 			public void onClick(View v) {
 				String publicKey = Env.getContext(m_ctx, RSACrypt.KEY_FOR_KEY);
-				if(publicKey == null) {
-					loadKeyChooser();
-				} else {
-					showPopupForTab(v);
-				}
+				showPopupForTab(v, publicKey == null);
 			}
 		});
     	butt_DropDB.setOnClickListener(new OnClickListener(){
@@ -249,21 +248,36 @@ public class T_Pref_General extends T_Pref_Parent {
 		m_IsLoadOk = true;
     }
     
-    private void showPopupForTab(View v) {
+    private void showPopupForTab(View v, boolean isNew) {
 	    PopupMenu popup = new PopupMenu(m_ctx, v);
 	    Menu menu = popup.getMenu();
-	    //	Share
-	    menu.add(Menu.NONE, O_SHARE, 
-				Menu.NONE, m_ctx.getString(R.string.Action_Share));
-	    //	
-	    menu.add(Menu.NONE, O_REPLACE, 
-				Menu.NONE, m_ctx.getString(R.string.Action_Replace));
+	    if(isNew) {
+		    //	Share
+		    menu.add(Menu.NONE, O_GENERATE, 
+					Menu.NONE, m_ctx.getString(R.string.Action_Generate));
+		    //	
+		    menu.add(Menu.NONE, O_LOAD, 
+					Menu.NONE, m_ctx.getString(R.string.Action_Load));
+	    } else {
+		    //	Share
+		    menu.add(Menu.NONE, O_SHARE, 
+					Menu.NONE, m_ctx.getString(R.string.Action_Share));
+		    //	
+		    menu.add(Menu.NONE, O_REPLACE, 
+					Menu.NONE, m_ctx.getString(R.string.Action_Replace));
+	    }
 	    //	Add Listener
 	    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 			
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
 				switch (item.getItemId()) {
+					case O_GENERATE:
+						generateKey();
+						break;
+					case O_LOAD:
+						loadKeyChooser();
+						break;
 					case O_SHARE:
 						shareKey();
 						break;
@@ -441,29 +455,57 @@ public class T_Pref_General extends T_Pref_Parent {
 		startActivityForResult(intent, 0);
 	}
 	
-	 @Override
-	 public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		 //	Valid Data
-		 if(data != null) {
-			 Uri m_DataUri = data.getData();
-			 try {
-				 InputStream input = m_ctx.getContentResolver().openInputStream(m_DataUri);
-				 if(input != null) {
-					 Key publicKey = HandleStorageKey.loadPublicKey(RSACrypt.RSA, input);
-					 byte[] keyBytes = publicKey.getEncoded();
-					 String keyForSave = Base64.encodeToString(keyBytes, Base64.DEFAULT);
-					 //	Set Key
-					 Env.setContext(m_ctx, RSACrypt.KEY_FOR_KEY, keyForSave);
-					 //	Reload Key Cipher
-					 RSACrypt.getInstance(m_ctx).initCipher(true);
-					 //	Change Button
-					 butt_PublicKey.setText(m_ctx.getString(R.string.msg_KeyLoaded));
-				 }
-			 } catch (Exception e) {
-				 LogM.log(m_ctx, getClass(), Level.SEVERE, "onActivityResult", e);
-			 }
-		 }
-	 }
+	/**
+	 * Generate Key
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return void
+	 */
+	private void generateKey() {
+		Key publicKeyGenerated = RSACrypt.generatePublicKey();
+		if(setKey(publicKeyGenerated)) {
+			Msg.toastMsg(m_ctx, m_ctx.getString(R.string.msg_KeyLoaded));
+		}
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		//	Valid Data
+		if(data != null) {
+			Uri m_DataUri = data.getData();
+			try {
+				InputStream input = m_ctx.getContentResolver().openInputStream(m_DataUri);
+				if(input != null) {
+					Key publicKey = HandleStorageKey.loadPublicKey(RSACrypt.RSA, input);
+					if(setKey(publicKey)) {
+						Msg.toastMsg(m_ctx, m_ctx.getString(R.string.msg_KeyLoaded));
+					}
+				}
+			} catch (Exception e) {
+				LogM.log(m_ctx, getClass(), Level.SEVERE, "onActivityResult", e);
+			}
+		}
+	}
+	
+	/**
+	 * Set Env Key
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param publicKey
+	 * @return boolean
+	 */
+	private boolean setKey(Key publicKey) {
+		if(publicKey == null)
+			return false;
+		byte[] keyBytes = publicKey.getEncoded();
+		String keyForSave = Base64.encodeToString(keyBytes, Base64.DEFAULT);
+		//	Set Key
+		Env.setContext(m_ctx, RSACrypt.KEY_FOR_KEY, keyForSave);
+		//	Reload Key Cipher
+		RSACrypt.getInstance(m_ctx).initCipher(true);
+		//	Change Button
+		butt_PublicKey.setText(m_ctx.getString(R.string.msg_KeyLoaded));
+		//	Default Return
+		return true;
+	}
 	
 	@Override
 	public boolean loadData() {
