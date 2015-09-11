@@ -225,8 +225,38 @@ public class RSACrypt implements SecureInterface {
 		try {
 			return getPublicKeyFromStringEx(p_Key);
 		} catch (NoSuchAlgorithmException e) {
-			LogM.log(Env.getCtx(), RSACrypt.class, Level.SEVERE, "Error while generate RSA Key", e);
+			LogM.log(Env.getCtx(), RSACrypt.class, Level.SEVERE, "Error while get RSA Key", e);
 		} catch (InvalidKeySpecException e) {
+			LogM.log(Env.getCtx(), RSACrypt.class, Level.SEVERE, "Error while get RSA Key", e);
+		}
+		//	Default
+		return null;
+	}
+	
+	/**
+	 * Generate Public Key with Exception
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @throws NoSuchAlgorithmException
+	 * @return Key
+	 */
+	public static Key generatePublicKeyEx() throws NoSuchAlgorithmException {
+		KeyPairGenerator kpg = KeyPairGenerator.getInstance(RSA);
+		kpg.initialize(1024);
+		KeyPair kp = kpg.genKeyPair();
+		return kp.getPublic();
+	}
+	
+	/**
+	 * Generate Public key, handle exception
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @return
+	 * @return Key
+	 */
+	public static Key generatePublicKey() {
+		try {
+			return generatePublicKeyEx();
+		} catch (NoSuchAlgorithmException e) {
 			LogM.log(Env.getCtx(), RSACrypt.class, Level.SEVERE, "Error while generate RSA Key", e);
 		}
 		//	Default
