@@ -456,7 +456,7 @@ public class Login extends FragmentActivity implements I_Login {
 		//	Get Warehouse
 		int m_M_Warehouse_ID = DB.getSQLValue(this, "SELECT w.M_Warehouse_ID "
 				+ "FROM M_Warehouse w "
-				+ "WHERE w.AD_Org_ID = ? "
+				+ "WHERE w.AD_Org_ID = " + m_AD_Org_ID + " "
 				+ "AND w.IsInTransit = 'N'");
 		//	Get Default Role
 		if(m_M_Warehouse_ID > -1) {
