@@ -445,4 +445,14 @@ public class MSequence extends X_AD_Sequence {
 		//	Log
 		LogM.log(ctx, "MSequence", Level.FINE, "#" + counter);
 	}
+	
+	@Override
+	public String toString() {
+		return "MSequence [getAD_Sequence_ID()=" + getAD_Sequence_ID()
+				+ ", getCurrentNext()=" + getCurrentNext()
+				+ ", getCurrentNextSys()=" + getCurrentNextSys()
+				+ ", isTableID()=" + isTableID() + ", getName()=" + getName()
+				+ ", getPrefix()=" + getPrefix() + ", getSuffix()="
+				+ getSuffix() + "]";
+	}
 }
