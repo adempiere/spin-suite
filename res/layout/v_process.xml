@@ -42,7 +42,7 @@
 		  	    android:id="@+id/tv_Help"
 		  	    android:text="@string/Help"
 		  	    android:visibility="gone"
-		  	    style="@style/TextStandard">
+		  	    style="@style/TextDynamicTabLabel">
 		  	</TextView>
 	    </LinearLayout>
         <!-- Process Parameters -->

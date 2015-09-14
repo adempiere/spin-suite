@@ -449,6 +449,7 @@ public class V_Process extends Activity {
 		tv_Summary = new TextView(this);
 		tv_Summary.setTextIsSelectable(true);
 		tv_Summary.setVisibility(TextView.GONE);
+		tv_Summary.setTextAppearance(this, R.style.TextDynamicTabLabel);
 		ll_ProcessInfo.addView(tv_Summary, v_rowParam);
 		v_tableLayout.addView(v_row);
 		//	Instance Process Control
