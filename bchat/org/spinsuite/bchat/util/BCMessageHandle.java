@@ -114,9 +114,11 @@ public class BCMessageHandle {
 			//	Compile Query
 			conn.compileQuery("SELECT r.Topic "
 					+ "FROM SPS_BC_Request r "
-					+ "WHERE r.IsActive = ? ");
+					+ "WHERE r.IsActive = ? "
+					+ "AND r.CreatedBy = ?");
 			//	Add Parameter
 			conn.addBoolean(true);
+			conn.addInt(Env.getAD_User_ID());
 			//	Query Data
 			Cursor rs = conn.querySQL();
 			//	Get Header Data
@@ -166,10 +168,12 @@ public class BCMessageHandle {
 					+ "LEFT JOIN SPS_BC_Request_User ru ON(ru.SPS_BC_Request_UUID = r.SPS_BC_Request_UUID) "
 					+ "WHERE r.Type = ? "
 					+ "AND ru.Status = ? "
+					+ "AND r.CreatedBy = ? "
 					+ "ORDER BY r.SPS_BC_Request_UUID, ru.Updated");
 			//	Add Parameter
 			conn.addString(p_Type);
 			conn.addString(p_Status);
+			conn.addInt(Env.getAD_User_ID());
 			//	Query Data
 			Cursor rs = conn.querySQL();
 			//	Get Header Data
@@ -239,9 +243,11 @@ public class BCMessageHandle {
 					+ "r.IsGroup "
 					+ "FROM SPS_BC_Request r "
 					+ "INNER JOIN AD_User u ON(u.AD_User_ID = r.AD_User_ID) "
-					+ "WHERE r.SPS_BC_Request_UUID = ?");
+					+ "WHERE r.SPS_BC_Request_UUID = ? "
+					+ "AND r.CreatedBy = ?");
 			//	Add Parameter
 			conn.addString(p_SPS_BC_Request_UUID);
+			conn.addInt(Env.getAD_User_ID());
 			//	Query Data
 			Cursor rs = conn.querySQL();
 			//	Get Header Data
@@ -260,9 +266,11 @@ public class BCMessageHandle {
 						+ "ru.AD_User_ID, "
 						+ "ru.Status "
 						+ "FROM SPS_BC_Request_User ru "
-						+ "WHERE ru.SPS_BC_Request_UUID = ?");
+						+ "WHERE ru.SPS_BC_Request_UUID = ? "
+						+ "AND ru.CreatedBy = ?");
 				//	Add Parameter
 				conn.addString(request.getSPS_BC_Request_UUID());
+				conn.addInt(Env.getAD_User_ID());
 				//	Query Data
 				rs = conn.querySQL();
 				if(rs.moveToFirst()) {
@@ -316,8 +324,9 @@ public class BCMessageHandle {
 					+ "SPS_BC_Request_UUID, "
 					+ "Topic, "
 					+ "Type, "
-					+ "IsGroup) "
-					+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					+ "IsGroup, "
+					+ "Status) "
+					+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			//	Add Values
 			int m_AD_Client_ID = Env.getAD_Client_ID();
 			int m_AD_Org_ID = Env.getAD_Org_ID();
@@ -348,14 +357,15 @@ public class BCMessageHandle {
 			conn.addInt(m_AD_User_ID);
 			conn.addString(request.getName());
 			conn.addDateTime(now);
-			conn.addInt(m_AD_User_ID);
+			conn.addInt(m_LocalUser_ID);
 			conn.addDateTime(now);
-			conn.addInt(m_AD_User_ID);
+			conn.addInt(m_LocalUser_ID);
 			conn.addBoolean(true);
 			conn.addString(request.getSPS_BC_Request_UUID());
 			conn.addString(request.getTopicName());
 			conn.addString(p_Type);
 			conn.addBoolean(request.isGroup());
+			conn.addString(p_Status);
 			//	Execute
 			conn.executeSQL();
 			//	Add Child or Request Users
@@ -377,9 +387,9 @@ public class BCMessageHandle {
 					conn.addInt(m_AD_Client_ID);
 					conn.addInt(m_AD_Org_ID);
 					conn.addDateTime(now);
-					conn.addInt(m_AD_User_ID);
+					conn.addInt(m_LocalUser_ID);
 					conn.addDateTime(now);
-					conn.addInt(m_AD_User_ID);
+					conn.addInt(m_LocalUser_ID);
 					conn.addBoolean(true);
 					conn.addString(request.getSPS_BC_Request_UUID());
 					conn.addInt(invited.getAD_User_ID());
@@ -433,20 +443,30 @@ public class BCMessageHandle {
 			}
 			//	Add Last
 			inClause.append(")");
+			//	Add Support to User
+			inClause.append(" AND CreatedBy = ?");
 			//	Create Connection
 			conn = DB.loadConnection(m_Ctx, DB.READ_WRITE);
 			//	Compile Query
 			conn.compileQuery("DELETE "
 					+ "FROM SPS_BC_Message " + inClause.toString());
+			//	Add User
+			int m_CreatedBy = Env.getAD_User_ID();
+			//	User
+			conn.addInt(m_CreatedBy);
 			//	Delete
 			conn.executeSQL();
 			//	Compile Query
 			conn.compileQuery("DELETE "
 					+ "FROM SPS_BC_Request_User " + inClause.toString());
+			//	User
+			conn.addInt(m_CreatedBy);
 			//	Delete
 			conn.executeSQL();
 			//	Delete Request
 			conn.compileQuery("DELETE FROM SPS_BC_Request " + inClause.toString());
+			//	User
+			conn.addInt(m_CreatedBy);
 			//	Execute
 			conn.executeSQL();
 			//	Successful
@@ -541,10 +561,12 @@ public class BCMessageHandle {
 			//	Compile Query
 			conn.compileQuery("UPDATE SPS_BC_Request "
 					+ "SET Status = ? "
-					+ "WHERE SPS_BC_Request_UUID = ? ");
+					+ "WHERE SPS_BC_Request_UUID = ? "
+					+ "AND CreatedBy = ?");
 			//	Add Parameter
 			conn.addString(p_Status);
 			conn.addString(p_SPS_BC_Request_UUID);
+			conn.addInt(Env.getAD_User_ID());
 			conn.executeSQL();
 			//	Successful
 			conn.setTransactionSuccessful();
@@ -606,9 +628,11 @@ public class BCMessageHandle {
 					+ "m.FileName "
 					+ "FROM SPS_BC_Message m "
 					+ "INNER JOIN AD_User u ON(u.AD_User_ID = m.AD_User_ID) "
-					+ "WHERE m.SPS_BC_Message_UUID = ?");
+					+ "WHERE m.SPS_BC_Message_UUID = ? "
+					+ "AND CreatedBy = ?");
 			//	Add Parameter
 			conn.addString(p_SPS_BC_Message_UUID);
+			conn.addInt(Env.getAD_User_ID());
 			//	Query Data
 			Cursor rs = conn.querySQL();
 			//	Get Header Data
@@ -663,12 +687,14 @@ public class BCMessageHandle {
 					+ "FROM SPS_BC_Message m "
 					+ "INNER JOIN AD_User u ON(u.AD_User_ID = m.AD_User_ID) "
 					+ "WHERE m.Status = ? "
-					+ "AND m.Type = ?");
+					+ "AND m.Type = ? "
+					+ "AND m.CreatedBy = ?");
 			//	Compile Query
 			conn.compileQuery(sql.toString());
 			//	Add Parameter
 			conn.addString(p_Status);
 			conn.addString(p_Type);
+			conn.addInt(Env.getAD_User_ID());
 			//	Query Data
 			Cursor rs = conn.querySQL();
 			//	Get Header Data
@@ -765,9 +791,10 @@ public class BCMessageHandle {
 			}
 			//	
 			int m_AD_User_ID = message.getAD_User_ID();
+			int m_CreatedBy = Env.getAD_User_ID();
 			//	For Out
 			if(p_Type.equals(MQTTDefaultValues.TYPE_OUT)) {
-				m_AD_User_ID = Env.getAD_User_ID(); 
+				m_AD_User_ID = Env.getAD_User_ID();
 			} else if(p_Type.equals(MQTTDefaultValues.TYPE_IN)) {
 				SyncRequest_BC request = getRequest(message.getSPS_BC_Request_UUID());
 				if(request != null) {
@@ -784,9 +811,9 @@ public class BCMessageHandle {
 			conn.addInt(m_AD_User_ID);
 			conn.addString(message.getText());
 			conn.addDateTime(now);
-			conn.addInt(m_AD_User_ID);
+			conn.addInt(m_CreatedBy);
 			conn.addDateTime(now);
-			conn.addInt(m_AD_User_ID);
+			conn.addInt(m_CreatedBy);
 			conn.addBoolean(true);
 			conn.addString(message.getSPS_BC_Request_UUID());
 			conn.addString(message.getSPS_BC_Message_UUID());
@@ -839,10 +866,12 @@ public class BCMessageHandle {
 			//	Compile Query
 			conn.compileQuery("UPDATE SPS_BC_Message "
 					+ "SET Status = ? "
-					+ "WHERE SPS_BC_Message_UUID = ? ");
+					+ "WHERE SPS_BC_Message_UUID = ? "
+					+ "AND CreatedBy = ?");
 			//	Add Parameter
 			conn.addString(p_Status);
 			conn.addString(p_SPS_BC_Message_UUID);
+			conn.addInt(Env.getAD_User_ID());
 			conn.executeSQL();
 			//	Successful
 			conn.setTransactionSuccessful();
@@ -874,7 +903,8 @@ public class BCMessageHandle {
 			//	
 			StringBuffer sql = new StringBuffer("DELETE "
 					+ "FROM SPS_BC_Message "
-					+ "WHERE SPS_BC_Request_UUID = ?");
+					+ "WHERE SPS_BC_Request_UUID = ? "
+					+ "AND CreatedBy = ?");
 			//	Add Where Clause
 			if(p_WhereClause != null
 					&& p_WhereClause.trim().length() > 0) {
@@ -885,14 +915,17 @@ public class BCMessageHandle {
 			conn.compileQuery(sql.toString());
 			//	Add Values
 			conn.addString(request.getSPS_BC_Request_UUID());
+			conn.addInt(Env.getAD_User_ID());
 			conn.executeSQL();
 			//	Get Last Message
 			conn.compileQuery("SELECT m.Text, m.FileName, (strftime('%s', m.Updated)*1000) Updated "
 					+ "FROM SPS_BC_Message m "
 					+ "WHERE SPS_BC_Request_UUID = ? "
+					+ "AND CreatedBy = ? "
 					+ "ORDER BY Updated DESC");
 			//	Add Parameter
 			conn.addString(request.getSPS_BC_Request_UUID());
+			conn.addInt(Env.getAD_User_ID());
 			//	Execute
 			Cursor rs = conn.querySQL();
 			String m_LastText = null;
@@ -909,12 +942,14 @@ public class BCMessageHandle {
 					+ "SET Updated = ?, "
 					+ "LastMsg = ?, "
 					+ "LastFileName = ? "
-					+ "WHERE SPS_BC_Request_UUID = ?");
+					+ "WHERE SPS_BC_Request_UUID = ? "
+					+ "AND CreatedBy = ?");
 			//	Add Parameters
 			conn.addDateTime(new Date(m_time));
 			conn.addString(m_LastText);
 			conn.addString(m_LastFileName);
 			conn.addString(request.getSPS_BC_Request_UUID());
+			conn.addInt(Env.getAD_User_ID());
 			//	Execute
 			conn.executeSQL();		
 			//	Successful
