@@ -16,6 +16,7 @@
 package org.spinsuite.mqtt.connection;
 
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -383,7 +384,27 @@ public class MQTTConnection {
 	 * @return String
 	 */
 	public static String getClient_ID(Context p_Ctx) {
-		return Env.getContext(p_Ctx, MQTT_CLIENT_ID);
+		String client_ID = Env.getContext(p_Ctx, MQTT_CLIENT_ID);
+		if(client_ID == null) {
+			client_ID = generateClient_ID(p_Ctx);
+		}
+		//	Default Return
+		return client_ID;
+	}
+	
+	/**
+	 * Generate a new Client ID
+	 * @author Yamel Senih, ysenih@erpcya.com, ERPCyA http://www.erpcya.com
+	 * @param p_Ctx
+	 * @return
+	 * @return String
+	 */
+	public static String generateClient_ID(Context p_Ctx) {
+		String client_ID = UUID.randomUUID().toString();
+		//	Set a new Client ID
+		setClient_ID(p_Ctx, client_ID);
+		//	Default Return
+		return client_ID;
 	}
 	
 	/**
