@@ -207,12 +207,13 @@ public class FV_ThreadIndex extends ListFragment
     			+ "FROM SPS_BC_Request rq "
     			+ "INNER JOIN AD_User us ON(us.AD_User_ID = rq.AD_User_ID) "
     			+ "WHERE rq.IsActive = 'Y' "
-    			+ "AND (rq.AD_User_ID = ?"
-    			+ "		OR EXISTS(SELECT 1 FROM SPS_BC_Request_User ru WHERE ru.AD_User_ID = ?)) "
+    			+ "AND rq.CreatedBy = ?"
+//    			+ "AND (rq.AD_User_ID = ?"
+//    			+ "		OR EXISTS(SELECT 1 FROM SPS_BC_Request_User ru WHERE ru.AD_User_ID = ?)) "
     			+ "ORDER BY rq.Updated DESC");
     	//	Add Parameters
     	conn.addInt(Env.getAD_User_ID(m_ctx));
-    	conn.addInt(Env.getAD_User_ID(m_ctx));
+//    	conn.addInt(Env.getAD_User_ID(m_ctx));
     	//	Compile Query
     	Cursor rs = conn.querySQL();
 		//	Instance Data

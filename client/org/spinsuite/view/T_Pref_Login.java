@@ -20,6 +20,7 @@ import org.spinsuite.adapters.LoginRoleAdapter;
 import org.spinsuite.base.R;
 import org.spinsuite.login.Login;
 import org.spinsuite.model.MUser;
+import org.spinsuite.mqtt.connection.MQTTConnection;
 import org.spinsuite.util.Env;
 import org.spinsuite.util.Msg;
 import org.spinsuite.util.SyncValues;
@@ -173,9 +174,13 @@ public class T_Pref_Login extends T_Pref_Parent {
     			//	Just when is Loaded Application
     			if(!Env.isEnvLoad()) {
     				Env.setContext(KEY_LOGIN_VALID_USER, true);
+    				MQTTConnection.generateClient_ID(m_ctx);
     				return true;
     			} else if(findUser(user, pass)) {
     				Env.setContext(KEY_LOGIN_VALID_USER, true);
+    				if(m_IsHasChanges) {
+    					MQTTConnection.generateClient_ID(m_ctx);
+    				}
     				return true;
     			} else {
     				Msg.toastMsg(m_ctx, 
