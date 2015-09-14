@@ -827,12 +827,14 @@ public class BCMessageHandle {
 					+ "SET Updated = ?, "
 					+ "LastMsg = ?, "
 					+ "LastFileName = ? "
-					+ "WHERE SPS_BC_Request_UUID = ?");
+					+ "WHERE SPS_BC_Request_UUID = ? "
+					+ "AND CreatedBy = ?");
 			//	Add Parameters
 			conn.addDateTime(now);
 			conn.addString(message.getText());
 			conn.addString(message.getFileName());
 			conn.addString(message.getSPS_BC_Request_UUID());
+			conn.addInt(m_CreatedBy);
 			//	Execute
 			conn.executeSQLEx();		
 			//	Successful
