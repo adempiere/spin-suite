@@ -123,7 +123,10 @@ public class DB extends SQLiteOpenHelper {
 	 */
 	public synchronized SQLiteDatabase openDB(int type) {
 		SQLiteDatabase database = DB_Manager.getInstance().open();
-		database.enableWriteAheadLogging();
+//		if(!database.isWriteAheadLoggingEnabled()
+//				&& !database.inTransaction()) {
+//			database.enableWriteAheadLogging();
+//		}
 		//	Return
 		return database;
 	}
