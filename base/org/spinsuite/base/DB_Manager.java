@@ -61,6 +61,8 @@ public class DB_Manager {
     private static DB_Manager 			m_Instance;
     /**	Counter							*/
     private static AtomicInteger 		m_Counter;
+    /**	Is Write A head Logging Enabled	*/
+    private static boolean				m_IsWriteAheadLoggingEnabled = false;
 
     /**
      * Get Current Instance
@@ -84,6 +86,10 @@ public class DB_Manager {
     	if(m_Counter.incrementAndGet() == 1) {
             // Opening new database
             m_DB = m_DBH.getWritableDatabase();
+            if(!m_IsWriteAheadLoggingEnabled) {
+            	m_DB.enableWriteAheadLogging();
+            	m_IsWriteAheadLoggingEnabled = true;
+            }
         }
         return m_DB;
     }
