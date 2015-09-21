@@ -57,7 +57,7 @@
 	<string name="PR_Login">Inicio de Sesión</string>
 	<string name="PR_D_Login">Preferencias de Inicio de Sesión (Seguridad, Perfil de Acceso)</string>
 	<string name="PR_Login_Role">Perfil de Inicio</string>
-	<string name="PR_D_Login_Role">Determina el perfil de Inicio por Defecto en el Sistema</string>
+	<string name="PR_D_Login_Role">Determina el Perfil de Inicio por Defecto en el Sistema</string>
 	<!-- Others -->
 	<string name="MenuDeploymentType">Menu (Tipo de Despliegue)</string>
 </resources>
