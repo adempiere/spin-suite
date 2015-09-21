@@ -538,8 +538,9 @@ public class FV_Thread extends Fragment {
      */
     public static void changeConnectionStatus(SyncStatus p_Status) {
 		//	Validate Request
-		if(isOpened(p_Status.getSPS_BC_Request_UUID())
-				|| existsUser(p_Status.getAD_User_ID())) {
+		if((isOpened(p_Status.getSPS_BC_Request_UUID())
+					|| existsUser(p_Status.getAD_User_ID()))
+				&& p_Status.getAD_User_ID() != Env.getAD_User_ID()) {
 			changeStatus(p_Status.getStatus());
 		}
     }
