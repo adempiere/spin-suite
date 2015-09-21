@@ -35,7 +35,7 @@
         <item name="ic_ab_overflow">@drawable/ic_action_overflow_dark</item>
         <item name="ic_ab_report">@drawable/ic_action_view_as_list_dark</item>
         <item name="ic_ab_share">@drawable/ic_action_share_dark</item>
-        <item name="ic_ab_process">@drawable/ic_action_forward_dark</item>
+        <item name="ic_ab_process">@drawable/ic_action_settings_dark</item>
         <item name="ic_ab_drawer">@drawable/ic_drawer</item>
         <item name="ic_ab_drawer_shadow">@drawable/drawer_shadow</item>
         <item name="ic_ab_bchat">@drawable/ic_action_chat_dark</item>
