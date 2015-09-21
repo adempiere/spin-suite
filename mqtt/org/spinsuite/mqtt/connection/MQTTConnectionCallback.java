@@ -215,9 +215,9 @@ public class MQTTConnectionCallback implements MqttCallback {
 		String m_Status = MQTTDefaultValues.STATUS_CREATED;
 		//	Valid if is same user
 		if(isSameUser) {
-			ok = BCMessageHandle.getInstance(m_Ctx).newOutMessage(message, MQTTDefaultValues.STATUS_DELIVERED);
 			m_Type = MQTTDefaultValues.TYPE_OUT;
 			m_Status = MQTTDefaultValues.STATUS_SENT;
+			ok = BCMessageHandle.getInstance(m_Ctx).newOutMessage(message, m_Status);
 		} else {
 			ok = BCMessageHandle.getInstance(m_Ctx).newInMessage(message);
 		}
